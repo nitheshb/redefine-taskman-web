@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 import ExecutiveHomeViewerPage from 'src/components/ExecutiveHomeViewerPage'
 import HeadSideBarDetailView from 'src/components/HeadDetailSideBar'
@@ -9,6 +9,7 @@ import MyAttedanceHomeBody from 'src/components/myAttedanceHomeBody'
 import MyLeadsReportHome from 'src/components/myLeadsReportHome'
 import MyPayHomeBody from 'src/components/myPayHomeBody'
 import ProjectsUnitInventory from 'src/components/projectUnitsInventory'
+import Confetti from 'src/components/shared/confetti'
 import TodayLeadsHomePage from 'src/components/TodayLeadsHomePage'
 import { USER_ROLES } from 'src/constants/userRoles'
 import { useAuth } from 'src/context/firebase-auth-context'
@@ -21,6 +22,14 @@ const LeadsManagerPage = () => {
   const [showSideBar, setShowSideBar] = useState(false)
   const [showDetailedSideBar, setDetailedShowSideBar] = useState(false)
   const [viewable, setViewable] = useState('Today1')
+  //confetti
+
+  const confettiRef = useRef(null)
+  const handleClick = () => {
+    confettiRef.current.fire()
+  }
+
+  //confetti
 
   const showSideView1 = () => {
     setShowSideBar(!showSideBar)
@@ -167,6 +176,8 @@ const LeadsManagerPage = () => {
                   isEdit={false}
                 />
               )}
+              <Confetti ref={confettiRef} />
+              <button onClick={handleClick}>Fire confetti</button>
             </div>
             {/* <div className="flex-grow mx-4  my-2 items-center overflow-y-auto  h-screen  px-300  py-300"> */}
             {/* {viewable === 'Today' && <ExecutiveHomeViewerPage />} *SS/}

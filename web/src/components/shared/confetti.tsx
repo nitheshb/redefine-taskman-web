@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react'
+import { forwardRef, useImperativeHandle, useRef, useCallback } from 'react'
 
 import ReactCanvasConfetti from 'react-canvas-confetti'
 
@@ -11,7 +11,7 @@ const canvasStyles = {
   left: '-50vw',
 }
 
-export default function Confetti() {
+const Confetti = forwardRef((props, ref) => {
   const refAnimationInstance = useRef(null)
 
   const getInstance = useCallback((instance) => {
@@ -56,15 +56,17 @@ export default function Confetti() {
     })
   }, [makeShot])
 
+  useImperativeHandle(ref, () => ({
+    fire,
+  }))
+
   return (
     <>
-      <button
-        className="w-40 h-10 rounded bg-blue-400 hover:bg-blue-600 "
-        onClick={fire}
-      >
-        Shoot Confetti
-      </button>
+      <div>confetti</div>
+
       <ReactCanvasConfetti refConfetti={getInstance} style={canvasStyles} />
     </>
   )
-}
+})
+
+export default Confetti

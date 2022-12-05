@@ -472,42 +472,7 @@ const CostBreakUpPdf = ({
                             </th>
                             <td className="w-[15%] text-[10px] text-right text-gray-700 ">
                               <TextFieldFlat
-                                label=""
-                                className
-                                name="ratePerSqft"
-                                onChange={(e) => {
-                                  // setNewSqftPrice(e.target.value)
-                                  console.log(
-                                    'changed value is',
-                                    d1,
-                                    e.target.value
-                                  )
-                                  formik.setFieldValue(
-                                    'unit_cost_charges',
-                                    e.target.value
-                                  )
-                                  setNewSqftPrice(e.target.value)
-                                  changeOverallCostFun(inx, d1, e.target.value)
-                                  // formik.setFieldValue(
-                                  //   'ratePerSqft',
-                                  //   e.target.value
-                                  // )
-                                  // console.log(
-                                  //   'what is =it',
-                                  //   value.value
-                                  // )
-                                  // formik.setFieldValue(
-                                  //   `${d1?.component?.value}`,
-                                  //   value
-                                  // )
-                                }}
-                                // value={formik.values[`unit_cost_charges`]}
-                                value={d1?.charges?.toLocaleString('en-IN')}
-                                // value={newSqftPrice}
-                                // type="number"
-                              />
-                              <TextFieldFlat
-                                className="hidden"
+                                className="w-[100%] text-[10px] text-right text-gray-800 "
                                 label=""
                                 name={d1?.component?.value}
                                 // onChange={(value) => {
