@@ -8,7 +8,7 @@ const canvasStyles = {
   width: '100vw',
   height: '100%',
   top: 0,
-  left: '-50vw',
+  left: '0vw',
 }
 
 const Confetti = forwardRef((props, ref) => {
