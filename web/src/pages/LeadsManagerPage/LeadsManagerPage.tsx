@@ -177,7 +177,14 @@ const LeadsManagerPage = () => {
                 />
               )}
               <Confetti ref={confettiRef} />
-              <button onClick={handleClick}>Fire confetti</button>
+              <div className="w-full flex flex-row justify-center">
+                <button
+                  className=" w-40 h-12 bg-blue-500 rounded"
+                  onClick={handleClick}
+                >
+                  Fire confetti
+                </button>
+              </div>
             </div>
             {/* <div className="flex-grow mx-4  my-2 items-center overflow-y-auto  h-screen  px-300  py-300"> */}
             {/* {viewable === 'Today' && <ExecutiveHomeViewerPage />} *SS/}
