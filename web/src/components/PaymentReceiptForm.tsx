@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 import { arrayUnion } from 'firebase/firestore'
 import { Form, Formik } from 'formik'
@@ -7,6 +7,7 @@ import * as Yup from 'yup'
 
 import { useParams } from '@redwoodjs/router'
 
+import Confetti from 'src/components/shared/confetti'
 import { paymentMode, statesList } from 'src/constants/projects'
 import {
   addPaymentReceivedEntry,
@@ -36,6 +37,10 @@ const AddPaymentDetailsForm = ({
   const { enqueueSnackbar } = useSnackbar()
   const { uid } = useParams()
   const bankData = {}
+  const confettiRef = useRef(null)
+  const handleClick = () => {
+    confettiRef.current.fire()
+  }
 
   useEffect(() => {
     const unsubscribe = steamBankDetailsList(
@@ -347,9 +352,11 @@ const AddPaymentDetailsForm = ({
                                 </div>
                               </div>
                               <hr className="mt-6 border-b-1 border-blueGray-300" />
+                              <Confetti ref={confettiRef} />
                               <div className="mt-5 text-right md:space-x-3 md:block flex flex-col-reverse mb-6">
                                 <button
                                   className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+                                  onClick={handleClick}
                                   type="button"
                                 >
                                   Receipt Download

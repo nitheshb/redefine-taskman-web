@@ -9,7 +9,6 @@ import MyAttedanceHomeBody from 'src/components/myAttedanceHomeBody'
 import MyLeadsReportHome from 'src/components/myLeadsReportHome'
 import MyPayHomeBody from 'src/components/myPayHomeBody'
 import ProjectsUnitInventory from 'src/components/projectUnitsInventory'
-import Confetti from 'src/components/shared/confetti'
 import TodayLeadsHomePage from 'src/components/TodayLeadsHomePage'
 import { USER_ROLES } from 'src/constants/userRoles'
 import { useAuth } from 'src/context/firebase-auth-context'
@@ -24,10 +23,7 @@ const LeadsManagerPage = () => {
   const [viewable, setViewable] = useState('Today1')
   //confetti
 
-  const confettiRef = useRef(null)
-  const handleClick = () => {
-    confettiRef.current.fire()
-  }
+
 
   //confetti
 
@@ -176,15 +172,7 @@ const LeadsManagerPage = () => {
                   isEdit={false}
                 />
               )}
-              <Confetti ref={confettiRef} />
-              <div className="w-full flex flex-row justify-center">
-                <button
-                  className=" w-40 h-12 bg-blue-500 rounded"
-                  onClick={handleClick}
-                >
-                  Fire confetti
-                </button>
-              </div>
+
             </div>
             {/* <div className="flex-grow mx-4  my-2 items-center overflow-y-auto  h-screen  px-300  py-300"> */}
             {/* {viewable === 'Today' && <ExecutiveHomeViewerPage />} *SS/}
