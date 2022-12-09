@@ -272,6 +272,9 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
                           <th className="text-right text-xs app-color-black pb-3">
                             <span className="mr-10">AMOUNT</span>
                           </th>
+                          <th className="text-right text-xs app-color-black pb-3">
+                            <span className="mr-10">STATUS</span>
+                          </th>
 
                           <th className="text-left text-xs app-color-black pb-3">
                             COMMENTS
@@ -330,7 +333,8 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
                                     {finData?.toAccount?.name}
                                   </span>
                                   <span className="font-normal text-xs app-color-gray-1">
-                                    {finData?.toAccount?.accountNo}
+                                    {/* {finData?.toAccount?.accountNo} */}
+                                    {finData?.towardsBankDocId}
                                   </span>
                                   <span className="font-normal text-xs app-color-gray-1">
                                     {finData?.toAccount?.bankName}
@@ -364,261 +368,14 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
                             </td>
 
                             <td>
-                              <span className="ml-3 font-semibold text-md app-color-gray-1">
+                              <span className="ml-3 font-normal text-md app-color-gray-1">
+                                {finData?.status}
+                              </span>
+                            </td>
+                            <td>
+                              <span className="font-semibold text-sm app-color-black">
                                 NA
                               </span>
-                            </td>
-                            <td>
-                              <svg
-                                className="w-6 h-6 app-color-blue-3"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth="2"
-                                  d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
-                                ></path>
-                              </svg>
-                            </td>
-                          </tr>
-                        ))}
-                        {[
-                          {
-                            fromObj: {
-                              name: 'Vikram Bose',
-                              accountNo: '52346673647',
-                              bankName: 'Andhara Bank',
-                              branch: 'Hsr layout',
-                            },
-                            toAccount: {
-                              name: 'Vertex Apartment',
-                              accountNo: '52346673647',
-                              bankName: 'Andhara Bank',
-                              branch: 'Hsr layout',
-                            },
-                            projDetails: {
-                              projName: 'Vertex Apartments',
-                              projId: 123456,
-                              unitId: 9876,
-                            },
-                            amount: 123000,
-                            mode: 'Neft/Imps',
-                            transactionNo: 12334,
-                            demandNo: 3456,
-                            transactionDate: '12-july-2022',
-                            dated: '12-july-2022',
-                            status: 'inreveiw',
-                          },
-                        ].map((dat, i) => (
-                          <tr
-                            className="app-border-1 border-y border-slate-200 my-2 py-2 h-[120px]"
-                            key={i}
-                          >
-                            <td>
-                              <div className="flex justify-center text-right items-center rounded-md w-8 h-8 app-bg-yellow-2 app-color-yellow-1 text-lg font-semibold">
-                                {i + 1}
-                              </div>
-                              <div
-                                className={`${
-                                  dat?.status === 'cleared'
-                                    ? 'bg-green-700'
-                                    : dat?.status === 'rejected'
-                                    ? 'bg-yellow-600'
-                                    : 'bg-violet-600'
-                                }   w-24 text-xs font-semibold px-3 py-0.5 rounded-br-md rounded-tl-md text-white`}
-                              >
-                                {dat?.status?.toLocaleUpperCase()}
-                              </div>
-                            </td>
-                            <td>
-                              <div className="flex flex-row py-3 ml-4">
-                                <div className="mr-2 w-[3px] rounded-2xl  bg-violet-300 "></div>
-                                <div className="flex flex-col">
-                                  <span className="font-semibold text-sm app-color-black">
-                                    {dat?.fromObj.name || 'Vikram Bose'}
-                                  </span>
-                                  <span className="font-normal text-xs app-color-gray-1">
-                                    {'52346673647'}
-                                  </span>
-                                  <span className="font-normal text-xs app-color-gray-1">
-                                    {dat?.fromObj.bankName}
-                                  </span>
-                                  <span className="font-normal text-xs app-color-gray-1">
-                                    {dat?.fromObj.branch}
-                                  </span>
-                                </div>
-                              </div>
-                            </td>
-                            <td>
-                              <div className="flex flex-row ml-4 py-3">
-                                <div className="mr-2 w-[3px] rounded-2xl bg-violet-300  "></div>
-                                <div className="flex flex-col">
-                                  <span className="font-semibold text-sm app-color-black">
-                                    {dat?.toAccount.name}
-                                  </span>
-                                  <span className="font-normal text-xs app-color-gray-1">
-                                    {dat?.toAccount.accountNo}
-                                  </span>
-                                  <span className="font-normal text-xs app-color-gray-1">
-                                    {dat?.toAccount.bankName}
-                                  </span>
-                                  <span className="font-normal text-xs app-color-gray-1">
-                                    {dat?.toAccount.branch}
-                                  </span>
-                                </div>
-                              </div>
-                            </td>
-                            <td>
-                              <div className="flex flex-row py-3">
-                                {/* <div className="mr-2 w-[3px]  bg-gray-100 "></div> */}
-                                <div className="flex flex-col">
-                                  <span className="font-semibold text-sm app-color-black">
-                                    {dat?.mode}
-                                  </span>
-                                  <span className="font-normal text-xs app-color-gray-1">
-                                    {dat?.transactionNo}
-                                  </span>
-                                  <span className="font-normal text-xs app-color-gray-1">
-                                    {dat?.dated}
-                                  </span>
-                                </div>
-                              </div>
-                            </td>
-                            <td className="text-right">
-                              <span className="text-right font-semibold text-sm app-color-gray-1 mr-10">
-                                Rs {dat?.amount}
-                              </span>
-                            </td>
-
-                            <td>
-                              <span className="ml-3 font-semibold text-md app-color-gray-1">
-                                NA
-                              </span>
-                            </td>
-                            <td>
-                              <svg
-                                className="w-6 h-6 app-color-blue-3"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth="2"
-                                  d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
-                                ></path>
-                              </svg>
-                            </td>
-                          </tr>
-                        ))}
-                        {leadsFetchedData.map((dat, i) => (
-                          <tr
-                            className="app-border-1 border-y border-slate-200 my-2 py-2 h-[120px]"
-                            key={i}
-                            onClick={() => selUserProfileF('Transaction', dat)}
-                          >
-                            <td>
-                              <div className="flex justify-center text-right items-center rounded-md w-8 h-8 app-bg-yellow-2 app-color-yellow-1 text-lg font-semibold">
-                                {i + 1}
-                              </div>
-                              <div
-                                className={`${
-                                  dat?.status === 'cleared'
-                                    ? 'bg-green-700'
-                                    : dat?.status === 'rejected'
-                                    ? 'bg-yellow-600'
-                                    : 'bg-violet-600'
-                                }   w-24 text-xs font-semibold px-3 py-0.5 rounded-br-md rounded-tl-md text-white`}
-                              >
-                                {dat?.status?.toLocaleUpperCase()}
-                              </div>
-                            </td>
-                            <td>
-                              <div className="flex flex-row py-3 ml-4">
-                                <div className="mr-2 w-[3px] rounded-2xl  bg-violet-300 "></div>
-                                <div className="flex flex-col">
-                                  <span className="font-semibold text-sm app-color-black">
-                                    {dat?.fromObj?.name || 'Vikram Bose'}
-                                  </span>
-                                  <span className="font-normal text-xs app-color-gray-1">
-                                    {dat?.fromObj?.accountNo || '52346673647'}
-                                  </span>
-                                  <span className="font-normal text-xs app-color-gray-1">
-                                    {dat?.fromObj?.bankName || 'Andhara Bank'}
-                                  </span>
-                                  <span className="font-normal text-xs app-color-gray-1">
-                                    {dat?.fromObj?.branch || 'Hsr layout'}
-                                  </span>
-                                </div>
-                              </div>
-                            </td>
-                            <td>
-                              <div className="flex flex-row ml-4 py-3">
-                                <div className="mr-2 w-[3px] rounded-2xl bg-violet-300  "></div>
-                                <div className="flex flex-col">
-                                  <span className="font-semibold text-sm app-color-black">
-                                    {dat?.toAccount?.name || 'Vertex Apartment'}
-                                  </span>
-                                  <span className="font-normal text-xs app-color-gray-1">
-                                    {dat?.toAccount?.accountNo || '52346673647'}
-                                  </span>
-                                  <span className="font-normal text-xs app-color-gray-1">
-                                    {dat?.toAccount?.bankName || 'Andhara Bank'}
-                                  </span>
-                                  <span className="font-normal text-xs app-color-gray-1">
-                                    {dat?.toAccount?.branch || 'Hsr layout'}
-                                  </span>
-                                </div>
-                              </div>
-                            </td>
-                            <td>
-                              <div className="flex flex-row py-3">
-                                {/* <div className="mr-2 w-[3px]  bg-gray-100 "></div> */}
-                                <div className="flex flex-col">
-                                  <span className="font-semibold text-sm app-color-black">
-                                    {dat?.mode}
-                                  </span>
-                                  <span className="font-normal text-xs app-color-gray-1">
-                                    {dat?.chequeno}
-                                  </span>
-                                  <span className="font-normal text-xs app-color-gray-1">
-                                    {dat?.dated}
-                                  </span>
-                                </div>
-                              </div>
-                            </td>
-                            <td className="text-right">
-                              <span className="text-right font-semibold text-sm app-color-gray-1 mr-10">
-                                Rs {dat?.amount}
-                              </span>
-                            </td>
-
-                            <td>
-                              <span className="ml-3 font-semibold text-md app-color-gray-1">
-                                NA
-                              </span>
-                            </td>
-                            <td>
-                              <svg
-                                className="w-6 h-6 app-color-blue-3"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth="2"
-                                  d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
-                                ></path>
-                              </svg>
                             </td>
                           </tr>
                         ))}

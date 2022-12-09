@@ -172,6 +172,18 @@ export const getLeadsByDate = async (orgId, data) => {
   console.log('my Array data is delayer 1', citySnapshot)
   return await citySnapshot.docs.map((doc) => doc.data())
 }
+// get crmCustomers list
+
+export const getCRMCustomerByProject = (orgId, snapshot, data, error) => {
+  const { status } = data
+
+  const itemsQuery = query(
+    collection(db, `${orgId}_customers`)
+    // where('status', 'in', status)
+  )
+  console.log('hello ', status, itemsQuery)
+  return onSnapshot(itemsQuery, snapshot, error)
+}
 // get finance transactions
 export const getFinanceTransactionsByStatus = (
   orgId,
@@ -188,7 +200,18 @@ export const getFinanceTransactionsByStatus = (
   console.log('hello ', status, itemsQuery)
   return onSnapshot(itemsQuery, snapshot, error)
 }
-// get finance transactions
+// get finance transactions of Unit
+export const getFinanceForUnit = (orgId, snapshot, data, error) => {
+  const { unitId } = data
+
+  const itemsQuery = query(
+    collection(db, `${orgId}_fincance`),
+    where('unitId', '==', unitId)
+  )
+  console.log('hello ', unitId, itemsQuery)
+  return onSnapshot(itemsQuery, snapshot, error)
+}
+// get unit details Matching to status
 export const getCrmUnitsByStatus = (orgId, snapshot, data, error) => {
   const { status } = data
 
@@ -740,7 +763,7 @@ export const addCustomer = async (
   enqueueSnackbar,
   resetForm
 ) => {
-  await addDoc(collection(db, `${orgId}_customer`), data)
+  await addDoc(collection(db, `${orgId}_customers`), data)
   enqueueSnackbar('Customer Details added successfully', {
     variant: 'success',
   })
@@ -1029,7 +1052,7 @@ export const addPaymentReceivedEntry = async (
     // const ref = doc(db, `${orgId}_fincance', unitDocId)
     const x = await addDoc(collection(db, `${orgId}_fincance`), updated)
 
-    enqueueSnackbar('Customer added successfully', {
+    enqueueSnackbar('Payment Captured..!', {
       variant: 'success',
     })
     return x.id
@@ -1046,7 +1069,7 @@ export const createBookedCustomer = async (
   by,
   enqueueSnackbar
 ) => {
-  console.log('unite data is', unitDocId)
+  console.log('unite data is', unitDocId, element)
   try {
     const updated = {
       ...element,
@@ -1595,7 +1618,7 @@ export const updateLeadCustomerDetailsTo = async (
     console.log('customer details updation failed', error, {
       ...data,
     })
-    enqueueSnackbar('Customer Details updation failed', {
+    enqueueSnackbar('Customer Details updation failed BBB', {
       variant: 'error',
     })
   }
@@ -1623,7 +1646,7 @@ export const updateLeadCostSheetDetailsTo = async (
     console.log('Filed updated Cost sheet', error, {
       ...data,
     })
-    enqueueSnackbar('Customer Details updation failed', {
+    enqueueSnackbar('Failed to update Cost sheet', {
       variant: 'error',
     })
   }
@@ -1659,7 +1682,7 @@ export const updateUnitAsBooked = async (
     console.log('Filed updated Cost sheet', error, {
       ...data,
     })
-    enqueueSnackbar('Customer Details updation failed', {
+    enqueueSnackbar('Cost sheet  updation failed', {
       variant: 'error',
     })
   }

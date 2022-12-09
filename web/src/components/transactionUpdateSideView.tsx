@@ -681,7 +681,7 @@ export default function TransactionUpdateSideView({
               Amount
             </div>
             <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-              Rs 1,20,000
+              Rs {transactionData?.amount?.toLocaleString('en-IN')}
             </div>
           </section>
         </section>
@@ -692,11 +692,11 @@ export default function TransactionUpdateSideView({
                 From
               </div>
               <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                Imps
+                {transactionData?.mode}
               </div>
             </section>
             <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-              data
+              {transactionData?.landlordBankDocId}
             </div>
           </section>
           <section className="flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md ">
@@ -705,11 +705,11 @@ export default function TransactionUpdateSideView({
                 To
               </div>
               <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                date
+                {transactionData?.dated}
               </div>
             </section>
             <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-              data
+              {transactionData?.towardsBankDocId}
             </div>
           </section>
         </div>
@@ -717,10 +717,10 @@ export default function TransactionUpdateSideView({
           <section className="mr-2 flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md ">
             <section className="flex flex-row justify-between mb-1">
               <div className="font-md text-xs text-gray-500  tracking-wide">
-                Date
+                Created
               </div>
               <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                31/11/2022
+                {transactionData?.created}
               </div>
             </section>
             <section className="flex flex-row justify-between mb-1">
@@ -728,7 +728,7 @@ export default function TransactionUpdateSideView({
                 Ref No
               </div>
               <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                00022344x45
+                {transactionData?.chequeno}
               </div>
             </section>
             <section className="flex flex-row  justify-between mb-1">
@@ -736,7 +736,7 @@ export default function TransactionUpdateSideView({
                 By
               </div>
               <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                date
+                {transactionData?.paidTo}
               </div>
             </section>
           </section>

@@ -18,6 +18,7 @@ import CrmUnitSideView from '../crmUnitSideView'
 import CustomerProfileSideView from '../customerProfileSideView'
 import DialogFormBody from '../DialogFormBody/DialogFormBody'
 import InventoryViewSideForm from '../DialogFormBody/InventoryViewSideView'
+import CaptureUnitPayment from '../FinanceModule/CapturePayment'
 import LegalDocsUplaodHome from '../LeadUplodCsv/Legal_Docs_upload'
 import LeadsDropHomes from '../LeadUplodCsv/uploadHome'
 import LegalDocsViewHome from '../LegalModule/viewLegalDocument'
@@ -48,7 +49,10 @@ const SiderForm = ({
   leadDetailsObj,
   projectsList,
   viewLegalDocData,
+  viewUnitConstData,
   transactionData,
+  selCustomerPayload,
+  selUnitDetails,
 }) => {
   // dont write too many here
   //  this is for customerProfileSideView
@@ -187,12 +191,12 @@ const SiderForm = ({
                   <ConstructUnitsDetails
                     title={title}
                     dialogOpen={setOpen}
-                    pId={pId}
-                    source={'planDiagram'}
+
                     myPhase={phaseDetails}
                     myBlock={myBlock}
                     projectsList={projectsList}
-                    viewLegalDocData={viewLegalDocData}
+                    projectDetails={projectDetails}
+                    viewUnitConstData={viewUnitConstData}
                   />
                 )}
                 {title === 'View Unit' && (
@@ -334,7 +338,11 @@ const SiderForm = ({
                     unitsViewMode={unitsViewMode}
                     setUnitsViewMode={setUnitsViewMode}
                     transactionData={transactionData}
+                    selCustomerPayload={selCustomerPayload}
                   />
+                )}
+                {title === 'capturePayment' && (
+                  <CaptureUnitPayment selUnitDetails={selUnitDetails} />
                 )}
               </div>
             </Transition.Child>

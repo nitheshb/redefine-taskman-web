@@ -1,7 +1,7 @@
 import { useState, useEffect, createRef, useRef } from 'react'
 
+import { Timestamp } from '@firebase/firestore'
 import { PDFExport } from '@progress/kendo-react-pdf'
-import { Timestamp } from 'firebase/firestore'
 import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 
@@ -9,19 +9,19 @@ import { useAuth } from 'src/context/firebase-auth-context'
 
 import { TextFieldFlat } from './formFields/TextFieldFlatType'
 
-const CostBreakUpPdf = ({
+const CostBreakUpPdfConstruct = ({
   projectDetails,
   csMode,
   pdfExportComponent,
   selPhaseObj,
   selUnitDetails,
   leadDetailsObj1,
-  setNewPlotCsObj,
-  newPlotCsObj,
+  setNewConstructCsObj,
+  newConstructCsObj,
   costSheetA,
   setCostSheetA,
-  setNewPS,
-  newPlotPS,
+  setNewConstructPS,
+  newConstructPS,
 }) => {
   const { user } = useAuth()
   const ref = createRef()
@@ -44,8 +44,8 @@ const CostBreakUpPdf = ({
   }, [costSheetA, selPhaseObj])
 
   useEffect(() => {
-    setNewPlotCsObj(costSheetA)
-    console.log('coster is ', costSheetA, newPlotCsObj)
+    setNewConstructCsObj(costSheetA)
+    console.log('coster is ', costSheetA, newConstructCsObj)
   }, [newSqftPrice])
 
   useEffect(() => {
@@ -202,7 +202,7 @@ const CostBreakUpPdf = ({
             value: 'Bescom_Sewage_Charges',
             label: 'Bescom & Sewage Charges ',
           },
-          others: selUnitDetails?.PLC,
+          others: selUnitDetails?.PLC || 200,
           charges: Number.isFinite(y) ? y : selUnitDetails?.PLC || 200,
           TotalSaleValue: Math.round(
             selUnitDetails?.builtup_area * (selUnitDetails?.PLC || 200)
@@ -236,7 +236,7 @@ const CostBreakUpPdf = ({
             value: 'clubhouse',
             label: 'Club House ',
           },
-          others: selUnitDetails?.PLC,
+          others: selUnitDetails?.PLC || 200,
           charges: 0,
           TotalSaleValue: 354000,
           // charges: y,
@@ -310,7 +310,7 @@ const CostBreakUpPdf = ({
         return z
       }
     })
-    setNewPS(newPs)
+    setNewConstructPS(newPs)
   }
 
   const initialState = initialValuesA
@@ -695,7 +695,7 @@ const CostBreakUpPdf = ({
                       </thead>
 
                       <tbody>
-                        {newPlotPS?.map((d1, inx) => (
+                        {newConstructPS?.map((d1, inx) => (
                           <tr
                             key={inx}
                             className="border-b-[0.05px] border-gray-300"
@@ -756,4 +756,4 @@ const CostBreakUpPdf = ({
   )
 }
 
-export default CostBreakUpPdf
+export default CostBreakUpPdfConstruct

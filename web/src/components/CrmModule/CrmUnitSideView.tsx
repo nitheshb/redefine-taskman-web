@@ -50,6 +50,7 @@ import {
   getCustomerDocs,
   getAllProjects,
   updateLeadProject,
+  getFinanceForUnit,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import { storage } from 'src/context/firebaseConfig'
@@ -72,6 +73,8 @@ import Loader from './Loader/Loader'
 import AddBookingForm from './bookingForm'
 
 import { useSnackbar } from 'notistack'
+
+import SiderForm from '../SiderForm/SiderForm'
 
 // interface iToastInfo {
 //   open: boolean
@@ -134,6 +137,7 @@ export default function UnitSideViewCRM({
   setUnitsViewMode,
   transactionData,
   customerDetails,
+  selCustomerPayload,
 }) {
   const { user } = useAuth()
   const { enqueueSnackbar } = useSnackbar()
@@ -143,7 +147,7 @@ export default function UnitSideViewCRM({
   const [usersList, setusersList] = useState([])
 
   // const [leadStatus, setLeadStatus] = useState([])
-  const [selFeature, setFeature] = useState('notes')
+  const [selFeature, setFeature] = useState('summary')
   const [tempLeadStatus, setLeadStatus] = useState('')
   const [assignerName, setAssignerName] = useState('')
   const [assignedTo, setAssignedTo] = useState('')
@@ -151,7 +155,7 @@ export default function UnitSideViewCRM({
 
   const [leadSchFetchedData, setLeadsFetchedSchData] = useState([])
   const [leadNotesFetchedData, setLeadsFetchedNotesData] = useState([])
-  const [leadAttachFetchedData, setLeadsFetchedAttachData] = useState([])
+  const [unitTransactionsA, setUnitTransactionsA] = useState([])
   const [leadSchFilteredData, setLeadsFilteredSchData] = useState([])
   const [takTitle, setTakTitle] = useState('')
   const [takNotes, setNotesTitle] = useState('')
@@ -161,6 +165,7 @@ export default function UnitSideViewCRM({
   const [filterData, setFilterData] = useState([])
   const [docsList, setDocsList] = useState([])
   const [progress, setProgress] = useState(0)
+  const [openCapturePayment, setOpenCapturePayment] = useState(false)
 
   const d = new window.Date()
   const [value, setValue] = useState(d)
@@ -179,7 +184,7 @@ export default function UnitSideViewCRM({
   const [attach, setAttach] = useState(false)
   const [loader, setLoader] = useState(false)
   const [projectList, setprojectList] = useState([])
-  const [financeMode, setFinanceMode] = useState('payments')
+  const [financeMode, setFinanceMode] = useState('schedule')
 
   const [selProjectIs, setSelProjectIs] = useState({
     projectName: '',
@@ -210,6 +215,9 @@ export default function UnitSideViewCRM({
     fromObj,
     toAccount,
   } = customerDetails
+
+  const { assets } = selCustomerPayload
+  let totalIs = 0
 
   useEffect(() => {
     const unsubscribe = steamUsersListByRole(
@@ -353,6 +361,33 @@ export default function UnitSideViewCRM({
       (error) => setfetchedUsersList([])
     )
 
+    return unsubscribe
+  }
+  useEffect(() => {
+    getAllTransactionsUnit()
+  }, [])
+
+  const getAllTransactionsUnit = () => {
+    console.log('transactions id is ', selCustomerPayload?.uid)
+    const unsubscribe = getFinanceForUnit(
+      orgId,
+      async (querySnapshot) => {
+        const transactionsListRaw = querySnapshot.docs.map((docSnapshot) => {
+          const x = docSnapshot.data()
+          x.id = docSnapshot.id
+          return x
+        })
+        // setBoardData
+        console.log('my Array data is ', transactionsListRaw)
+
+        await setUnitTransactionsA(transactionsListRaw)
+        await console.log('my Array data is set it')
+      },
+      {
+        unitId: selCustomerPayload?.uid,
+      },
+      () => setUnitTransactionsA([])
+    )
     return unsubscribe
   }
   useEffect(() => {
@@ -556,9 +591,8 @@ export default function UnitSideViewCRM({
     return time.getHours() > 12 ? 'text-success' : 'text-error'
   }
 
-  const setTitleFun = (e) => {
-    console.log('title value is', e.target.value)
-    setTakTitle(e.target.value)
+  const openPaymentFun = () => {
+    setOpenCapturePayment(true)
   }
   const doneFun = (data) => {
     console.log('clicked schedule is', data)
@@ -643,17 +677,32 @@ export default function UnitSideViewCRM({
       className={`bg-white   h-screen    ${openUserProfile ? 'hidden' : ''} `}
     >
       <div className="rounded-t bg-[#F1F5F9] mb-0 px-3 pt-2">
-        <div className="flex flex-col justify-between">
-          <p className="text-md font-bold tracking-tight uppercase font-body my-[2px]  ml-2">
-            UNIT-101, PHASE-I, SUBHA ECOSTONE
-          </p>
-          <p className="text-xs tracking-tight uppercase font-body my-[2px] ml-2">
-            Mr.Somit Mukerjee & Mrs. Sonali Banejee
-          </p>
-          <p className="text-xs tracking-tight  font-body my-[2px] ml-2">
-            <span className="">8971610977</span>
-            <span className="ml-2">somitm@gmail.com</span>
-          </p>
+        <div className="flex flex-row justify-between">
+          <div className="flex flex-col justify-between">
+            <p className="text-md font-bold tracking-tight uppercase font-body my-[2px]  ml-2">
+              {selCustomerPayload?.[`${assets[0]}_unitDetails`]?.unit_no}
+              ,PHASE-I,
+              {selCustomerPayload?.projectName}
+            </p>
+            <p className="text-xs tracking-tight uppercase font-body my-[2px] ml-2">
+              {selCustomerPayload?.customerName1} &{' '}
+              {selCustomerPayload?.secondaryCustomerDetailsObj?.customerName2}
+            </p>
+            <p className="text-xs tracking-tight  font-body my-[2px] ml-2">
+              <span className="">{selCustomerPayload?.phoneNo1}</span>
+              <span className="ml-2">{selCustomerPayload?.email1}</span>
+            </p>
+          </div>
+          <div className="text-center items-center mr-2 mt-3">
+            <div
+              className="text-center items-center align-middle text-blue-500 text-xs cursor-pointer hover:underline"
+              onClickCapture={() => {
+                openPaymentFun()
+              }}
+            >
+              CAPTURE PAYMENT
+            </div>
+          </div>
         </div>
         <>
           <div className="">
@@ -1151,7 +1200,7 @@ export default function UnitSideViewCRM({
                     Unit No
                   </div>
                   <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {/* {data?.unitDetail?.unit_no} */}
+                    {selCustomerPayload?.[`${assets[0]}_unitDetails`]?.unit_no}
                   </div>
                 </section>
                 <section className="flex flow-row justify-between mb-1">
@@ -1162,7 +1211,9 @@ export default function UnitSideViewCRM({
                     </span>
                   </div>
                   <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {/* {data?.unitDetail?.builtup_area?.toLocaleString('en-IN')} */}
+                    {selCustomerPayload?.[
+                      `${assets[0]}_unitDetails`
+                    ]?.builtup_area?.toLocaleString('en-IN')}
                   </div>
                 </section>
                 <section className="flex flow-row justify-between mb-1">
@@ -1170,7 +1221,7 @@ export default function UnitSideViewCRM({
                     Facing
                   </div>
                   <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {/* {data?.unitDetail?.facing} */}
+                    {selCustomerPayload?.[`${assets[0]}_unitDetails`]?.facing}
                   </div>
                 </section>
                 <section className="flex flow-row justify-between mb-1">
@@ -1178,7 +1229,9 @@ export default function UnitSideViewCRM({
                     BUA
                   </div>
                   <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {/* {data?.unitDetail?.builtup_area?.toLocaleString('en-IN')} */}
+                    {selCustomerPayload?.[
+                      `${assets[0]}_unitDetails`
+                    ].builtup_area?.toLocaleString('en-IN')}
                   </div>
                 </section>
               </section>
@@ -1188,7 +1241,9 @@ export default function UnitSideViewCRM({
                     East
                   </div>
                   <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {/* {data?.unitDetail?.east?.toLocaleString('en-IN')} */}
+                    {selCustomerPayload?.[
+                      `${assets[0]}_unitDetails`
+                    ].east?.toLocaleString('en-IN')}
                   </div>
                 </section>
                 <section className="flex flow-row justify-between mb-1">
@@ -1196,7 +1251,9 @@ export default function UnitSideViewCRM({
                     West
                   </div>
                   <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {/* {data?.unitDetail?.west?.toLocaleString('en-IN')} */}
+                    {selCustomerPayload?.[
+                      `${assets[0]}_unitDetails`
+                    ]?.west?.toLocaleString('en-IN')}
                   </div>
                 </section>
                 <section className="flex flow-row justify-between mb-1">
@@ -1204,7 +1261,9 @@ export default function UnitSideViewCRM({
                     South
                   </div>
                   <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {/* {data?.unitDetail?.south?.toLocaleString('en-IN')} */}
+                    {selCustomerPayload?.[
+                      `${assets[0]}_unitDetails`
+                    ]?.south?.toLocaleString('en-IN')}
                   </div>
                 </section>
                 <section className="flex flow-row justify-between mb-1">
@@ -1212,7 +1271,9 @@ export default function UnitSideViewCRM({
                     North
                   </div>
                   <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {/* {data?.unitDetail?.north?.toLocaleString('en-IN')} */}
+                    {selCustomerPayload?.[
+                      `${assets[0]}_unitDetails`
+                    ]?.north?.toLocaleString('en-IN')}
                   </div>
                 </section>
               </section>
@@ -1226,6 +1287,9 @@ export default function UnitSideViewCRM({
                       data?.unitDetail?.builtup_area *
                       data?.unitDetail?.rate_per_sqft
                     )?.toLocaleString('en-IN')} */}
+                    {selCustomerPayload?.[
+                      `${assets[0]}_unitDetails`
+                    ]?.rate_per_sqft?.toLocaleString('en-IN')}
                   </div>
                 </section>
                 <section className="flex flow-row justify-between mb-1">
@@ -1233,7 +1297,9 @@ export default function UnitSideViewCRM({
                     PLC
                   </div>
                   <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {/* {data?.unitDetail?.builtup_area?.toLocaleString('en-IN')} */}
+                    {selCustomerPayload?.[
+                      `${assets[0]}_unitDetails`
+                    ]?.builtup_area?.toLocaleString('en-IN')}
                   </div>
                 </section>
                 <section className="flex flow-row justify-between mb-1">
@@ -1241,7 +1307,7 @@ export default function UnitSideViewCRM({
                     Total
                   </div>
                   <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {/* {data?.unitDetail?.facing} */}
+                    {selCustomerPayload?.[`${assets[0]}_unitDetails`]?.facing}
                   </div>
                 </section>
                 <section className="flex flow-row justify-between mb-1">
@@ -1249,7 +1315,7 @@ export default function UnitSideViewCRM({
                     KathaId
                   </div>
                   <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {/* {data?.unitDetail?.kathaId} */}
+                    {selCustomerPayload?.[`${assets[0]}_unitDetails`]?.kathaId}
                   </div>
                 </section>
               </section>
@@ -1268,7 +1334,7 @@ export default function UnitSideViewCRM({
                 role="tablist"
               >
                 {[
-                  { lab: 'Payment Schedule', val: 'demands' },
+                  { lab: 'Payment Schedule', val: 'schedule' },
                   {
                     lab: 'Transactions',
                     val: 'transactions',
@@ -1309,198 +1375,245 @@ export default function UnitSideViewCRM({
                 </div>
               </section>
             </div>
-            <section className="flex flex-col bg-[#F6F7FF] p-3 mt-3 border border-[#e5e7f8] rounded-md ">
-              <section className="flex flow-row justify-between mb-1">
-                <div className="font-md text-xs text-gray-500  tracking-wide">
-                  Out Standing Balance
-                </div>
-                <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                  Rs 1,00,000
-                </div>
-              </section>
-              <section className="flex flow-row justify-between mb-1">
-                <div className="font-md text-xs text-gray-500  tracking-wide">
-                  Total Amount
-                </div>
-                <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                  Rs 1,20,001
-                </div>
-              </section>
-            </section>
-
-            <div className="mt-2">
-              <section className="mr-2 flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md ">
-                <div>
-                  <h1 className="text-bodyLato text-left text-gray-800 font-semibold text-[12px] mb-2">
-                    Plot Sales Value Information (A)
-                  </h1>
-                  <table className="w-[100%]">
-                    <thead>
-                      <tr className=" h-6 border-b-[0.2px] border-gray-300 w-[100%]">
-                        <th className="min-w-[35%] text-[10px] text-left text-[#8993a4] font-bodyLato tracking-wide uppercase">
-                          Particulars
-                        </th>
-                        <th className="w-[15%] text-[10px] text-right text-[#8993a4] font-bodyLato tracking-wide uppercase">
-                          Plot Rate/Sqft
-                        </th>
-                        <th className="w-[15%] text-[10px] text-right text-[#8993a4] font-bodyLato tracking-wide uppercase">
-                          Sale Value
-                        </th>
-                        <th className="w-[15%] text-[10px] text-right text-[#8993a4] font-bodyLato tracking-wide uppercase">
-                          GST
-                        </th>
-                        <th className="w-[15%] text-[10px] text-right text-[#8993a4] font-bodyLato tracking-wide uppercase ">
-                          Total
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {' '}
-                      {[
-                        { component: { label: 'Unit Cost' } },
-                        { component: { label: 'PLC' } },
-                      ]?.map((d1, inx) => (
-                        <tr
-                          key={inx}
-                          className="border-b-[0.05px] border-gray-300"
-                        >
-                          <th className="w-[40%] text-[10px] text-left text-gray-700  ">
-                            {d1?.component?.label}
-                          </th>
-                          <td className="w-[15%] text-[10px] text-right text-gray-700 "></td>
-                          <td className="w-[15%] text-[10px] text-right text-gray-700 ">
-                            {d1?.TotalSaleValue?.toLocaleString('en-IN')}
-                          </td>
-                          <td className="w-[15%] text-[10px] text-right text-gray-700 ">
-                            {d1?.gst?.value?.toLocaleString('en-IN')}
-                          </td>
-                          <td className="w-[15%] text-[10px] text-right text-gray-800 ">
-                            {d1?.TotalNetSaleValueGsT?.toLocaleString('en-IN')}
-                          </td>
-                        </tr>
-                      ))}
-                      <tr className="border-b-[0.05px] border-gray-300">
-                        <th className="w-[40%] text-[10px] text-left text-gray-800 ">
-                          Total (A)
-                        </th>
-                        <td className="w-[15%] font-bold text-[10px] text-right text-gray-800 "></td>
-                        <td className="w-[15%] font-bold  text-[10px] text-right text-gray-800 "></td>
-                        <td className="w-[15%] font-bold  text-[10px] text-right text-gray-800 "></td>
-                        <td className="w-[15%] font-bold  text-[10px] text-right text-gray-800 "></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <h1 className=" mt-10 mb-1 text-bodyLato text-left text-gray-800 font-semibold text-[12px] mb-1">
-                    Other Charges (B)
-                  </h1>
-                  <table className="w-full">
-                    <thead>
-                      {' '}
-                      <tr className=" h-6  border-b-[0.2px] border-gray-300">
-                        <th className="w-[40%] text-[10px] text-left text-gray-700 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
-                          Particulars
-                        </th>
-                        <th className="w-[45%] text-[10px] text-right text-gray-700 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
-                          Timeline
-                        </th>
-                        <th className="w-[15%] text-[10px] text-right text-gray-700  text-[#8993a4] font-bodyLato tracking-wide uppercase">
-                          Total Inc GST
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {[
-                        { component: { label: 'Unit Cost' } },
-                        { component: { label: 'PLC' } },
-                      ].map((d1, inx) => (
-                        <tr
-                          key={inx}
-                          className="border-b-[0.05px] border-gray-300"
-                        >
-                          <th className=" text-[10px] text-left text-gray-700 ">
-                            {d1?.component?.label} (0.05% Plor Sale value)
-                          </th>
-                          <td className="text-[10px] text-right text-gray-700 ">
-                            {d1?.description}
-                          </td>
-                          <td className="text-[10px] text-right text-gray-700 "></td>
-                        </tr>
-                      ))}
-                      <tr className="border-b-[0.05px] border-gray-300">
-                        <th className="text-[10px] text-left text-gray-700 ">
-                          Total (B)
-                        </th>
-                        <td className="text-[10px] text-right text-gray-400 "></td>
-                        <td className="text-[10px] text-right text-gray-800 font-bold "></td>
-                      </tr>
-                    </tbody>
-                  </table>
-
-                  <section className="flex flex-row justify-between  mt-4 rounded">
-                    <h1 className=" mt-4 text-bodyLato text-left text-gray-800 font-semibold text-[12px] mb-2">
-                      Total Plot Sale Value(A+B)
-                    </h1>
-                    <section className=" mt-4 text-green-600  "></section>
+            {financeMode === 'schedule' && (
+              <>
+                <section className="flex flex-col bg-[#F6F7FF] p-3 mt-3 border border-[#e5e7f8] rounded-md ">
+                  <section className="flex flow-row justify-between mb-1">
+                    <div className="font-md text-xs text-gray-500  tracking-wide">
+                      Out Standing Balance
+                    </div>
+                    <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
+                      Rs{' '}
+                      {selCustomerPayload?.[
+                        `${assets[0]}_T_balance`
+                      ]?.toLocaleString('en-IN')}
+                    </div>
                   </section>
-                  <h1 className=" mt-10 text-bodyLato text-left text-gray-800 font-semibold text-[12px] mb-2">
-                    Plot - Payment Schedule
-                  </h1>
-                  <table className="w-full">
-                    <thead>
-                      {' '}
-                      <tr className=" h-6 border-b-[0.2px] border-gray-300">
-                        <th className="w-[30%] text-[10px] text-left text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
-                          Particulars
-                        </th>
-                        <th className="w-[15%] text-[10px] text-right text-gray-400  text-[#8993a4] font-bodyLato tracking-wide uppercase">
-                          Payment Timeline
-                        </th>
-                        <th className="w-[15%] text-[10px] text-right text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
-                          Total inc GST
-                        </th>
-                        <th className="w-[15%] text-[10px] text-right text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
-                          Eligible
-                        </th>
-                        <th className="w-[15%] text-[10px] text-right text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
-                          Amount Received
-                        </th>
-                        <th className="w-[15%] text-[10px] text-right text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
-                          Status
-                        </th>
-                      </tr>
-                    </thead>
+                  <section className="flex flow-row justify-between mb-1">
+                    <div className="font-md text-xs text-gray-500  tracking-wide">
+                      Total Amount
+                    </div>
+                    <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
+                      Rs{' '}
+                      {selCustomerPayload?.[
+                        `${assets[0]}_T_balance`
+                      ]?.toLocaleString('en-IN')}
+                    </div>
+                  </section>
+                  <section className="flex flow-row justify-between mb-1">
+                    <div className="font-md text-xs text-gray-500  tracking-wide">
+                      Total Review
+                    </div>
+                    <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
+                      Rs{' '}
+                      {selCustomerPayload?.[
+                        `${assets[0]}_T_review`
+                      ]?.toLocaleString('en-IN')}
+                    </div>
+                  </section>
+                  <section className="flex flow-row justify-between mb-1">
+                    <div className="font-md text-xs text-gray-500  tracking-wide">
+                      Total Elgible
+                    </div>
+                    <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
+                      Rs{' '}
+                      {selCustomerPayload?.[
+                        `${assets[0]}_T_elgible`
+                      ]?.toLocaleString('en-IN')}
+                    </div>
+                  </section>
+                </section>
 
-                    <tbody>
-                      {[
-                        { component: { label: 'Unit Cost' } },
-                        { component: { label: 'PLC' } },
-                      ]?.map((d1, inx) => (
-                        <tr
-                          key={inx}
-                          className="border-b-[0.05px] border-gray-300"
-                        >
-                          <th className=" text-[10px] text-left text-gray-700 ">
-                            {d1?.stage?.label}
-                          </th>
-                          <td className="text-[10px] text-right text-gray-700 ">
-                            {d1?.description}
-                          </td>
+                <div className="mt-2">
+                  <section className="mr-2 flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md ">
+                    <div>
+                      <h1 className=" text-bodyLato text-left text-gray-800 font-semibold text-[12px] mb-2">
+                        Plot - Payment Schedule
+                      </h1>
+                      <table className="w-full mb-10">
+                        <thead>
+                          {' '}
+                          <tr className=" h-6 border-b-[0.2px] border-gray-300">
+                            <th className="w-[30%] text-[10px] text-left text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
+                              Particulars
+                            </th>
+                            <th className="w-[15%] text-[10px] text-right text-gray-400  text-[#8993a4] font-bodyLato tracking-wide uppercase">
+                              Payment Timeline
+                            </th>
+                            <th className="w-[15%] text-[10px] text-right text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
+                              Total inc GST
+                            </th>
+                            <th className="w-[15%] text-[10px] text-right text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
+                              Eligible
+                            </th>
+                            <th className="w-[15%] text-[10px] text-right text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
+                              Amount Received
+                            </th>
+                            <th className="w-[15%] text-[10px] text-right text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
+                              Status
+                            </th>
+                          </tr>
+                        </thead>
 
-                          <td className="text-[10px] text-right text-gray-800 "></td>
-                        </tr>
-                      ))}
+                        <tbody>
+                          {selCustomerPayload?.[`${assets[0]}_fullPs`]?.map(
+                            (d1, inx) => {
+                              totalIs =
+                                selCustomerPayload?.[`${assets[0]}_T_review`] -
+                                d1?.value
+                              return (
+                                <tr
+                                  key={inx}
+                                  className="border-b-[0.05px] border-gray-300"
+                                >
+                                  <th className=" text-[10px] text-left text-gray-700 ">
+                                    {d1?.stage?.label}
+                                  </th>
+                                  <td className="text-[10px] text-right text-gray-700 ">
+                                    {d1?.description}
+                                  </td>
 
-                      <tr className="border-b-[0.05px] border-gray-300">
-                        <th className="text-[10px] text-left text-gray-800 ">
-                          Plot Value Total Rs.:
-                        </th>
-                        <td className="text-[10px] text-right text-gray-400 "></td>
-                        <th className="text-[10px] text-right text-gray-800 "></th>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                {/* <section className="flex flex-row justify-between mb-1">
+                                  <td className="text-[10px] text-right text-gray-800 ">
+                                    {d1?.value?.toLocaleString('en-IN')}
+                                  </td>
+                                  <td className="text-[10px] text-right text-gray-800 ">
+                                    {d1?.elgible ? 'Yes' : 'No'}
+                                  </td>
+                                  <td className="text-[10px] text-right text-gray-800 ">
+                                    {totalIs >
+                                    d1?.value?.toLocaleString('en-IN')
+                                      ? d1?.value?.toLocaleString('en-IN')
+                                      : 0}
+                                  </td>
+                                </tr>
+                              )
+                            }
+                          )}
+
+                          <tr className="border-b-[0.05px] border-gray-300">
+                            <th className="text-[10px] text-left text-gray-800 ">
+                              Plot Value Total Rs.:
+                            </th>
+                            <td className="text-[10px] text-right text-gray-400 "></td>
+                            <th className="text-[10px] text-right text-gray-800 "></th>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <h1 className="text-bodyLato text-left text-gray-800 font-semibold text-[12px] mb-2">
+                        Plot Sales Value Information (A)
+                      </h1>
+                      <table className="w-[100%]">
+                        <thead>
+                          <tr className=" h-6 border-b-[0.2px] border-gray-300 w-[100%]">
+                            <th className="min-w-[35%] text-[10px] text-left text-[#8993a4] font-bodyLato tracking-wide uppercase">
+                              Particulars
+                            </th>
+                            <th className="w-[15%] text-[10px] text-right text-[#8993a4] font-bodyLato tracking-wide uppercase">
+                              Plot Rate/Sqft
+                            </th>
+                            <th className="w-[15%] text-[10px] text-right text-[#8993a4] font-bodyLato tracking-wide uppercase">
+                              Sale Value
+                            </th>
+                            <th className="w-[15%] text-[10px] text-right text-[#8993a4] font-bodyLato tracking-wide uppercase">
+                              GST
+                            </th>
+                            <th className="w-[15%] text-[10px] text-right text-[#8993a4] font-bodyLato tracking-wide uppercase ">
+                              Total
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {' '}
+                          {[
+                            { component: { label: 'Unit Cost' } },
+                            { component: { label: 'PLC' } },
+                          ]?.map((d1, inx) => (
+                            <tr
+                              key={inx}
+                              className="border-b-[0.05px] border-gray-300"
+                            >
+                              <th className="w-[40%] text-[10px] text-left text-gray-700  ">
+                                {d1?.component?.label}
+                              </th>
+                              <td className="w-[15%] text-[10px] text-right text-gray-700 "></td>
+                              <td className="w-[15%] text-[10px] text-right text-gray-700 ">
+                                {d1?.TotalSaleValue?.toLocaleString('en-IN')}
+                              </td>
+                              <td className="w-[15%] text-[10px] text-right text-gray-700 ">
+                                {d1?.gst?.value?.toLocaleString('en-IN')}
+                              </td>
+                              <td className="w-[15%] text-[10px] text-right text-gray-800 ">
+                                {d1?.TotalNetSaleValueGsT?.toLocaleString(
+                                  'en-IN'
+                                )}
+                              </td>
+                            </tr>
+                          ))}
+                          <tr className="border-b-[0.05px] border-gray-300">
+                            <th className="w-[40%] text-[10px] text-left text-gray-800 ">
+                              Total (A)
+                            </th>
+                            <td className="w-[15%] font-bold text-[10px] text-right text-gray-800 "></td>
+                            <td className="w-[15%] font-bold  text-[10px] text-right text-gray-800 "></td>
+                            <td className="w-[15%] font-bold  text-[10px] text-right text-gray-800 "></td>
+                            <td className="w-[15%] font-bold  text-[10px] text-right text-gray-800 "></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <h1 className=" mt-10 mb-1 text-bodyLato text-left text-gray-800 font-semibold text-[12px] mb-1">
+                        Other Charges (B)
+                      </h1>
+                      <table className="w-full">
+                        <thead>
+                          {' '}
+                          <tr className=" h-6  border-b-[0.2px] border-gray-300">
+                            <th className="w-[40%] text-[10px] text-left text-gray-700 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
+                              Particulars
+                            </th>
+                            <th className="w-[45%] text-[10px] text-right text-gray-700 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
+                              Timeline
+                            </th>
+                            <th className="w-[15%] text-[10px] text-right text-gray-700  text-[#8993a4] font-bodyLato tracking-wide uppercase">
+                              Total Inc GST
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {[
+                            { component: { label: 'Unit Cost' } },
+                            { component: { label: 'PLC' } },
+                          ].map((d1, inx) => (
+                            <tr
+                              key={inx}
+                              className="border-b-[0.05px] border-gray-300"
+                            >
+                              <th className=" text-[10px] text-left text-gray-700 ">
+                                {d1?.component?.label} (0.05% Plor Sale value)
+                              </th>
+                              <td className="text-[10px] text-right text-gray-700 ">
+                                {d1?.description}
+                              </td>
+                              <td className="text-[10px] text-right text-gray-700 "></td>
+                            </tr>
+                          ))}
+                          <tr className="border-b-[0.05px] border-gray-300">
+                            <th className="text-[10px] text-left text-gray-700 ">
+                              Total (B)
+                            </th>
+                            <td className="text-[10px] text-right text-gray-400 "></td>
+                            <td className="text-[10px] text-right text-gray-800 font-bold "></td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                      <section className="flex flex-row justify-between  mt-4 rounded">
+                        <h1 className=" mt-4 text-bodyLato text-left text-gray-800 font-semibold text-[12px] mb-2">
+                          Total Plot Sale Value(A+B)
+                        </h1>
+                        <section className=" mt-4 text-green-600  "></section>
+                      </section>
+                    </div>
+                    {/* <section className="flex flex-row justify-between mb-1">
                   <div className="font-md text-xs text-gray-500  tracking-wide">
                     From
                   </div>
@@ -1511,55 +1624,201 @@ export default function UnitSideViewCRM({
                 <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
                   data
                 </div> */}
-              </section>
-            </div>
-            <div className="my-2  grid grid-cols-2 ">
-              <section className="mr-2 flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md ">
-                <section className="flex flex-row justify-between mb-1">
-                  <div className="font-md text-xs text-gray-500  tracking-wide">
-                    Date
-                  </div>
-                  <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    31/11/2022
-                  </div>
+                  </section>
+                </div>
+                <div className="my-2  grid grid-cols-2 ">
+                  <section className="mr-2 flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md ">
+                    <section className="flex flex-row justify-between mb-1">
+                      <div className="font-md text-xs text-gray-500  tracking-wide">
+                        Date
+                      </div>
+                      <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
+                        31/11/2022
+                      </div>
+                    </section>
+                    <section className="flex flex-row justify-between mb-1">
+                      <div className="font-md text-xs text-gray-500  tracking-wide">
+                        Ref No
+                      </div>
+                      <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
+                        00022344x45
+                      </div>
+                    </section>
+                    <section className="flex flex-row  justify-between mb-1">
+                      <div className="font-md text-xs text-gray-500  tracking-wide">
+                        By
+                      </div>
+                      <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
+                        date
+                      </div>
+                    </section>
+                  </section>
+                  <section className="flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md ">
+                    <section className="flex flex-row justify-between mb-1">
+                      <div className="font-md text-xs text-gray-500  tracking-wide">
+                        Owner
+                      </div>
+                      <div className="font-md text-xs tracking-wide font-semibold text-slate-900 "></div>
+                    </section>
+                    <section className="flex flex-row  justify-between mb-1">
+                      <div className="font-md text-xs text-gray-500  tracking-wide">
+                        Status
+                      </div>
+                      <div className="font-md text-xs tracking-wide font-semibold text-slate-900 "></div>
+                    </section>
+                  </section>
+                </div>
+              </>
+            )}
+            {financeMode === 'transactions' && (
+              <>
+                <section className="flex flex-col bg-[#F6F7FF] p-3 mt-3 border border-[#e5e7f8] rounded-md ">
+                  <section className="flex flow-row justify-between mb-1">
+                    <div className="font-md text-xs text-gray-500  tracking-wide">
+                      Out Standing Balance
+                    </div>
+                    <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
+                      Rs{' '}
+                      {selCustomerPayload?.[
+                        `${assets[0]}_T_balance`
+                      ]?.toLocaleString('en-IN')}
+                    </div>
+                  </section>
+                  <section className="flex flow-row justify-between mb-1">
+                    <div className="font-md text-xs text-gray-500  tracking-wide">
+                      Total Amount
+                    </div>
+                    <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
+                      Rs{' '}
+                      {selCustomerPayload?.[
+                        `${assets[0]}_T_balance`
+                      ]?.toLocaleString('en-IN')}
+                    </div>
+                  </section>
+                  <section className="flex flow-row justify-between mb-1">
+                    <div className="font-md text-xs text-gray-500  tracking-wide">
+                      Total Review
+                    </div>
+                    <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
+                      Rs{' '}
+                      {selCustomerPayload?.[
+                        `${assets[0]}_T_review`
+                      ]?.toLocaleString('en-IN')}
+                    </div>
+                  </section>
+                  <section className="flex flow-row justify-between mb-1">
+                    <div className="font-md text-xs text-gray-500  tracking-wide">
+                      Total Elgible
+                    </div>
+                    <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
+                      Rs{' '}
+                      {selCustomerPayload?.[
+                        `${assets[0]}_T_elgible`
+                      ]?.toLocaleString('en-IN')}
+                    </div>
+                  </section>
                 </section>
-                <section className="flex flex-row justify-between mb-1">
-                  <div className="font-md text-xs text-gray-500  tracking-wide">
-                    Ref No
-                  </div>
-                  <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    00022344x45
-                  </div>
-                </section>
-                <section className="flex flex-row  justify-between mb-1">
-                  <div className="font-md text-xs text-gray-500  tracking-wide">
-                    By
-                  </div>
-                  <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    date
-                  </div>
-                </section>
-              </section>
-              <section className="flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md ">
-                <section className="flex flex-row justify-between mb-1">
-                  <div className="font-md text-xs text-gray-500  tracking-wide">
-                    Owner
-                  </div>
-                  <div className="font-md text-xs tracking-wide font-semibold text-slate-900 "></div>
-                </section>
-                <section className="flex flex-row  justify-between mb-1">
-                  <div className="font-md text-xs text-gray-500  tracking-wide">
-                    Status
-                  </div>
-                  <div className="font-md text-xs tracking-wide font-semibold text-slate-900 "></div>
-                </section>
-              </section>
-            </div>
+
+                <div className="mt-2">
+                  <section className="mr-2 flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md ">
+                    <div>
+                      <h1 className=" text-bodyLato text-left text-gray-800 font-semibold text-[12px] mb-2">
+                        Payment History
+                      </h1>
+                      <table className="w-full mb-10">
+                        <thead>
+                          {' '}
+                          <tr className=" h-6 border-b-[0.2px] border-gray-300">
+                            <th className="w-[8%] text-[10px] text-left text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
+                              Paid On
+                            </th>
+                            <th className="w-[10%] text-[10px] text-right text-gray-400  text-[#8993a4] font-bodyLato tracking-wide uppercase">
+                              Amount
+                            </th>
+                            <th className="w-[10%] text-[10px] text-right text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
+                              Status
+                            </th>
+                            <th className="w-[15%] text-[10px] text-right text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
+                              Ref Id
+                            </th>
+                            <th className="w-[8%] text-[10px] text text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
+                              From
+                            </th>
+                            <th className="w-[15%] text-[10px] text text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
+                              To
+                            </th>
+                            <th className="w-[15%] text-[10px] text-right text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
+                              Tx Id
+                            </th>
+                            <th className="w-[15%] text-[10px] text-right text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
+                              Reviewed by
+                            </th>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                          {unitTransactionsA?.map((d1, inx) => {
+                            totalIs =
+                              selCustomerPayload?.[`${assets[0]}_T_review`] -
+                              d1?.value
+                            return (
+                              <tr
+                                key={inx}
+                                className="border-b-[0.05px] border-gray-300"
+                              >
+                                <th className=" text-[10px] text-left text-gray-700 ">
+                                  {d1?.dated}
+                                </th>
+                                <td className="text-[10px] text-right text-gray-700 ">
+                                  {d1?.amount.toLocaleString('en-IN')}
+                                </td>
+
+                                <td className="text-[10px] text-right text-gray-800 ">
+                                  {d1?.status}
+                                </td>
+                                <td className="text-[10px] text-right text-gray-800 ">
+                                  {d1?.chequeno}
+                                </td>
+                                <td className="text-[10px] text-center  text-gray-800 ">
+                                  {d1?.mode}
+                                </td>
+                                <td className="text-[10px] text-center text-gray-800 ">
+                                  {d1?.builderName}
+                                </td>
+                                <td className="text-[10px] text-right text-gray-800 ">
+                                  {d1?.created}
+                                </td>
+                              </tr>
+                            )
+                          })}
+
+                          <tr className="border-b-[0.05px] border-gray-300">
+                            <th className="text-[10px] text-left text-gray-800 ">
+                              Plot Value Total Rs.:
+                            </th>
+                            <td className="text-[10px] text-right text-gray-400 "></td>
+                            <th className="text-[10px] text-right text-gray-800 "></th>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </section>
+                </div>
+              </>
+            )}
           </div>
         </>
       )}
 
       {selFeature === 'legal_info' && <></>}
+      <SiderForm
+        open={openCapturePayment}
+        setOpen={setOpenCapturePayment}
+        title={'capturePayment'}
+        unitsViewMode={false}
+        widthClass="max-w-md"
+        selUnitDetails={selCustomerPayload}
+      />
     </div>
   )
 }

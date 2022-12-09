@@ -306,7 +306,7 @@ const LegalDocsHome = ({ project }) => {
         title={'disp_legal_docs'}
         projectDetails={projectDetails}
         unitsViewMode={false}
-        widthClass="max-w-md"
+        widthClass="max-w-xl"
         projectsList={projects}
         viewLegalDocData={viewDocData}
       />

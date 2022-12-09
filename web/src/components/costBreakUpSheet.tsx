@@ -33,6 +33,7 @@ import {
   sendWhatAppTextSms,
 } from 'src/util/axiosWhatAppApi'
 import CostBreakUpPdf from 'src/util/costBreakUpPdf'
+import CostBreakUpPdfConstruct from 'src/util/costBreakUpPdf_construct'
 import { PhoneNoField } from 'src/util/formFields/phNoField'
 import { CustomSelect } from 'src/util/formFields/selectBoxField'
 import { TextField } from 'src/util/formFields/TextField'
@@ -41,8 +42,8 @@ import { TextFieldFlat } from 'src/util/formFields/TextFieldFlatType'
 
 import BlockingUnitForm from './BlockingUnitForm'
 import AddBookingForm from './bookingForm'
+import AddPaymentDetailsForm from './FinanceModule/BookingPaymentForm'
 import Loader from './Loader/Loader'
-import AddPaymentDetailsForm from './PaymentReceiptForm'
 import PaymentScheduleSheet from './paymentScheduleSheet'
 import UnitTransactionForm from './UnitBillTransactionForm'
 
@@ -70,7 +71,22 @@ const CostBreakUpSheet = ({
   const [onStep, setOnStep] = useState('costsheet')
   const [soldPrice, setSoldPrice] = useState(0)
   const [csMode, setCsMode] = useState('plot_cs')
+  const [newPlotCostSheetA, setNewPlotCostSheetA] = useState([])
+  const [newPlotCsObj, setNewPlotCsObj] = useState([])
+  const [newPlotPS, setNewPlotPS] = useState([])
+  const [newConstructCsObj, setNewConstructCsObj] = useState([])
+  const [newConstructCostSheetA, setNewConstructCostSheetA] = useState([])
+  const [newConstructPS, setNewConstructPS] = useState([])
+
   const pdfExportComponent = useRef(null)
+  const pdfExportComponentConstruct = useRef(null)
+  useEffect(() => {
+    console.log('new cost sheet value is ', newPlotCsObj)
+  }, [newPlotCsObj])
+  useEffect(() => {
+    console.log('leadDetailsObj1 are', leadDetailsObj1)
+  }, [])
+
   useEffect(() => {
     console.log('new customer object x', title, leadDetailsObj1)
     if (leadDetailsObj1) {
@@ -148,105 +164,6 @@ const CostBreakUpSheet = ({
   //   console.log('value os costsheet', costSheetA)
   // }, [costSheetA])
 
-  useEffect(() => {
-    const unsubscribe = steamUsersListByRole(
-      orgId,
-      (querySnapshot) => {
-        const usersListA = querySnapshot.docs.map((docSnapshot) =>
-          docSnapshot.data()
-        )
-        setfetchedUsersList(usersListA)
-        usersListA.map((user) => {
-          user.label = user.displayName || user.name
-          user.value = user.uid
-        })
-        console.log('fetched users list is', usersListA)
-
-        setusersList(usersListA)
-      },
-      (error) => setfetchedUsersList([])
-    )
-
-    return unsubscribe
-  }, [])
-  useEffect(() => {
-    const unsubscribe = getAllProjects(
-      orgId,
-      (querySnapshot) => {
-        const projectsListA = querySnapshot.docs.map((docSnapshot) =>
-          docSnapshot.data()
-        )
-        setfetchedUsersList(projectsListA)
-        projectsListA.map((user) => {
-          user.label = user.projectName
-          user.value = user.projectName
-        })
-        console.log('fetched users list is', projectsListA)
-        setprojectList(projectsListA)
-      },
-      (error) => setfetchedUsersList([])
-    )
-
-    return unsubscribe
-  }, [])
-  const styles = {
-    fontFamily: 'sans-serif',
-    textAlign: 'center',
-  }
-  const colstyle = {}
-  const tableStyle = {
-    width: '100%',
-  }
-  const moveStep = (stepper) => {
-    setOnStep(stepper)
-  }
-  const Prints = () => (
-    <div>
-      <h3 className="text-blue-600">
-        Time & Materials Statement of Work (SOW)
-      </h3>
-      <h4>General Information</h4>
-      <table
-        id="tab_customers"
-        className="table table-striped"
-        style={tableStyle}
-      >
-        <colgroup>
-          <col span={1} style={colstyle} />
-          <col span={1} style={colstyle} />
-        </colgroup>
-        <thead>
-          <tr className="warning">
-            <th>SOW Creation Date</th>
-            <th>SOW Start Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Dec 13, 2017</td>
-            <td>Jan 1, 2018</td>
-          </tr>
-        </tbody>
-      </table>
-      <p>
-        This is a Time and Materials Statement of Work between Northwestern
-        Mutual Life Insurance Company and Infosys with all general terms and
-        conditions as described in the current Master Agreement and its related
-        documents
-      </p>
-    </div>
-  )
-  const downloadPdf = () => {
-    // const doc = new jsPDF('p', 'pt')
-    // doc.text('This is default text', 20, 20)
-    // doc.save('generated.pdf')
-    const string = renderToString(<Prints />)
-    const pdf = new jsPDF('p', 'pt', 'a4')
-    pdf.text('This is default text', 20, 20)
-    pdf.html(string)
-    pdf.save('pdf')
-  }
-
   const devTypeA = [
     {
       name: 'Outright',
@@ -282,6 +199,9 @@ const CostBreakUpSheet = ({
   const resetter = () => {
     setSelected({})
     setFormMessage('')
+  }
+  const moveStep = (stepper) => {
+    setOnStep(stepper)
   }
 
   const calTotal = (costSheetA, formik) => {
@@ -676,15 +596,46 @@ const CostBreakUpSheet = ({
                                 boxShadow: '0 1px 12px #f2f2f2',
                               }}
                             >
-                              <CostBreakUpPdf
-                                projectDetails={projectDetails}
-                                csMode={csMode}
-                                costSheetA={costSheetA}
-                                pdfExportComponent={pdfExportComponent}
-                                selPhaseObj={selPhaseObj}
-                                leadDetailsObj1={leadDetailsObj1}
-                                selUnitDetails={selUnitDetails}
-                              />
+                              {csMode === 'plot_cs' && (
+                                <CostBreakUpPdf
+                                  projectDetails={projectDetails}
+                                  csMode={csMode}
+                                  // costSheetA={costSheetA}
+                                  pdfExportComponent={pdfExportComponent}
+                                  selPhaseObj={selPhaseObj}
+                                  leadDetailsObj1={leadDetailsObj1}
+                                  selUnitDetails={selUnitDetails}
+                                  setNewPlotCsObj={setNewPlotCsObj}
+                                  newPlotCsObj={newPlotCsObj}
+                                  costSheetA={newPlotCostSheetA}
+                                  setCostSheetA={setNewPlotCostSheetA}
+                                  setNewPS={setNewPlotPS}
+                                  newPlotPS={newPlotPS}
+                                />
+                              )}
+                              {csMode != 'plot_cs' && (
+                                <CostBreakUpPdfConstruct
+                                  projectDetails={projectDetails}
+                                  csMode={csMode}
+                                  // costSheetA={costSheetA}
+                                  pdfExportComponent={
+                                    pdfExportComponentConstruct
+                                  }
+                                  selPhaseObj={selPhaseObj}
+                                  leadDetailsObj1={leadDetailsObj1}
+                                  selUnitDetails={selUnitDetails}
+                                  setNewConstructCsObj={setNewConstructCsObj}
+                                  newConstructCsObj={newConstructCsObj}
+                                  newConstructCostSheetA={
+                                    newConstructCostSheetA
+                                  }
+                                  setCostSheetA={setNewConstructCostSheetA}
+                                  costSheetA={newConstructCostSheetA}
+                                  setNewPS={setNewConstructPS}
+                                  setNewConstructPS={setNewConstructPS}
+                                  newConstructPS={newConstructPS}
+                                />
+                              )}
                             </section>
                             <div className="flex flex-col mt-2 p-4 ">
                               <div className="mt-5 text-right md:space-x-3 md:block flex flex-col-reverse mb-6">
@@ -710,8 +661,16 @@ const CostBreakUpSheet = ({
                             </Pdf> */}
                                 <button
                                   onClick={() => {
-                                    if (pdfExportComponent.current) {
+                                    if (
+                                      pdfExportComponent.current &&
+                                      csMode === 'plot_cs'
+                                    ) {
                                       pdfExportComponent.current.save()
+                                    } else if (
+                                      pdfExportComponentConstruct.current &&
+                                      csMode != 'plot_cs'
+                                    ) {
+                                      pdfExportComponentConstruct.current.save()
                                     }
                                   }}
                                   type="button"
@@ -772,6 +731,13 @@ const CostBreakUpSheet = ({
                   phase={selPhaseObj}
                   leadDetailsObj2={leadDetailsObj1}
                   selUnitDetails={selUnitDetails}
+                  newPlotCsObj={newPlotCsObj}
+                  newPlotCostSheetA={newPlotCostSheetA}
+                  newConstructCsObj={newConstructCsObj}
+                  newConstructCostSheetA={newConstructCostSheetA}
+                  newConstructPS={newConstructPS}
+                  newPlotPS={newPlotPS}
+                  projectDetails={projectDetails}
                 />
               )}
 

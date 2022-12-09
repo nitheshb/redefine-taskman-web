@@ -26,7 +26,14 @@ const AddPaymentDetailsForm = ({
   selUnitDetails,
   leadDetailsObj2,
   dialogOpen,
+  newPlotCsObj,
+  newPlotCostSheetA,
+  newPlotPS,
+  newConstructCsObj,
+  newConstructCostSheetA,
+  newConstructPS,
   phase,
+  projectDetails,
 }) => {
   const { user } = useAuth()
   const { orgId } = user
@@ -38,9 +45,18 @@ const AddPaymentDetailsForm = ({
   const { uid } = useParams()
   const bankData = {}
   const confettiRef = useRef(null)
+  let T_elgible = 0
+  let stepsComp = 0
+  let T_transaction = 0
+  let T_review = 0
+  let T_balance = 0
   const handleClick = () => {
+    console.log(' projectDetails', projectDetails)
     confettiRef.current.fire()
   }
+  useEffect(() => {
+    console.log('leadDetailsObj2 are', leadDetailsObj2)
+  }, [])
 
   useEffect(() => {
     const unsubscribe = steamBankDetailsList(
@@ -65,6 +81,29 @@ const AddPaymentDetailsForm = ({
   }, [])
 
   const onSubmit = async (data, resetForm) => {
+    console.log(
+      'submitted data is ',
+      newPlotCostSheetA,
+      newConstructCostSheetA,
+      newPlotCsObj,
+      data,
+      leadDetailsObj2,
+      phase?.paymentScheduleObj
+    )
+    const fullPs = [...newPlotPS, ...newConstructPS]
+    const { amount } = data
+    const { projectName } = projectDetails
+    fullPs.map((dataObj) => {
+      if (dataObj?.elgible) {
+        T_elgible = dataObj?.value + T_elgible
+        stepsComp = stepsComp + 1
+        T_transaction = T_transaction + (amount || undefined)
+        T_review = T_review + (amount || undefined)
+      }
+    })
+    T_balance = T_elgible - T_review
+    console.log('newPlotPS', newPlotPS, newConstructPS, fullPs, T_elgible)
+
     // get booking details, leadId, unitDetails,
     //  from existing object send values of
     //  booking
@@ -80,11 +119,11 @@ const AddPaymentDetailsForm = ({
     //   const x = await addDoc(collection(db, 'spark_leads'), data)
     // await console.log('x value is', x, x.id)
 
-    const { uid } = selUnitDetails
     const { id, purpose, customerDetailsObj, secondaryCustomerDetailsObj } =
       leadDetailsObj2
-
+    const { uid } = selUnitDetails
     // 1)Make an entry to finance Table {source: ''}
+    console.log('secondary value si s', secondaryCustomerDetailsObj)
     const x1 = await addPaymentReceivedEntry(
       orgId,
       uid,
@@ -95,29 +134,48 @@ const AddPaymentDetailsForm = ({
       enqueueSnackbar
     )
 
+    // add phaseNo , projName to selUnitDetails
     // 2)Create('')
     console.log('submit doc is ', orgId, uid, {
       leadId: id,
+      projectName,
       ...customerDetailsObj,
-      secondaryCustomerDetailsObj,
+      secondaryCustomerDetailsObj: secondaryCustomerDetailsObj || {},
       assets: arrayUnion(uid),
-      [`${uid}_cs`]: leadDetailsObj2[`${uid}_cs`],
-      [`${uid}_ps`]: phase?.paymentScheduleObj || {},
+      // [`${uid}_cs`]: leadDetailsObj2[`${uid}_cs`],
+      // [`${uid}_ps`]: phase?.paymentScheduleObj || {},
       [`${uid}_unitDetails`]: selUnitDetails || {},
+      [`${uid}_plotCS`]: newPlotCostSheetA,
+      [`${uid}_constructCS`]: newConstructCostSheetA,
+      [`${uid}_fullPs`]: fullPs,
+      [`${uid}_T_elgible`]: T_elgible,
+      [`${uid}_stepsComp`]: stepsComp,
+      [`${uid}_T_transaction`]: T_transaction,
+      [`${uid}_T_review`]: T_review,
+      [`${uid}_T_balance`]: T_balance,
 
       //paymentScheduleObj
     })
     const x2 = await createBookedCustomer(
       orgId,
-      uid,
+      id,
       {
         leadId: id,
+        projectName,
         ...customerDetailsObj,
-        secondaryCustomerDetailsObj,
+        secondaryCustomerDetailsObj: secondaryCustomerDetailsObj || {},
         assets: arrayUnion(uid),
-        [`${uid}_cs`]: leadDetailsObj2[`${uid}_cs`],
-        [`${uid}_ps`]: phase?.paymentScheduleObj || {},
+        // [`${uid}_cs`]: leadDetailsObj2[`${uid}_cs`],
+        // [`${uid}_ps`]: phase?.paymentScheduleObj || {},
         [`${uid}_unitDetails`]: selUnitDetails || {},
+        [`${uid}_plotCS`]: newPlotCostSheetA,
+        [`${uid}_constructCS`]: newConstructCostSheetA,
+        [`${uid}_fullPs`]: fullPs,
+        [`${uid}_T_elgible`]: T_elgible,
+        [`${uid}_stepsComp`]: stepsComp,
+        [`${uid}_T_transaction`]: T_transaction,
+        [`${uid}_T_review`]: T_review,
+        [`${uid}_T_balance`]: T_balance,
 
         //paymentScheduleObj
       },
@@ -136,7 +194,15 @@ const AddPaymentDetailsForm = ({
       secondaryCustomerDetailsObj: secondaryCustomerDetailsObj || {},
       ...otherData,
     }
-    unitUpdate[`cs`] = leadDetailsObj2[`${uid}_cs`]
+    // unitUpdate[`cs`] = leadDetailsObj2[`${uid}_cs`]
+    unitUpdate[`plotCS`] = newPlotCostSheetA
+    unitUpdate[`constructCS`] = newConstructCostSheetA
+    unitUpdate[`fullPs`] = fullPs
+    unitUpdate[`T_elgible`] = T_elgible
+    unitUpdate[`stepsComp`] = stepsComp
+    unitUpdate[`T_transaction`] = T_transaction
+    unitUpdate[`T_review`] = T_review
+    unitUpdate[`T_balance`] = T_balance
     console.log('unit space is ', uid)
     updateUnitAsBooked(
       orgId,
@@ -159,7 +225,7 @@ const AddPaymentDetailsForm = ({
       'nitheshreddy.email@gmail.com',
       enqueueSnackbar
     )
-
+    handleClick()
     const updatedData = {
       ...data,
     }
