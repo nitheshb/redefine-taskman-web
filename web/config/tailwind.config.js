@@ -5,6 +5,7 @@ module.exports = {
       fontFamily: {
         Playfair: ['Playfair Display', 'serif'],
         bodyLato: ['Lato', 'sans-serif'],
+        montF: ['Montserrat', 'sans-serif'],
       },
     },
   },

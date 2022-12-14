@@ -27,6 +27,7 @@ import CrmHome from 'src/components/A_CRMcomp/CrmHome'
 import CrmTaskList from 'src/components/A_CRMcomp/CrmTaskList'
 import AllBankDetailsView from 'src/components/All_BankDetailsView'
 import ConstructUnitsHome from 'src/components/ConstructModule/ConstructUnitsHome'
+import CrmDashboardHome from 'src/components/CrmModule/CrmDashboard'
 import CustomersSearchHome from 'src/components/CrmModule/CustomersSearchHome'
 import CustomersSearchHome2 from 'src/components/CrmModule/CustomersSearchHome2'
 import HeadSideBarDetailView from 'src/components/HeadDetailSideBar'
@@ -381,6 +382,16 @@ const CrmHomePage = () => {
             />
             <div className="flex-grow  items-center overflow-y-auto  h-[98%]  px-300  py-300">
               <HeadNavBar2 />
+              <div className="px-1">
+                {viewable === 'crmDashboard' && (
+                  <CrmDashboardHome
+                    project={{
+                      projectName: 'Projects',
+                    }}
+                    isEdit={undefined}
+                  />
+                )}
+              </div>
               <div className="px-3">
                 {(viewable === 'Today1' || viewable === 'Home') && (
                   <CrmHome leadsTyper={undefined} />
@@ -388,6 +399,7 @@ const CrmHomePage = () => {
                 {viewable === 'CrmTeamTasks' && (
                   <CrmHome leadsTyper={undefined} />
                 )}
+
                 {viewable === 'unitsInventory' && (
                   <ProjectsUnitInventory
                     project={{
