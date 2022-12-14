@@ -6,16 +6,22 @@
 // import PhaseDetailsCard from '../PhaseDetailsCard/PhaseDetailsCard'
 import { useState, useEffect } from 'react'
 
+import { useTheme } from '@mui/material'
+import { useTranslation } from 'react-i18next'
+
 import { Link } from '@redwoodjs/router'
 
 import SiderForm from 'src/components/SiderForm/SiderForm'
 import { getAllProjects } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
+
 import 'flowbite'
 
 import '../../styles/myStyles.css'
 import Chart from 'react-apexcharts'
 const CrmDashboardHome = ({ project }) => {
+  const theme = useTheme()
+  const { t } = useTranslation()
   const { projectName } = project
   const { user } = useAuth()
 
@@ -26,7 +32,11 @@ const CrmDashboardHome = ({ project }) => {
   const [isDocViewOpenSideView, setIsDocViewOpenSideView] = useState(false)
   const [projectDetails, setProjectDetails] = useState({})
   const [viewDocData, setViewDocData] = useState({})
+  const [seriesData, setSeriesData] = useState('Month')
 
+  const handleChangeSeriesData = (event) => {
+    setSeriesData(event.target.value)
+  }
   const chartData = [
     {
       title: 'Month',
