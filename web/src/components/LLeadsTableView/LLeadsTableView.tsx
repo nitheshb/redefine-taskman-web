@@ -298,7 +298,7 @@ const LLeadsTableView = ({
       junk: [],
       others: [],
     }
-
+// vedant
     if (leadsTyper === 'inProgress') {
       const z2 = leadsFetchedData
         .sort((a, b) => b.Date - a.Date)
