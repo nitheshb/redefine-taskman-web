@@ -1,13 +1,17 @@
 // import { useState } from 'react'
-import ProjectStatsCard from '../ProjectStatsCard/ProjectStatsCard'
 // import PhaseDetailsCard from '../PhaseDetailsCard/PhaseDetailsCard'
 
 import { PencilIcon, EyeIcon } from '@heroicons/react/outline'
+
 import { Link, routes } from '@redwoodjs/router'
+
 import PieChartProject from '../comps/pieChartProject'
+import ProjectStatsCard from '../ProjectStatsCard/ProjectStatsCard'
 
 const ProjectsMHomeBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
   const {
+    totalEstValue,
+    totalPlotArea,
     totalValue,
     soldValue,
     availValue,
@@ -42,7 +46,7 @@ const ProjectsMHomeBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
   ]
 
   const areaFeedData = [
-    { k: 'Total', totalArea: 125, pic: '' },
+    { k: 'Total', v: totalPlotArea, pic: '' },
     { k: 'Sold', v: soldArea, pic: '' },
     { k: 'Booked', v: bookArea || 0, pic: '' },
     { k: 'Available', v: availArea || 0, pic: '' },
@@ -56,7 +60,7 @@ const ProjectsMHomeBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
     { k: 'Hold', v: blockUnitCount || 0, pic: '' },
   ]
   const valueFeedData = [
-    { k: 'Total', v: totalValue || 0, pic: '' },
+    { k: 'Total', v: totalEstValue || 0, pic: '' },
     { k: 'Sold', v: soldValue || 0, pic: '' },
     { k: 'Booked', v: bookValue || 0, pic: '' },
     { k: 'Collected', v: availValue || 0, pic: '' },

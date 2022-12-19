@@ -1,7 +1,19 @@
 import * as React from 'react'
-import PropTypes from 'prop-types'
-import { alpha } from '@mui/material/styles'
+
+import { Timestamp } from '@firebase/firestore'
+import DoneIcon from '@material-ui/icons/DoneAllTwoTone'
+import RevertIcon from '@material-ui/icons/NotInterestedOutlined'
+import { ConnectingAirportsOutlined } from '@mui/icons-material'
+import DeleteIcon from '@mui/icons-material/Delete'
+import FileDownloadIcon from '@mui/icons-material/FileDownload'
+import FileUploadTwoToneIcon from '@mui/icons-material/FileUploadTwoTone'
 import Box from '@mui/material/Box'
+import Checkbox from '@mui/material/Checkbox'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import IconButton from '@mui/material/IconButton'
+import Paper from '@mui/material/Paper'
+import { alpha } from '@mui/material/styles'
+import Switch from '@mui/material/Switch'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -11,26 +23,22 @@ import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
 import TableSortLabel from '@mui/material/TableSortLabel'
 import Toolbar from '@mui/material/Toolbar'
-import Typography from '@mui/material/Typography'
-import Paper from '@mui/material/Paper'
-import Checkbox from '@mui/material/Checkbox'
-import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import Switch from '@mui/material/Switch'
-import DeleteIcon from '@mui/icons-material/Delete'
-import FileDownloadIcon from '@mui/icons-material/FileDownload'
+import Typography from '@mui/material/Typography'
 import { visuallyHidden } from '@mui/utils'
+import PropTypes from 'prop-types'
 import Highlighter from 'react-highlight-words'
-import CSVDownloader from '../util/csvDownload'
-import DoneIcon from '@material-ui/icons/DoneAllTwoTone'
-import FileUploadTwoToneIcon from '@mui/icons-material/FileUploadTwoTone'
-import RevertIcon from '@material-ui/icons/NotInterestedOutlined'
-import { ConnectingAirportsOutlined } from '@mui/icons-material'
-import { addLead, addUnit, getLedsData1 } from 'src/context/dbQueryFirebase'
+
+import {
+  addLead,
+  addUnit,
+  getLedsData1,
+  getProjectByUid,
+} from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import { prettyDate } from 'src/util/dateConverter'
-import { Timestamp } from '@firebase/firestore'
+
+import CSVDownloader from '../util/csvDownload'
 
 // function createData(
 //   Date,
@@ -208,12 +216,16 @@ const EnhancedTableToolbar = (props) => {
   } = props
 
   const [rowsAfterSearchKey, setRowsAfterSearchKey] = React.useState(rows)
+  const [myProject, setProject] = React.useState({})
+
   const [unitUploadMessage, setUnitUploadMessage] = React.useState(
     sourceTab === 'validR' ? true : false
   )
 
   const [uploadedLeadsCount, setUploadedLeadsCount] = React.useState(0)
   const [uploadedUnitsCount, setUploadedUnitsCount] = React.useState(0)
+  const [builderbankId, setBuilderbankId] = React.useState('')
+
   const [uploadIcon, setUploadIcon] = React.useState(
     sourceTab === 'validR' ? true : false
   )
@@ -221,6 +233,10 @@ const EnhancedTableToolbar = (props) => {
   React.useEffect(() => {
     setRowsAfterSearchKey(rows)
   }, [rows])
+
+  React.useEffect(() => {
+    getProjectDetails(pId)
+  }, [])
   const { user } = useAuth()
 
   const { orgId } = user
@@ -266,6 +282,34 @@ const EnhancedTableToolbar = (props) => {
     )
     console.log('mappedArry', mappedArry)
   }
+
+  const getProjectDetails = async (id) => {
+    const unsubscribe = await getProjectByUid(
+      orgId,
+      id,
+      (querySnapshot) => {
+        const projects = querySnapshot.docs.map((docSnapshot) =>
+          docSnapshot.data()
+        )
+        setProject(projects[0])
+
+        const { builderBankDocId, landlord } = myProject
+        if (builderBankDocId) {
+          setBuilderbankId(builderBankDocId)
+        } else {
+          // show bank details not available error
+          // vedant
+        }
+        console.log('set project value is ', projects[0])
+      },
+      () =>
+        setProject({
+          projectName: '',
+        })
+    )
+
+    return unsubscribe
+  }
   const addUnitsToDB = async (records, pId) => {
     setUnitUploadMessage(false)
     // upload successfully
@@ -275,12 +319,23 @@ const EnhancedTableToolbar = (props) => {
         newData['intype'] = 'bulk'
         newData['pId'] = pId
         newData['blockId'] = myBlock?.uid || 0
-        newData['status'] = data?.status || 'available'
+        newData['status'] = data?.status?.toLowerCase() || 'available'
         newData['by'] = 'bulk'
-        newData['rate_per_sqft'] = data?.price || 4000
+        newData['rate_per_sqft'] = data?.price || data?.plot_cost_sqf || 0
         newData['construct_price'] = data?.construct_price || 0
-        newData['builtup_area'] = data?.builtup_area || 4000
+        newData['builtup_area'] = data?.builtup_area || 0
+        newData['area'] = data?.area || 0
+        newData['plc'] = data?.plc || 0
         newData['ct'] = Timestamp.now().toMillis() + 10800000
+        newData['revised_area'] = data?.revised_area || 0
+        newData['additional_area'] = data?.additional_area || 0
+        newData['plot_cost_sqf'] = data?.plot_cost_sqf || 0
+        newData['construct_cost_sqf'] = data?.construct_cost_sqf || 0
+        newData['ownerName'] = data?.ownerName || ''
+        newData['type'] = data?.type || 'sellable'
+        newData['remarks'] = data?.remarks || ''
+        newData['builderbankId'] = data?.builderbankId || ''
+
         delete newData['']
         console.log('am inside addUnitstoDB', newData)
         setUploadedUnitsCount(index + 1)

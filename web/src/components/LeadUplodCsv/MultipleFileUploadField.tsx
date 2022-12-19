@@ -23,7 +23,6 @@ import {
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import { storage } from 'src/context/firebaseConfig'
-import { prettyDate } from 'src/util/dateConverter'
 import { TextField } from 'src/util/formFields/TextField'
 
 import { LAddLeadTable } from '../LAddLeadTable'

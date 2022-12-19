@@ -771,6 +771,30 @@ export const addCustomer = async (
   return
 }
 export const addUnit = async (orgId, data, by, msg) => {
+  const {
+    pId,
+    phaseId,
+    blockId,
+    builderbankId,
+    owner_name,
+    builtup_area,
+    rate_per_sqft,
+    plot_Sqf,
+    plot_cost_sqf,
+    super_built_up_area,
+    construct_cost_sqf,
+  } = data
+  console.log(
+    'loading data is ',
+    builtup_area,
+    rate_per_sqft,
+    plot_Sqf,
+    plot_cost_sqf,
+    super_built_up_area,
+    construct_cost_sqf,
+    data
+  )
+
   const x = await addDoc(collection(db, `${orgId}_units`), data)
   await console.log('x value is', x, x.id)
   // await addLeadLog(x.id, {
@@ -783,27 +807,65 @@ export const addUnit = async (orgId, data, by, msg) => {
   // })
 
   // add task to scheduler to Intro call in 3 hrs
-  const { pId, phaseId, blockId, builtup_area, rate_per_sqft } = data
 
   addUnitComputedValues(
     `${orgId}_projects`,
     pId,
-    builtup_area * rate_per_sqft || 0,
-    builtup_area,
+    plot_Sqf || 0,
+    super_built_up_area || 0,
+    plot_Sqf * plot_cost_sqf || 0,
+    super_built_up_area * construct_cost_sqf || 0,
     1
   )
   addUnitComputedValues(
     'phases',
     phaseId,
-    builtup_area * rate_per_sqft || 0,
-    builtup_area,
+    plot_Sqf || 0,
+    super_built_up_area || 0,
+    plot_Sqf * plot_cost_sqf || 0,
+    super_built_up_area * construct_cost_sqf || 0,
     1
   )
   addUnitComputedValues(
     'blocks',
     blockId,
-    builtup_area * rate_per_sqft || 0,
-    builtup_area,
+    plot_Sqf || 0,
+    super_built_up_area || 0,
+    plot_Sqf * plot_cost_sqf || 0,
+    super_built_up_area * construct_cost_sqf || 0,
+    1
+  )
+
+  // add data to bank account
+  // 1) get bank account id of project
+  // 2) convert owner name to something friendly
+
+  // 1) get bank account id of project
+  // builderbankId
+  addUnitBankComputed(
+    orgId,
+    `${orgId}_BankDetails`,
+    builderbankId,
+    plot_Sqf || 0,
+    super_built_up_area || 0,
+    plot_Sqf * plot_cost_sqf || 0,
+    super_built_up_area * construct_cost_sqf || 0,
+    1
+  )
+  // 2) convert owner name to something friendly
+  const owner_docId = owner_name
+    ?.replace(/[^A-Za-z\s!?]/g, '')
+    .replaceAll(' ', '')
+    .toLocaleLowerCase()
+
+  addUnitBankComputed(
+    orgId,
+    `${orgId}_VirtualAccounts`,
+    owner_docId,
+    plot_Sqf || 0,
+    super_built_up_area || 0,
+    plot_Sqf * plot_cost_sqf || 0,
+    super_built_up_area * construct_cost_sqf || 0,
     1
   )
 
@@ -2125,13 +2187,19 @@ export const deleteSchLog = async (
 export const addUnitComputedValues = async (
   c_name,
   docId,
-  value,
-  area,
+  plot_Sqf,
+  super_built_up_area,
+  plot_value,
+  construct_value,
   unitCount
 ) => {
   const yo = {
-    totalValue: increment(value),
-    totalArea: increment(area),
+    totalEstValue: increment(plot_value + construct_value),
+    totalEstPlotVal: increment(plot_value),
+    totalEstConstuctVal: increment(construct_value),
+    totalPlotArea: increment(plot_Sqf),
+    totalConstructArea: increment(super_built_up_area),
+    // totalArea: increment(area),
     totalUnitCount: increment(unitCount),
     availableCount: increment(unitCount),
   }
@@ -2141,6 +2209,45 @@ export const addUnitComputedValues = async (
     await updateDoc(washingtonRef, yo)
   } catch (error) {
     await setDoc(doc(db, c_name, docId), yo)
+  }
+  return
+}
+
+export const addUnitBankComputed = async (
+  orgId,
+  c_name,
+  docId,
+  plot_Sqf,
+  super_built_up_area,
+  plot_value,
+  construct_value,
+  unitCount
+) => {
+  const yo = {
+    totalEstValue: increment(plot_value + construct_value),
+    totalEstPlotVal: increment(plot_value),
+    totalEstConstuctVal: increment(construct_value),
+    totalPlotArea: increment(plot_Sqf),
+    totalConstructArea: increment(super_built_up_area),
+    [`${docId}_totalUnitCount`]: increment(unitCount),
+    [`${docId}_availableCount`]: increment(unitCount),
+    [`${docId}_totalEstValue`]: increment(plot_value + construct_value),
+    [`${docId}_totalEstPlotVal`]: increment(plot_value),
+    [`${docId}_totalEstConstuctVal`]: increment(construct_value),
+    [`${docId}_totalPlotArea`]: increment(plot_Sqf),
+    [`${docId}_totalConstructArea`]: increment(super_built_up_area),
+    [`${docId}_totalUnitCount`]: increment(unitCount),
+    [`${docId}_availableCount`]: increment(unitCount),
+  }
+  try {
+    const washingtonRef = doc(db, c_name, docId)
+
+    await updateDoc(washingtonRef, yo)
+  } catch (error) {
+    console.log('error at addUnitBankComputed', error)
+    if (c_name === `${orgId}_VirtualAccounts`) {
+      await setDoc(doc(db, c_name, docId), yo)
+    }
   }
   return
 }

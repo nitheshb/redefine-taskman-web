@@ -1295,7 +1295,7 @@ const HeadSideBarDetailView = ({
                           </svg>
                         </span>
 
-                        <span className="text-sm pl-[6px]">Bank Accounts</span>
+                        <span className="text-sm pl-[6px]">Bank Account</span>
                       </span>
                       <span className="flex ml-auto items-bottom">
                         <span

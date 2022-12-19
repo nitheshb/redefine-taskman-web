@@ -423,57 +423,26 @@ const CostBreakUpPdfConstruct = ({
               <div className="p-4">
                 <div>
                   {/* upper part */}
-                  <div className="flex flex-row justify-between">
-                    <span className="h-full mt-10 w-[50%] items-center justify-center ">
-                      <h1 className="font-playfair text-[24px]  text-gray-700 font-bold ">
-                        {projectDetails?.projectName?.toUpperCase()}
-                      </h1>
-                    </span>
-                    <div className="flex w-[25%] flex-col gap-4 mt-4">
-                      <div>
-                        {' '}
-                        <h1 className="font-bodyLato text-gray-400 text-[10px] mb-[2px]">
-                          Costsheet Id
-                        </h1>
-                        <p className="font-playfair font-semibold text-gray-800 text-[9px]">
-                          25852332
-                        </p>
-                      </div>
-
-                      <div>
-                        <h1 className="font-bodyLato  text-gray-400 text-[10px] mb-[2px] ">
-                          Issued By
-                        </h1>
-                        <p className="font-playfair font-semibold text-gray-800 text-[9px]">
-                          {leadDetailsObj1?.assignedToObj?.name}
-                        </p>
-                        <p className="font-playfair font-semibold text-gray-800 text-[9px]">
-                          Maa Homes LLP
-                        </p>
-                        <p className="font-playfair  text-gray-800 text-[8px]">
-                          Sector-2,HSR Layout, Banglore,India
-                        </p>
-                      </div>
-                    </div>
-                    {/* form  */}
-                    <div className="flex w-[25%] flex-col gap-4 mt-4">
-                      <div>
-                        <h1 className="font-bodyLato  text-gray-400 text-[10px] mb-[2px]">
-                          Cost Sheet To
-                        </h1>
-                        <p className="font-playfair font-semibold text-gray-800 text-[9px]">
-                          {leadDetailsObj1?.Name}
-                        </p>
-                        <p className="font-playfair  text-gray-800 text-[9px]">
-                          {leadDetailsObj1?.Mobile}
-                        </p>
-                        <p className="font-playfair  text-gray-800 text-[9px]">
-                          29, 1st Floor, 5th Main, KG Road, Kaveri Nagar, BSK
-                          3rd Stage, Bangelore-560085
-                        </p>
+                  <div className="flex flex-row justify-between pt-4 ">
+                    <h1 className="font-playfair text-[19px]  text-gray-700   ">
+                      {projectDetails?.projectName?.toUpperCase()}
+                    </h1>
+                    <div>
+                      <img
+                        className="h-6 w-24 "
+                        alt="barcode"
+                        src="https://t4.ftcdn.net/jpg/02/28/23/91/240_F_228239110_4eEmhcqbUpZG8y1x1aazFBQMVmbGjoce.jpg"
+                      />
+                      <div className=" text-center">
+                        <span className="tracking-widest font-bodyLato  text-gray-400 text-[10px] mb-[2px]">
+                          23456788
+                        </span>
                       </div>
                     </div>
                   </div>
+
+                  {/* form  */}
+
                   <div className=" my-10  justify-end">
                     <h1 className="text-bodyLato text-right text-green-600 font-semibold text-[8px]">
                       Total Amount
@@ -627,10 +596,10 @@ const CostBreakUpPdfConstruct = ({
                       <thead>
                         {' '}
                         <tr className=" h-6  border-b-[0.2px] border-gray-300">
-                          <th className="w-[40%] text-[10px] text-left text-gray-700 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
+                          <th className="w-[50%] text-[10px] text-left text-gray-700 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
                             Particulars
                           </th>
-                          <th className="w-[45%] text-[10px] text-right text-gray-700 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
+                          <th className="w-[35%] text-[10px] text-left text-gray-700 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
                             Timeline
                           </th>
                           <th className="w-[15%] text-[10px] text-right text-gray-700  text-[#8993a4] font-bodyLato tracking-wide uppercase">
@@ -647,7 +616,7 @@ const CostBreakUpPdfConstruct = ({
                             <th className=" text-[10px] text-left text-gray-700 ">
                               {d1?.component?.label} (0.05% Plor Sale value)
                             </th>
-                            <td className="text-[10px] text-right text-gray-700 ">
+                            <td className="text-[10px] text-left text-gray-700 ">
                               {d1?.description}
                             </td>
                             <td className="text-[10px] text-right text-gray-700 ">
@@ -682,10 +651,10 @@ const CostBreakUpPdfConstruct = ({
                       <thead>
                         {' '}
                         <tr className=" h-6 border-b-[0.2px] border-gray-300">
-                          <th className="w-[40%] text-[10px] text-left text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
+                          <th className="w-[50%] text-[10px] text-left text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
                             Particulars
                           </th>
-                          <th className="w-[45%] text-[10px] text-right text-gray-400  text-[#8993a4] font-bodyLato tracking-wide uppercase">
+                          <th className="w-[35%] text-[10px] text-left text-gray-400  text-[#8993a4] font-bodyLato tracking-wide uppercase">
                             Payment Timeline
                           </th>
                           <th className="w-[15%] text-[10px] text-right text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
@@ -703,7 +672,7 @@ const CostBreakUpPdfConstruct = ({
                             <th className=" text-[10px] text-left text-gray-700 ">
                               {d1?.stage?.label}
                             </th>
-                            <td className="text-[10px] text-right text-gray-700 ">
+                            <td className="text-[10px] text-left text-gray-700 ">
                               {d1?.description}
                             </td>
                             <td className="text-[10px] text-right text-gray-800 ">
