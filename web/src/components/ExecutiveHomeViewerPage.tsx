@@ -52,6 +52,7 @@ import SiderForm from './SiderForm/SiderForm'
 // }
 const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
   const { user } = useAuth()
+  const [isLoading, setIsLoading] = useState(true)
   const { enqueueSnackbar } = useSnackbar()
   const { orgId, access, projAccessA } = user
   const isImportLeads =
@@ -136,6 +137,7 @@ const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
         'junk',
       ]
       setGetStatus(archieveFields1)
+      setIsLoading(false)
     } else if (leadsTyper == 'inProgress') {
       const archieveFields2 = [
         'new',
