@@ -146,6 +146,19 @@ export const getLeadsByAdminStatus = (orgId, snapshot, data, error) => {
   console.log('hello by Status', onSnapshot(itemsQuery, snapshot, error))
   return onSnapshot(itemsQuery, snapshot, error)
 }
+export const getCpLeadsByAdminStatus = (orgId, snapshot, data, error) => {
+  const { status, projAccessA } = data
+  const itemsQuery = query(
+    collection(db, `${orgId}_leads_cp`),
+    where('Status', 'in', status)
+    //  orderBy('Date')
+  )
+  console.log(
+    'hello by Status cpleads',
+    onSnapshot(itemsQuery, snapshot, error)
+  )
+  return onSnapshot(itemsQuery, snapshot, error)
+}
 
 export const getMyLeadsByDate = async (orgId, data) => {
   const { cutoffDate, uid, isCp } = data

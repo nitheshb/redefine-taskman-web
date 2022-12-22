@@ -14,6 +14,7 @@ import { useFormik } from 'formik'
 import { useSnackbar } from 'notistack'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import DatePicker from 'react-datepicker'
+import { v4 as uuidv4 } from 'uuid'
 
 import { MetaTags } from '@redwoodjs/web'
 
@@ -23,6 +24,7 @@ import {
   addLeadSupabase,
   deleteLeadSupabase,
   getAllProjects,
+  getCpLeadsByAdminStatus,
   getLeadsByAdminStatus,
   getLeadsByStatus,
   getLeadsByStatusUser,
@@ -51,6 +53,7 @@ import SiderForm from './SiderForm/SiderForm'
 //   })
 // }
 const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
+  const uid = uuidv4()
   const { user } = useAuth()
   const [isLoading, setIsLoading] = useState(true)
   const { enqueueSnackbar } = useSnackbar()
@@ -80,14 +83,15 @@ const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
   const [projectList, setprojectList] = useState([])
   const [unitsViewMode, setUnitsViewMode] = useState(false)
   const [fetchLeadsLoader, setFetchLeadsLoader] = useState(true)
+  const [uuidKey, setUuidKey] = useState(uuidv4())
 
   const [selProjectIs, setSelProject] = useState({
     label: 'All Projects',
     value: 'allprojects',
   })
   const [selLeadsOf, setSelLeadsOf] = useState({
-    label: 'Team Leads',
-    value: 'teamleads',
+    label: 'My Leads',
+    value: 'myleads',
   })
 
   const statusFields = [
@@ -101,9 +105,27 @@ const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
     'booked',
   ]
   const archieveFields = ['Dead', 'RNR', 'blocked', 'notinterested', 'junk']
+  // useEffect(() => {
+  //   getLeadsDataFun()
+  // }, [])
+
   useEffect(() => {
-    getLeadsDataFun()
-  }, [])
+    setFetchLeadsLoader(true)
+    if (selLeadsOf?.value == 'myleads') {
+      const { uid } = user
+      getMyLeadsOrAnyUserLeads(uid)
+    } else if (selLeadsOf?.value == 'cpleads') {
+      getCpTeamLeads()
+    } else if (selLeadsOf?.value == 'teamleads') {
+      if (user?.role?.includes(USER_ROLES.ADMIN)) {
+        getAdminAllLeads()
+      } else {
+        getMyTeamLeads()
+      }
+    } else {
+      getMyLeadsOrAnyUserLeads(selLeadsOf?.value)
+    }
+  }, [selLeadsOf])
 
   useEffect(() => {
     const unsubscribe = steamUsersListByRole(
@@ -186,13 +208,270 @@ const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
   }, [])
   const [getStatus, setGetStatus] = useState([])
   useEffect(() => {
+    console.log('my Array data is delayer ', selLeadsOf)
     filter_Leads_Projects_Users_Fun()
-  }, [selProjectIs, selLeadsOf, startDate, endDate])
+  }, [selProjectIs, startDate, endDate])
 
   useEffect(() => {
-    console.log('am refreshed ')
+    console.log(
+      'my Array data is delayer ',
+      selLeadsOf,
+      leadsFetchedRawData,
+      new Date()
+    )
     filter_Leads_Projects_Users_Fun()
   }, [leadsFetchedRawData])
+
+  const getAdminAllLeads = async () => {
+    const { orgId } = user
+    if (user?.role?.includes(USER_ROLES.ADMIN)) {
+      console.log('loading check 1')
+      const unsubscribe = getLeadsByAdminStatus(
+        orgId,
+        async (querySnapshot) => {
+          const usersListA = querySnapshot.docs.map((docSnapshot) => {
+            const x = docSnapshot.data()
+            x.id = docSnapshot.id
+            return x
+          })
+          usersListA.map((data) => {
+            const y = data
+            delete y.Note
+            delete y.AssignedTo
+            delete y.AssignTo
+            delete y.AssignedBy
+            delete y['Country Code']
+            delete y.assignT
+            delete y.CT
+            delete y.visitDoneNotes
+            delete y.VisitDoneNotes
+            delete y.VisitDoneReason
+            delete y.EmpId
+            delete y.CountryCode
+            delete y.from
+            delete y['Followup date']
+            delete y.mode
+            delete y.notInterestedNotes
+            delete y.notInterestedReason
+            y.coveredA = { a: data.coveredA }
+            addLeadSupabase(data)
+          })
+          await setLeadsFetchedRawData(usersListA)
+          await serealizeData(usersListA)
+        },
+        {
+          status:
+            leadsTyper === 'inProgress'
+              ? [
+                  'new',
+                  'followup',
+                  'unassigned',
+                  'visitfixed',
+                  '',
+                  'visitdone',
+                  'visitcancel',
+                  'negotiation',
+                  // 'reassign',
+                  // 'RNR',
+                ]
+              : leadsTyper === 'booked'
+              ? ['booked']
+              : archieveFields,
+          projAccessA: projAccessA,
+        },
+        (error) => setLeadsFetchedData([])
+      )
+      return unsubscribe
+    }
+  }
+  const getMyTeamLeads = async () => {
+    const unsubscribe = await getLeadsByStatus(
+      orgId,
+      async (querySnapshot) => {
+        const usersListA = querySnapshot.docs.map((docSnapshot) => {
+          const x = docSnapshot.data()
+          x.id = docSnapshot.id
+          return x
+        })
+        // setBoardData
+        // await setLeadsFetchedRawData(usersListA)
+        // await serealizeData(usersListA)
+        await getUnassignedLeads(usersListA)
+        // filter_Leads_Projects_Users_Fun()
+        // await setLeadsFetchedData(usersListA)
+      },
+      {
+        status:
+          leadsTyper === 'inProgress'
+            ? [
+                'new',
+                'followup',
+                'unassigned',
+                'visitfixed',
+                '',
+                'visitdone',
+                'visitcancel',
+                'negotiation',
+                'reassign',
+                'RNR',
+                // 'booked',
+              ]
+            : leadsTyper === 'booked'
+            ? ['booked']
+            : archieveFields,
+        projAccessA: projAccessA,
+        isCp: user?.role?.includes(USER_ROLES.CP_AGENT),
+      },
+      (error) => setLeadsFetchedData([])
+    )
+  }
+  const getMyLeadsOrAnyUserLeads = async (userId) => {
+    const { access, uid, orgId } = user
+    const unsubscribe = getLeadsByStatusUser(
+      orgId,
+      async (querySnapshot) => {
+        const usersListA = querySnapshot.docs.map((docSnapshot) => {
+          const x = docSnapshot.data()
+          x.id = docSnapshot.id
+          return x
+        })
+        // setBoardData
+        console.log('my Array data is delayer 1 ', usersListA.length)
+        await setLeadsFetchedRawData(usersListA)
+        await serealizeData(usersListA)
+        // filter_Leads_Projects_Users_Fun()
+
+        //  await setLeadsFetchedData(usersListA)
+      },
+      {
+        isCp: user?.role?.includes(USER_ROLES.CP_AGENT),
+        uid: userId,
+        status:
+          leadsTyper === 'inProgress'
+            ? [
+                'new',
+                'followup',
+                'unassigned',
+                'visitfixed',
+                'visitcancel',
+                '',
+                'visitdone',
+                'negotiation',
+                'reassign',
+                'RNR',
+                // 'booked',
+              ]
+            : leadsTyper === 'booked'
+            ? ['booked']
+            : archieveFields,
+      },
+      (error) => setLeadsFetchedData([])
+    )
+    return unsubscribe
+  }
+
+  const getCpTeamLeads = async () => {
+    const { orgId } = user
+    if (user?.role?.includes(USER_ROLES.ADMIN)) {
+      console.log('loading check 1')
+      const unsubscribe = getCpLeadsByAdminStatus(
+        orgId,
+        async (querySnapshot) => {
+          const usersListA = querySnapshot.docs.map((docSnapshot) => {
+            const x = docSnapshot.data()
+            x.id = docSnapshot.id
+            return x
+          })
+          usersListA.map((data) => {
+            const y = data
+            delete y.Note
+            delete y.AssignedTo
+            delete y.AssignTo
+            delete y.AssignedBy
+            delete y['Country Code']
+            delete y.assignT
+            delete y.CT
+            delete y.visitDoneNotes
+            delete y.VisitDoneNotes
+            delete y.VisitDoneReason
+            delete y.EmpId
+            delete y.CountryCode
+            delete y.from
+            delete y['Followup date']
+            delete y.mode
+            delete y.notInterestedNotes
+            delete y.notInterestedReason
+            y.coveredA = { a: data.coveredA }
+            addLeadSupabase(data)
+          })
+          await setLeadsFetchedRawData(usersListA)
+          await serealizeData(usersListA)
+        },
+        {
+          status:
+            leadsTyper === 'inProgress'
+              ? [
+                  'new',
+                  'followup',
+                  'unassigned',
+                  'visitfixed',
+                  '',
+                  'visitdone',
+                  'visitcancel',
+                  'negotiation',
+                  // 'reassign',
+                  // 'RNR',
+                ]
+              : leadsTyper === 'booked'
+              ? ['booked']
+              : archieveFields,
+          projAccessA: projAccessA,
+        },
+        (error) => setLeadsFetchedData([])
+      )
+      return unsubscribe
+    } else if (access?.includes('manage_leads')) {
+      const unsubscribe = await getLeadsByStatus(
+        orgId,
+        async (querySnapshot) => {
+          const usersListA = querySnapshot.docs.map((docSnapshot) => {
+            const x = docSnapshot.data()
+            x.id = docSnapshot.id
+            return x
+          })
+          // setBoardData
+          // await setLeadsFetchedRawData(usersListA)
+          // await serealizeData(usersListA)
+          await getUnassignedLeads(usersListA)
+          // filter_Leads_Projects_Users_Fun()
+          // await setLeadsFetchedData(usersListA)
+        },
+        {
+          status:
+            leadsTyper === 'inProgress'
+              ? [
+                  'new',
+                  'followup',
+                  'unassigned',
+                  'visitfixed',
+                  '',
+                  'visitdone',
+                  'visitcancel',
+                  'negotiation',
+                  'reassign',
+                  'RNR',
+                  // 'booked',
+                ]
+              : leadsTyper === 'booked'
+              ? ['booked']
+              : archieveFields,
+          projAccessA: projAccessA,
+          isCp: true,
+        },
+        (error) => setLeadsFetchedData([])
+      )
+    }
+  }
 
   const getLeadsDataFun = async () => {
     console.log('login role detials', user)
@@ -346,8 +625,6 @@ const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
       )
       return unsubscribe
     }
-
-    // await console.log('leadsData', leadsData)
   }
 
   const getUnassignedLeads = (otherData) => {
@@ -369,6 +646,7 @@ const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
     return unsubscribe1
   }
   const filter_Leads_Projects_Users_Fun = () => {
+    setFetchLeadsLoader(true)
     const x = leadsFetchedRawData
     console.log('raw max is ==>  ', x.length)
     if (selProjectIs?.value != 'allprojects') {
@@ -392,7 +670,7 @@ const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
       let y = z
       if (selLeadsOf?.value == 'myleads') {
         y = z
-          .filter((d1) => d1?.assingedTo === user.uid)
+          // .filter((d1) => d1?.assingedTo === user.uid)
           .filter((item) => {
             if (startDate !== null && endDate != null) {
               return (
@@ -445,14 +723,40 @@ const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
           })
       }
       setFetchLeadsLoader(false)
-      console.log('my Array data is delayer follow', y.length)
+      console.log('my Array data is delayer follow', y.length, new Date())
       setLeadsFetchedData(y)
     } else {
       let y = x
       if (selLeadsOf?.value == 'myleads') {
-        y = x
-          .filter((d1) => d1?.assingedTo === user.uid)
-          .filter((item) => {
+        console.log('my Array data is delayer 2 yo', x)
+        if (startDate !== null) {
+          y = x
+            // .filter((d1) => d1?.assingedTo === user.uid)
+            .filter((item) => {
+              if (startDate !== null && endDate != null) {
+                return (
+                  item?.Date >= startDate?.getTime() &&
+                  item?.Date <= endDate?.getTime() + 86399999
+                )
+              } else if (startDate !== null) {
+                return (
+                  item?.Date >= startDate?.getTime() + 19070000 &&
+                  item?.Date <= startDate?.getTime() + 86399999
+                )
+              } else {
+                return item
+              }
+            })
+        } else {
+          y = x
+        }
+        console.log('my Array data is delayer 2 yo yo', y)
+      } else if (
+        selLeadsOf?.value == 'teamleads' ||
+        selLeadsOf?.value == 'cpleads'
+      ) {
+        if (startDate !== null) {
+          y = x.filter((item) => {
             if (startDate !== null && endDate != null) {
               return (
                 item?.Date >= startDate?.getTime() &&
@@ -463,26 +767,11 @@ const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
                 item?.Date >= startDate?.getTime() + 19070000 &&
                 item?.Date <= startDate?.getTime() + 86399999
               )
-            } else {
-              return item
             }
           })
-      } else if (selLeadsOf?.value == 'teamleads') {
-        y = x.filter((item) => {
-          if (startDate !== null && endDate != null) {
-            return (
-              item?.Date >= startDate?.getTime() &&
-              item?.Date <= endDate?.getTime() + 86399999
-            )
-          } else if (startDate !== null) {
-            return (
-              item?.Date >= startDate?.getTime() + 19070000 &&
-              item?.Date <= startDate?.getTime() + 86399999
-            )
-          } else {
-            return item
-          }
-        })
+        } else {
+          y = x
+        }
       } else {
         console.log('seleUser details are', selLeadsOf?.value)
         y = x
@@ -503,7 +792,7 @@ const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
             }
           })
       }
-      console.log('my Array data is delayer follow 1 ', y.length)
+      console.log('my Array data is delayer follow 1 ', y.length, new Date())
       setLeadsFetchedData(y)
       setFetchLeadsLoader(false)
     }
@@ -630,6 +919,7 @@ const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
                         ...[
                           { label: 'Team Leads', value: 'teamleads' },
                           { label: 'My Leads', value: 'myleads' },
+                          { label: 'Cp Leads', value: 'cpleads' },
                         ],
                         ...usersList,
                       ]}
@@ -864,6 +1154,7 @@ const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
 
             {!ready && (
               <LLeadsTableView
+                setFetchLeadsLoader={setFetchLeadsLoader}
                 fetchLeadsLoader={fetchLeadsLoader}
                 leadsFetchedData={leadsFetchedData}
                 setisImportLeadsOpen={setisImportLeadsOpen}

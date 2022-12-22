@@ -315,7 +315,7 @@ const EnhancedTableToolbar = (props) => {
 
   React.useEffect(() => {
     let downRows = []
-    rowsAfterSearchKey.map((data) => {
+    rowsAfterSearchKey?.map((data) => {
       let row = {}
       let remark
       if (data?.Remarks) {
@@ -483,7 +483,7 @@ const EnhancedTableToolbar = (props) => {
             </IconButton>
           </Tooltip>
         ) : (
-          <Tooltip title={`Download ${rowsAfterSearchKey.length} Rows`}>
+          <Tooltip title={`Download ${rowsAfterSearchKey?.length} Rows`}>
             {/* <IconButton>
             <FileDownloadIcon />
             <CSVDownloader />
@@ -530,7 +530,7 @@ export default function LLeadsTableBody({
   newArray
 }) {
   const { user } = useAuth()
-  const [order, setOrder] = React.useState('desc')
+  const [order, setOrder] = React.useState('asc')
   const [orderBy, setOrderBy] = React.useState('Date')
   const [selected, setSelected] = React.useState([])
   const [page, setPage] = React.useState(0)
@@ -572,10 +572,13 @@ export default function LLeadsTableBody({
 
   const filterStuff = async (parent) => {
 console.log('filter value stuff' , parent)
+
+
     let x =  selStatus === 'all'
     ? parent['all'] :  selStatus === 'archieve_all' ? parent['archieve_all'] : parent[selStatus]
 
     await setRows(newArray)
+
   }
   const filterByDate = () => {
     rows.filter((item) => {
@@ -748,24 +751,19 @@ console.log('filter value stuff' , parent)
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={rows?.length}
               searchkey={searchKey}
               viewUnitStatusA={viewUnitStatusA}
             />
+                        {rows?.length===0 &&(
+                      <div className='flex items-center'>No Records</div>)}
+
             <TableBody>
+
               {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.slice().sort(getComparator(order, orderBy)) */}
               {/* {stableSort(rows, getComparator(order, orderBy)).map( */}
-              {/* Assignedto: "Arun"
-Date: "23-01-20221"
-Email: "Jessicanewmannhz@Yahoo.Com"
-Mobile: "9000000000"
-Name: "myName 1"
-Note: "NA"
-Project: "Nakshatra Township"
-Source: "Google"
-Status: "new"
-id: "1" */}
+
 
               {/* item.Assignedto.toLowerCase().includes(
                     searchKey.toLowerCase()
@@ -773,7 +771,7 @@ id: "1" */}
               {
 
                 rows
-                .filter((item) => {
+                ?.filter((item) => {
                   if (searchKey == '' || !searchKey) {
                     return item
                   }
@@ -792,6 +790,8 @@ id: "1" */}
                     return item
                   }
                 })
+
+
                 .sort(getComparator(order, orderBy))
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.Name)

@@ -6,107 +6,8 @@ import { useTranslation } from 'react-i18next' // styled components
 
 import { prettyDate } from 'src/util/dateConverter'
 
-import uniqueId from '../../util/generatedId'
 import LLeadsTableBody from '../LLeadsTableBody/LLeadsTableBody'
-
-const tableData2 = [
-  {
-    id: uniqueId(),
-    avatar: '/static/avatar/001-man.svg',
-    name: 'Zachary Gomez',
-    username: 'zachary-gomez',
-    email: 'zachary-gomez@gmail.com',
-    role: 'Editor',
-  },
-  {
-    id: uniqueId(),
-    avatar: '/static/avatar/002-girl.svg',
-    name: 'Amanda Montgomery',
-    username: 'amanda-montgomery',
-    email: 'montgomery@ya.com',
-    role: 'Subscriber',
-  },
-  {
-    id: uniqueId(),
-    avatar: '/static/avatar/003-boy.svg',
-    name: 'Lester Holland',
-    username: 'lester-holland',
-    email: 'lester75@gmail.com',
-    role: 'Subscriber',
-  },
-  {
-    id: uniqueId(),
-    avatar: '/static/avatar/004-woman.svg',
-    name: 'Max Allison',
-    username: 'max-allison',
-    email: 'max-allison@pochta.io',
-    role: 'Subscriber',
-  },
-  {
-    id: uniqueId(),
-    avatar: '/static/avatar/005-man-1.svg',
-    name: 'Richard Gregory',
-    username: 'r.gregory',
-    email: 'gregory@gmail.com',
-    role: 'Subscriber',
-  },
-  {
-    id: uniqueId(),
-    avatar: '/static/avatar/006-woman-1.svg',
-    name: 'Clifford Caldwell',
-    username: 'clifford-caldwell',
-    email: 'clifford-c@gmail.com',
-    role: 'Author',
-  },
-  {
-    id: uniqueId(),
-    avatar: '/static/avatar/007-boy-1.svg',
-    name: 'Lester Holland',
-    username: 'zlester-holland',
-    email: 'lester75@gmail.com',
-    role: 'Subscriber',
-  },
-  {
-    id: uniqueId(),
-    avatar: '/static/avatar/008-clown.svg',
-    name: 'Richard Gregory',
-    username: 'r.gregory',
-    email: 'gregory@gmail.com',
-    role: 'Subscriber',
-  },
-  {
-    id: uniqueId(),
-    avatar: '/static/avatar/009-firefighter.svg',
-    name: 'Max Allison',
-    username: 'max-allison',
-    email: 'max-allison@pochta.io',
-    role: 'Subscriber',
-  },
-  {
-    id: uniqueId(),
-    avatar: '/static/avatar/010-girl-1.svg',
-    name: 'Zachary Gomez',
-    username: 'zachary-gomez',
-    email: 'zachary-gomez@gmail.com',
-    role: 'Editor',
-  },
-  {
-    id: uniqueId(),
-    avatar: '/static/avatar/011-man-2.svg',
-    name: 'Zachary Gomez',
-    username: 'zachary-gomez',
-    email: 'zachary-gomez@gmail.com',
-    role: 'Editor',
-  },
-  {
-    id: uniqueId(),
-    avatar: '/static/avatar/012-woman-2.svg',
-    name: 'Zachary Gomez',
-    username: 'zachary-gomez',
-    email: 'zachary-gomez@gmail.com',
-    role: 'Editor',
-  },
-]
+import LogSkelton from '../shimmerLoaders/logSkelton'
 
 const rowsCounter = (parent, searchKey) => {
   return searchKey === 'all'
@@ -130,32 +31,9 @@ const rowsCounter = (parent, searchKey) => {
         (item) => item?.Status?.toLowerCase() === searchKey.toLowerCase()
       )
 }
-const Wrapper = styled(Section)(() => ({
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  flexWrap: 'wrap',
-  padding: '0 1.5rem',
-  paddingTop: '1rem',
-}))
-const IconWrapper = styled(Section)(({ theme }) => ({
-  backgroundColor: theme.palette.primary.light,
-  width: 40,
-  height: 40,
-  borderRadius: '5px',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  marginRight: '0.5rem',
-}))
-const TabListWrapper = styled(TabList)(({ theme }) => ({
-  [theme.breakpoints.down(700)]: {
-    order: 3,
-    marginTop: 1,
-  },
-}))
 
 const LLeadsTableView = ({
+  setFetchLeadsLoader,
   setisImportLeadsOpen,
   fetchLeadsLoader,
   selUserProfileF,
@@ -173,6 +51,7 @@ const LLeadsTableView = ({
 
   // const [leadsFetchedData, setLeadsFetchedData] = useState([])
   const [openModal, setOpenModal] = useState(false)
+  const [finalKeyA, setFinalKeyA] = useState([])
 
   const handleChange = (_, newValue) => {
     console.log('newvalue is ', newValue)
@@ -180,8 +59,12 @@ const LLeadsTableView = ({
   }
 
   useEffect(() => {
-    console.log('my Array data is delayer 2', leadsFetchedData.length)
-    setTableData(tableData2)
+    console.log(
+      'my Array data is delayer 2',
+      leadsFetchedData.length,
+      new Date()
+    )
+
     // axios
     //   .get('/api/tableData1/all')
     //   .then(({ data }) => {
@@ -300,6 +183,7 @@ const LLeadsTableView = ({
     }
     // vedant
     if (leadsTyper === 'inProgress') {
+      console.log('my Array data is delayer z2', new Date())
       const z2 = leadsFetchedData
         .sort((a, b) => b.Date - a.Date)
         .map((fil) => {
@@ -333,7 +217,7 @@ const LLeadsTableView = ({
           }
         })
 
-      console.log('filter stroke z2', z2, z1, whole)
+      console.log('my Array data is delayer z2', z2, z1, whole, new Date())
       setStatusSepA([whole])
     } else if (leadsTyper === 'archieveLeads') {
       const z2 = leadsFetchedData
@@ -393,6 +277,11 @@ const LLeadsTableView = ({
 
     console.log('filter stroke', leadsFetchedData, leadsHeadA, statusSepA)
   }, [leadsFetchedData, tabHeadFieldsA])
+
+  useEffect(() => {
+    setFinalKeyA(statusSepA[0]?.[value])
+  }, [value])
+
   return (
     <Section pb={4}>
       <Card
@@ -421,7 +310,11 @@ const LLeadsTableView = ({
                         }`}
                         type="button"
                         role="tab"
-                        onClick={() => setValue(d.val)}
+                        onClick={() => {
+                          setFetchLeadsLoader(true)
+                          setValue(d.val)
+                          setFetchLeadsLoader(false)
+                        }}
                       >
                         <span
                           className={`font-PlayFair ${
@@ -463,15 +356,19 @@ const LLeadsTableView = ({
                 })}
               </table>
             } */}
-            <LLeadsTableBody
-              data={filterTable}
-              fetchLeadsLoader={fetchLeadsLoader}
-              handleDelete={handleDelete}
-              selStatus={value}
-              rowsParent={statusSepA[0]}
-              selUserProfileF={selUserProfileF}
-              newArray={statusSepA[0]?.[value]}
-            />
+            {fetchLeadsLoader &&
+              [1, 2, 3].map((data, i) => <LogSkelton key={i} />)}
+            {!fetchLeadsLoader && (
+              <LLeadsTableBody
+                // data={filterTable}
+                fetchLeadsLoader={fetchLeadsLoader}
+                handleDelete={handleDelete}
+                selStatus={value}
+                rowsParent={statusSepA[0]}
+                selUserProfileF={selUserProfileF}
+                newArray={statusSepA[0]?.[value]}
+              />
+            )}
           </Grid>
         </Grid>
       </Card>
