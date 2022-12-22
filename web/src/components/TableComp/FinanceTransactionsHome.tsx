@@ -160,12 +160,161 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
             className="
             "
           >
-            <div className="flex items-center justify-between py-2 px-6 bg-white ">
-              <div>
+            <div className="items-center justify-between py-2 px-2 bg-white ">
+              {/* <div>
                 <h2 className="text-lg font-semibold text-gray-900 leading-light py-2 ">
                   Accounts Transactions Space
                 </h2>
+              </div> */}
+              <div className="flex flex-col">
+                <div className="flex flex-row">
+                  <h2 className="headTxt1 font-semibold text-[11px] ">
+                    TOTAL COLLECTION
+                  </h2>
+                  <span className="headTxt1 font-semibold text-[11px] ml-4 bg-[#d6e9ed] text-[#53a0a3] px-2 rounded-md ">
+                    10
+                  </span>
+                </div>
+                <section className="flex flex-row mt-2 mr-1  mb-1 leading-7 text-gray-900  rounded-lg  ">
+                  <div className=" m-1">
+                    <div className=" border-[#E5EAF2] rounded-xl border w-60">
+                      <section>
+                        <small className="px-2 css-17tn7gx">$</small>
+                        <div className="px-2 flex flex-row justify-between">
+                          <h3 className=" css-5mn5yy">36k</h3>
+                        </div>
+                        <div
+                          className="flex flex-row justify-between bg-[#F7F7F7]"
+                          style={{
+                            borderBottomLeftRadius: '12px',
+                            borderBottomRightRadius: '12px',
+                          }}
+                        >
+                          <div className=" flexCenter p-2">
+                            <span className="w-2 h-2 rounded-full bg-[#209653]"></span>
+                            {/* <svg
+                              className="svgIcon text-[#209653] text-[14px] "
+                              focusable="false"
+                              viewBox="0 0 24 24"
+                              aria-hidden="true"
+                              data-testid="ArrowUpwardIcon"
+                            >
+                              <path d="m4 12 1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"></path>
+                            </svg> */}
+
+                            <span className="css-1lpgd8m text-[#209653] text-[10px]">
+                              CLEARED (2)
+                            </span>
+                          </div>
+                        </div>
+                      </section>
+                    </div>
+                  </div>
+                  <div className=" m-1">
+                    <div className=" border-[#E5EAF2] rounded-xl border w-60">
+                      <section>
+                        <small className="px-2 css-17tn7gx">$</small>
+                        <div className="px-2 flex flex-row justify-between">
+                          <h3 className=" css-5mn5yy">36k</h3>
+                        </div>
+                        <div
+                          className="flex flex-row justify-between bg-[#F7F7F7]"
+                          style={{
+                            borderBottomLeftRadius: '12px',
+                            borderBottomRightRadius: '12px',
+                          }}
+                        >
+                          <div className=" flexCenter p-2">
+                            <span className="w-2 h-2 rounded-full bg-[#F59A4C]"></span>
+                            {/* <svg
+                              className="svgIcon text-[#209653] text-[14px] "
+                              focusable="false"
+                              viewBox="0 0 24 24"
+                              aria-hidden="true"
+                              data-testid="ArrowUpwardIcon"
+                            >
+                              <path d="m4 12 1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"></path>
+                            </svg> */}
+
+                            <span className="css-1lpgd8m text-[#F59A4C] text-[10px]">
+                              PENDING (4)
+                            </span>
+                          </div>
+                        </div>
+                      </section>
+                    </div>
+                  </div>
+                  <div className=" m-1">
+                    <div className=" border-[#E5EAF2] rounded-xl border w-60">
+                      <section>
+                        <small className="px-2 css-17tn7gx">$</small>
+                        <div className="px-2 flex flex-row justify-between">
+                          <h3 className=" css-5mn5yy">36k</h3>
+                        </div>
+                        <div
+                          className="flex flex-row justify-between bg-[#F7F7F7]"
+                          style={{
+                            borderBottomLeftRadius: '12px',
+                            borderBottomRightRadius: '12px',
+                          }}
+                        >
+                          <div className=" flexCenter p-2">
+                            <span className="w-2 h-2 rounded-full bg-[#EB5657]"></span>
+                            {/* <svg
+                              className="svgIcon text-[#209653] text-[14px] "
+                              focusable="false"
+                              viewBox="0 0 24 24"
+                              aria-hidden="true"
+                              data-testid="ArrowUpwardIcon"
+                            >
+                              <path d="m4 12 1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"></path>
+                            </svg> */}
+
+                            <span className="css-1lpgd8m text-[#EB5657] text-[10px]">
+                              CANCELLED (2)
+                            </span>
+                          </div>
+                        </div>
+                      </section>
+                    </div>
+                  </div>
+                  <div className=" m-1">
+                    <div className=" border-[#E5EAF2] rounded-xl border w-60">
+                      <section>
+                        <small className="px-2 css-17tn7gx">$</small>
+                        <div className="px-2 flex flex-row justify-between">
+                          <h3 className=" css-5mn5yy">36k</h3>
+                        </div>
+                        <div
+                          className="flex flex-row justify-between bg-[#F7F7F7]"
+                          style={{
+                            borderBottomLeftRadius: '12px',
+                            borderBottomRightRadius: '12px',
+                          }}
+                        >
+                          <div className=" flexCenter p-2">
+                            <span className="w-2 h-2 rounded-full bg-[#767676]"></span>
+                            {/* <svg
+                              className="svgIcon text-[#209653] text-[14px] "
+                              focusable="false"
+                              viewBox="0 0 24 24"
+                              aria-hidden="true"
+                              data-testid="ArrowUpwardIcon"
+                            >
+                              <path d="m4 12 1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"></path>
+                            </svg> */}
+
+                            <span className="css-1lpgd8m text-[#767676] text-[10px]">
+                              TOTAL (10)
+                            </span>
+                          </div>
+                        </div>
+                      </section>
+                    </div>
+                  </div>
+                </section>
               </div>
+
               <div className="flex px-6">
                 {leadsTyper == 'inProgress' && (
                   <span className="inline-flex p-1 border bg-gray-200 rounded-md">
@@ -220,81 +369,106 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
             <MetaTags title="ExecutiveHome" description="ExecutiveHome page" />
 
             {!ready && (
-              <div className="container overflow-hidden rounded-2xl px-6">
+              <div className="container overflow-hidden  px-[1px] rounded">
                 <div className="flex flex-col app-bg-white-1  pb-10">
-                  <div className="flex flex-row py-5">
+                  <div className="flex flex-row pt-[1px]">
                     <span className="text-lg font-bold app-color-black"></span>
                   </div>
-
-                  <div className="flex flex-row">
-                    {tabHeadFieldsA.map((fieldHead, i) => (
-                      <div
-                        key={i}
-                        className={`flex flex-col w-40 h-[55px] bg-white pl-5 py-1 mr- border-r-2 border-t-slate-700  ${
-                          value != fieldHead?.val
-                            ? 'bg-[#EAF0F6]'
-                            : 'bg-[#F5F8FA]'
-                        } `}
-                        onClick={() => setValue(fieldHead?.val)}
+                  <div className=" bg-[#F7F7F7]">
+                    <div className=" ">
+                      <ul
+                        className="flex flex-wrap -mb-px "
+                        id="myTab"
+                        data-tabs-toggle="#myTabContent"
+                        role="tablist"
                       >
-                        <span
-                          className={`text-[14px] ${
-                            value != fieldHead?.val ? '' : 'text-black'
-                          } font-bold`}
-                        >
-                          {' '}
-                          {rowsCounter(leadsFetchedData, fieldHead?.val).length}
-                        </span>
-                        <span
-                          className={`text-[12px] ${
-                            value != fieldHead?.val ? '' : 'text-black'
-                          }  font-semibold`}
-                        >
-                          {fieldHead?.lab}
-                        </span>
-                      </div>
-                    ))}
+                        {tabHeadFieldsA.map((fieldHead, i) => {
+                          return (
+                            <li key={i} className="mr-2" role="presentation">
+                              <button
+                                className={`inline-block pt-3 pb-2  mx-2 text-sm font-medium text-center text-[#4f5861] rounded-t-lg border-b-[3px]  hover:text-gray-600 hover:border-[#1A91EB] dark:text-gray-400 dark:hover:text-gray-300  ${
+                                  value === fieldHead?.val
+                                    ? 'border-[#1A91EB] text-gray-800'
+                                    : 'border-transparent'
+                                }`}
+                                type="button"
+                                role="tab"
+                                onClick={() => setValue(fieldHead?.val)}
+                              >
+                                <span
+                                  className={`font-PlayFair font-bold ${
+                                    value === fieldHead.val
+                                      ? 'text-[#0080ff] text-gray-800'
+                                      : ''
+                                  }`}
+                                >
+                                  {' '}
+                                  {`${fieldHead.lab} `}
+                                </span>
+                                <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded-full ml-[4px] text-[10px] ">
+                                  {/* {rowsCounter(leadsFetchedData, d.val).length} */}
+                                  {/* {statusSepA[0][d.val]?.length || 0} */}
+                                  {
+                                    rowsCounter(
+                                      leadsFetchedData,
+                                      fieldHead?.val
+                                    ).length
+                                  }
+                                </span>
+                                {/*
+                        <div className="px-2 mt-1 text-[9px] text-black  rounded-full">
+                          <span className="bg-gray-100 px-2 py-1 rounded-full">
+                            {rowsCounter(leadsFetchedData, d.val).length}
+                          </span>
+                        </div> */}
+                              </button>
+                            </li>
+                          )
+                        })}
+                      </ul>
+                    </div>
                   </div>
-                  <div className="flex flex-row bg-[#F5F8FA] px-10 pt-6 relative">
-                    <table className="w-full">
-                      <thead>
-                        <tr>
-                          <th className="w-28"></th>
-                          <th className="text-left text-xs app-color-black pb-3">
-                            <span className="ml-4">FROM</span>
-                          </th>
-                          <th className="text-left text-xs app-color-black pb-3">
-                            <span className="ml-4">To</span>
-                          </th>
-                          <th className="text-left text-xs app-color-black pb-3">
-                            TRANSACTION DETAILS
-                          </th>
-                          <th className="text-right text-xs app-color-black pb-3">
-                            <span className="mr-10">AMOUNT</span>
-                          </th>
-                          <th className="text-right text-xs app-color-black pb-3">
-                            <span className="mr-10">STATUS</span>
-                          </th>
+                  <div className="flex flex-row bg-white px-[4px] py-2 relative">
+                    <div className="flex w-full rounded border ">
+                      <table className="w-full pt-[1px]">
+                        <thead className="">
+                          <tr className="p-2">
+                            <th className="w-2"></th>
+                            <th className="text-left text-xs app-color-black py-2">
+                              <span className="ml-4">FROM</span>
+                            </th>
+                            <th className="text-left text-xs app-color-black py-2">
+                              <span className="ml-4">To</span>
+                            </th>
+                            <th className="text-left text-xs app-color-black py-2">
+                              TRANSACTION DETAILS
+                            </th>
+                            <th className="text-right text-xs app-color-black py-2">
+                              <span className="mr-10">AMOUNT</span>
+                            </th>
+                            <th className="text-right text-xs app-color-black py-2">
+                              <span className="mr-10">STATUS</span>
+                            </th>
 
-                          <th className="text-left text-xs app-color-black pb-3">
-                            COMMENTS
-                          </th>
+                            <th className="text-left text-xs app-color-black py-2">
+                              COMMENTS
+                            </th>
 
-                          <th></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {leadsFetchedData.map((finData, i) => (
-                          <tr
-                            className="app-border-1 border-y border-slate-200 my-2 py-2 h-[120px]"
-                            key={i}
-                            onClick={() => viewTransaction(finData)}
-                          >
-                            <td>
-                              <div className="flex justify-center text-right items-center rounded-md w-8 h-8 app-bg-yellow-2 app-color-yellow-1 text-lg font-semibold">
-                                {i + 1}
-                              </div>
-                              <div
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <tbody className="p-2">
+                          {leadsFetchedData.map((finData, i) => (
+                            <tr
+                              className="app-border-1 border-y border-slate-200 "
+                              key={i}
+                              onClick={() => viewTransaction(finData)}
+                            >
+                              <td className="pl-3 ">
+                                <div className="flex justify-center text-right items-center rounded-md w-2 h-8 app-bg-yellow-2 app-color-yellow-1 text-xs font-semibold">
+                                  {i + 1}
+                                </div>
+                                {/* <div
                                 className={`${
                                   finData?.status === 'cleared'
                                     ? 'bg-green-700'
@@ -304,83 +478,84 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
                                 }   w-24 text-xs font-semibold px-3 py-0.5 rounded-br-md rounded-tl-md text-white`}
                               >
                                 {finData?.status?.toLocaleUpperCase()}
-                              </div>
-                            </td>
-                            <td>
-                              <div className="flex flex-row py-3 ml-4">
-                                <div className="mr-2 w-[3px] rounded-2xl  bg-violet-300 "></div>
-                                <div className="flex flex-col">
-                                  <span className="font-semibold text-sm app-color-black">
-                                    {finData?.fromObj?.name || 'Vikram Bose'}
-                                  </span>
-                                  <span className="font-normal text-xs app-color-gray-1">
-                                    {'52346673647'}
-                                  </span>
-                                  <span className="font-normal text-xs app-color-gray-1">
-                                    {finData?.fromObj?.bankName}
-                                  </span>
-                                  <span className="font-normal text-xs app-color-gray-1">
-                                    {finData?.fromObj?.branch}
-                                  </span>
+                              </div> */}
+                              </td>
+                              <td>
+                                <div className="flex flex-row py-2 ml-4">
+                                  <div className="mr-2 w-[3px] rounded-2xl  bg-violet-300 "></div>
+                                  <div className="flex flex-col">
+                                    <span className="font-semibold text-sm app-color-black">
+                                      {finData?.fromObj?.name || 'Vikram Bose'}
+                                    </span>
+                                    <span className="font-normal text-xs app-color-gray-1">
+                                      {'52346673647'}
+                                    </span>
+                                    <span className="font-normal text-xs app-color-gray-1">
+                                      {finData?.fromObj?.bankName}
+                                    </span>
+                                    <span className="font-normal text-xs app-color-gray-1">
+                                      {finData?.fromObj?.branch}
+                                    </span>
+                                  </div>
                                 </div>
-                              </div>
-                            </td>
-                            <td>
-                              <div className="flex flex-row ml-4 py-3">
-                                <div className="mr-2 w-[3px] rounded-2xl bg-violet-300  "></div>
-                                <div className="flex flex-col">
-                                  <span className="font-semibold text-sm app-color-black">
-                                    {finData?.toAccount?.name}
-                                  </span>
-                                  <span className="font-normal text-xs app-color-gray-1">
-                                    {/* {finData?.toAccount?.accountNo} */}
-                                    {finData?.towardsBankDocId}
-                                  </span>
-                                  <span className="font-normal text-xs app-color-gray-1">
-                                    {finData?.toAccount?.bankName}
-                                  </span>
-                                  <span className="font-normal text-xs app-color-gray-1">
-                                    {finData?.toAccount?.branch}
-                                  </span>
+                              </td>
+                              <td>
+                                <div className="flex flex-row ml-4 py-2">
+                                  <div className="mr-2 w-[3px] rounded-2xl bg-violet-300  "></div>
+                                  <div className="flex flex-col">
+                                    <span className="font-semibold text-sm app-color-black">
+                                      {finData?.toAccount?.name}
+                                    </span>
+                                    <span className="font-normal text-xs app-color-gray-1">
+                                      {/* {finData?.toAccount?.accountNo} */}
+                                      {finData?.towardsBankDocId}
+                                    </span>
+                                    <span className="font-normal text-xs app-color-gray-1">
+                                      {finData?.toAccount?.bankName}
+                                    </span>
+                                    <span className="font-normal text-xs app-color-gray-1">
+                                      {finData?.toAccount?.branch}
+                                    </span>
+                                  </div>
                                 </div>
-                              </div>
-                            </td>
-                            <td>
-                              <div className="flex flex-row py-3">
-                                {/* <div className="mr-2 w-[3px]  bg-gray-100 "></div> */}
-                                <div className="flex flex-col">
-                                  <span className="font-semibold text-sm app-color-black">
-                                    {finData?.mode}
-                                  </span>
-                                  <span className="font-normal text-xs app-color-gray-1">
-                                    {finData?.transactionNo}
-                                  </span>
-                                  <span className="font-normal text-xs app-color-gray-1">
-                                    {finData?.dated}
-                                  </span>
+                              </td>
+                              <td>
+                                <div className="flex flex-row py-2">
+                                  {/* <div className="mr-2 w-[3px]  bg-gray-100 "></div> */}
+                                  <div className="flex flex-col">
+                                    <span className="font-semibold text-sm app-color-black">
+                                      {finData?.mode}
+                                    </span>
+                                    <span className="font-normal text-xs app-color-gray-1">
+                                      {finData?.transactionNo}
+                                    </span>
+                                    <span className="font-normal text-xs app-color-gray-1">
+                                      {finData?.dated}
+                                    </span>
+                                  </div>
                                 </div>
-                              </div>
-                            </td>
-                            <td className="text-right">
-                              <span className="text-right font-semibold text-sm app-color-gray-1 mr-10">
-                                Rs {finData?.amount}
-                              </span>
-                            </td>
+                              </td>
+                              <td className="text-right">
+                                <span className="text-right font-semibold text-sm app-color-gray-1 mr-10">
+                                  Rs {finData?.amount}
+                                </span>
+                              </td>
 
-                            <td>
-                              <span className="ml-3 font-normal text-md app-color-gray-1">
-                                {finData?.status}
-                              </span>
-                            </td>
-                            <td>
-                              <span className="font-semibold text-sm app-color-black">
-                                NA
-                              </span>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                              <td>
+                                <span className="ml-3 font-normal text-md app-color-gray-1">
+                                  {finData?.status}
+                                </span>
+                              </td>
+                              <td>
+                                <span className="font-semibold text-sm app-color-black">
+                                  NA
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div>
