@@ -33,6 +33,7 @@ import { TextField } from 'src/util/formFields/TextField'
 import { TextField2 } from 'src/util/formFields/TextField2'
 
 import Loader from './Loader/Loader'
+import { useFileUpload } from './useFileUpload'
 
 const AddBookingForm = ({
   title,
@@ -42,7 +43,7 @@ const AddBookingForm = ({
 }) => {
   const { user } = useAuth()
   const { orgId } = user
-
+  const [uploadedFileLink, handleFileUpload] = useFileUpload()
   const [fetchedUsersList, setfetchedUsersList] = useState([])
   const [usersList, setusersList] = useState([])
   const [projectList, setprojectList] = useState([])
@@ -584,11 +585,29 @@ const AddBookingForm = ({
                                         </div>
                                         <div className="w-full lg:w-8/12 pl-4">
                                           <div className="relative w-full mb-3 mt-2">
-                                            <TextField2
-                                              label="PAN upload"
-                                              name="panDocUrl1"
-                                              type="text"
-                                            />
+                                            <div>
+                                              {uploadedFileLink ? (
+                                                <a href={uploadedFileLink}>
+                                                  View uploaded file
+                                                </a>
+                                              ) : null}
+                                              <label
+                                                htmlFor="formFile"
+                                                className="form-label cursor-pointer inline-block mb-2  font-regular text-sm "
+                                              >
+                                                Upload Pan Card
+                                              </label>
+                                              <input
+                                                type="file"
+                                                className="hidden"
+                                                id="formFile"
+                                                onChange={(e) =>
+                                                  handleFileUpload(
+                                                    e.target.files[0]
+                                                  )
+                                                }
+                                              />
+                                            </div>
                                           </div>
                                         </div>
                                       </div>
