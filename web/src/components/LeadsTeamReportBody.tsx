@@ -4,32 +4,37 @@
 // import ProjectStatsCard from '../ProjectStatsCard/ProjectStatsCard'
 // import PhaseDetailsCard from '../PhaseDetailsCard/PhaseDetailsCard'
 
-import { CalendarIcon, EyeIcon } from '@heroicons/react/outline'
-
-import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from 'recharts'
-import { sourceList, sourceListItems } from 'src/constants/projects'
 import { useEffect, useState } from 'react'
-import { useAuth } from 'src/context/firebase-auth-context'
-import DatePicker from 'react-datepicker'
 
-import {
-  getAllProjects,
-  getLeadsByDate,
-  steamUsersListByRole,
-} from 'src/context/dbQueryFirebase'
+import { CalendarIcon, EyeIcon } from '@heroicons/react/outline'
 import {
   ChevronDoubleLeftIcon,
   ChevronDoubleRightIcon,
 } from '@heroicons/react/solid'
-import { serialMyData } from './LeadsTeamReport/SourceLeads'
-import { serialEmployeeLeadData } from './LeadsTeamReport/serialEmployeeLeadData'
-import { serialProjectLeadData } from './LeadsTeamReport/serialProjectLeadData'
-import { SlimSelectBox } from 'src/util/formFields/slimSelectBoxField'
+import { startOfWeek, startOfDay, startOfMonth, subMonths } from 'date-fns'
+import DatePicker from 'react-datepicker'
+import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from 'recharts'
+
+import { sourceList, sourceListItems } from 'src/constants/projects'
+import {
+  getAllProjects,
+  getLeadbyId1,
+  getLeadsByDate,
+  steamAllLeadsActivity,
+  steamUsersListByRole,
+  updateLeadsLogWithProject,
+} from 'src/context/dbQueryFirebase'
+import { useAuth } from 'src/context/firebase-auth-context'
+import { sendWhatAppTextSms1 } from 'src/util/axiosWhatAppApi'
 import CSVDownloader from 'src/util/csvDownload'
 import { prettyDate } from 'src/util/dateConverter'
-import { startOfWeek, startOfDay, startOfMonth, subMonths } from 'date-fns'
-import { sendWhatAppTextSms1 } from 'src/util/axiosWhatAppApi'
+import { SlimSelectBox } from 'src/util/formFields/slimSelectBoxField'
+
+import { serialEmployeeLeadData } from './LeadsTeamReport/serialEmployeeLeadData'
 import { serialEmployeeTaskLeadData } from './LeadsTeamReport/serialEmployeeTaskLeadData'
+import { serialProjectLeadData } from './LeadsTeamReport/serialProjectLeadData'
+import { serialProjecVisitFixedData } from './LeadsTeamReport/serialProjectVisitsFixedData'
+import { serialMyData } from './LeadsTeamReport/SourceLeads'
 
 const valueFeedData = [
   { k: 'Total', v: 300, pic: '' },
@@ -90,12 +95,15 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
   const { user } = useAuth()
   const { orgId, access } = user
   const [leadsFetchedRawData, setLeadsFetchedRawData] = useState([])
+  const [leadLogsRawData, setLeadLogsRawData] = useState([])
+
   const [sourceListTuned, setSourceListTuned] = useState([])
   const [sourceFiltListTuned, setFiltSourceListTuned] = useState([])
   const [viewSource, selViewSource] = useState({
     label: 'All Sources',
     value: 'allsources',
   })
+  const [leadsLogFilData, setLeadsLogFilData] = useState([])
 
   const [showInproFSource, setShowInproFSource] = useState(false)
   const [showArchiFSource, setShowArchiFSource] = useState(false)
@@ -219,6 +227,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
 
   useEffect(() => {
     if (viewProjs?.value == 'allprojects') {
+      console.log('project list i s', projectList)
       setFiltProjectListTuned(projectList)
     } else {
       const z = projectList.filter((da) => {
@@ -238,6 +247,10 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
   useEffect(() => {
     setProjectListTuned(serialProjectLeadData(projectList, leadsFetchedRawData))
   }, [projectList, leadsFetchedRawData])
+  useEffect(() => {
+    setLeadsLogFilData(serialProjecVisitFixedData(projectList, leadLogsRawData))
+  }, [projectList, leadLogsRawData])
+
   useEffect(() => {
     if (selProjectEmpIs?.value === 'allprojects') {
       setEmployeeListTuned(
@@ -433,6 +446,56 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
     }
   }
 
+  useEffect(() => {
+    fetchLogsData()
+  }, [])
+  useEffect(() => {
+    fetchLogsData()
+  }, [sourceDateRange])
+
+  const fetchLogsData = async () => {
+    const steamLeadLogs = await steamAllLeadsActivity(
+      orgId,
+      'snap',
+      {
+        uid: 'VIzMzz5rl0NAywdnpHpb',
+        cutoffDate: sourceDateRange,
+      },
+      (error) => setLeadLogsRawData([])
+    )
+    await setLeadLogsRawData(steamLeadLogs)
+  }
+
+  const updateProjectNameInlogs = async () => {
+    // get all the logs from supabase
+    // loop through each doc and get projectId
+    // update the respective doc in supabase with projectId
+
+    const steamLeadLogs = await steamAllLeadsActivity(
+      orgId,
+      'snap',
+      {
+        uid: 'VIzMzz5rl0NAywdnpHpb',
+      },
+      (error) => []
+    )
+    steamLeadLogs.map(async (logData) => {
+      const { Luid } = logData
+      const x = await getLeadbyId1(orgId, Luid)
+      const { ProjectId } = await x
+      await console.log('flexed value is ', ProjectId)
+      updateLeadsLogWithProject(
+        orgId,
+        'snap',
+        {
+          LeadId: Luid,
+          pId: ProjectId,
+        },
+        (error) => []
+      )
+    })
+    console.log('stream logs', steamLeadLogs)
+  }
   React.useEffect(() => {
     const downRows = []
     sourceRawFilData.map((data) => {
@@ -550,7 +613,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
       const { label, offPh, now, sevenDays, Total } = empData
       sendWhatAppTextSms1(
         offPh,
-      `Good Morning..! ${label} 🏆\n
+        `Good Morning..! ${label} 🏆\n
       Here is your Today's task overview  \n
       Due Tasks   -${(Total?.length || 0) - (now?.length || 0)}
       Today Tasks -  ${now?.length || 0}\n \n
@@ -737,7 +800,460 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
               </span>
             </div> */}
           </div>
+          <div
+            className="flex flex-col  mt-14 drop-shadow-md rounded-lg  px-4"
+            style={{ backgroundColor: '#ebfafa' }}
+          >
+            <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
+              <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
+                <div className="overflow-hidden">
+                  <div className=" text-md font-bold leading-none pl-0 mt-4 border-b pb-4 mb-4 ">
+                    {`Visits Performance Counts `}
+                  </div>
 
+                  <section className="flex flex-row justify-between mt-[18px]">
+                    <section className="flex">
+                      {!isEdit && (
+                        // <Link to={routes.projectEdit({ uid })}>
+                        <button
+                          onClick={() => {
+                            setSourceDateRange(startOfDay(d).getTime())
+                          }}
+                        >
+                          <span
+                            className={`flex ml-2 mt-[5px] items-center h-6 px-3 text-xs ${
+                              sourceDateRange === startOfDay(d).getTime()
+                                ? 'font-semibold text-pink-800 bg-pink-200 '
+                                : 'text-green-800 bg-green-200 '
+                            }rounded-full`}
+                          >
+                            <EyeIcon
+                              className="h-3 w-3 mr-1"
+                              aria-hidden="true"
+                            />
+                            Now
+                          </span>
+                        </button>
+                        // </Link>
+                      )}
+
+                      <button
+                        onClick={() => {
+                          setSourceDateRange(startOfWeek(d).getTime())
+                        }}
+                      >
+                        <span
+                          className={`flex ml-2 mt-[5px] items-center h-6 px-3 text-xs ${
+                            sourceDateRange === startOfWeek(d).getTime()
+                              ? 'font-semibold text-pink-800 bg-pink-200 '
+                              : 'text-green-800 bg-green-200 '
+                          }rounded-full`}
+                        >
+                          <CalendarIcon
+                            className="h-3 w-3 mr-1"
+                            aria-hidden="true"
+                          />
+                          This Week
+                        </span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSourceDateRange(startOfMonth(d).getTime())
+                        }}
+                      >
+                        <span
+                          className={`flex ml-2 mt-[5px] items-center h-6 px-3 text-xs ${
+                            sourceDateRange === startOfMonth(d).getTime()
+                              ? 'font-semibold text-pink-800 bg-pink-200 '
+                              : 'text-green-800 bg-green-200 '
+                          }rounded-full`}
+                        >
+                          <CalendarIcon
+                            className="h-3 w-3 mr-1"
+                            aria-hidden="true"
+                          />
+                          This Month
+                        </span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSourceDateRange(
+                            subMonths(startOfMonth(d), 6).getTime()
+                          )
+                        }}
+                      >
+                        <span
+                          className={`flex ml-2 mt-[5px] items-center h-6 px-3 text-xs ${
+                            sourceDateRange ===
+                            subMonths(startOfMonth(d), 6).getTime()
+                              ? 'font-semibold text-pink-800 bg-pink-200 '
+                              : 'text-green-800 bg-green-200 '
+                          }rounded-full`}
+                        >
+                          <CalendarIcon
+                            className="h-3 w-3 mr-1"
+                            aria-hidden="true"
+                          />
+                          Last 6 Months
+                        </span>
+                      </button>
+                      <span className="max-h-[42px] mt-[2px] ml-3">
+                        <label className="bg-green   pl-   flex flex-row cursor-pointer">
+                          {!isOpened && (
+                            <span
+                              className={`flex ml-1 mt-[6px] items-center h-6 px-3 text-xs ${
+                                sourceDateRange === startDate?.getTime()
+                                  ? 'font-semibold text-pink-800 bg-pink-200 '
+                                  : 'text-green-800 bg-green-200 '
+                              } rounded-full`}
+                              onClick={() => {
+                                setIsOpened(true)
+                              }}
+                            >
+                              <CalendarIcon
+                                className="h-3 w-3 mr-1"
+                                aria-hidden="true"
+                              />
+                              {startDate == null ? 'Custom' : ''}
+                              {/* {sourceDateRange} -- {startDate?.getTime()} */}
+                              {startDate != null
+                                ? prettyDate(startDate?.getTime() + 21600000)
+                                : ''}
+                              {endDate != null ? '-' : ''}
+                              {endDate != null
+                                ? prettyDate(endDate?.getTime() + 21600000)
+                                : ''}
+                            </span>
+                          )}
+                          {
+                            <span
+                              className="inline"
+                              style={{
+                                visibility: isOpened ? 'visible' : 'hidden',
+                              }}
+                            >
+                              <DatePicker
+                                className={`z-10 pl- py-1 px-3 mt-[7px] inline text-xs text-[#0091ae] placeholder-green-800 cursor-pointer  max-w-fit   ${
+                                  sourceDateRange === startDate?.getTime()
+                                    ? 'font-semibold text-pink-800 bg-pink-200 '
+                                    : 'text-green-800 bg-green-200 '
+                                } rounded-full`}
+                                onCalendarClose={() => setIsOpened(false)}
+                                placeholderText="&#128467;	 Custom"
+                                onChange={(update) => {
+                                  setDateRange(update)
+
+                                  console.log(
+                                    'was this updated',
+                                    update,
+                                    startDate
+                                  )
+                                }}
+                                selectsRange={true}
+                                startDate={startDate}
+                                endDate={endDate}
+                                isClearable={true}
+                                onClear={() => {
+                                  console.log('am i cleared')
+                                }}
+                                dateFormat="MMM d, yyyy "
+                              />
+                            </span>
+                          }
+                        </label>
+                      </span>
+                    </section>
+                    <div className=" flex flex-row   ">
+                      <SlimSelectBox
+                        name="project"
+                        label=""
+                        className="input min-w-[164px] "
+                        onChange={(value) => {
+                          selProjs(value)
+                        }}
+                        value={viewProjs?.value}
+                        options={[
+                          ...[{ label: 'All Projects', value: 'allprojects' }],
+                          ...projectList,
+                        ]}
+                      />
+                      <span style={{ display: '' }}>
+                        <CSVDownloader
+                          className="mr-6 h-[20px] w-[20px]"
+                          downloadRows={projDownloadRows}
+                          style={{ height: '20px', width: '20px' }}
+                        />
+                      </span>
+                    </div>
+                  </section>
+                  <table className="min-w-full text-center mt-6">
+                    <thead className="border-b">
+                      <tr>
+                        {[
+                          { label: 'Source', id: 'label' },
+                          { label: 'Total Visit Fixed', id: 'total' },
+                          { label: 'InProgress', id: 'inprogress' },
+                          { label: 'New', id: 'new' },
+                          { label: 'Followup', id: 'followup' },
+                          { label: 'VisitFixed', id: 'visitfixed' },
+                          { label: 'VisitDone', id: 'visitdone' },
+                          { label: 'Neogotiation', id: 'neogotiation' },
+                          { label: 'Booked', id: 'booked' },
+                          { label: 'NotInterested', id: 'notinterested' },
+                          { label: 'Dead', id: 'dead' },
+                          { label: 'Blocked', id: 'blocked' },
+                          { label: 'Junk', id: 'junk' },
+                          { label: 'Archieve', id: 'archieve' },
+                          { label: 'Others', id: 'others' },
+                        ].map((d, i) => (
+                          <th
+                            key={i}
+                            scope="col"
+                            className={`text-sm font-medium text-gray-900 px-6 py-4 ${
+                              ['Source'].includes(d.label) ? 'text-left' : ''
+                            }`}
+                            style={{
+                              display: viewSourceStats1A.includes(d.id)
+                                ? ''
+                                : 'none',
+                              color:
+                                ['inprogress'].includes(d.id) &&
+                                showInproFSource
+                                  ? 'blue'
+                                  : ['archieve'].includes(d.id) &&
+                                    showArchiFSource
+                                  ? 'blue'
+                                  : 'black',
+                            }}
+                            onClick={() => {
+                              if (['inprogress', 'archieve'].includes(d.id))
+                                showColumnsSourceFun(d.id)
+                            }}
+                          >
+                            {d.label}
+                            {d.id === 'inprogress' && !showInproFSource && (
+                              <ChevronDoubleRightIcon
+                                className="w-4 h-4 inline"
+                                aria-hidden="true"
+                              />
+                            )}
+                            {d.id === 'inprogress' && showInproFSource && (
+                              <ChevronDoubleLeftIcon
+                                className="w-4 h-4 inline"
+                                aria-hidden="true"
+                              />
+                            )}
+                            {d.id === 'archieve' && !showArchiFSource && (
+                              <ChevronDoubleRightIcon
+                                className="w-4 h-4 inline"
+                                aria-hidden="true"
+                              />
+                            )}
+                            {d.id === 'archieve' && showArchiFSource && (
+                              <ChevronDoubleLeftIcon
+                                className="w-4 h-4 inline"
+                                aria-hidden="true"
+                              />
+                            )}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {leadsLogFilData.map((data, i) => {
+                        return (
+                          <tr
+                            className={` ${
+                              i % 2 === 0
+                                ? 'bg-white border-blue-200'
+                                : 'bg-gray-100'
+                            }`}
+                            key={i}
+                          >
+                            <td className="text-sm text-gray-900 font-medium px-6 py-2 whitespace-nowrap text-left">
+                              {data?.label}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.Total?.length}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.inprogress?.length}
+                            </td>
+                            {showInproFSource && (
+                              <>
+                                <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                                  {data?.new?.length}
+                                </td>
+                                <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                                  {data?.followup?.length}
+                                </td>
+                                <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                                  {data?.visitfixed?.length}
+                                </td>
+                                <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                                  {data?.visitdone?.length}
+                                </td>
+                                <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                                  {data?.negotiation?.length}
+                                </td>
+                              </>
+                            )}
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.booked?.length}
+                            </td>
+                            {showArchiFSource && (
+                              <>
+                                <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                                  {data?.notinterested?.length}
+                                </td>
+                                <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                                  {data?.dead?.length}
+                                </td>
+                                <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                                  {data?.blocked?.length}
+                                </td>
+                                <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                                  {data?.junk?.length}
+                                </td>
+                              </>
+                            )}
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.archieve?.length}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.others?.length}
+                            </td>
+                          </tr>
+                        )
+                      })}
+
+                      {viewProjs?.value == 'allprojects' && (
+                        <tr className="border-b bg-gray-800 boder-gray-900">
+                          <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap text-left">
+                            Total
+                          </td>
+                          <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                            {leadLogsRawData.length}
+                          </td>
+                          <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                            {
+                              leadLogsRawData.filter((datObj) =>
+                                [
+                                  'new',
+                                  'unassigned',
+                                  'followup',
+                                  'visitfixed',
+                                  'visitdone',
+                                  'negotiation',
+                                ].includes(datObj?.to)
+                              ).length
+                            }
+                          </td>
+                          {showInproFSource && (
+                            <>
+                              <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                                {
+                                  leadLogsRawData.filter(
+                                    (datObj) => datObj?.to == 'new'
+                                  ).length
+                                }
+                              </td>
+                              <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                                {
+                                  leadLogsRawData.filter(
+                                    (datObj) => datObj?.to == 'followup'
+                                  ).length
+                                }
+                              </td>
+                              <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                                {
+                                  leadLogsRawData.filter(
+                                    (datObj) => datObj?.to == 'visitfixed'
+                                  ).length
+                                }
+                              </td>
+                              <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                                {
+                                  leadLogsRawData.filter(
+                                    (datObj) => datObj?.to == 'visitdone'
+                                  ).length
+                                }
+                              </td>
+                              <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                                {
+                                  leadLogsRawData.filter(
+                                    (datObj) => datObj?.to == 'negotiation'
+                                  ).length
+                                }
+                              </td>
+                            </>
+                          )}
+                          <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                            {
+                              leadLogsRawData.filter(
+                                (datObj) => datObj?.to == 'booked'
+                              ).length
+                            }
+                          </td>
+                          {showArchiFSource && (
+                            <>
+                              <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                                {
+                                  leadLogsRawData.filter(
+                                    (datObj) => datObj?.to == 'notinterested'
+                                  ).length
+                                }
+                              </td>
+                              <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                                {
+                                  leadLogsRawData.filter(
+                                    (datObj) => datObj?.to == 'dead'
+                                  ).length
+                                }
+                              </td>
+                              <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                                {
+                                  leadLogsRawData.filter(
+                                    (datObj) => datObj?.to == 'blocked'
+                                  ).length
+                                }
+                              </td>
+                              <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                                {
+                                  leadLogsRawData.filter(
+                                    (datObj) => datObj?.to == 'junk'
+                                  ).length
+                                }
+                              </td>
+                            </>
+                          )}
+                          <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                            {
+                              leadLogsRawData.filter((datObj) =>
+                                [
+                                  'blocked',
+                                  'dead',
+                                  'notinterested',
+                                  'junk',
+                                ].includes(datObj?.to)
+                              ).length
+                            }
+                          </td>
+                          <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                            {
+                              leadLogsRawData.filter(
+                                (datObj) => datObj?.to == ''
+                              ).length
+                            }
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             className="flex flex-col  mt-4 drop-shadow-md rounded-lg  px-4"
             style={{ backgroundColor: '#ebfafa' }}
@@ -747,6 +1263,14 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                 <div className="overflow-hidden">
                   <div className=" text-md font-bold leading-none pl-0 mt-4 border-b pb-4 mb-4 ">
                     {`Source vs Status `}
+                  </div>
+
+                  <div
+                    onClick={() => {
+                      updateProjectNameInlogs()
+                    }}
+                  >
+                    update projectName
                   </div>
 
                   <section className="flex flex-row justify-between mt-[18px]">

@@ -77,6 +77,39 @@ export const steamUsersActivityOfUser = (orgId, snapshot, error) => {
   )
   return onSnapshot(itemsQuery, snapshot, error)
 }
+// get all leadLogs from supabase
+export const steamAllLeadsActivity = async (orgId, snapshot, data, error) => {
+  // const itemsQuery = query(doc(db, `${orgId}_leads_log', 'W6sFKhgyihlsKmmqDG0r'))
+  const { uid, cutoffDate } = data
+  // return onSnapshot(doc(db, `${orgId}_leads_log`, uid), snapshot, error)
+  const { data: lead_logs, error1 } = await supabase
+    .from(`${orgId}_lead_logs`)
+    .select('projectId, type,subtype,T, by, from, to, uid, Luid, payload')
+    //.eq('Luid', uid)
+    .eq('type', 'sts_change')
+    .eq('from', 'visitfixed')
+    .gte('T', cutoffDate)
+
+  return lead_logs
+  // return onSnapshot(itemsQuery, snapshot, error)
+}
+export const updateLeadsLogWithProject = async (
+  orgId,
+  snapshot,
+  data1,
+  error1
+) => {
+  // const itemsQuery = query(doc(db, `${orgId}_leads_log', 'W6sFKhgyihlsKmmqDG0r'))
+  const { pId, LeadId } = data1
+  // return onSnapshot(doc(db, `${orgId}_leads_log`, uid), snapshot, error)
+  const { data: lead_logs, error } = await supabase
+    .from(`${orgId}_lead_logs`)
+    .update({ projectId: pId })
+    .eq('Luid', LeadId)
+    .eq('type', 'sts_change')
+  return lead_logs
+  // return onSnapshot(itemsQuery, snapshot, error)
+}
 
 //  get lead activity list
 export const steamLeadActivityLog = async (orgId, snapshot, data, error) => {
