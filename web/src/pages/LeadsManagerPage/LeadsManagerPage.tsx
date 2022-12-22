@@ -10,6 +10,7 @@ import MyLeadsReportHome from 'src/components/myLeadsReportHome'
 import MyPayHomeBody from 'src/components/myPayHomeBody'
 import ProjectsUnitInventory from 'src/components/projectUnitsInventory'
 import TodayLeadsHomePage from 'src/components/TodayLeadsHomePage'
+import { useFileUpload } from 'src/components/useFileUpload'
 import { USER_ROLES } from 'src/constants/userRoles'
 import { useAuth } from 'src/context/firebase-auth-context'
 
@@ -17,13 +18,12 @@ import HeadNavBar from '../../components/HeadNavBar/HeadNavBar'
 
 const LeadsManagerPage = () => {
   const { user } = useAuth()
-
+  const [uploadedFileLink, handleFileUpload] = useFileUpload()
+  const [loading, setLoading] = useState(true)
   const [showSideBar, setShowSideBar] = useState(false)
   const [showDetailedSideBar, setDetailedShowSideBar] = useState(false)
   const [viewable, setViewable] = useState('Today1')
   //confetti
-
-
 
   //confetti
 
@@ -172,7 +172,6 @@ const LeadsManagerPage = () => {
                   isEdit={false}
                 />
               )}
-
             </div>
             {/* <div className="flex-grow mx-4  my-2 items-center overflow-y-auto  h-screen  px-300  py-300"> */}
             {/* {viewable === 'Today' && <ExecutiveHomeViewerPage />} *SS/}

@@ -298,13 +298,22 @@ const LLeadsTableView = ({
       junk: [],
       others: [],
     }
-
+    // vedant
     if (leadsTyper === 'inProgress') {
       const z2 = leadsFetchedData
         .sort((a, b) => b.Date - a.Date)
         .map((fil) => {
+          const { Status } = fil
+
+          if (!Status) {
+            return
+          }
+
+          const statusLowerCase = Status.toLowerCase()
+
           whole.all.push(fil)
-          switch (fil?.Status?.toLowerCase()) {
+
+          switch (statusLowerCase) {
             case 'new':
               return whole.new.push(fil)
             case 'followup':
@@ -322,17 +331,25 @@ const LLeadsTableView = ({
             default:
               return whole.others.push(fil)
           }
-          // return z1[fil?.Status?.toLowerCase()].push(fil)
         })
-      console.log('filter stroke z2', z2, z1, whole)
 
+      console.log('filter stroke z2', z2, z1, whole)
       setStatusSepA([whole])
     } else if (leadsTyper === 'archieveLeads') {
       const z2 = leadsFetchedData
         .sort((a, b) => b.Date - a.Date)
         .map((fil) => {
+          const { Status } = fil
+
+          if (!Status) {
+            return
+          }
+
+          const statusLowerCase = Status.toLowerCase()
+
           archieveArr.archieve_all.push(fil)
-          switch (fil?.Status?.toLowerCase()) {
+
+          switch (statusLowerCase) {
             case 'dead':
               return archieveArr.dead.push(fil)
             case 'notinterested':
@@ -344,29 +361,37 @@ const LLeadsTableView = ({
             default:
               return archieveArr.others.push(fil)
           }
-          // return z1[fil?.Status?.toLowerCase()].push(fil)
         })
-      console.log('filter stroke z2', z2, z1, archieveArr)
 
+      console.log('filter stroke z2', z2, z1, archieveArr)
       setStatusSepA([archieveArr])
     } else {
       const z2 = leadsFetchedData
         .sort((a, b) => b.Date - a.Date)
         .map((fil) => {
+          const { Status } = fil
+
+          if (!Status) {
+            return
+          }
+
+          const statusLowerCase = Status.toLowerCase()
+
           bookedArr.all.push(fil)
-          switch (fil?.Status?.toLowerCase()) {
+
+          switch (statusLowerCase) {
             case 'booked':
               return bookedArr.booked.push(fil)
             default:
               return bookedArr.others.push(fil)
           }
-          // return z1[fil?.Status?.toLowerCase()].push(fil)
         })
-      console.log('filter stroke z2', z2, z1, bookedArr)
 
+      console.log('filter stroke z2', z2, z1, bookedArr)
       setStatusSepA([bookedArr])
     }
-    console.log('filter stroke', y)
+
+    console.log('filter stroke', leadsFetchedData, leadsHeadA, statusSepA)
   }, [leadsFetchedData, tabHeadFieldsA])
   return (
     <Section pb={4}>
