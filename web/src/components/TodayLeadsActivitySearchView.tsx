@@ -44,6 +44,8 @@ import {
 } from 'src/util/dateConverter'
 import { SlimSelectBox } from 'src/util/formFields/slimSelectBoxField'
 
+import RecentActivity from './Charts_Graphs/RecentActivity'
+import TaskProgress from './Charts_Graphs/TaskProgress'
 import Loader from './Loader/Loader'
 import LogSkelton from './shimmerLoaders/logSkelton'
 import SiderForm from './SiderForm/SiderForm'
@@ -737,7 +739,7 @@ export default function TodayLeadsActivitySearchView({
                   />
                 </div>
                 {access?.includes('manage_leads') && (
-                  <div className=" flex flex-col  w-40 mr-5">
+                  <div className=" flex flex-col  w-40">
                     <SlimSelectBox
                       name="project"
                       label=""
@@ -804,7 +806,7 @@ export default function TodayLeadsActivitySearchView({
                     </svg>
                   </button>
                 </span> */}
-                <div className="ml-2 py-3 px-4 flex items-center text-sm font-medium leading-none text-gray-600 bg-gray-200 hover:bg-gray-300 cursor-pointer rounded max-h-[35px]">
+                {/* <div className="ml-2 py-3 px-4 flex items-center text-sm font-medium leading-none text-gray-600 bg-gray-200 hover:bg-gray-300 cursor-pointer rounded max-h-[35px]">
                   <p>Sort By:</p>
                   <select
                     aria-label="select"
@@ -814,7 +816,7 @@ export default function TodayLeadsActivitySearchView({
                     <option className="text-sm text-indigo-800">Latest</option>
                     <option className="text-sm text-indigo-800">Oldest</option>
                   </select>
-                </div>
+                </div> */}
               </section>
             </div>
           </div>
@@ -842,17 +844,37 @@ export default function TodayLeadsActivitySearchView({
           }
           {/* searchKey, setSearchKey */}
           {!schLoading && !leadByViewLayout && todaySch && (
-            <TodoListView
-              taskListA={schFetCleanData}
-              setisImportLeadsOpen={setisImportLeadsOpen}
-              selUserProfileF={selUserProfileF}
-              leadsFetchedData={undefined}
-              leadsTyper={undefined}
-              leadByViewLayout={leadByViewLayout}
-              setLeadByViewLayout={setLeadByViewLayout}
-              searchKey={searchKey}
-              setSearchKey={setSearchKey}
-            />
+            <>
+              <div className=" ">
+                <div className="flex flex-wrap">
+                  <div className="w-10/12">
+                    <TodoListView
+                      taskListA={schFetCleanData}
+                      setisImportLeadsOpen={setisImportLeadsOpen}
+                      selUserProfileF={selUserProfileF}
+                      leadsFetchedData={undefined}
+                      leadsTyper={undefined}
+                      leadByViewLayout={leadByViewLayout}
+                      setLeadByViewLayout={setLeadByViewLayout}
+                      searchKey={searchKey}
+                      setSearchKey={setSearchKey}
+                    />
+                  </div>
+                  <div className="w-2/12 flex flex-col">
+                    <section className="ml-2">
+                      <TaskProgress />
+                      <div className="mt-2">
+                        <RecentActivity title={'My Recent Activity'} />
+                      </div>
+
+                      <div className="mt-2">
+                        <RecentActivity title={'Team Activity'} />
+                      </div>
+                    </section>
+                  </div>
+                </div>
+              </div>
+            </>
           )}
 
           {leadByViewLayout && todaySch && (
@@ -861,7 +883,7 @@ export default function TodayLeadsActivitySearchView({
 
               </div> */}
 
-              <div className="bg-white py-4 md:py-7 px-4 md:px-8 xl:px-10">
+              <div className="bg-white py-4 md:py-7 px-4 md:px-4 xl:px-6 rounded">
                 <div className="sm:flex items-center justify-between">
                   <div className="flex items-center">
                     <a

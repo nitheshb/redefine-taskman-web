@@ -22,7 +22,7 @@ import SiderForm from '../SiderForm/SiderForm'
 
 import FinanceTableView from './financeTableView'
 
-const FinanceTransactionsHome = ({ leadsTyper }) => {
+const CrmRepHomePageView1 = ({ leadsTyper }) => {
   const { user } = useAuth()
   const { orgId } = user
   const [isImportLeadsOpen, setisImportLeadsOpen] = useState(false)
@@ -38,16 +38,64 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
   const [transactionData, setTransactionData] = useState({})
 
   const [value, setValue] = useState('latest')
-  const tabHeadFieldsA = [
+  const DocumentationHeadA = [
     { lab: 'All Transactions', val: 'all' },
-    { lab: 'Latest', val: 'latest' },
-    { lab: 'Reviewing', val: 'reviewing' },
-    { lab: 'Cleared', val: 'cleared' },
-    { lab: 'Rejected', val: 'rejected' },
+    { lab: 'For onBoarding', val: 'latest' },
+    { lab: 'For Agreement', val: 'reviewing' },
+    { lab: 'For Registration', val: 'cleared' },
+    { lab: 'For Bank Loan', val: 'rejected' },
+    { lab: 'For Position', val: 'rejected' },
   ]
+  const [tabHeadFieldsA, setTabHeadFields] = useState(DocumentationHeadA)
+  const [selCategory, setSelCategory] = useState('manage')
+
+  const QueriesHeadA = [
+    { lab: 'All', val: 'all' },
+    { lab: 'Finance', val: 'latest' },
+    { lab: 'Legal', val: 'legal' },
+    { lab: 'Construction', val: 'cleared' },
+    { lab: 'Other', val: 'rejected' },
+  ]
+  const FinanceHeadA = [
+    { lab: 'All', val: 'all' },
+    { lab: 'Customer Estimates', val: 'latest' },
+    { lab: 'Bank Estimates', val: 'legal' },
+    { lab: 'Payment Review', val: 'cleared' },
+    { lab: 'Other', val: 'rejected' },
+  ]
+  const LegalHeadA = [
+    { lab: 'All', val: 'all' },
+    { lab: 'EC', val: 'latest' },
+    { lab: 'Agreement Doc', val: 'legal' },
+    { lab: 'Registration Doc', val: 'cleared' },
+    { lab: 'Other', val: 'rejected' },
+  ]
+  const ConstructionHeadA = [
+    { lab: 'All', val: 'all' },
+    { lab: 'For onBoarding', val: 'latest' },
+    { lab: 'For Agreement', val: 'latest' },
+    { lab: 'For Registration', val: 'legal' },
+    { lab: 'For Bank Loan', val: 'cleared' },
+    { lab: 'Other', val: 'rejected' },
+  ]
+
   useEffect(() => {
     getLeadsDataFun()
   }, [])
+
+  useEffect(() => {
+    if (selCategory === 'manage') {
+      setTabHeadFields(DocumentationHeadA)
+    } else if (selCategory === 'Query') {
+      setTabHeadFields(QueriesHeadA)
+    } else if (selCategory === 'Finance') {
+      setTabHeadFields(FinanceHeadA)
+    } else if (selCategory === 'Legal') {
+      setTabHeadFields(LegalHeadA)
+    } else if (selCategory === 'Construction') {
+      setTabHeadFields(ConstructionHeadA)
+    }
+  }, [selCategory])
 
   const rowsCounter = (parent, searchKey) => {
     return parent.filter((item) => {
@@ -156,27 +204,24 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
   }
   return (
     <>
-      <div className="">
+      <div className="bg-white rounded">
         <div className="">
           <div
             className="
             "
           >
-            <div className="items-center justify-between rounded-md mx-1 my-1 py-2 px-2 bg-white ">
+            <div className="items-center justify-between rounded-md my-1 py-2 px-2 bg-white ">
               {/* <div>
                 <h2 className="text-lg font-semibold text-gray-900 leading-light py-2 ">
                   Accounts Transactions Space
                 </h2>
               </div> */}
               <div className="flex flex-row">
-                <section className="min-w-[100px]">
-                  <CircleProgress />
-                </section>
-                {/* <SemiCircleProgress /> */}
+                {/* section 1 */}
                 <div className="flex flex-col">
                   <div className="flex flex-row">
-                    <h2 className="headTxt1 font-semibold text-[11px] ">
-                      TOTAL COLLECTION
+                    <h2 className="headTxt1 font-semibold text-[11px] ml-2">
+                      PROCESS
                     </h2>
                     <span className="headTxt1 font-semibold text-[11px] ml-4 bg-[#d6e9ed] text-[#53a0a3] px-2 rounded-md ">
                       10
@@ -184,142 +229,253 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
                   </div>
                   <section className="flex flex-row justify-between">
                     <section className="flex flex-row mt-2 mr-1  mb-1 leading-7 text-gray-900  rounded-lg  ">
-                      <div className=" m-1">
-                        <div className=" border-[#E5EAF2] rounded-xl border w-60">
-                          <section>
-                            <small className="px-2 css-17tn7gx">$</small>
-                            <div className="px-2 flex flex-row justify-between">
-                              <h3 className=" css-5mn5yy">36k</h3>
-                            </div>
-                            <div
-                              className="flex flex-row justify-between bg-[#F7F7F7]"
-                              style={{
-                                borderBottomLeftRadius: '12px',
-                                borderBottomRightRadius: '12px',
-                              }}
-                            >
-                              <div className=" flexCenter p-2">
-                                <span className="w-2 h-2 rounded-full bg-[#209653]"></span>
-                                {/* <svg
-                              className="svgIcon text-[#209653] text-[14px] "
-                              focusable="false"
-                              viewBox="0 0 24 24"
-                              aria-hidden="true"
-                              data-testid="ArrowUpwardIcon"
-                            >
-                              <path d="m4 12 1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"></path>
-                            </svg> */}
-
-                                <span className="css-1lpgd8m text-[#209653] text-[10px]">
-                                  CLEARED (2)
-                                </span>
+                      {[
+                        { count: 2, name: 'NEWLY BOOKED', color: '209653' },
+                        { count: 4, name: 'FOR AGREEMENT', color: 'F59A4C' },
+                        { count: 4, name: 'FOR REGISTRATION', color: 'F59A4C' },
+                      ].map((dat, i) => (
+                        <div className=" m-1" key={i}>
+                          <div
+                            key={i}
+                            className=" border-[#E5EAF2] rounded-xl border w-30"
+                            onClick={() => setSelCategory('manage')}
+                          >
+                            <section>
+                              <div className="px-2 py-2 flex flex-row justify-between">
+                                <h3 className=" css-5mn5yy text-sm">
+                                  {dat.count}
+                                </h3>
                               </div>
-                            </div>
-                          </section>
-                        </div>
-                      </div>
-                      <div className=" m-1">
-                        <div className=" border-[#E5EAF2] rounded-xl border w-60">
-                          <section>
-                            <small className="px-2 css-17tn7gx">$</small>
-                            <div className="px-2 flex flex-row justify-between">
-                              <h3 className=" css-5mn5yy">36k</h3>
-                            </div>
-                            <div
-                              className="flex flex-row justify-between bg-[#F7F7F7]"
-                              style={{
-                                borderBottomLeftRadius: '12px',
-                                borderBottomRightRadius: '12px',
-                              }}
-                            >
-                              <div className=" flexCenter p-2">
-                                <span className="w-2 h-2 rounded-full bg-[#F59A4C]"></span>
-                                {/* <svg
-                              className="svgIcon text-[#209653] text-[14px] "
-                              focusable="false"
-                              viewBox="0 0 24 24"
-                              aria-hidden="true"
-                              data-testid="ArrowUpwardIcon"
-                            >
-                              <path d="m4 12 1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"></path>
-                            </svg> */}
-
-                                <span className="css-1lpgd8m text-[#F59A4C] text-[10px]">
-                                  PENDING (4)
-                                </span>
+                              <div
+                                className="flex flex-row justify-between bg-[#F7F7F7]"
+                                style={{
+                                  borderBottomLeftRadius: '12px',
+                                  borderBottomRightRadius: '12px',
+                                }}
+                              >
+                                <div className=" flexCenter p-2">
+                                  <span
+                                    className={`w-2 h-2 rounded-full bg-[#${dat.color}]`}
+                                  ></span>
+                                  <span
+                                    className={`css-1lpgd8m text-[#${dat.color}] text-[10px]`}
+                                  >
+                                    {dat.name}
+                                  </span>
+                                </div>
                               </div>
-                            </div>
-                          </section>
+                            </section>
+                          </div>
                         </div>
-                      </div>
-                      <div className=" m-1">
-                        <div className=" border-[#E5EAF2] rounded-xl border w-60">
-                          <section>
-                            <small className="px-2 css-17tn7gx">$</small>
-                            <div className="px-2 flex flex-row justify-between">
-                              <h3 className=" css-5mn5yy">36k</h3>
-                            </div>
+                      ))}
+                    </section>
+                  </section>
+                </div>
+                {/* section 2 */}
+                <div className="flex flex-col ml-3">
+                  <div className="flex flex-row">
+                    <h2 className="headTxt1 font-semibold text-[11px] ml-2">
+                      FINANCE
+                    </h2>
+                    <span className="headTxt1 font-semibold text-[11px] ml-4 bg-[#d6e9ed] text-[#53a0a3] px-2 rounded-md ">
+                      10
+                    </span>
+                  </div>
+                  <section className="flex flex-row justify-between">
+                    <section className="flex flex-row mt-2 mr-1  mb-1 leading-7 text-gray-900  rounded-lg  ">
+                      {[{ count: 2, name: 'FINANCE', color: '209653' }].map(
+                        (dat, i) => (
+                          <div className=" m-1" key={i}>
                             <div
-                              className="flex flex-row justify-between bg-[#F7F7F7]"
-                              style={{
-                                borderBottomLeftRadius: '12px',
-                                borderBottomRightRadius: '12px',
-                              }}
+                              key={i}
+                              className=" border-[#E5EAF2] rounded-xl border w-30"
+                              onClick={() => setSelCategory('Finance')}
                             >
-                              <div className=" flexCenter p-2">
-                                <span className="w-2 h-2 rounded-full bg-[#EB5657]"></span>
-                                {/* <svg
-                              className="svgIcon text-[#209653] text-[14px] "
-                              focusable="false"
-                              viewBox="0 0 24 24"
-                              aria-hidden="true"
-                              data-testid="ArrowUpwardIcon"
-                            >
-                              <path d="m4 12 1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"></path>
-                            </svg> */}
-
-                                <span className="css-1lpgd8m text-[#EB5657] text-[10px]">
-                                  CANCELLED (2)
-                                </span>
-                              </div>
+                              <section>
+                                <div className="px-2 py-2 flex flex-row justify-between">
+                                  <h3 className=" css-5mn5yy text-sm">
+                                    {dat.count}
+                                  </h3>
+                                </div>
+                                <div
+                                  className="flex flex-row justify-between bg-[#F7F7F7]"
+                                  style={{
+                                    borderBottomLeftRadius: '12px',
+                                    borderBottomRightRadius: '12px',
+                                  }}
+                                >
+                                  <div className=" flexCenter p-2">
+                                    <span
+                                      className={`w-2 h-2 rounded-full bg-[#${dat.color}]`}
+                                    ></span>
+                                    <span
+                                      className={`css-1lpgd8m text-[#${dat.color}] text-[10px]`}
+                                    >
+                                      {dat.name}
+                                    </span>
+                                  </div>
+                                </div>
+                              </section>
                             </div>
-                          </section>
-                        </div>
-                      </div>
-                      <div className=" m-1">
-                        <div className=" border-[#E5EAF2] rounded-xl border w-60">
-                          <section>
-                            <small className="px-2 css-17tn7gx">$</small>
-                            <div className="px-2 flex flex-row justify-between">
-                              <h3 className=" css-5mn5yy">36k</h3>
-                            </div>
+                          </div>
+                        )
+                      )}
+                    </section>
+                  </section>
+                </div>
+                {/* section 3 */}
+                <div className="flex flex-col ml-3">
+                  <div className="flex flex-row">
+                    <h2 className="headTxt1 font-semibold text-[11px] ml-2">
+                      LEGAL
+                    </h2>
+                    <span className="headTxt1 font-semibold text-[11px] ml-4 bg-[#d6e9ed] text-[#53a0a3] px-2 rounded-md ">
+                      10
+                    </span>
+                  </div>
+                  <section className="flex flex-row justify-between">
+                    <section className="flex flex-row mt-2 mr-1  mb-1 leading-7 text-gray-900  rounded-lg  ">
+                      {[{ count: 4, name: 'LEGAL', color: 'F59A4C' }].map(
+                        (dat, i) => (
+                          <div className=" m-1" key={i}>
                             <div
-                              className="flex flex-row justify-between bg-[#F7F7F7]"
-                              style={{
-                                borderBottomLeftRadius: '12px',
-                                borderBottomRightRadius: '12px',
-                              }}
+                              key={i}
+                              className=" border-[#E5EAF2] rounded-xl border w-30"
+                              onClick={() => setSelCategory('Legal')}
                             >
-                              <div className=" flexCenter p-2">
-                                <span className="w-2 h-2 rounded-full bg-[#767676]"></span>
-                                {/* <svg
-                              className="svgIcon text-[#209653] text-[14px] "
-                              focusable="false"
-                              viewBox="0 0 24 24"
-                              aria-hidden="true"
-                              data-testid="ArrowUpwardIcon"
-                            >
-                              <path d="m4 12 1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"></path>
-                            </svg> */}
-
-                                <span className="css-1lpgd8m text-[#767676] text-[10px]">
-                                  TOTAL (10)
-                                </span>
-                              </div>
+                              <section>
+                                <div className="px-2 py-2 flex flex-row justify-between">
+                                  <h3 className=" css-5mn5yy text-sm">
+                                    {dat.count}
+                                  </h3>
+                                </div>
+                                <div
+                                  className="flex flex-row justify-between bg-[#F7F7F7]"
+                                  style={{
+                                    borderBottomLeftRadius: '12px',
+                                    borderBottomRightRadius: '12px',
+                                  }}
+                                >
+                                  <div className=" flexCenter p-2">
+                                    <span
+                                      className={`w-2 h-2 rounded-full bg-[#${dat.color}]`}
+                                    ></span>
+                                    <span
+                                      className={`css-1lpgd8m text-[#${dat.color}] text-[10px]`}
+                                    >
+                                      {dat.name}
+                                    </span>
+                                  </div>
+                                </div>
+                              </section>
                             </div>
-                          </section>
-                        </div>
-                      </div>
+                          </div>
+                        )
+                      )}
+                    </section>
+                  </section>
+                </div>
+                {/* section 4 */}
+                <div className="flex flex-col ml-3">
+                  <div className="flex flex-row">
+                    <h2 className="headTxt1 font-semibold text-[11px] ml-2">
+                      Construction
+                    </h2>
+                    <span className="headTxt1 font-semibold text-[11px] ml-4 bg-[#d6e9ed] text-[#53a0a3] px-2 rounded-md ">
+                      10
+                    </span>
+                  </div>
+                  <section className="flex flex-row justify-between">
+                    <section className="flex flex-row mt-2 mr-1  mb-1 leading-7 text-gray-900  rounded-lg  ">
+                      {[{ count: 2, name: 'ALL', color: '209653' }].map(
+                        (dat, i) => (
+                          <div className=" m-1" key={i}>
+                            <div
+                              key={i}
+                              className=" border-[#E5EAF2] rounded-xl border w-30"
+                              onClick={() => setSelCategory('Construction')}
+                            >
+                              <section>
+                                <div className="px-2 py-2 flex flex-row justify-between">
+                                  <h3 className=" css-5mn5yy text-sm">
+                                    {dat.count}
+                                  </h3>
+                                </div>
+                                <div
+                                  className="flex flex-row justify-between bg-[#F7F7F7]"
+                                  style={{
+                                    borderBottomLeftRadius: '12px',
+                                    borderBottomRightRadius: '12px',
+                                  }}
+                                >
+                                  <div className=" flexCenter p-2">
+                                    <span
+                                      className={`w-2 h-2 rounded-full bg-[#${dat.color}]`}
+                                    ></span>
+                                    <span
+                                      className={`css-1lpgd8m text-[#${dat.color}] text-[10px]`}
+                                    >
+                                      {dat.name}
+                                    </span>
+                                  </div>
+                                </div>
+                              </section>
+                            </div>
+                          </div>
+                        )
+                      )}
+                    </section>
+                  </section>
+                </div>
+                {/* section 5 */}
+                <div className="flex flex-col ml-3">
+                  <div className="flex flex-row">
+                    <h2 className="headTxt1 font-semibold text-[11px] ml-2">
+                      QUERIES
+                    </h2>
+                    <span className="headTxt1 font-semibold text-[11px] ml-4 bg-[#d6e9ed] text-[#53a0a3] px-2 rounded-md ">
+                      10
+                    </span>
+                  </div>
+                  <section className="flex flex-row justify-between">
+                    <section className="flex flex-row mt-2 mr-1  mb-1 leading-7 text-gray-900  rounded-lg  ">
+                      {[{ count: 2, name: 'ALL', color: '209653' }].map(
+                        (dat, i) => (
+                          <div className=" m-1" key={i}>
+                            <div
+                              key={i}
+                              className=" border-[#E5EAF2] rounded-xl border w-30"
+                              onClick={() => setSelCategory('Query')}
+                            >
+                              <section>
+                                <div className="px-2 py-2 flex flex-row justify-between">
+                                  <h3 className=" css-5mn5yy text-sm">
+                                    {dat.count}
+                                  </h3>
+                                </div>
+                                <div
+                                  className="flex flex-row justify-between bg-[#F7F7F7]"
+                                  style={{
+                                    borderBottomLeftRadius: '12px',
+                                    borderBottomRightRadius: '12px',
+                                  }}
+                                >
+                                  <div className=" flexCenter p-2">
+                                    <span
+                                      className={`w-2 h-2 rounded-full bg-[#${dat.color}]`}
+                                    ></span>
+                                    <span
+                                      className={`css-1lpgd8m text-[#${dat.color}] text-[10px]`}
+                                    >
+                                      {dat.name}
+                                    </span>
+                                  </div>
+                                </div>
+                              </section>
+                            </div>
+                          </div>
+                        )
+                      )}
                     </section>
                   </section>
                 </div>
@@ -444,24 +600,42 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
                         <thead className="">
                           <tr className="p-2">
                             <th className="w-2"></th>
-                            <th className="text-left text-xs app-color-black py-2">
-                              <span className="ml-4">FROM</span>
+                            <th className="text-left text-xs app-color-black py-2 whitespace-nowrap mx-3">
+                              <span className="ml-4">Asset Details</span>
                             </th>
-                            <th className="text-left text-xs app-color-black py-2">
-                              <span className="ml-4">To</span>
+                            <th className="text-left text-xs app-color-black py-2 whitespace-nowrap px-3">
+                              <span className="ml-4">Welcome Formalities</span>
                             </th>
-                            <th className="text-left text-xs app-color-black py-2">
-                              TRANSACTION DETAILS
+                            <th className="text-left text-xs app-color-black py-2 whitespace-nowrap px-3">
+                              Payment Pending
                             </th>
-                            <th className="text-right text-xs app-color-black py-2">
-                              <span className="mr-10">AMOUNT</span>
+                            <th className="text-left text-xs app-color-black py-2 whitespace-nowrap mx-3 px-3">
+                              Payment Review
                             </th>
-                            <th className="text-right text-xs app-color-black py-2">
-                              <span className="mr-10">STATUS</span>
+                            <th className="text-left text-xs app-color-black py-2 whitespace-nowrap px-3">
+                              Agreement Documentation
+                            </th>
+                            <th className="text-left text-xs app-color-black py-2 whitespace-nowrap px-3">
+                              Agreement Schedule
+                            </th>
+                            <th className="text-left text-xs app-color-black py-2 whitespace-nowrap px-3">
+                              Registration Documentation
+                            </th>
+                            <th className="text-left text-xs app-color-black py-2 whitespace-nowrap px-3">
+                              Registration Schedule
                             </th>
 
-                            <th className="text-left text-xs app-color-black py-2">
-                              COMMENTS
+                            <th className="text-right text-xs app-color-black py-2 whitespace-nowrap px-3">
+                              <span className="m-10">
+                                Constuction Progress
+                              </span>
+                            </th>
+                            <th className="text-right text-xs app-color-black py-2 px-3">
+                              <span className="m-10">Queries</span>
+                            </th>
+
+                            <th className="text-left text-xs app-color-black py-2 px-3">
+                              Others
                             </th>
 
                             <th></th>
@@ -594,4 +768,4 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
   )
 }
 
-export default FinanceTransactionsHome
+export default CrmRepHomePageView1

@@ -8,6 +8,7 @@ import { USER_ROLES } from 'src/constants/userRoles'
 import { useAuth } from 'src/context/firebase-auth-context'
 
 import FinanceHomePagePage from './pages/FinanceHomePagePage/FinanceHomePagePage'
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage/PrivacyPolicyPage'
 import Profile from './pages/Profile/Profile'
 
 const defaultRoutes = () => {
@@ -61,6 +62,7 @@ const Routes = () => {
         <Route path="/admin/finance-module" page={FinanceHomePagePage} name="financeModule" />
         <Route path="/admin/legal-module" page={LegalHomePage} name="legalModule" />
         <Route path="/admin/erp-account" page={ErpAccountHomePage} name="erpAccount" />
+        <Route path="/privacyPolicy" page={PrivacyPolicyPage} name="privacyPolicy" />
       </>
     )
   } else if (user?.role?.includes(USER_ROLES.HR_MANAGER) || user?.role?.includes(USER_ROLES.HR_EXECUTIVE)) {
@@ -113,6 +115,7 @@ const Routes = () => {
 
   return (
     <Router>
+      <Route path="/privacPolicy" page={PrivacyPolicyPage} name="privacyPolicy" />
       <Route path="/construct-module" page={ConstructModulePage} name="constructModule" />
       {/* <Route path="/admin/home" page={HomePage} name="home" /> */}
       <Route path="/erp-account-home" page={ErpAccountHomePage} name="erpAccountHome" />

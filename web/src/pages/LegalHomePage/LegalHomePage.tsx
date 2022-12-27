@@ -51,7 +51,7 @@ const LegalHomePage = () => {
         <div className="flex flex-col flex-grow">
           <HeadNavBar />
           {}
-          <div className="flex flex-row overflow-auto gap-2 h-[100vh]  text-gray-700 bg-gradient-to-tr from-blue-200 via-indigo-200 to-pink-200">
+          <div className="flex flex-row overflow-auto h-[100vh]  text-gray-700 bg-gradient-to-tr from-blue-200 via-indigo-200 to-pink-200">
             <div
               className={`${
                 showDetailedSideBar

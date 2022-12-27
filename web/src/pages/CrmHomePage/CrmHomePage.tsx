@@ -28,7 +28,9 @@ import CrmTaskList from 'src/components/A_CRMcomp/CrmTaskList'
 import AllBankDetailsView from 'src/components/All_BankDetailsView'
 import ConstructUnitsHome from 'src/components/ConstructModule/ConstructUnitsHome'
 import CrmDashboardHome from 'src/components/CrmModule/CrmDashboard'
-import CustomersSearchHome from 'src/components/CrmModule/CustomersSearchHome'
+import CrmRegisterModeHome from 'src/components/CrmModule/CrmRegisterHome'
+import CrmRepHomePageView1 from 'src/components/CrmModule/CrmRepHomePageView1'
+import CustomersEventsHome from 'src/components/CrmModule/CustomersEventsHome'
 import CustomersSearchHome2 from 'src/components/CrmModule/CustomersSearchHome2'
 import HeadSideBarDetailView from 'src/components/HeadDetailSideBar'
 import HeadSideBarDetailView2 from 'src/components/HeadDetailSideBar2'
@@ -391,7 +393,9 @@ const CrmHomePage = () => {
                     isEdit={undefined}
                   />
                 )}
+                {viewable === 'crmSpace' && <CrmRepHomePageView1 />}
               </div>
+
               <div className="px-3">
                 {(viewable === 'Today1' || viewable === 'Home') && (
                   <CrmHome leadsTyper={undefined} />
@@ -411,10 +415,18 @@ const CrmHomePage = () => {
                 {viewable === 'CrmBuckets' && (
                   <CrmBucketList leadsTyper={'financeModule'} />
                 )}
-
-                {viewable === 'crmSpace' && <CrmTaskList />}
+                {viewable === 'crmSpace-II' && <CrmTaskList />}
+                {viewable === 'crmSpace-I' && <CrmRegisterModeHome />}
                 {viewable === 'MyCustomers' && (
-                  <CustomersSearchHome
+                  <CustomersEventsHome
+                    project={{
+                      projectName: 'Projects',
+                    }}
+                    isEdit={undefined}
+                  />
+                )}
+                {viewable === 'MyCustomersEvents' && (
+                  <CustomersEventsHome
                     project={{
                       projectName: 'Projects',
                     }}

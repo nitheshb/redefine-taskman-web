@@ -1,14 +1,13 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
+import { useEffect, useState } from 'react'
+
+import { ArrowNarrowRightIcon } from '@heroicons/react/solid'
 import { TabList } from '@mui/lab'
 import { Box, Card, Grid, styled } from '@mui/material'
-import LLeadsTableBody from '../LLeadsTableBody/LLeadsTableBody'
-import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next' // styled components
-import { ArrowNarrowRightIcon } from '@heroicons/react/solid'
 
-import uniqueId from 'src/util/generatedId'
 import {
   formatToPhone,
   getDifferenceInDays,
@@ -16,6 +15,9 @@ import {
   getDifferenceInMinutes,
   prettyDateTime,
 } from 'src/util/dateConverter'
+import uniqueId from 'src/util/generatedId'
+
+import LLeadsTableBody from '../LLeadsTableBody/LLeadsTableBody'
 
 const torrowDate = new Date(
   +new Date().setHours(0, 0, 0, 0) + 86400000
@@ -106,7 +108,7 @@ const TodoListView = ({
   return (
     <Box pb={4}>
       <div className=" w-full">
-        <div className="bg-white py-4 md:py-7 px-4 md:px-8 xl:px-10">
+        <div className="bg-white py-4 md:py-7 px-4 md:px-4 xl:px-6 rounded">
           <div className="sm:flex items-center justify-between">
             <div className="flex items-center">
               <a
