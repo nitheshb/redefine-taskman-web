@@ -170,6 +170,7 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
               </div> */}
               <div className="flex flex-row">
                 <section className="min-w-[100px]">
+                <h5>Weekly Progress</h5>
                   <CircleProgress />
                 </section>
                 {/* <SemiCircleProgress /> */}

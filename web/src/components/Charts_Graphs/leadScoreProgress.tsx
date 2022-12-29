@@ -5,7 +5,7 @@ import { Box, Card, useTheme } from '@mui/material'
 import Chart from 'react-apexcharts'
 import { useTranslation } from 'react-i18next'
 
-const CircleProgress = () => {
+const LeadScoreProgress = () => {
   const theme = useTheme()
   const { t } = useTranslation()
 
@@ -23,7 +23,7 @@ const CircleProgress = () => {
           plotOptions: {
             radialBar: {
               hollow: {
-                size: '70%',
+                size: '40%',
               },
               dataLabels: {
                 name: {
@@ -31,7 +31,7 @@ const CircleProgress = () => {
                 },
                 value: {
                   offsetY: 10,
-                  fontSize: '28px',
+                  fontSize: '12px',
                   fontWeight: 600,
                   formatter: (value) => `${value}%`,
                   fontFamily: theme.typography.fontFamily,
@@ -68,11 +68,11 @@ const CircleProgress = () => {
             mode: theme.palette.mode,
           },
         }}
-        height={150}
+        height={50}
         series={[75]}
       />
     </section>
   )
 }
 
-export default CircleProgress
+export default LeadScoreProgress

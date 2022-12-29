@@ -62,6 +62,7 @@ import {
   editTaskDB,
   editAddTaskCommentDB,
   rescheduleTaskDB,
+  updateLeadLastUpdateTime,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import { storage } from 'src/context/firebaseConfig'
@@ -184,6 +185,31 @@ const siteVisitFeedbackOptions = [
   // { label: 'Follow Up', value: 'followup' },
   // { label: 'RNR', value: 'rnr' },
   // { label: 'Dead', value: 'Dead' },
+]
+const lookingAtBudgetRange = [
+  { label: 'less than 25 lakhs', value: 'less25L' },
+  { label: 'less than 50 lakhs', value: 'less50L' },
+  { label: 'less than 1 Cr', value: 'less1Cr' },
+  { label: 'less than 1.5 Cr', value: 'less1.5Cr' },
+  { label: 'less than 2 Cr', value: 'less2Cr' },
+]
+const exitstingAsset = [
+  { label: 'Plot', value: 'plot' },
+  { label: 'Apartment', value: 'apartment' },
+  { label: 'Villa', value: 'villa' },
+  { label: 'Apartment & Villa', value: 'apart_villa' },
+  { label: 'Plot & Apartment', value: 'plot_villa' },
+  { label: 'Others', value: 'other' },
+]
+const reasonPurchase = [
+  { label: 'Living', value: 'living' },
+  { label: 'Commercial', value: 'Commercial' },
+  { label: 'Rental', value: 'renatal' },
+  { label: 'Investment', value: 'investment' },
+]
+const preferredArea = [
+  { label: 'East', value: 'east' },
+  { label: 'west', value: 'west' },
 ]
 export default function CustomerProfileSideView({
   openUserProfile,
@@ -960,6 +986,12 @@ export default function CustomerProfileSideView({
         data.schTime = addCommentTime
       }
       await editAddTaskCommentDB(orgId, id, data.ct, 'pending', schStsA, data)
+      await updateLeadLastUpdateTime(
+        orgId,
+        id,
+        Timestamp.now().toMillis(),
+        addCommentTime
+      )
       await cancelResetStatusFun()
     }
   }
@@ -1726,7 +1758,7 @@ export default function CustomerProfileSideView({
                           Notes
                         </div> */}
 
-                  <div className=" border-gray-200">
+                  <div className="flex flex-row justify-between border-gray-200">
                     <ul
                       className="flex   rounded-t-lg border-b mx-2"
                       id="myTab"
@@ -1762,7 +1794,94 @@ export default function CustomerProfileSideView({
                         )
                       })}
                     </ul>
+                    {selFeature != 'lead_strength' && (
+                      <span
+                        className="font-bodyLato text-xs text-blue-400 mr-2 mt-2 cursor-pointer"
+                        onClick={() => setFeature('lead_strength')}
+                      >
+                        LEAD STRENGTH
+                      </span>
+                    )}
+                    {selFeature == 'lead_strength' && (
+                      <span
+                        className="font-bodyLato text-xs text-red-400 mr-2 mt-2 cursor-pointer"
+                        onClick={() => setFeature('appointments')}
+                      >
+                        CLOSE
+                      </span>
+                    )}
                   </div>
+                  {selFeature == 'lead_strength' && (
+                    <>
+                      <div className="flex flex-col pt-0 my-10 mt-[30px] rounded bg-gradient-to-r from-teal-200 to-teal-400 mx-4 p-4">
+                        <div className="grid grid-cols-2 gap-8 pt-3 mx-3  mt-2">
+                          <CustomSelect
+                            name="bugetRange"
+                            label="Looking at Budget Range*"
+                            className="input mt-3"
+                            onChange={(value) => {
+                              // formik.setFieldValue('source', value.value)
+                              // setNotInterestType(value.value)
+                            }}
+                            value={notInterestType}
+                            options={lookingAtBudgetRange}
+                          />
+                          <CustomSelect
+                            name="assetPossesed"
+                            label="Any Existing Banglore Assets ?*"
+                            className="input mt-3"
+                            onChange={(value) => {
+                              // formik.setFieldValue('source', value.value)
+                              // setNotInterestType(value.value)
+                            }}
+                            value={notInterestType}
+                            options={exitstingAsset}
+                          />
+                          <CustomSelect
+                            name="reasonPurchase"
+                            label="Reason For Purchase ?*"
+                            className="input"
+                            onChange={(value) => {
+                              // formik.setFieldValue('source', value.value)
+                              // setNotInterestType(value.value)
+                            }}
+                            value={notInterestType}
+                            options={reasonPurchase}
+                          />
+                          <CustomSelect
+                            name="preferredArea"
+                            label="Preferred Area ?*"
+                            className="input"
+                            onChange={(value) => {
+                              // formik.setFieldValue('source', value.value)
+                              // setNotInterestType(value.value)
+                            }}
+                            value={notInterestType}
+                            options={reasonPurchase}
+                          />
+                        </div>
+
+                        <div className="flex flex-row justify-end mt-6">
+                          <section className="flex flex-row">
+                            <button
+                              onClick={() => fAddNotes()}
+                              className={`flex mt-2 rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium text-white bg-teal-900  hover:bg-teal-700  `}
+                            >
+                              <span className="ml-1 ">Save</span>
+                            </button>
+
+                            <button
+                              // onClick={() => fSetLeadsType('Add Lead')}
+                              onClick={() => setFeature('appointments')}
+                              className={`flex mt-2 ml-4  rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium border  hover:bg-teal-900 hover:text-white  `}
+                            >
+                              <span className="ml-1 ">Cancel</span>
+                            </button>
+                          </section>
+                        </div>
+                      </div>
+                    </>
+                  )}
                   {selFeature == 'email' && (
                     <>
                       <EmailForm />

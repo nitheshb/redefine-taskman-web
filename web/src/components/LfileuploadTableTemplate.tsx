@@ -275,8 +275,9 @@ const EnhancedTableToolbar = (props) => {
         // newData['Status'] = 'unassigned'
         console.log('am inside addLeadstoDB', newData)
 
-        return await addLead(orgId, newData, user?.email, 'Lead Created by csv')
+        await addLead(orgId, newData, user?.email, 'Lead Created by csv')
         setUploadedLeadsCount(index + 1)
+        return
         console.log('am inside addLeadstoDB')
       })
     )

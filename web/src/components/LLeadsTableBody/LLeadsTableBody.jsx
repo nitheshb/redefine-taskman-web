@@ -3,6 +3,10 @@
 import * as React from 'react'
 
 import '../../styles/myStyles.css'
+import {
+  LinearProgress,
+  Rating,
+} from '@mui/material'
 import Section from '@mui/material/Box'
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
@@ -71,11 +75,18 @@ import LogSkelton from '../shimmerLoaders/logSkelton'
 // }
 
 function descendingComparator(a, b, orderBy) {
-  console.log('what is the order 1 ', b,  b[orderBy])
-  if (b[orderBy] || b['Date'] < a[orderBy] || b['Date']) {
+  console.log('what is the order 1 ', b,orderBy, b[orderBy] || b['stsUpT'])
+  if ((b[orderBy] || b['stsUpT'] || b['Date'])  < (a[orderBy] || a['stsUpT'] || a['Date'] )) {
     return -1
   }
-  if (b[orderBy] || b['Date'] > a[orderBy] || b['Date']) {
+  if ((b[orderBy] || b['stsUpT'] || b['Date'])  > (a[orderBy] || a['stsUpT'] || a['Date']) ) {
+    return 1
+  }
+  return 0
+  if (b[orderBy] < a[orderBy]) {
+    return -1
+  }
+  if (b[orderBy]> a[orderBy]) {
     return 1
   }
   return 0
@@ -112,13 +123,19 @@ const headCells = [
     id: 'Date',
     numeric: false,
     disablePadding: true,
-    label: 'Created Date',
+    label: 'Created On',
   },
   {
-    id: 'stsUpT',
+    id: 'leadUpT',
     numeric: false,
     disablePadding: true,
-    label: 'Updated',
+    label: 'Last Activity',
+  },
+  {
+    id: 'schTime',
+    numeric: false,
+    disablePadding: true,
+    label: 'Next Sch',
   },
   {
     id: 'Clientdetails',
@@ -175,6 +192,34 @@ function EnhancedTableHead(props) {
     onRequestSort(event, property)
   }
 
+  const displayHeadersFun =(headCell)=> {
+
+    if(['Assigned', 'schTime', 'leadUpT'].includes(headCell)){
+      switch (headCell) {
+        case 'Assigned':
+        return  viewUnitStatusA.includes('Assigned To') ? '' : 'none'
+        case 'leadUpT':
+        return  viewUnitStatusA.includes('Last Activity') ? '' : 'none'
+        case 'schTime':
+          return  viewUnitStatusA.includes('Next Sch') ? '' : 'none'
+        default:
+          break;
+      }
+    }else {
+      return ''
+    }
+    //   if(viewUnitStatusA.includes('Assigned To') &&
+    //   headCell === 'Assigned'){
+    //   return ''
+    //   }else{
+    //     return 'none'
+    //   }
+    // }else {
+    //   return ''
+    // }
+
+
+  }
   return (
     <TableHead style={{ height: '10px' }}>
       <TableRow selected={true}>
@@ -221,13 +266,7 @@ function EnhancedTableHead(props) {
                 height: '10px',
                 maxHeight: '10px',
                 lineHeight: '7px',
-                display:
-                  headCell.id != 'Assigned'
-                    ? ''
-                    : viewUnitStatusA.includes('Assigned To') &&
-                      headCell.id === 'Assigned'
-                    ? ''
-                    : 'none',
+                display: displayHeadersFun(headCell.id)
               }}
             >
               <TableSortLabel
@@ -530,7 +569,7 @@ export default function LLeadsTableBody({
   newArray
 }) {
   const { user } = useAuth()
-  const [order, setOrder] = React.useState('asc')
+  const [order, setOrder] = React.useState('desc')
   const [orderBy, setOrderBy] = React.useState('Date')
   const [selected, setSelected] = React.useState([])
   const [page, setPage] = React.useState(0)
@@ -687,6 +726,7 @@ console.log('filter value stuff' , parent)
   const [selBlock, setSelBlock] = React.useState({})
   const [viewUnitStatusA, setViewUnitStatusA] = React.useState([
     'Phone No',
+    'Last Activity'
 
     // 'Blocked',
     // 'Booked',
@@ -823,10 +863,14 @@ console.log('filter value stuff' , parent)
                         scope="row"
                         padding="none"
                       >
+                      <section>
                         <span className="font-bodyLato">
                           {prettyDate(row.Date).toLocaleString()}
                         </span>
+
+                        </section>
                       </TableCell>
+                      {viewUnitStatusA.includes('Last Activity') && (
                       <TableCell
                         component="th"
                         id={labelId}
@@ -840,30 +884,74 @@ console.log('filter value stuff' , parent)
                         <span className="px- py-[1px]  min-w-[100px] inline-flex text-xs leading-5 tracking-wide  rounded-full  text-green-800">
                                                 {Math.abs(
                                                   getDifferenceInMinutes(
-                                                    (row?.stsUpT || row.Date),
+                                                    (row?.leadUpT || row?.stsUpT),
                                                     ''
                                                   )
                                                 ) > 60
                                                   ? Math.abs(
                                                       getDifferenceInMinutes(
-                                                        (row?.stsUpT || row.Date),
+                                                        (row?.leadUpT || row?.stsUpT),
                                                         ''
                                                       )
                                                     ) > 1440
                                                     ? `${Math.abs(getDifferenceInDays(
-                                                      (row?.stsUpT || row.Date),
+                                                      (row?.leadUpT || row?.stsUpT),
                                                         ''
                                                       ))} Days `
                                                     : `${Math.abs(getDifferenceInHours(
-                                                      (row?.stsUpT || row.Date),
+                                                      (row?.leadUpT || row?.stsUpT),
                                                         ''
                                                       ))} Hours `
                                                   : `${Math.abs(getDifferenceInMinutes(
-                                                    (row?.stsUpT || row.Date),
+                                                    (row?.leadUpT || row?.stsUpT),
                                                       ''
                                                     ))} Min`}{' '}
                                                 {getDifferenceInMinutes(
-                                                  (row?.stsUpT || row.Date),
+                                                  (row?.leadUpT || row?.stsUpT),
+                                                  ''
+                                                ) < 0
+                                                  ? 'ago'
+                                                  : 'Left'}
+                                              </span>
+                        </>
+                      </TableCell>)}
+                     {viewUnitStatusA.includes('Next Sch') && <TableCell
+                        component="th"
+                        id={labelId}
+                        scope="row"
+                        padding="none"
+                      >
+                      <>
+                        {/* <span className="font-bodyLato">
+                          {prettyDate(row?.stsUpT || row.Date).toLocaleString()}
+                        </span> */}
+                        <span className="px- py-[1px]  min-w-[100px] inline-flex text-xs leading-5 tracking-wide  rounded-full  text-green-800">
+                                                {Math.abs(
+                                                  getDifferenceInMinutes(
+                                                    (row?.schTime ),
+                                                    ''
+                                                  )
+                                                ) > 60
+                                                  ? Math.abs(
+                                                      getDifferenceInMinutes(
+                                                        (row?.schTime),
+                                                        ''
+                                                      )
+                                                    ) > 1440
+                                                    ? `${Math.abs(getDifferenceInDays(
+                                                      (row?.schTime ),
+                                                        ''
+                                                      ))} Days `
+                                                    : `${Math.abs(getDifferenceInHours(
+                                                      (row?.schTime),
+                                                        ''
+                                                      ))} Hours `
+                                                  : `${Math.abs(getDifferenceInMinutes(
+                                                    (row?.schTime),
+                                                      ''
+                                                    ))} Min`}{' '}
+                                                {getDifferenceInMinutes(
+                                                  (row?.schTime),
                                                   ''
                                                 ) < 0
                                                   ? 'ago'
@@ -871,6 +959,9 @@ console.log('filter value stuff' , parent)
                                               </span>
                         </>
                       </TableCell>
+                     }
+
+
 
                       <TableCell align="left">
                         <section>
@@ -959,6 +1050,7 @@ console.log('filter value stuff' , parent)
                           )}
                         </section>
                       </TableCell>
+
                       <TableCell align="left">{row.Project}</TableCell>
                       {/* display:
                   viewUnitStatusA.includes('Assigned To') &&
@@ -978,12 +1070,18 @@ console.log('filter value stuff' , parent)
                       )}
 
                       <TableCell align="middle">
+                      <section className="flex flex-col">
                         <span className="px-2 uppercase inline-flex text-[11px] text-black-900  ">
                           {row?.Source?.toString() || 'NA'}
                         </span>
+                      <Rating name="size-small half-rating-read" defaultValue={2.5} size="small" precision={0.5} readOnly />
+
+                        </section>
                       </TableCell>
 
                       <TableCell align="left">
+
+
                         <span className="px-2 uppercase inline-flex text-[10px] leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                           <HighlighterStyle
                             searchKey={searchKey}

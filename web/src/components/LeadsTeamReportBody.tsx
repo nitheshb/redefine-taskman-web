@@ -6,6 +6,7 @@
 
 import { useEffect, useState } from 'react'
 
+import { Timestamp } from '@firebase/firestore'
 import { CalendarIcon, EyeIcon } from '@heroicons/react/outline'
 import {
   ChevronDoubleLeftIcon,
@@ -20,8 +21,11 @@ import {
   getAllProjects,
   getLeadbyId1,
   getLeadsByDate,
+  getTodayTodoLeadsData,
   steamAllLeadsActivity,
+  steamLeadScheduleLog,
   steamUsersListByRole,
+  updateLeadLastUpdateTime,
   updateLeadsLogWithProject,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
@@ -253,6 +257,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
 
   useEffect(() => {
     if (selProjectEmpIs?.value === 'allprojects') {
+      console.log('leadsFetchedRawData', leadsFetchedRawData)
       setEmployeeListTuned(
         serialEmployeeLeadData(usersList, leadsFetchedRawData)
       )
@@ -424,7 +429,12 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
 
   const getLeadsDataFun = async () => {
     startOfWeek(d)
-    console.log('date is', d, subMonths(startOfMonth(d), 6).getTime())
+    console.log(
+      'date is',
+      d,
+      subMonths(startOfMonth(d), 6).getTime(),
+      sourceDateRange
+    )
     const { access, uid, orgId } = user
 
     if (access?.includes('manage_leads')) {
@@ -466,6 +476,84 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
     await setLeadLogsRawData(steamLeadLogs)
   }
 
+  const updateLeadsLastUpdatetimeFun = async () => {
+    // get data from tasks table with pending as available
+    // steamLeadScheduleLog(
+    //   orgId,
+    //   (doc) => {
+    //     console.log('my total fetched list is 1', doc.data())
+    //     const x = doc.data()
+    //     let y = []
+    //     const { staA, staDA } = x
+    //     const indi = staA.indexOf('pending')
+    //     y = staDA
+    //     if (y.length > 0) {
+    //       // x.uid = docSnapshot.id
+    //       // eslint-disable-next-line prefer-const
+    //       const { comments, ct, schTime } = x[y[indi]]
+    //       if (comments) {
+    //         console.log('insdied coment ', x.uid, comments[0]['t'], schTime)
+    //         // updateLeadLastUpdateTime(orgId, x.uid, comments[0]['t'], schTime)
+    //       } else if (ct) {
+    //         console.log('insdied ct ', x.uid, ct, schTime)
+
+    //         updateLeadLastUpdateTime(orgId, 'suAn4KcwwEUVy4ziYTwb', ct, schTime)
+    //       }
+    //     }
+    //   },
+
+    //   {
+    //     uid: 'suAn4KcwwEUVy4ziYTwb',
+    //   },
+    //   (error) => console.log('error', error)
+    // )
+
+    getTodayTodoLeadsData(
+      orgId,
+      (querySnapshot) => {
+        let pro
+        let y = []
+        querySnapshot.docs.map(async (docSnapshot) => {
+          const x = docSnapshot.data()
+          const { staDA, staA } = x
+
+          const indi = staA.indexOf('pending')
+
+          y = staDA
+
+          if (y.length > 0 && y[indi]) {
+            // x.uid = docSnapshot.id
+            // eslint-disable-next-line prefer-const
+
+            const { comments, ct, schTime } = x[y[indi]]
+            if (comments) {
+              // console.log(
+              //   'insdied coment ',
+              //   docSnapshot.id,
+              //   comments[0]['t'],
+              //   schTime
+              // )
+              // updateLeadLastUpdateTime(orgId, x.uid, comments[0]['t'], schTime)
+            } else if (ct) {
+              // console.log('insdied ct ', docSnapshot.id, ct, schTime)
+              try {
+                updateLeadLastUpdateTime(orgId, docSnapshot.id, ct, schTime)
+              } catch (error) {
+                console.log(
+                  'faile to throw error at inside fun getTodayTodoLeadsData  ',
+                  error
+                )
+              }
+            }
+          }
+        })
+      },
+      { type: 'upcoming' },
+      () => {
+        console.log('error')
+      }
+    )
+  }
   const updateProjectNameInlogs = async () => {
     // get all the logs from supabase
     // loop through each doc and get projectId
@@ -594,7 +682,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
     'bg-white border-blue-200',
     'bg-[#baf6d0] border-purple-200',
   ]
-  const triggerWhatsAppAlert = async () => {
+  const triggerWhatsAppAlert = async (check) => {
     empListTuned.map((empData, i) => {
       const { label, offPh, followup, visitfixed, negotiation, booked } =
         empData
@@ -612,7 +700,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
     empTaskListTuned.map((empData, i) => {
       const { label, offPh, now, sevenDays, Total } = empData
       sendWhatAppTextSms1(
-        offPh,
+        '9849000525',
         `Good Morning..! ${label} 🏆\n
       Here is your Today's task overview  \n
       Due Tasks   -${(Total?.length || 0) - (now?.length || 0)}
@@ -1133,11 +1221,11 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                             Total
                           </td>
                           <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
-                            {leadLogsRawData.length}
+                            {leadLogsRawData?.length}
                           </td>
                           <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
                             {
-                              leadLogsRawData.filter((datObj) =>
+                              leadLogsRawData?.filter((datObj) =>
                                 [
                                   'new',
                                   'unassigned',
@@ -1153,35 +1241,35 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                             <>
                               <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
                                 {
-                                  leadLogsRawData.filter(
+                                  leadLogsRawData?.filter(
                                     (datObj) => datObj?.to == 'new'
                                   ).length
                                 }
                               </td>
                               <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
                                 {
-                                  leadLogsRawData.filter(
+                                  leadLogsRawData?.filter(
                                     (datObj) => datObj?.to == 'followup'
                                   ).length
                                 }
                               </td>
                               <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
                                 {
-                                  leadLogsRawData.filter(
+                                  leadLogsRawData?.filter(
                                     (datObj) => datObj?.to == 'visitfixed'
                                   ).length
                                 }
                               </td>
                               <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
                                 {
-                                  leadLogsRawData.filter(
+                                  leadLogsRawData?.filter(
                                     (datObj) => datObj?.to == 'visitdone'
                                   ).length
                                 }
                               </td>
                               <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
                                 {
-                                  leadLogsRawData.filter(
+                                  leadLogsRawData?.filter(
                                     (datObj) => datObj?.to == 'negotiation'
                                   ).length
                                 }
@@ -1190,7 +1278,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                           )}
                           <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
                             {
-                              leadLogsRawData.filter(
+                              leadLogsRawData?.filter(
                                 (datObj) => datObj?.to == 'booked'
                               ).length
                             }
@@ -1199,28 +1287,28 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                             <>
                               <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
                                 {
-                                  leadLogsRawData.filter(
+                                  leadLogsRawData?.filter(
                                     (datObj) => datObj?.to == 'notinterested'
                                   ).length
                                 }
                               </td>
                               <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
                                 {
-                                  leadLogsRawData.filter(
+                                  leadLogsRawData?.filter(
                                     (datObj) => datObj?.to == 'dead'
                                   ).length
                                 }
                               </td>
                               <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
                                 {
-                                  leadLogsRawData.filter(
+                                  leadLogsRawData?.filter(
                                     (datObj) => datObj?.to == 'blocked'
                                   ).length
                                 }
                               </td>
                               <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
                                 {
-                                  leadLogsRawData.filter(
+                                  leadLogsRawData?.filter(
                                     (datObj) => datObj?.to == 'junk'
                                   ).length
                                 }
@@ -1229,7 +1317,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                           )}
                           <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
                             {
-                              leadLogsRawData.filter((datObj) =>
+                              leadLogsRawData?.filter((datObj) =>
                                 [
                                   'blocked',
                                   'dead',
@@ -1241,7 +1329,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                           </td>
                           <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
                             {
-                              leadLogsRawData.filter(
+                              leadLogsRawData?.filter(
                                 (datObj) => datObj?.to == ''
                               ).length
                             }
@@ -1271,6 +1359,14 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                     }}
                   >
                     update projectName
+                  </div>
+
+                  <div
+                    onClick={() => {
+                      updateLeadsLastUpdatetimeFun()
+                    }}
+                  >
+                    update LeadsLastUpdatetTime
                   </div>
 
                   <section className="flex flex-row justify-between mt-[18px]">
@@ -2710,7 +2806,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                   <section className="flex flex-row justify-between mt-[18px]">
                     <section></section>
                     <div className=" flex   ">
-                      {/* <button
+                      <button
                         onClick={() => {
                           triggerWhatsAppTasksCountAlert()
                         }}
@@ -2726,7 +2822,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                           />
                           Alert Tasks Counts
                         </span>
-                      </button> */}
+                      </button>
                       {/* <SlimSelectBox
                         name="project"
                         label=""

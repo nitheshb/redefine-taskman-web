@@ -1914,6 +1914,25 @@ export const updateLeadRemarks_VisitDone = async (
 
   return
 }
+export const updateLeadLastUpdateTime = async (
+  orgId,
+  leadDocId,
+  time,
+  schTime
+) => {
+  try {
+    // console.log('wow it should be here', leadDocId, schTime)
+    await updateDoc(doc(db, `${orgId}_leads`, leadDocId), {
+      leadUpT: time,
+      schTime,
+    })
+  } catch (e) {
+    console.log('failed to throw error at updateLeadLastUpdateTime ', e)
+    // enqueueSnackbar(e.message, {
+    //   variant: 'error',
+    // })
+  }
+}
 export const updateLeadStatus = async (
   orgId,
   leadDocId,
@@ -1928,6 +1947,7 @@ export const updateLeadStatus = async (
       Status: newStatus,
       coveredA: arrayUnion(oldStatus),
       stsUpT: Timestamp.now().toMillis(),
+      leadUpT: Timestamp.now().toMillis(),
     })
     // await addLeadLog(orgId, x.id, {
     //   s: 's',
