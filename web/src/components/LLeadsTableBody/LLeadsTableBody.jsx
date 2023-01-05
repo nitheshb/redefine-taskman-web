@@ -125,18 +125,8 @@ const headCells = [
     disablePadding: true,
     label: 'Created On',
   },
-  {
-    id: 'leadUpT',
-    numeric: false,
-    disablePadding: true,
-    label: 'Last Activity',
-  },
-  {
-    id: 'schTime',
-    numeric: false,
-    disablePadding: true,
-    label: 'Next Sch',
-  },
+
+
   {
     id: 'Clientdetails',
     numeric: false,
@@ -167,6 +157,18 @@ const headCells = [
     numeric: false,
     disablePadding: false,
     label: 'Status',
+  },
+  {
+    id: 'leadUpT',
+    numeric: false,
+    disablePadding: true,
+    label: 'Last Activity',
+  },
+  {
+    id: 'schTime',
+    numeric: false,
+    disablePadding: true,
+    label: 'Next Sch',
   },
 
   {
@@ -279,7 +281,7 @@ function EnhancedTableHead(props) {
                   fontFamily: 'inherit',
                 }}
               >
-                <span className="text-black font-bodyLato">
+                <span className="text-black font-bodyLato whitespace-nowrap">
                   {headCell.label}
                 </span>
                 {orderBy === headCell.id ? (
@@ -870,96 +872,7 @@ console.log('filter value stuff' , parent)
 
                         </section>
                       </TableCell>
-                      {viewUnitStatusA.includes('Last Activity') && (
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
-                      >
-                      <>
-                        {/* <span className="font-bodyLato">
-                          {prettyDate(row?.stsUpT || row.Date).toLocaleString()}
-                        </span> */}
-                        <span className="px- py-[1px]  min-w-[100px] inline-flex text-xs leading-5 tracking-wide  rounded-full  text-green-800">
-                                                {Math.abs(
-                                                  getDifferenceInMinutes(
-                                                    (row?.leadUpT || row?.stsUpT),
-                                                    ''
-                                                  )
-                                                ) > 60
-                                                  ? Math.abs(
-                                                      getDifferenceInMinutes(
-                                                        (row?.leadUpT || row?.stsUpT),
-                                                        ''
-                                                      )
-                                                    ) > 1440
-                                                    ? `${Math.abs(getDifferenceInDays(
-                                                      (row?.leadUpT || row?.stsUpT),
-                                                        ''
-                                                      ))} Days `
-                                                    : `${Math.abs(getDifferenceInHours(
-                                                      (row?.leadUpT || row?.stsUpT),
-                                                        ''
-                                                      ))} Hours `
-                                                  : `${Math.abs(getDifferenceInMinutes(
-                                                    (row?.leadUpT || row?.stsUpT),
-                                                      ''
-                                                    ))} Min`}{' '}
-                                                {getDifferenceInMinutes(
-                                                  (row?.leadUpT || row?.stsUpT),
-                                                  ''
-                                                ) < 0
-                                                  ? 'ago'
-                                                  : 'Left'}
-                                              </span>
-                        </>
-                      </TableCell>)}
-                     {viewUnitStatusA.includes('Next Sch') && <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
-                      >
-                      <>
-                        {/* <span className="font-bodyLato">
-                          {prettyDate(row?.stsUpT || row.Date).toLocaleString()}
-                        </span> */}
-                        <span className="px- py-[1px]  min-w-[100px] inline-flex text-xs leading-5 tracking-wide  rounded-full  text-green-800">
-                                                {Math.abs(
-                                                  getDifferenceInMinutes(
-                                                    (row?.schTime ),
-                                                    ''
-                                                  )
-                                                ) > 60
-                                                  ? Math.abs(
-                                                      getDifferenceInMinutes(
-                                                        (row?.schTime),
-                                                        ''
-                                                      )
-                                                    ) > 1440
-                                                    ? `${Math.abs(getDifferenceInDays(
-                                                      (row?.schTime ),
-                                                        ''
-                                                      ))} Days `
-                                                    : `${Math.abs(getDifferenceInHours(
-                                                      (row?.schTime),
-                                                        ''
-                                                      ))} Hours `
-                                                  : `${Math.abs(getDifferenceInMinutes(
-                                                    (row?.schTime),
-                                                      ''
-                                                    ))} Min`}{' '}
-                                                {getDifferenceInMinutes(
-                                                  (row?.schTime),
-                                                  ''
-                                                ) < 0
-                                                  ? 'ago'
-                                                  : 'Left'}
-                                              </span>
-                        </>
-                      </TableCell>
-                     }
+
 
 
 
@@ -1089,13 +1002,102 @@ console.log('filter value stuff' , parent)
                           />
                         </span>
                       </TableCell>
-
+                      {viewUnitStatusA.includes('Last Activity') && (
+                      <TableCell
+                        component="th"
+                        id={labelId}
+                        scope="row"
+                        padding="none"
+                      >
+                      <>
+                        {/* <span className="font-bodyLato">
+                          {prettyDate(row?.stsUpT || row.Date).toLocaleString()}
+                        </span> */}
+                        <span className="px- py-[1px]  min-w-[100px] inline-flex text-xs leading-5 tracking-wide  rounded-full  text-green-800">
+                                                {Math.abs(
+                                                  getDifferenceInMinutes(
+                                                    (row?.leadUpT || row?.stsUpT),
+                                                    ''
+                                                  )
+                                                ) > 60
+                                                  ? Math.abs(
+                                                      getDifferenceInMinutes(
+                                                        (row?.leadUpT || row?.stsUpT),
+                                                        ''
+                                                      )
+                                                    ) > 1440
+                                                    ? `${Math.abs(getDifferenceInDays(
+                                                      (row?.leadUpT || row?.stsUpT),
+                                                        ''
+                                                      ))} Days `
+                                                    : `${Math.abs(getDifferenceInHours(
+                                                      (row?.leadUpT || row?.stsUpT),
+                                                        ''
+                                                      ))} Hours `
+                                                  : `${Math.abs(getDifferenceInMinutes(
+                                                    (row?.leadUpT || row?.stsUpT),
+                                                      ''
+                                                    ))} Min`}{' '}
+                                                {getDifferenceInMinutes(
+                                                  (row?.leadUpT || row?.stsUpT),
+                                                  ''
+                                                ) < 0
+                                                  ? 'ago'
+                                                  : 'Left'}
+                                              </span>
+                        </>
+                      </TableCell>)}
+                     {viewUnitStatusA.includes('Next Sch') && <TableCell
+                        component="th"
+                        id={labelId}
+                        scope="row"
+                        padding="none"
+                      >
+                      <>
+                        {/* <span className="font-bodyLato">
+                          {prettyDate(row?.stsUpT || row.Date).toLocaleString()}
+                        </span> */}
+                        <span className="px- py-[1px]  min-w-[100px] inline-flex text-xs leading-5 tracking-wide  rounded-full  text-green-800">
+                                                {Math.abs(
+                                                  getDifferenceInMinutes(
+                                                    (row?.schTime ),
+                                                    ''
+                                                  )
+                                                ) > 60
+                                                  ? Math.abs(
+                                                      getDifferenceInMinutes(
+                                                        (row?.schTime),
+                                                        ''
+                                                      )
+                                                    ) > 1440
+                                                    ? `${Math.abs(getDifferenceInDays(
+                                                      (row?.schTime ),
+                                                        ''
+                                                      ))} Days `
+                                                    : `${Math.abs(getDifferenceInHours(
+                                                      (row?.schTime),
+                                                        ''
+                                                      ))} Hours `
+                                                  : `${Math.abs(getDifferenceInMinutes(
+                                                    (row?.schTime),
+                                                      ''
+                                                    ))} Min`}{' '}
+                                                {getDifferenceInMinutes(
+                                                  (row?.schTime),
+                                                  ''
+                                                ) < 0
+                                                  ? 'ago'
+                                                  : 'Left'}
+                                              </span>
+                        </>
+                      </TableCell>
+                     }
                       <TableCell
                         align="left"
-                        style={{ maxWidth: '150px', textOverflow: 'ellipsis' }}
+                        style={{ maxWidth: '100px', maxHeight:'100px', textOverflow: 'ellipsis' }}
                       >
                         {' '}
-                        <span className="font-bodyLato">{row.Remarks}</span>
+                        <span className="font-bodyLato"  style={{ maxWidth: '100px', maxHeight:'100px', textOverflow: 'ellipsis' }}>{row.Remarks}</span>
                       </TableCell>
                     </TableRow>
                   )

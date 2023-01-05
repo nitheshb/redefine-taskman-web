@@ -1,20 +1,17 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import { ChatBubble, Edit, Flag } from '@mui/icons-material'
 import { Box, Card, Divider, Grid, LinearProgress } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 
-const TaskProgress = () => {
+import { useAuth } from 'src/context/firebase-auth-context'
+
+const TaskProgress = ({ userTodayPerfA }) => {
   // change navbar title
 
   const { t } = useTranslation()
-  const [todoEl, setTodoEl] = useState(null)
-
-  const handleTodoMoreOpen = (event) => {
-    setTodoEl(event.currentTarget)
-  }
-
-  const handleTodoMoreClose = () => setTodoEl(null)
+  const { user } = useAuth()
+  const { orgId, uid, name } = user
 
   return (
     <section className="bg-white rounded  flex flex-col p-4 w-100 ">
@@ -23,11 +20,13 @@ const TaskProgress = () => {
       <Box mt={2}>
         <div className="flex flex-row align-middle justify-between">
           <h6 className="font-bodyLato font-semibold text-sm">{t('New')}</h6>
-          <span className="font-bodyLato text-[12px] text-[#94A4C4]">6/10</span>
+          <span className="font-bodyLato text-[12px] text-[#94A4C4]">
+            {userTodayPerfA?.new_comp || 0}/{userTodayPerfA?.new}
+          </span>
         </div>
         <LinearProgress
           variant="determinate"
-          value={35}
+          value={userTodayPerfA?.new_comp || 0 / userTodayPerfA?.new || 0}
           color="inherit"
           style={{
             backgroundColor: '#E5EAF2',
@@ -42,12 +41,16 @@ const TaskProgress = () => {
           <h6 className="font-bodyLato font-semibold text-sm">
             {t('Followup')}
           </h6>
-          <span className="font-bodyLato text-[12px] text-[#94A4C4]">3/8</span>
+          <span className="font-bodyLato text-[12px] text-[#94A4C4]">
+            {userTodayPerfA?.followup_comp || 0}/{userTodayPerfA?.followup}
+          </span>
         </div>
         <LinearProgress
           variant="determinate"
           color="info"
-          value={35}
+          value={
+            userTodayPerfA?.followup_comp || 0 / userTodayPerfA?.followup || 0
+          }
           style={{
             backgroundColor: '#E5EAF2',
             borderRadius: '3px',
@@ -65,10 +68,16 @@ const TaskProgress = () => {
           <h6 className="font-bodyLato font-semibold text-sm">
             {t('Visits Fixed')}
           </h6>
-          <span className="font-bodyLato text-[12px] text-[#94A4C4]">2/7</span>
+          <span className="font-bodyLato text-[12px] text-[#94A4C4]">
+            {userTodayPerfA?.visitfixed_comp || 0}/{userTodayPerfA?.visitfixed}
+          </span>
         </div>
         <LinearProgress
-          value={35}
+          value={
+            userTodayPerfA?.visitfixed_comp ||
+            0 / userTodayPerfA?.visitfixed ||
+            0
+          }
           color="warning"
           variant="determinate"
           style={{
@@ -85,11 +94,18 @@ const TaskProgress = () => {
           <h6 className="font-bodyLato font-semibold text-sm">
             {t('Negotiation')}
           </h6>
-          <span className="font-bodyLato text-[12px] text-[#94A4C4]">3/8</span>
+          <span className="font-bodyLato text-[12px] text-[#94A4C4]">
+            {userTodayPerfA?.negotiation_comp || 0}/
+            {userTodayPerfA?.negotiation}
+          </span>
         </div>
         <LinearProgress
           variant="determinate"
-          value={35}
+          value={
+            userTodayPerfA?.negotiation_comp ||
+            0 / userTodayPerfA?.negotiation ||
+            0
+          }
           color="success"
           style={{
             borderRadius: '3px',

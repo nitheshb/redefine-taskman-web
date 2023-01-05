@@ -47,7 +47,6 @@ export const steamUsersListByRole = (orgId, snapshot, error) => {
   )
   return onSnapshot(itemsQuery, snapshot, error)
 }
-
 // get all bank detials list
 export const steamBankDetailsList = (orgId, snapshot, error) => {
   const itemsQuery = query(collection(db, `${orgId}_BankDetails`))
@@ -93,6 +92,19 @@ export const steamAllLeadsActivity = async (orgId, snapshot, data, error) => {
   return lead_logs
   // return onSnapshot(itemsQuery, snapshot, error)
 }
+export const getEmployeesTaskProgressDept = async (
+  orgId,
+  snapshot,
+  data,
+  error
+) => {
+  const { dateFull } = data
+  const itemsQuery = query(
+    collection(db, `${orgId}_emp_performance`),
+    where('date', '==', dateFull)
+  )
+  return onSnapshot(itemsQuery, snapshot, error)
+}
 export const updateLeadsLogWithProject = async (
   orgId,
   snapshot,
@@ -135,8 +147,27 @@ export const steamLeadNotes = (orgId, snapshot, data, error) => {
 export const steamLeadPhoneLog = (orgId, snapshot, data, error) => {
   // const itemsQuery = query(doc(db, `${orgId}_leads_log', 'W6sFKhgyihlsKmmqDG0r'))
   const { uid } = data
-  console.log('is uid g', uid)
+
   return onSnapshot(doc(db, `${orgId}_leads_log`, uid), snapshot, error)
+  // return onSnapshot(itemsQuery, snapshot, error)
+}
+export const steamUserTodayProgress = (orgId, snapshot, data, error) => {
+  // const itemsQuery = query(doc(db, `${orgId}_leads_log', 'W6sFKhgyihlsKmmqDG0r'))
+  const todaydate = new Date()
+  const { uid } = data
+  const ddMy =
+    'D' +
+    todaydate.getDate() +
+    'M' +
+    todaydate.getMonth() +
+    'Y' +
+    todaydate.getFullYear()
+  console.log('is uid g', uid)
+
+  const id = `${uid}DD${ddMy}`
+
+  console.log('is uid g', uid)
+  return onSnapshot(doc(db, `${orgId}_emp_performance`, id), snapshot, error)
   // return onSnapshot(itemsQuery, snapshot, error)
 }
 export const steamLeadScheduleLog = (orgId, snapshot, data, error) => {
@@ -191,6 +222,19 @@ export const getCpLeadsByAdminStatus = (orgId, snapshot, data, error) => {
     onSnapshot(itemsQuery, snapshot, error)
   )
   return onSnapshot(itemsQuery, snapshot, error)
+}
+export const getEmployeesListDept = async (orgId, data) => {
+  const { cutoffDate, uid, isCp } = data
+
+  const itemsQuery = query(
+    collection(db, 'users'),
+    where('orgId', '==', orgId),
+    where('roles', 'array-contains-any', ['sales-manager', 'sales-executive'])
+  )
+  const citySnapshot = await getDocs(itemsQuery)
+  // await citySnapshot.docs.map((doc) => doc.data())
+  console.log('my Array data is delayer 1', citySnapshot)
+  return await citySnapshot.docs.map((doc) => doc.data())
 }
 
 export const getMyLeadsByDate = async (orgId, data) => {
@@ -328,7 +372,7 @@ export const getLeadbyId1 = async (orgId, uid) => {
   const docSnap = await getDoc(docRef)
 
   if (docSnap.exists()) {
-    console.log('Document data:', docSnap.data())
+    // console.log('Document data:', docSnap.data())
     return docSnap.data()
   } else {
     // doc.data() will be undefined in this case
@@ -1670,12 +1714,16 @@ export const updateLeadAssigTo = async (
   orgId,
   leadDocId,
   assignedTo,
-  Status,
+  oldOwnerId,
+  newStatus,
   leadDetailsObj,
+  todayTasksIncre,
+  txt,
   by
 ) => {
   const { value, offPh } = assignedTo
-  const { Name, Email, Mobile } = leadDetailsObj
+  const { Name, Email, Mobile, Status } = leadDetailsObj
+  const newSt = newStatus == 'unassigned' || newStatus == '' ? 'new' : newStatus
   console.log('inside updater ', assignedTo, {
     leadDocId,
     assignedTo: value,
@@ -1689,8 +1737,36 @@ export const updateLeadAssigTo = async (
     assignedToObj: assignedTo,
     AssignedBy: by,
     assignT: Timestamp.now().toMillis(),
-    Status: Status == 'unassigned' || Status == '' ? 'new' : Status,
+    Status: newSt,
   })
+  await updateDoc(doc(db, `${orgId}_leads_sch`, leadDocId), {
+    assignedTo: value,
+  })
+  if (newSt != '') {
+    const todaydate = new Date()
+
+    const ddMy =
+      'D' +
+      todaydate.getDate() +
+      'M' +
+      todaydate.getMonth() +
+      'Y' +
+      todaydate.getFullYear()
+
+    await updateDoc(doc(db, `${orgId}_emp_performance`, `${value}DD${ddMy}`), {
+      [newSt]: increment(todayTasksIncre),
+      all: increment(todayTasksIncre),
+      recA: arrayUnion({ tx: txt, T: Timestamp.now().toMillis() }),
+    })
+    await updateDoc(
+      doc(db, `${orgId}_emp_performance`, `${oldOwnerId}DD${ddMy}`),
+      {
+        [newSt]: increment(-todayTasksIncre),
+        all: increment(-todayTasksIncre),
+      }
+    )
+  }
+
   await sendWhatAppTextSms1(
     offPh,
     `⚡ A new lead- ${Name} Assigned to you. 📱${Mobile}`
@@ -1704,6 +1780,50 @@ export const updateLeadAssigTo = async (
   //   txt: `${email} is updated with ${role}`,
   //   by,
   // })
+}
+
+export const IncrementTastCompletedCount = async (
+  orgId,
+  userId,
+  ddMy,
+  newSt,
+  todayTasksIncre,
+  txt
+) => {
+  await updateDoc(doc(db, `${orgId}_emp_performance`, `${userId}DD${ddMy}`), {
+    [newSt]: increment(todayTasksIncre),
+    all_comp: increment(todayTasksIncre),
+    recA: arrayUnion({ tx: txt, T: Timestamp.now().toMillis() }),
+  })
+}
+export const IncrementTastTotalCount = async (
+  orgId,
+  userId,
+  ddMy,
+  newSt,
+  todayTasksIncre,
+  txt
+) => {
+  // this is used when new task is created for the same day
+  await updateDoc(doc(db, `${orgId}_emp_performance`, `${userId}DD${ddMy}`), {
+    [newSt]: increment(todayTasksIncre),
+    all: increment(todayTasksIncre),
+    recA: arrayUnion({ tx: txt, T: Timestamp.now().toMillis() }),
+  })
+}
+export const decreCountOnResheduleOtherDay = async (
+  orgId,
+  userId,
+  ddMy,
+  newSt,
+  todayTasksIncre,
+  txt
+) => {
+  await updateDoc(doc(db, `${orgId}_emp_performance`, `${userId}DD${ddMy}`), {
+    [newSt]: increment(-todayTasksIncre),
+    all: increment(-todayTasksIncre),
+    recA: arrayUnion({ tx: txt, T: Timestamp.now().toMillis() }),
+  })
 }
 export const updateLeadCustomerDetailsTo = async (
   orgId,
@@ -2087,6 +2207,19 @@ export const updateSch = async (
     })
   } catch (error) {
     console.log('xo xo xo error', error)
+  }
+}
+export const updateTodayTasksTotal = async (orgId, uid, payload) => {
+  try {
+    await updateDoc(doc(db, `${orgId}_emp_performance`, uid), {
+      ...payload,
+    })
+  } catch (error) {
+    console.log('xo xo xo error', error)
+    if (/\No document\b/.test(error)) {
+      setDoc(doc(db, `${orgId}_emp_performance`, uid), { ...payload })
+      console.log('no such doc baby')
+    }
   }
 }
 export const updateMoreDetails = async (uid, moreDetails, enqueueSnackbar) => {

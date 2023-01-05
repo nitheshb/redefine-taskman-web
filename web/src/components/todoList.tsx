@@ -153,7 +153,7 @@ const TodoListView = ({
                       : 'text-gray-600'
                   }`}
                 >
-                  <p>Pending</p>
+                  <p>Todo</p>
                 </div>
               </a>
               <a
@@ -195,6 +195,9 @@ const TodoListView = ({
               </time>
             </div>
           )}
+          {taskListA.length}
+          {searchKey}
+          {taskListA?.filter((d) => searchKey.includes(d['sts'])).length}
           <div className="mt-7 overflow-x-auto">
             <table className="w-full whitespace-nowrap">
               <tbody>
@@ -262,11 +265,18 @@ const TodoListView = ({
                                 {dat?.notes}
                               </p>
                               <div className="flex flex-row">
-                                <p className="text-[11px]  leading-none  pr-2 text-green-800  mt-1  py-[4px]  rounded-full  text-2xl  mb-1 mr-2  ">
-                                  {dat?.leadUser?.Project}
+                                <p className="text-[9px]   leading-none  pr-2 text-green-800  mt-[6px]  py-[4px]  rounded-full   mb-1 mr-2  ">
+                                  {dat?.leadUser?.Project?.toUpperCase()}
                                 </p>
-                                <p className="text-[11px]  leading-none text-red-800  mt-1  py-[4px]  rounded-full  text-2xl  mb-1 mr-2  ">
+
+                                {/* <p className="text-[11px]  leading-none text-red-800  mt-1  py-[4px]  rounded-full  text-2xl  mb-1 mr-2  ">
                                   {dat?.pri}
+                                </p> */}
+                                <p className="text-[9px]  leading-none text-red-800  mt-[6px] font-bodyLato  py-[4px]  rounded-full   mb-1 mr-4  ">
+                                  {dat?.leadUser?.Status?.toUpperCase()}
+                                </p>
+                                <p className="text-[9px]  leading-none text-gray-600  mt-[6px] font-bodyLato  py-[4px]  rounded-full    mb-1 mr-2  ">
+                                  {dat?.sts?.toUpperCase()}
                                 </p>
                               </div>
                             </div>
@@ -468,14 +478,12 @@ const TodoListView = ({
                             </button>
                           </div>
                         </td>
-                        <td className="pl-4">
-                          {/* <button className="focus:ring-2 focus:ring-offset-2 focus:ring-red-300 text-sm leading-none text-gray-600 py-3 px-5 bg-gray-100 rounded hover:bg-gray-200 focus:outline-none">
-                          View
-                        </button> */}
+                        {/* <td className="pl-4">
+
                           <span className="ml-4 px-4 py-[4px] inline-flex text-xs leading-5 font-semibold rounded-full  text-green-800">
                             {dat?.sts}
                           </span>
-                        </td>
+                        </td> */}
                         {/* <td>
                         <div className="relative px-1">
                           <button

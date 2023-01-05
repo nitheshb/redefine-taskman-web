@@ -34,6 +34,7 @@ import Highlighter from 'react-highlight-words'
 import {
   getAllProjects,
   steamUsersListByRole,
+  steamUserTodayProgress,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import CSVDownloader from 'src/util/csvDownload'
@@ -337,6 +338,8 @@ export default function TodayLeadsActivitySearchView({
   const [usersList, setusersList] = useState([])
   const [sortType, setSortType] = useState('Latest')
 
+  const [userTodayPerfA, setUserTodayPerfA] = useState({})
+
   const [selProjectIs, setSelProject] = useState({
     label: 'All Projects',
     value: 'allprojects',
@@ -368,6 +371,27 @@ export default function TodayLeadsActivitySearchView({
     //   second
     // }
   }, [selStatus, rowsParent])
+  useEffect(() => {
+    getMyTodayProgress()
+  }, [])
+
+  const getMyTodayProgress = async () => {
+    const unsubscribe = steamUserTodayProgress(
+      orgId,
+      (doc) => {
+        const myTaskA = doc.data()
+        // setprojectList(projectsListA)
+
+        console.log('fetched users list is', myTaskA)
+
+        setUserTodayPerfA(myTaskA)
+      },
+      { uid: user?.uid },
+      (error) => setUserTodayPerfA([])
+    )
+
+    return unsubscribe
+  }
 
   useEffect(() => {
     const unsubscribe = getAllProjects(
@@ -456,6 +480,7 @@ export default function TodayLeadsActivitySearchView({
     })
 
     await setSchFetData(y)
+    console.log('full today data 0', todaySch.length)
     const z = todaySch.map((data1) => {
       data1['staDA'].map((data2) => {
         const y = data1[data2]
@@ -471,7 +496,7 @@ export default function TodayLeadsActivitySearchView({
             y.id = data1.uid
             y.leadUser = data1.leadUser
             streamedTodo.push(y)
-            console.log('my value is 1 yo i', y)
+            console.log('full today data 1', torrowDate, streamedTodo.length)
             return y
           } else {
             return
@@ -531,20 +556,26 @@ export default function TodayLeadsActivitySearchView({
     if (todaySch) {
       const z = todaySch?.filter((item) => {
         if (selLeadsOf?.value == 'mytasks') {
-          if (selProjectIs?.value === 'allprojects') {
-            return item?.leadUser?.assignedTo === user?.uid
-          } else {
-            return (
-              item?.leadUser?.assignedTo === user?.uid &&
-              item?.leadUser.ProjectId === selProjectIs?.value
-            )
-          }
+          return item
+          // console.log('zoro i s mytasks')
+          // if (selProjectIs?.value === 'allprojects') {
+          //   console.log('zoro i s mytasks allprojects')
+          //   return item?.leadUser?.assignedTo === user?.uid
+          // } else {
+          //   console.log('zoro i s mytasks allprojects else')
+          //   return (
+          //     item?.leadUser?.assignedTo === user?.uid &&
+          //     item?.leadUser.ProjectId === selProjectIs?.value
+          //   )
+          // }
         } else if (selLeadsOf?.value === 'teamtasks') {
+          console.log('zoro i s teamtasks')
           console.log('zoro condition', selProjectIs?.value)
           return selProjectIs?.value === 'allprojects'
             ? item
             : item?.leadUser.ProjectId === selProjectIs?.value
         } else {
+          console.log('zoro i s else statement')
           console.log(
             'zoro condition 1',
             selProjectIs?.value,
@@ -862,13 +893,19 @@ export default function TodayLeadsActivitySearchView({
                   </div>
                   <div className="w-2/12 flex flex-col">
                     <section className="ml-2">
-                      <TaskProgress />
+                      <TaskProgress userTodayPerfA={userTodayPerfA} />
                       <div className="mt-2">
-                        <RecentActivity title={'My Recent Activity'} />
+                        <RecentActivity
+                          title={'My Recent Activity'}
+                          userTodayPerfA={userTodayPerfA}
+                        />
                       </div>
 
                       <div className="mt-2">
-                        <RecentActivity title={'Team Activity'} />
+                        <RecentActivity
+                          title={'Team Activity'}
+                          userTodayPerfA={userTodayPerfA}
+                        />
                       </div>
                     </section>
                   </div>
@@ -931,7 +968,7 @@ export default function TodayLeadsActivitySearchView({
                             : 'text-gray-600'
                         }`}
                       >
-                        <p>Pending</p>
+                        <p>Todo</p>
                       </div>
                     </a>
                     <a

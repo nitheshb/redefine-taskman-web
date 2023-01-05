@@ -3,7 +3,6 @@ import { DockSharp } from '@mui/icons-material'
 import { getTodayTodoLeadsDataByUser } from 'src/context/dbQueryFirebase'
 
 export function serialEmployeeTaskLeadData(employeeListA) {
-  console.log('user list is', employeeListA)
   let z = []
   const finalSet = []
   employeeListA.map(async (souceObj) => {
@@ -44,7 +43,6 @@ export function serialEmployeeTaskLeadData(employeeListA) {
         const fiftyDaysDate = new Date(
           +new Date().setHours(0, 0, 0, 0) - 4320000000
         ).getTime()
-        console.log('fifty days date is ', label, 1659168185117 > thirtyDaysDate,1659168185117-twentyDaysDate, fourtyDaysDate )
         if (querySnapshot.docs.length === 0) {
           sou['label'] = label
           sou['Name'] = label
@@ -64,7 +62,6 @@ export function serialEmployeeTaskLeadData(employeeListA) {
           const projects = querySnapshot.docs.map(async (docSnapshot) => {
             const x = docSnapshot.data()
             const { staDA } = x
-            console.log('wow it', x)
 
             const tomorrowDateNEW = staDA.filter(
               (da) =>

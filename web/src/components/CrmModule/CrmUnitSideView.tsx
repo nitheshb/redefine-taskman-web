@@ -141,6 +141,8 @@ export default function UnitSideViewCRM({
   transactionData,
   customerDetails,
   selCustomerPayload,
+  selSubMenu,
+  selSubMenu2,
 }) {
   const { user } = useAuth()
   const { enqueueSnackbar } = useSnackbar()
@@ -242,6 +244,17 @@ export default function UnitSideViewCRM({
 
     return unsubscribe
   }, [])
+  useEffect(() => {
+    if (selSubMenu) {
+      console.log('new setValue is ', selSubMenu)
+      setFeature(selSubMenu)
+    } else {
+      console.log('new setValue is ', selSubMenu)
+      setFeature('summary')
+    }
+    console.log('new setValue is ', selSubMenu)
+  }, [selSubMenu])
+
   useEffect(() => {
     let x = []
     if (selFilterVal === 'all') {

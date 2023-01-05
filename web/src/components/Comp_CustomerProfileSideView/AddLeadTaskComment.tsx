@@ -2,16 +2,24 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import DatePicker from 'react-datepicker'
-import 'react-datepicker/dist/react-datepicker.css'
-import { setHours, setMinutes } from 'date-fns'
-import { useEffect, useState } from 'react'
-import CalendarMonthTwoToneIcon from '@mui/icons-material/CalendarMonthTwoTone'
-import ScheduleSendTwoToneIcon from '@mui/icons-material/ScheduleSendTwoTone';
-import CloseTwoToneIcon from '@mui/icons-material/CloseTwoTone'
-import SendTwoToneIcon from '@mui/icons-material/SendTwoTone'
-import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone'
-import { XIcon } from '@heroicons/react/solid'
 
+import 'react-datepicker/dist/react-datepicker.css'
+import { useEffect, useState } from 'react'
+
+import { XIcon } from '@heroicons/react/solid'
+import CalendarMonthTwoToneIcon from '@mui/icons-material/CalendarMonthTwoTone'
+import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone'
+import CloseTwoToneIcon from '@mui/icons-material/CloseTwoTone'
+import ScheduleSendTwoToneIcon from '@mui/icons-material/ScheduleSendTwoTone';
+import SendTwoToneIcon from '@mui/icons-material/SendTwoTone'
+import { setHours, setMinutes } from 'date-fns'
+import { connectStorageEmulator } from 'firebase/storage'
+
+import ConstructModulePageStories from 'src/pages/ConstructModulePage/ConstructModulePage.stories'
+const todaydate = new Date()
+const torrowDate = new Date(
+  +new Date().setHours(0, 0, 0, 0) + 86400000
+).getTime()
 export default function AddLeadTaskComment({
   closeTask,
   data,
@@ -21,6 +29,7 @@ export default function AddLeadTaskComment({
   addCommentTitle,
   addCommentTime,
   setClosePrevious,
+  setPostPoneToFuture,
   setAddCommentPlusTask,
   setAddCommentTime,
   cancelResetStatusFun,
@@ -34,6 +43,8 @@ export default function AddLeadTaskComment({
   const [error, setError] = useState(false)
   const [hover, setHover] = useState(false)
   const [clicked, setClicked] = useState(false)
+  const [intialSchTime, setIntialSchTime] = useState(0)
+
 
 
   const [hoverId, setHoverID] = useState(1000)
@@ -47,12 +58,28 @@ export default function AddLeadTaskComment({
   }, [addCommentTitle])
   useEffect(() => {
     setError(false)
+    setIntialSchTime(addCommentTime)
   }, [])
   const hoverEffectFun = (id) => {
     setHoverID(id)
   }
   const hoverEffectTaskFun = (id) => {
     setHoverTasId(id)
+  }
+
+  const setPostPoneCounterFun=(myDate)=>{
+    if(intialSchTime>torrowDate && myDate<torrowDate){
+      console.log('am i coming here Future2Present', intialSchTime<torrowDate, myDate< torrowDate)
+      // Future2Present
+      setPostPoneToFuture('Future2Present')
+    }
+   else if(intialSchTime<torrowDate && myDate> torrowDate){
+      // present to future
+      console.log('am i coming here 1 present2Future', intialSchTime<torrowDate, myDate> torrowDate)
+      setPostPoneToFuture('present2Future')
+    }else  if(intialSchTime<torrowDate && myDate< torrowDate){
+      console.log('am i coming here present', intialSchTime<torrowDate, myDate< torrowDate)
+     setPostPoneToFuture('present')}
   }
 
   return (
@@ -187,7 +214,14 @@ export default function AddLeadTaskComment({
                     <DatePicker
                       className=" pl- px- min-w-[151px] inline text-xs text-[#0091ae] bg-white cursor-pointer"
                       selected={addCommentTime}
-                      onChange={(date) =>{ setAddCommentTime(date.getTime())}}
+                      onChange={(date) =>{
+                        console.log('am i coming here', addCommentTime, addCommentTime<torrowDate, date.getTime()< torrowDate,date.getTime()> torrowDate, date.getTime())
+
+                        setPostPoneCounterFun(date.getTime())
+
+                        setAddCommentTime(date.getTime())
+
+                      }}
                       showTimeSelect
                       timeFormat="HH:mm"
                       injectTimes={[
@@ -253,7 +287,9 @@ export default function AddLeadTaskComment({
                           // setClicked(true)
                           // setHover(false)
                           // setAddCommentTitle(dataObj?.label)
+                          console.log('am i coming here clicked')
                           setAddCommentTime(d.getTime() + dataObj.value)
+                          setPostPoneCounterFun(d.getTime() + dataObj.value)
                         }}
                         onMouseEnter={() => {
 

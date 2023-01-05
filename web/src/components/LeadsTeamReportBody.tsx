@@ -19,14 +19,18 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from 'recharts'
 import { sourceList, sourceListItems } from 'src/constants/projects'
 import {
   getAllProjects,
+  getEmployeesListDept,
+  getEmployeesTaskProgressDept,
   getLeadbyId1,
   getLeadsByDate,
   getTodayTodoLeadsData,
+  getTodayTodoLeadsDataByUser,
   steamAllLeadsActivity,
   steamLeadScheduleLog,
   steamUsersListByRole,
   updateLeadLastUpdateTime,
   updateLeadsLogWithProject,
+  updateTodayTasksTotal,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import { sendWhatAppTextSms1 } from 'src/util/axiosWhatAppApi'
@@ -100,6 +104,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
   const { orgId, access } = user
   const [leadsFetchedRawData, setLeadsFetchedRawData] = useState([])
   const [leadLogsRawData, setLeadLogsRawData] = useState([])
+  const [empPerDayTasksCountsA, setEmpPerDayTasksCountsA] = useState([])
 
   const [sourceListTuned, setSourceListTuned] = useState([])
   const [sourceFiltListTuned, setFiltSourceListTuned] = useState([])
@@ -135,6 +140,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
   })
   const [EmpRawFilData, setEmpRawFilData] = useState([])
   const [EmpDownloadRows, setEmpDownloadRows] = React.useState([])
+  const [resettingEmpValues, setResettingEmpValues] = React.useState(false)
 
   const [selProjectIs, setSelProject] = useState({
     label: 'All Projects',
@@ -175,6 +181,10 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
   useEffect(() => {
     getLeadsDataFun()
   }, [sourceDateRange])
+
+  useEffect(() => {
+    showAllEmpTodayActivity()
+  }, [usersCleanList])
 
   // useEffect(() => {
   //   console.log('emp task list is ', empTaskListTuned)
@@ -280,6 +290,38 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
       setEmpRawFilData(projectWideA)
     }
   }, [usersList, leadsFetchedRawData, selProjectEmpIs])
+
+  const showAllEmpTodayActivity = async () => {
+    const todaydate = new Date()
+    console.log('employee list is ', usersCleanList)
+
+    getEmployeesTaskProgressDept(
+      orgId,
+      async (querySnapshot) => {
+        const empTodayTasksCountA = querySnapshot.docs.map((docSnapshot) =>
+          docSnapshot.data()
+        )
+        // const sortVal = empTodayTasksCountA.sort((a, b) => {
+        //   return b.emp < a.emp
+        // })
+        const sortVal = empTodayTasksCountA.sort((a, b) =>
+          a.emp.localeCompare(b.emp)
+        )
+        setEmpPerDayTasksCountsA(sortVal)
+        console.log('sort valis ', sortVal)
+      },
+      {
+        dateFull:
+          'D' +
+          todaydate.getDate() +
+          'M' +
+          todaydate.getMonth() +
+          'Y' +
+          todaydate.getFullYear(),
+      },
+      (error) => setEmpPerDayTasksCountsA([])
+    )
+  }
   const setEmpTaskFun = async () => {
     const x = await serialEmployeeTaskLeadData(usersCleanList)
     // await console.log('master one', x)
@@ -475,7 +517,281 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
     )
     await setLeadLogsRawData(steamLeadLogs)
   }
+  const GenerateTasksDailyReportForEmp = async () => {
+    // get all the employees based on orgId
+    console.log('employee list is ', usersList)
+    // const data = []
+    // for (const empListD of [
+    //   { uid: 'yP5IMRXqByUNYZ6atk5AaJjaoGH3', name: 'RAM PRASAD' },
+    // ]) {
+    //   const dataUser = await getRestEmpTodayTasksCount(
+    //     empListD?.uid,
+    //     empListD?.name
+    //   )
+    //   data.push(dataUser)
+    // }
+    // return
+    await getEmployeesListDept(orgId, {}).then(async (empList) => {
+      console.log('employee list is ', empList)
+      const data = []
+      for (const empListD of empList) {
+        const dataUser = await getRestEmpTodayTasksCount(
+          empListD?.uid,
+          empListD?.name
+        )
+        data.push(dataUser)
+      }
+    })
+    await setResettingEmpValues(false)
+    // const empDempListA = await getEmployeesListDept(orgId, {})
+    // await empDempListA.map(async (empDetails) => {
+    //   const { uid } = empDetails
+    //   if (uid) {
+    //     await getRestEmpTodayTasksCount(uid)
+    //   } else {
+    //     return
+    //   }
+    // })
 
+    // await console.log('get users list is', empDempListA)
+    return
+    const unsubscribe = steamUsersListByRole(
+      orgId,
+      async (querySnapshot) => {
+        const usersListA1 = await querySnapshot.docs.map((docSnapshot) =>
+          docSnapshot.data()
+        )
+        // setusersList(usersListA)
+        usersListA1.map((user) => {
+          user.label = user.displayName || user.name
+          user.value = user.uid
+        })
+        console.log('fetched users list is', usersListA1)
+
+        const usersListA = await [
+          ...usersListA1,
+          ...[{ label: 'others', value: 'others' }],
+        ]
+        await usersListA.map(async (empDetails) => {
+          const { uid } = empDetails
+          if (uid) {
+            await getRestEmpTodayTasksCount(uid)
+          } else {
+            return
+          }
+        })
+        await setResettingEmpValues(false)
+        return usersListA
+      },
+      (error) => []
+    )
+  }
+  const getRestEmpTodayTasksCount = async (empID, name) => {
+    // Get all the employees of sales,crm , finance, legal of each dept
+    // Loop through each emp and get TastDate < Tomorrow
+    // get the Lead status of each task and put that into that section count
+    // save count in db too
+    // send to whats app
+
+    return await getTodayTodoLeadsDataByUser(
+      orgId,
+      async (querySnapshot) => {
+        let pro
+        let y = []
+        // const projects = await querySnapshot.docs.map(async (docSnapshot) => {
+        //   const x = docSnapshot.data()
+        //   console.log('git values is 2', x)
+        //   const { staDA } = x
+        //   y = staDA
+        //   if (y.length > 0) {
+        //     x.uid = docSnapshot.id
+        //     // eslint-disable-next-line prefer-const
+        //     let y1 = await getLeadbyId1(orgId, x.uid)
+        //     x.leadUser = await y1
+        //     return x
+        //   }
+        // })
+
+        const userTodoTasksList = []
+        console.log('Total fetcher is ', querySnapshot.docs.length, name)
+        for (const docSnapshot of querySnapshot.docs) {
+          const x = docSnapshot.data()
+          // results.filter((data) => data != 'remove')
+          console.log('Total Tasks count is ', x, name)
+          const { staDA } = x
+          y = staDA
+          if (y.length > 0) {
+            x.uid = docSnapshot.id
+            // eslint-disable-next-line prefer-const
+            let leadDetails = await getLeadbyId1(orgId, x.uid)
+            x.leadUser = await leadDetails
+            userTodoTasksList.push(x)
+          }
+        }
+        //  get the task details from docid
+        if (userTodoTasksList.length > 0) {
+          // projects.filter((data) => data != undefined)
+          // const data = []
+          // for (const results of userTodoTasksList) {
+          //   console.log('TaskListResults is', results)
+          //   results?.filter((data) => data != 'remove')
+          //   const dataUser = await filterTodayTodoFun(
+          //     results?.filter((data) => data != 'remove'),
+          //     empID,
+          //     name
+          //   )
+          //   data.push(dataUser)
+          // }
+          Promise.all(userTodoTasksList).then(function (results) {
+            results.filter((data) => data != 'remove')
+            filterTodayTodoFun(
+              results.filter((data) => data != 'remove'),
+              empID,
+              name
+            )
+            console.log(
+              'fetched values is 1',
+              results.filter((data) => data != 'remove')
+            )
+          })
+        }
+      },
+      { uid: empID, type: 'today' },
+      () => {
+        console.log('error')
+      }
+    )
+  }
+
+  const filterTodayTodoFun = (todaySch, empID, name) => {
+    const todaydate = new Date()
+
+    const ddMy =
+      'D' +
+      todaydate.getDate() +
+      'M' +
+      todaydate.getMonth() +
+      'Y' +
+      todaydate.getFullYear()
+    //find the year of the current date
+    const oneJan = new Date(todaydate.getFullYear(), 0, 1)
+
+    // calculating number of days in given year before a given date
+    const numberOfDays = Math.floor(
+      (todaydate - oneJan) / (24 * 60 * 60 * 1000)
+    )
+
+    // adding 1 since to current date and returns value starting from 0
+    const weekCount = Math.ceil((todaydate.getDay() + 1 + numberOfDays) / 7)
+    const streamedTodo = []
+    const whole = {
+      new: [],
+      followup: [],
+      all: [],
+      visitfixed: [],
+      visitdone: [],
+      vistcancel: [],
+      negotiation: [],
+      booked: [],
+      dead: [],
+      notinterested: [],
+      blocked: [],
+      junk: [],
+      others: [],
+      unassigned: [],
+    }
+    console.log('report today data 0', todaySch.length)
+    const z = todaySch.map((data1) => {
+      data1['staDA'].map((data2) => {
+        const y = data1[data2]
+        const torrowDate = new Date(
+          +new Date().setHours(0, 0, 0, 0) + 86400000
+        ).getTime()
+        if (y['sts'] === 'pending' && y['schTime'] < torrowDate) {
+          // make sure if date less than tomorrow is added
+          if (y['schTime'] < torrowDate) {
+            y.uid = data1.uid
+            y.id = data1.uid
+            y.leadUser = data1.leadUser
+            streamedTodo.push(y)
+            whole.all.push(y)
+            switch (data1?.leadUser?.Status) {
+              case 'new':
+                return whole.new.push(y)
+              case 'followup':
+                return whole.followup.push(y)
+              case 'visitfixed':
+                return whole.visitfixed.push(y)
+              case 'visitdone':
+                return whole.visitdone.push(y)
+              case 'vistcancel':
+                return whole.vistcancel.push(y)
+              case 'negotiation':
+                return whole.negotiation.push(y)
+              case 'booked':
+                return whole.booked.push(y)
+              case 'dead':
+                return whole.dead.push(y)
+              case 'notinterested':
+                return whole.notinterested.push(y)
+              case 'blocked':
+                return whole.blocked.push(y)
+              case 'junk':
+                return whole.junk.push(y)
+              case 'unassigned':
+                return whole.unassigned.push(y)
+              default:
+                return whole.others.push(y)
+            }
+            console.log('whole is ', whole)
+            console.log(
+              'report today data 1',
+              data1.leadUser,
+              torrowDate,
+              user?.uid,
+              streamedTodo
+            )
+            return y
+          } else {
+            return
+          }
+        }
+      })
+    })
+    // save this value in DB against the user
+    const taskCounts = {
+      uid: empID,
+      emp: name,
+      date: ddMy,
+      new: whole?.new.length,
+      followup: whole?.followup.length,
+      all: whole?.all.length,
+      visitfixed: whole?.visitfixed.length,
+      visitdone: whole?.visitdone.length,
+      vistcancel: whole?.vistcancel.length,
+      negotiation: whole?.negotiation.length,
+      others: whole?.others.length,
+      booked: whole?.booked.length,
+      dead: whole?.dead.length,
+      notinterested: whole?.notinterested.length,
+      blocked: whole?.blocked.length,
+      junk: whole?.junk.length,
+      new_comp: 0,
+      followup_comp: 0,
+      all_comp: 0,
+      visitfixed_comp: 0,
+      visitdone_comp: 0,
+      vistcancel_comp: 0,
+      negotiation_comp: 0,
+      others_comp: 0,
+    }
+    //  this week docId = ${uidXweekcountXtodaydate.getFullYear()}
+    //  this month docId = ${uidXweekcountXtodaydate.getFullYear()}
+
+    updateTodayTasksTotal(orgId, `${empID}DD${ddMy}`, taskCounts)
+
+    console.log('whole is ', name, whole)
+  }
   const updateLeadsLastUpdatetimeFun = async () => {
     // get data from tasks table with pending as available
     // steamLeadScheduleLog(
@@ -1352,22 +1668,26 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                   <div className=" text-md font-bold leading-none pl-0 mt-4 border-b pb-4 mb-4 ">
                     {`Source vs Status `}
                   </div>
+                  <section className="flex flex-row text-blue">
+                    <div
+                      onClick={() => {
+                        updateProjectNameInlogs()
+                      }}
+                    >
+                      Update projectName
+                    </div>
 
-                  <div
-                    onClick={() => {
-                      updateProjectNameInlogs()
-                    }}
-                  >
-                    update projectName
-                  </div>
+                    <div
+                      className="ml-4"
+                      onClick={() => {
+                        updateLeadsLastUpdatetimeFun()
+                      }}
+                    >
+                      update LeadsLastUpdatetTime
+                    </div>
 
-                  <div
-                    onClick={() => {
-                      updateLeadsLastUpdatetimeFun()
-                    }}
-                  >
-                    update LeadsLastUpdatetTime
-                  </div>
+                    {}
+                  </section>
 
                   <section className="flex flex-row justify-between mt-[18px]">
                     <section className="flex">
@@ -2801,6 +3121,224 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                 <div className="overflow-hidden">
                   <div className=" text-md font-bold leading-none pl-0 mt-4 border-b pb-4 mb-4 ">
                     {`Employee vs Tasks `}
+                  </div>
+
+                  <section className="flex flex-row justify-between mt-[18px]">
+                    <section></section>
+                    <div className=" flex   ">
+                      <div
+                        className="ml-4 text-blue cursor-pointer"
+                        onClick={() => {
+                          setResettingEmpValues(true)
+                          GenerateTasksDailyReportForEmp()
+                        }}
+                      >
+                        Generate Daily Task Report
+                      </div>
+
+                      {resettingEmpValues && <span>InProgress</span>}
+                      <button
+                        onClick={() => {
+                          triggerWhatsAppTasksCountAlert()
+                        }}
+                      >
+                        <span
+                          className={`flex ml-2 mr-4  items-center h-6 px-3 text-xs
+                            text-green-800 bg-green-200
+                          rounded-full`}
+                        >
+                          <CalendarIcon
+                            className="h-3 w-3 mr-1"
+                            aria-hidden="true"
+                          />
+                          Send WhatsApp Notification
+                        </span>
+                      </button>
+
+                      {/* <SlimSelectBox
+                        name="project"
+                        label=""
+                        className="input min-w-[164px] "
+                        onChange={(value) => {
+                          setSelProjectEmp(value)
+                        }}
+                        value={selProjectEmpIs?.value}
+                        options={[
+                          ...[{ label: 'All Projects', value: 'allprojects' }],
+                          ...projectList,
+                        ]}
+                      /> */}
+                      {/* <span style={{ display: '' }}>
+                        <CSVDownloader
+                          className="mr-6 h-[20px] w-[20px]"
+                          downloadRows={EmpDownloadRows}
+                          style={{ height: '20px', width: '20px' }}
+                        />
+                      </span> */}
+                    </div>
+                  </section>
+                  <table className="min-w-full text-center mt-6">
+                    <thead className="border-b">
+                      <tr>
+                        {[
+                          { label: 'sNo', id: 'no' },
+                          { label: 'Name', id: 'label' },
+                          { label: 'Rnr', id: 'all' },
+                          { label: 'Busy', id: 'new' },
+                          { label: 'All', id: 'all' },
+                          { label: 'New', id: 'new' },
+                          { label: 'Follow Up', id: 'followup' },
+                          { label: 'Visit Fixed', id: 'visitfixed' },
+                          { label: 'Visit Done', id: 'visitdone' },
+                          { label: 'Visit Cancel', id: 'visitCancel' },
+                          { label: 'Booked', id: 'booked' },
+                          { label: 'Dead', id: 'dead' },
+                          { label: 'Blocked', id: 'blocked' },
+                          { label: 'Junk', id: 'junk' },
+
+                          { label: 'Negotiations', id: 'negotiation' },
+                          { label: 'Others', id: 'others' },
+                        ].map((d, i) => (
+                          <th
+                            key={i}
+                            scope="col"
+                            className={`text-sm font-medium text-gray-900 px-6 py-4 ${
+                              ['Name'].includes(d.label) ? 'text-left' : ''
+                            }`}
+                            onClick={() => {
+                              if (['inprogress', 'archieve'].includes(d.id))
+                                showColumnsSourceFun(d.id)
+                            }}
+                          >
+                            {d.label}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {empPerDayTasksCountsA?.map((data, i) => {
+                        return (
+                          <tr
+                            className={`  ${
+                              i % 2 === 0
+                                ? 'bg-white border-blue-200'
+                                : 'bg-gray-100'
+                            }`}
+                            key={i}
+                          >
+                            <td className="text-sm text-gray-900 font-medium px-6 py-2 whitespace-nowrap text-left">
+                              {i + 1}
+                            </td>
+                            <td className="text-sm text-gray-900 font-medium px-6 py-2 whitespace-nowrap text-left">
+                              {data?.emp}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.rnr || 0}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.busy || 0}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.all_comp || 0}/{data?.all || 0}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.new_comp || 0}/{data?.new || 0}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.followup_comp || 0}/{data?.followup || 0}
+                            </td>
+
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.visitfixed_comp || 0}/{' '}
+                              {data?.visitfixed || 0}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.visitdone_comp || 0}/{' '}
+                              {data?.visitdone || 0}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.visitCancel_comp || 0}/{' '}
+                              {data?.visitCancel || 0}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.booked_comp || 0}/ {data?.booked || 0}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.dead_comp || 0}/ {data?.dead || 0}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.blocked_comp || 0}/ {data?.blocked || 0}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.junk_comp || 0}/ {data?.junk || 0}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.negotiation_comp || 0}/
+                              {data?.negotiation || 0}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.others_comp || 0}/ {data?.others || 0}
+                            </td>
+                          </tr>
+                        )
+                      })}
+
+                      <tr className="border-b bg-gray-800 boder-gray-900">
+                        <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap text-left">
+                          Total
+                        </td>
+                        <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                          {/* {Object.keys(empTaskListTuned.Total).length
+                            empTaskListTuned.reduce((a, b) => {
+                              return a.Total + b.Total
+                            }).length
+                          } */}
+                          {/* {empTaskListTuned.reduce(
+                            (previousValue, currentValue) =>
+                              previousValue.Total + currentValue.Total,
+                            0
+                          )} */}
+                          {empTaskListTunedTotal?.TotalSum}
+                        </td>
+                        <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                          {empTaskListTunedTotal?.now}
+                        </td>
+                        <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                          {empTaskListTunedTotal?.Sum7}
+                        </td>
+
+                        <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                          {empTaskListTunedTotal?.Sum20}
+                        </td>
+                        <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                          {empTaskListTunedTotal?.Sum30}
+                        </td>
+                        <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                          {empTaskListTunedTotal?.Sum40}
+                        </td>
+                        <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                          {empTaskListTunedTotal?.Sum50}
+                        </td>
+                        <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                          {empTaskListTunedTotal?.Sum50M}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            className="flex flex-col  mt-14 drop-shadow-md rounded-lg  px-4"
+            style={{ backgroundColor: '#ebfafa' }}
+          >
+            <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
+              <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
+                <div className="overflow-hidden">
+                  <div className=" text-md font-bold leading-none pl-0 mt-4 border-b pb-4 mb-4 ">
+                    {`Employee vs Leads Aging `}
                   </div>
 
                   <section className="flex flex-row justify-between mt-[18px]">

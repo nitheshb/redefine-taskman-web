@@ -4,10 +4,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { Fragment, useEffect, useState } from 'react'
 
-import EmailForm from './customerProfileView/emailForm'
-import Confetti from './shared/confetti'
-
-import '../styles/myStyles.css'
 import { Menu } from '@headlessui/react'
 import { Listbox, Transition } from '@headlessui/react'
 import {
@@ -30,6 +26,11 @@ import {
 import { SelectorIcon, DownloadIcon } from '@heroicons/react/solid'
 import ClockIcon from '@heroicons/react/solid/ClockIcon'
 import PlusCircleIcon from '@heroicons/react/solid/PlusCircleIcon'
+import {
+  ArrowBackRounded,
+  DriveEtaOutlined,
+  VerticalAlignBottom,
+} from '@mui/icons-material'
 import FileUploadIcon from '@mui/icons-material/FileUpload'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 import { ErrorMessage, Form, Formik, useFormik } from 'formik'
@@ -61,8 +62,10 @@ import {
   undoSchLog,
   editTaskDB,
   editAddTaskCommentDB,
-  rescheduleTaskDB,
   updateLeadLastUpdateTime,
+  IncrementTastCompletedCount,
+  IncrementTastTotalCount,
+  decreCountOnResheduleOtherDay,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import { storage } from 'src/context/firebaseConfig'
@@ -86,13 +89,6 @@ import { Timestamp } from 'firebase/firestore'
 import StatusDropComp from './statusDropComp'
 import AssigedToDropComp from './assignedToDropComp'
 import Loader from './Loader/Loader'
-
-import {
-  ArrowBackRounded,
-  DriveEtaOutlined,
-  VerticalAlignBottom,
-} from '@mui/icons-material'
-
 import ProjPhaseHome from './ProjPhaseHome/ProjPhaseHome'
 import AddBookingForm from './bookingForm'
 
@@ -108,6 +104,11 @@ import LeadTaskFooter from './Comp_CustomerProfileSideView/LeadTaskFooter'
 import { USER_ROLES } from 'src/constants/userRoles'
 import { currentStatusDispFun } from 'src/util/leadStatusDispFun'
 import { sendWhatAppTextSms1 } from 'src/util/axiosWhatAppApi'
+
+import EmailForm from './customerProfileView/emailForm'
+import Confetti from './shared/confetti'
+
+import '../styles/myStyles.css'
 
 // interface iToastInfo {
 //   open: boolean
@@ -211,6 +212,18 @@ const preferredArea = [
   { label: 'East', value: 'east' },
   { label: 'west', value: 'west' },
 ]
+const torrowDate = new Date(
+  +new Date().setHours(0, 0, 0, 0) + 86400000
+).getTime()
+const todaydate = new Date()
+const ddMy =
+  'D' +
+  todaydate.getDate() +
+  'M' +
+  todaydate.getMonth() +
+  'Y' +
+  todaydate.getFullYear()
+
 export default function CustomerProfileSideView({
   openUserProfile,
   customerDetails,
@@ -223,6 +236,7 @@ export default function CustomerProfileSideView({
   const [fetchedUsersList, setfetchedUsersList] = useState([])
   const [usersList, setusersList] = useState([])
   const [uploadFile, setUploadFile] = useState()
+  const [postPoneToFuture, setPostPoneToFuture] = useState('present')
 
   // const [leadStatus, setLeadStatus] = useState([])
   const [selFeature, setFeature] = useState('appointments')
@@ -302,6 +316,7 @@ export default function CustomerProfileSideView({
   // const [addCommentTime, setAddCommentTime] = useState(
   //   setHours(setMinutes(d, 30), 16)
   // )
+
   const [addCommentTime, setAddCommentTime] = useState(d.getTime() + 60000)
   const {
     id,
@@ -549,11 +564,28 @@ export default function CustomerProfileSideView({
   }, [customerDetails])
 
   const setAssigner = (leadDocId, value) => {
-    setAssignerName(value.name)
-    setAssignedTo(value.value)
-    // save assigner Details in db
-    const x = leadDetailsObj?.Status || 'unassigned'
-    updateLeadAssigTo(orgId, leadDocId, value, x, leadDetailsObj, by)
+    if (assignedTo != value.value) {
+      setAssignerName(value.name)
+      setAssignedTo(value.value)
+      // save assigner Details in db
+      const x = leadDetailsObj?.Status || 'unassigned'
+      // check if there any pending lead with scheduleTime < tomorrow and send count
+      const todayTasksIncre = leadSchFetchedData?.filter(
+        (d) => d?.sts === 'pending' && d?.schTime < torrowDate
+      ).length
+      const txt = `A New Lead is assigned to ${value.name} with ${todayTasksIncre} tasks`
+      updateLeadAssigTo(
+        orgId,
+        leadDocId,
+        value,
+        assignedTo,
+        x,
+        leadDetailsObj,
+        todayTasksIncre,
+        txt,
+        by
+      )
+    }
   }
   const setNewProject = (leadDocId, value) => {
     console.log('sel pROJECT DETAILS ', value)
@@ -818,6 +850,22 @@ export default function CustomerProfileSideView({
     //  get assignedTo Led
     console.log('new one ', schStsA)
     await addLeadScheduler(orgId, id, data, schStsA, assignedTo)
+
+    // for booked status this startDate might not exists
+    if (
+      (startDate?.getTime() || Timestamp.now().toMillis() + 10800000) <
+      torrowDate
+    ) {
+      IncrementTastTotalCount(
+        orgId,
+        assignedTo,
+        ddMy,
+        tempLeadStatus,
+        1,
+        `New Task-${tempLeadStatus}`
+      )
+    }
+
     const { name } = assignedTo
 
     if (streamCurrentStatus != tempLeadStatus) {
@@ -992,6 +1040,28 @@ export default function CustomerProfileSideView({
         Timestamp.now().toMillis(),
         addCommentTime
       )
+      console.log('am i coming here', postPoneToFuture)
+      if (postPoneToFuture === 'present2Future') {
+        await decreCountOnResheduleOtherDay(
+          orgId,
+          user?.uid,
+          ddMy,
+          `${leadDetailsObj?.Status}`,
+          1,
+          'Lead Posted'
+        )
+        setPostPoneToFuture('present')
+      } else if (postPoneToFuture === 'Future2Present') {
+        IncrementTastTotalCount(
+          orgId,
+          user?.uid,
+          ddMy,
+          `${leadDetailsObj?.Status}`,
+          1,
+          'Lead Posted'
+        )
+        setPostPoneToFuture('present')
+      }
       await cancelResetStatusFun()
     }
   }
@@ -1056,6 +1126,24 @@ export default function CustomerProfileSideView({
       )
       //2) mark the tasks as done
       await doneFun(pendObj)
+      console.log(
+        'am inside schedule close',
+        pendObj?.schTime < torrowDate,
+        pendObj,
+        torrowDate,
+        pendObj
+      )
+      if (pendObj?.schTime < torrowDate) {
+        console.log('am inside schedule close')
+        await IncrementTastCompletedCount(
+          orgId,
+          user?.uid,
+          ddMy,
+          `${leadDetailsObj?.Status}_comp`,
+          1,
+          'A Task Closed by change status'
+        )
+      }
     })
   }
   const closeTaskFun = async (data) => {
@@ -3089,6 +3177,7 @@ export default function CustomerProfileSideView({
                                   setAddCommentTitle={setAddCommentTitle}
                                   addCommentTitle={addCommentTitle}
                                   addCommentTime={addCommentTime}
+                                  setPostPoneToFuture={setPostPoneToFuture}
                                   setClosePrevious={setClosePrevious}
                                   setAddCommentPlusTask={setAddCommentPlusTask}
                                   setAddCommentTime={setAddCommentTime}

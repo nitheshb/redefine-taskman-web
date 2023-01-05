@@ -53,6 +53,8 @@ const SiderForm = ({
   transactionData,
   selCustomerPayload,
   selUnitDetails,
+  selSubMenu,
+  selSubMenu2,
 }) => {
   // dont write too many here
   //  this is for customerProfileSideView
@@ -191,7 +193,6 @@ const SiderForm = ({
                   <ConstructUnitsDetails
                     title={title}
                     dialogOpen={setOpen}
-
                     myPhase={phaseDetails}
                     myBlock={myBlock}
                     projectsList={projectsList}
@@ -339,6 +340,8 @@ const SiderForm = ({
                     setUnitsViewMode={setUnitsViewMode}
                     transactionData={transactionData}
                     selCustomerPayload={selCustomerPayload}
+                    selSubMenu={selSubMenu}
+                    selSubMenu2={selSubMenu2}
                   />
                 )}
                 {title === 'capturePayment' && (

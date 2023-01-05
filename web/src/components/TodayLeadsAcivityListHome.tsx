@@ -1,10 +1,12 @@
+import { useEffect, useState } from 'react'
+
 import { CleaningServicesRounded } from '@mui/icons-material'
 import { TabList } from '@mui/lab'
 import { Box, Card, Grid, styled } from '@mui/material'
 import { yearsToMonths } from 'date-fns'
 // import LLeadsTableBody from '../LLeadsTableBody/LLeadsTableBody'
-import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next' // styled components
+
 // import uniqueId from '../../util/generatedId'
 import {
   getLeadbyId1,
@@ -13,6 +15,7 @@ import {
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import uniqueId from 'src/util/generatedId'
+
 import LLeadsTableBody from './LLeadsTableBody/LLeadsTableBody'
 import TodayLeadsActivitySearchView from './TodayLeadsActivitySearchView'
 
@@ -143,6 +146,7 @@ const TodayLeadsActivityListHomeView = ({
             console.log('git values is 2', querySnapshot.docs)
             const projects = querySnapshot.docs.map(async (docSnapshot) => {
               const x = docSnapshot.data()
+              console.log('git values is 2', x)
               const { staDA } = x
               y = staDA
               // if (taskType === 'Today1') {
@@ -177,6 +181,10 @@ const TodayLeadsActivityListHomeView = ({
                 results.filter((data) => data != 'remove')
 
                 setTodaySchL(results.filter((data) => data != 'remove'))
+                console.log(
+                  'fetched values is',
+                  results.filter((data) => data != 'remove')
+                )
                 setSchLoading(false)
               })
             } else {
