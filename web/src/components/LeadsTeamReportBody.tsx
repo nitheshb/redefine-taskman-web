@@ -1212,6 +1212,223 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
               <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
                 <div className="overflow-hidden">
                   <div className=" text-md font-bold leading-none pl-0 mt-4 border-b pb-4 mb-4 ">
+                    {`Employee vs Tasks `}
+                  </div>
+
+                  <section className="flex flex-row justify-between mt-[18px]">
+                    <section></section>
+                    <div className=" flex   ">
+                      <div
+                        className="ml-4 text-blue cursor-pointer"
+                        onClick={() => {
+                          setResettingEmpValues(true)
+                          GenerateTasksDailyReportForEmp()
+                        }}
+                      >
+                        Generate Daily Task Report
+                      </div>
+
+                      {resettingEmpValues && <span>InProgress</span>}
+                      <button
+                        onClick={() => {
+                          triggerWhatsAppTasksCountAlert()
+                        }}
+                      >
+                        <span
+                          className={`flex ml-2 mr-4  items-center h-6 px-3 text-xs
+                            text-green-800 bg-green-200
+                          rounded-full`}
+                        >
+                          <CalendarIcon
+                            className="h-3 w-3 mr-1"
+                            aria-hidden="true"
+                          />
+                          Send WhatsApp Notification
+                        </span>
+                      </button>
+
+                      {/* <SlimSelectBox
+                        name="project"
+                        label=""
+                        className="input min-w-[164px] "
+                        onChange={(value) => {
+                          setSelProjectEmp(value)
+                        }}
+                        value={selProjectEmpIs?.value}
+                        options={[
+                          ...[{ label: 'All Projects', value: 'allprojects' }],
+                          ...projectList,
+                        ]}
+                      /> */}
+                      {/* <span style={{ display: '' }}>
+                        <CSVDownloader
+                          className="mr-6 h-[20px] w-[20px]"
+                          downloadRows={EmpDownloadRows}
+                          style={{ height: '20px', width: '20px' }}
+                        />
+                      </span> */}
+                    </div>
+                  </section>
+                  <table className="min-w-full text-center mt-6">
+                    <thead className="border-b">
+                      <tr>
+                        {[
+                          { label: 'sNo', id: 'no' },
+                          { label: 'Name', id: 'label' },
+                          { label: 'Rnr', id: 'all' },
+                          { label: 'Busy', id: 'new' },
+                          { label: 'All', id: 'all' },
+                          { label: 'New', id: 'new' },
+                          { label: 'Follow Up', id: 'followup' },
+                          { label: 'Visit Fixed', id: 'visitfixed' },
+                          { label: 'Visit Done', id: 'visitdone' },
+                          { label: 'Visit Cancel', id: 'visitCancel' },
+                          { label: 'Booked', id: 'booked' },
+                          { label: 'Dead', id: 'dead' },
+                          { label: 'Blocked', id: 'blocked' },
+                          { label: 'Junk', id: 'junk' },
+
+                          { label: 'Negotiations', id: 'negotiation' },
+                          { label: 'Others', id: 'others' },
+                        ].map((d, i) => (
+                          <th
+                            key={i}
+                            scope="col"
+                            className={`text-sm font-medium text-gray-900 px-6 py-4 ${
+                              ['Name'].includes(d.label) ? 'text-left' : ''
+                            }`}
+                            onClick={() => {
+                              if (['inprogress', 'archieve'].includes(d.id))
+                                showColumnsSourceFun(d.id)
+                            }}
+                          >
+                            {d.label}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {empPerDayTasksCountsA?.map((data, i) => {
+                        return (
+                          <tr
+                            className={`  ${
+                              i % 2 === 0
+                                ? 'bg-white border-blue-200'
+                                : 'bg-gray-100'
+                            }`}
+                            key={i}
+                          >
+                            <td className="text-sm text-gray-900 font-medium px-6 py-2 whitespace-nowrap text-left">
+                              {i + 1}
+                            </td>
+                            <td className="text-sm text-gray-900 font-medium px-6 py-2 whitespace-nowrap text-left">
+                              {data?.emp}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.rnr || 0}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.busy || 0}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.all_comp || 0}/{data?.all || 0}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.new_comp || 0}/{data?.new || 0}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.followup_comp || 0}/{data?.followup || 0}
+                            </td>
+
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.visitfixed_comp || 0}/{' '}
+                              {data?.visitfixed || 0}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.visitdone_comp || 0}/{' '}
+                              {data?.visitdone || 0}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.visitCancel_comp || 0}/{' '}
+                              {data?.visitCancel || 0}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.booked_comp || 0}/ {data?.booked || 0}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.dead_comp || 0}/ {data?.dead || 0}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.blocked_comp || 0}/ {data?.blocked || 0}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.junk_comp || 0}/ {data?.junk || 0}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.negotiation_comp || 0}/
+                              {data?.negotiation || 0}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.others_comp || 0}/ {data?.others || 0}
+                            </td>
+                          </tr>
+                        )
+                      })}
+
+                      <tr className="border-b bg-gray-800 boder-gray-900">
+                        <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap text-left">
+                          Total
+                        </td>
+                        <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                          {/* {Object.keys(empTaskListTuned.Total).length
+                            empTaskListTuned.reduce((a, b) => {
+                              return a.Total + b.Total
+                            }).length
+                          } */}
+                          {/* {empTaskListTuned.reduce(
+                            (previousValue, currentValue) =>
+                              previousValue.Total + currentValue.Total,
+                            0
+                          )} */}
+                          {empTaskListTunedTotal?.TotalSum}
+                        </td>
+                        <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                          {empTaskListTunedTotal?.now}
+                        </td>
+                        <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                          {empTaskListTunedTotal?.Sum7}
+                        </td>
+
+                        <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                          {empTaskListTunedTotal?.Sum20}
+                        </td>
+                        <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                          {empTaskListTunedTotal?.Sum30}
+                        </td>
+                        <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                          {empTaskListTunedTotal?.Sum40}
+                        </td>
+                        <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                          {empTaskListTunedTotal?.Sum50}
+                        </td>
+                        <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                          {empTaskListTunedTotal?.Sum50M}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="flex flex-col  mt-14 drop-shadow-md rounded-lg  px-4"
+            style={{ backgroundColor: '#ebfafa' }}
+          >
+            <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
+              <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
+                <div className="overflow-hidden">
+                  <div className=" text-md font-bold leading-none pl-0 mt-4 border-b pb-4 mb-4 ">
                     {`Visits Performance Counts `}
                   </div>
 
@@ -3105,224 +3322,6 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                           </td>
                         </tr>
                       )}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div
-            className="flex flex-col  mt-14 drop-shadow-md rounded-lg  px-4"
-            style={{ backgroundColor: '#ebfafa' }}
-          >
-            <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
-              <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
-                <div className="overflow-hidden">
-                  <div className=" text-md font-bold leading-none pl-0 mt-4 border-b pb-4 mb-4 ">
-                    {`Employee vs Tasks `}
-                  </div>
-
-                  <section className="flex flex-row justify-between mt-[18px]">
-                    <section></section>
-                    <div className=" flex   ">
-                      <div
-                        className="ml-4 text-blue cursor-pointer"
-                        onClick={() => {
-                          setResettingEmpValues(true)
-                          GenerateTasksDailyReportForEmp()
-                        }}
-                      >
-                        Generate Daily Task Report
-                      </div>
-
-                      {resettingEmpValues && <span>InProgress</span>}
-                      <button
-                        onClick={() => {
-                          triggerWhatsAppTasksCountAlert()
-                        }}
-                      >
-                        <span
-                          className={`flex ml-2 mr-4  items-center h-6 px-3 text-xs
-                            text-green-800 bg-green-200
-                          rounded-full`}
-                        >
-                          <CalendarIcon
-                            className="h-3 w-3 mr-1"
-                            aria-hidden="true"
-                          />
-                          Send WhatsApp Notification
-                        </span>
-                      </button>
-
-                      {/* <SlimSelectBox
-                        name="project"
-                        label=""
-                        className="input min-w-[164px] "
-                        onChange={(value) => {
-                          setSelProjectEmp(value)
-                        }}
-                        value={selProjectEmpIs?.value}
-                        options={[
-                          ...[{ label: 'All Projects', value: 'allprojects' }],
-                          ...projectList,
-                        ]}
-                      /> */}
-                      {/* <span style={{ display: '' }}>
-                        <CSVDownloader
-                          className="mr-6 h-[20px] w-[20px]"
-                          downloadRows={EmpDownloadRows}
-                          style={{ height: '20px', width: '20px' }}
-                        />
-                      </span> */}
-                    </div>
-                  </section>
-                  <table className="min-w-full text-center mt-6">
-                    <thead className="border-b">
-                      <tr>
-                        {[
-                          { label: 'sNo', id: 'no' },
-                          { label: 'Name', id: 'label' },
-                          { label: 'Rnr', id: 'all' },
-                          { label: 'Busy', id: 'new' },
-                          { label: 'All', id: 'all' },
-                          { label: 'New', id: 'new' },
-                          { label: 'Follow Up', id: 'followup' },
-                          { label: 'Visit Fixed', id: 'visitfixed' },
-                          { label: 'Visit Done', id: 'visitdone' },
-                          { label: 'Visit Cancel', id: 'visitCancel' },
-                          { label: 'Booked', id: 'booked' },
-                          { label: 'Dead', id: 'dead' },
-                          { label: 'Blocked', id: 'blocked' },
-                          { label: 'Junk', id: 'junk' },
-
-                          { label: 'Negotiations', id: 'negotiation' },
-                          { label: 'Others', id: 'others' },
-                        ].map((d, i) => (
-                          <th
-                            key={i}
-                            scope="col"
-                            className={`text-sm font-medium text-gray-900 px-6 py-4 ${
-                              ['Name'].includes(d.label) ? 'text-left' : ''
-                            }`}
-                            onClick={() => {
-                              if (['inprogress', 'archieve'].includes(d.id))
-                                showColumnsSourceFun(d.id)
-                            }}
-                          >
-                            {d.label}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {empPerDayTasksCountsA?.map((data, i) => {
-                        return (
-                          <tr
-                            className={`  ${
-                              i % 2 === 0
-                                ? 'bg-white border-blue-200'
-                                : 'bg-gray-100'
-                            }`}
-                            key={i}
-                          >
-                            <td className="text-sm text-gray-900 font-medium px-6 py-2 whitespace-nowrap text-left">
-                              {i + 1}
-                            </td>
-                            <td className="text-sm text-gray-900 font-medium px-6 py-2 whitespace-nowrap text-left">
-                              {data?.emp}
-                            </td>
-                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
-                              {data?.rnr || 0}
-                            </td>
-                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
-                              {data?.busy || 0}
-                            </td>
-                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
-                              {data?.all_comp || 0}/{data?.all || 0}
-                            </td>
-                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
-                              {data?.new_comp || 0}/{data?.new || 0}
-                            </td>
-                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
-                              {data?.followup_comp || 0}/{data?.followup || 0}
-                            </td>
-
-                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
-                              {data?.visitfixed_comp || 0}/{' '}
-                              {data?.visitfixed || 0}
-                            </td>
-                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
-                              {data?.visitdone_comp || 0}/{' '}
-                              {data?.visitdone || 0}
-                            </td>
-                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
-                              {data?.visitCancel_comp || 0}/{' '}
-                              {data?.visitCancel || 0}
-                            </td>
-                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
-                              {data?.booked_comp || 0}/ {data?.booked || 0}
-                            </td>
-                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
-                              {data?.dead_comp || 0}/ {data?.dead || 0}
-                            </td>
-                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
-                              {data?.blocked_comp || 0}/ {data?.blocked || 0}
-                            </td>
-                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
-                              {data?.junk_comp || 0}/ {data?.junk || 0}
-                            </td>
-                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
-                              {data?.negotiation_comp || 0}/
-                              {data?.negotiation || 0}
-                            </td>
-                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
-                              {data?.others_comp || 0}/ {data?.others || 0}
-                            </td>
-                          </tr>
-                        )
-                      })}
-
-                      <tr className="border-b bg-gray-800 boder-gray-900">
-                        <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap text-left">
-                          Total
-                        </td>
-                        <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
-                          {/* {Object.keys(empTaskListTuned.Total).length
-                            empTaskListTuned.reduce((a, b) => {
-                              return a.Total + b.Total
-                            }).length
-                          } */}
-                          {/* {empTaskListTuned.reduce(
-                            (previousValue, currentValue) =>
-                              previousValue.Total + currentValue.Total,
-                            0
-                          )} */}
-                          {empTaskListTunedTotal?.TotalSum}
-                        </td>
-                        <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
-                          {empTaskListTunedTotal?.now}
-                        </td>
-                        <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
-                          {empTaskListTunedTotal?.Sum7}
-                        </td>
-
-                        <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
-                          {empTaskListTunedTotal?.Sum20}
-                        </td>
-                        <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
-                          {empTaskListTunedTotal?.Sum30}
-                        </td>
-                        <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
-                          {empTaskListTunedTotal?.Sum40}
-                        </td>
-                        <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
-                          {empTaskListTunedTotal?.Sum50}
-                        </td>
-                        <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
-                          {empTaskListTunedTotal?.Sum50M}
-                        </td>
-                      </tr>
                     </tbody>
                   </table>
                 </div>

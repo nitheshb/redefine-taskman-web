@@ -8,6 +8,7 @@ import { TabList } from '@mui/lab'
 import { Box, Card, Grid, styled } from '@mui/material'
 import { useTranslation } from 'react-i18next' // styled components
 
+import { useAuth } from 'src/context/firebase-auth-context'
 import {
   formatToPhone,
   getDifferenceInDays,
@@ -38,6 +39,8 @@ const TodoListView = ({
   // useTitle('Data Table V1')
   const { t } = useTranslation()
   const [value, setValue] = useState('new')
+  const { user } = useAuth()
+  const { orgId } = user
   const [tableData, setTableData] = useState([])
   const [tabHeadFieldsA, settabHeadFieldsA] = useState([])
   // const [leadsFetchedData, setLeadsFetchedData] = useState([])
@@ -274,6 +277,15 @@ const TodoListView = ({
                                 </p>
                                 <p className="text-[9px]  leading-none text-gray-600  mt-[6px] font-bodyLato  py-[4px]  rounded-full    mb-1 mr-2  ">
                                   {dat?.sts?.toUpperCase()}
+                                </p>
+                                <p
+                                  className={`text-[9px]  leading-none ${
+                                    user?.uid == dat?.leadUser?.assignedTo
+                                      ? 'text-green-800'
+                                      : 'text-red-800 '
+                                  }   mt-[6px] font-bodyLato  py-[4px]  rounded-full    mb-1 mr-2  `}
+                                >
+                                  {dat?.leadUser?.assignedToObj?.name?.toUpperCase()}
                                 </p>
                               </div>
                             </div>
