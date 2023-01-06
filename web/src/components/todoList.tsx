@@ -195,9 +195,6 @@ const TodoListView = ({
               </time>
             </div>
           )}
-          {taskListA.length}
-          {searchKey}
-          {taskListA?.filter((d) => searchKey.includes(d['sts'])).length}
           <div className="mt-7 overflow-x-auto">
             <table className="w-full whitespace-nowrap">
               <tbody>

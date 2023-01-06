@@ -21,11 +21,25 @@ const RecentActivity = ({ title, userTodayPerfA }) => {
       setRecActA([])
     }
   }, [userTodayPerfA])
-
   return (
     <section className="bg-white rounded  flex flex-col p-4 w-100 ">
       <h5 className="font-bodyLato text-md">{t(title)}</h5>
       <section className="mt-3">
+        {recActA.length < 1 && (
+          <div className="flex font-md font-medium text-xs mb-4 text-gray-800 items-center">
+            <img
+              className="w-[80px] h-[80px] inline mt-3"
+              alt=""
+              src="/templates.svg"
+              style={{
+                display: 'block',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                width: '50%',
+              }}
+            />
+          </div>
+        )}
         {recActA.map((item, i) => (
           // <ActivityListItem activity={item} key={item.id} />
           <li className="flex flex-row mb-2 pb-2 border-b" key={i}>
