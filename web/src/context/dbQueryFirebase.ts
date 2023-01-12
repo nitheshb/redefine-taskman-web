@@ -559,6 +559,10 @@ export const checkIfUserAlreadyExists = async (cName, matchVal) => {
 
   // db.collection(`${orgId}_leads`).add(data)
 }
+export const getLeadsDataLake = async (orgId, snapshot, error) => {
+  const getAllProjectsQuery = await query(collection(db, `${orgId}_leads_lake`))
+  return onSnapshot(getAllProjectsQuery, snapshot, error)
+}
 export const getAllRoleAccess = async (orgId) => {
   // userAccessRoles.forEach(async (element) => {
   //   const r = 'A' + Math.random() * 100000000000000000 + 'Z'

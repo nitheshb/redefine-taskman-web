@@ -797,10 +797,10 @@ console.log('filter value stuff' , parent)
               searchkey={searchKey}
               viewUnitStatusA={viewUnitStatusA}
             />
-                        {rows?.length===0 &&(
-                      <div className='flex items-center'>No Records</div>)}
+
 
             <TableBody>
+        
 
               {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.slice().sort(getComparator(order, orderBy)) */}

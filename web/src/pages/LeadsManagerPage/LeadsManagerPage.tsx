@@ -8,6 +8,7 @@ import LeadsTeamReportBody from 'src/components/LeadsTeamReportBody'
 import MyAttedanceHomeBody from 'src/components/myAttedanceHomeBody'
 import MyLeadsReportHome from 'src/components/myLeadsReportHome'
 import MyPayHomeBody from 'src/components/myPayHomeBody'
+import LeadsLakeHomePage from 'src/components/PreSaleModule/LeadsManagement/LeadsLakeHomePage'
 import ProjectsUnitInventory from 'src/components/projectUnitsInventory'
 import TodayLeadsHomePage from 'src/components/TodayLeadsHomePage'
 import { useFileUpload } from 'src/components/useFileUpload'
@@ -89,6 +90,9 @@ const LeadsManagerPage = () => {
               )}
               {viewable === 'archieveLeads' && (
                 <ExecutiveHomeViewerPage leadsTyper={'archieveLeads'} />
+              )}
+              {viewable === 'leadslake' && (
+                <LeadsLakeHomePage taskType={viewable} />
               )}
               {viewable === 'Today1' && (
                 <TodayLeadsHomePage taskType={viewable} />

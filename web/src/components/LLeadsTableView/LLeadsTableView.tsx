@@ -358,7 +358,22 @@ const LLeadsTableView = ({
             } */}
             {fetchLeadsLoader &&
               [1, 2, 3].map((data, i) => <LogSkelton key={i} />)}
-            {!fetchLeadsLoader && (
+            {statusSepA[0]?.[value].length === 0 && (
+              <div className="flex items-center py-6">
+                <span
+                  className="text-xs text-gray-500"
+                  style={{
+                    display: 'block',
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                    // width: '50%',
+                  }}
+                >
+                  No Records
+                </span>
+              </div>
+            )}
+            {!fetchLeadsLoader && statusSepA[0]?.[value].length != 0 && (
               <LLeadsTableBody
                 // data={filterTable}
                 fetchLeadsLoader={fetchLeadsLoader}
