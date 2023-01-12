@@ -93,7 +93,7 @@ export default function LeadsLakeHomeComponent({
   }, [])
 
   const selUserProfileF = (title, data) => {
-    console.log('data is', data)
+    console.log('data is', title, data)
     setAddLeadsTypes(title)
     setisImportLeadsOpen(true)
     setSelUserProfile(data)
@@ -239,7 +239,7 @@ export default function LeadsLakeHomeComponent({
       <SiderForm
         open={isImportLeadsOpen}
         setOpen={setisImportLeadsOpen}
-        title={addLeadsTypes}
+        title={'Edit to Push Lead'}
         customerDetails={selUserProfile}
         widthClass="max-w-2xl"
       />

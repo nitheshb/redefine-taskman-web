@@ -998,6 +998,22 @@ export const addLeadNotes = async (orgId, id, data) => {
     await setDoc(doc(db, `${orgId}_leads_notes`, id), yo)
   }
 }
+export const updateLeadLakeStatus = async (orgId, id, data) => {
+  console.log('what is this', data)
+  const { status, by } = data
+  const yo = {
+    currentStatus: status,
+    mT: Timestamp.now().toMillis(),
+  }
+  try {
+    const washingtonRef = doc(db, `${orgId}_leads_lake`, id)
+    console.log('check add LeadLog', id, washingtonRef)
+
+    await updateDoc(washingtonRef, yo)
+  } catch (error) {
+    console.log('check add LeadLog', error, id)
+  }
+}
 
 export const addUserLog = (orgId, data) => {
   // type    === addUser || updateUserRole || deleteUser

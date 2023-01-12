@@ -1,43 +1,47 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import { Dialog } from '@headlessui/react'
 import { useState, useEffect } from 'react'
-import { RadioGroup } from '@headlessui/react'
-import { Label, InputField, TextAreaField, FieldError } from '@redwoodjs/forms'
-import Select from 'react-select'
-import { Form, Formik } from 'formik'
-import * as Yup from 'yup'
-import NumberFormat from 'react-number-format'
-import DatePicker from 'react-datepicker'
-import { setHours, setMinutes } from 'date-fns'
 
-import { TextField } from 'src/util/formFields/TextField'
-import { CustomSelect } from 'src/util/formFields/selectBoxField'
-import Loader from './Loader/Loader'
-import { PhoneNoField } from 'src/util/formFields/phNoField'
+import { Dialog } from '@headlessui/react'
+import { RadioGroup } from '@headlessui/react'
+import { DeviceMobileIcon, MailIcon } from '@heroicons/react/outline'
+import { setHours, setMinutes } from 'date-fns'
+import { Timestamp } from 'firebase/firestore'
+import { Form, Formik } from 'formik'
+import DatePicker from 'react-datepicker'
+import NumberFormat from 'react-number-format'
+import Select from 'react-select'
+import * as Yup from 'yup'
+
+import { Label, InputField, TextAreaField, FieldError } from '@redwoodjs/forms'
+import { useRouterStateSetter } from '@redwoodjs/router/dist/router-context'
+
+import { sourceList, sourceListItems } from 'src/constants/projects'
+import { USER_ROLES } from 'src/constants/userRoles'
 import {
   addCpLead,
   addLead,
   checkIfLeadAlreadyExists,
   getAllProjects,
   steamUsersListByRole,
+  updateLeadLakeStatus,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
-import { Timestamp } from 'firebase/firestore'
-import { useRouterStateSetter } from '@redwoodjs/router/dist/router-context'
 import {
   sendWhatAppMediaSms,
   sendWhatAppTextSms,
 } from 'src/util/axiosWhatAppApi'
-import { sourceList } from 'src/constants/projects'
-import { USER_ROLES } from 'src/constants/userRoles'
-import { DeviceMobileIcon, MailIcon } from '@heroicons/react/outline'
-import AssigedToDropComp from './assignedToDropComp'
 import { prettyDateTime } from 'src/util/dateConverter'
+import { PhoneNoField } from 'src/util/formFields/phNoField'
+import { CustomSelect } from 'src/util/formFields/selectBoxField'
+import { TextField } from 'src/util/formFields/TextField'
 import { currentStatusDispFun } from 'src/util/leadStatusDispFun'
 
-const AddLeadForm = ({ title, dialogOpen }) => {
+import AssigedToDropComp from './assignedToDropComp'
+import Loader from './Loader/Loader'
+
+const AddLeadForm = ({ title, dialogOpen, customerDetails }) => {
   const d = new window.Date()
   const { user } = useAuth()
   const { orgId } = user
@@ -46,6 +50,34 @@ const AddLeadForm = ({ title, dialogOpen }) => {
   const [projectList, setprojectList] = useState([])
   const [closeWindowMode, setCloseWindowMode] = useState(false)
   const [startDate, setStartDate] = useState(d)
+  const [customerDetailsTuned, setCustomerDetailsTuned] = useState({})
+  useEffect(() => {
+    const custObj = customerDetails
+    const {
+      responderName,
+      responderEmail,
+      responderPhone,
+      cT,
+      source,
+      projectName,
+    } = customerDetails
+    const sourceListMatch = sourceListItems?.filter((sourObj) => {
+      return sourObj?.rep.includes(source)
+    })
+    const projectListMatch = projectList?.filter((projObj) => {
+      return projObj?.value == projectName
+    })
+    custObj.name = responderName
+    custObj.email = responderEmail
+    custObj.phone = responderPhone
+    custObj.Date = cT
+    custObj.source = sourceListMatch[0]?.value || ''
+    custObj.project = projectListMatch[0]?.projectName || ''
+    custObj.projectId = projectListMatch[0]?.uid || ''
+
+    setCustomerDetailsTuned(custObj)
+    console.log('customerDetailsTuned', customerDetailsTuned)
+  }, [customerDetails, sourceList, projectList])
 
   useEffect(() => {
     const unsubscribe = steamUsersListByRole(
@@ -161,9 +193,8 @@ const AddLeadForm = ({ title, dialogOpen }) => {
     await setdevType(sel)
   }
   const onSubmitFun = async (data, resetForm) => {
-    console.log(data)
+    // set status as uploaded
     setLoading(true)
-
     if (user?.role?.includes(USER_ROLES.CP_AGENT)) {
       const { uid, email, displayName, department, role, orgId, phone } = user
       data.assignedTo = uid
@@ -247,9 +278,14 @@ const AddLeadForm = ({ title, dialogOpen }) => {
           user?.email,
           `lead created and assidged to ${assignedToObj?.email || assignedTo}`
         )
+        if (customerDetailsTuned?.id && title == 'Edit to Push Lead') {
+          await updateLeadLakeStatus(orgId, customerDetailsTuned?.id, {
+            status: 'added',
+          })
+        }
         //
       }
-
+      // update the leads bank status
       await sendWhatAppTextSms(
         mobileNo,
         `Thank you ${name} for choosing the world class ${project || 'project'}`
@@ -333,15 +369,16 @@ const AddLeadForm = ({ title, dialogOpen }) => {
             {/* new one */}
 
             <Formik
+              enableReinitialize={true}
               initialValues={{
-                name: '',
-                cDate: '',
-                mobileNo: '',
-                email: '',
-                source: '',
-                project: '',
-                projectId: '',
-                assignedTo: '',
+                name: customerDetailsTuned?.name || '',
+                cDate: customerDetailsTuned?.Date || '',
+                mobileNo: customerDetailsTuned?.phone || '',
+                email: customerDetailsTuned?.email || '',
+                source: customerDetailsTuned?.source || '',
+                project: customerDetailsTuned?.projectName || '',
+                projectId: customerDetailsTuned?.projectId || '',
+                assignedTo: customerDetailsTuned?.name || '',
                 budget: '20-30L',
                 deptVal: '',
                 myRole: '',

@@ -226,6 +226,13 @@ const SiderForm = ({
                 {title === 'Add Lead' && (
                   <AddLeadForm title={title} dialogOpen={setOpen} />
                 )}
+                {title === 'Edit to Push Lead' && (
+                  <AddLeadForm
+                    title={title}
+                    dialogOpen={setOpen}
+                    customerDetails={customerDetails}
+                  />
+                )}
                 {title === 'User Profile' && (
                   <CustomerProfileSideView
                     openUserProfile={false}

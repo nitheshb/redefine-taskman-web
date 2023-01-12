@@ -193,7 +193,13 @@ export const sourceListItems = [
   {
     label: 'Magic Bricks',
     value: 'magicbricks',
-    rep: ['magicbricks', 'magic bricks', 'magic bricks'],
+    rep: [
+      'magicbricks',
+      'magic bricks',
+      'magic bricks',
+      'MagicBricks',
+      'Magic Bricks',
+    ],
   },
   { label: 'MCube', value: 'mcube', rep: ['mcube', 'Mcube'] },
   {
@@ -204,7 +210,7 @@ export const sourceListItems = [
   { label: 'REPP', value: 'repp', rep: ['REPP', 'repp'] },
   { label: 'SMS', value: 'sms', rep: ['sms', 'Sms', 'SMS'] },
   { label: 'Website', value: 'website', rep: ['website'] },
-  { label: '99acres', value: '99acres', rep: ['99acres'] },
+  { label: '99acres', value: '99acres', rep: ['99acres', '99Acres'] },
   { label: 'others', value: 'others', rep: [] },
 ]
 export const sourceList = [
