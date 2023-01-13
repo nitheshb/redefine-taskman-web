@@ -721,23 +721,25 @@ export const addLeadSupabase = async (payload) => {
   // await console.log('error as ', error)
 }
 export const addLead = async (orgId, data, by, msg) => {
-  const x = await addDoc(collection(db, `${orgId}_leads`), data)
-  await console.log('add Lead value is ', x, x.id, data)
-  const { intype, Name, Mobile, assignedTo, Project, assignedToObj } = data
-  const { data3, errorx } = await supabase.from(`${orgId}_lead_logs`).insert([
-    {
-      type: 'l_ctd',
-      subtype: intype,
-      T: Timestamp.now().toMillis(),
-      Luid: x?.id || '',
-      by,
-      payload: {},
-    },
-  ])
-  if (Project) {
-    await sendWhatAppTextSms1(
-      '7760959579',
-      `Warm Greetings!
+  try {
+    delete data[""]
+    const x = await addDoc(collection(db, `${orgId}_leads`), data)
+    await console.log('add Lead value is ', x, x.id, data)
+    const { intype, Name, Mobile, assignedTo, Project, assignedToObj } = data
+    const { data3, errorx } = await supabase.from(`${orgId}_lead_logs`).insert([
+      {
+        type: 'l_ctd',
+        subtype: intype,
+        T: Timestamp.now().toMillis(),
+        Luid: x?.id || '',
+        by,
+        payload: {},
+      },
+    ])
+    if (Project) {
+      await sendWhatAppTextSms1(
+        '7760959579',
+        `Warm Greetings!
 
       Thanks for your interest in ${Project},
       It's a pleasure to be a part of your housing journey. Our team will be in touch with you in a brief period. In the meanwhile, this would help you get to know the project a little more.
@@ -745,18 +747,18 @@ export const addLead = async (orgId, data, by, msg) => {
 
       Warm Regards
       Maa Homes.`
-    )
-  }
-  if (assignedTo) {
-    const { offPh, name } = assignedToObj
-    await sendWhatAppTextSms1(
-      offPh,
-      `⚡ A new lead- ${Name} Assigned to you @${Project || ''}. 📱${Mobile}`
-    )
+      )
+    }
+    if (assignedTo) {
+      const { offPh, name } = assignedToObj
+      await sendWhatAppTextSms1(
+        offPh,
+        `⚡ A new lead- ${Name} Assigned to you @${Project || ''}. 📱${Mobile}`
+      )
 
-    await sendWhatAppTextSms1(
-      '7760959579',
-      `Greetings from MAA Homes, I am ${name}
+      await sendWhatAppTextSms1(
+        '7760959579',
+        `Greetings from MAA Homes, I am ${name}
 
       This is ${name} from Maa Homes,
 
@@ -767,36 +769,39 @@ export const addLead = async (orgId, data, by, msg) => {
       Warm Regards
       ${name}
       Maa Homes`
-    )
+      )
+    }
+    await console.log('what is this supbase', data3, errorx)
+    // await addLeadLog(orgId, x.id, {
+    //   s: 's',
+    //   type: 'status',
+    //   subtype: 'added',
+    //   T: Timestamp.now().toMillis(),
+    //   txt: msg,
+    //   by,
+    // })
+
+    // add task to scheduler to Intro call in 3 hrs
+
+    const data1 = {
+      by: by,
+      type: 'schedule',
+      pri: 'priority 1',
+      notes: 'Get into Introduction Call with customer',
+      sts: 'pending',
+      schTime: Timestamp.now().toMillis() + 10800000, // 3 hrs
+      ct: Timestamp.now().toMillis(),
+    }
+
+    const x1 = []
+
+    x1.push('pending')
+
+    await addLeadScheduler(orgId, x.id, data1, x1, data.assignedTo)
+    return
+  } catch (error) {
+    console.log('error in uploading file with data', data, error)
   }
-  await console.log('what is this supbase', data3, errorx)
-  // await addLeadLog(orgId, x.id, {
-  //   s: 's',
-  //   type: 'status',
-  //   subtype: 'added',
-  //   T: Timestamp.now().toMillis(),
-  //   txt: msg,
-  //   by,
-  // })
-
-  // add task to scheduler to Intro call in 3 hrs
-
-  const data1 = {
-    by: by,
-    type: 'schedule',
-    pri: 'priority 1',
-    notes: 'Get into Introduction Call with customer',
-    sts: 'pending',
-    schTime: Timestamp.now().toMillis() + 10800000, // 3 hrs
-    ct: Timestamp.now().toMillis(),
-  }
-
-  const x1 = []
-
-  x1.push('pending')
-
-  await addLeadScheduler(orgId, x.id, data1, x1, data.assignedTo)
-  return
 }
 // This function is used to add leads for cp
 export const addCpLead = async (orgId, data, by, msg) => {

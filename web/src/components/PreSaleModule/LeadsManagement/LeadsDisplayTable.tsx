@@ -43,24 +43,14 @@ const LeadsDisplayTable = ({
   })
 
   useEffect(() => {
-    setSortedList(
-      leadsRawList.sort((a, b) => {
-        return b.cT - a.cT
-      })
-    )
-  }, [leadsRawList])
-
-  useEffect(() => {
-    if (selProjectIs?.value != 'allprojects') {
-      console.log('project value is ', selProjectIs?.label)
-      const x = leadsRawList
-        .filter((rawObj) => {
-          return rawObj?.projectName == selProjectIs?.label
-        })
-        .sort((a, b) => {
-          return b.cT - a.cT
-        })
-      setSortedList(x)
+    if (searchKey.includes('unassigned')) {
+      setSortedList(
+        leadsRawList
+          .filter((item) => item?.currentStatus === 'unassigned')
+          .sort((a, b) => {
+            return b.cT - a.cT
+          })
+      )
     } else {
       setSortedList(
         leadsRawList.sort((a, b) => {
@@ -68,7 +58,7 @@ const LeadsDisplayTable = ({
         })
       )
     }
-  }, [selProjectIs])
+  }, [leadsRawList, searchKey])
 
   return (
     <Box pb={4}>
@@ -78,12 +68,11 @@ const LeadsDisplayTable = ({
             <div className="flex items-center">
               <a
                 className={`rounded-full focus:outline-none focus:ring-2  focus:bg-indigo-50 focus:ring-indigo-800`}
-                onClick={() => setSearchKey(['completed', 'pending'])}
+                onClick={() => setSearchKey(['all'])}
               >
                 <div
                   className={`py-2 px-8 rounded-full hover:text-indigo-700 hover:bg-indigo-100  ${
-                    searchKey.includes('completed') &&
-                    searchKey.includes('pending')
+                    searchKey.includes('all')
                       ? 'bg-indigo-100 text-indigo-700'
                       : 'text-gray-600'
                   }`}
@@ -94,11 +83,11 @@ const LeadsDisplayTable = ({
               <a
                 className="rounded-full focus:outline-none focus:ring-2 focus:bg-indigo-50 focus:ring-indigo-800 ml-4 sm:ml-8"
                 href="javascript:void(0)"
-                onClick={() => setSearchKey(['completed'])}
+                onClick={() => setSearchKey(['unassigned'])}
               >
                 <div
                   className={`py-2 px-8 rounded-full hover:text-indigo-700 hover:bg-indigo-100  ${
-                    searchKey.includes('completed') && searchKey.length === 1
+                    searchKey.includes('unassigned') && searchKey.length === 1
                       ? 'bg-indigo-100 text-indigo-700'
                       : 'text-gray-600'
                   }`}
@@ -190,24 +179,24 @@ const LeadsDisplayTable = ({
                           selUserProfileF('User Profile', dat)
                         }}
                       >
-                        <td>
+                        <td className="max-w-[50px] min-w-[50px] w-[50px]">
                           <div className="ml-5">
                             <div className="rounded-sm h-5 w-5 flex flex-shrink-0 justify-center items-center relative">
                               {i + 1}
                             </div>
                           </div>
                         </td>
-                        <td className=" max-w-[300px]">
+                        <td className=" max-w-[300px] min-w-[300px] w-[300px]">
                           <div className="flex items-center ">
                             <div className="flex flex-col">
-                              <p className="text-base max-w-[350px] overflow-ellipsis overflow-hidden font-semibold leading-none text-blue-800 mr-2 mt-2">
+                              <p className="text-base max-w-[300px] overflow-ellipsis overflow-hidden font-semibold leading-none text-blue-800  mt-2">
                                 {responderName || 'NA'}
                               </p>
                               <div className="flex flex-row">
-                                <p className="text-[9px]   leading-none  pr-2 text-green-800  mt-[6px]  py-[4px]  rounded-full   mb-1 mr-2  ">
+                                <p className="text-[9px]   leading-none  pr-2 text-green-800  mt-[6px]  py-[4px]  rounded-full   mb-1  ">
                                   {responderPhone || 'NA'}
                                 </p>
-                                <p className="text-[9px]  leading-none text-red-800  mt-[6px] font-bodyLato  py-[4px]  rounded-full   mb-1 mr-4  ">
+                                <p className="text-[9px]  leading-none text-red-800  mt-[6px] font-bodyLato  py-[4px]  rounded-full   mb-1 ml-2  ">
                                   {responderEmail || 'NA'}
                                 </p>
                                 <p
@@ -223,20 +212,20 @@ const LeadsDisplayTable = ({
                             </div>
                           </div>
                         </td>
-                        <td className="pl-24"></td>
-                        <td className="pl-5">
+
+                        <td className="max-w-[150px] min-w-[150px] w-[150px]">
                           <div className="flex flex-col">
-                            <p className="text-[12px] leading-none text-gray-600 ml-2 mt-2">
+                            <p className="text-[12px] leading-none text-gray-600  mt-2">
                               {projectName || 'NA'}
                             </p>
-                            <p className="text-[11px] leading-none text-gray-600 ml-2 mt-2">
+                            <p className="text-[11px] leading-none text-gray-600  mt-2">
                               {source || 'NA'}
                             </p>
 
-                            <p className="text-sm leading-none text-gray-600 ml-2"></p>
+                            <p className="text-sm leading-none text-gray-600 "></p>
                           </div>
                         </td>
-                        <td className="pl-5">
+                        <td className="max-w-[150px] min-w-[150px] w-[150px]">
                           <div className="flex flex-row">
                             <button className="py-3 px-3 text-[13px] focus:outline-none leading-none text-red-700 rounded">
                               {Math.abs(getDifferenceInMinutes(cT, '')) > 60
@@ -248,16 +237,66 @@ const LeadsDisplayTable = ({
                               {getDifferenceInMinutes(cT, '') < 0
                                 ? 'ago'
                                 : 'Left'}
-                              <p className="text-[11px] leading-none text-gray-600 ml-2 mt-2">
+                              <p className="text-[11px] leading-none text-gray-600  mt-2">
                                 {prettyDateTime(cT)}
                               </p>
                             </button>
                           </div>
                         </td>
-                        <td className="pl-5">
+                        <td className="max-w-[150px] min-w-[150px] w-[150px]">
                           <div className="flex flex-row">
-                            <button className="py-3 px-3 text-[13px] focus:outline-none leading-none text-red-700 rounded">
-                              {currentStatus}
+                            <button
+                              className={`py-[6px] px-[10px] min-w-[110px] rounded-full justify-between flex ${
+                                currentStatus == 'unassigned'
+                                  ? 'bg-[#FEe2e2] text-[#7f1d1d] '
+                                  : 'bg-[#D1FAE5] text-[#064e3b]'
+                              } text-[10px] font-bodyLato font-semibold focus:outline-none leading-none  text-left`}
+                            >
+                              <span className="pl-1 uppercase mt-[2px]">
+                                {currentStatus}
+                              </span>
+                              {currentStatus != 'unassigned' && (
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 24 24"
+                                  fill="currentColor"
+                                  className="w-4 h-4"
+                                  style={{
+                                    display: 'inline',
+                                    color:
+                                      currentStatus == 'unassigned'
+                                        ? '#fbbf24'
+                                        : '#10b981',
+                                  }}
+                                >
+                                  <path
+                                    fillRule="evenodd"
+                                    d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z"
+                                    clipRule="evenodd"
+                                  />
+                                </svg>
+                              )}
+                              {currentStatus === 'unassigned' && (
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 24 24"
+                                  fill="currentColor"
+                                  className="w-4 h-4"
+                                  style={{
+                                    display: 'inline',
+                                    color:
+                                      currentStatus == 'unassigned'
+                                        ? '#ef4444'
+                                        : '#10b981',
+                                  }}
+                                >
+                                  <path
+                                    fillRule="evenodd"
+                                    d="M12.963 2.286a.75.75 0 00-1.071-.136 9.742 9.742 0 00-3.539 6.177A7.547 7.547 0 016.648 6.61a.75.75 0 00-1.152-.082A9 9 0 1015.68 4.534a7.46 7.46 0 01-2.717-2.248zM15.75 14.25a3.75 3.75 0 11-7.313-1.172c.628.465 1.35.81 2.133 1a5.99 5.99 0 011.925-3.545 3.75 3.75 0 013.255 3.717z"
+                                    clipRule="evenodd"
+                                  />
+                                </svg>
+                              )}{' '}
                             </button>
                           </div>
                         </td>

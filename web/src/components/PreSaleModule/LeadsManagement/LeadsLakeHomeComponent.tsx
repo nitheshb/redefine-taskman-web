@@ -36,11 +36,7 @@ import { SlimSelectBox } from 'src/util/formFields/slimSelectBoxField'
 
 import LeadsDisplayTable from './LeadsDisplayTable'
 
-export default function LeadsLakeHomeComponent({
-  todaySch,
-  schLoading,
-  searchKey,
-}) {
+export default function LeadsLakeHomeComponent({ todaySch, schLoading }) {
   const { user } = useAuth()
   const { access, orgId } = user
   const [selected, setSelected] = React.useState([])
@@ -53,7 +49,7 @@ export default function LeadsLakeHomeComponent({
   const [addLeadsTypes, setAddLeadsTypes] = React.useState('')
   const [selUserProfile, setSelUserProfile] = React.useState({})
   const [schFetData, setSchFetData] = React.useState([])
-  const [schFetCleanData, setSchFetCleanData] = React.useState([])
+  const [searchKey, setSearchKey] = React.useState(['all'])
   const [leadByViewLayout, setLeadByViewLayout] = React.useState(false)
   const [leadsRawList, setLeadsRawList] = useState([])
   const [allProjectsA, setAllProjectsA] = useState([])
@@ -165,7 +161,8 @@ export default function LeadsLakeHomeComponent({
                     /> */}
                     <LeadsDisplayTable
                       leadsRawList={leadsRawList}
-                      searchKey={[]}
+                      searchKey={searchKey}
+                      setSearchKey={setSearchKey}
                       selUserProfileF={selUserProfileF}
                       allProjectsA={allProjectsA}
                     />
