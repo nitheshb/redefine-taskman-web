@@ -14,6 +14,7 @@ import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import PropTypes from 'prop-types'
 
+import LeadBankSourceStats from 'src/components/Charts_Graphs/LeadBankSourceStats'
 import RecentActivity from 'src/components/Charts_Graphs/RecentActivity'
 import TaskProgress from 'src/components/Charts_Graphs/TaskProgress'
 import LogSkelton from 'src/components/shimmerLoaders/logSkelton'
@@ -55,7 +56,7 @@ export default function LeadsLakeHomeComponent({
   const [schFetCleanData, setSchFetCleanData] = React.useState([])
   const [leadByViewLayout, setLeadByViewLayout] = React.useState(false)
   const [leadsRawList, setLeadsRawList] = useState([])
-  const [usersList, setusersList] = useState([])
+  const [allProjectsA, setAllProjectsA] = useState([])
   const [sortType, setSortType] = useState('Latest')
 
   const [userTodayPerfA, setUserTodayPerfA] = useState({})
@@ -91,6 +92,28 @@ export default function LeadsLakeHomeComponent({
 
     return unsubscribe
   }, [])
+  useEffect(() => {
+    const unsubscribe = getAllProjects(
+      orgId,
+      (querySnapshot) => {
+        const projectsListA = querySnapshot.docs.map((docSnapshot) => {
+          const x = docSnapshot.data()
+          x.id = docSnapshot.id
+          return x
+        })
+
+        projectsListA.map((user) => {
+          user.label = user?.projectName
+          user.value = user?.uid
+        })
+        console.log('fetched projects list is', projectsListA)
+        setAllProjectsA(projectsListA)
+      },
+      (error) => setAllProjectsA([])
+    )
+
+    return unsubscribe
+  }, [])
 
   const selUserProfileF = (title, data) => {
     console.log('data is', title, data)
@@ -115,74 +138,8 @@ export default function LeadsLakeHomeComponent({
         <div className=" justify-center items-center text-gray-900">
           <div className="flex flex-row justify-between pb-3">
             <section>
-              <h2 className="text-xl font-semibold text-black leading-light font-Playfair pb-1">
-                {greet}, {user?.displayName?.toLocaleUpperCase()}
-              </h2>
-
-              <h2 className="text-sm text-gray-700 ">
-                You've got {'  '}
-                <span className="inline-flex text-md leading-5 font-semibold rounded-full  text-green-800">
-                  {
-                    schFetCleanData?.filter(
-                      (d) =>
-                        searchKey.includes(d['sts']) ||
-                        searchKey.includes('upcoming')
-                    ).length
-                  }
-                </span>{' '}
-                tasks
-              </h2>
+              <h2 className="text-md text-gray-800 ">Leads Bank</h2>
             </section>
-            <div className="flex items-center justify-between">
-              <p
-                tabIndex={0}
-                className="focus:outline-none text-base sm:text-lg md:text-xl lg:text-2xl font-bold leading-normal text-gray-800"
-              ></p>
-              <section className="flex flex-row">
-                <div className=" flex flex-col   mr-5 w-40">
-                  <SlimSelectBox
-                    name="project"
-                    label=""
-                    className="input "
-                    onChange={(value) => {
-                      console.log('zoro condition changed one  is', value)
-                      setSelProject(value)
-                      // formik.setFieldValue('project', value.value)
-                    }}
-                    value={selProjectIs?.value}
-                    // options={aquaticCreatures}
-                    options={[
-                      ...[{ label: 'All Projects', value: 'allprojects' }],
-                      ...leadsRawList,
-                    ]}
-                  />
-                </div>
-                {access?.includes('manage_leads') && (
-                  <div className=" flex flex-col  w-40">
-                    <SlimSelectBox
-                      name="project"
-                      label=""
-                      placeholder="My Tasks"
-                      className="input "
-                      onChange={(value) => {
-                        console.log('changed value is ', value.value)
-                        setSelLeadsOf(value)
-                        // formik.setFieldValue('project', value.value)
-                      }}
-                      value={selLeadsOf?.value}
-                      // options={aquaticCreatures}
-                      options={[
-                        ...[
-                          { label: 'Team Tasks', value: 'teamtasks' },
-                          { label: 'My Tasks', value: 'mytasks' },
-                        ],
-                        ...usersList,
-                      ]}
-                    />
-                  </div>
-                )}
-              </section>
-            </div>
           </div>
 
           {schLoading &&
@@ -210,21 +167,15 @@ export default function LeadsLakeHomeComponent({
                       leadsRawList={leadsRawList}
                       searchKey={[]}
                       selUserProfileF={selUserProfileF}
+                      allProjectsA={allProjectsA}
                     />
                   </div>
                   <div className="w-2/12 flex flex-col">
                     <section className="ml-2">
-                      <TaskProgress userTodayPerfA={userTodayPerfA} />
+                      <LeadBankSourceStats userTodayPerfA={userTodayPerfA} />
                       <div className="mt-2">
                         <RecentActivity
-                          title={'My Recent Activity'}
-                          userTodayPerfA={userTodayPerfA}
-                        />
-                      </div>
-
-                      <div className="mt-2">
-                        <RecentActivity
-                          title={'Team Activity'}
+                          title={'My Activity'}
                           userTodayPerfA={userTodayPerfA}
                         />
                       </div>

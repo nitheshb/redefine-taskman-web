@@ -1390,29 +1390,51 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                               previousValue.Total + currentValue.Total,
                             0
                           )} */}
-                          {empTaskListTunedTotal?.TotalSum}
+                          {}
                         </td>
                         <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
-                          {empTaskListTunedTotal?.now}
+                          {}
                         </td>
                         <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
-                          {empTaskListTunedTotal?.Sum7}
+                          {}
                         </td>
 
                         <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
-                          {empTaskListTunedTotal?.Sum20}
+                          {}
                         </td>
                         <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
-                          {empTaskListTunedTotal?.Sum30}
+                          {}
                         </td>
                         <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
-                          {empTaskListTunedTotal?.Sum40}
+                          {}
                         </td>
                         <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
-                          {empTaskListTunedTotal?.Sum50}
+                          {}
                         </td>
                         <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
-                          {empTaskListTunedTotal?.Sum50M}
+                          {}
+                        </td>
+                        <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                          {}
+                        </td>
+                        <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                          {}
+                        </td>
+
+                        <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                          {}
+                        </td>
+                        <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                          {}
+                        </td>
+                        <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                          {}
+                        </td>
+                        <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                          {}
+                        </td>
+                        <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                          {}
                         </td>
                       </tr>
                     </tbody>

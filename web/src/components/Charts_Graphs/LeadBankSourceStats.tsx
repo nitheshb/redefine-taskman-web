@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useAuth } from 'src/context/firebase-auth-context'
 
-const TaskProgress = ({ userTodayPerfA }) => {
+const LeadBankSourceStats = ({ userTodayPerfA }) => {
   // change navbar title
 
   const { t } = useTranslation()
@@ -15,11 +15,11 @@ const TaskProgress = ({ userTodayPerfA }) => {
 
   return (
     <section className="bg-white rounded  flex flex-col p-4 w-100 ">
-      <h5>{t('Task Progress')}</h5>
+      <h5>{t('Today Stats')}</h5>
 
       <Box mt={2}>
         <div className="flex flex-row align-middle justify-between">
-          <h6 className="font-bodyLato font-semibold text-sm">{t('New')}</h6>
+          <h6 className="font-bodyLato font-semibold text-sm">{t('Total')}</h6>
           <span className="font-bodyLato text-[12px] text-[#94A4C4]">
             {userTodayPerfA?.new_comp || 0}/{userTodayPerfA?.new}
           </span>
@@ -39,7 +39,7 @@ const TaskProgress = ({ userTodayPerfA }) => {
       <Box mt={3}>
         <div className="flex flex-row align-middle justify-between">
           <h6 className="font-bodyLato font-semibold text-sm">
-            {t('Followup')}
+            {t('99 Acres')}
           </h6>
           <span className="font-bodyLato text-[12px] text-[#94A4C4]">
             {userTodayPerfA?.followup_comp || 0}/{userTodayPerfA?.followup}
@@ -66,7 +66,7 @@ const TaskProgress = ({ userTodayPerfA }) => {
       </FlexBox> */}
         <div className="flex flex-row align-middle justify-between">
           <h6 className="font-bodyLato font-semibold text-sm">
-            {t('Visits Fixed')}
+            {t('MagicBricks')}
           </h6>
           <span className="font-bodyLato text-[12px] text-[#94A4C4]">
             {userTodayPerfA?.visitfixed_comp || 0}/{userTodayPerfA?.visitfixed}
@@ -92,7 +92,7 @@ const TaskProgress = ({ userTodayPerfA }) => {
       <Box mt={3}>
         <div className="flex flex-row align-middle justify-between">
           <h6 className="font-bodyLato font-semibold text-sm">
-            {t('Negotiation')}
+            {t('Landing Pages')}
           </h6>
           <span className="font-bodyLato text-[12px] text-[#94A4C4]">
             {userTodayPerfA?.negotiation_comp || 0}/
@@ -118,4 +118,5 @@ const TaskProgress = ({ userTodayPerfA }) => {
     </section>
   )
 }
-export default TaskProgress
+
+export default LeadBankSourceStats

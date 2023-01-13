@@ -16,6 +16,7 @@ import {
   getDifferenceInMinutes,
   prettyDateTime,
 } from 'src/util/dateConverter'
+import { SlimSelectBox } from 'src/util/formFields/slimSelectBoxField'
 import uniqueId from 'src/util/generatedId'
 
 import LLeadsTableBody from '../LLeadsTableBody/LLeadsTableBody'
@@ -29,12 +30,17 @@ const LeadsDisplayTable = ({
   selUserProfileF,
   searchKey,
   setSearchKey,
+  allProjectsA,
 }) => {
   // change navbar title
   // useTitle('Data Table V1')
   const { user } = useAuth()
   const { orgId } = user
   const [sortedList, setSortedList] = useState([])
+  const [selProjectIs, setSelProject] = useState({
+    label: 'All Projects',
+    value: 'allprojects',
+  })
 
   useEffect(() => {
     setSortedList(
@@ -43,6 +49,26 @@ const LeadsDisplayTable = ({
       })
     )
   }, [leadsRawList])
+
+  useEffect(() => {
+    if (selProjectIs?.value != 'allprojects') {
+      console.log('project value is ', selProjectIs?.label)
+      const x = leadsRawList
+        .filter((rawObj) => {
+          return rawObj?.projectName == selProjectIs?.label
+        })
+        .sort((a, b) => {
+          return b.cT - a.cT
+        })
+      setSortedList(x)
+    } else {
+      setSortedList(
+        leadsRawList.sort((a, b) => {
+          return b.cT - a.cT
+        })
+      )
+    }
+  }, [selProjectIs])
 
   return (
     <Box pb={4}>
@@ -81,11 +107,32 @@ const LeadsDisplayTable = ({
                 </div>
               </a>
             </div>
-            <button className="focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 mt-4 sm:mt-0 inline-flex items-start justify-start px-6 py-3 bg-indigo-700 hover:bg-indigo-600 focus:outline-none rounded">
-              <p className="text-sm font-medium leading-none text-white">
-                Add Lead
-              </p>
-            </button>
+            <div className="flex items-center justify-between">
+              <p
+                tabIndex={0}
+                className="focus:outline-none text-base sm:text-lg md:text-xl lg:text-2xl font-bold leading-normal text-gray-800"
+              ></p>
+              <section className="flex flex-row">
+                <div className=" flex flex-col   mr- w-40">
+                  <SlimSelectBox
+                    name="project"
+                    label=""
+                    className="input "
+                    onChange={(value) => {
+                      console.log('zoro condition changed one  is', value)
+                      setSelProject(value)
+                      // formik.setFieldValue('project', value.value)
+                    }}
+                    value={selProjectIs?.value}
+                    // options={aquaticCreatures}
+                    options={[
+                      ...[{ label: 'All Projects', value: 'allprojects' }],
+                      ...allProjectsA,
+                    ]}
+                  />
+                </div>
+              </section>
+            </div>
           </div>
           {leadsRawList.length === 0 && (
             <div className="py-8 px-8 mt-10 flex flex-col items-center bg-red-100 rounded">

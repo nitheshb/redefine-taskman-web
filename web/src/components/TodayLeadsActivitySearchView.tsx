@@ -896,7 +896,7 @@ export default function TodayLeadsActivitySearchView({
                       <TaskProgress userTodayPerfA={userTodayPerfA} />
                       <div className="mt-2">
                         <RecentActivity
-                          title={'My Recent Activity'}
+                          title={'My Activity'}
                           userTodayPerfA={userTodayPerfA}
                         />
                       </div>

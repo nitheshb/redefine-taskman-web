@@ -52,31 +52,33 @@ const AddLeadForm = ({ title, dialogOpen, customerDetails }) => {
   const [startDate, setStartDate] = useState(d)
   const [customerDetailsTuned, setCustomerDetailsTuned] = useState({})
   useEffect(() => {
-    const custObj = customerDetails
-    const {
-      responderName,
-      responderEmail,
-      responderPhone,
-      cT,
-      source,
-      projectName,
-    } = customerDetails
-    const sourceListMatch = sourceListItems?.filter((sourObj) => {
-      return sourObj?.rep.includes(source)
-    })
-    const projectListMatch = projectList?.filter((projObj) => {
-      return projObj?.value == projectName
-    })
-    custObj.name = responderName
-    custObj.email = responderEmail
-    custObj.phone = responderPhone
-    custObj.Date = cT
-    custObj.source = sourceListMatch[0]?.value || ''
-    custObj.project = projectListMatch[0]?.projectName || ''
-    custObj.projectId = projectListMatch[0]?.uid || ''
+    if (customerDetails) {
+      const custObj = customerDetails
+      const {
+        responderName,
+        responderEmail,
+        responderPhone,
+        cT,
+        source,
+        projectName,
+      } = customerDetails
+      const sourceListMatch = sourceListItems?.filter((sourObj) => {
+        return sourObj?.rep.includes(source)
+      })
+      const projectListMatch = projectList?.filter((projObj) => {
+        return projObj?.value == projectName
+      })
+      custObj.name = responderName
+      custObj.email = responderEmail
+      custObj.phone = responderPhone
+      custObj.Date = cT
+      custObj.source = sourceListMatch[0]?.value || ''
+      custObj.project = projectListMatch[0]?.projectName || ''
+      custObj.projectId = projectListMatch[0]?.uid || ''
 
-    setCustomerDetailsTuned(custObj)
-    console.log('customerDetailsTuned', customerDetailsTuned)
+      setCustomerDetailsTuned(custObj)
+      console.log('customerDetailsTuned', customerDetailsTuned)
+    }
   }, [customerDetails, sourceList, projectList])
 
   useEffect(() => {
