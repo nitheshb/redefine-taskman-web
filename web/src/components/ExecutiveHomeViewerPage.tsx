@@ -234,30 +234,31 @@ const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
             x.id = docSnapshot.id
             return x
           })
-          usersListA.map((data) => {
-            const y = data
-            delete y.Note
-            delete y.AssignedTo
-            delete y.AssignTo
-            delete y.AssignedBy
-            delete y['Country Code']
-            delete y.assignT
-            delete y.CT
-            delete y.visitDoneNotes
-            delete y.VisitDoneNotes
-            delete y.VisitDoneReason
-            delete y.EmpId
-            delete y.CountryCode
-            delete y.from
-            delete y['Followup date']
-            delete y.mode
-            delete y.notInterestedNotes
-            delete y.notInterestedReason
-            y.coveredA = { a: data.coveredA }
-            addLeadSupabase(data)
-          })
+          // usersListA.map((data) => {
+          //   const y = data
+          //   delete y.Note
+          //   delete y.AssignedTo
+          //   delete y.AssignTo
+          //   delete y.AssignedBy
+          //   delete y['Country Code']
+          //   delete y.assignT
+          //   delete y.CT
+          //   delete y.visitDoneNotes
+          //   delete y.VisitDoneNotes
+          //   delete y.VisitDoneReason
+          //   delete y.EmpId
+          //   delete y.CountryCode
+          //   delete y.from
+          //   delete y['Followup date']
+          //   delete y.mode
+          //   delete y.notInterestedNotes
+          //   delete y.notInterestedReason
+          //   y.coveredA = { a: data.coveredA }
+          //   addLeadSupabase(data)
+          // })
           await setLeadsFetchedRawData(usersListA)
           await serealizeData(usersListA)
+          console.timeEnd('query Fetch Time')
         },
         {
           status:
@@ -268,8 +269,8 @@ const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
                   'unassigned',
                   'visitfixed',
                   '',
-                  'visitdone',
-                  'visitcancel',
+                  // 'visitdone',
+                  // 'visitcancel',
                   'negotiation',
                   // 'reassign',
                   // 'RNR',
@@ -806,32 +807,6 @@ const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
     })
     setSerialLeadsData(x)
   }
-  const onDragEnd = (re) => {
-    console.log('re is', re)
-    if (!re.destination) return
-    const newBoardData = serialLeadsData
-    const dragItem =
-      newBoardData[parseInt(re.source.droppableId)].items[re.source.index]
-    newBoardData[parseInt(re.source.droppableId)].items.splice(
-      re.source.index,
-      1
-    )
-    newBoardData[parseInt(re.destination.droppableId)].items.splice(
-      re.destination.index,
-      0,
-      dragItem
-    )
-
-    updateLeadStatus(
-      orgId,
-      re.draggableId,
-      statusFields[parseInt(re.source.droppableId)],
-      statusFields[parseInt(re.destination.droppableId)],
-      user.email,
-      enqueueSnackbar
-    )
-    setBoardData(newBoardData)
-  }
 
   // const onTextAreaKeyPress = (e) => {
   //   if (e.keyCode === 13) {
@@ -878,7 +853,7 @@ const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
             px-3 py-6"
           >
             <div className="flex items-center flex-row flex-wrap justify-between py-1 pb-5 ">
-              <h2 className="text-xl font-semibold text-black leading-light font-Playfair">
+              <h2 className="text-md font-semibold text-black leading-light font-Playfair">
                 Leads Management
               </h2>
 
@@ -1079,7 +1054,7 @@ const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
 
             <MetaTags title="ExecutiveHome" description="ExecutiveHome page" />
 
-            {ready && (
+            {/* {ready && (
               <div className="flex flex-row ">
                 <main className="mt-3 flex flex-row overflow-auto max-h-[60%] rounded ">
                   <div className="flex">
@@ -1110,7 +1085,7 @@ const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
                                       {board.name}
                                     </span>
                                     <span className="flex items-center justify-center w-5 h-5 ml-2 text-sm font-semibold text-indigo-500 bg-white rounded bg-opacity-30">
-                                      {/* {x.length} */}
+
                                       {board.items.length}
                                     </span>
                                   </div>
@@ -1148,9 +1123,8 @@ const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
                     </DragDropContext>
                   </div>
                 </main>
-                {/* <CustomerProfileSideView openUserProfile={openUserProfile} /> */}
               </div>
-            )}
+            )} */}
 
             {!ready && (
               <LLeadsTableView

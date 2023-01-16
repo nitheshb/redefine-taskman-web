@@ -11,16 +11,7 @@ import LogSkelton from '../shimmerLoaders/logSkelton'
 
 const rowsCounter = (parent, searchKey) => {
   return searchKey === 'all'
-    ? parent.filter((item) =>
-        [
-          'new',
-          'followup',
-          'visitfixed',
-          'visitdone',
-          'visitcancel',
-          'negotiation',
-        ].includes(item.Status.toLowerCase())
-      )
+    ? parent
     : searchKey === 'archieve_all'
     ? parent.filter((item) =>
         ['notinterested', 'blocked', 'junk', 'dead'].includes(
@@ -50,21 +41,9 @@ const LLeadsTableView = ({
   const [statusSepA, setStatusSepA] = useState([])
 
   // const [leadsFetchedData, setLeadsFetchedData] = useState([])
-  const [openModal, setOpenModal] = useState(false)
   const [finalKeyA, setFinalKeyA] = useState([])
 
-  const handleChange = (_, newValue) => {
-    console.log('newvalue is ', newValue)
-    setValue(newValue)
-  }
-
   useEffect(() => {
-    console.log(
-      'my Array data is delayer 2',
-      leadsFetchedData.length,
-      new Date()
-    )
-
     // axios
     //   .get('/api/tableData1/all')
     //   .then(({ data }) => {
@@ -108,17 +87,6 @@ const LLeadsTableView = ({
       : setValue('booked')
   }, [])
 
-  const handleDelete = async (ids) => {
-    const { data } = await axios.post('/api/tableData1/delete', {
-      ids,
-    })
-    setTableData(data)
-  }
-
-  const filterTable = tableData.filter((item) =>
-    value !== '' ? item.role.toLowerCase() === value : item.role
-  )
-
   const archieveTab = [
     { lab: 'Archieve', val: 'archieve_all' },
     { lab: 'Dead', val: 'dead' },
@@ -126,8 +94,67 @@ const LLeadsTableView = ({
     { lab: 'Blocked', val: 'blocked' },
     { lab: 'Junk', val: 'junk' },
   ]
+
+  const [newStatusA, setNewStatusA] = useState([])
+  const [followupA, setfollowupA] = useState([])
+  const [mySelRows, setmySelRows] = useState([])
+
+  const newStatus = []
+  const followup = []
+  const all = leadsFetchedData
+  const visitfixed = []
+  const visitdone = []
+  const vistcancel = []
+  const negotiation = []
+  const unassigned = []
+  const others = []
+  const findCount = (val) => {
+    if (val === 'new') {
+      return newStatus.length
+    } else if (val === 'all') {
+      return all.length
+    } else if (val === 'followup') {
+      return followupA.length
+    } else if (val === 'visitfixed') {
+      return visitfixed.length
+    } else if (val === 'visitdone') {
+      return visitdone.length
+    } else if (val === 'negotiation') {
+      return negotiation.length
+    } else if (val === 'unassigned') {
+      return unassigned.length
+    }
+  }
   useEffect(() => {
     // split data as per
+    console.time('query Fetch Time')
+    console.timeLog('query Fetch Time')
+    return
+    for (let i = 0; i < leadsFetchedData.length; i++) {
+      // your operations
+
+      switch (leadsFetchedData[i].Status.toLowerCase()) {
+        case 'new':
+          return newStatus.push(leadsFetchedData[i])
+        case 'followup':
+          console.log('loop for followup')
+          followup.push(leadsFetchedData[i])
+          return setNewStatusA(followup)
+        case 'visitfixed':
+          return visitfixed.push(leadsFetchedData[i])
+        case 'visitdone':
+          return visitdone.push(leadsFetchedData[i])
+        case 'vistcancel':
+          return vistcancel.push(leadsFetchedData[i])
+        case 'negotiation':
+          return negotiation.push(leadsFetchedData[i])
+        case 'unassigned':
+          return unassigned.push(leadsFetchedData[i])
+        default:
+          return others.push(leadsFetchedData[i])
+      }
+    }
+    return
     const leadsHeadA =
       leadsTyper === 'inProgress'
         ? [
@@ -276,12 +303,41 @@ const LLeadsTableView = ({
     }
 
     console.log('filter stroke', leadsFetchedData, leadsHeadA, statusSepA)
+    console.timeEnd('query Fetch Time')
   }, [leadsFetchedData, tabHeadFieldsA])
 
+  const [filLeadsA, setFilLeadsA] = useState([])
+  // useEffect(() => {
+  //   setFilLeadsA(leadsFetchedData)
+  // }, [leadsFetchedData])
   useEffect(() => {
-    setFinalKeyA(statusSepA[0]?.[value])
-  }, [value])
+    switch (value) {
+      case 'all':
+        return setFilLeadsA(leadsFetchedData)
+      case 'followup':
+        return setFilLeadsA(
+          leadsFetchedData.filter((dat) => dat?.Status === value)
+        )
+      case 'visitfixed':
+        return setFilLeadsA(
+          leadsFetchedData.filter((dat) => dat?.Status === value)
+        )
+      case 'negotiation':
+        return setFilLeadsA(
+          leadsFetchedData.filter((dat) => dat?.Status === value)
+        )
+      case 'unassigned':
+        return setFilLeadsA(
+          leadsFetchedData.filter((dat) => dat?.Status === value)
+        )
+      default:
+        return setFilLeadsA(
+          leadsFetchedData.filter((dat) => dat?.Status === value)
+        )
+    }
+  }, [value, leadsFetchedData])
 
+  useEffect(() => {}, [leadsFetchedData])
   return (
     <Section pb={4}>
       <Card
@@ -294,6 +350,54 @@ const LLeadsTableView = ({
             <div className="mb-1 border-b border-gray-200 ">
               {/* bg-[#fdb7b7] */}
               <ul
+                className="flex flex-wrap -mb-px "
+                id="myTab"
+                data-tabs-toggle="#myTabContent"
+                role="tablist"
+              >
+                {tabHeadFieldsA.map((d, i) => {
+                  return (
+                    <li key={i} className="mr-2" role="presentation">
+                      <button
+                        className={`inline-block py-4 px-4 text-sm font-medium text-center text-[#4f5861] rounded-t-lg border-b-2  hover:text-gray-600 hover:border-[#1A91EB] dark:text-gray-400 dark:hover:text-gray-300  ${
+                          value === d.val
+                            ? 'border-[#1A91EB] text-gray-800'
+                            : 'border-transparent'
+                        }`}
+                        type="button"
+                        role="tab"
+                        onClick={() => {
+                          setFetchLeadsLoader(true)
+                          setValue(d.val)
+                          setFetchLeadsLoader(false)
+                          setmySelRows(rowsCounter(leadsFetchedData, d.val))
+                        }}
+                      >
+                        <span
+                          className={`font-PlayFair ${
+                            value === d.val
+                              ? 'text-[#0080ff] text-gray-800'
+                              : ''
+                          }`}
+                        >
+                          {' '}
+                          {`${d.lab} `}
+                        </span>
+                        <span className="bg-gray-100 text-black px-2 py-1 rounded-full ml-[4px]  ">
+                          {rowsCounter(leadsFetchedData, d.val).length}
+                        </span>
+                        {/*
+                        <div className="px-2 mt-1 text-[9px] text-black  rounded-full">
+                          <span className="bg-gray-100 px-2 py-1 rounded-full">
+                            {rowsCounter(leadsFetchedData, d.val).length}
+                          </span>
+                        </div> */}
+                      </button>
+                    </li>
+                  )
+                })}
+              </ul>
+              {/* <ul
                 className="flex flex-wrap -mb-px "
                 id="myTab"
                 data-tabs-toggle="#myTabContent"
@@ -327,20 +431,13 @@ const LLeadsTableView = ({
                           {`${d.lab} `}
                         </span>
                         <span className="bg-gray-100 text-black px-2 py-1 rounded-full ml-[4px]  ">
-                          {/* {rowsCounter(leadsFetchedData, d.val).length} */}
                           {statusSepA[0][d.val]?.length || 0}
                         </span>
-                        {/*
-                        <div className="px-2 mt-1 text-[9px] text-black  rounded-full">
-                          <span className="bg-gray-100 px-2 py-1 rounded-full">
-                            {rowsCounter(leadsFetchedData, d.val).length}
-                          </span>
-                        </div> */}
                       </button>
                     </li>
                   )
                 })}
-              </ul>
+              </ul> */}
             </div>
 
             {/* {
@@ -377,11 +474,12 @@ const LLeadsTableView = ({
               <LLeadsTableBody
                 // data={filterTable}
                 fetchLeadsLoader={fetchLeadsLoader}
-                handleDelete={handleDelete}
                 selStatus={value}
                 rowsParent={statusSepA[0]}
                 selUserProfileF={selUserProfileF}
                 newArray={statusSepA[0]?.[value]}
+                leadsFetchedData={filLeadsA}
+                mySelRows={mySelRows}
               />
             )}
           </Grid>

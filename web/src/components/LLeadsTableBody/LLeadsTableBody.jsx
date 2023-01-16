@@ -568,7 +568,9 @@ export default function LLeadsTableBody({
   selStatus,
   rowsParent,
   selUserProfileF,
-  newArray
+  newArray,
+  leadsFetchedData,
+  mySelRows
 }) {
   const { user } = useAuth()
   const [order, setOrder] = React.useState('desc')
@@ -584,7 +586,7 @@ export default function LLeadsTableBody({
 
   React.useEffect(() => {
     console.log('send values is', rowsParent, selStatus)
-    filterStuff(rowsParent)
+    // filterStuff(rowsParent)
     // let x = rowsParent.filter((item) => {
     //   if (selStatus === 'all') {
     //     return item
@@ -800,7 +802,7 @@ console.log('filter value stuff' , parent)
 
 
             <TableBody>
-        
+
 
               {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.slice().sort(getComparator(order, orderBy)) */}
@@ -812,7 +814,7 @@ console.log('filter value stuff' , parent)
                   ) || */}
               {
 
-                rows
+                leadsFetchedData
                 ?.filter((item) => {
                   if (searchKey == '' || !searchKey) {
                     return item
