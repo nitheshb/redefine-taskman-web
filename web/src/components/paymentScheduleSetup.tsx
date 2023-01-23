@@ -18,7 +18,7 @@ const PaymentScheduleSetup = ({ phase, source }) => {
   )
 
   return (
-    <div className="lg:col-span-10 border  ">
+    <div className="lg:col-span-10 border w-full  ">
       <div className=" border-gray-800 bg-[#F1F5F9]  text-black">
         <ul
           className="flex justify-  rounded-t-lg border-b  "

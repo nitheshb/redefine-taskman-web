@@ -323,6 +323,7 @@ const EnhancedTableToolbar = (props) => {
     startDate,
     endDate,
     setDateRange,
+    leadsFetchedData
   } = props
   const d = new window.Date()
   const [rowsAfterSearchKey, setRowsAfterSearchKey] = React.useState(rows)
@@ -524,7 +525,7 @@ const EnhancedTableToolbar = (props) => {
             </IconButton>
           </Tooltip>
         ) : (
-          <Tooltip title={`Download ${rowsAfterSearchKey?.length} Rows`}>
+          <Tooltip title={`Download ${leadsFetchedData?.length} Row`}>
             {/* <IconButton>
             <FileDownloadIcon />
             <CSVDownloader />
@@ -532,7 +533,7 @@ const EnhancedTableToolbar = (props) => {
 
             <CSVDownloader
               className="mr-6 h-[20px] w-[20px]"
-              downloadRows={downloadFormatRows}
+              downloadRows={leadsFetchedData}
               style={{ height: '20px', width: '20px' }}
             />
           </Tooltip>
@@ -777,6 +778,7 @@ console.log('filter value stuff' , parent)
         viewUnitStatusA={viewUnitStatusA}
         pickCustomViewer={pickCustomViewer}
         setViewUnitStatusA={setViewUnitStatusA}
+        leadsFetchedData={leadsFetchedData}
       />
       <section
         style={{ borderTop: '1px solid #efefef', background: '#fefafb' }}

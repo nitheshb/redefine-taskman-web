@@ -52,11 +52,11 @@ const ProjectEditPage = () => {
         <HeadSideBar />
         <div className="flex flex-col flex-grow">
           <HeadNavBar />
-          <div className="flex-grow p-6 overflow-auto  text-gray-700 bg-gradient-to-tr from-blue-200 via-indigo-200 to-pink-200">
+          <div className="flex-grow px-2 overflow-auto  text-gray-700 bg-gradient-to-tr from-blue-200 via-indigo-200 to-pink-200">
             <div className="flex items-center flex-shrink-0 h-16 px-0  pl-0  ">
               {/* <h1 className="text-lg font-medium">redefine.</h1> */}
               <span className="relative z-10 flex items-center w-auto text-xl  leading-none pl-0">
-                PROJECTS
+                Project Details
               </span>
               <button
                 onClick={() => setIsAddPhaseOpen(true)}

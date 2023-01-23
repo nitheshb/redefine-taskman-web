@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react'
+
 import { Dialog } from '@headlessui/react'
 import { Alert, AlertTitle } from '@mui/lab'
-import DatePicker from 'react-datepicker'
+import Checkbox from '@mui/material/Checkbox'
 import { format, parse, isDate } from 'date-fns'
 import { useSnackbar } from 'notistack'
+import DatePicker from 'react-datepicker'
 import Select from 'react-select'
 
 // import { Edit, DeleteOutline } from '@material-ui/icons'
 import { MaterialCRUDTable } from 'src/components/MaterialCRUDTable'
+import { paymentScheduleA } from 'src/constants/projects'
 import {
   getPaymentSchedule,
   createPaymentSheduleComp,
@@ -17,9 +20,7 @@ import {
   steamUsersListByRole,
   updateUserAccessProject,
 } from 'src/context/dbQueryFirebase'
-import { paymentScheduleA } from 'src/constants/projects'
 import { useAuth } from 'src/context/firebase-auth-context'
-import Checkbox from '@mui/material/Checkbox'
 
 const PaymentLeadAccess = ({ title, data, source }) => {
   const { user } = useAuth()
@@ -93,7 +94,7 @@ const PaymentLeadAccess = ({ title, data, source }) => {
 
   return (
     <>
-      <div className="h-full shadow-xl flex flex-col pt-6 mb-6 mt-10 bg-[#F1F5F9] rounded-t overflow-y-scroll">
+      <div className="h-full w-full shadow-xl flex flex-col pt-6 mb-6  bg-[#F1F5F9] rounded-t overflow-y-scroll">
         <div className="z-10">
           {/* <Dialog.Title className="font-semibold text-xl mr-auto ml-3 text-[#053219]">
           {title}

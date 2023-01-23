@@ -18,6 +18,12 @@ import {
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 
+import ConstructHomeList from '../A_ProjModule/ConstructHomeList'
+import CRMHomeList from '../A_ProjModule/CRMHomeList'
+import FinanceHomeList from '../A_ProjModule/FinanceHomeList'
+import LegalHomeList from '../A_ProjModule/LegalHomeList'
+import SalesHomeList from '../A_ProjModule/SalesHomeList'
+import TemplatesHomeList from '../A_ProjModule/TemplatesHomeList'
 import AdditionalChargesForm from '../AdditionalChargesForm/AdditionalChargesForm'
 import AssigedToDropComp from '../assignedToDropComp'
 import BlockingUnitForm from '../BlockingUnitForm'
@@ -66,6 +72,7 @@ const ProjPhaseHome = ({
     widthClass: 'max-w-2xl',
   })
 
+  const [subView, setSubView] = useState('')
   const setPhaseFun = (leadDocId, value) => {
     setSelPhaseName(value.name)
     setSelPhaseIs(value.value)
@@ -169,6 +176,11 @@ const ProjPhaseHome = ({
     }
   }, [phases, projectDetails])
 
+  const selCat = (cat, subCat) => {
+    setPhaseViewFeature(cat)
+    setSubView(subCat || '')
+  }
+
   return (
     <div>
       {phases
@@ -255,15 +267,15 @@ const ProjPhaseHome = ({
                   key={phase?.uid}
                   className="py-8 mb-8 leading-7 text-gray-900 bg-white sm:py-12 md:py-16 lg:py-18 rounded-lg"
                 >
-                  <div className="box-border px-4 mx-auto border-solid sm:px-6 md:px-6 lg:px-8 max-w-full ">
+                  <div className="box-border p-4 mx-auto border-solid sm:px-6 md:px-6 lg:px-8 max-w-full ">
                     <div className="flex flex-col  leading-7  text-gray-900 border-0 border-gray-200 ">
                       <div className="flex items-center flex-shrink-0  px-0  pl-0 border-b border-grey  mb-2 ">
                         <img
-                          className="w-12 h-12 mr-2"
+                          className="w-8 h-8 mr-2"
                           alt=""
                           src="/m3.png"
                         ></img>
-                        <span className="relative z-10 flex items-center w-auto text-2xl font-bold leading-none pl-0 mt-[8px]">
+                        <span className="relative z-10 flex items-center w-auto text-md font-bold leading-none pl-0 mt-[px]">
                           {/* {phase?.phaseName} */}
                           {/* selPhaseIs, setSelPhaseIs */}
                           <AssigedToDropComp
@@ -404,22 +416,31 @@ const ProjPhaseHome = ({
                         >
                           {[
                             { lab: 'Report', val: 'Report' },
-                            { lab: 'Blocks', val: 'Blocks' },
+
+                            { lab: 'Units', val: 'Blocks' },
                             {
-                              lab: 'Cost Sheet',
-                              val: 'Cost Sheet',
+                              lab: 'Finance',
+                              val: 'Finance',
+                              subval: 'bankdetails',
+                            },
+                            {
+                              lab: 'Legal',
+                              val: 'Legal',
+                              subval: 'projectApprovals',
+                            },
+                            {
+                              lab: 'Sales',
+                              val: 'Sales',
+                              subval: 'saleTemplates',
+                            },
+                            { lab: 'CRM', val: 'CRM', subval: 'bankDetails' },
+                            {
+                              lab: 'Construction',
+                              val: 'Construction',
+                              subval: 'bankdetails',
                             },
 
-                            {
-                              lab: 'Payment Schedule',
-                              val: 'Payment Schedule',
-                            },
-                            { lab: 'Plan Diagram', val: 'Plan Diagram' },
-                            { lab: 'Brouchers', val: 'Brouchers' },
-                            { lab: 'Approvals', val: 'Approvals' },
-                            { lab: 'Bank Details', val: 'Bank Details' },
-                            { lab: 'Leads Access', val: 'Lead Access' },
-                            { lab: 'More Details', val: 'More Details' },
+                            { lab: 'Templates', val: 'Templates' },
                           ].map((d, i) => {
                             return (
                               <li key={i} className="mr-2" role="presentation">
@@ -431,7 +452,7 @@ const ProjPhaseHome = ({
                                   }`}
                                   type="button"
                                   role="tab"
-                                  onClick={() => setPhaseViewFeature(d.val)}
+                                  onClick={() => selCat(d.val, d?.subval)}
                                 >
                                   {`${d.lab} `}
                                   {/* <span className="bg-gray-100 px-2 py-1 rounded-full">
@@ -568,8 +589,6 @@ const ProjPhaseHome = ({
                           </div>
                         ))}
 
-
-
                       {phaseViewFeature === 'Plan Diagram' && (
                         <PlanDiagramView
                           title={'Plan Diagram'}
@@ -612,9 +631,72 @@ const ProjPhaseHome = ({
                           source={source}
                         />
                       )}
+                      {phaseViewFeature === 'Finance' && (
+                        <FinanceHomeList
+                          title={'Finance'}
+                          dialogOpen={'false'}
+                          data={phase}
+                          source={source}
+                          setSubView={setSubView}
+                          subView={subView}
+                          projectDetails={projectDetails}
+                        />
+                      )}
+                      {phaseViewFeature === 'Legal' && (
+                        <LegalHomeList
+                          title={'Finance'}
+                          dialogOpen={'false'}
+                          data={phase}
+                          source={source}
+                          setSubView={setSubView}
+                          subView={subView}
+                          projectDetails={projectDetails}
+                          pId={uid || myProjectDetails?.uid}
+                        />
+                      )}
+                      {phaseViewFeature === 'Sales' && (
+                        <SalesHomeList
+                          title={'Finance'}
+                          dialogOpen={'false'}
+                          data={{ phase: phase }}
+                          source={source}
+                          setSubView={setSubView}
+                          subView={subView}
+                          projectDetails={projectDetails}
+                          pId={uid || myProjectDetails?.uid}
+                        />
+                      )}
+                      {phaseViewFeature === 'CRM' && (
+                        <CRMHomeList
+                          title={'Finance'}
+                          dialogOpen={'false'}
+                          data={{ phase: phase }}
+                          source={source}
+                          setSubView={setSubView}
+                          subView={subView}
+                          projectDetails={projectDetails}
+                          pId={uid || myProjectDetails?.uid}
+                        />
+                      )}
+                      {phaseViewFeature === 'Construction' && (
+                        <ConstructHomeList
+                          title={'Finance'}
+                          dialogOpen={'false'}
+                          data={{ phase: phase }}
+                          source={source}
+                        />
+                      )}
+                      {phaseViewFeature === 'Templates' && (
+                        <TemplatesHomeList
+                          title={'Templates'}
+                          dialogOpen={'false'}
+                          data={{ phase: phase }}
+                          source={source}
+                        />
+                      )}
                       {phaseViewFeature === 'More Details' && (
                         <MoreDetailsPhaseForm
-                          title={'More Detailss'}
+                          title={'More Details'}
                           dialogOpen={'false'}
                           data={{ phase: phase }}
                           source={source}

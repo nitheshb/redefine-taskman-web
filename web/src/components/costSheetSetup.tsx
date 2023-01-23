@@ -16,7 +16,7 @@ const CostSheetSetup = ({ phase, source }) => {
     useState('Plot_Other_Charges')
 
   return (
-    <div className="lg:col-span-10 border ">
+    <div className="lg:col-span-10 border w-full ">
       <div className=" border-gray-800 bg-[#203129]  text-white">
         <ul
           className="flex justify-  rounded-t-lg border-b  "

@@ -43,7 +43,7 @@ const HeadSideBarDetailView = ({
 
   return (
     <div className="flex flex-col items-left w-16 min-w-[226px]   bg-white bg-opacity-75 bg-[#f0f3ff] ">
-      <div className="bg-[#f0f3ff] overflow-auto">
+      <div className="bg-[#f0f3ff] overflow-auto no-scrollbar">
         <div className="pl-4 mr-6 border-l h-screen ">
           <ul className="mt-6 pt-4">
             {/* <li className="relative">

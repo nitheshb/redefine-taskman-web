@@ -38,7 +38,7 @@ const HeadSideBarDetailView2 = ({
 
   return (
     <div className="flex flex-col items-left w-16 min-w-[226px]    bg-opacity-75 bg-[#f0f3ff] ">
-      <div className="bg-[#f0f3ff] overflow-auto">
+      <div className="bg-[#f0f3ff] overflow-auto no-scrollbar">
         <div className="pl-4 mr-6 mt-[13px] border-l h-screen">
           <span
             style={{ marginLeft: '-43px' }}

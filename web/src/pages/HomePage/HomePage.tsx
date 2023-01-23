@@ -370,7 +370,7 @@ const HomePage = () => {
               </div>
             </div>
 
-            <div className="flex-grow mx-6  mt-10 items-center overflow-y-auto  h-[98%]  px-300  pt-300">
+            <div className="flex-grow   items-center overflow-y-auto no-scrollbar  h-[98%]  px-300  pt-300">
               {(viewable === 'Bank Accounts' ||
                 viewable === 'Virtual Accounts') && (
                 <>
@@ -426,8 +426,8 @@ const HomePage = () => {
                   <>
                     <div className="">
                       <div className="flex items-center justify-between py-2 pb-8 ">
-                        <div className="w-full flex-grow   items-center overflow-y-auto bg-blue h-[98%]  py-300 ">
-                          <div className="px-3">
+                        <div className="w-full flex-grow   items-center  bg-blue h-[98%]  py-300 ">
+                          <div className="px-1">
                             {viewable != 'inProgress' &&
                               viewable != 'Projects Lead Report' &&
                               viewable != 'Campaign Budget Report' &&
@@ -436,8 +436,8 @@ const HomePage = () => {
                               viewable != 'unitsInventory' && (
                                 <>
                                   <div className="">
-                                    <div className="flex items-center justify-between py-2 pb-8 ">
-                                      <span className="relative z-10 flex items-center w-auto text-2xl font-bold leading-none pl-0 font-Playfair">
+                                    <div className="flex items-center justify-between py-2 pb-4 ">
+                                      <span className="relative z-10 flex items-center w-auto text-xl font-bold leading-none pl-0 font-Playfair">
                                         Projects {viewable}
                                       </span>
                                       <button
