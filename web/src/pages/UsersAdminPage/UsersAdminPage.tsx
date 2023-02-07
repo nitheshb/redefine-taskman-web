@@ -8,6 +8,7 @@ import UserManageTable from 'src/components/UserManageTable/UserManageTable'
 import UserAccessTable from 'src/components/UserAccessTable/UserAccessTable'
 import HeadSideBarDetailView from 'src/components/HeadDetailSideBar'
 import MyActivityHome from 'src/components/MyActivityHome/MyActivityHome'
+import SlimSideMenuBar from 'src/components/A_SideMenu/slimSideMenu'
 
 const UsersAdminPage = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -24,13 +25,16 @@ const UsersAdminPage = () => {
       <MetaTags title="UsersAdmin" description="UsersAdmin page" />
 
       <div className="flex w-screen h-screen text-gray-700">
-        <HeadSideBar pgName={'usersAdmin'} />
-        <HeadSideBarDetailView
-          pgName={'UsersManagement'}
-          sourceLink={'hrModule'}
-          showSideView1={undefined}
-          setViewable={setViewable}
-        />
+
+
+        <SlimSideMenuBar
+              pgName={'hrModule'}
+              sourceLink={'hrModule'}
+              showSideView1={undefined}
+              setViewable={setViewable}
+              viewable={viewable}
+            />
+
         <div className="flex flex-col flex-grow">
           <HeadNavBar />
           <div className="flex-grow p-6 overflow-auto  text-gray-700 bg-gradient-to-tr from-blue-200 via-indigo-200 to-pink-200">

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import SlimSideMenuBar from 'src/components/A_SideMenu/slimSideMenu'
 
 import ConstructUnitsHome from 'src/components/ConstructModule/ConstructUnitsHome'
 import ExecutiveHomeViewerPage from 'src/components/ExecutiveHomeViewerPage'
@@ -51,7 +52,7 @@ const ConstructModulePage = () => {
         <div className="flex flex-col flex-grow">
           <HeadNavBar />
           {}
-          <div className="flex flex-row overflow-auto gap-2 h-[100vh]  text-gray-700 bg-gradient-to-tr from-blue-200 via-indigo-200 to-pink-200">
+          <div className="flex flex-row  gap-2 h-[100vh]  text-gray-700 bg-gradient-to-tr from-blue-200 via-indigo-200 to-pink-200">
             <div
               className={`${
                 showDetailedSideBar
@@ -59,21 +60,14 @@ const ConstructModulePage = () => {
                   : 'flex flex-row overflow-auto   text-gray-700 '
               }`}
             >
-              <HeadSideBar pgName={'constructModule'} />
-              <div className="flex items-start flex-row">
-                <div>
-                  <div>
-                    <HeadSideBarDetailView
-                      pgName={'constructModule'}
-                      sourceLink={'constructModule'}
-                      showSideBar={showSideBar}
-                      showSideView1={showSideView1}
-                      setViewable={setViewable}
-                      viewable={viewable}
-                    />
-                  </div>
-                </div>
-              </div>
+              <SlimSideMenuBar
+              pgName={'constructModule'}
+              sourceLink={'constructModule'}
+              showSideView1={undefined}
+              setViewable={setViewable}
+              viewable={viewable}
+            />
+
             </div>
 
             <div className="flex-grow  items-center overflow-y-auto  px-300  py-300">

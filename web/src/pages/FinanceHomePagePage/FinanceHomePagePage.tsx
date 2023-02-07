@@ -21,6 +21,7 @@ import HeadNavBar from '../../components/HeadNavBar/HeadNavBar'
 import HeadSideBar from '../../components/HeadSideBar/HeadSideBar'
 import ProjectsMHomeBody from '../../components/ProjectsMHomeBody/ProjectsMHomeBody'
 import SiderForm from '../../components/SiderForm/SiderForm'
+import SlimSideMenuBar from 'src/components/A_SideMenu/slimSideMenu'
 
 const FinanceHomePagePage = () => {
   const { user } = useAuth()
@@ -349,14 +350,14 @@ const FinanceHomePagePage = () => {
         <div className="flex flex-col flex-grow">
           {/* <HeadNavBar /> */}
           <div className="flex flex-row  text-gray-700 bg-gradient-to-tr from-blue-200 via-indigo-200 to-pink-200">
-            <HeadSideBar pgName={'financeModule'} />
-            <HeadSideBarDetailView2
+            <SlimSideMenuBar
               pgName={'financeModule'}
               sourceLink={'financeModule'}
               showSideView1={undefined}
               setViewable={setViewable}
               viewable={viewable}
             />
+           
 
             <div className="w-full flex-grow  my- border-t  items-center overflow-y-auto bg-blue h-[98%]  py-300">
               <HeadNavBar2 />

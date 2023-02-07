@@ -414,7 +414,6 @@ const Floordetails = ({
           x.uid = docSnapshot.id
           const { staDA } = x
           y.push(x)
-          console.log('fetched units are', x)
         })
         y.sort((a, b) => a.unit_no - b.unit_no)
         setUnitsFeed(y)

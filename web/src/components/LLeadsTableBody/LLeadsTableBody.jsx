@@ -75,7 +75,6 @@ import LogSkelton from '../shimmerLoaders/logSkelton'
 // }
 
 function descendingComparator(a, b, orderBy) {
-  console.log('what is the order 1 ', b,orderBy, b[orderBy] || b['stsUpT'])
   if ((b[orderBy] || b['stsUpT'] || b['Date'])  < (a[orderBy] || a['stsUpT'] || a['Date'] )) {
     return -1
   }
@@ -586,7 +585,6 @@ export default function LLeadsTableBody({
   const [startDate, endDate] = dateRange
 
   React.useEffect(() => {
-    console.log('send values is', rowsParent, selStatus)
     // filterStuff(rowsParent)
     // let x = rowsParent.filter((item) => {
     //   if (selStatus === 'all') {
@@ -610,7 +608,6 @@ export default function LLeadsTableBody({
   }, [selStatus, rowsParent])
 
   React.useEffect(() => {
-    console.log('search on is', searchKey)
     filterSearchString(rows)
   }, [searchKey])
 
@@ -717,7 +714,6 @@ console.log('filter value stuff' , parent)
     //     selected.slice(selectedIndex + 1)
     //   )
     // }
-    console.log('is row clicked', row)
     selUserProfileF('User Profile', row)
     setSelected(newSelected)
   }
@@ -986,7 +982,7 @@ console.log('filter value stuff' , parent)
                         </TableCell>
                       )}
 
-                      <TableCell align="middle">
+                      <TableCell align="center">
                       <section className="flex flex-col">
                         <span className="px-2 uppercase inline-flex text-[11px] text-black-900  ">
                           {row?.Source?.toString() || 'NA'}

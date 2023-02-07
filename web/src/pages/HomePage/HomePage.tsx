@@ -9,6 +9,7 @@ import { usePageLoadingContext } from '@redwoodjs/router'
 import { Link, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
 
+import SlimSideMenuBar from 'src/components/A_SideMenu/slimSideMenu'
 import AllBankDetailsView from 'src/components/All_BankDetailsView'
 import HeadSideBarDetailView from 'src/components/HeadDetailSideBar'
 import HeadSideBarDetailView2 from 'src/components/HeadDetailSideBar2'
@@ -355,20 +356,14 @@ const HomePage = () => {
         <div className="flex flex-col flex-grow">
           <HeadNavBar />
           <div className="flex overflow-y-hidden flex-row overflow-auto h-[100vh]  text-gray-700 bg-gradient-to-tr from-blue-200 via-indigo-200 to-pink-200">
-            <HeadSideBar pgName={'home'} />
-
-            <div className="flex items-start flex-row">
-              {' '}
-              <div>
-                <HeadSideBarDetailView
-                  pgName={'leadsManager'}
-                  sourceLink={'projectsScreen'}
-                  showSideView1={undefined}
-                  setViewable={setViewable}
-                  viewable={viewable}
-                />
-              </div>
-            </div>
+            {/* <HeadSideBar pgName={'home'} /> */}
+            <SlimSideMenuBar
+              pgName={'projectModule'}
+              sourceLink={'projectModule'}
+              showSideView1={undefined}
+              setViewable={setViewable}
+              viewable={viewable}
+            />
 
             <div className="flex-grow   items-center overflow-y-auto no-scrollbar  h-[98%]  px-300  pt-300">
               {(viewable === 'Bank Accounts' ||
@@ -435,16 +430,20 @@ const HomePage = () => {
                               viewable != 'Virtual Accounts' &&
                               viewable != 'unitsInventory' && (
                                 <>
-                                  <div className="">
+
+
+                                  {projects.length > 0 ? (
+                                    <section className="bg-white py-2 rounded-sm">
+                                       <div className="px-4">
                                     <div className="flex items-center justify-between py-2 pb-4 ">
-                                      <span className="relative z-10 flex items-center w-auto text-xl font-bold leading-none pl-0 font-Playfair">
+                                      <span className="relative z-10 flex items-center w-auto text-md font-bold leading-none pl-0 font-Playfair">
                                         Projects {viewable}
                                       </span>
                                       <button
                                         onClick={() =>
                                           setIsNewProjectOpen(true)
                                         }
-                                        className="flex items-center justify-center h-10 px-4  bg-gray-200 ml-auto text-sm font-medium rounded hover:bg-gray-300"
+                                        className="flex items-center justify-center h-8 px-4  bg-gray-200 ml-auto text-sm font-medium rounded hover:bg-gray-300"
                                       >
                                         <svg
                                           className="w-5 h-5"
@@ -466,19 +465,18 @@ const HomePage = () => {
                                       </button>
                                     </div>
                                   </div>
-
-                                  {projects.length > 0 ? (
-                                    projects.map((project) => (
-                                      <ProjectsMHomeBody
-                                        key={project.uid}
-                                        project={project}
-                                        onSliderOpen={() => {
-                                          setProject(project)
-                                          setIsEditProjectOpen(true)
-                                        }}
-                                        isEdit={false}
-                                      />
-                                    ))
+                                      {projects.map((project) => (
+                                        <ProjectsMHomeBody
+                                          key={project.uid}
+                                          project={project}
+                                          onSliderOpen={() => {
+                                            setProject(project)
+                                            setIsEditProjectOpen(true)
+                                          }}
+                                          isEdit={false}
+                                        />
+                                      ))}
+                                    </section>
                                   ) : (
                                     <DummyBodyLayout />
                                   )}

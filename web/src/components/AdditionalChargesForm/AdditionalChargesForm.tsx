@@ -40,12 +40,14 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
 
   useEffect(() => {
     const { phase } = data
+
     const { additonalChargesObj, ConstructOtherChargesObj } = phase
     const x =
       blocksViewFeature === 'Construction_Other_Charges'
         ? ConstructOtherChargesObj
         : additonalChargesObj
     setTableData(x)
+    console.log('phase is ', phase, x)
   }, [data, blocksViewFeature])
 
   const { enqueueSnackbar } = useSnackbar()

@@ -1011,11 +1011,11 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                       return (
                         <section
                           key={i}
-                          className="flex flex-row border mb-1 w-[768px] shadow"
+                          className="flex flex-row border mb-1 w-[868px] shadow"
                         >
-                          <div className="flex flex-row py-2 ml-4 mt- mr-[1px]">
+                          <div className="flex flex-row  mt- mr-[1px]">
                             <div
-                              className="flex flex-col w-[81px] bg-gradient-to-r from-orange-300 to-rose-300 text-black p-2 rounded-md py-4"
+                              className="flex flex-col w-[181px] bg-gradient-to-r from-orange-300 to-rose-300 text-black p-2 rounded-sm py-4"
                               onClick={() =>
                                 viewTransaction(
                                   finData,
@@ -1024,13 +1024,24 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                 )
                               }
                             >
-                              <span className="font-semibold text-sm app-color-black">
-                                {finData?.[`${assets[0]}_unitDetails`]
-                                  ?.unit_no || ''}
-                              </span>
-                              <span className="font-normal text-xs app-color-gray-1">
-                                Eco Stone
-                              </span>
+                              <section className="flex flex-row">
+                                <img
+                                  className="w-10 h-10 mr-2"
+                                  alt=""
+                                  src="/apart.svg"
+                                ></img>
+                                <section className="flex flex-col ml-2 ">
+                                  <span className="font-semibold text-sm app-color-black">
+                                    {finData?.[`${assets[0]}_unitDetails`]
+                                      ?.unit_no || ''}
+                                  </span>
+                                  {customerName1}
+                                  <span className="font-normal text-xs app-color-gray-1">
+                                    Eco Stone
+                                  </span>
+                                </section>
+                              </section>
+
                               {/* <span className="font-normal text-xs app-color-gray-1">
                                   {finData?.ph}
                                 </span> */}
@@ -1196,8 +1207,8 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                         key={i}
                         className="flex flex-row border mb-1 w-[768px] shadow"
                       >
-                        <div className="flex flex-row py-2 ml-4 mt- mr-[1px]">
-                          <div className="flex flex-col bg-gradient-to-r from-orange-300 to-rose-300 text-black p-2 rounded-md py-4">
+                        <div className="flex flex-row  mr-[1px]">
+                          <div className="flex flex-col bg-gradient-to-r from-orange-300 to-rose-300 text-black p-2 rounded-sm py-4">
                             <span className="font-semibold text-sm app-color-black">
                               {finData?.assetName}
                             </span>

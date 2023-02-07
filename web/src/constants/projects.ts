@@ -328,10 +328,7 @@ export const costSheetAdditionalChargesA = [
     value: 'carparking',
     label: 'Car Parking',
   },
-  {
-    value: 'clubhouse_membership',
-    label: 'Club House Membership',
-  },
+
   {
     value: 'electricity_watersewage',
     label: 'Electricity/Water Sewage',
@@ -366,8 +363,20 @@ export const costSheetAdditionalChargesA = [
 ]
 export const csConstruAdditionalChargesA = [
   {
+    value: 'bescom_bwssb',
+    label: 'Bescom & Bwssb',
+  },
+  {
     value: 'corpusfund',
     label: 'Corpus Fund',
+  },
+  {
+    value: 'clubhouse_charges',
+    label: 'Club House Charges',
+  },
+  {
+    value: 'clubhouse_membership',
+    label: 'Club House Membership',
   },
   {
     value: 'maintenance_2',
