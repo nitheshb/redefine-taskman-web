@@ -70,7 +70,7 @@ const AddLeadForm = ({ title, dialogOpen, customerDetails }) => {
       })
       custObj.name = responderName
       custObj.email = responderEmail
-      custObj.phone = responderPhone
+      custObj.phone = responderPhone?.slice(-10)
       custObj.Date = cT
       custObj.source = sourceListMatch[0]?.value || ''
       custObj.project = projectListMatch[0]?.projectName || ''
