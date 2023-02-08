@@ -34,6 +34,7 @@ const FinanceHomePagePage = () => {
   const handleEditProjectClose = () => setIsEditProjectOpen(false)
   const [projects, setProjects] = useState([])
   const [viewable, setViewable] = useState('Home')
+  const [selModule, setSelModule] = useState('Finance')
 
   const getProjects = async () => {
     const unsubscribe = getAllProjects(
@@ -357,10 +358,13 @@ const FinanceHomePagePage = () => {
               setViewable={setViewable}
               viewable={viewable}
             />
-           
+
 
             <div className="w-full flex-grow  my- border-t  items-center overflow-y-auto bg-blue h-[98%]  py-300">
-              <HeadNavBar2 />
+            <HeadNavBar2
+              selModule ={selModule}
+              setSelModule={setSelModule}
+            />
               {(viewable === 'Today1' || viewable === 'Home') && (
                 <CrmHome leadsTyper={undefined} />
               )}

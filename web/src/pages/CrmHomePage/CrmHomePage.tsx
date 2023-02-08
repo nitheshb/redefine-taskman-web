@@ -59,6 +59,7 @@ const CrmHomePage = () => {
   const handleEditProjectClose = () => setIsEditProjectOpen(false)
   const [projects, setProjects] = useState([])
   const [viewable, setViewable] = useState('Home')
+  const [selModule, setSelModule] = useState('CRM')
 
   const getProjects = async () => {
     const unsubscribe = getAllProjects(
@@ -391,7 +392,10 @@ const CrmHomePage = () => {
               viewable={viewable}
             /> */}
             <div className="flex-grow  items-center overflow-y-auto  h-[98%]  px-300  py-300">
-              <HeadNavBar2 />
+            <HeadNavBar2
+              selModule ={selModule}
+              setSelModule={setSelModule}
+            />
               <div className="px-1">
                 {viewable === 'crmDashboard' && (
                   <CrmDashboardHome

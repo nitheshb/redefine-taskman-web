@@ -9,12 +9,14 @@ import UserAccessTable from 'src/components/UserAccessTable/UserAccessTable'
 import HeadSideBarDetailView from 'src/components/HeadDetailSideBar'
 import MyActivityHome from 'src/components/MyActivityHome/MyActivityHome'
 import SlimSideMenuBar from 'src/components/A_SideMenu/slimSideMenu'
+import HeadNavBar2 from 'src/components/HeadNavBar/HeadNavBar2'
 
 const UsersAdminPage = () => {
   const [isOpen, setIsOpen] = useState(false)
   const handleOnClose = () => setIsOpen(false)
   const [viewable, setViewable] = useState('User Management')
   const [empData, setEmpData] = useState({})
+  const [selModule, setSelModule] = useState('HR')
 
   const editEmployeeFun = (empData) => {
     setEmpData(empData)
@@ -36,7 +38,11 @@ const UsersAdminPage = () => {
             />
 
         <div className="flex flex-col flex-grow">
-          <HeadNavBar />
+          {/* <HeadNavBar /> */}
+          <HeadNavBar2
+              selModule ={selModule}
+              setSelModule={setSelModule}
+            />
           <div className="flex-grow p-6 overflow-auto  text-gray-700 bg-gradient-to-tr from-blue-200 via-indigo-200 to-pink-200">
             <div className="flex items-center flex-shrink-0 h-16 px-0  pl-0  ">
               {/* <h1 className="text-lg font-medium">redefine.</h1> */}

@@ -4,6 +4,7 @@ import SlimSideMenuBar from 'src/components/A_SideMenu/slimSideMenu'
 import ConstructUnitsHome from 'src/components/ConstructModule/ConstructUnitsHome'
 import ExecutiveHomeViewerPage from 'src/components/ExecutiveHomeViewerPage'
 import HeadSideBarDetailView from 'src/components/HeadDetailSideBar'
+import HeadNavBar2 from 'src/components/HeadNavBar/HeadNavBar2'
 import HeadSideBar from 'src/components/HeadSideBar/HeadSideBar'
 import LeadsManagementHome from 'src/components/LeadsManagement'
 import LeadsTeamReportBody from 'src/components/LeadsTeamReportBody'
@@ -23,6 +24,7 @@ const ConstructModulePage = () => {
   const [showSideBar, setShowSideBar] = useState(false)
   const [showDetailedSideBar, setDetailedShowSideBar] = useState(false)
   const [viewable, setViewable] = useState('Today1')
+  const [selModule, setSelModule] = useState('Construction')
 
   const showSideView1 = () => {
     setShowSideBar(!showSideBar)
@@ -50,9 +52,9 @@ const ConstructModulePage = () => {
         /> */}
 
         <div className="flex flex-col flex-grow">
-          <HeadNavBar />
+          {/* <HeadNavBar /> */}
           {}
-          <div className="flex flex-row  gap-2 h-[100vh]  text-gray-700 bg-gradient-to-tr from-blue-200 via-indigo-200 to-pink-200">
+          <div className="flex flex-row  h-[100vh]  text-gray-700 bg-gradient-to-tr from-blue-200 via-indigo-200 to-pink-200">
             <div
               className={`${
                 showDetailedSideBar
@@ -71,103 +73,17 @@ const ConstructModulePage = () => {
             </div>
 
             <div className="flex-grow  items-center overflow-y-auto  px-300  py-300">
+            <HeadNavBar2
+              selModule ={selModule}
+              setSelModule={setSelModule}
+            />
+
               {viewable === 'ConstructUnits' && (
                 <ConstructUnitsHome
                   project={{
                     projectName: 'Projects',
                   }}
                   isEdit={undefined}
-                />
-              )}
-              {viewable === 'inProgress' && (
-                <ExecutiveHomeViewerPage leadsTyper={'inProgress'} />
-              )}
-              {viewable === 'booked' && (
-                <ExecutiveHomeViewerPage leadsTyper={'booked'} />
-              )}
-              {viewable === 'archieveLeads' && (
-                <ExecutiveHomeViewerPage leadsTyper={'archieveLeads'} />
-              )}
-              {viewable === 'Today1' && (
-                <TodayLeadsHomePage taskType={viewable} />
-              )}
-              {viewable === 'Upcoming' && (
-                <TodayLeadsHomePage taskType={viewable} />
-              )}
-              {viewable === 'Today1Team' && (
-                <TodayLeadsHomePage taskType={viewable} />
-              )}
-              {viewable === 'UpcomingTeam' && (
-                <TodayLeadsHomePage taskType={viewable} />
-              )}
-              {viewable === 'unitsInventory' && (
-                <ProjectsUnitInventory
-                  project={{
-                    projectName: 'Projects',
-                  }}
-                  isEdit={undefined}
-                />
-              )}
-
-              {viewable === 'LeadsManagerHome' && <LeadsManagementHome />}
-              {viewable === 'Team Lead Report' && (
-                <LeadsTeamReportBody
-                  project={{
-                    area: 1000,
-                    builderName: 'hello',
-                    location: 'local',
-                    projectName: 'Team Leads Report',
-                    projectType: 'aprtment',
-                  }}
-                  isEdit={false}
-                />
-              )}
-              {viewable === 'My Lead Report' && (
-                <MyLeadsReportHome
-                  project={{
-                    area: 1000,
-                    builderName: 'hello',
-                    location: 'local',
-                    projectName: 'My Leads Report',
-                    projectType: 'aprtment',
-                  }}
-                  isEdit={false}
-                />
-              )}
-              {viewable === 'Attendance' && (
-                <MyAttedanceHomeBody
-                  project={{
-                    area: 1000,
-                    builderName: 'hello',
-                    location: 'local',
-                    projectName: 'Attendance',
-                    projectType: 'aprtment',
-                  }}
-                  isEdit={false}
-                />
-              )}
-              {viewable === 'Pay' && (
-                <MyPayHomeBody
-                  project={{
-                    area: 1000,
-                    builderName: 'hello',
-                    location: 'local',
-                    projectName: 'Pay',
-                    projectType: 'aprtment',
-                  }}
-                  isEdit={false}
-                />
-              )}
-              {viewable === 'LinkWhatsApp' && (
-                <LeadsTeamReportBody
-                  project={{
-                    area: 1000,
-                    builderName: 'hello',
-                    location: 'local',
-                    projectName: 'Pay',
-                    projectType: 'aprtment',
-                  }}
-                  isEdit={false}
                 />
               )}
             </div>

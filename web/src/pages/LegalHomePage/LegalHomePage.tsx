@@ -3,6 +3,7 @@ import SlimSideMenuBar from 'src/components/A_SideMenu/slimSideMenu'
 
 import ExecutiveHomeViewerPage from 'src/components/ExecutiveHomeViewerPage'
 import HeadSideBarDetailView from 'src/components/HeadDetailSideBar'
+import HeadNavBar2 from 'src/components/HeadNavBar/HeadNavBar2'
 import HeadSideBar from 'src/components/HeadSideBar/HeadSideBar'
 import LeadsManagementHome from 'src/components/LeadsManagement'
 import LeadsTeamReportBody from 'src/components/LeadsTeamReportBody'
@@ -23,6 +24,7 @@ const LegalHomePage = () => {
   const [showSideBar, setShowSideBar] = useState(false)
   const [showDetailedSideBar, setDetailedShowSideBar] = useState(false)
   const [viewable, setViewable] = useState('Today1')
+  const [selModule, setSelModule] = useState('Legal')
 
   const showSideView1 = () => {
     setShowSideBar(!showSideBar)
@@ -50,15 +52,14 @@ const LegalHomePage = () => {
         /> */}
 
         <div className="flex flex-col flex-grow">
-          <HeadNavBar />
-          {}
+          {/* <HeadNavBar /> */}
+          { }
           <div className="flex flex-row  h-[100vh]  text-gray-700 bg-gradient-to-tr from-blue-200 via-indigo-200 to-pink-200">
             <div
-              className={`${
-                showDetailedSideBar
+              className={`${showDetailedSideBar
                   ? 'flex flex-row overflow-auto w-[20vw]   text-gray-700 '
                   : 'flex flex-row overflow-auto   text-gray-700 '
-              }`}
+                }`}
             >
               <SlimSideMenuBar
                 pgName={'legalModule'}
@@ -71,6 +72,11 @@ const LegalHomePage = () => {
             </div>
 
             <div className="flex-grow  items-center overflow-y-auto  px-300  py-300">
+              <HeadNavBar2
+                selModule={selModule}
+                setSelModule={setSelModule}
+              />
+
               {viewable === 'legalDocuments' && (
                 <LegalDocsHome
                   project={{

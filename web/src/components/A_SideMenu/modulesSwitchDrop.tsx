@@ -11,6 +11,8 @@ import {
 } from '@heroicons/react/solid'
 
 import { Link, routes } from '@redwoodjs/router'
+import { useAuth } from 'src/context/firebase-auth-context'
+import { USER_ROLES } from 'src/constants/userRoles'
 
 export default function ModuleSwitchDrop({
   type,
@@ -21,13 +23,18 @@ export default function ModuleSwitchDrop({
   filteredUnits,
   pickedValue,
 }) {
+  const { user } = useAuth()
+
+  if (!user?.role?.includes(USER_ROLES.ADMIN)) {
+    return null
+  }
   return (
     <div className="text-right inline-block ml-2 mt-[px]">
       <Menu as="div" className="relative inline-block text-left">
         <div>
           <Menu.Button className="inline-flex justify-center w-full px-0 py-0 text-sm font-semibold text-black-500 bg- rounded-md bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
             <span className=" text-[12px] tracking-wide text-[#0091ae]  ">
-              {type?.toLocaleUpperCase()} Module
+              {type} Module
             </span>
             <ChevronDownIcon className="w-5 h-5 mr-3 mt-[1px] inline text-[#058527]" />
           </Menu.Button>

@@ -36,6 +36,8 @@ const HomePage = () => {
   const [projects, setProjects] = useState([])
   const [viewable, setViewable] = useState('Home')
   const { loading } = usePageLoadingContext()
+  const [selModule, setSelModule] = useState('Projects')
+
   const getProjects = async () => {
     const unsubscribe = getAllProjects(
       orgId,
@@ -354,7 +356,7 @@ const HomePage = () => {
       {loading && <div>Loading...</div>}
       <div className="flex w-screen h-screen text-gray-700">
         <div className="flex flex-col flex-grow">
-          <HeadNavBar />
+          {/* <HeadNavBar /> */}
           <div className="flex overflow-y-hidden flex-row overflow-auto h-[100vh]  text-gray-700 bg-gradient-to-tr from-blue-200 via-indigo-200 to-pink-200">
             {/* <HeadSideBar pgName={'home'} /> */}
             <SlimSideMenuBar
@@ -366,6 +368,10 @@ const HomePage = () => {
             />
 
             <div className="flex-grow   items-center overflow-y-auto no-scrollbar  h-[98%]  px-300  pt-300">
+            <HeadNavBar2
+              selModule ={selModule}
+              setSelModule={setSelModule}
+            />
               {(viewable === 'Bank Accounts' ||
                 viewable === 'Virtual Accounts') && (
                 <>
@@ -436,7 +442,7 @@ const HomePage = () => {
                                     <section className="bg-white py-2 rounded-sm">
                                        <div className="px-4">
                                     <div className="flex items-center justify-between py-2 pb-4 ">
-                                      <span className="relative z-10 flex items-center w-auto text-md font-bold leading-none pl-0 font-Playfair">
+                                      <span className="relative  flex items-center w-auto text-md font-bold leading-none pl-0 font-Playfair">
                                         Projects {viewable}
                                       </span>
                                       <button

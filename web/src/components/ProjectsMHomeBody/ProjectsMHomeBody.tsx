@@ -243,7 +243,7 @@ const ProjectsMHomeBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                           alt=""
                           src="/apart.svg"
                         ></img>
-                        <span className="relative z-10 flex items-center w-auto text-md font-bold leading-none pl-0 mt-[8px]">
+                        <span className="relative  flex items-center w-auto text-md font-bold leading-none pl-0 mt-[8px]">
                           {projectName}
                         </span>
                       </Link>

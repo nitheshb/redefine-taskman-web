@@ -8,17 +8,17 @@ import { useAuth } from 'src/context/firebase-auth-context'
 
 const SlimSideMenuBar = (props) => {
   const { pgName, sourceLink, showSideView1, setViewable, viewable } = props
-  const { user } = useAuth()
+  // const { user } = useAuth()
 
-  if (!user?.role?.includes(USER_ROLES.ADMIN)) {
-    return null
-  }
+  // if (!user?.role?.includes(USER_ROLES.ADMIN)) {
+  //   return null
+  // }
 
   return (
-    <div className="flex flex-col items-center w-20 min-w-[66px] pb-4   bg-white bg-opacity-75  bg-[#f0f3ff] h-screen">
-      {['hrModule', 'financeModule', 'crmModule'].includes(sourceLink) && (
+    <div className="flex flex-col items-center w-20 min-w-[83px] pb-4   bg-white bg-opacity-75  bg-[#f0f3ff] h-screen w-[83px] max-w-[83px]">
+      {['hrModule', 'financeModule', 'crmModule', 'projectModule', 'salesModule', 'constructModule', 'legalModule'].includes(sourceLink) && (
         <a
-          className="flex items-center justify-center flex-shrink-0 w-full py-[9px] mr-4  border-b"
+          className="flex items-center justify-center flex-shrink-0 w-full py-[9px] mr-4  border-b mt-[4px] pt-[10px]"
           href="#"
         >
           {/* bg-gradient-to-tr from-blue-200 via-indigo-200 to-pink-200 */}
@@ -80,9 +80,9 @@ const SlimSideMenuBar = (props) => {
             <li className="relative justify-center ">
               <span
                 className={
-                  'flex items-center justify-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center justify-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'Today1'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('Today1')}
@@ -92,7 +92,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#058527' }}>
                     <svg width="24" height="24" viewBox="0 0 24 24">
                       <g fill="currentColor" fillRule="evenodd">
@@ -125,12 +125,12 @@ const SlimSideMenuBar = (props) => {
                 </span>
               </span>
             </li>
-            <li className="relative mt-1 bg-[#D1D5DB] w-100 rounded-tl-[30px] rounded-bl-[30px] pt-1">
+            <li className="relative mt-1 ">
               <span
                 className={
-                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center text-sm py-1   overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'crmSpace-I'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('crmSpace-I')}
@@ -140,7 +140,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#eb8909' }}>
                     <svg
                       width="24"
@@ -163,16 +163,16 @@ const SlimSideMenuBar = (props) => {
                       ></path>
                     </svg>
                   </span>
-                  <span className="text-[8px] font-bold  pl-1">CRM</span>
+                  <span className="text-[9px] font-bold  pl-1">CRM</span>
                 </span>
               </span>
             </li>
             <li className="relative mt-1">
               <span
                 className={
-                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'Today1'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('MyCustomers-II')}
@@ -182,7 +182,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#058527' }}>
                     {/* <svg width="24" height="24" viewBox="0 0 24 24">
                             <g fill="currentColor" fillRule="nonzero">
@@ -196,7 +196,7 @@ const SlimSideMenuBar = (props) => {
 
                     <UserGroupIcon className="h-5 w-5 " aria-hidden="true" />
                   </span>
-                  <span className="text-[8px] font-bold  pl-1">CUSTOMERS</span>
+                  <span className="text-[9px] font-bold  pl-1">Customers</span>
                 </span>
                 <span className="flex ml-auto items-bottom">
                   <span className="flex ml-auto items-bottom text-xs mt-2"></span>
@@ -207,9 +207,9 @@ const SlimSideMenuBar = (props) => {
             <li className="relative mt-1">
               <span
                 className={
-                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'MyCustomersEvents'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('MyCustomersEvents')}
@@ -219,7 +219,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#058527' }}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -236,7 +236,7 @@ const SlimSideMenuBar = (props) => {
                       />
                     </svg>
                   </span>
-                  <span className="text-[8px] font-bold  pl-1">SNAPSHOT</span>
+                  <span className="text-[9px] font-bold  pl-1">Snapshot</span>
                 </span>
                 <span className="flex ml-auto items-bottom">
                   <span className="flex ml-auto items-bottom text-xs mt-2"></span>
@@ -246,9 +246,9 @@ const SlimSideMenuBar = (props) => {
             <li className="relative mt-1">
               <span
                 className={
-                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'Today1'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('Today1')}
@@ -258,7 +258,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#058527' }}>
                     <svg
                       width="24"
@@ -277,7 +277,7 @@ const SlimSideMenuBar = (props) => {
                       />
                     </svg>
                   </span>
-                  <span className="text-[8px] font-bold  pl-1">CONSTRUCT</span>
+                  <span className="text-[9px] font-bold  pl-1">Construct</span>
                 </span>
                 <span className="flex ml-auto items-bottom">
                   <span className="flex ml-auto items-bottom text-xs mt-2"></span>
@@ -287,9 +287,9 @@ const SlimSideMenuBar = (props) => {
             <li className="relative mt-1">
               <span
                 className={
-                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'crmDashboard'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('crmDashboard')}
@@ -299,7 +299,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#692fc2' }}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -322,7 +322,7 @@ const SlimSideMenuBar = (props) => {
                     </svg>
                   </span>
 
-                  <span className="text-[8px] font-bold  pl-1">REPORTS</span>
+                  <span className="text-[9px] font-bold  pl-1">Reports</span>
                 </span>
                 <span className="flex ml-auto items-bottom">
                   <span className="flex ml-auto items-bottom text-xs mt-2"></span>
@@ -338,9 +338,9 @@ const SlimSideMenuBar = (props) => {
             <li className="relative justify-center ">
               <span
                 className={
-                  'flex items-center justify-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center justify-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'Today1'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('Today1')}
@@ -350,7 +350,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#058527' }}>
                     <svg width="24" height="24" viewBox="0 0 24 24">
                       <g fill="currentColor" fillRule="evenodd">
@@ -383,12 +383,12 @@ const SlimSideMenuBar = (props) => {
                 </span>
               </span>
             </li>
-            <li className="relative mt-1 bg-[#D1D5DB] w-100 rounded-tl-[30px] rounded-bl-[30px] pt-1">
+            <li className="relative mt-1 pt-1">
               <span
                 className={
-                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'ConstructUnits'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('ConstructUnits')}
@@ -398,7 +398,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#eb8909' }}>
                     <svg
                       width="24"
@@ -421,7 +421,7 @@ const SlimSideMenuBar = (props) => {
                       ></path>
                     </svg>
                   </span>
-                  <span className="text-[8px] font-bold  pl-1">UNITS</span>
+                  <span className="text-[9px] font-bold  pl-1">Units</span>
                 </span>
               </span>
             </li>
@@ -429,9 +429,9 @@ const SlimSideMenuBar = (props) => {
             <li className="relative mt-1">
               <span
                 className={
-                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'ConstructQueries'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('ConstructQueries')}
@@ -441,7 +441,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#058527' }}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -458,7 +458,7 @@ const SlimSideMenuBar = (props) => {
                       />
                     </svg>
                   </span>
-                  <span className="text-[8px] font-bold  pl-1">ALTER</span>
+                  <span className="text-[9px] font-bold  pl-1">Modify</span>
                 </span>
                 <span className="flex ml-auto items-bottom">
                   <span className="flex ml-auto items-bottom text-xs mt-2"></span>
@@ -468,9 +468,9 @@ const SlimSideMenuBar = (props) => {
             <li className="relative mt-1">
               <span
                 className={
-                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'Roles Management'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('Roles Management')}
@@ -480,7 +480,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#058527' }}>
                     <svg
                       width="24"
@@ -499,7 +499,7 @@ const SlimSideMenuBar = (props) => {
                       />
                     </svg>
                   </span>
-                  <span className="text-[8px] font-bold  pl-1">GALLERY</span>
+                  <span className="text-[9px] font-bold  pl-1">Gallery</span>
                 </span>
                 <span className="flex ml-auto items-bottom">
                   <span className="flex ml-auto items-bottom text-xs mt-2"></span>
@@ -509,9 +509,9 @@ const SlimSideMenuBar = (props) => {
             <li className="relative mt-1">
               <span
                 className={
-                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'projectReports'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('projectReports')}
@@ -521,7 +521,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#692fc2' }}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -544,7 +544,7 @@ const SlimSideMenuBar = (props) => {
                     </svg>
                   </span>
 
-                  <span className="text-[8px] font-bold  pl-1">REPORTS</span>
+                  <span className="text-[9px] font-bold  pl-1">Reports</span>
                 </span>
                 <span className="flex ml-auto items-bottom">
                   <span className="flex ml-auto items-bottom text-xs mt-2"></span>
@@ -561,9 +561,9 @@ const SlimSideMenuBar = (props) => {
             <li className="relative justify-center ">
               <span
                 className={
-                  'flex items-center justify-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center justify-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'Today1'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('MyProjectTasks')}
@@ -573,7 +573,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#058527' }}>
                     <svg width="24" height="24" viewBox="0 0 24 24">
                       <g fill="currentColor" fillRule="evenodd">
@@ -606,12 +606,12 @@ const SlimSideMenuBar = (props) => {
                 </span>
               </span>
             </li>
-            <li className="relative mt-1 bg-[#D1D5DB] w-100 rounded-tl-[30px] rounded-bl-[30px] pt-1">
+            <li className="relative mt-1 pt-1">
               <span
                 className={
-                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'ongoing_projects'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('ongoing_projects')}
@@ -621,7 +621,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#eb8909' }}>
                     <svg
                       width="24"
@@ -644,16 +644,16 @@ const SlimSideMenuBar = (props) => {
                       ></path>
                     </svg>
                   </span>
-                  <span className="text-[8px] font-bold  pl-1">PROJECTS</span>
+                  <span className="text-[9px] font-bold  pl-1">Projects</span>
                 </span>
               </span>
             </li>
             <li className="relative mt-1">
               <span
                 className={
-                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'Virtual Accounts'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('Virtual Accounts')}
@@ -663,7 +663,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#058527' }}>
                     {/* <svg width="24" height="24" viewBox="0 0 24 24">
                             <g fill="currentColor" fillRule="nonzero">
@@ -677,7 +677,7 @@ const SlimSideMenuBar = (props) => {
 
                     <UserGroupIcon className="h-5 w-5 " aria-hidden="true" />
                   </span>
-                  <span className="text-[8px] font-bold  pl-1">MARKETING</span>
+                  <span className="text-[9px] font-bold  pl-1">Marketing</span>
                 </span>
                 <span className="flex ml-auto items-bottom">
                   <span className="flex ml-auto items-bottom text-xs mt-2"></span>
@@ -688,9 +688,9 @@ const SlimSideMenuBar = (props) => {
             <li className="relative mt-1">
               <span
                 className={
-                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'Bank Accounts'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('Bank Accounts')}
@@ -700,7 +700,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#058527' }}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -717,7 +717,7 @@ const SlimSideMenuBar = (props) => {
                       />
                     </svg>
                   </span>
-                  <span className="text-[8px] font-bold  pl-1">BANK</span>
+                  <span className="text-[9px] font-bold  pl-1">Bank</span>
                 </span>
                 <span className="flex ml-auto items-bottom">
                   <span className="flex ml-auto items-bottom text-xs mt-2"></span>
@@ -727,9 +727,9 @@ const SlimSideMenuBar = (props) => {
             <li className="relative mt-1">
               <span
                 className={
-                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'Today1'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('Today1')}
@@ -739,7 +739,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#058527' }}>
                     <svg
                       width="24"
@@ -758,8 +758,8 @@ const SlimSideMenuBar = (props) => {
                       />
                     </svg>
                   </span>
-                  <span className="text-[8px] font-bold  pl-1">
-                    INTEGRATION
+                  <span className="text-[9px] font-bold  pl-1">
+                    Integration
                   </span>
                 </span>
                 <span className="flex ml-auto items-bottom">
@@ -770,9 +770,9 @@ const SlimSideMenuBar = (props) => {
             <li className="relative mt-1">
               <span
                 className={
-                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'projectReports'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('projectReports')}
@@ -782,7 +782,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#692fc2' }}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -805,7 +805,7 @@ const SlimSideMenuBar = (props) => {
                     </svg>
                   </span>
 
-                  <span className="text-[8px] font-bold  pl-1">REPORTS</span>
+                  <span className="text-[9px] font-bold  pl-1">Reports</span>
                 </span>
                 <span className="flex ml-auto items-bottom">
                   <span className="flex ml-auto items-bottom text-xs mt-2"></span>
@@ -822,9 +822,9 @@ const SlimSideMenuBar = (props) => {
             <li className="relative justify-center ">
               <span
                 className={
-                  'flex items-center justify-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center justify-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'Today1'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('Today1')}
@@ -834,7 +834,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#058527' }}>
                     <svg width="24" height="24" viewBox="0 0 24 24">
                       <g fill="currentColor" fillRule="evenodd">
@@ -867,12 +867,12 @@ const SlimSideMenuBar = (props) => {
                 </span>
               </span>
             </li>
-            <li className="relative mt-1 bg-[#D1D5DB] w-100 rounded-tl-[30px] rounded-bl-[30px] pt-1">
+            <li className="relative mt-1 pt-1">
               <span
                 className={
-                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'inProgress'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('inProgress')}
@@ -882,7 +882,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#eb8909' }}>
                     <svg
                       width="24"
@@ -905,7 +905,7 @@ const SlimSideMenuBar = (props) => {
                       ></path>
                     </svg>
                   </span>
-                  <span className="text-[8px] font-bold  pl-1">
+                  <span className="text-[9px] font-bold  pl-1">
                     In Progress
                   </span>
                 </span>
@@ -914,9 +914,9 @@ const SlimSideMenuBar = (props) => {
             <li className="relative mt-1">
               <span
                 className={
-                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'archieveLeads'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('archieveLeads')}
@@ -926,7 +926,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#058527' }}>
                     {/* <svg width="24" height="24" viewBox="0 0 24 24">
                             <g fill="currentColor" fillRule="nonzero">
@@ -940,7 +940,7 @@ const SlimSideMenuBar = (props) => {
 
                     <UserGroupIcon className="h-5 w-5 " aria-hidden="true" />
                   </span>
-                  <span className="text-[8px] font-bold  pl-1">Archieve</span>
+                  <span className="text-[9px] font-bold  pl-1">Archieve</span>
                 </span>
                 <span className="flex ml-auto items-bottom">
                   <span className="flex ml-auto items-bottom text-xs mt-2"></span>
@@ -951,9 +951,9 @@ const SlimSideMenuBar = (props) => {
             <li className="relative mt-1">
               <span
                 className={
-                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'booked'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('booked')}
@@ -963,7 +963,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#058527' }}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -980,7 +980,7 @@ const SlimSideMenuBar = (props) => {
                       />
                     </svg>
                   </span>
-                  <span className="text-[8px] font-bold  pl-1">BOOKED</span>
+                  <span className="text-[9px] font-bold  pl-1">Booked</span>
                 </span>
                 <span className="flex ml-auto items-bottom">
                   <span className="flex ml-auto items-bottom text-xs mt-2"></span>
@@ -990,9 +990,9 @@ const SlimSideMenuBar = (props) => {
             <li className="relative mt-1">
               <span
                 className={
-                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'leadslake'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('leadslake')}
@@ -1002,7 +1002,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#058527' }}>
                     <svg
                       width="24"
@@ -1021,7 +1021,7 @@ const SlimSideMenuBar = (props) => {
                       />
                     </svg>
                   </span>
-                  <span className="text-[8px] font-bold  pl-1">Leads Bank</span>
+                  <span className="text-[9px] font-bold  pl-1">Leads Bank</span>
                 </span>
                 <span className="flex ml-auto items-bottom">
                   <span className="flex ml-auto items-bottom text-xs mt-2"></span>
@@ -1031,9 +1031,9 @@ const SlimSideMenuBar = (props) => {
             <li className="relative mt-1">
               <span
                 className={
-                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'My Lead Report'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('My Lead Report')}
@@ -1043,7 +1043,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#692fc2' }}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -1066,7 +1066,7 @@ const SlimSideMenuBar = (props) => {
                     </svg>
                   </span>
 
-                  <span className="text-[8px] font-bold  pl-1">REPORTS</span>
+                  <span className="text-[9px] font-bold  pl-1">Reports</span>
                 </span>
                 <span className="flex ml-auto items-bottom">
                   <span className="flex ml-auto items-bottom text-xs mt-2"></span>
@@ -1076,9 +1076,9 @@ const SlimSideMenuBar = (props) => {
             <li className="relative mt-1">
               <span
                 className={
-                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'Team Lead Report'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('Team Lead Report')}
@@ -1088,7 +1088,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#692fc2' }}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -1111,8 +1111,8 @@ const SlimSideMenuBar = (props) => {
                     </svg>
                   </span>
 
-                  <span className="text-[8px] font-bold  pl-1">
-                    TEAM REPORTS
+                  <span className="text-[9px] font-bold  pl-1">
+                    Team Reports
                   </span>
                 </span>
                 <span className="flex ml-auto items-bottom">
@@ -1129,9 +1129,9 @@ const SlimSideMenuBar = (props) => {
             <li className="relative justify-center ">
               <span
                 className={
-                  'flex items-center justify-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center justify-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'Today1'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('Today1')}
@@ -1141,7 +1141,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#058527' }}>
                     <svg width="24" height="24" viewBox="0 0 24 24">
                       <g fill="currentColor" fillRule="evenodd">
@@ -1174,12 +1174,12 @@ const SlimSideMenuBar = (props) => {
                 </span>
               </span>
             </li>
-            <li className="relative mt-1 bg-[#D1D5DB] w-100 rounded-tl-[30px] rounded-bl-[30px] pt-1">
+            <li className="relative mt-1 pt-1">
               <span
                 className={
-                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'legalDocuments'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('legalDocuments')}
@@ -1189,7 +1189,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#eb8909' }}>
                     <svg
                       width="24"
@@ -1212,16 +1212,16 @@ const SlimSideMenuBar = (props) => {
                       ></path>
                     </svg>
                   </span>
-                  <span className="text-[8px] font-bold  pl-1">DOCUMENTS</span>
+                  <span className="text-[9px] font-bold  pl-1">Documents</span>
                 </span>
               </span>
             </li>
             <li className="relative mt-1">
               <span
                 className={
-                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'Team Lead Report'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('Team Lead Report')}
@@ -1231,7 +1231,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#692fc2' }}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -1254,8 +1254,8 @@ const SlimSideMenuBar = (props) => {
                     </svg>
                   </span>
 
-                  <span className="text-[8px] font-bold  pl-1">
-                    TEAM REPORTS
+                  <span className="text-[9px] font-bold  pl-1">
+                    Team Reports
                   </span>
                 </span>
                 <span className="flex ml-auto items-bottom">
@@ -1273,9 +1273,9 @@ const SlimSideMenuBar = (props) => {
             <li className="relative justify-center ">
               <span
                 className={
-                  'flex items-center justify-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center justify-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'Today1'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('Today1')}
@@ -1285,7 +1285,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#058527' }}>
                     <svg width="24" height="24" viewBox="0 0 24 24">
                       <g fill="currentColor" fillRule="evenodd">
@@ -1318,12 +1318,12 @@ const SlimSideMenuBar = (props) => {
                 </span>
               </span>
             </li>
-            <li className="relative mt-1 bg-[#D1D5DB] w-100 rounded-tl-[30px] rounded-bl-[30px] pt-1">
+            <li className="relative mt-1 pt-1">
               <span
                 className={
-                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'Payments'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('Payments')}
@@ -1333,7 +1333,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#eb8909' }}>
                     <svg
                       width="24"
@@ -1356,16 +1356,16 @@ const SlimSideMenuBar = (props) => {
                       ></path>
                     </svg>
                   </span>
-                  <span className="text-[8px] font-bold  pl-1">AMOUNTS</span>
+                  <span className="text-[9px] font-bold  pl-1">Amounts</span>
                 </span>
               </span>
             </li>
             <li className="relative mt-1">
               <span
                 className={
-                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'Bank Accounts'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('Bank Accounts')}
@@ -1375,7 +1375,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#058527' }}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -1392,7 +1392,7 @@ const SlimSideMenuBar = (props) => {
                       />
                     </svg>
                   </span>
-                  <span className="text-[8px] font-bold  pl-1">BANK</span>
+                  <span className="text-[9px] font-bold  pl-1">Bank</span>
                 </span>
                 <span className="flex ml-auto items-bottom">
                   <span className="flex ml-auto items-bottom text-xs mt-2"></span>
@@ -1403,9 +1403,9 @@ const SlimSideMenuBar = (props) => {
             <li className="relative mt-1">
               <span
                 className={
-                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'Dashboard'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('Dashboard')}
@@ -1415,7 +1415,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#692fc2' }}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -1438,7 +1438,7 @@ const SlimSideMenuBar = (props) => {
                     </svg>
                   </span>
 
-                  <span className="text-[8px] font-bold  pl-1">REPORTS</span>
+                  <span className="text-[9px] font-bold  pl-1">Reports</span>
                 </span>
                 <span className="flex ml-auto items-bottom">
                   <span className="flex ml-auto items-bottom text-xs mt-2"></span>
@@ -1454,9 +1454,9 @@ const SlimSideMenuBar = (props) => {
             <li className="relative justify-center ">
               <span
                 className={
-                  'flex items-center justify-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center justify-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'myHRTasks'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('myHRTasks')}
@@ -1466,7 +1466,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#058527' }}>
                     <svg width="24" height="24" viewBox="0 0 24 24">
                       <g fill="currentColor" fillRule="evenodd">
@@ -1499,12 +1499,12 @@ const SlimSideMenuBar = (props) => {
                 </span>
               </span>
             </li>
-            <li className="relative mt-1 bg-[#D1D5DB] w-100 rounded-tl-[30px] rounded-bl-[30px] pt-1">
+            <li className="relative mt-1 pt-1">
               <span
                 className={
-                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'ongoing_projects'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('ongoing_projects')}
@@ -1514,7 +1514,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#eb8909' }}>
                     <svg
                       width="24"
@@ -1537,16 +1537,16 @@ const SlimSideMenuBar = (props) => {
                       ></path>
                     </svg>
                   </span>
-                  <span className="text-[8px] font-bold  pl-1">HR</span>
+                  <span className="text-[9px] font-bold  pl-1">HR</span>
                 </span>
               </span>
             </li>
             <li className="relative mt-1">
               <span
                 className={
-                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'User Management'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('User Management')}
@@ -1556,7 +1556,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#058527' }}>
                     {/* <svg width="24" height="24" viewBox="0 0 24 24">
                             <g fill="currentColor" fillRule="nonzero">
@@ -1570,7 +1570,7 @@ const SlimSideMenuBar = (props) => {
 
                     <UserGroupIcon className="h-5 w-5 " aria-hidden="true" />
                   </span>
-                  <span className="text-[8px] font-bold  pl-1">EMPLOYEES</span>
+                  <span className="text-[9px] font-bold  pl-1">Employees</span>
                 </span>
                 <span className="flex ml-auto items-bottom">
                   <span className="flex ml-auto items-bottom text-xs mt-2"></span>
@@ -1581,9 +1581,9 @@ const SlimSideMenuBar = (props) => {
             <li className="relative mt-1">
               <span
                 className={
-                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'Bank Accounts'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('Bank Accounts')}
@@ -1593,7 +1593,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#058527' }}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -1610,7 +1610,7 @@ const SlimSideMenuBar = (props) => {
                       />
                     </svg>
                   </span>
-                  <span className="text-[8px] font-bold  pl-1">BANK</span>
+                  <span className="text-[9px] font-bold  pl-1">Bank</span>
                 </span>
                 <span className="flex ml-auto items-bottom">
                   <span className="flex ml-auto items-bottom text-xs mt-2"></span>
@@ -1620,9 +1620,9 @@ const SlimSideMenuBar = (props) => {
             <li className="relative mt-1">
               <span
                 className={
-                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'Roles Management'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('Roles Management')}
@@ -1632,7 +1632,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#058527' }}>
                     <svg
                       width="24"
@@ -1651,7 +1651,7 @@ const SlimSideMenuBar = (props) => {
                       />
                     </svg>
                   </span>
-                  <span className="text-[8px] font-bold  pl-1">ACCESS</span>
+                  <span className="text-[9px] font-bold  pl-1">Access</span>
                 </span>
                 <span className="flex ml-auto items-bottom">
                   <span className="flex ml-auto items-bottom text-xs mt-2"></span>
@@ -1661,9 +1661,9 @@ const SlimSideMenuBar = (props) => {
             <li className="relative mt-1">
               <span
                 className={
-                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer ' +
+                  'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
                   (viewable === 'projectReports'
-                    ? 'text-blue-600 text-md font-semibold '
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
                     : '')
                 }
                 onClick={() => setViewable('projectReports')}
@@ -1673,7 +1673,7 @@ const SlimSideMenuBar = (props) => {
                   marginRight: 'auto',
                 }}
               >
-                <span className="flex items-center flex-col">
+                <span className="flex items-center flex-col pt-[8px]">
                   <span style={{ color: '#692fc2' }}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -1696,7 +1696,7 @@ const SlimSideMenuBar = (props) => {
                     </svg>
                   </span>
 
-                  <span className="text-[8px] font-bold  pl-1">REPORTS</span>
+                  <span className="text-[9px] font-bold  pl-1">Reports</span>
                 </span>
                 <span className="flex ml-auto items-bottom">
                   <span className="flex ml-auto items-bottom text-xs mt-2"></span>
@@ -1712,7 +1712,7 @@ const SlimSideMenuBar = (props) => {
           'flex items-center justify-center flex-shrink-0 w-10 h-10 mt-4 mt-auto rounded hover:bg-gray-300 ' +
           (pgName === 'erpAccount' ? 'bg-gray-300' : '')
         }
-        to={routes.erpAccount()}
+        // to={routes.erpAccount()}
       >
         <svg
           className="w-5 h-5"
