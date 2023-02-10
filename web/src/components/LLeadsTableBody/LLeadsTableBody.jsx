@@ -1037,7 +1037,8 @@ export default function LLeadsTableBody({
                                   : `${Math.abs(getDifferenceInMinutes(
                                     (row?.leadUpT || row?.stsUpT),
                                     ''
-                                  ))} Min`}{' '}
+                                  )) || 0} Min`}{' '}
+                                  {/* in above line I have added 0 to take Nan value */}
                                 {getDifferenceInMinutes(
                                   (row?.leadUpT || row?.stsUpT),
                                   ''

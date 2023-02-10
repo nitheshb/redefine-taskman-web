@@ -8,7 +8,7 @@ import { useAuth } from 'src/context/firebase-auth-context'
 
 const SlimSideMenuBar = (props) => {
   const { pgName, sourceLink, showSideView1, setViewable, viewable } = props
-  // const { user } = useAuth()
+  const { user } = useAuth()
 
   // if (!user?.role?.includes(USER_ROLES.ADMIN)) {
   //   return null
@@ -987,6 +987,8 @@ const SlimSideMenuBar = (props) => {
                 </span>
               </span>
             </li>
+            { (user?.role?.includes(USER_ROLES.SALES_MANAGER) || user?.role?.includes(USER_ROLES.ADMIN)) &&
+
             <li className="relative mt-1">
               <span
                 className={
@@ -1028,6 +1030,7 @@ const SlimSideMenuBar = (props) => {
                 </span>
               </span>
             </li>
+}
             <li className="relative mt-1">
               <span
                 className={
@@ -1073,6 +1076,7 @@ const SlimSideMenuBar = (props) => {
                 </span>
               </span>
             </li>
+            { (user?.role?.includes(USER_ROLES.SALES_MANAGER) || user?.role?.includes(USER_ROLES.ADMIN)) &&
             <li className="relative mt-1">
               <span
                 className={
@@ -1120,6 +1124,7 @@ const SlimSideMenuBar = (props) => {
                 </span>
               </span>
             </li>
+}
           </ul>
         </>
       )}
