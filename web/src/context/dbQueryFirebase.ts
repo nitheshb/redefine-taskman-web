@@ -391,6 +391,17 @@ export const getLeadbyId1 = async (orgId, uid) => {
     console.log('No such document!')
   }
 }
+export const getProjById1 = async (orgId, uid) => {
+  const itemsQuery = query(
+    collection(db, `${orgId}_phases`),
+    where('projectId', '==', uid)
+  )
+
+  const citySnapshot = await getDocs(itemsQuery)
+  // await citySnapshot.docs.map((doc) => doc.data())
+  console.log('my Array data is delayer 1', citySnapshot)
+  return await citySnapshot.docs.map((doc) => doc.data())
+}
 export const getLedsData1 = async (orgId) => {
   try {
     const citiesCol = collection(db, `${orgId}_leads`)
@@ -734,7 +745,7 @@ export const addLeadSupabase = async (payload) => {
 }
 export const addLead = async (orgId, data, by, msg) => {
   try {
-    delete data[""]
+    delete data['']
     const x = await addDoc(collection(db, `${orgId}_leads`), data)
     await console.log('add Lead value is ', x, x.id, data)
     const { intype, Name, Mobile, assignedTo, Project, assignedToObj } = data
@@ -905,6 +916,30 @@ export const addUnit = async (orgId, data, by, msg) => {
     construct_cost_sqf,
     data
   )
+
+  // get the cost sheet charges obj & successully create total unit cost
+
+  const yo = {
+    // totalEstValue: increment(plot_value + construct_value),
+    // totalEstPlotVal: increment(plot_value),
+    // totalEstConstuctVal: increment(construct_value),
+    plotcost: 10,
+    constCost: 10,
+    plcCharges: 10,
+    discount: 10,
+    totalUnitCost: 100,
+    legal: 10,
+    clubhousecharges: 10,
+    bescom_bwssb: 10,
+    totalPlotArea: plot_Sqf,
+    totalConstructArea: super_built_up_area,
+    // totalArea: increment(area),
+    totalUnitCount: 1,
+    availableCount: 1,
+  }
+
+  console.log('uplaod unit val', yo)
+  return
 
   const x = await addDoc(collection(db, `${orgId}_units`), data)
   await console.log('x value is', x, x.id)

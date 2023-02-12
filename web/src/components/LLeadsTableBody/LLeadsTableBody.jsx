@@ -75,18 +75,17 @@ import LogSkelton from '../shimmerLoaders/logSkelton'
 // }
 
 function descendingComparator(a, b, orderBy) {
-  console.log('what is the order 1 ', b,orderBy, b[orderBy] || b['stsUpT'])
-  if ((b[orderBy] || b['stsUpT'] || b['Date'])  < (a[orderBy] || a['stsUpT'] || a['Date'] )) {
+  if ((b[orderBy] || b['stsUpT'] || b['Date']) < (a[orderBy] || a['stsUpT'] || a['Date'])) {
     return -1
   }
-  if ((b[orderBy] || b['stsUpT'] || b['Date'])  > (a[orderBy] || a['stsUpT'] || a['Date']) ) {
+  if ((b[orderBy] || b['stsUpT'] || b['Date']) > (a[orderBy] || a['stsUpT'] || a['Date'])) {
     return 1
   }
   return 0
   if (b[orderBy] < a[orderBy]) {
     return -1
   }
-  if (b[orderBy]> a[orderBy]) {
+  if (b[orderBy] > a[orderBy]) {
     return 1
   }
   return 0
@@ -194,20 +193,20 @@ function EnhancedTableHead(props) {
     onRequestSort(event, property)
   }
 
-  const displayHeadersFun =(headCell)=> {
+  const displayHeadersFun = (headCell) => {
 
-    if(['Assigned', 'schTime', 'leadUpT'].includes(headCell)){
+    if (['Assigned', 'schTime', 'leadUpT'].includes(headCell)) {
       switch (headCell) {
         case 'Assigned':
-        return  viewUnitStatusA.includes('Assigned To') ? '' : 'none'
+          return viewUnitStatusA.includes('Assigned To') ? '' : 'none'
         case 'leadUpT':
-        return  viewUnitStatusA.includes('Last Activity') ? '' : 'none'
+          return viewUnitStatusA.includes('Last Activity') ? '' : 'none'
         case 'schTime':
-          return  viewUnitStatusA.includes('Next Sch') ? '' : 'none'
+          return viewUnitStatusA.includes('Next Sch') ? '' : 'none'
         default:
           break;
       }
-    }else {
+    } else {
       return ''
     }
     //   if(viewUnitStatusA.includes('Assigned To') &&
@@ -393,8 +392,8 @@ React.useEffect(()=>{
     // console.log('searched values is ', e.target.value)
     setSearchKey(e.target.value)
     let searchString = e.target.value
-console.log(e.target.value, "Acdvf")
-    let rowsR = rows.filter((item) => {
+
+    let rowsR = leadsFetchedData.filter((item) => {
       if (searchString == '' || !searchString) {
         console.log('ami here')
         return item
@@ -591,7 +590,6 @@ export default function LLeadsTableBody({
   const [dateRange, setDateRange] = React.useState([null, null])
   const [startDate, endDate] = dateRange
   React.useEffect(() => {
-    console.log('send values is', rowsParent, selStatus)
     // filterStuff(rowsParent)
     // let x = rowsParent.filter((item) => {
     //   if (selStatus === 'all') {
@@ -615,19 +613,15 @@ export default function LLeadsTableBody({
   }, [selStatus, rowsParent])
   console.log(searchKey, "cdsvfeg")
   React.useEffect(() => {
-    console.log('search on is', searchKey)
     filterSearchString(rows)
   }, [searchKey])
 
   const filterStuff = async (parent) => {
     console.log('filter value stuff', parent)
 
-    let x =
-      selStatus === 'all'
-        ? parent['all']
-        : selStatus === 'archieve_all'
-        ? parent['archieve_all']
-        : parent[selStatus]
+
+    let x = selStatus === 'all'
+      ? parent['all'] : selStatus === 'archieve_all' ? parent['archieve_all'] : parent[selStatus]
 
     await setRows(newArray)
   }
@@ -650,7 +644,7 @@ export default function LLeadsTableBody({
         console.log(
           'iinside you1 x',
           item?.Date >= startDate?.getTime() &&
-            item?.Date <= startDate?.getTime() + 86400000,
+          item?.Date <= startDate?.getTime() + 86400000,
           startDate?.getTime() + 86399999,
           startDate?.getTime(),
           item.Name
@@ -660,7 +654,7 @@ export default function LLeadsTableBody({
           console.log(
             'inside you wjat os tjo filter',
             item?.Date >= startDate?.getTime() &&
-              item?.Date <= startDate?.getTime() + 86400000,
+            item?.Date <= startDate?.getTime() + 86400000,
             startDate?.getTime() + 86399999,
             startDate?.getTime(),
             item.Name
@@ -724,7 +718,6 @@ export default function LLeadsTableBody({
     //     selected.slice(selectedIndex + 1)
     //   )
     // }
-    console.log('is row clicked', row)
     selUserProfileF('User Profile', row)
     setSelected(newSelected)
   }
@@ -791,7 +784,7 @@ export default function LLeadsTableBody({
       >
         <TableContainer sx={{ maxHeight: 640 }}>
           <Table
-            sx={{ minWidth: 750 }}
+            sx={{ minWidth: 750, minHeight: 260 }}
             aria-labelledby="tableTitle"
             size={dense ? 'small' : 'medium'}
             stickyHeader
@@ -816,193 +809,245 @@ export default function LLeadsTableBody({
               {/* item.Assignedto.toLowerCase().includes(
                     searchKey.toLowerCase()
                   ) || */}
-              {leadsFetchedData
-                ?.filter((item) => {
-                  if (searchKey == '' || !searchKey) {
-                    return item
-                  } else if (
-                    item.Email.toLowerCase().includes(
-                      searchKey.toLowerCase()
-                    ) ||
-                    item.Mobile.toLowerCase().includes(
-                      searchKey.toLowerCase()
-                    ) ||
-                    item.Name.toLowerCase().includes(searchKey.toLowerCase()) ||
-                    item.Source.toLowerCase().includes(searchKey.toLowerCase())
-                  ) {
-                    return item
-                  }
-                })
+              {
 
-                .sort(getComparator(order, orderBy))
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.Name)
-                  const labelId = `enhanced-table-checkbox-${index}`
-                  return (
-                    <TableRow
-                      hover
-                      onClick={(event) => handleClick(event, row)}
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={index}
-                      selected={isItemSelected}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      <TableCell
-                        align="center"
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
-                        size="small"
+                leadsFetchedData
+                  ?.filter((item) => {
+                    if (searchKey == '' || !searchKey) {
+                      return item
+                    }
+                    else if (
+                      item.Email.toLowerCase().includes(
+                        searchKey.toLowerCase()
+                      ) ||
+                      item.Mobile.toLowerCase().includes(
+                        searchKey.toLowerCase()
+                      ) ||
+                      item.Name.toLowerCase().includes(searchKey.toLowerCase()) ||
+                      item.Source.toLowerCase().includes(
+                        searchKey.toLowerCase()
+                      )
+                    ) {
+                      return item
+                    }
+                  })
+
+
+                  .sort(getComparator(order, orderBy))
+                  .map((row, index) => {
+                    const isItemSelected = isSelected(row.Name)
+                    const labelId = `enhanced-table-checkbox-${index}`
+                    return (
+                      <TableRow
+                        hover
+                        onClick={(event) => handleClick(event, row)}
+                        aria-checked={isItemSelected}
+                        tabIndex={-1}
+                        key={index}
+                        selected={isItemSelected}
+                        style={{ cursor: 'pointer' }}
                       >
-                        {index + 1}
-                      </TableCell>
+                        <TableCell
+                          align="center"
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding="none"
+                          size="small"
+                        >
+                          {index + 1}
+                        </TableCell>
 
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
-                      >
-                        <section>
-                          <span className="font-bodyLato">
-                            {prettyDate(row.Date).toLocaleString()}
-                          </span>
-                        </section>
-                      </TableCell>
+                        <TableCell
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding="none"
+                        >
+                          <section>
+                            <span className="font-bodyLato">
+                              {prettyDate(row.Date).toLocaleString()}
+                            </span>
 
-                      <TableCell align="left">
-                        <section>
-                          <div>
-                            <div
-                              className="relative flex flex-col  group"
-                              // style={{ alignItems: 'end' }}
-                            >
+                          </section>
+                        </TableCell>
+
+
+
+
+                        <TableCell align="left">
+                          <section>
+                            <div>
                               <div
-                                className="absolute bottom-0 flex-col items-center hidden mb-6 group-hover:flex"
-                                // style={{  width: '300px' }}
-                                style={{ zIndex: '9' }}
+                                className="relative flex flex-col  group"
+                              // style={{ alignItems: 'end' }}
                               >
-                                <span
-                                  className="rounded italian relative mr-2 z-100000 p-2 text-xs leading-none text-white whitespace-no-wrap bg-black shadow-lg"
-                                  style={{
-                                    color: 'black',
-                                    background: '#e2c062',
-                                    maxWidth: '300px',
-                                  }}
+                                <div
+                                  className="absolute bottom-0 flex-col items-center hidden mb-6 group-hover:flex"
+                                  // style={{  width: '300px' }}
+                                  style={{ 'zIndex': '9' }}
                                 >
-                                  <div className="italic flex flex-col">
-                                    <div className="font-bodyLato">
-                                      <HighlighterStyle
-                                        searchKey={searchKey}
-                                        source={row.Name.toString()}
-                                      />
-                                    </div>
-                                    <div className="font-bodyLato">
-                                      <HighlighterStyle
-                                        searchKey={searchKey}
-                                        source={row.Email.toString()}
-                                      />
-                                    </div>
-                                    <div>
-                                      <span className="font-bodyLato">
+                                  <span
+                                    className="rounded italian relative mr-2 z-100000 p-2 text-xs leading-none text-white whitespace-no-wrap bg-black shadow-lg"
+                                    style={{
+                                      color: 'black',
+                                      background: '#e2c062',
+                                      maxWidth: '300px',
+                                    }}
+                                  >
+                                    <div className="italic flex flex-col">
+                                      <div className="font-bodyLato">
                                         <HighlighterStyle
                                           searchKey={searchKey}
-                                          source={row.Mobile.toString().replace(
-                                            /(\d{3})(\d{3})(\d{4})/,
-                                            '$1-$2-$3'
-                                          )}
+                                          source={row.Name.toString()}
                                         />
-                                      </span>
+                                      </div>
+                                      <div className="font-bodyLato">
+                                        <HighlighterStyle
+                                          searchKey={searchKey}
+                                          source={row.Email.toString()}
+                                        />
+                                      </div>
+                                      <div>
+                                        <span className="font-bodyLato">
+                                          <HighlighterStyle
+                                            searchKey={searchKey}
+                                            source={row.Mobile.toString().replace(
+                                              /(\d{3})(\d{3})(\d{4})/,
+                                              '$1-$2-$3'
+                                            )}
+                                          />
+                                        </span>
+                                      </div>
                                     </div>
-                                  </div>
+                                  </span>
+                                  <div
+                                    className="w-3 h-3  -mt-2 rotate-45 bg-black"
+                                    style={{
+                                      background: '#e2c062',
+                                      marginRight: '12px',
+                                    }}
+                                  ></div>
+                                </div>
+                                <span className="font-bodyLato">
+                                  <HighlighterStyle
+                                    searchKey={searchKey}
+                                    source={row.Name.toString()}
+                                  />
                                 </span>
-                                <div
-                                  className="w-3 h-3  -mt-2 rotate-45 bg-black"
-                                  style={{
-                                    background: '#e2c062',
-                                    marginRight: '12px',
-                                  }}
-                                ></div>
                               </div>
-                              <span className="font-bodyLato">
-                                <HighlighterStyle
-                                  searchKey={searchKey}
-                                  source={row.Name.toString()}
-                                />
-                              </span>
                             </div>
-                          </div>
-                          {viewUnitStatusA.includes('Email Id') && (
-                            <div>
-                              <span className="font-bodyLato">
-                                <HighlighterStyle
-                                  searchKey={searchKey}
-                                  source={row.Email.toString()}
-                                />
-                              </span>
-                            </div>
-                          )}
-                          {viewUnitStatusA.includes('Phone No') && (
-                            <div>
-                              <span className="font-bodyLato">
-                                <HighlighterStyle
-                                  searchKey={searchKey}
-                                  source={row.Mobile.toString().replace(
-                                    /(\d{3})(\d{3})(\d{4})/,
-                                    '$1-$2-$3'
-                                  )}
-                                />
-                              </span>
-                            </div>
-                          )}
-                        </section>
-                      </TableCell>
+                            {viewUnitStatusA.includes('Email Id') && (
+                              <div>
+                                <span className="font-bodyLato">
+                                  <HighlighterStyle
+                                    searchKey={searchKey}
+                                    source={row.Email.toString()}
+                                  />
+                                </span>
+                              </div>
+                            )}
+                            {viewUnitStatusA.includes('Phone No') && (
+                              <div>
+                                <span className="font-bodyLato">
+                                  <HighlighterStyle
+                                    searchKey={searchKey}
+                                    source={row.Mobile.toString().replace(
+                                      /(\d{3})(\d{3})(\d{4})/,
+                                      '$1-$2-$3'
+                                    )}
+                                  />
+                                </span>
+                              </div>
+                            )}
+                          </section>
+                        </TableCell>
 
-                      <TableCell align="left">{row.Project}</TableCell>
-                      {/* display:
+                        <TableCell align="left">{row.Project}</TableCell>
+                        {/* display:
                   viewUnitStatusA.includes('Assigned To') &&
                   headCell.id === 'Assigned'
                     ? 'none'
                     : '', */}
-                      {viewUnitStatusA.includes('Assigned To') && (
-                        <TableCell align="left">
-                          {/* <HighlighterStyle
+                        {viewUnitStatusA.includes('Assigned To') && (
+                          <TableCell align="left">
+                            {/* <HighlighterStyle
                         searchKey={searchKey}
                         source={row.Assignedto}
                       /> */}
-                          <span className="font-bodyLato">
-                            {row?.assignedToObj?.label}
+                            <span className="font-bodyLato">
+                              {row?.assignedToObj?.label}
+                            </span>
+                          </TableCell>
+                        )}
+
+                        <TableCell align="center">
+                          <section className="flex flex-col">
+                            <span className="px-2 uppercase inline-flex text-[11px] text-black-900  ">
+                              {row?.Source?.toString() || 'NA'}
+                            </span>
+                            <Rating name="size-small half-rating-read" defaultValue={2.5} size="small" precision={0.5} readOnly />
+
+                          </section>
+                        </TableCell>
+
+                        <TableCell align="left">
+
+
+                          <span className="px-2 uppercase inline-flex text-[10px] leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                            <HighlighterStyle
+                              searchKey={searchKey}
+                              source={row.Status.toString()}
+                            />
                           </span>
                         </TableCell>
-                      )}
-
-                      <TableCell align="middle">
-                        <section className="flex flex-col">
-                          <span className="px-2 uppercase inline-flex text-[11px] text-black-900  ">
-                            {row?.Source?.toString() || 'NA'}
-                          </span>
-                          <Rating
-                            name="size-small half-rating-read"
-                            defaultValue={2.5}
-                            size="small"
-                            precision={0.5}
-                            readOnly
-                          />
-                        </section>
-                      </TableCell>
-
-                      <TableCell align="left">
-                        <span className="px-2 uppercase inline-flex text-[10px] leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                          <HighlighterStyle
-                            searchKey={searchKey}
-                            source={row.Status.toString()}
-                          />
-                        </span>
-                      </TableCell>
-                      {viewUnitStatusA.includes('Last Activity') && (
-                        <TableCell
+                        {viewUnitStatusA.includes('Last Activity') && (
+                          <TableCell
+                            component="th"
+                            id={labelId}
+                            scope="row"
+                            padding="none"
+                          >
+                            <>
+                              {/* <span className="font-bodyLato">
+                          {prettyDate(row?.stsUpT || row.Date).toLocaleString()}
+                        </span> */}
+                              <span className="px- py-[1px]  min-w-[100px] inline-flex text-xs leading-5 tracking-wide  rounded-full  text-green-800">
+                                {Math.abs(
+                                  getDifferenceInMinutes(
+                                    (row?.leadUpT || row?.stsUpT),
+                                    ''
+                                  )
+                                ) > 60
+                                  ? Math.abs(
+                                    getDifferenceInMinutes(
+                                      (row?.leadUpT || row?.stsUpT),
+                                      ''
+                                    )
+                                  ) > 1440
+                                    ? `${Math.abs(getDifferenceInDays(
+                                      (row?.leadUpT || row?.stsUpT),
+                                      ''
+                                    ))} Days `
+                                    : `${Math.abs(getDifferenceInHours(
+                                      (row?.leadUpT || row?.stsUpT),
+                                      ''
+                                    ))} Hours `
+                                  : `${Math.abs(getDifferenceInMinutes(
+                                    (row?.leadUpT || row?.stsUpT),
+                                    ''
+                                  )) || 0} Min`}{' '}
+                                  {/* in above line I have added 0 to take Nan value */}
+                                {getDifferenceInMinutes(
+                                  (row?.leadUpT || row?.stsUpT),
+                                  ''
+                                ) < 0
+                                  ? 'ago'
+                                  : 'Left'}
+                              </span>
+                            </>
+                          </TableCell>)}
+                        {viewUnitStatusA.includes('Next Sch') && <TableCell
                           component="th"
                           id={labelId}
                           scope="row"
@@ -1015,36 +1060,30 @@ export default function LLeadsTableBody({
                             <span className="px- py-[1px]  min-w-[100px] inline-flex text-xs leading-5 tracking-wide  rounded-full  text-green-800">
                               {Math.abs(
                                 getDifferenceInMinutes(
-                                  row?.leadUpT || row?.stsUpT,
+                                  (row?.schTime),
                                   ''
                                 )
                               ) > 60
                                 ? Math.abs(
-                                    getDifferenceInMinutes(
-                                      row?.leadUpT || row?.stsUpT,
-                                      ''
-                                    )
-                                  ) > 1440
-                                  ? `${Math.abs(
-                                      getDifferenceInDays(
-                                        row?.leadUpT || row?.stsUpT,
-                                        ''
-                                      )
-                                    )} Days `
-                                  : `${Math.abs(
-                                      getDifferenceInHours(
-                                        row?.leadUpT || row?.stsUpT,
-                                        ''
-                                      )
-                                    )} Hours `
-                                : `${Math.abs(
-                                    getDifferenceInMinutes(
-                                      row?.leadUpT || row?.stsUpT,
-                                      ''
-                                    )
-                                  )} Min`}{' '}
+                                  getDifferenceInMinutes(
+                                    (row?.schTime),
+                                    ''
+                                  )
+                                ) > 1440
+                                  ? `${Math.abs(getDifferenceInDays(
+                                    (row?.schTime),
+                                    ''
+                                  ))} Days `
+                                  : `${Math.abs(getDifferenceInHours(
+                                    (row?.schTime),
+                                    ''
+                                  ))} Hours `
+                                : `${Math.abs(getDifferenceInMinutes(
+                                  (row?.schTime),
+                                  ''
+                                ))} Min`}{' '}
                               {getDifferenceInMinutes(
-                                row?.leadUpT || row?.stsUpT,
+                                (row?.schTime),
                                 ''
                               ) < 0
                                 ? 'ago'
@@ -1052,64 +1091,17 @@ export default function LLeadsTableBody({
                             </span>
                           </>
                         </TableCell>
-                      )}
-                      {viewUnitStatusA.includes('Next Sch') && (
+                        }
                         <TableCell
-                          component="th"
-                          id={labelId}
-                          scope="row"
-                          padding="none"
+                          align="left"
+                          style={{ maxWidth: '100px', maxHeight: '100px', textOverflow: 'ellipsis' }}
                         >
-                          <>
-                            {/* <span className="font-bodyLato">
-                          {prettyDate(row?.stsUpT || row.Date).toLocaleString()}
-                        </span> */}
-                            <span className="px- py-[1px]  min-w-[100px] inline-flex text-xs leading-5 tracking-wide  rounded-full  text-green-800">
-                              {Math.abs(
-                                getDifferenceInMinutes(row?.schTime, '')
-                              ) > 60
-                                ? Math.abs(
-                                    getDifferenceInMinutes(row?.schTime, '')
-                                  ) > 1440
-                                  ? `${Math.abs(
-                                      getDifferenceInDays(row?.schTime, '')
-                                    )} Days `
-                                  : `${Math.abs(
-                                      getDifferenceInHours(row?.schTime, '')
-                                    )} Hours `
-                                : `${Math.abs(
-                                    getDifferenceInMinutes(row?.schTime, '')
-                                  )} Min`}{' '}
-                              {getDifferenceInMinutes(row?.schTime, '') < 0
-                                ? 'ago'
-                                : 'Left'}
-                            </span>
-                          </>
+                          {' '}
+                          <span className="font-bodyLato" style={{ maxWidth: '100px', maxHeight: '100px', textOverflow: 'ellipsis' }}>{row.Remarks}</span>
                         </TableCell>
-                      )}
-                      <TableCell
-                        align="left"
-                        style={{
-                          maxWidth: '100px',
-                          maxHeight: '100px',
-                          textOverflow: 'ellipsis',
-                        }}
-                      >
-                        {' '}
-                        <span
-                          className="font-bodyLato"
-                          style={{
-                            maxWidth: '100px',
-                            maxHeight: '100px',
-                            textOverflow: 'ellipsis',
-                          }}
-                        >
-                          {row.Remarks}
-                        </span>
-                      </TableCell>
-                    </TableRow>
-                  )
-                })}
+                      </TableRow>
+                    )
+                  })}
               {emptyRows > 0 && (
                 <TableRow
                   style={{

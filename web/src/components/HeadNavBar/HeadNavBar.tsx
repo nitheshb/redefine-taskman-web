@@ -1,4 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
+import { useState, useEffect } from 'react'
+
 import { Diversity1 } from '@mui/icons-material'
 import { Box, Menu, MenuItem, Typography } from '@mui/material'
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux'
@@ -12,6 +14,8 @@ import { logout as logoutAction } from 'src/state/actions/user'
 import { getLeadsByPhoneNo } from 'src/context/dbQueryFirebase'
 import { searchValue, searchData as searchResponse } from 'src/state/actions/search'
 import Loader from 'src/components/Loader/Loader'
+import ModuleSwitchDrop from '../A_SideMenu/modulesSwitchDrop'
+
 const HeadNavBar = (props) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const [searchKey, setSearchKey] = React.useState<string>(props.searchVal?props.searchVal : '')
@@ -20,6 +24,14 @@ const HeadNavBar = (props) => {
   const [showSearchDropdown, setShowSearchDropdown] = React.useState<boolean>(false)
   const [showLoader, setshowLoader] = React.useState<boolean>(false)
   const [searchData, setSearchData] = React.useState([])
+
+const HeadNavBar = () => {
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+
+  const [filteredUnits, setFilteredUnits] = useState([])
+  const [filStatus, setFilStatus] = useState(['available', 'booked', 'blocked'])
+
+  const [selModule, setSelModule] = useState('Projects')
 
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -91,6 +103,12 @@ if (val.trim() && val.length>=10 ) {
   console.log(searchKey, "acdsvfj")
   // const searchingData = useSelector((state: RootStateOrAny) => state?.searchData)
   // console.log(searchingData, "sdvfdbvlkjzsbvlkjsb")
+  const makeFilterFun = (id, viewModule) => {
+    // 'Sales', 'CRM', 'Legal', 'Finance', 'HR'
+    setSelModule(viewModule)
+    console.log('i was clicked', id, viewModule)
+  }
+
   return (
     <div>
       <div className="flex items-center flex-shrink-0 h-[50px] px-2  pl-0 bg-white bg-opacity-75 ">
@@ -114,44 +132,20 @@ if (val.trim() && val.length>=10 ) {
               d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
             />
           </svg> */}
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="78"
-            height="24"
-            viewBox="0 0 1 28"
-            fill="none"
-            className="injected-svg"
-            data-src="/images/logo/cubejs-logo.svg"
-          >
-            <path
-              d="M22.1337 7.03243L11.8594 1V5.17391L22.1336 11.1804L22.1337 7.03243Z"
-              fill="#FF6492"
-            ></path>
-            <path
-              d="M22.1336 11.1823L19.0513 13.0019L11.8574 8.78565L7.74692 11.1857L4.66406 9.49917L11.8593 5.17578L22.1336 11.1823Z"
-              fill="#141446"
-            ></path>
-            <path
-              d="M7.74692 11.1826L4.66406 9.49609V12.9988L7.74692 11.1826Z"
-              fill="#A14474"
-            ></path>
-            <path
-              d="M1.58105 18.9676L11.8572 13L22.1334 18.9676L11.8572 25L1.58105 18.9676Z"
-              fill="#141446"
-            ></path>
-            <path
-              d="M22.1336 14.8259L11.8574 8.71875V12.9998L22.1336 18.9674L22.1336 14.8259Z"
-              fill="#FF6492"
-            ></path>
-            <path
-              d="M4.66391 13V9.4973L11.8592 5.17391V1L1.58105 7.03243V18.9676L11.8573 13V8.71892L4.66391 13Z"
-              fill="#7A77FF"
-            ></path>
-          </svg>
-          <span className="ml- text-md" style={{ marginLeft: '-11px' }}>
+
+          <span className="ml- text-md" style={{ marginLeft: '41px' }}>
             {' '}
             Redefine Erp .
           </span>
+          <section className="mt-1">
+            <ModuleSwitchDrop
+              type={selModule}
+              id={'Status'}
+              setStatusFun={makeFilterFun}
+              filteredUnits={filteredUnits}
+              pickedValue={selModule}
+            />
+          </section>
         </span>
 
         {/* <a
@@ -349,5 +343,5 @@ if (val.trim() && val.length>=10 ) {
     </div>
   )
 }
-
+}
 export default HeadNavBar

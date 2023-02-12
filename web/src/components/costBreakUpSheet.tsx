@@ -33,6 +33,7 @@ import {
   sendWhatAppTextSms,
 } from 'src/util/axiosWhatAppApi'
 import CostBreakUpPdf from 'src/util/costBreakUpPdf'
+import CostBreakUpPdfAll from 'src/util/costBreakUpPdf_all'
 import CostBreakUpPdfConstruct from 'src/util/costBreakUpPdf_construct'
 import { PhoneNoField } from 'src/util/formFields/phNoField'
 import { CustomSelect } from 'src/util/formFields/selectBoxField'
@@ -512,43 +513,60 @@ const CostBreakUpSheet = ({
                       COST SHEET
                     </p> */}
                     <div className=" border-gray-800 flex flex-row justify-between bg-[#F6F7FE]">
-                      <ul
-                        className="flex justify-  rounded-t-lg  ml-2"
-                        id="myTab"
-                        data-tabs-toggle="#myTabContent"
-                        role="tablist"
-                      >
-                        {[
-                          { lab: 'Plot CostSheet', val: 'plot_cs' },
-                          {
-                            lab: 'Construction CostSheet',
-                            val: 'construct_cs',
-                          },
-                        ].map((d, i) => {
-                          return (
-                            <li
-                              key={i}
-                              className="mr-2 font-bodyLato"
-                              role="presentation"
-                            >
-                              <button
-                                className={`inline-block py-3 mr-4 text-sm font-medium text-center rounded-t-lg border-b-2  hover:text-blue hover:border-gray-300   ${
-                                  csMode === d.val
-                                    ? 'border-[#1B97F2] border-b-3'
-                                    : 'border-transparent'
-                                }`}
-                                type="button"
-                                role="tab"
-                                onClick={() => setCsMode(d.val)}
+                      <div>
+                        <ul
+                          className="flex justify-  rounded-t-lg  ml-2"
+                          id="myTab"
+                          data-tabs-toggle="#myTabContent"
+                          role="tablist"
+                        >
+                          {[
+                            { lab: 'Both', val: 'both' },
+                            { lab: 'Plot', val: 'plot_cs' },
+                            {
+                              lab: 'Construction',
+                              val: 'construct_cs',
+                            },
+                          ].map((d, i) => {
+                            return (
+                              <li
+                                key={i}
+                                className="mr-2 font-bodyLato"
+                                role="presentation"
                               >
-                                {`${d.lab} `}
-                                {/* <span className="bg-gray-100 px-2 py-1 rounded-full">
-                          {/* {rowsCounter(leadsFetchedData, d.val).length} */}
-                              </button>
-                            </li>
-                          )
-                        })}
-                      </ul>
+                                <section className="bg-[#F6F7FE]">
+                                  <div className="w-full flex items-center ">
+                                    <label
+                                      htmlFor="area"
+                                      className="label font-regular text-sm font-bodyLato"
+                                    >
+                                      {d?.lab}
+                                    </label>
+                                    <Field
+                                      name="isGSTChecked"
+                                      type="checkbox"
+                                      component={() => (
+                                        <Checkbox
+                                          color="primary"
+                                          checked={csMode === d.val}
+                                          onClick={() => setCsMode(d.val)}
+                                          // checked={formik.values.isGSTChecked}
+                                          // onChange={() =>
+                                          //   formik.setFieldValue(
+                                          //     'isGSTChecked',
+                                          //     !formik.values.isGSTChecked
+                                          //   )
+                                          // }
+                                        />
+                                      )}
+                                    />
+                                  </div>
+                                </section>
+                              </li>
+                            )
+                          })}
+                        </ul>
+                      </div>
                       <section className="bg-[#F6F7FE]">
                         <div className="w-full flex items-center ">
                           <label
@@ -596,6 +614,29 @@ const CostBreakUpSheet = ({
                                 boxShadow: '0 1px 12px #f2f2f2',
                               }}
                             >
+                              {csMode === 'both' && (
+                                <CostBreakUpPdfAll
+                                  projectDetails={projectDetails}
+                                  csMode={csMode}
+                                  // costSheetA={costSheetA}
+                                  pdfExportComponent={
+                                    pdfExportComponentConstruct
+                                  }
+                                  selPhaseObj={selPhaseObj}
+                                  leadDetailsObj1={leadDetailsObj1}
+                                  selUnitDetails={selUnitDetails}
+                                  setNewConstructCsObj={setNewConstructCsObj}
+                                  newConstructCsObj={newConstructCsObj}
+                                  newConstructCostSheetA={
+                                    newConstructCostSheetA
+                                  }
+                                  setCostSheetA={setNewConstructCostSheetA}
+                                  costSheetA={newConstructCostSheetA}
+                                  setNewPS={setNewConstructPS}
+                                  setNewConstructPS={setNewConstructPS}
+                                  newConstructPS={newConstructPS}
+                                />
+                              )}
                               {csMode === 'plot_cs' && (
                                 <CostBreakUpPdf
                                   projectDetails={projectDetails}
@@ -613,7 +654,7 @@ const CostBreakUpSheet = ({
                                   newPlotPS={newPlotPS}
                                 />
                               )}
-                              {csMode != 'plot_cs' && (
+                              {csMode === 'construct_cs' && (
                                 <CostBreakUpPdfConstruct
                                   projectDetails={projectDetails}
                                   csMode={csMode}

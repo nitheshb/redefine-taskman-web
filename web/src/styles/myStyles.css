@@ -1,3 +1,5 @@
+
+
 .blockHead:after {
   color: #4D81BF;
   border-left: 20px solid;
@@ -157,7 +159,7 @@
 .css-17tn7gx {
   font-family: 'Montserrat', sans-serif;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.5;
   color: #94A4C4;
   display: block;
@@ -265,14 +267,17 @@
   color: #1d2438;
   -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  border-radius: 4px;
-  box-shadow: 0px 4px 23px rgb(0 0 0 / 12%);
+
+  /* box-shadow: 0px 4px 23px rgb(0 0 0 / 12%); */
   background-image: none;
   overflow: hidden;
   box-shadow: none;
-  border: 1px solid #E5EAF2;
-  border-radius: 8px;
+  /* border: 1px solid #E5EAF2; */
+  border-top-left-radius: 4px;
+  border-bottom-left-radius : 4px;
+
   padding: 1rem 1.5rem;
+  height: 145px;
 }
 .css-19otv5r {
   width: 27px;
@@ -291,6 +296,7 @@
   -webkit-justify-content: center;
   justify-content: center;
   background-color: rgba(36, 153, 239, 0.3);
+  background-color: #e6dff9;
 }
 
 .css-16rhdfd {

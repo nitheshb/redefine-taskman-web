@@ -25,6 +25,7 @@ import { MetaTags } from '@redwoodjs/web'
 
 import CrmHome from 'src/components/A_CRMcomp/CrmHome'
 import CrmTaskList from 'src/components/A_CRMcomp/CrmTaskList'
+import SlimSideMenuBar from 'src/components/A_SideMenu/slimSideMenu'
 import AllBankDetailsView from 'src/components/All_BankDetailsView'
 import ConstructUnitsHome from 'src/components/ConstructModule/ConstructUnitsHome'
 import CrmDashboardHome from 'src/components/CrmModule/CrmDashboard'
@@ -58,6 +59,7 @@ const CrmHomePage = () => {
   const handleEditProjectClose = () => setIsEditProjectOpen(false)
   const [projects, setProjects] = useState([])
   const [viewable, setViewable] = useState('Home')
+  const [selModule, setSelModule] = useState('CRM')
 
   const getProjects = async () => {
     const unsubscribe = getAllProjects(
@@ -374,16 +376,26 @@ const CrmHomePage = () => {
         <div className="flex flex-col flex-grow">
           {/* <HeadNavBar /> */}
           <div className="flex flex-row overflow-auto  text-gray-700 bg-gradient-to-tr from-blue-200 via-indigo-200 to-pink-200">
-            <HeadSideBar pgName={'crmModule'} />
-            <HeadSideBarDetailView2
+            <SlimSideMenuBar
               pgName={'crmModule'}
               sourceLink={'crmModule'}
               showSideView1={undefined}
               setViewable={setViewable}
               viewable={viewable}
             />
+            {/* <HeadSideBar pgName={'crmModule'} />
+            <HeadSideBarDetailView2
+              pgName={'crmModule'}
+              sourceLink={'crmModule'}
+              showSideView1={undefined}
+              setViewable={setViewable}
+              viewable={viewable}
+            /> */}
             <div className="flex-grow  items-center overflow-y-auto  h-[98%]  px-300  py-300">
-              <HeadNavBar2 />
+            <HeadNavBar2
+              selModule ={selModule}
+              setSelModule={setSelModule}
+            />
               <div className="px-1">
                 {viewable === 'crmDashboard' && (
                   <CrmDashboardHome

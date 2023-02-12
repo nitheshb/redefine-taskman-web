@@ -54,7 +54,7 @@ const CostSheetSetup = ({ phase, source }) => {
       <AdditionalChargesForm
         blocksViewFeature={blocksViewFeature}
         title={''}
-        data={{ phase: phase }}
+        data={phase}
         source={source}
       />
     </div>

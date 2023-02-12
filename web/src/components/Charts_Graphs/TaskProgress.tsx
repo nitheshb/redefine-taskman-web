@@ -24,17 +24,8 @@ const TaskProgress = ({ userTodayPerfA }) => {
             {userTodayPerfA?.new_comp || 0}/{userTodayPerfA?.new}
           </span>
         </div>
-        <LinearProgress
-          variant="determinate"
-          value={userTodayPerfA?.new_comp || 0 / userTodayPerfA?.new || 0}
-          color="inherit"
-          style={{
-            backgroundColor: '#E5EAF2',
-            borderRadius: '3px',
-            height: '4px',
-            color: '#FD396D',
-          }}
-        />
+
+      
       </Box>
       <Box mt={3}>
         <div className="flex flex-row align-middle justify-between">

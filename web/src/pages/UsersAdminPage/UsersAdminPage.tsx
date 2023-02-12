@@ -8,12 +8,15 @@ import UserManageTable from 'src/components/UserManageTable/UserManageTable'
 import UserAccessTable from 'src/components/UserAccessTable/UserAccessTable'
 import HeadSideBarDetailView from 'src/components/HeadDetailSideBar'
 import MyActivityHome from 'src/components/MyActivityHome/MyActivityHome'
+import SlimSideMenuBar from 'src/components/A_SideMenu/slimSideMenu'
+import HeadNavBar2 from 'src/components/HeadNavBar/HeadNavBar2'
 
 const UsersAdminPage = () => {
   const [isOpen, setIsOpen] = useState(false)
   const handleOnClose = () => setIsOpen(false)
   const [viewable, setViewable] = useState('User Management')
   const [empData, setEmpData] = useState({})
+  const [selModule, setSelModule] = useState('HR')
 
   const editEmployeeFun = (empData) => {
     setEmpData(empData)
@@ -24,19 +27,26 @@ const UsersAdminPage = () => {
       <MetaTags title="UsersAdmin" description="UsersAdmin page" />
 
       <div className="flex w-screen h-screen text-gray-700">
-        <HeadSideBar pgName={'usersAdmin'} />
-        <HeadSideBarDetailView
-          pgName={'UsersManagement'}
-          sourceLink={'hrModule'}
-          showSideView1={undefined}
-          setViewable={setViewable}
-        />
+
+
+        <SlimSideMenuBar
+              pgName={'hrModule'}
+              sourceLink={'hrModule'}
+              showSideView1={undefined}
+              setViewable={setViewable}
+              viewable={viewable}
+            />
+
         <div className="flex flex-col flex-grow">
-          <HeadNavBar />
+          {/* <HeadNavBar /> */}
+          <HeadNavBar2
+              selModule ={selModule}
+              setSelModule={setSelModule}
+            />
           <div className="flex-grow p-6 overflow-auto  text-gray-700 bg-gradient-to-tr from-blue-200 via-indigo-200 to-pink-200">
             <div className="flex items-center flex-shrink-0 h-16 px-0  pl-0  ">
               {/* <h1 className="text-lg font-medium">redefine.</h1> */}
-              <span className="relative z-10 flex items-center w-auto text-2xl font-bold leading-none pl-0">
+              <span className="relative  flex items-center w-auto text-2xl font-bold leading-none pl-0">
                 {viewable}
               </span>
 
