@@ -139,7 +139,6 @@ const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
           user.label = user.displayName || user.name
           user.value = user.uid
         })
-        console.log('fetched users list is', usersListA)
 
         setusersList(usersListA)
       },
@@ -189,7 +188,6 @@ const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
           user.label = user.projectName
           user.value = user.projectName
         })
-        console.log('fetched myProjects list is', projectsListA)
         if (user?.role?.includes(USER_ROLES.ADMIN)) {
           setprojectList(projectsListA)
         } else {
@@ -208,24 +206,16 @@ const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
   }, [])
   const [getStatus, setGetStatus] = useState([])
   useEffect(() => {
-    console.log('my Array data is delayer ', selLeadsOf)
     filter_Leads_Projects_Users_Fun()
   }, [selProjectIs, startDate, endDate])
 
   useEffect(() => {
-    console.log(
-      'my Array data is delayer ',
-      selLeadsOf,
-      leadsFetchedRawData,
-      new Date()
-    )
     filter_Leads_Projects_Users_Fun()
   }, [leadsFetchedRawData])
 
   const getAdminAllLeads = async () => {
     const { orgId } = user
     if (user?.role?.includes(USER_ROLES.ADMIN)) {
-      console.log('loading check 1')
       const unsubscribe = getLeadsByAdminStatus(
         orgId,
         async (querySnapshot) => {
@@ -258,7 +248,6 @@ const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
           // })
           await setLeadsFetchedRawData(usersListA)
           await serealizeData(usersListA)
-          console.timeEnd('query Fetch Time')
         },
         {
           status:
@@ -337,7 +326,6 @@ const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
           return x
         })
         // setBoardData
-        console.log('my Array data is delayer 1 ', usersListA.length)
         await setLeadsFetchedRawData(usersListA)
         await serealizeData(usersListA)
         // filter_Leads_Projects_Users_Fun()
@@ -374,7 +362,6 @@ const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
   const getCpTeamLeads = async () => {
     const { orgId } = user
     if (user?.role?.includes(USER_ROLES.ADMIN)) {
-      console.log('loading check 1')
       const unsubscribe = getCpLeadsByAdminStatus(
         orgId,
         async (querySnapshot) => {
@@ -474,160 +461,7 @@ const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
     }
   }
 
-  const getLeadsDataFun = async () => {
-    console.log('login role detials', user)
-    const { access, uid, orgId } = user
-    if (user?.role?.includes(USER_ROLES.ADMIN)) {
-      console.log('loading check 1')
-      const unsubscribe = getLeadsByAdminStatus(
-        orgId,
-        async (querySnapshot) => {
-          const usersListA = querySnapshot.docs.map((docSnapshot) => {
-            const x = docSnapshot.data()
-            x.id = docSnapshot.id
-            return x
-          })
-          // const usersListA = []
-          // querySnapshot.forEach((doc) => {
-          //   usersListA.push(doc.data())
-          // })
-          // setBoardData
-          console.log('loading check 2', projAccessA, usersListA.length)
-          usersListA.map((data) => {
-            const y = data
-            delete y.Note
-            delete y.AssignedTo
-            delete y.AssignTo
-            delete y.AssignedBy
-            delete y['Country Code']
-            delete y.assignT
-            delete y.CT
-            delete y.visitDoneNotes
-            delete y.VisitDoneNotes
-            delete y.VisitDoneReason
-            delete y.EmpId
-            delete y.CountryCode
-            delete y.from
-            delete y['Followup date']
-            delete y.mode
-            delete y.notInterestedNotes
-            delete y.notInterestedReason
-            y.coveredA = { a: data.coveredA }
-            addLeadSupabase(data)
-          })
-          await setLeadsFetchedRawData(usersListA)
-          await serealizeData(usersListA)
-          // filter_Leads_Projects_Users_Fun()
-          // await setLeadsFetchedData(usersListA)
-        },
-        {
-          status:
-            leadsTyper === 'inProgress'
-              ? [
-                  'new',
-                  'followup',
-                  'unassigned',
-                  'visitfixed',
-                  '',
-                  'visitdone',
-                  'visitcancel',
-                  'negotiation',
-                  // 'reassign',
-                  // 'RNR',
-                ]
-              : leadsTyper === 'booked'
-              ? ['booked']
-              : archieveFields,
-          projAccessA: projAccessA,
-        },
-        (error) => setLeadsFetchedData([])
-      )
-      return unsubscribe
-    } else if (access?.includes('manage_leads')) {
-      const unsubscribe = await getLeadsByStatus(
-        orgId,
-        async (querySnapshot) => {
-          const usersListA = querySnapshot.docs.map((docSnapshot) => {
-            const x = docSnapshot.data()
-            x.id = docSnapshot.id
-            return x
-          })
-          // setBoardData
-          // await setLeadsFetchedRawData(usersListA)
-          // await serealizeData(usersListA)
-          await getUnassignedLeads(usersListA)
-          // filter_Leads_Projects_Users_Fun()
-          // await setLeadsFetchedData(usersListA)
-        },
-        {
-          status:
-            leadsTyper === 'inProgress'
-              ? [
-                  'new',
-                  'followup',
-                  'unassigned',
-                  'visitfixed',
-                  '',
-                  'visitdone',
-                  'visitcancel',
-                  'negotiation',
-                  'reassign',
-                  'RNR',
-                  // 'booked',
-                ]
-              : leadsTyper === 'booked'
-              ? ['booked']
-              : archieveFields,
-          projAccessA: projAccessA,
-          isCp: user?.role?.includes(USER_ROLES.CP_AGENT),
-        },
-        (error) => setLeadsFetchedData([])
-      )
-    } else {
-      const unsubscribe = getLeadsByStatusUser(
-        orgId,
-        async (querySnapshot) => {
-          const usersListA = querySnapshot.docs.map((docSnapshot) => {
-            const x = docSnapshot.data()
-            x.id = docSnapshot.id
-            return x
-          })
-          // setBoardData
-          console.log('my Array data is delayer 1 ', usersListA.length)
-          await setLeadsFetchedRawData(usersListA)
-          await serealizeData(usersListA)
-          // filter_Leads_Projects_Users_Fun()
-
-          //  await setLeadsFetchedData(usersListA)
-        },
-        {
-          isCp: user?.role?.includes(USER_ROLES.CP_AGENT),
-          uid: uid,
-          status:
-            leadsTyper === 'inProgress'
-              ? [
-                  'new',
-                  'followup',
-                  'unassigned',
-                  'visitfixed',
-                  'visitcancel',
-                  '',
-                  'visitdone',
-                  'negotiation',
-                  'reassign',
-                  'RNR',
-                  // 'booked',
-                ]
-              : leadsTyper === 'booked'
-              ? ['booked']
-              : archieveFields,
-        },
-        (error) => setLeadsFetchedData([])
-      )
-      return unsubscribe
-    }
-  }
-
+ 
   const getUnassignedLeads = (otherData) => {
     const unsubscribe1 = getLeadsByUnassigned(
       orgId,

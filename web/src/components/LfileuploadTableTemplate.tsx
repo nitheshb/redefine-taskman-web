@@ -33,6 +33,7 @@ import {
   addLead,
   addUnit,
   getLedsData1,
+  getProjById1,
   getProjectByUid,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
@@ -314,6 +315,15 @@ const EnhancedTableToolbar = (props) => {
   const addUnitsToDB = async (records, pId) => {
     setUnitUploadMessage(false)
     // upload successfully
+
+    // get additionalCharges obj
+    //   additonalChargesObj,
+    // ConstructOtherChargesObj,
+    const projPayload = await getProjById1(orgId, pId)
+    // phase details of zero
+    console.log('proj details is', projPayload)
+    const { ConstructOtherChargesObj, additonalChargesObj } = projPayload[0]
+    return
     const mappedArry = await Promise.all(
       records.map(async (data, index) => {
         const newData = data

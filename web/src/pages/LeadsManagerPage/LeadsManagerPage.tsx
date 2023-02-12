@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
+import SlimSideMenuBar from 'src/components/A_SideMenu/slimSideMenu'
 
 import ExecutiveHomeViewerPage from 'src/components/ExecutiveHomeViewerPage'
 import HeadSideBarDetailView from 'src/components/HeadDetailSideBar'
+import HeadNavBar2 from 'src/components/HeadNavBar/HeadNavBar2'
 import HeadSideBar from 'src/components/HeadSideBar/HeadSideBar'
 import LeadsManagementHome from 'src/components/LeadsManagement'
 import LeadsTeamReportBody from 'src/components/LeadsTeamReportBody'
@@ -24,6 +26,8 @@ const LeadsManagerPage = () => {
   const [showSideBar, setShowSideBar] = useState(false)
   const [showDetailedSideBar, setDetailedShowSideBar] = useState(false)
   const [viewable, setViewable] = useState('Today1')
+  const [selModule, setSelModule] = useState('Sales')
+
   //confetti
 
   //confetti
@@ -54,9 +58,9 @@ const LeadsManagerPage = () => {
         /> */}
 
         <div className="flex flex-col flex-grow">
-          <HeadNavBar />
+          {/* <HeadNavBar /> */}
           {}
-          <div className="flex flex-row overflow-auto h-[100vh]  text-gray-700 bg-gradient-to-tr from-blue-200 via-indigo-200 to-pink-200">
+          <div className="flex flex-row  h-[100vh]  text-gray-700 bg-gradient-to-tr from-blue-200 via-indigo-200 to-pink-200">
             <div
               className={`${
                 showDetailedSideBar
@@ -64,24 +68,23 @@ const LeadsManagerPage = () => {
                   : 'flex flex-row overflow-auto   text-gray-700 '
               }`}
             >
-              <HeadSideBar pgName={'leadsManager'} />
-              <div className="flex items-start flex-row">
-                <div>
-                  <div>
-                    <HeadSideBarDetailView
-                      pgName={'leadsManager'}
-                      sourceLink={'leadsScreen'}
-                      showSideBar={showSideBar}
-                      showSideView1={showSideView1}
-                      setViewable={setViewable}
-                      viewable={viewable}
-                    />
-                  </div>
-                </div>
-              </div>
+
+              <SlimSideMenuBar
+              pgName={'salesModule'}
+              sourceLink={'salesModule'}
+              showSideView1={undefined}
+              setViewable={setViewable}
+              viewable={viewable}
+            />
+
             </div>
 
             <div className="flex-grow  items-center overflow-y-auto  px-300  py-300">
+            <HeadNavBar2
+              selModule ={selModule}
+              setSelModule={setSelModule}
+            />
+
               {viewable === 'inProgress' && (
                 <ExecutiveHomeViewerPage leadsTyper={'inProgress'} />
               )}

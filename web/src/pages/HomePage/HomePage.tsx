@@ -9,6 +9,7 @@ import { usePageLoadingContext } from '@redwoodjs/router'
 import { Link, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
 
+import SlimSideMenuBar from 'src/components/A_SideMenu/slimSideMenu'
 import AllBankDetailsView from 'src/components/All_BankDetailsView'
 import HeadSideBarDetailView from 'src/components/HeadDetailSideBar'
 import HeadSideBarDetailView2 from 'src/components/HeadDetailSideBar2'
@@ -22,6 +23,7 @@ import HeadNavBar from '../../components/HeadNavBar/HeadNavBar'
 import HeadSideBar from '../../components/HeadSideBar/HeadSideBar'
 import ProjectsMHomeBody from '../../components/ProjectsMHomeBody/ProjectsMHomeBody'
 import SiderForm from '../../components/SiderForm/SiderForm'
+import MarkeingMessagesList from 'src/components/A_ProjModule/MarketingMessagesList'
 
 const HomePage = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -35,6 +37,8 @@ const HomePage = () => {
   const [projects, setProjects] = useState([])
   const [viewable, setViewable] = useState('Home')
   const { loading } = usePageLoadingContext()
+  const [selModule, setSelModule] = useState('Projects')
+
   const getProjects = async () => {
     const unsubscribe = getAllProjects(
       orgId,
@@ -353,24 +357,46 @@ const HomePage = () => {
       {loading && <div>Loading...</div>}
       <div className="flex w-screen h-screen text-gray-700">
         <div className="flex flex-col flex-grow">
-          <HeadNavBar />
+          {/* <HeadNavBar /> */}
           <div className="flex overflow-y-hidden flex-row overflow-auto h-[100vh]  text-gray-700 bg-gradient-to-tr from-blue-200 via-indigo-200 to-pink-200">
-            <HeadSideBar pgName={'home'} />
-
-            <div className="flex items-start flex-row">
-              {' '}
-              <div>
-                <HeadSideBarDetailView
-                  pgName={'leadsManager'}
-                  sourceLink={'projectsScreen'}
-                  showSideView1={undefined}
-                  setViewable={setViewable}
-                  viewable={viewable}
-                />
-              </div>
-            </div>
+            {/* <HeadSideBar pgName={'home'} /> */}
+            <SlimSideMenuBar
+              pgName={'projectModule'}
+              sourceLink={'projectModule'}
+              showSideView1={undefined}
+              setViewable={setViewable}
+              viewable={viewable}
+            />
 
             <div className="flex-grow   items-center overflow-y-auto no-scrollbar  h-[98%]  px-300  pt-300">
+            <HeadNavBar2
+              selModule ={selModule}
+              setSelModule={setSelModule}
+            />
+            {(viewable === 'Marketing' &&
+(
+  <>
+                  <div className="">
+                    <div className="flex items-center justify-between py-2  ">
+                      <span className="relative z-10 flex items-center w-auto text-2xl font-bold leading-none pl-0">
+                        {viewable}
+                      </span>
+                      <button className="flex items-center justify-center h-10 px-4  bg-transparent ml-auto text-sm font-medium rounded hover:bg-transparent"></button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <section className="w-full py-4  leading-7 text-gray-900 bg-white sm:py-12 md:py-16 lg:py-18 rounded-lg">
+                      <div className="box-border px-4 mx-auto border-solid sm:px-6 md:px-6 lg:px-8 max-w-full ">
+                        <div className="flex flex-col  leading-7  text-gray-900 border-0 border-gray-200 ">
+                          <MarkeingMessagesList title={'WhatsApp Message Templates'} />
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </>
+)
+            )}
               {(viewable === 'Bank Accounts' ||
                 viewable === 'Virtual Accounts') && (
                 <>
@@ -435,16 +461,20 @@ const HomePage = () => {
                               viewable != 'Virtual Accounts' &&
                               viewable != 'unitsInventory' && (
                                 <>
-                                  <div className="">
-                                    <div className="flex items-center justify-between py-2 pb-4 ">
-                                      <span className="relative z-10 flex items-center w-auto text-xl font-bold leading-none pl-0 font-Playfair">
+
+
+                                  {projects.length > 0 ? (
+                                    <section className="bg-white py-2 rounded-sm">
+                                       <div className="px-4">
+                                    <div className="flex items-center justify-between py-2 pb-4  ">
+                                      <span className="relative  flex items-center w-auto text-md font-bold leading-none pl-0 font-Playfair">
                                         Projects {viewable}
                                       </span>
                                       <button
                                         onClick={() =>
                                           setIsNewProjectOpen(true)
                                         }
-                                        className="flex items-center justify-center h-10 px-4  bg-gray-200 ml-auto text-sm font-medium rounded hover:bg-gray-300"
+                                        className="flex items-center justify-center h-8 px-4  bg-gray-200 ml-auto text-sm font-medium rounded hover:bg-gray-300"
                                       >
                                         <svg
                                           className="w-5 h-5"
@@ -466,19 +496,18 @@ const HomePage = () => {
                                       </button>
                                     </div>
                                   </div>
-
-                                  {projects.length > 0 ? (
-                                    projects.map((project) => (
-                                      <ProjectsMHomeBody
-                                        key={project.uid}
-                                        project={project}
-                                        onSliderOpen={() => {
-                                          setProject(project)
-                                          setIsEditProjectOpen(true)
-                                        }}
-                                        isEdit={false}
-                                      />
-                                    ))
+                                      {projects.map((project) => (
+                                        <ProjectsMHomeBody
+                                          key={project.uid}
+                                          project={project}
+                                          onSliderOpen={() => {
+                                            setProject(project)
+                                            setIsEditProjectOpen(true)
+                                          }}
+                                          isEdit={false}
+                                        />
+                                      ))}
+                                    </section>
                                   ) : (
                                     <DummyBodyLayout />
                                   )}

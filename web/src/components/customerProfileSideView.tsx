@@ -353,16 +353,11 @@ export default function CustomerProfileSideView({
   const [closePrevious, setClosePrevious] = useState(false)
 
   useEffect(() => {
-    console.log('customer detail sare', customerDetails)
-  }, [customerDetails])
-
-  useEffect(() => {
     //   get lead data by id
     streamLeadDataFun()
   }, [])
 
   useEffect(() => {
-    console.log('object is ', addTaskCommentObj)
     const { schTime } = addTaskCommentObj
     if (schTime) {
       setStartDate(schTime)
@@ -382,7 +377,6 @@ export default function CustomerProfileSideView({
       orgId,
       (querySnapshot) => {
         const SnapData = querySnapshot.data()
-        console.log('new customer object 1', SnapData)
         SnapData.id = id
         setLeadDetailsObj(SnapData)
       },
@@ -416,7 +410,6 @@ export default function CustomerProfileSideView({
           user.label = user.displayName || user.name
           user.value = user.uid
         })
-        console.log('fetched users list is', usersListA)
         setusersList(usersListA)
       },
       (error) => setfetchedUsersList([])
@@ -438,12 +431,6 @@ export default function CustomerProfileSideView({
   }, [leadSchFetchedData, selFilterVal])
 
   useEffect(() => {
-    console.log(
-      'assinger to yo yo',
-      customerDetails,
-
-      customerDetails?.assignedToObj?.label
-    )
     setAssignedTo(customerDetails?.assignedTo)
     setAssignerName(customerDetails?.assignedToObj?.label)
     setSelProjectIs({ projectName: Project, uid: ProjectId })
@@ -452,7 +439,6 @@ export default function CustomerProfileSideView({
     )
 
     // setLeadStatus(Status)
-    console.log('this is the macho ', customerDetails)
   }, [customerDetails])
   // adopt this
   useEffect(() => {
@@ -496,20 +482,13 @@ export default function CustomerProfileSideView({
     //   )
     // }
     else {
-      leadsActivityFetchedData?.map((data) => {
-        console.log('value of filtered feature count before', data)
-      })
       let x = []
       if (selFeature != 'timeline') {
         x = leadsActivityFetchedData?.filter((data) => data.type === fet)
       } else {
         x = leadsActivityFetchedData
       }
-      console.log(
-        'value of filtered feature count is wow it ',
-        leadsActivityFetchedData,
-        x?.length
-      )
+
       setFilterData(x)
     }
   }, [leadsActivityFetchedData, selFeature])
@@ -531,7 +510,6 @@ export default function CustomerProfileSideView({
         const projects = querySnapshot.docs.map((docSnapshot) =>
           docSnapshot.data()
         )
-        console.log('user docs list fetched are', projects)
         setDocsList(projects)
       },
       () => setDocsList([])
@@ -551,7 +529,6 @@ export default function CustomerProfileSideView({
           user.label = user.projectName
           user.value = user.projectName
         })
-        console.log('fetched proejcts list is', projectsListA)
         setprojectList(projectsListA)
       },
       (error) => setfetchedUsersList([])
@@ -588,8 +565,6 @@ export default function CustomerProfileSideView({
     }
   }
   const setNewProject = (leadDocId, value) => {
-    console.log('sel pROJECT DETAILS ', value)
-
     // setProjectName(value.projectName)
     // setProjectId(value.uid)
     // save assigner Details in db
@@ -613,7 +588,6 @@ export default function CustomerProfileSideView({
     // setFeature('appointments')
   }
   const setShowVisitFeedBackStatusFun = (scheduleData, value) => {
-    console.log('show visit done feeback')
     setSelSchGrpO(scheduleData)
     cancelResetStatusFun()
     setLeadStatus('visitdone')
@@ -625,9 +599,7 @@ export default function CustomerProfileSideView({
     cancelResetStatusFun()
     setLoader(true)
     setClosePrevious(true)
-    console.log('is this triggered yo yo', newStatus)
     if (newStatus == 'visitdone') {
-      console.log('is this triggered yo yo 1', newStatus)
       enqueueSnackbar(`Mark VISIT-DONE  from VISIT-FIXED Task`, {
         variant: 'error',
       })
@@ -635,7 +607,6 @@ export default function CustomerProfileSideView({
       return
     }
 
-    console.log('is this triggered yo yo 2', newStatus)
     setLeadStatus(newStatus)
 
     const arr = ['visitdone', 'visitcancel']
@@ -645,7 +616,6 @@ export default function CustomerProfileSideView({
       setFeature('visitCancelNotes')
     } else if (newStatus === 'notinterested') {
       setShowNotInterestedFun({}, '')
-      console.log('is this triggered yo yo 2 checking it', newStatus)
     } else if (newStatus === 'junk') {
       setLoader(false)
       setShowJunk(true)
@@ -680,7 +650,6 @@ export default function CustomerProfileSideView({
     window.location.href = url
   }
   const getLeadsDataFun = async () => {
-    console.log('ami triggered')
     const steamLeadLogs = await steamLeadActivityLog(
       orgId,
       'snap',
@@ -690,20 +659,17 @@ export default function CustomerProfileSideView({
       (error) => setLeadsFetchedActivityData([])
     )
 
-    console.log('stream logs', steamLeadLogs)
     await setLeadsFetchedActivityData(steamLeadLogs)
 
     const unsubscribe = steamLeadActivityLog(
       orgId,
       (doc) => {
-        console.log('my total fetched list is yo yo ', doc.data())
         const usersList = doc.data()
         const usersListA = []
 
         Object.entries(usersList).forEach((entry) => {
           const [key, value] = entry
           usersListA.push(value)
-          console.log('my total fetched list is 3', `${key}: ${value}`)
         })
         // for (const key in usersList) {
         //   if (usersList.hasOwnProperty(key)) {
@@ -712,7 +678,6 @@ export default function CustomerProfileSideView({
         //   }
         // }
 
-        console.log('my total fetched list is', usersListA.length)
         setLeadsFetchedActivityData(usersListA)
       },
       {
@@ -725,14 +690,12 @@ export default function CustomerProfileSideView({
     steamLeadScheduleLog(
       orgId,
       (doc) => {
-        console.log('my total fetched list is 1', doc.data())
         setLeadsSchLoading(true)
         const usersList = doc.data()
         const usersListA = []
 
         const sMapStsA = []
         const { staA, staDA } = usersList
-        console.log('this is what we found', staA)
         setschStsA(staA)
         setschStsMA(staDA)
         // delete usersList['staA']
@@ -760,8 +723,6 @@ export default function CustomerProfileSideView({
         //   }
         // }
 
-        console.log('my total fetched list is', usersListA.length, usersListA)
-
         setLeadsFetchedSchData(
           usersListA.sort((a, b) => {
             return b.schTime - a.schTime
@@ -782,16 +743,13 @@ export default function CustomerProfileSideView({
     const unsubscribe = steamLeadNotes(
       orgId,
       (doc) => {
-        console.log('my total fetched list is yo yo ', doc.data())
         const usersList = doc.data()
         const usersListA = []
 
         Object?.entries(usersList)?.forEach((entry) => {
           const [key, value] = entry
           usersListA.push(value)
-          console.log('my total fetched list is 3', `${key}: ${value}`)
         })
-        console.log('my total notes list is ', usersListA)
         usersListA?.sort((a, b) => {
           return b.ct - a.ct
         })
@@ -805,21 +763,6 @@ export default function CustomerProfileSideView({
     return unsubscribe
   }
   const fAddSchedule = async () => {
-    console.log(
-      'what is this status setup  ',
-      closePrevious,
-      tempLeadStatus,
-      streamCurrentStatus
-    )
-
-    console.log(
-      'start time is ',
-      startDate,
-      'takti',
-      takTitle,
-      'nx',
-      addCommentTitle
-    )
     const y = takTitle === '' ? addCommentTitle : takTitle
     if (closePrevious) {
       closeAllPerviousTasks(`${y}`)
@@ -848,7 +791,7 @@ export default function CustomerProfileSideView({
     setschStsA(x)
     // addSchedulerLog(orgId,id, data)
     //  get assignedTo Led
-    console.log('new one ', schStsA)
+
     await addLeadScheduler(orgId, id, data, schStsA, assignedTo)
 
     // for booked status this startDate might not exists
@@ -877,7 +820,6 @@ export default function CustomerProfileSideView({
         user?.email,
         enqueueSnackbar
       )
-      console.log('tempLeadStatus', streamCurrentStatus, tempLeadStatus)
       if (tempLeadStatus === 'visitfixed') {
         sendWhatAppTextSms1(
           '7760959579',
@@ -936,7 +878,6 @@ export default function CustomerProfileSideView({
       const tmId = data.ct
       const newTm = Timestamp.now().toMillis() + 10800000 + 5 * 3600000
 
-      console.log('new one ', schStsA)
       await updateSch(
         orgId,
         id,
@@ -956,11 +897,9 @@ export default function CustomerProfileSideView({
   }
 
   const setTitleFun = (e) => {
-    console.log('title value is', e.target.value)
     setTakTitle(e.target.value)
   }
   const doneFun = (data) => {
-    console.log('clicked schedule is', data)
     const inx = schStsMA.indexOf(data.ct)
     const x = schStsA
     x[inx] = 'completed'
@@ -969,14 +908,7 @@ export default function CustomerProfileSideView({
     updateSchLog(orgId, id, data.ct, 'completed', schStsA)
   }
   const EditTaskOpenWindowFun = (data) => {
-    console.log(
-      'clicked schedule is',
-      data,
-      startDate,
-      'max',
-      data?.schTime,
-      setHours(setMinutes(data?.schTime, 30), 16)
-    )
+
     cancelResetStatusFun()
     setEditTaskObj(data)
     setTakTitle(data?.notes || '')
@@ -990,7 +922,6 @@ export default function CustomerProfileSideView({
     // updateSchLog(orgId, id, data.ct, 'completed', schStsA)
   }
   const editTaskFun = (data) => {
-    console.log('clicked schedule is', data, startDate, addCommentTime)
 
     const inx = schStsMA.indexOf(data.ct)
     data.schTime = startDate
@@ -1004,7 +935,6 @@ export default function CustomerProfileSideView({
   }
   const addTaskCommentFun = async (data) => {
     await setTakTitle(addCommentTitle)
-    console.log('clicked schedule is', data, addCommentPlusTask, takTitle)
     const inx = schStsMA.indexOf(data.ct)
     data.comments = [
       {
@@ -1040,7 +970,6 @@ export default function CustomerProfileSideView({
         Timestamp.now().toMillis(),
         addCommentTime
       )
-      console.log('am i coming here', postPoneToFuture)
       if (postPoneToFuture === 'present2Future') {
         await decreCountOnResheduleOtherDay(
           orgId,
@@ -1101,7 +1030,6 @@ export default function CustomerProfileSideView({
       (d) => d?.schTime != undefined && d?.sts === 'pending'
     )
     // const inx = schStsMA.indexOf(data.ct)
-    console.log('come is pending tasks ', pendingTaskAObj)
     pendingTaskAObj?.map(async (pendObj) => {
       //1)add comment on task
 
@@ -1126,15 +1054,7 @@ export default function CustomerProfileSideView({
       )
       //2) mark the tasks as done
       await doneFun(pendObj)
-      console.log(
-        'am inside schedule close',
-        pendObj?.schTime < torrowDate,
-        pendObj,
-        torrowDate,
-        pendObj
-      )
       if (pendObj?.schTime < torrowDate) {
-        console.log('am inside schedule close')
         await IncrementTastCompletedCount(
           orgId,
           user?.uid,
@@ -1193,7 +1113,6 @@ export default function CustomerProfileSideView({
     setschStsA(x)
   }
   const undoFun = (data) => {
-    console.log('clicked schedule is', data)
     const inx = schStsMA.indexOf(data.ct)
     const x = schStsA
     x[inx] = 'pending'
@@ -1202,7 +1121,6 @@ export default function CustomerProfileSideView({
     undoSchLog(orgId, id, data.ct, 'pending', schStsA, data)
   }
   const delFun = (data) => {
-    console.log('clicked schedule is', data)
     const inx = schStsMA.indexOf(data.ct)
     const x = schStsA
     const y = schStsMA
@@ -1215,7 +1133,6 @@ export default function CustomerProfileSideView({
   }
 
   const selFun = () => {
-    console.log('i was selcted')
     setAddNote(true)
   }
 
@@ -1240,12 +1157,6 @@ export default function CustomerProfileSideView({
 
   const fAddNotes = async () => {
     //  make it as notInterested if source is from NotInterestedd Page
-    console.log(
-      'start time is temp ',
-      startDate,
-      tempLeadStatus,
-      tempLeadStatus === 'notinterested'
-    )
     const data = {
       by: user.email,
       type: 'notes',
@@ -1255,7 +1166,6 @@ export default function CustomerProfileSideView({
 
     await addLeadNotes(orgId, id, data)
     if (tempLeadStatus === 'notinterested') {
-      console.log('am i here', takTitle, takNotes)
       const dat = {
         from: streamCurrentStatus,
         Status: tempLeadStatus,
@@ -1274,7 +1184,6 @@ export default function CustomerProfileSideView({
       setLeadStatus('notinterested')
       cancelResetStatusFun()
     } else if (tempLeadStatus === 'junk') {
-      console.log('am i here', takTitle, takNotes)
       const dat = {
         from: streamCurrentStatus,
         Status: tempLeadStatus,
@@ -1291,7 +1200,6 @@ export default function CustomerProfileSideView({
       setLeadStatus('junk')
       cancelResetStatusFun()
     } else if (tempLeadStatus === 'visitdone') {
-      console.log('am i here', takTitle, takNotes)
 
       const covA = [
         ...(customerDetails?.coveredA || []),
@@ -1320,7 +1228,6 @@ export default function CustomerProfileSideView({
 
   const docUploadHandler = async (e) => {
     e.preventDefault()
-    console.log('filer upload stuff', e.target[0].files[0])
     uploadStuff(e.target[0].files[0])
   }
 

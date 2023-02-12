@@ -208,6 +208,7 @@ export const sourceListItems = [
     rep: ['NewsPaper', 'newspaper', 'News Paper', 'news paper'],
   },
   { label: 'REPP', value: 'repp', rep: ['REPP', 'repp'] },
+  { label: 'Roofandfloor', value: 'roofandfloor', rep: ['RoofandFloor', 'roofandfloor', 'Roofandfloor'] },
   { label: 'SMS', value: 'sms', rep: ['sms', 'Sms', 'SMS'] },
   { label: 'Website', value: 'website', rep: ['website'] },
   { label: '99acres', value: '99acres', rep: ['99acres', '99Acres'] },
@@ -328,10 +329,7 @@ export const costSheetAdditionalChargesA = [
     value: 'carparking',
     label: 'Car Parking',
   },
-  {
-    value: 'clubhouse_membership',
-    label: 'Club House Membership',
-  },
+
   {
     value: 'electricity_watersewage',
     label: 'Electricity/Water Sewage',
@@ -366,8 +364,20 @@ export const costSheetAdditionalChargesA = [
 ]
 export const csConstruAdditionalChargesA = [
   {
+    value: 'bescom_bwssb',
+    label: 'Bescom & Bwssb',
+  },
+  {
     value: 'corpusfund',
     label: 'Corpus Fund',
+  },
+  {
+    value: 'clubhouse_charges',
+    label: 'Club House Charges',
+  },
+  {
+    value: 'clubhouse_membership',
+    label: 'Club House Membership',
   },
   {
     value: 'maintenance_2',

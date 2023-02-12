@@ -1,29 +1,28 @@
 import { useState, useEffect, createRef, useRef } from 'react'
 
+import { Timestamp } from '@firebase/firestore'
 import { PDFExport } from '@progress/kendo-react-pdf'
-import { Timestamp } from 'firebase/firestore'
 import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 
-import CrmUnitHeader from 'src/components/CrmModule/CrmUnitHeader'
 import { useAuth } from 'src/context/firebase-auth-context'
 
-import { TextFieldFlat } from './formFields/TextFieldFlatType'
 import { computeTotal } from './computeCsTotals'
+import { TextFieldFlat } from './formFields/TextFieldFlatType'
 
-const CostBreakUpPdf = ({
+const CostBreakUpPdfAll = ({
   projectDetails,
   csMode,
   pdfExportComponent,
   selPhaseObj,
   selUnitDetails,
   leadDetailsObj1,
-  setNewPlotCsObj,
-  newPlotCsObj,
+  setNewConstructCsObj,
+  newConstructCsObj,
   costSheetA,
   setCostSheetA,
-  setNewPS,
-  newPlotPS,
+  setNewConstructPS,
+  newConstructPS,
 }) => {
   const { user } = useAuth()
   const ref = createRef()
@@ -45,11 +44,11 @@ const CostBreakUpPdf = ({
   }, [costSheetA, selPhaseObj])
 
   useEffect(() => {
-    setNewPlotCsObj(costSheetA)
+    setNewConstructCsObj(costSheetA)
   }, [newSqftPrice])
 
   useEffect(() => {
-
+    console.log('selUnitDetails', selUnitDetails)
     const {
       additonalChargesObj,
       ConstructOtherChargesObj,
@@ -145,11 +144,49 @@ const CostBreakUpPdf = ({
         },
       ]
     } else {
-      setPartBPayload(ConstructOtherChargesObj)
+      setPartBPayload([...additonalChargesObj, ...ConstructOtherChargesObj])
       setPSPayload(ConstructPayScheduleObj)
       x = [
         {
           myId: '1',
+          units: {
+            value: 'fixedcost',
+            label: 'Fixed cost',
+          },
+          component: {
+            value: 'unit_cost_charges',
+            label: 'Unit Cost',
+          },
+          others: selUnitDetails?.rate_per_sqft,
+          charges: Number.isFinite(y) ? y : selUnitDetails?.rate_per_sqft,
+          TotalSaleValue: Number.isFinite(y)
+            ? Number(selUnitDetails?.plot_Sqf * y)
+            : Number(selUnitDetails?.plot_Sqf * selUnitDetails?.rate_per_sqft),
+          // charges: y,
+          gst: {
+            label: '0.05',
+            value: Number.isFinite(y)
+              ? Number(selUnitDetails?.plot_Sqf * y)
+              : Math.round(
+                  selUnitDetails?.plot_Sqf * selUnitDetails?.rate_per_sqft
+                ) * 0.05,
+          },
+          TotalNetSaleValueGsT:
+            (Number.isFinite(y)
+              ? Number(selUnitDetails?.super_built_up_area * y)
+              : Number(
+                  selUnitDetails?.plot_Sqf *
+                    selUnitDetails?.rate_per_sqft
+                )) +
+            (Number.isFinite(y)
+              ? Number(selUnitDetails?.super_built_up_area * y)
+              : Math.round(
+                  selUnitDetails?.plot_Sqf *
+                    selUnitDetails?.rate_per_sqft
+                ) * 0.05),
+        },
+        {
+          myId: '2',
           units: {
             value: 'fixedcost',
             label: 'Fixed cost',
@@ -186,6 +223,43 @@ const CostBreakUpPdf = ({
                   selUnitDetails?.builtup_area * selUnitDetails?.construct_price
                 ) * 0.05),
         },
+        {
+          myId: '3',
+          units: {
+            value: 'fixedcost',
+            label: 'Fixed cost',
+          },
+          component: {
+            value: 'plc_cost_sqft',
+            label: 'PLC ',
+          },
+          others: selUnitDetails?.PLC || 200,
+          charges: Number.isFinite(y) ? y : selUnitDetails?.PLC || 200,
+          TotalSaleValue: Math.round(
+            selUnitDetails?.super_built_up_area * (selUnitDetails?.PLC || 200)
+          ),
+          // charges: y,
+          gst: {
+            label: '0.05',
+            value: Math.round(
+              Number(
+                selUnitDetails?.super_built_up_area *
+                  (selUnitDetails?.PLC || 200)
+              ) * 0.05
+            ),
+          },
+          TotalNetSaleValueGsT:
+            Math.round(
+              selUnitDetails?.super_built_up_area * (selUnitDetails?.PLC || 200)
+            ) +
+            Math.round(
+              Number(
+                selUnitDetails?.super_built_up_area *
+                  (selUnitDetails?.PLC || 200)
+              ) * 0.05
+            ),
+        },
+
         // {
         //   myId: '2',
         //   units: {
@@ -196,7 +270,7 @@ const CostBreakUpPdf = ({
         //     value: 'Bescom_Sewage_Charges',
         //     label: 'Bescom & Sewage Charges ',
         //   },
-        //   others: selUnitDetails?.PLC,
+        //   others: selUnitDetails?.PLC || 200,
         //   charges: Number.isFinite(y) ? y : selUnitDetails?.PLC || 200,
         //   TotalSaleValue: Math.round(
         //     selUnitDetails?.builtup_area * (selUnitDetails?.PLC || 200)
@@ -229,10 +303,9 @@ const CostBreakUpPdf = ({
         //     value: 'clubhouse',
         //     label: 'Club House ',
         //   },
-        //   others: selUnitDetails?.PLC,
+        //   others: selUnitDetails?.PLC || 200,
         //   charges: 0,
         //   TotalSaleValue: 354000,
-        //   // charges: y,
         //   gst: {
         //     label: '0.05',
         //     value: Math.round(354000 * 0.0),
@@ -298,7 +371,7 @@ const CostBreakUpPdf = ({
         return z
       }
     })
-    setNewPS(newPs)
+    setNewConstructPS(newPs)
   }
 
   const initialState = initialValuesA
@@ -307,9 +380,8 @@ const CostBreakUpPdf = ({
     //   .max(15, 'Must be 15 characters or less')
     //   .required('Name is Required'),
   })
-
   const setTotalFun = async () => {
-    const partBTotal = selPhaseObj?.additonalChargesObj.reduce(
+    const partBTotal = partBPayload.reduce(
       (partialSum, obj) =>
         partialSum +
         Number(computeTotal(obj, selUnitDetails?.super_built_up_area)),
@@ -330,7 +402,6 @@ const CostBreakUpPdf = ({
     })
   }
   const onSubmit = async (data, resetForm) => {
-
     const { uid } = selUnitDetails
     const { id } = leadDetailsObj1
     // const x = {
@@ -410,48 +481,32 @@ const CostBreakUpPdf = ({
               <div className="p-4">
                 <div>
                   {/* upper part */}
-                  <CrmUnitHeader projectDetails={projectDetails} />
-
-                  <div className="flex flex-row justify-between my-8">
+                  <div className="flex flex-row justify-between pt-4">
+                    <h1 className="font-playfair text-[19px]  text-gray-700">
+                      {projectDetails?.projectName?.toUpperCase()}
+                    </h1>
                     <div>
-                      <h1 className="font-bodyLato font-semibold  text-gray-800 text-[10px] mb-[2px]">
-                        Addressed To
-                      </h1>
-                      <p className="font-playfair font-semibold  text-gray-600 text-[9px]">
-                        {leadDetailsObj1?.Name}
-                      </p>
-                      <p className="font-playfair  text-gray-600 text-[9px]">
-                        {leadDetailsObj1?.Mobile}
-                      </p>
-                      <p className="font-playfair  text-gray-800 text-[9px] max-w-[140px]">
-                        29, 1st Floor, 5th Main, KG Road, Kaveri Nagar, BSK 3rd
-                        Stage, Bangelore-560085
-                      </p>
-                    </div>
-                    <div>
-                      <h1 className="font-bodyLato  font-semibold  text-gray-800 text-[10px] mb-[2px] ">
-                        Issued By
-                      </h1>
-                      <p className="font-playfair font-semibold text-gray-800 text-[9px]">
-                        {leadDetailsObj1?.assignedToObj?.name}
-                      </p>
-                      <p className="font-playfair font-semibold text-gray-800 text-[9px]">
-                        Maa Homes LLP
-                      </p>
-                      <p className="font-playfair  text-gray-800 text-[8px]">
-                        Sector-2,HSR Layout, Banglore,India
-                      </p>
-                    </div>
-                    <div className=" justify-end">
-                      <h1 className="text-bodyLato text-right text-green-600 font-semibold text-[8px]">
-                        Total Amount
-                      </h1>
-                      <p className="text-bodyLato font-bold text-right text-gray-800 text-[10px]">
-                        Rs.{netTotal?.toLocaleString('en-IN')}
-                      </p>
+                      <img
+                        className="h-6 w-24"
+                        alt="barcode"
+                        src="https://t4.ftcdn.net/jpg/02/28/23/91/240_F_228239110_4eEmhcqbUpZG8y1x1aazFBQMVmbGjoce.jpg"
+                      />
+                      <div className=" text-center">
+                        <span className="tracking-widest font-bodyLato  text-gray-400 text-[10px] mb-[2px]">
+                          23456788
+                        </span>
+                      </div>
                     </div>
                   </div>
-
+                  {/* form  */}
+                  <div className=" my-10  justify-end">
+                    <h1 className="text-bodyLato text-right text-green-600 font-semibold text-[8px]">
+                      Total Amount
+                    </h1>
+                    <p className="text-bodyLato font-bold text-right text-gray-800 text-[10px]">
+                      Rs.{netTotal?.toLocaleString('en-IN')}
+                    </p>
+                  </div>
                   <div>
                     <h1 className="text-bodyLato text-left text-gray-800 font-semibold text-[12px] mb-2">
                       Plot Sales Value Information (A)
@@ -463,7 +518,7 @@ const CostBreakUpPdf = ({
                             Particulars
                           </th>
                           <th className="w-[15%] text-[10px] text-right text-[#8993a4] font-bodyLato tracking-wide uppercase">
-                            Rate/Sqft
+                            Plot Rate/Sqft
                           </th>
                           <th className="w-[15%] text-[10px] text-right text-[#8993a4] font-bodyLato tracking-wide uppercase">
                             Sale Value
@@ -493,7 +548,6 @@ const CostBreakUpPdf = ({
                                 name="ratePerSqft"
                                 onChange={(e) => {
                                   // setNewSqftPrice(e.target.value)
-
                                   formik.setFieldValue(
                                     'unit_cost_charges',
                                     e.target.value
@@ -617,7 +671,6 @@ const CostBreakUpPdf = ({
                               {d1?.description}
                             </td>
                             <td className="text-[10px] text-right text-gray-700 ">
-                              {/* {Number(d1?.charges)?.toLocaleString('en-IN')} */}
                               {Number(
                                 computeTotal(
                                   d1,
@@ -667,7 +720,7 @@ const CostBreakUpPdf = ({
                       </thead>
 
                       <tbody>
-                        {newPlotPS?.map((d1, inx) => (
+                        {newConstructPS?.map((d1, inx) => (
                           <tr
                             key={inx}
                             className="border-b-[0.05px] border-gray-300"
@@ -728,4 +781,4 @@ const CostBreakUpPdf = ({
   )
 }
 
-export default CostBreakUpPdf
+export default CostBreakUpPdfAll

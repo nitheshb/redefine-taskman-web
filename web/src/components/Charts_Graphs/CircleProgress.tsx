@@ -23,15 +23,15 @@ const CircleProgress = () => {
           plotOptions: {
             radialBar: {
               hollow: {
-                size: '70%',
+                size: '40%',
               },
               dataLabels: {
                 name: {
                   show: false,
                 },
                 value: {
-                  offsetY: 10,
-                  fontSize: '28px',
+                  offsetY: 4,
+                  fontSize: '10px',
                   fontWeight: 600,
                   formatter: (value) => `${value}%`,
                   fontFamily: theme.typography.fontFamily,
@@ -68,8 +68,9 @@ const CircleProgress = () => {
             mode: theme.palette.mode,
           },
         }}
-        height={150}
-        series={[75]}
+        height={98}
+        width={90}
+        series={[15]}
       />
     </section>
   )
