@@ -34,18 +34,14 @@ const LeadsManagerPage = (props) => {
   //confetti
 
   //confetti
-  console.log(viewable, 'CAdsvf', props)
   const a =  window.location.pathname
   window.history.pushState('', document.title, a)
   const showSideView1 = () => {
     setShowSideBar(!showSideBar)
   }
   useEffect(() => {
-    console.log("called again", isClicked)
     setIsClicked(prev => !prev)
-     console.log(isClicked, 'called again')
   },[props.clicked])
-  console.log(isClicked, 'called again')
   useEffect(() => {
     if (user) {
       if (user?.role?.includes(USER_ROLES.CP_AGENT)) {

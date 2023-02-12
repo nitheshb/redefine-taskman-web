@@ -40,7 +40,6 @@ export const GlobalSearchBar = (props) => {
       // let res
       const orgId = user?.orgId
       const res = await getLeadsByPhoneNo(orgId, { search: val })
-      console.log(res)
       setSearchData(res)
       dispatch(searchResponse({ ...res[0], id: 'dkcjbkdjbadkj' }))
       setshowLoader(false)
@@ -113,8 +112,6 @@ export const GlobalSearchBar = (props) => {
               </div>
             </div>
           ) : (
-            // console.log(searchData)
-            // {console.log(searchData)}
             <div
               style={{ width: '31.5%' }}
               className="z-10 absolute bg-white border border-gray-300 border-solid box-border rounded-r-lg min-h-[75px]"

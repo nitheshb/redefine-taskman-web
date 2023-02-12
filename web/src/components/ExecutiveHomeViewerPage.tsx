@@ -111,12 +111,10 @@ const ExecutiveHomeViewerPage = ({ leadsTyper, isClicked, setIsClicked }) => {
   }, [searchVal])
   const searchData = useSelector((state: RootStateOrAny) => state.searchData)
   useEffect(() => {
-    console.log(searchData, 'called aGAIN', isClicked)
     Object.keys(searchData).length &&
       isClicked &&
       selUserProfileF('User Profile', searchData)
   }, [searchData, isClicked])
-  console.log(isClicked, "called againnn")
   const archieveFields = ['Dead', 'RNR', 'blocked', 'notinterested', 'junk']
   // useEffect(() => {
   //   getLeadsDataFun()
@@ -474,7 +472,7 @@ const ExecutiveHomeViewerPage = ({ leadsTyper, isClicked, setIsClicked }) => {
     }
   }
 
- 
+
   const getUnassignedLeads = (otherData) => {
     const unsubscribe1 = getLeadsByUnassigned(
       orgId,
@@ -686,7 +684,6 @@ const ExecutiveHomeViewerPage = ({ leadsTyper, isClicked, setIsClicked }) => {
     setisImportLeadsOpen(true)
   }
   const selUserProfileF = (title, data) => {
-    console.log('cdsfvnlsdnsld', title, data)
     setAddLeadsTypes(title)
     setUnitsViewMode(false)
     setisImportLeadsOpen(true)

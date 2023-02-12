@@ -64,7 +64,6 @@ const SiderForm = ({
   // dont write too many here
   //  this is for customerProfileSideView
   const dispatch = useDispatch()
-  console.log('ldnslnv', window.location, window.location.search)
   return (
     <Transition.Root show={open || false} as={Fragment}>
       <Dialog
