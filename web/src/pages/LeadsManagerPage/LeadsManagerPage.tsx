@@ -17,30 +17,41 @@ import { useAuth } from 'src/context/firebase-auth-context'
 
 import HeadNavBar from '../../components/HeadNavBar/HeadNavBar'
 
-const LeadsManagerPage = () => {
+const LeadsManagerPage = (props) => {
   const { user } = useAuth()
   const [uploadedFileLink, handleFileUpload] = useFileUpload()
   const [loading, setLoading] = useState(true)
   const [showSideBar, setShowSideBar] = useState(false)
   const [showDetailedSideBar, setDetailedShowSideBar] = useState(false)
-  const [viewable, setViewable] = useState('Today1')
+  const [viewable, setViewable] = useState(
+    props.type === 'inProgress' ? 'inProgress' : 'Today1'
+  )
+  const [isClicked, setIsClicked] = useState(false)
+  // const [viewable, setViewable] = useState('Today1')
   //confetti
 
   //confetti
-
+  console.log(window.location, "CAdsvf")
+  const a =  window.location.pathname
+  window.history.pushState('', document.title, a)
   const showSideView1 = () => {
     setShowSideBar(!showSideBar)
   }
+  useEffect(() => {
+    console.log("called again", isClicked)
+    setIsClicked(prev => !prev)
+     console.log(isClicked, 'called again')
+  },[props.clicked])
+  console.log(isClicked, 'called again')
   useEffect(() => {
     if (user) {
       if (user?.role?.includes(USER_ROLES.CP_AGENT)) {
         setViewable('inProgress')
       } else {
-        setViewable('Today1')
+        setViewable( props.type === 'inProgress' ? 'inProgress' : 'Today1')
       }
     }
   }, [user])
-
   return (
     <>
       <div className="flex w-screen h-screen text-gray-700">
@@ -54,7 +65,7 @@ const LeadsManagerPage = () => {
         /> */}
 
         <div className="flex flex-col flex-grow">
-          <HeadNavBar />
+          <HeadNavBar/>
           {}
           <div className="flex flex-row overflow-auto h-[100vh]  text-gray-700 bg-gradient-to-tr from-blue-200 via-indigo-200 to-pink-200">
             <div
@@ -83,7 +94,11 @@ const LeadsManagerPage = () => {
 
             <div className="flex-grow  items-center overflow-y-auto  px-300  py-300">
               {viewable === 'inProgress' && (
-                <ExecutiveHomeViewerPage leadsTyper={'inProgress'} />
+                <ExecutiveHomeViewerPage
+                  leadsTyper={'inProgress'}
+                  isClicked= {isClicked}
+                  setIsClicked = {setIsClicked}
+                />
               )}
               {viewable === 'booked' && (
                 <ExecutiveHomeViewerPage leadsTyper={'booked'} />

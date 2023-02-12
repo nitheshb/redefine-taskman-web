@@ -27,7 +27,11 @@ import PaymentScheduleForm from '../PaymentScheduleForm/PaymentScheduleForm'
 import ProjPhaseHome from '../ProjPhaseHome/ProjPhaseHome'
 import TransactionUpdateSideView from '../transactionUpdateSideView'
 import ViewUnitDetails from '../ViewUnitDetails'
-
+import {
+  searchValue as searchedVal,
+  searchData as searchResponse,
+} from 'src/state/actions/search'
+import { useDispatch } from 'react-redux'
 const SiderForm = ({
   open,
   setOpen,
@@ -55,10 +59,12 @@ const SiderForm = ({
   selUnitDetails,
   selSubMenu,
   selSubMenu2,
+  setIsClicked,
 }) => {
   // dont write too many here
   //  this is for customerProfileSideView
-
+  const dispatch = useDispatch()
+  console.log('ldnslnv', window.location, window.location.search)
   return (
     <Transition.Root show={open || false} as={Fragment}>
       <Dialog
@@ -113,7 +119,12 @@ const SiderForm = ({
                     <button
                       type="button"
                       className="rounded-md text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
-                      onClick={() => setOpen(false)}
+                      onClick={() => {
+                        setOpen(false)
+                        setIsClicked(false)
+                        dispatch(searchedVal(''))
+                        dispatch(searchResponse({}))
+                      }}
                     >
                       <span className="sr-only">Close panel</span>
                       <XIcon className="h-6 w-6" aria-hidden="true" />

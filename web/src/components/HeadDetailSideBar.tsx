@@ -40,7 +40,7 @@ const HeadSideBarDetailView = ({
       setUserAccess(access || [])
     }
   }, [user])
-
+console.log(viewable)
   return (
     <div className="flex flex-col items-left w-16 min-w-[226px]   bg-white bg-opacity-75 bg-[#f0f3ff] ">
       <div className="bg-[#f0f3ff] overflow-auto no-scrollbar">

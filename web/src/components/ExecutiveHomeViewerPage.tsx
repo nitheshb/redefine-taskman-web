@@ -6,8 +6,9 @@ import { Fragment, useState, useEffect } from 'react'
 import { CalendarIcon, EyeIcon } from '@heroicons/react/outline'
 import CalendarMonthTwoToneIcon from '@mui/icons-material/CalendarMonthTwoTone'
 import { useFormik } from 'formik'
-
+import { RootStateOrAny, useDispatch, useSelector } from 'react-redux'
 // import { XIcon } from '@heroicons/react/outline'
+
 
 // import { XIcon } from '@heroicons/react/outline'
 
@@ -44,6 +45,7 @@ import SiderForm from './SiderForm/SiderForm'
 // import CustomerProfileSideView from './customerProfileSideView'
 // import CardItem from '../../components/leadsCard'
 // import BoardData from '../../components/board-data.json'
+import { Search } from '@material-ui/icons/Search';
 
 // function createGuidId() {
 //   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -52,8 +54,9 @@ import SiderForm from './SiderForm/SiderForm'
 //     return v.toString(16)
 //   })
 // }
-const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
+const ExecutiveHomeViewerPage = ({ leadsTyper, isClicked, setIsClicked }) => {
   const uid = uuidv4()
+
   const { user } = useAuth()
   const [isLoading, setIsLoading] = useState(true)
   const { enqueueSnackbar } = useSnackbar()
@@ -62,7 +65,6 @@ const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
     user?.role?.includes(USER_ROLES.ADMIN) ||
     user?.role?.includes(USER_ROLES.SALES_MANAGER)
   const [isImportLeadsOpen, setisImportLeadsOpen] = useState(false)
-
   // kanban board
   const [ready, setReady] = useState(false)
   const [boardData, setBoardData] = useState([])
@@ -72,7 +74,6 @@ const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
   const [isOpened, setIsOpened] = React.useState(false)
   const [dateRange, setDateRange] = React.useState([null, null])
   const [startDate, endDate] = dateRange
-
   const [usersList, setusersList] = useState([])
   const [openUserProfile, setopenUserProfile] = useState(false)
   const [addLeadsTypes, setAddLeadsTypes] = useState('')
@@ -84,7 +85,7 @@ const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
   const [unitsViewMode, setUnitsViewMode] = useState(false)
   const [fetchLeadsLoader, setFetchLeadsLoader] = useState(true)
   const [uuidKey, setUuidKey] = useState(uuidv4())
-
+  const [searchValue, setSearchValue] = useState('')
   const [selProjectIs, setSelProject] = useState({
     label: 'All Projects',
     value: 'allprojects',
@@ -104,6 +105,18 @@ const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
     'RNR',
     'booked',
   ]
+  const searchVal = useSelector((state: RootStateOrAny) => state.search)
+  useEffect(() => {
+    setSearchValue(searchVal)
+  }, [searchVal])
+  const searchData = useSelector((state: RootStateOrAny) => state.searchData)
+  useEffect(() => {
+    console.log(searchData, 'called aGAIN', isClicked)
+    Object.keys(searchData).length &&
+      isClicked &&
+      selUserProfileF('User Profile', searchData)
+  }, [searchData, isClicked])
+  console.log(isClicked, "called againnn")
   const archieveFields = ['Dead', 'RNR', 'blocked', 'notinterested', 'junk']
   // useEffect(() => {
   //   getLeadsDataFun()
@@ -839,6 +852,7 @@ const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
     setisImportLeadsOpen(true)
   }
   const selUserProfileF = (title, data) => {
+    console.log('cdsfvnlsdnsld', title, data)
     setAddLeadsTypes(title)
     setUnitsViewMode(false)
     setisImportLeadsOpen(true)
@@ -1134,6 +1148,7 @@ const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
                 setisImportLeadsOpen={setisImportLeadsOpen}
                 selUserProfileF={selUserProfileF}
                 leadsTyper={leadsTyper}
+                searchVal={searchValue}
               />
             )}
           </div>
@@ -1147,6 +1162,7 @@ const ExecutiveHomeViewerPage = ({ leadsTyper }) => {
         customerDetails={selUserProfile}
         unitsViewMode={unitsViewMode}
         setUnitsViewMode={setUnitsViewMode}
+        setIsClicked={setIsClicked}
       />
     </>
   )
