@@ -10,7 +10,8 @@ export default function ReportCard(props) {
       <div
         className="drop-shadow-md  z-10  mt-10 rounded-lg flex flex-col overscroll-x-scroll p-10 max-w-[80%] bg-white-500"
         style={{
-          backgroundColor: 'white',
+          backgroundColor: '#e5e5e5',
+          minHeight:'590px'
         }}
       >
         <div className="flex m-1 justify-between">
@@ -52,7 +53,7 @@ export default function ReportCard(props) {
                             : ['archieve'].includes(d.id) &&
                               props.showArchiFSource
                             ? 'blue'
-                            : '#94A4C4',
+                            : '#A3A3A3',
                       }}
                     >
                       <div

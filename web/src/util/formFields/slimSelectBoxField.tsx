@@ -126,13 +126,13 @@ export const SlimDateSelectBox = ({
 
   console.log(value, 'value')
   return (
-    <div className="">
+    <div style={{width:'200px'}}>
       {/* {label != '' && label != 'Assign To' && (
         <label className="label font-regular text-sm ">{label}</label>
       )} */}
       {!isDatePicker ? (
         <Select
-          maxMenuHeight={150}
+          minMenuHeight={150}
           name={name}
           value={value}
           placeholder={value}
