@@ -23,6 +23,7 @@ import HeadNavBar from '../../components/HeadNavBar/HeadNavBar'
 import HeadSideBar from '../../components/HeadSideBar/HeadSideBar'
 import ProjectsMHomeBody from '../../components/ProjectsMHomeBody/ProjectsMHomeBody'
 import SiderForm from '../../components/SiderForm/SiderForm'
+import MarkeingMessagesList from 'src/components/A_ProjModule/MarketingMessagesList'
 
 const HomePage = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -372,6 +373,30 @@ const HomePage = () => {
               selModule ={selModule}
               setSelModule={setSelModule}
             />
+            {(viewable === 'Marketing' &&
+(
+  <>
+                  <div className="">
+                    <div className="flex items-center justify-between py-2  ">
+                      <span className="relative z-10 flex items-center w-auto text-2xl font-bold leading-none pl-0">
+                        {viewable}
+                      </span>
+                      <button className="flex items-center justify-center h-10 px-4  bg-transparent ml-auto text-sm font-medium rounded hover:bg-transparent"></button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <section className="w-full py-4  leading-7 text-gray-900 bg-white sm:py-12 md:py-16 lg:py-18 rounded-lg">
+                      <div className="box-border px-4 mx-auto border-solid sm:px-6 md:px-6 lg:px-8 max-w-full ">
+                        <div className="flex flex-col  leading-7  text-gray-900 border-0 border-gray-200 ">
+                          <MarkeingMessagesList title={'WhatsApp Message Templates'} />
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </>
+)
+            )}
               {(viewable === 'Bank Accounts' ||
                 viewable === 'Virtual Accounts') && (
                 <>
@@ -441,7 +466,7 @@ const HomePage = () => {
                                   {projects.length > 0 ? (
                                     <section className="bg-white py-2 rounded-sm">
                                        <div className="px-4">
-                                    <div className="flex items-center justify-between py-2 pb-4 ">
+                                    <div className="flex items-center justify-between py-2 pb-4  ">
                                       <span className="relative  flex items-center w-auto text-md font-bold leading-none pl-0 font-Playfair">
                                         Projects {viewable}
                                       </span>

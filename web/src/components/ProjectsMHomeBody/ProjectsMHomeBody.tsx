@@ -225,7 +225,7 @@ const ProjectsMHomeBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
   //   setValueCurrency(currency)
   const chartSeries = data.series
   return (
-    <div className="px-4 pb-[0.1px]">
+    <div className="px-4 pb-[0.1px] flex ">
       <Link to={routes.projectEdit({ uid })}>
         <section className=" mb-1 leading-7 text-gray-900 bg-[#E9E9F2] rounded-md  hover:text-blue-600 hover:bg-[#E9E9F2] transition duration-300 ease-in-out cursor-pointer">
           <div className="box-border  max-w-full ">

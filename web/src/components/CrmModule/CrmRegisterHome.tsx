@@ -13,7 +13,7 @@ import {
   UserIcon,
 } from '@heroicons/react/outline'
 import CheckCircleIcon from '@heroicons/react/solid/CheckCircleIcon'
-import { LinearProgress } from '@mui/material'
+import { Box, LinearProgress, useTheme } from '@mui/material'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 
 import { MetaTags } from '@redwoodjs/web'
@@ -1047,6 +1047,42 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                 </span> */}
                             </div>
                           </div>
+                          <Box my={2} mx={2}>
+                <div className="flex flex-col">
+                  {[
+                    { item: 'Total', value: 100 },
+                    { item: 'Balance', value: 80 },
+
+                  ].map((data, i) => (
+                    <div className="flex inline-block mt-2" key={i}>
+                      <div className="flex flex-row align-middle justify-between mr-1 w-12">
+                        <h6 className="font-bodyLato font-semibold text-xs mt-1">
+                          {(data.item)}
+                        </h6>
+                        <span className="font-bodyLato text-[12px] text-[#94A4C4]"></span>
+                      </div>
+                      <div className="inline-block ml-2">
+                        <LinearProgress
+                          sx={{
+                            backgroundColor: 'white',
+                            '& .MuiLinearProgress-bar': {
+                              backgroundColor: '#A798FF',
+                            },
+                          }}
+                          variant="determinate"
+                          value={data.value}
+                          style={{
+                            backgroundColor: '#E5EAF2',
+                            borderRadius: '3px',
+                            height: '18px',
+                            width: '10rem',
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Box>
                           {/* <CrmSubMenu
                             selMenuItem={selMenuItem}
                             viewTransaction={viewTransaction}
@@ -1100,76 +1136,10 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                               ))}
                             </div>
 
+
+
                             {/* <div className="w-[300px] ml-[150px] h-[1px] bg-[#efefef] mt-2 rounded-xl text-center"></div> */}
                             <div className="flex flex-row justify-between  py-2  text-black   w-[640px]">
-                              <section>
-                                <span
-                                  className="font-normal whitespace-nowrap font-bodyLato text-xs uppercase app-color-gray-1 inline-block max-w-[100px] min-w-[100px] w-[100px] mb-[4px]"
-                                  onClick={() =>
-                                    viewTransaction(
-                                      finData,
-                                      'summary',
-                                      'summary'
-                                    )
-                                  }
-                                >
-                                  {customerName1}
-                                </span>
-                                {/* <span className="font-normal ml-4 text-xs app-color-gray-1 inline-block max-w-[100px] min-w-[100px] w-[100px]">
-                                <PhoneIcon className="w-3 h-3 mr-1 inline text-[##8e544d]" />
-                                {finData?.ph}
-                              </span> */}
-                              </section>
-                              {/* <section className="inline-block max-w-[100px] min-w-[100px] w-[100px]">
-                              <span className="font-normal ml-6 text-[10px] app-color-gray-1 text-[#b3b3b3]">
-                                Bal
-                              </span>
-                              <span className="font-normal ml-2 text-xs app-color-gray-1 text-[#F59A4C]">
-                                {finData?.pending || 0}
-                              </span>
-                            </section> */}
-                              <section
-                                className="inline-block max-w-[400px] min-w-[100px] flex flex-row"
-                                onClick={() =>
-                                  viewTransaction(
-                                    finData,
-                                    'finance_info',
-                                    'finance_info'
-                                  )
-                                }
-                              >
-                                <span className="font-normal ml-6  mt-2 text-[10px] app-color-gray-1 text-[#b3b3b3]">
-                                  Bal
-                                </span>
-                                <span className="font-normal ml-2 text-sm mt-1 app-color-gray-1">
-                                  {finData?.reviw || 0}
-                                </span>
-                                <ShieldExclamationIcon className="w-3 h-3 ml-[3px]  mt-[8px] inline text-[#83a4f5]" />
-                              </section>
-                              <section
-                                className="inline-block max-w-[400px] min-w-[100px] flex flex-row"
-                                onClick={() =>
-                                  viewTransaction(
-                                    finData,
-                                    'finance_info',
-                                    'finance_info'
-                                  )
-                                }
-                              >
-                                <span className="font-normal ml-6 mt-2 text-[10px] app-color-gray-1 text-[#b3b3b3]">
-                                  Paid
-                                </span>
-                                <span className="font-normal ml-2 text-sm mt-1 app-color-gray-1">
-                                  {finData?.pend || 0}
-                                </span>
-                                {finData?.paymentStatus === 'completed' && (
-                                  <CheckCircleIcon className="w-3 h-3 ml-[3px]  mt-[8px] inline text-[#8becbd]" />
-                                )}
-                                {finData?.paymentStatus === 'pending' && (
-                                  <ShieldExclamationIcon className="w-3 h-3 ml-[3px]  mt-[8px] inline text-[##8e544d]" />
-                                )}
-                              </section>
-
                               <section className="inline-block max-w-[400px] min-w-[100px] text-right">
                                 <span
                                   className={`font-normal ml-6 text-[10px] app-color-gray-1 text-[#435ad9]`}
