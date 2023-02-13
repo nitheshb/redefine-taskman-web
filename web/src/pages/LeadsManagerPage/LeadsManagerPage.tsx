@@ -16,7 +16,7 @@ import TodayLeadsHomePage from 'src/components/TodayLeadsHomePage'
 import { useFileUpload } from 'src/components/useFileUpload'
 import { USER_ROLES } from 'src/constants/userRoles'
 import { useAuth } from 'src/context/firebase-auth-context'
-
+import ReportMain from '../../components/Reports/ReportMainCom'
 import HeadNavBar from '../../components/HeadNavBar/HeadNavBar'
 
 const LeadsManagerPage = (props) => {
@@ -130,16 +130,17 @@ const LeadsManagerPage = (props) => {
 
               {viewable === 'LeadsManagerHome' && <LeadsManagementHome />}
               {viewable === 'Team Lead Report' && (
-                <LeadsTeamReportBody
-                  project={{
-                    area: 1000,
-                    builderName: 'hello',
-                    location: 'local',
-                    projectName: 'Team Leads Report',
-                    projectType: 'aprtment',
-                  }}
-                  isEdit={false}
-                />
+                <ReportMain/>
+                // <LeadsTeamReportBody
+                //   project={{
+                //     area: 1000,
+                //     builderName: 'hello',
+                //     location: 'local',
+                //     projectName: 'Team Leads Report',
+                //     projectType: 'aprtment',
+                //   }}
+                //   isEdit={false}
+                // />
               )}
               {viewable === 'My Lead Report' && (
                 <MyLeadsReportHome
