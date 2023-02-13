@@ -322,7 +322,9 @@ const EnhancedTableToolbar = (props) => {
     startDate,
     endDate,
     setDateRange,
-    leadsFetchedData
+    leadsFetchedData,
+    searchVal,
+    searchKey,
   } = props
   const d = new window.Date()
   const [rowsAfterSearchKey, setRowsAfterSearchKey] = React.useState(rows)
@@ -330,7 +332,6 @@ const EnhancedTableToolbar = (props) => {
   const [cutOffDate, setCutOffDate] = React.useState(d.getTime() + 60000)
 
   const [isOpened, setIsOpened] = React.useState(false)
-
   React.useEffect(() => {
     setRowsAfterSearchKey(rows)
   }, [rows])
@@ -383,7 +384,10 @@ const EnhancedTableToolbar = (props) => {
 
     setDownloadFormatRows(downRows)
   }, [rowsAfterSearchKey])
-
+React.useEffect(()=>{
+  setSearchKey(searchVal)
+  // searchKeyField({target:{value:searchVal}})
+},[searchVal])
   const searchKeyField = (e) => {
     // console.log('searched values is ', e.target.value)
     setSearchKey(e.target.value)
@@ -431,6 +435,7 @@ const EnhancedTableToolbar = (props) => {
             type="text"
             placeholder={`Search...${selStatus}`}
             onChange={searchKeyField}
+            value={searchKey}
             className="ml-6 bg-transparent text-xs focus:border-transparent focus:ring-0 focus-visible:border-transparent focus-visible:ring-0 focus:outline-none"
           />
         </span>
@@ -570,7 +575,8 @@ export default function LLeadsTableBody({
   selUserProfileF,
   newArray,
   leadsFetchedData,
-  mySelRows
+  mySelRows,
+  searchVal,
 }) {
   const { user } = useAuth()
   const [order, setOrder] = React.useState('desc')
@@ -580,10 +586,9 @@ export default function LLeadsTableBody({
   const [dense, setDense] = React.useState(false)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
   const [rows, setRows] = React.useState([])
-  const [searchKey, setSearchKey] = React.useState('')
+  const [searchKey, setSearchKey] = React.useState(searchVal?searchVal:'')
   const [dateRange, setDateRange] = React.useState([null, null])
   const [startDate, endDate] = dateRange
-
   React.useEffect(() => {
     // filterStuff(rowsParent)
     // let x = rowsParent.filter((item) => {
@@ -606,7 +611,7 @@ export default function LLeadsTableBody({
     //   second
     // }
   }, [selStatus, rowsParent])
-
+  console.log(searchKey, "cdsvfeg")
   React.useEffect(() => {
     filterSearchString(rows)
   }, [searchKey])
@@ -619,7 +624,6 @@ export default function LLeadsTableBody({
       ? parent['all'] : selStatus === 'archieve_all' ? parent['archieve_all'] : parent[selStatus]
 
     await setRows(newArray)
-
   }
   const filterByDate = () => {
     rows.filter((item) => {
@@ -727,7 +731,7 @@ export default function LLeadsTableBody({
   const [selBlock, setSelBlock] = React.useState({})
   const [viewUnitStatusA, setViewUnitStatusA] = React.useState([
     'Phone No',
-    'Last Activity'
+    'Last Activity',
 
     // 'Blocked',
     // 'Booked',
@@ -742,8 +746,6 @@ export default function LLeadsTableBody({
       }
     }
   }, [user])
-
-
 
   const pickCustomViewer = (item) => {
     const newViewer = viewUnitStatusA
@@ -775,6 +777,7 @@ export default function LLeadsTableBody({
         pickCustomViewer={pickCustomViewer}
         setViewUnitStatusA={setViewUnitStatusA}
         leadsFetchedData={leadsFetchedData}
+        searchVal={searchVal}
       />
       <section
         style={{ borderTop: '1px solid #efefef', background: '#fefafb' }}
@@ -798,14 +801,10 @@ export default function LLeadsTableBody({
               viewUnitStatusA={viewUnitStatusA}
             />
 
-
             <TableBody>
-
-
               {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.slice().sort(getComparator(order, orderBy)) */}
               {/* {stableSort(rows, getComparator(order, orderBy)).map( */}
-
 
               {/* item.Assignedto.toLowerCase().includes(
                     searchKey.toLowerCase()

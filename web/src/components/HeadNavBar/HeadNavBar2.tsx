@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux'
 import { useAuth } from 'src/context/firebase-auth-context'
 import { logout as logoutAction } from 'src/state/actions/user'
 import ModuleSwitchDrop from '../A_SideMenu/modulesSwitchDrop'
+import { GlobalSearchBar } from './GlobalSearchBar';
 
 const HeadNavBar2 = ({selModule, setSelModule}) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
@@ -46,6 +47,7 @@ const HeadNavBar2 = ({selModule, setSelModule}) => {
               pickedValue={selModule}
             />
           </section>
+          <GlobalSearchBar />
         <button className="flex items-center justify-center h-10 px-4 ml-auto "></button>
         <button className="flex items-center justify-center h-10 text-sm font-medium "></button>
         <Box

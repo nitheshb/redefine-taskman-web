@@ -1,8 +1,12 @@
 import { combineReducers } from '@reduxjs/toolkit'
 import userReducer from './user'
+import searchReducer from "./search"
+import searchDataReducer from "./searchData"
 
 const appReducer = combineReducers({
   user: userReducer,
+  search: searchReducer,
+  searchData: searchDataReducer,
 })
 
 const rootReducer = (state, action) => {
