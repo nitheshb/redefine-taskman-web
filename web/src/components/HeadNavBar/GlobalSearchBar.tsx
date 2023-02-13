@@ -76,10 +76,10 @@ export const GlobalSearchBar = (props) => {
     document.addEventListener('click', handleClickOutside)
   }, [])
   return (
-    <span className="ml-5 bg-gray-50 border border-gray-300 border-solid box-border w-1/3 rounded-r-lg">
+    <span className="ml-5 bg-gray-50 border border-gray-300 border-solid box-border w-1/3 rounded-md">
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        className="h-4 w-4 absolute mt-2 ml-1"
+        className="h-4 w-4 absolute mt-[6px] mx-2"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -94,17 +94,17 @@ export const GlobalSearchBar = (props) => {
       <input
         type="text"
         id="globalSearch"
-        placeholder="Search Unit No, Customer name, Phone no, Dues, Review..."
+        placeholder="Search Unit No, Customer name, Phone no, Dues..."
         onChange={searchKeyField}
         autoComplete="off"
         // value={searchKey}
-        className="ml-6 w-52 bg-transparent focus:border-transparent focus:ring-0 focus-visible:border-transparent focus-visible:ring-0 focus:outline-none text-sm leading-7 text-gray-900 w-4/5 relative"
+        className="ml-[30px] w-52 bg-transparent focus:border-transparent focus:ring-0 focus-visible:border-transparent focus-visible:ring-0 focus:outline-none text-sm leading-7 text-gray-900 w-4/5 relative"
       />
       {showSearchDropdown && (
         <div ref={refContainer}>
           {showLoader ? (
             <div
-              style={{ width: '31.5%' }}
+              style={{ width: '397px' }}
               className="z-10 absolute bg-white border border-gray-300 border-solid box-border rounded-r-lg p-2 min-h-[75px]"
             >
               <div className="flex justify-center">
@@ -113,29 +113,29 @@ export const GlobalSearchBar = (props) => {
             </div>
           ) : (
             <div
-              style={{ width: '31.5%' }}
-              className="z-10 absolute bg-white border border-gray-300 border-solid box-border rounded-r-lg min-h-[75px]"
+              style={{ width: '397px' }}
+              className="z-10 absolute bg-white border border-gray-300 border-solid box-border rounded-lg mt-1 min-h-[75px]"
             >
               {searchData.length
                 ? searchData.map((item, index) => {
                     return (
-                      <div className="m-1">
+                      <div className="m-1 mx-2 mt-2">
                         <span>{item.Name}</span>
-                        <div className="mt-2">
+                        <div className="">
                           {/* {item.sales && ( */}
                           <Link
                             to={routes.leadsManager({
                               type: 'inProgress',
                               clicked: Math.random(),
                             })}
-                            className="text-lg underline mr-10 text-indigo-700"
+                            className="text-xs underline mr-3 text-indigo-700"
                             id="testing"
                           >
                             Sales
                           </Link>
                           <Link
                             to={routes.crmModule()}
-                            className="text-lg underline mr-10 text-indigo-700"
+                            className="text-xs underline mr-3 text-indigo-700"
                           >
                             CRM
                           </Link>
@@ -143,7 +143,7 @@ export const GlobalSearchBar = (props) => {
                           {/* {item.finance && ( */}
                           <Link
                             to={routes.financeModule()}
-                            className="text-lg underline mr-10 text-indigo-700"
+                            className="text-xs underline mr-3 text-indigo-700"
                           >
                             Finance
                           </Link>
@@ -151,7 +151,7 @@ export const GlobalSearchBar = (props) => {
                           {/* {item.legal && ( */}
                           <Link
                             to={routes.legalModule()}
-                            className="text-lg underline mr-10 text-indigo-700"
+                            className="text-xs underline mr-3 text-indigo-700"
                           >
                             Legal
                           </Link>

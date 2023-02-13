@@ -376,17 +376,10 @@ const HomePage = () => {
             {(viewable === 'Marketing' &&
 (
   <>
-                  <div className="">
-                    <div className="flex items-center justify-between py-2  ">
-                      <span className="relative z-10 flex items-center w-auto text-2xl font-bold leading-none pl-0">
-                        {viewable}
-                      </span>
-                      <button className="flex items-center justify-center h-10 px-4  bg-transparent ml-auto text-sm font-medium rounded hover:bg-transparent"></button>
-                    </div>
-                  </div>
 
-                  <div>
-                    <section className="w-full py-4  leading-7 text-gray-900 bg-white sm:py-12 md:py-16 lg:py-18 rounded-lg">
+
+                  <div className="mt-2 mx-1">
+                    <section className="w-full py-4  leading-7 text-gray-900 bg-white sm:py-12 md:py-12 lg:py-18 rounded-md">
                       <div className="box-border px-4 mx-auto border-solid sm:px-6 md:px-6 lg:px-8 max-w-full ">
                         <div className="flex flex-col  leading-7  text-gray-900 border-0 border-gray-200 ">
                           <MarkeingMessagesList title={'WhatsApp Message Templates'} />
@@ -448,7 +441,7 @@ const HomePage = () => {
                 viewable != 'Campaign Budget Report' &&
                 viewable != 'Bank Accounts' &&
                 viewable != 'Virtual Accounts' &&
-                viewable != 'unitsInventory' && (
+                viewable != 'unitsInventory' && viewable != 'Marketing'  && (
                   <>
                     <div className="">
                       <div className="flex items-center justify-between py-2 pb-8 ">
