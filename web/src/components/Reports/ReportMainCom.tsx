@@ -27,8 +27,9 @@ import {
   SlimSelectBox,
   SlimDateSelectBox,
 } from '../../util/formFields/slimSelectBoxField'
-import GridLayout from 'react-grid-layout'
-import { CalendarIcon, EyeIcon } from '@heroicons/react/outline'
+import { Responsive, WidthProvider } from 'react-grid-layout'
+import '../../../../node_modules/react-grid-layout/css/styles.css'
+const ResponsiveGridLayout = WidthProvider(Responsive)
 export default function ReportMainCom() {
   const d = new window.Date()
   const { user } = useAuth()
@@ -599,7 +600,7 @@ export default function ReportMainCom() {
           /* padding: 5px; */
           borderBottom: '1px solid gray',
           display: 'flex',
-          alignItems:'center'
+          alignItems: 'center',
         }}
       >
         <svg
@@ -623,10 +624,64 @@ export default function ReportMainCom() {
         </svg>
         <h1 className="text-2xl font-bold">Reports</h1>
       </div>
-      <div style={{ position: 'relative', width:'100vm', overflow:'scroll' }}>
-        <GridLayout
+      <div style={{ width:'100vm',height:'100vh', overflow: 'scroll' }}>
+        <ResponsiveGridLayout
           rowHeight={50}
-          cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+          breakpoints={{ lg: 1200, md: 996, sm: 768 }}
+          cols={{ lg: 12, md: 10, sm: 6 }}
+          layouts={{
+            lg: [
+              {
+                w: 4,
+                h: 26,
+                x: 0,
+                y: 0,
+                i: 'graph1',
+              },
+              {
+                w: 4,
+                h: 12,
+                x: 8,
+                y: 0,
+                i: 'graph2',
+              },
+              {
+                w: 5,
+                h: 2,
+                x: 0,
+                y: 0,
+                i: 'graph3',
+              },
+              {
+                w: 3,
+                h: 2,
+                x: 5,
+                y: 0,
+                i: 'graph4',
+              },
+              {
+                w: 4,
+                h: 2,
+                x: 9,
+                y: 2,
+                i: 'graph5',
+              },
+              {
+                w: 3,
+                h: 2,
+                x: 3,
+                y: 2,
+                i: 'graph6',
+              },
+              {
+                w: 3,
+                h: 2,
+                x: 0,
+                y: 2,
+                i: 'graph7',
+              },
+            ]
+          }}
           width={1200}
           verticalCompact={true}
           compactType={'vertical'}
@@ -634,11 +689,20 @@ export default function ReportMainCom() {
         >
           <div
             key={'graph-1'}
-            data-grid={{ x: 0, y: 0, w: 12, h: 9 }}
-            style={{ transform: 'translate(10px, 680px)' }}
-            //style={styles.box}
+            data-grid={{
+              w: 6,
+              h: 15,
+              x: 0,
+              y: 0,
+              i: 'graph1',
+            }}
+            className="drop-shadow-md  rounded-lg "
+            style={{
+              backgroundColor: '#e5e5e5'
+            }}
           >
-            <div style={{ width: '1600px' }}>
+
+            <div style={{height:'100%', overflow:"scroll"}}>
               <ReportCard
                 title="Source Vs Status"
                 headers={[
@@ -667,16 +731,25 @@ export default function ReportMainCom() {
                 showArchiFSource={showArchiFSource}
                 viewSourceStats1A={viewSourceStats1A}
                 DateComponent={DateSourceComponent}
+                id='test'
               />
             </div>
           </div>
           <div
             key={'graph-2'}
-            data-grid={{ x: 5, y: 5, w: 9, h: 9 }}
-            style={{ transform: 'translate(10px, 10px)' }}
-            //style={styles.box}
+            data-grid={{
+              w: 6,
+              h: 11,
+              x: 8,
+              y: 0,
+              i: 'graph2',
+            }}
+            className="drop-shadow-md  rounded-lg "
+            style={{
+              backgroundColor: '#e5e5e5'
+            }}
           >
-            <div style={{ width: '1600px' }}>
+            <div style={{height:'100%', overflow:"scroll"}}>
               <ReportCard
                 title="Project vs Status"
                 headers={[
@@ -705,16 +778,20 @@ export default function ReportMainCom() {
                 showArchiFSource={showArchiFProject}
                 viewSourceStats1A={viewProjectStats1A}
                 DateComponent={DateProjectComponent}
+                id='test1'
               />
             </div>
           </div>
 
           <div
             key={'graph-3'}
-            data-grid={{ x: 9, y: 9, w: 9, h: 9 }}
-            style={{ transform: 'translate(1000px, 10px)' }}
+            data-grid={{ x: 0, y: 9, w: 7, h: 11 }}
+            className="drop-shadow-md  rounded-lg "
+            style={{
+              backgroundColor: '#e5e5e5'
+            }}
           >
-            <div style={{ width: '1600px' }}>
+            <div  style={{height:'100%', overflow:"scroll"}}>
               <ReportCard
                 title="Employee vs Status"
                 headers={[
@@ -749,11 +826,13 @@ export default function ReportMainCom() {
           </div>
           <div
             key={'graph-4'}
-            data-grid={{ x: 5, y: 5, w: 9, h: 9 }}
-            style={{ transform: 'translate(1000px, 680px)' }}
-            //style={styles.box}
+            data-grid={{ x: 0, y: 9, w: 6, h: 12 }}
+            className="drop-shadow-md  rounded-lg "
+            style={{
+              backgroundColor: '#e5e5e5'
+            }}
           >
-            <div style={{ width: '1600px' }}>
+            <div  style={{height:'100%', overflow:"scroll"}}>
               <ReportCard
                 title="Visits Performance Counts"
                 headers={[
@@ -785,7 +864,7 @@ export default function ReportMainCom() {
               />
             </div>
           </div>
-        </GridLayout>
+        </ResponsiveGridLayout>
       </div>
     </div>
   )
