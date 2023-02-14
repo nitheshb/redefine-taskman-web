@@ -11,8 +11,10 @@ import HeadSideBar from '../../components/HeadSideBar/HeadSideBar'
 import ProjectsMHomeBody from '../../components/ProjectsMHomeBody/ProjectsMHomeBody'
 import ProjPhaseHome from '../../components/ProjPhaseHome/ProjPhaseHome'
 import SiderForm from '../../components/SiderForm/SiderForm'
+import HeadNavBar2 from 'src/components/HeadNavBar/HeadNavBar2'
+import SlimSideMenuBar from 'src/components/A_SideMenu/slimSideMenu'
 
-const ProjectEditPage = () => {
+const ProjectEditPage = ({selModule, setSelModule,viewable, setViewable, }) => {
   const [isAddPhaseOpen, setIsAddPhaseOpen] = useState(false)
   const [isEditProjectOpen, setIsEditProjectOpen] = useState(false)
   const [project, setProject] = useState({
@@ -49,10 +51,25 @@ const ProjectEditPage = () => {
   return (
     <>
       <div className="flex w-screen h-screen text-gray-700">
-        <HeadSideBar />
+        {/* <HeadSideBar /> */}
         <div className="flex flex-col flex-grow">
-          <HeadNavBar />
-          <div className="flex-grow px-2 overflow-auto  text-gray-700 bg-gradient-to-tr from-blue-200 via-indigo-200 to-pink-200">
+          {/* <HeadNavBar /> */}
+          <div className="flex overflow-y-hidden flex-row overflow-auto h-[100vh]  text-gray-700 bg-gradient-to-tr from-blue-200 via-indigo-200 to-pink-200">
+
+             <SlimSideMenuBar
+              pgName={'projectModule'}
+              sourceLink={'projectModule'}
+              showSideView1={undefined}
+              setViewable={setViewable}
+              viewable={viewable}
+            />
+            <div className="flex-grow   items-center overflow-y-auto no-scrollbar  h-[98%]  px-300  pt-300">
+
+
+          <HeadNavBar2
+              selModule ={""}
+              setSelModule={""}
+            />
             <div className="flex items-center flex-shrink-0 h-16 px-0  pl-0  ">
               {/* <h1 className="text-lg font-medium">redefine.</h1> */}
               <span className="relative z-10 flex items-center w-auto text-xl  leading-none pl-0">
@@ -110,6 +127,7 @@ const ProjectEditPage = () => {
               data={project}
               widthClass="max-w-2xl"
             />
+          </div>
           </div>
         </div>
       </div>

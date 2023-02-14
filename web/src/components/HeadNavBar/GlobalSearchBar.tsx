@@ -76,10 +76,10 @@ export const GlobalSearchBar = (props) => {
     document.addEventListener('click', handleClickOutside)
   }, [])
   return (
-    <span className="ml-5 bg-gray-50 border border-gray-300 border-solid box-border w-1/3 rounded-md">
+    <span className="flex ml-5 bg-gray-50 border border-gray-300 border-solid box-border w-1/3 rounded-md">
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        className="h-4 w-4 absolute mt-[6px] mx-2"
+        className="h-4 w-4  mt-[6px] mx-2"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -98,7 +98,7 @@ export const GlobalSearchBar = (props) => {
         onChange={searchKeyField}
         autoComplete="off"
         // value={searchKey}
-        className="ml-[30px] w-52 bg-transparent focus:border-transparent focus:ring-0 focus-visible:border-transparent focus-visible:ring-0 focus:outline-none text-sm leading-7 text-gray-900 w-4/5 relative"
+        className="w-52 bg-transparent focus:border-transparent focus:ring-0 focus-visible:border-transparent focus-visible:ring-0 focus:outline-none text-sm leading-7 text-gray-900 w-4/5 relative"
       />
       {showSearchDropdown && (
         <div ref={refContainer}>
