@@ -72,7 +72,7 @@ const ProjectEditPage = ({selModule, setSelModule,viewable, setViewable, }) => {
             />
             <div className="flex items-center flex-shrink-0 h-16 px-0  pl-0  ">
               {/* <h1 className="text-lg font-medium">redefine.</h1> */}
-              <span className="relative z-10 flex items-center w-auto text-xl  leading-none pl-0">
+              <span className="relative  flex items-center w-auto text-xl  leading-none pl-0">
                 Project Details
               </span>
               <button
