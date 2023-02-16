@@ -25,7 +25,7 @@ const TaskProgress = ({ userTodayPerfA }) => {
           </span>
         </div>
 
-      
+
       </Box>
       <Box mt={3}>
         <div className="flex flex-row align-middle justify-between">
