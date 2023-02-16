@@ -582,8 +582,12 @@ export const checkIfUserAlreadyExists = async (cName, matchVal) => {
 
   // db.collection(`${orgId}_leads`).add(data)
 }
-export const getLeadsDataLake = async (orgId, snapshot, error) => {
-  const getAllProjectsQuery = await query(collection(db, `${orgId}_leads_lake`))
+export const getLeadsDataLake = async (orgId, snapshot, error, data) => {
+  const {dateRange} = data
+  const getAllProjectsQuery = await query(
+    collection(db, `${orgId}_leads_lake`),
+    where('cT', '>=', dateRange)
+  )
   return onSnapshot(getAllProjectsQuery, snapshot, error)
 }
 export const getAllRoleAccess = async (orgId) => {
@@ -638,6 +642,7 @@ export const getAllProjects = async (orgId, snapshot, error) => {
     collection(db, `${orgId}_projects`),
     orderBy('created', 'desc')
   )
+  console.log(getAllProjectsQuery, "dcavlvblasfjv")
   return onSnapshot(getAllProjectsQuery, snapshot, error)
 }
 

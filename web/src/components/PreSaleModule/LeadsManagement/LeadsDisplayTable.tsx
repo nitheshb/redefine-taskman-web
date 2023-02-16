@@ -16,10 +16,11 @@ import {
   getDifferenceInMinutes,
   prettyDateTime,
 } from 'src/util/dateConverter'
-import { SlimSelectBox } from 'src/util/formFields/slimSelectBoxField'
+import { SlimDateSelectBox, SlimSelectBox } from 'src/util/formFields/slimSelectBoxField'
 import uniqueId from 'src/util/generatedId'
-
-import LLeadsTableBody from '../LLeadsTableBody/LLeadsTableBody'
+import Tooltip from '@mui/material/Tooltip'
+import CSVDownloader from '../../../util/csvDownload'
+// import LLeadsTableBody from '../LLeadsTableBody/LLeadsTableBody'
 
 const torrowDate = new Date(
   +new Date().setHours(0, 0, 0, 0) + 86400000
@@ -31,6 +32,7 @@ const LeadsDisplayTable = ({
   searchKey,
   setSearchKey,
   allProjectsA,
+  setDateRange,
 }) => {
   // change navbar title
   // useTitle('Data Table V1')
@@ -101,8 +103,16 @@ const LeadsDisplayTable = ({
                 tabIndex={0}
                 className="focus:outline-none text-base sm:text-lg md:text-xl lg:text-2xl font-bold leading-normal text-gray-800"
               ></p>
+
               <section className="flex flex-row">
-                <div className=" flex flex-col   mr- w-40">
+                <SlimDateSelectBox
+                  onChange={async (value) => {
+                    console.log(value, 'ksdvnlfkjv')
+                    setDateRange(value)
+                  }}
+                  label="This Month"
+                />
+                <div className=" flex flex-col   ml-5 mt-1 w-40">
                   <SlimSelectBox
                     name="project"
                     label=""
@@ -120,6 +130,13 @@ const LeadsDisplayTable = ({
                     ]}
                   />
                 </div>
+                <Tooltip title={`Download ${leadsRawList?.length} Row`}>
+                  <CSVDownloader
+                    className="mr-6 h-[20px] w-[20px]"
+                    downloadRows={leadsRawList}
+                    style={{ height: '20px', width: '20px' }}
+                  />
+                </Tooltip>
               </section>
             </div>
           </div>
