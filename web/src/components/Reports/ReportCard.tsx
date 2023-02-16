@@ -6,21 +6,19 @@ import {
 
 export default function ReportCard(props) {
   return (
-    <div style={{ display: 'flex' }} className={'dragMe'}>
+    <div style={{ display: 'flex', }} className={'dragMe'}>
       <div
-        className="drop-shadow-md  z-10  mt-10 rounded-lg flex flex-col overscroll-x-scroll p-10 max-w-[80%] bg-white-500"
-        style={{
-          backgroundColor: '#e5e5e5',
-          minHeight:'590px'
-        }}
+        className=" flex flex-col overscroll-x-scroll p-10 max-w-[100%]"
       >
-        <div className="flex m-1 justify-between">
-          <div className="relative z-10 flex items-center w-auto text-md font-bold leading-none pl-0 ml-1 mt-4 ">
+        <div className="flex m-1 justify-between"
+        style={{position:"sticky", top:"0px", background:"#e5e5e5"}}
+        >
+          <div className="relative  flex items-center w-auto text-md font-bold leading-none pl-0 ml-1 mt-4 ">
             <div className="text-md font-bold leading-none">{props.title}</div>
           </div>
 
           <div
-            className="relative z-10 flex items-center w-auto text-md font-bold leading-none pl-0 ml-1 mt-4"
+            className="relative  flex items-center w-auto text-md font-bold leading-none pl-0 ml-1 mt-4"
             style={{ gap: '50px' }}
           >
             {props.hasOwnProperty('employeeDataDropDown')
