@@ -3,14 +3,28 @@ import { useState, useEffect } from 'react'
 
 import { Diversity1 } from '@mui/icons-material'
 import { Box, Menu, MenuItem, Typography } from '@mui/material'
-import { useDispatch } from 'react-redux'
-
+import { RootStateOrAny, useDispatch, useSelector } from 'react-redux'
+import { useCallback } from 'react'
 import { Link, routes } from '@redwoodjs/router'
-
+// import { useDispatch } from 'react-redux'
 import { useAuth } from 'src/context/firebase-auth-context'
+import debounce from 'lodash.debounce'
+import ExecutiveHomeViewerPage from 'src/components/ExecutiveHomeViewerPage'
 import { logout as logoutAction } from 'src/state/actions/user'
-
+import { getLeadsByPhoneNo } from 'src/context/dbQueryFirebase'
+import { searchValue, searchData as searchResponse } from 'src/state/actions/search'
+import Loader from 'src/components/Loader/Loader'
 import ModuleSwitchDrop from '../A_SideMenu/modulesSwitchDrop'
+
+const HeadNavBar = (props) => {
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const [searchKey, setSearchKey] = React.useState<string>(props.searchVal?props.searchVal : '')
+  // const [searchKey, setSearchKey] = React.useState<string>('')
+
+  const [showSearchDropdown, setShowSearchDropdown] = React.useState<boolean>(false)
+  const [showLoader, setshowLoader] = React.useState<boolean>(false)
+  const [searchData, setSearchData] = React.useState([])
+
 const HeadNavBar = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
 
@@ -23,6 +37,8 @@ const HeadNavBar = () => {
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
   }
+  let refContainer = React.useRef(null)
+  console.log(searchKey, props, "cdsvfjlsc")
   const { user, logout } = useAuth()
   const dispatch = useDispatch()
   const handleClose = async (menuItem) => {
@@ -32,7 +48,61 @@ const HeadNavBar = () => {
       await logout()
     }
   }
+  const getSearchData = async (val) => {
+  setSearchKey(val)
 
+if (val.trim() && val.length>=10 ) {
+  dispatch(searchValue(val))
+  setShowSearchDropdown(true)
+  setshowLoader(true)
+  // let res
+  const orgId = user?.orgId
+  const res = await getLeadsByPhoneNo(orgId, {search: val})
+  console.log(res)
+  setSearchData(res)
+  dispatch(searchResponse({ ...res[0], id: 'dkcjbkdjbadkj' }))
+  setshowLoader(false)
+  // setTimeout(() => {
+  //   setSearchData([
+  //     {
+  //       customerName: 'Raghu',
+  //       sales: '/admin/leads-manager',
+  //     },
+  //     {
+  //       customerName: 'Raghu',
+  //       sales: '/admin/leads-manager',
+  //       finance: '/admin/leads-manager',
+  //     },
+  //   ])
+  //   setshowLoader(false)
+  // }, 2000)
+}
+  }
+  const handleClickOutside = (event) => {
+    if (event.target.id === 'globalSearch') {
+      return
+    } else if (
+      refContainer.current !== null &&
+      !refContainer.current.contains(event.target)
+    ) {
+      setShowSearchDropdown(false)
+      setshowLoader(false)
+      setSearchData([])
+    }
+
+  }
+   React.useEffect(() => {
+     document.addEventListener('click', handleClickOutside)
+   }, [])
+  // const debouncedSave = useCallback(debounce(getSearchData, 1000),[])
+  // const debouncedSave = useCallback(debounce(getSearchData, 1000), [])
+  const searchKeyField = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value
+    getSearchData(val)
+  }
+  console.log(searchKey, "acdsvfj")
+  // const searchingData = useSelector((state: RootStateOrAny) => state?.searchData)
+  // console.log(searchingData, "sdvfdbvlkjzsbvlkjsb")
   const makeFilterFun = (id, viewModule) => {
     // 'Sales', 'CRM', 'Legal', 'Finance', 'HR'
     setSelModule(viewModule)
@@ -105,10 +175,109 @@ const HeadNavBar = () => {
           <span className="ml-1"> Redefine Erp.</span>
         </span>
       </a> */}
+
         <span
           style={{ marginLeft: '10px' }}
           className="relative z-10 flex items-center text-2xl font-extrabold leading-none text-black select-none pl-0 ml-4"
-        ></span>
+        >
+          <span className="bg-zinc-400 rounded">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4 absolute mt-2 ml-1"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              ></path>
+            </svg>
+            <input
+              type="text"
+              id="globalSearch"
+              placeholder="Search something here"
+              onChange={searchKeyField}
+              autoComplete="off"
+              // value={searchKey}
+              className="ml-6 w-52 bg-transparent focus:border-transparent focus:ring-0 focus-visible:border-transparent focus-visible:ring-0 focus:outline-none text-sm leading-7 placeholder-white text-white"
+            />
+
+            {setShowSearchDropdown && (
+              <div ref={refContainer}>
+                {showLoader ? (
+                  <div className="z-10 absolute w-72 bg-zinc-700 text-white p-2">
+                    <div className="flex justify-center">
+                      <Loader texColor="text-white" />
+                    </div>
+                  </div>
+                ) : (
+                  // console.log(searchData)
+                  // {console.log(searchData)}
+                  <div className="z-10 absolute w-72 bg-zinc-700 text-white">
+                    {searchData.length
+                      ? searchData.map((item, index) => {
+                          return (
+                            <div className="m-1">
+                              <span>{item.Name}</span>
+                              <div className="">
+                                {/* {item.sales && ( */}
+                                <Link
+                                  to={routes.leadsManager({
+                                    type: 'inProgress',
+                                    clicked: Math.random(),
+                                  })}
+                                  className="text-lg underline mr-2"
+                                  id="testing"
+                                >
+                                  Sales{' '}
+                                </Link>
+                                <Link
+                                  to={routes.crmModule()}
+                                  className="text-lg underline mr-2"
+                                >
+                                  CRM {'   '}
+                                </Link>
+                                {/* )} */}
+                                {/* {item.finance && ( */}
+                                <Link
+                                  to={routes.financeModule()}
+                                  className="text-lg underline mr-2"
+                                >
+                                  Finance {'   '}
+                                </Link>
+                                {/* )} */}
+                                {/* {item.legal && ( */}
+                                <Link
+                                  to={routes.legalModule()}
+                                  className="text-lg underline mr-2"
+                                >
+                                  Legal {'   '}
+                                </Link>
+
+                                {/* )} */}
+                                {/* {item.construction && ( */}
+                                {/* <Link
+                                  to={routes.leadsManager()}
+                                  className="text-lg underline mr-2"
+                                >
+                                  Construction {'   '}
+                                </Link> */}
+                                {/* )} */}
+                              </div>
+                              {searchData.length - 1 !== index && <hr></hr>}
+                            </div>
+                          )
+                        })
+                      : null}
+                  </div>
+                )}
+              </div>
+            )}
+          </span>
+        </span>
         <button className="flex items-center justify-center h-10 px-4 ml-auto "></button>
         <button className="flex items-center justify-center h-10 text-sm font-medium "></button>
         <Box
@@ -164,8 +333,15 @@ const HeadNavBar = () => {
           <MenuItem onClick={() => handleClose('Logout')}>Logout</MenuItem>
         </Menu>
       </div>
+      {searchKey && searchKey.length != 10 && (
+        <span className="relative text-sm	bottom-4 left-44">
+          {searchKey.length != 10
+            ? `Please enter a 10 digit number`
+            : `Please enter only 10 digit number`}
+        </span>
+      )}
     </div>
   )
 }
-
+}
 export default HeadNavBar

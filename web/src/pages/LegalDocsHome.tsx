@@ -17,6 +17,7 @@ import 'flowbite'
 import DropDownSearchBar from 'src/components/dropDownSearchBar'
 
 import { PlusIcon } from '@heroicons/react/outline'
+import FileCardAnim from 'src/components/A_LegalModule/fileCard'
 const LegalDocsHome = ({ project }) => {
   const { projectName } = project
   const { user } = useAuth()
@@ -127,7 +128,7 @@ const LegalDocsHome = ({ project }) => {
             </form>
           </div>
 
-          <section className="grid justify-center md:grid-cols-3 lg:grid-cols-4 gap-5 lg:gap-7 my-10 ">
+          <section className=" justify-center flex flex-row my-10">
             <div
               className="cursor-pointer  z-10 flex flex-col  max-w-md p-2 my-0  mx-4 rounded-sm inline-block  min-h-[50px]  min-w-[100px] border border-dotted border-black rounded-md"
               onClick={() => {
@@ -161,50 +162,17 @@ const LegalDocsHome = ({ project }) => {
                 </span>
               </div>
             </div>
+
             {projects.length > 0 ? (
               projects.map((project, i) => (
                 // <span key={i}>{project?.projectName}</span>
                 <>
                   <div
                     key={i}
-                    className=" cursor-pointer relative max-w-md mx-auto md:max-w-2xl  min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded-xl  mr-8 transition duration-300 ease-in-out hover:scale-105 hover:drop-shadow-2xl bg-white bg-opacity-50 shadow-xl bg-gradient-to-br from-green-50 to-cyan-100"
+                    className=" cursor-pointer relative max-w-md mx-auto md:max-w-2xl  min-w-0 break-words bg-white w-full mb-6  rounded-xl  mr-8 transition duration-300 ease-in-out  "
                     onClick={() => dispDoc(project)}
                   >
-                    <div className="px-4 py-2 mb-4 flex flex-col">
-                      <span>#103459</span>
-
-                      <h3 className="text-lg text-slate-700 font-bold  leading-normal mb-1 mt-">
-                        {project?.projectName}
-                      </h3>
-                      <div className="text-xs mt-0 mb-2 text-slate-400 font-bold uppercase">
-                        Nithesh B 31/11/2022
-                      </div>
-                      <div className="text-xs mt-0 mb-2 text-slate-400 font-bold uppercase">
-                        Sale Agreement
-                      </div>
-
-                      {/* <div className="text-center mt-2 mb-4">
-                        <div className="flex justify-center lg:pt-2 pt-2 pb-0">
-                          <div className="p-3 text-center">
-                            <span className="text-xl font-bold block uppercase tracking-wide text-slate-700">
-                              3,360
-                            </span>
-                            <span className="text-sm text-slate-400">
-                              Phases
-                            </span>
-                          </div>
-                          <div className="p-3 text-center">
-                            <span className="text-xl font-bold block uppercase tracking-wide text-slate-700">
-                              2,454
-                            </span>
-                            <span className="text-sm text-slate-400">
-                              Available Units
-                            </span>
-                          </div>
-
-                        </div>
-                      </div> */}
-                    </div>
+                     <FileCardAnim />
                   </div>
                 </>
 

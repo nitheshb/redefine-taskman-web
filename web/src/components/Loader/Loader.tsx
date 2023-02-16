@@ -1,7 +1,7 @@
-const Loader = ({ texColor }) => {
+const Loader = ({ texColor, size }) => {
   return (
     <svg
-      className={`animate-spin -ml-1 mr-3 h-5 w-5 ${
+      className={`animate-spin -ml-1 mr-3 ${size || 'h-5 w-5'} ${
         texColor || 'text-black'
       } inline`}
       xmlns="http://www.w3.org/2000/svg"

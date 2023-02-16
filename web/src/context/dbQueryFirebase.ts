@@ -262,6 +262,18 @@ export const getLeadsByDate = async (orgId, data) => {
   console.log('my Array data is delayer 1', citySnapshot)
   return await citySnapshot.docs.map((doc) => doc.data())
 }
+//for global search
+export const getLeadsByPhoneNo = async (orgId, data) => {
+  const { search } = data
+  const itemsQuery = query(
+    collection(db, `${orgId}_leads`),
+    where('Mobile', '==', search )
+  )
+  const citySnapshot = await getDocs(itemsQuery)
+  // await citySnapshot.docs.map((doc) => doc.data())
+  console.log('my Array data is delayer 1', citySnapshot)
+  return await citySnapshot.docs.map((doc) => doc.data())
+}
 // get crmCustomers list
 
 export const getCRMCustomerByProject = (orgId, snapshot, data, error) => {

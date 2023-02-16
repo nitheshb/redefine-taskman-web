@@ -16,35 +16,41 @@ import TodayLeadsHomePage from 'src/components/TodayLeadsHomePage'
 import { useFileUpload } from 'src/components/useFileUpload'
 import { USER_ROLES } from 'src/constants/userRoles'
 import { useAuth } from 'src/context/firebase-auth-context'
-
+import ReportMain from '../../components/Reports/ReportMainCom'
 import HeadNavBar from '../../components/HeadNavBar/HeadNavBar'
 
-const LeadsManagerPage = () => {
+const LeadsManagerPage = (props) => {
   const { user } = useAuth()
   const [uploadedFileLink, handleFileUpload] = useFileUpload()
   const [loading, setLoading] = useState(true)
   const [showSideBar, setShowSideBar] = useState(false)
   const [showDetailedSideBar, setDetailedShowSideBar] = useState(false)
-  const [viewable, setViewable] = useState('Today1')
+  const [viewable, setViewable] = useState(
+    props.type === 'inProgress' ? 'inProgress' : 'Today1'
+  )
+  const [isClicked, setIsClicked] = useState(false)
   const [selModule, setSelModule] = useState('Sales')
 
   //confetti
 
   //confetti
-
+  const a =  window.location.pathname
+  window.history.pushState('', document.title, a)
   const showSideView1 = () => {
     setShowSideBar(!showSideBar)
   }
+  useEffect(() => {
+    setIsClicked(prev => !prev)
+  },[props.clicked])
   useEffect(() => {
     if (user) {
       if (user?.role?.includes(USER_ROLES.CP_AGENT)) {
         setViewable('inProgress')
       } else {
-        setViewable('Today1')
+        setViewable( props.type === 'inProgress' ? 'inProgress' : 'Today1')
       }
     }
   }, [user])
-
   return (
     <>
       <div className="flex w-screen h-screen text-gray-700">
@@ -86,7 +92,11 @@ const LeadsManagerPage = () => {
             />
 
               {viewable === 'inProgress' && (
-                <ExecutiveHomeViewerPage leadsTyper={'inProgress'} />
+                <ExecutiveHomeViewerPage
+                  leadsTyper={'inProgress'}
+                  isClicked= {isClicked}
+                  setIsClicked = {setIsClicked}
+                />
               )}
               {viewable === 'booked' && (
                 <ExecutiveHomeViewerPage leadsTyper={'booked'} />
@@ -120,16 +130,17 @@ const LeadsManagerPage = () => {
 
               {viewable === 'LeadsManagerHome' && <LeadsManagementHome />}
               {viewable === 'Team Lead Report' && (
-                <LeadsTeamReportBody
-                  project={{
-                    area: 1000,
-                    builderName: 'hello',
-                    location: 'local',
-                    projectName: 'Team Leads Report',
-                    projectType: 'aprtment',
-                  }}
-                  isEdit={false}
-                />
+                <ReportMain/>
+                // <LeadsTeamReportBody
+                //   project={{
+                //     area: 1000,
+                //     builderName: 'hello',
+                //     location: 'local',
+                //     projectName: 'Team Leads Report',
+                //     projectType: 'aprtment',
+                //   }}
+                //   isEdit={false}
+                // />
               )}
               {viewable === 'My Lead Report' && (
                 <MyLeadsReportHome

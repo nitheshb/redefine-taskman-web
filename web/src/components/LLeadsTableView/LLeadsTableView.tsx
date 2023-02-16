@@ -30,6 +30,7 @@ const LLeadsTableView = ({
   selUserProfileF,
   leadsFetchedData,
   leadsTyper,
+  searchVal,
 }) => {
   // change navbar title
   // useTitle('Data Table V1')
@@ -336,7 +337,6 @@ const LLeadsTableView = ({
         )
     }
   }, [value, leadsFetchedData])
-
   useEffect(() => {}, [leadsFetchedData])
   return (
     <Section pb={4}>
@@ -480,6 +480,7 @@ const LLeadsTableView = ({
                 newArray={statusSepA[0]?.[value]}
                 leadsFetchedData={filLeadsA}
                 mySelRows={mySelRows}
+                searchVal={searchVal}
               />
             )}
           </Grid>

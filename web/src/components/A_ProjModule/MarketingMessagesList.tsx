@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 
 import { PlusCircleIcon, TrashIcon } from '@heroicons/react/outline'
 import { useSnackbar } from 'notistack'
+import SendTwoToneIcon from '@mui/icons-material/SendTwoTone'
 
 import {
   deleteBankAccount,
@@ -21,7 +22,7 @@ const MarkeingMessagesList = ({ title, pId, data }) => {
   const { user } = useAuth()
   const { orgId } = user
   const { enqueueSnackbar } = useSnackbar()
-  const [bankDetialsA, setGetBankDetailsA] = useState([])
+  const [testPhNo, setTestPhNo] = useState("")
 
   const [sliderInfo, setSliderInfo] = useState({
     open: false,
@@ -30,41 +31,40 @@ const MarkeingMessagesList = ({ title, pId, data }) => {
     widthClass: 'max-w-xl',
   })
 
-  const triggerFun = (txt) => {
-    const { btnTxt, target } = txt
-    console.log(btnTxt, btnTxt === 'On Payment', target === 'Sales Executive')
-    if (btnTxt === 'On Payment' && target === 'Customer') {
+const triggerFun = (txt)=>{
+  const {btnTxt,target}=txt
+  console.log(btnTxt, btnTxt==='On Payment', target === 'Sales Executive')
+  if (btnTxt === 'On Payment' && target==='Customer') {
 
-      console.log(txt)
-      sendWhatAppTextSms1(
-        '8838598345',
-        `Dear {CustomerName},\nGreetings from Excel Dwellings.\n
+    console.log(txt)
+    sendWhatAppTextSms1(
+      `${testPhNo}`,
+      `Dear {CustomerName},\nGreetings from Excel Dwellings.\n
       This is an acknowledgement for your payment of a sum of Rs. {AmountPaid} on {PaidDate} as {PaymentMode}, for unit {UnitName} in {Project Name}.\n
       Please feel to contact us for any clarifications.\n
       Best Regards,\n
       {CompanyName} URL`
 
-      )
-    } else if (btnTxt === 'On Payment' && target === 'Sales Executive') {
-      sendWhatAppTextSms1(
-        '8838598345',
-        `Dear Executive,\n
+  )} else   if (btnTxt === 'On Payment' && target==='Sales Executive') {
+    sendWhatAppTextSms1(
+      `${testPhNo}`,
+      `Dear Executive,\n
       {CustomerName} has paid Rs/- {AmountPaid} on {PaidDate} as {PaymentMode} towards {Booking / Registration}, for unit {UnitName} in {Project Name}.\n
       eEstate Alert Service`
-      )
-    } else if (btnTxt === 'On Payment' && target === 'Manager') {
-      sendWhatAppTextSms1(
-        '8838598345',
-        `Dear Manager,\n
+    )
+  } else if  (btnTxt === 'On Payment' && target==='Manager') {
+    sendWhatAppTextSms1(
+      `${testPhNo}`,
+      `Dear Manager,\n
       {CustomerName} has paid Rs/- {AmountPaid} on {PaidDate} as {PaymentMode} towards {Booking / Registration}, for unit {UnitName} in {Project Name}.\n
       eEstate Alert Service
       `
-      )
-    }
-    else if (btnTxt === 'On Payment' && target === 'Administrator') {
-      sendWhatAppTextSms1(
-        '8838598345',
-        `Dear Manager,\n
+    )
+  }
+  else if  (btnTxt === 'On Payment' && target==='Administrator') {
+    sendWhatAppTextSms1(
+      `${testPhNo}`,
+      `Dear Manager,\n
       {CustomerName} has paid Rs/- {AmountPaid} on {PaidDate} as {PaymentMode} towards {Booking / Registration}, for unit {UnitName} in {Project Name}.\n
       eEstate Alert Service
       `
@@ -72,193 +72,193 @@ const MarkeingMessagesList = ({ title, pId, data }) => {
     }
     else if (btnTxt === 'On Delete' && target === 'Customer') {
       sendWhatAppTextSms1(
-        '8838598345',
+        `${testPhNo}`,
         `Dear {CustomerName},\n
         your payment of Rs/- {AmountPaid} paid as {PaymentMode}, for unit {UnitName} has been deleted .\n
         eEstate Alert Service
         `
       )
-    }
-    else if (btnTxt === 'On Delete' && target === 'Sales Executive') {
-      sendWhatAppTextSms1(
-        '8838598345',
-        `Dear Executive,\n
+}
+else if  (btnTxt === 'On Delete' && target==='Sales Executive') {
+  sendWhatAppTextSms1(
+    `${testPhNo}`,
+    `Dear Executive,\n
     {CustomerName} has paid Rs/- {AmountPaid} as {PaymentMode} towards {Booking / Registration}, for unit {UnitName} in {Project Name} is deleted.\n
     eEstate Alert Service
     `
-      )
-    }
-    else if (btnTxt === 'On Delete' && target === 'Manager') {
-      sendWhatAppTextSms1(
-        '8838598345',
-        `Dear Manager,\n
+  )
+}
+else if  (btnTxt === 'On Delete' && target==='Manager') {
+  sendWhatAppTextSms1(
+    `${testPhNo}`,
+    `Dear Manager,\n
     {CustomerName} has paid Rs/- {AmountPaid} as {PaymentMode} towards {Booking / Registration}, for unit {UnitName} in {Project Name} is deleted.\n
     eEstate Alert Service
     `
-      )
-    }
-    else if (btnTxt === 'On Delete' && target === 'Administrator') {
-      sendWhatAppTextSms1(
-        '8838598345',
-        `Dear Administrator,\n
-    {CustomerName} has paid Rs/- {AmountPaid} as {PaymentMode} towards {Booking / Registration}, for unit {UnitName} in {Project Name} is deleted.\n
-    eEstate Alert Service
-
-    `
-      )
-    }
-    else if (btnTxt === 'On Refund Pay' && target === 'Customer') {
-      sendWhatAppTextSms1(
-        '8838598345',
-        `Dear Administrator,\n
+  )
+}
+else if  (btnTxt === 'On Delete' && target==='Administrator') {
+  sendWhatAppTextSms1(
+    `${testPhNo}`,
+    `Dear Administrator,\n
     {CustomerName} has paid Rs/- {AmountPaid} as {PaymentMode} towards {Booking / Registration}, for unit {UnitName} in {Project Name} is deleted.\n
     eEstate Alert Service
 
     `
-      )
-    }
-    else if (btnTxt === 'On Refund Pay' && target === 'Sales Executive') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {ExecutiveName},\n
+  )
+}
+else if  (btnTxt === 'On Refund Pay' && target==='Customer') {
+  sendWhatAppTextSms1(
+    `${testPhNo}`,
+    `Dear Administrator,\n
+    {CustomerName} has paid Rs/- {AmountPaid} as {PaymentMode} towards {Booking / Registration}, for unit {UnitName} in {Project Name} is deleted.\n
+    eEstate Alert Service
+
+    `
+  )
+}
+else if (btnTxt === 'On Refund Pay' && target==='Sales Executive'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {ExecutiveName},\n
   {CustomerName}'s excess pay amount of {AmountPaid}/- in {Project Name} is returned on {RefundDate}, through {ModeofPayment}.\n
   eEstate Alert Service
   `)
-    }
-    else if (btnTxt === 'On Refund Pay' && target === 'Manager') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Manager,\n
+}
+else if (btnTxt === 'On Refund Pay' && target==='Manager'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Manager,\n
   {CustomerName}'s excess pay amount of {AmountPaid}/- in {Project Name} is returned on {RefundDate}, through {ModeofPayment}.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Refund Pay' && target === 'Administrator') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Administrator,\n
+}
+else if (btnTxt === 'On Refund Pay' && target==='Administrator'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Administrator,\n
   {CustomerName}'s excess pay amount of {AmountPaid}/- in {Project Name} is returned on {RefundDate}, through {ModeofPayment}.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Creation' && target === 'Customer') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {customername},\nGreetings From Excel Dwellings.\n
+}
+else if (btnTxt === 'On Creation' && target==='Customer'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {customername},\nGreetings From Excel Dwellings.\n
   Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\n                                                                 Our {executivename} will contact you soon. Please feel to contact us for any clarifications.
   Best regards,\n
   {companyname} URL`)
-    }
-    else if (btnTxt === 'On Creation' && target === 'Sales Executive') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {Executive Name} -\n
+}
+else if (btnTxt === 'On Creation' && target==='Sales Executive'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {Executive Name} -\n
   {CustomerName} contact is assigned\n
   to you, on {ContactDate}.\n
   Regards,\n
   {AttendantName}\n
   {CompanyName}`)
-    }
-    else if (btnTxt === 'On Creation' && target === 'Manager') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {ManagerName},\n
+}
+else if (btnTxt === 'On Creation' && target==='Manager'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {ManagerName},\n
   {CustomerName}  contact is created ,\n
   on {ContactDate} by {ExecutiveName}.\n
   Regards,\n
   {AttendantName}\n
   {CompanyName}`)
-    }
-    else if (btnTxt === 'On Creation' && target === 'Administrator') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Dear {Administrator Name},\n
+}
+else if (btnTxt === 'On Creation' && target==='Administrator'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Dear {Administrator Name},\n
   {CustomerName} contact is created ,\n
   on {ContactDate} by {ExecutveName}.\n
   Regards,\n
   {AttendantName}\n
   {CompanyName}`)
-    }
-    else if (btnTxt === 'On Update' && target === 'Customer') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {customername},\n
+}
+else if (btnTxt === 'On Update' && target==='Customer'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {customername},\n
   Greetings From Excel Dwellings.\nYour (Enq.no {BaseURL}) information has been updated. Please feel to contact us for any clarifications.\n
   Best regards,\n
   {companyname} URL\n
   eEstate Alert Service
   `)
-    }
-    else if (btnTxt === 'On Update' && target === 'Sales Executive') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {ExecutiveName},\n
+}
+else if (btnTxt === 'On Update' && target==='Sales Executive'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {ExecutiveName},\n
   {CustomerName}s (Enq.no {BaseURL}) information has been updated.\n
   eEstate Alert Service
 
   `)
-    }
-    else if (btnTxt === 'On Update' && target === 'Manager') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Manager,\n
+}
+else if (btnTxt === 'On Update' && target==='Manager'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Manager,\n
   {CustomerName}s (Enq.no {BaseURL}) information\n
   has been updated.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Update' && target === 'Administrator') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Administrator,\n
+}
+else if (btnTxt === 'On Update' && target==='Administrator'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Administrator,\n
   {contactname}'s (Enq.no <a href=""{base_URL}/contacts/eno={enquiryno}"">{enquiryno}</a>) information has been updated.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Delete Info' && target === 'Customer') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {CustomerName},\n
+}
+else if (btnTxt === 'On Delete Info' && target==='Customer'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {CustomerName},\n
   Due to wrong information, we are
   stopping all the services to you.\n
   Please contact us.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Delete Info' && target === 'Sales Executive') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {executivename},\n
+}
+else if (btnTxt === 'On Delete Info' && target==='Sales Executive'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {executivename},\n
   {contactname} is a wrong entry in our database, hence it was removed. Please stop all follow ups with this contact.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Delete Info' && target === 'Manager') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Manager,\n
+}
+else if (btnTxt === 'On Delete Info' && target==='Manager'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Manager,\n
   {CustomerName} is a wrong entry
   in our database, hence it was removed.\n
   So, we are  stopping all follow
   ups with this contact.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Delete Info' && target === 'Administrator') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Administrator,\n
+}
+else if (btnTxt === 'On Delete Info' && target==='Administrator'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Administrator,\n
   {contactname}'s (Enq.no <a href=""{base_URL}/contacts/eno={enquiryno}"">{enquiryno}</a>) is deleted.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Assignment' && target === 'Customer') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {ContactName},\n                                                       Greetings from Excel Dwellings.
+}
+else if (btnTxt === 'On Assignment' && target==='Customer'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {ContactName},\n                                                       Greetings from Excel Dwellings.
   {ToExecutive} has been assigned to you.\n
  Please feel to contact us fot any clarification.\n
  Best regards,\n
  {companyname} URL   `)
-    }
-    else if (btnTxt === 'On Assignment' && target === 'Sales Executive') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {toexecutive},\n
+}
+else if (btnTxt === 'On Assignment' && target==='Sales Executive'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {toexecutive},\n
   A new contact {contactname} has been assigned to you on {assigneddate} and you need to follow up with the contact on {firstfollowupdate}\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Assignment' && target === 'Manager') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Manager,\n
+}
+else if (btnTxt === 'On Assignment' && target==='Manager'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Manager,\n
   A new contact {ContactName} has been
   assigned to {ToExecutive}.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Assignment' && target === 'Administrator') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Administrator,\n
+}
+else if (btnTxt === 'On Assignment' && target==='Administrator'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Administrator,\n
   A new contact {ContactName} has been assigned to {ToExecutive}.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Transfer' && target === 'Customer') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {ContactName},\nGreetings from Excel Dwellings.\n
+}
+else if (btnTxt === 'On Transfer' && target==='Customer'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {ContactName},\nGreetings from Excel Dwellings.\n
   This is to inform you that ,
   your followup is transferred from
   {FromExecutive}  to {ToExecutive}.\n
@@ -266,428 +266,428 @@ const MarkeingMessagesList = ({ title, pId, data }) => {
   Please feel to contact us fot any clarification.\n
   Best regards,\n
   {companyname} URLeEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Transfer' && target === 'Sales Executive') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {ToExecutive},\n
+}
+else if (btnTxt === 'On Transfer' && target==='Sales Executive'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {ToExecutive},\n
   This is to inform you that , {ContactName},
   assignment is transferred from {FromExecutive}
   to you on {AssignedDate}.And next followup date
   is on {NextFollowupdate}.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Transfer' && target === 'Manager') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Manager,\n
+}
+else if (btnTxt === 'On Transfer' && target==='Manager'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Manager,\n
   This is to inform you that , {ContactName}, assignment is transferred from {FromExecutive}  to {ToExecutive}.\n
   The reason for transfer is {Reason}.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Transfer' && target === 'Administrator') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Administrator,\n
+}
+else if (btnTxt === 'On Transfer' && target==='Administrator'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Administrator,\n
   This is to inform you that , {ContactName}, assignment is transferred from {FromExecutive} to {ToExecutive}.\n
   The reason for transfer is {Reason}.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On De-assignment' && target === 'Customer') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {ContactName}, \n                                                  Greetings from Excel Dwellings.
+}
+else if (btnTxt === 'On De-assignment' && target==='Customer'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {ContactName}, \n                                                  Greetings from Excel Dwellings.
   Your followup is de-assigned on {DeassignedDate}.Sorry for the inconvenience.\n
   The reason is {Reason} .\n
   Please feel to contact us fot any clarification.\n
   Best regards,\n
   {companyname} URL                                                        eEstate Alert Service
   `)
-    }
-    else if (btnTxt === 'On De-assignment' && target === 'Sales Executive') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {FromExecutive},\n
+}
+else if (btnTxt === 'On De-assignment' && target==='Sales Executive'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {FromExecutive},\n
   {ContactName} is de-assigned on {DeassignedDate} ,from your followup list.The reason is {Reason}.\n
   eEstate Alert Service
   `)
-    }
-    else if (btnTxt === 'On De-assignment' && target === 'Manager') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Manager,\n
+}
+else if (btnTxt === 'On De-assignment' && target==='Manager'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Manager,\n
   {ContactName} is de-assigned on {DeassignedDate}.The reason is {Reason}.\n
   eEstate Alert Service
   `)
-    }
-    else if (btnTxt === 'On De-assignment' && target === 'Administrator') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Administrator,\n
+}
+else if (btnTxt === 'On De-assignment' && target==='Administrator'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Administrator,\n
   {ContactName} is de-assigned on {DeassignedDate}.The reason is {Reason}.\n
   eEstate Alert Service
   `)
-    }
-    else if (btnTxt === 'On Re-assignment' && target === 'Customer') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {ContactName},\n                                                Greetings from Excel Dwellings.
+}
+else if (btnTxt === 'On Re-assignment' && target==='Customer'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {ContactName},\n                                                Greetings from Excel Dwellings.
   Our executive {ToExecutive} is re-assigned to you.\n
   Please feel to contact us fot any clarification.\n
   Best regards,\n
   {companyname} URL\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Re-assignment' && target === 'Sales Executive') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {ToExecutive},\n
+}
+else if (btnTxt === 'On Re-assignment' && target==='Sales Executive'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {ToExecutive},\n
   A new contact {ContactName} has been assigned to you on {AssignedDate} and you need to follow up with the contact on {NextFollowupdate}.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Re-assignment' && target === 'Manager') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Manager,\n
+}
+else if (btnTxt === 'On Re-assignment' && target==='Manager'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Manager,\n
   A new contact {ContactName} has been re-assigned to {ToExecutive}.And the next followup date is {NextFollowupdate}.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Re-assignment' && target === 'Administrator') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Administrator,\n
+}
+else if (btnTxt === 'On Re-assignment' && target==='Administrator'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Administrator,\n
   A new contact {ContactName} has been Re-assigned to {ToExecutive}.And the next followup date is {NextFollowupdate}.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On First Follow Up' && target === 'Customer') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {ContactName},\n                                                  Greetings from Excel Dwellings.
+}
+else if (btnTxt === 'On First Follow Up' && target==='Customer'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {ContactName},\n                                                  Greetings from Excel Dwellings.
   This is to inform you that your first follow Up dated on {FirstFollowupdate} has been initialized and assigned to  {ExecutiveName}.{ExecutiveName} will keep following and updating you regarding your interested property.\n
   Please feel to contact us fot any clarification.\n
   Best regards,\n
   {companyname} URL
   `)
-    }
-    else if (btnTxt === 'On First Follow Up' && target === 'Sales Executive') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {ExecutiveName},\n
+}
+else if (btnTxt === 'On First Follow Up' && target==='Sales Executive'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {ExecutiveName},\n
   This is to inform you that you have been assigned a new follow up on {FirstFollowupdate} for {ContactName}.\n
   Keep following and updating the {ContactName}.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On First Follow Up' && target === 'Manager') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Manager,\n
+}
+else if (btnTxt === 'On First Follow Up' && target==='Manager'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Manager,\n
   This is to inform you that {ExecutiveName} of your team have been assigned a new follow up on {FirstFollowupdate} for {ContactName}.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On First Follow Up' && target === 'Administrator') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Administrator,\n
+}
+else if (btnTxt === 'On First Follow Up' && target==='Administrator'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Administrator,\n
   This is to inform you that {ExecutiveName} working under you have been assigned a new follow up on {FirstFollowupdate} for {ContactName}.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Next Follow Up' && target === 'Customer') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {ContactName},\n Greetings from Excel Dwellings.\n
+}
+else if (btnTxt === 'On Next Follow Up' && target==='Customer'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {ContactName},\n Greetings from Excel Dwellings.\n
   This is to inform you that your next follow Up dated on {NextFollowupdate} has been initialized and assigned to {ExecutiveName}.\n
   Please feel to contact us fot any clarification.\n
   Best regards,\n
   {companyname} URL`)
-    }
-    else if (btnTxt === 'On Next Follow Up' && target === 'Sales Executive') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {ExecutiveName},\n
+}
+else if (btnTxt === 'On Next Follow Up' && target==='Sales Executive'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {ExecutiveName},\n
   This is to inform you that you have next follow up on {NextFollowupdate} for {ContactName}.\n
   Keep following and updating {ContactName}.\n
   eEstate Alert Service
   `)
-    }
-    else if (btnTxt === 'On Next Follow Up' && target === 'Manager') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Manager,\n
+}
+else if (btnTxt === 'On Next Follow Up' && target==='Manager'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Manager,\n
   This is to inform you that {ExecutiveName} of your team have next follow up on {NextFollowupdate} for {ContactName}.\n
   eEstate Alert Service
   `)
-    }
-    else if (btnTxt === 'On Next Follow Up' && target === 'Administrator') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Administrator,\n
+}
+else if (btnTxt === 'On Next Follow Up' && target==='Administrator'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Administrator,\n
   This is to inform you that {ExecutiveName} working under you have next follow up on {NextFollowupdate} for {ContactName}.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Delete Follow Up' && target === 'Customer') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {ContactName},\nGreetings from Excel Dwellings.\n
+}
+else if (btnTxt === 'On Delete Follow Up' && target==='Customer'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {ContactName},\nGreetings from Excel Dwellings.\n
   This is to inform you that your next follow Up dated on {NextFollowupdate} handled by {ExecutiveName} has been deleted as you do not seem to be interested in our projects.\n
   Please feel to contact us fot any clarification.\n
   Best regards,\n
   {companyname} URL`)
-    }
-    else if (btnTxt === 'On Delete Follow Up' && target === 'Sales Executive') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {ExecutiveName},\n
+}
+else if (btnTxt === 'On Delete Follow Up' && target==='Sales Executive'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {ExecutiveName},\n
   This is to inform you that your next follow Up dated on {NextFollowupdate} for {ContactName} has been deleted as {ContactName}  do not seem to be interested in our projects.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Delete Follow Up' && target === 'Manager') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Manager,\n
+}
+else if (btnTxt === 'On Delete Follow Up' && target==='Manager'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Manager,\n
   This is to inform you that your next follow Up dated on {NextFollowupdate} for {ContactName} handled by {ExecutiveName} of your team has been deleted as {ContactName}.  do not seem to be interested in our projects.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Delete Follow Up' && target === 'Administrator') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Administrator,\n
+}
+else if (btnTxt === 'On Delete Follow Up' && target==='Administrator'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Administrator,\n
   This is to inform you that your next follow Up dated on {NextFollowupdate} for {ContactName} handled by {ExecutiveName} working under you has been deleted as {ContactName}  do not seem to be interested in our projects.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Dead Status' && target === 'Customer') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {ContactName} \n Greetings from Excel Dwellings\n
+}
+else if (btnTxt === 'On Dead Status' && target==='Customer'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {ContactName} \n Greetings from Excel Dwellings\n
   We regret that we were unable to serve you at this time. We will be glad to help you in future for assisting you in selecting a suitable property.\n
   Please feel to contact us fot any clarification.\n
   Best regards,\n
   {companyname} URL
   `)
-    }
-    else if (btnTxt === 'On Dead Status' && target === 'Sales Executive') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {ExecutiveName},\n
+}
+else if (btnTxt === 'On Dead Status' && target==='Sales Executive'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {ExecutiveName},\n
   {ContactName} is no longer interested with us. Please stop all follow ups in this contact.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Dead Status' && target === 'Manager') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Manager,\n
+}
+else if (btnTxt === 'On Dead Status' && target==='Manager'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Manager,\n
   {ContactName} is no longer interested with us. So, we are stopping all follow ups with this contact.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Dead Status' && target === 'Administrative') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Administrator,\n
+}
+else if (btnTxt === 'On Dead Status' && target==='Administrative'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Administrator,\n
   {ContactName} is no longer interested with us. So, we are stopping all follow ups with this contact.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Booking' && target === 'Customer') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {CustomerName},\n
+}
+else if (btnTxt === 'On Booking' && target==='Customer'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {CustomerName},\n
   Greetings from Excel Dwellings.\nThis is to inform you that site visit to {ProjectName} has been scheduled on {SiteVisitDateTime} for you.\n
   {ExecutiveName} will be attending you during the visit.\n
   Cab Status : {CabRequired}.Please feel to contact us for any clarifications.\n
   Best Regards,\n
   {CompanyName} URL
   `)
-    }
-    else if (btnTxt === 'On Booking' && target === 'Sales Executive') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {ExecutiveName},\n
+}
+else if (btnTxt === 'On Booking' && target==='Sales Executive'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {ExecutiveName},\n
   This is to inform you that you have a site visit to {ProjectName} dated on {SiteVisitDateTime} for {CustomerName} ref. no. : {EnquiryNo}.\n
   Cab Status : {CabRequired}.\n
   eEstate Alert Service
   `)
-    }
-    else if (btnTxt === 'On Booking' && target === 'Manager') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Manager,\n
+}
+else if (btnTxt === 'On Booking' && target==='Manager'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Manager,\n
   This is to inform you that {ExecutiveName} of your team have a sitevisit to {ProjectName} dated on {SiteVisitDateTime} for {CustomerName} ref. no. : {EnquiryNo}.\n
   Cab Status : {CabRequired}.\n
   eEstate Alert Service
   `)
-    }
-    else if (btnTxt === 'On Booking' && target === 'Administrator') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Administrator,\n
+}
+else if (btnTxt === 'On Booking' && target==='Administrator'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Administrator,\n
   This is to inform you that {ExecutiveName} have a site
   visit to {ProjectName} dated on {SiteVisitDateTime} for {CustomerName} ref. no. : {EnquiryNo}.\n
   Cab Status : {CabRequired}.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Prepone' && target === 'Customer') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {CustomerName},\nGreetings from Excel Dwellings.\n
+}
+else if (btnTxt === 'On Prepone' && target==='Customer'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {CustomerName},\nGreetings from Excel Dwellings.\n
   This is to inform you that site visit to {ProjectName} has been Preponed to {SiteVisitDateTime} for you.
   {ExecutiveName} will be attending you during the visit.\n
   Cab Status : {CabRequired}.Please feel to contact us for any clarifications.\n
   Best Regards,\n
   {CompanyName} URL
   `)
-    }
-    else if (btnTxt === 'On Prepone' && target === 'Sales Executive') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {ExecutiveName},\n
+}
+else if (btnTxt === 'On Prepone' && target==='Sales Executive'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {ExecutiveName},\n
   This is to inform you that site
   visit to {ProjectName} for {CustomerName} ref. no. : {EnquiryNo} has been Preponed to {SiteVisitDateTime}.\n
   Cab Status : {CabRequired}.\n
   eEstate Alert Service
   `)
-    }
-    else if (btnTxt === 'On Prepone' && target === 'Manager') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Manager,\n
+}
+else if (btnTxt === 'On Prepone' && target==='Manager'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Manager,\n
   This is to inform you that site visit to {ProjectName} for {CustomerName} ref. no. : {EnquiryNo} handled by {ExecutiveName} of your team has been Preponed to {SiteVisitDateTime}.\n
   Cab Status : {CabRequired}.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Prepone' && target === 'Administrator') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Administrator,\n
+}
+else if (btnTxt === 'On Prepone' && target==='Administrator'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Administrator,\n
   This is to inform you that site visit to {ProjectName} for {CustomerName} ref. no. : {EnquiryNo} handled by  {ExecutiveName} has been Preponed to {SiteVisitDateTime}.\n
   Cab Status : {CabRequired}.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Postpone' && target === 'Customer') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {CustomerName}, \n Greetings from Excel Dwellings.\n
+}
+else if (btnTxt === 'On Postpone' && target==='Customer'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {CustomerName}, \n Greetings from Excel Dwellings.\n
   This is to inform you that site visit to {ProjectName} has been Postponed to {SiteVisitDateTime} for you.\n
   {ExecutiveName} will be attending you during the visit.\n
   Cab Status : {CabRequired}.Please feel to contact us for any clarifications.\n
   Best Regards,\n
   {CompanyName} URL
   `)
-    }
-    else if (btnTxt === 'On Postpone' && target === 'Sales Executive') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {ExecutiveName},\n
+}
+else if (btnTxt === 'On Postpone' && target==='Sales Executive'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {ExecutiveName},\n
   This is to inform you that site
   visit to {ProjectName} for {CustomerName} ref. no. : {EnquiryNo} has been Postponed to {SiteVisitDateTime}.\n
   Cab Status : {CabRequired}.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Postpone' && target === 'Manager') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {ExecutiveName},\n
+}
+else if (btnTxt === 'On Postpone' && target==='Manager'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {ExecutiveName},\n
   This is to inform you that site
   visit to {ProjectName} for {CustomerName} ref. no. : {EnquiryNo} has been Postponed to {SiteVisitDateTime}.\n
   Cab Status : {CabRequired}.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Postpone' && target === 'Administrator') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Administrator,\n
+}
+else if (btnTxt === 'On Postpone' && target==='Administrator'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Administrator,\n
   This is to inform you that site visit to {ProjectName} for{CustomerName} ref. no. : {EnquiryNo} handled by  {ExecutiveName} hasbeen Postponed to {SiteVisitDateTime}.\n
   Cab Status : {CabRequired}.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Cancel' && target === 'Customer') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {CustomerName},\nGreetings from Excel Dwellings.\n
+}
+else if (btnTxt === 'On Cancel' && target==='Customer'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {CustomerName},\nGreetings from Excel Dwellings.\n
   This is to inform you that the site visit to {ProjectName} on {SiteVisitDateTime} has been called off.\n
   Please feel to contact us for any clarifications.\n
   Best Regards,\n
   {CompanyName} URL`)
-    }
-    else if (btnTxt === 'On Cancel' && target === 'Sales Executive') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {ExecutiveName},\n
+}
+else if (btnTxt === 'On Cancel' && target==='Sales Executive'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {ExecutiveName},\n
   This is to inform you that site visit to {ProjectName} dated on {SiteVisitDateTime} for {CustomerName} ref. no. :{EnquiryNo} has been Cancelled.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Cancel' && target === 'Manager') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Manager,\n
+}
+else if (btnTxt === 'On Cancel' && target==='Manager'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Manager,\n
   This is to inform you that site visit to {ProjectName} dated on {SiteVisitDateTime} for {CustomerName} ref. no. : {EnquiryNo} handled by {ExecutiveName} of your team has been Cancelled.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Cancel' && target === 'Administrator') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Administrator,\n
+}
+else if (btnTxt === 'On Cancel' && target==='Administrator'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Administrator,\n
   This is to inform you that site visit to {ProjectName} dated on {SiteVisitDateTime} for {CustomerName} ref. no. : {EnquiryNo} handled by{ExecutiveName} has been Cancelled.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Complete' && target === 'Customer') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {CustomerName}, \n Greetings from Excel Dwellings.\n
+}
+else if (btnTxt === 'On Complete' && target==='Customer'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {CustomerName}, \n Greetings from Excel Dwellings.\n
   This is to inform you that your site visit to {ProjectName} has been completed on {SiteVisitDateTime}. Please give {ExecutiveName} your valuable feedback.\n
   Please feel to contact us for any clarifications.\n
   Best Regards,\n
   {CompanyName} URL`)
-    }
-    else if (btnTxt === 'On Complete' && target === 'Sales Executive') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {ExecutiveName},\n
+}
+else if (btnTxt === 'On Complete' && target==='Sales Executive'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {ExecutiveName},\n
   This is to inform you that sitevisit to {ProjectName} dated on {SiteVisitDateTime} for {CustomerName} ref. no. : {EnquiryNo} has been Completed.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Complete' && target === 'Manager') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Manager,\n
+}
+else if (btnTxt === 'On Complete' && target==='Manager'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Manager,\n
   This is to inform you that site visit to {ProjectName} dated on {SiteVisitDateTime} for {CustomerName} ref. no. : {EnquiryNo} handled by  {ExecutiveName} of your team has been Completed.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Complete' && target === 'Administrator') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Administrator,\n
+}
+else if (btnTxt === 'On Complete' && target==='Administrator'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Administrator,\n
   This is to inform you that site visit to {ProjectName} {ExecutiveName} has been Completed.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'Bring To Live' && target === 'Customer') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {CustomerName},\n
+}
+else if (btnTxt === 'Bring To Live' && target==='Customer'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {CustomerName},\n
   your contact has been again brought to live and assigned to {ExecutiveName}.\n
   eEstate Alert Service
   `)
-    }
-    else if (btnTxt === 'Bring To Live' && target === 'Sales Executive') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {ExecutiveName},\n
+}
+else if (btnTxt === 'Bring To Live' && target==='Sales Executive'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {ExecutiveName},\n
   {CustomerName} contact has been again brought to live and assigned to you.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'Bring To Live' && target === 'Manager') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Manager,\n
+}
+else if (btnTxt === 'Bring To Live' && target==='Manager'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Manager,\n
   {CustomerName} contact has been again brought to live and assigned to {ExecutiveName}.\n
   eEstate Alert Service
   `)
-    }
-    else if (btnTxt === 'Bring To Live' && target === 'Administrator') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Administrator,\n
+}
+else if (btnTxt === 'Bring To Live' && target==='Administrator'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Administrator,\n
   {CustomerName} contact has been again brought to live and assigned to {ExecutiveName}.\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Creation' && target === 'Customer') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {CustomerName}, \n Greetings from Excel Dwellings.\n
+}
+else if (btnTxt === 'On Creation' && target==='Customer'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {CustomerName}, \n Greetings from Excel Dwellings.\n
   Thank you and Welcome to the Excel Family on your Booking {UnitType} in {ProjectName} on {BookingDate}. UnitNumber: {UnitName}.\n
   We appreciate you sincerely for the business you brought to us. And we hope that your journey with us will be wonderful and fruitful for both of us. We assure our best to deliver outstanding results. \n                                         Please feel to contact us for any clarifications.
   Best Regards,\n
   {CompanyName} URL`)
-    }
-    else if (btnTxt === 'On Creation' && target === 'Sales Executive') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {AttendantName},\n
+}
+else if (btnTxt === 'On Creation' && target==='Sales Executive'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {AttendantName},\n
   {CustomerName}  booking done on Project: {ProjectName} and UnitNumber : {UnitName}\n
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Creation' && target === 'Manager') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Manager,\n
+}
+else if (btnTxt === 'On Creation' && target==='Manager'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Manager,\n
   {CustomerName}  Booking is created , on {BookingDate}. Booked UnitNumber: {UnitName} in Project: {ProjectName} .\n
   Yours truly,\n
   {AttendantName}\n
   {CompanyName}`)
-    }
-    else if (btnTxt === 'On Creation' && target === 'Administrator') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear sir,\n
+}
+else if (btnTxt === 'On Creation' && target==='Administrator'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear sir,\n
   {CustomerName}  Booking is created , on {BookingDate}. Booked UnitNumber: {UnitName} in Project: {ProjectName}.\n
   Yours truly,\n
   {AttendantName}\n
   {CompanyName}
   `)
-    }
-    else if (btnTxt === 'On Update' && target === 'Customer') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {CustomerName},                                      Greetings from Excel Dwellings.
+}
+else if (btnTxt === 'On Update' && target==='Customer'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {CustomerName},                                      Greetings from Excel Dwellings.
   Your information with booked UnitNumber: {UnitName} in Project: {ProjectName} is updated.
   Please feel to contact us for any clarifications.
   Best Regards,
   {CompanyName} URL
   `)
-    }
-    else if (btnTxt === 'On Update' && target === 'Sales Executive') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {AttendantName},
+}
+else if (btnTxt === 'On Update' && target==='Sales Executive'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {AttendantName},
   {CustomerName} information with booked Project:
   {ProjectName} and UnitNumber :
   {UnitName} is updated.
   eEstate Alert Service
   `)
-    }
-    else if (btnTxt === 'On Update' && target === 'Manager') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Manager,
+}
+else if (btnTxt === 'On Update' && target==='Manager'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Manager,
   {CustomerName} information with booked
   UnitNumber: {UnitName} in Project:
   {ProjectName} is updated.
@@ -696,132 +696,132 @@ const MarkeingMessagesList = ({ title, pId, data }) => {
   {CompanyName}
 
   `)
-    }
-    else if (btnTxt === 'On Update' && target === 'Administrator') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear sir,
+}
+else if (btnTxt === 'On Update' && target==='Administrator'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear sir,
   {CustomerName} information  booking
   with booked UnitNumber: {UnitName}
   in Project: {ProjectName} is Updated.
   Yours truly,
   {AttendantName}
   {CompanyName}`)
-    }
-    else if (btnTxt === 'On Transfer Charge' && target === 'Customer') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {CustomerName} ,                                      Greetings from Excel Dwellings.
+}
+else if (btnTxt === 'On Transfer Charge' && target==='Customer'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {CustomerName} ,                                      Greetings from Excel Dwellings.
   This is to inform you that ,your booking is transferred from {OldInterestedProject}, {OldUnitName} to {NewInterestedProject},{NewUnitName}.
   The charges for transferring will be {Charges}.
   Please feel to contact us for any clarifications.
   Best Regards,
   {CompanyName} URL
   `)
-    }
-    else if (btnTxt === 'On Transfer Charge' && target === 'Sales Executive') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Executive,
+}
+else if (btnTxt === 'On Transfer Charge' && target==='Sales Executive'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Executive,
   This is to inform you that ,{CustomerName} booking is transferred from {OldInterestedProject}, {OldUnitName} to {NewInterestedProject},{NewUnitName}.
   The charges for transferring is {Charges}.
   eEstate Alert Service
 
   `)
-    }
-    else if (btnTxt === 'On Transfer Charge' && target === 'Manager') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Manager,
+}
+else if (btnTxt === 'On Transfer Charge' && target==='Manager'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Manager,
   This is to inform you that ,{CustomerName} booking is transferred from {OldInterestedProject}, {OldUnitName} to {NewInterestedProject},{NewUnitName}.
   The charges for transferring is {Charges}.
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Transfer Charge' && target === 'Administrator') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Administrator,
+}
+else if (btnTxt === 'On Transfer Charge' && target==='Administrator'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Administrator,
   This is to inform you that ,{CustomerName} booking is transferred from {OldInterestedProject}, {OldUnitName} to {NewInterestedProject},{NewUnitName}.
   The charges for transferring is {Charges}.
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Delete Booking' && target === 'Customer') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {CustomerName},                                     Greetings from Excel Dwellings.
+}
+else if (btnTxt === 'On Delete Booking' && target==='Customer'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {CustomerName},                                     Greetings from Excel Dwellings.
   Your booking in {ProjectName} {UnitName} has been deleted due to some wrong information. Apoligies for the inconvenience  caused.
   Please feel to contact us for any clarifications.
   Best Regards,
   {CompanyName} URL`)
-    }
-    else if (btnTxt === 'On Delete Booking' && target === 'Sales Executive') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Executive,
+}
+else if (btnTxt === 'On Delete Booking' && target==='Sales Executive'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Executive,
   {CustomerName} booking with booked UnitNumber: {UnitName} in Project: {ProjectName} is deleted.
   eEstate Alert Service
   `)
-    }
-    else if (btnTxt === 'On Delete Booking' && target === 'Manager') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Manager,
+}
+else if (btnTxt === 'On Delete Booking' && target==='Manager'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Manager,
   {CustomerName} booking with booked UnitNumber: {UnitName} in Project: {ProjectName} is deleted .
   Yours truly,
   {AttendantName}
   {CompanyName}
   `)
-    }
-    else if (btnTxt === 'On Delete Booking' && target === 'Administrator') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear sir,
+}
+else if (btnTxt === 'On Delete Booking' && target==='Administrator'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear sir,
   {CustomerName} booking with booked UnitNumber: {UnitName} in Project: {ProjectName} is deleted.
   Yours truly,
   {AttendantName}
   {CompanyName}`)
-    }
-    else if (btnTxt === 'On Cancel Booking' && target === '') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {CustomerName},                                  Greetings from Excel Dwellings.
+}
+else if (btnTxt === 'On Cancel Booking' && target===''){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {CustomerName},                                  Greetings from Excel Dwellings.
   This is to inform you that for your booking in {ProjectName} Unit Number: {UnitName} a cancellation ticket has been raised. The resaon being - {ReasonForCancellation}.
   Please feel to contact us for any clarifications.
   Best Regards,
   {CompanyName} URL`)
-    }
-    else if (btnTxt === 'On Cancel Booking' && target === '') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Executive,
+}
+else if (btnTxt === 'On Cancel Booking' && target===''){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Executive,
   For {CustomerName} booking with booked UnitNumber: {UnitName} in Project: {ProjectName} cancellation ticket has been raised. The resaon is {ReasonForCancellation}.
   eEstate Alert Service
   `)
-    }
-    else if (btnTxt === 'On Cancel Booking' && target === '') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Manager,
+}
+else if (btnTxt === 'On Cancel Booking' && target===''){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Manager,
   For {CustomerName} booking with booked UnitNumber: {UnitName} in Project: {ProjectName} cancellation ticket has been raised. The resaon is {ReasonForCancellation}.
   Yours truly,
   {AttendantName}
   {CompanyName}`)
-    }
-    else if (btnTxt === 'On Cancel Booking' && target === '') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear sir,
+}
+else if (btnTxt === 'On Cancel Booking' && target===''){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear sir,
   For {CustomerName} booking with booked UnitNumber: {UnitName} in Project: {ProjectName} cancellation ticket has been raised. The resaon is {ReasonForCancellation}.
   Yours truly,
   {AttendantName}
   {CompanyName}`)
-    }
-    else if (btnTxt === 'On Block' && target === 'Customer') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {CustomerName},                                           Greetings from Excel Dwellings.
+}
+else if (btnTxt === 'On Block' && target==='Customer'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {CustomerName},                                           Greetings from Excel Dwellings.
   This is to inform you that your booking In {Project Name}, UnitNumber: {UnitName} has been blocked up to {BlockedUpToDate} with the reason {BlockReason}.
   At Excel Dwellings we value your time and your money. We understand that not only should your home be a refuge from the storms of life but also give you excellent return on investment. We also take great pride to bring a customer focused organization.                        Please feel to contact us for any clarifications.
   Best Regards,
   {CompanyName} URL`)
     }
 
-    else if (btnTxt === 'On Block' && target === 'Sales Executive') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Executive,
+else if (btnTxt === 'On Block' && target==='Sales Executive'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Executive,
   {CustomerName} booking with booked UnitNumber: {UnitName} in Project: {ProjectName} has been blocked up to {BlockedUpToDate} with the reason {BlockReason}.
   eEstate Alert Service`)
     }
 
-    else if (btnTxt === 'On Block' && target === 'Manager') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Manager,
+else if (btnTxt === 'On Block' && target==='Manager'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Manager,
   {CustomerName} booking with booked UnitNumber: {UnitName} in Project: {ProjectName} has been blocked up to {BlockedUpToDate} with the reason {BlockReason}.
   Yours truly,
   {AttendantName}
@@ -830,246 +830,246 @@ const MarkeingMessagesList = ({ title, pId, data }) => {
   `)
     }
 
-    else if (btnTxt === 'On Block' && target === 'Administrator') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear sir,
+else if (btnTxt === 'On Block' && target==='Administrator'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear sir,
   {CustomerName} booking with booked UnitNumber: {UnitName} in Project: {ProjectName} has been blocked up to {BlockedUpToDate} with the reason {BlockReason}.
   Yours truly,
   {AttendantName}
   {CompanyName}`)
-    }
-    else if (btnTxt === 'On Initialize Approve Reject' && target === 'Customer') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {CustomerName},                                      Greetings from Excel Dwellings.
+}
+else if (btnTxt === 'On Initialize Approve Reject' && target==='Customer'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {CustomerName},                                      Greetings from Excel Dwellings.
   Your cancellation request for the Booked UnitNumber: {UnitName} in Project: {ProjectName} has been {StatusofCancellation}.
   Please feel to contact us for any clarifications.
   Best Regards,
   {CompanyName} URL
   `)
-    }
-    else if (btnTxt === 'On Initialize Approve Reject' && target === 'Sales Executive') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Executive,
+}
+else if (btnTxt === 'On Initialize Approve Reject' && target==='Sales Executive'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Executive,
   {CustomerName} cancellation request for the Booked UnitNumber: {UnitName} in Project: {ProjectName} has been {StatusofCancellation}.
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Initialize Approve Reject' && target === 'Manager') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Manager,
+}
+else if (btnTxt === 'On Initialize Approve Reject' && target==='Manager'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Manager,
   {CustomerName} cancellation request for the Booked UnitNumber: {UnitName} in Project: {ProjectName} has been {StatusofCancellation}.
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Initialize Approve Reject' && target === 'Administrator') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Administrator,
+}
+else if (btnTxt === 'On Initialize Approve Reject' && target==='Administrator'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Administrator,
   {CustomerName} cancellation request for the Booked UnitNumber: {UnitName} in Project: {ProjectName} has been {StatusofCancellation}.
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Payment' && target === 'Customer') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {CustomerName},                                     Greetings from Excel Dwellings.
+}
+else if (btnTxt === 'On Payment' && target==='Customer'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {CustomerName},                                     Greetings from Excel Dwellings.
   This is an acknowledgement for your payment of a sum of Rs. {AmountPaid} on {PaidDate} as {PaymentMode}, for unit {UnitName} in {Project Name}.
   Please feel to contact us for any clarifications.
   Best Regards,
   {CompanyName} UR`)
-    }
-    else if (btnTxt === 'On Payment' && target === 'Sales Executive') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Executive,
+}
+else if (btnTxt === 'On Payment' && target==='Sales Executive'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Executive,
   {CustomerName} has paid Rs/- {AmountPaid} on {PaidDate} as {PaymentMode} towards {Booking / Registration}, for unit {UnitName} in {Project Name}.
   eEstate Alert Service
   `)
-    }
-    else if (btnTxt === 'On Payment' && target === 'Manager') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Manager,
+}
+else if (btnTxt === 'On Payment' && target==='Manager'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Manager,
   {CustomerName} has paid Rs/- {AmountPaid} on {PaidDate} as {PaymentMode} towards {Booking / Registration}, for unit {UnitName} in {Project Name}.
   eEstate Alert Service
 
   `)
-    }
-    else if (btnTxt === 'On Payment' && target === 'Administrator') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Administrator,
+}
+else if (btnTxt === 'On Payment' && target==='Administrator'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Administrator,
   {CustomerName} has paid Rs/- {AmountPaid} on {PaidDate} as {PaymentMode} towards {Booking / Registration}, for unit {UnitName} in {Project Name}.
   eEstate Alert Service
   `)
-    }
-    else if (btnTxt === 'On Delete Payment' && target === 'Customer') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {CustomerName},
+}
+else if (btnTxt === 'On Delete Payment' && target==='Customer'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {CustomerName},
   your payment of Rs/- {AmountPaid} paid as {PaymentMode}, for unit {UnitName} has been deleted .
   eEstate Alert Service
   `)
-    }
-    else if (btnTxt === 'On Delete Payment' && target === 'Sales Executive') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Executive,
+}
+else if (btnTxt === 'On Delete Payment' && target==='Sales Executive'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Executive,
   {CustomerName} has paid Rs/- {AmountPaid} as {PaymentMode} towards {Booking / Registration}, for unit {UnitName} in {Project Name} is deleted.
   eEstate Alert Service
   `)
-    }
-    else if (btnTxt === 'On Delete Payment' && target === 'Manager') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Manager,
+}
+else if (btnTxt === 'On Delete Payment' && target==='Manager'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Manager,
   {CustomerName} has paid Rs/- {AmountPaid} as {PaymentMode} towards {Booking / Registration}, for unit {UnitName} in {Project Name} is deleted.
   eEstate Alert Service
   `)
-    }
-    else if (btnTxt === 'On Delete Payment' && target === 'Administrator') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Administrator,
+}
+else if (btnTxt === 'On Delete Payment' && target==='Administrator'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Administrator,
   {CustomerName} has paid Rs/- {AmountPaid} as {PaymentMode} towards {Booking / Registration}, for unit {UnitName} in {Project Name} is deleted.
   eEstate Alert Service
   `)
-    }
-    else if (btnTxt === 'On Refund Pay' && target === 'Customer') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {CustomerName},                                     Greetings from Excel Dwellings.
+}
+else if (btnTxt === 'On Refund Pay' && target==='Customer'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {CustomerName},                                     Greetings from Excel Dwellings.
   This is to inform that your excess paid amount of Rs. {AmountPaid}/- will be refunded to you on {RefundDate}, through {ModeofPayment}.
   Please feel to contact us for any clarifications.
   Best Regards,
   {CompanyName} URL`)
-    }
-    else if (btnTxt === 'On Refund Pay' && target === 'Sales Executive') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {ExecutiveName},
+}
+else if (btnTxt === 'On Refund Pay' && target==='Sales Executive'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {ExecutiveName},
   {CustomerName}'s excess pay amount of {AmountPaid}/- in {Project Name} is returned on {RefundDate}, through {ModeofPayment}.
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Refund Pay' && target === 'Manager') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Manager,
+}
+else if (btnTxt === 'On Refund Pay' && target==='Manager'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Manager,
   {CustomerName}'s excess pay amount of {AmountPaid}/- in {Project Name} is returned on {RefundDate}, through {ModeofPayment}.
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Refund Pay' && target === 'Administrator') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Administrator,
+}
+else if (btnTxt === 'On Refund Pay' && target==='Administrator'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Administrator,
   {CustomerName}'s excess pay amount of {AmountPaid}/- in {Project Name} is returned on {RefundDate}, through {ModeofPayment}.
   eEstate Alert Service`)
     }
 
-    else if (btnTxt === 'On Refund Delete' && target === 'Customer') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {CustomerName},
+else if (btnTxt === 'On Refund Delete' && target==='Customer'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {CustomerName},
   your returned excess pay amount of about {AmountPaid}/- ,through {ModeofPayment} is deleted due to some wrong entries.
   Please contact us for more information.
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Refund Delete' && target === 'Sales Executive') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {ExecutiveName},
+}
+else if (btnTxt === 'On Refund Delete' && target==='Sales Executive'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {ExecutiveName},
   {CustomerName} returned excess pay amount of about {AmountPaid}/- ,through {ModeofPayment} is deleted due to some wrong entries.
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Refund Delete' && target === 'Manager') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Manager,
+}
+else if (btnTxt === 'On Refund Delete' && target==='Manager'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Manager,
   {CustomerName} returned excess pay amount of about {AmountPaid}/- ,through {ModeofPayment} is deleted due to some wrong entries.
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Refund Delete' && target === 'Administrator') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Administrator,
+}
+else if (btnTxt === 'On Refund Delete' && target==='Administrator'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Administrator,
   {CustomerName} returned excess pay amount of about {AmountPaid}/- ,through {ModeofPayment} is deleted due to some wrong entries.
   eEstate Alert Service`)
-    }
-    else if (btnTxt === 'On Refund Pay' && target === 'Customer') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {CustomerName},                                      Greetings from Excel Dwellings.
+}
+else if (btnTxt === 'On Refund Pay' && target==='Customer'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {CustomerName},                                      Greetings from Excel Dwellings.
   This is to inform you that your Booking Cancellation excess paid amount of Rs. {AmountPaid}/- will be returned to you on {RefundDate}, through {ModeofPayment}.
   Please feel to contact us for any clarifications.
   Best Regards,
   {CompanyName} URL
   `)
-    }
-    else if (btnTxt === 'On Refund Pay' && target === 'Sales Executive') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear {ExecutiveName},
+}
+else if (btnTxt === 'On Refund Pay' && target==='Sales Executive'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear {ExecutiveName},
 {CustomerName} Booking Cancellation excess paid amount of {AmountPaid}/- in {Project Name} is returned on {RefundDate}, through {ModeofPayment}.
 eEstate Alert Service
 `)
-    }
-    else if (btnTxt === 'On Refund Pay' && target === 'Manager') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Manager,
+}
+else if (btnTxt === 'On Refund Pay' && target==='Manager'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Manager,
   {CustomerName} Booking Cancellation excess paid amount of {AmountPaid}/- in {Project Name} is returned on {RefundDate}, through {ModeofPayment}.
   eEstate Alert Service
 
   `)
-    }
-    else if (btnTxt === 'On Refund Pay' && target === 'Administrator') {
-      sendWhatAppTextSms1('8838598345',
-        `Dear Administrator,
+}
+else if (btnTxt === 'On Refund Pay' && target==='Administrator'){
+  sendWhatAppTextSms1(`${testPhNo}`,
+  `Dear Administrator,
   {CustomerName} Booking Cancellation excess paid amount of {AmountPaid}/- in {Project Name} is returned on {RefundDate}, through {ModeofPayment}.
   eEstate Alert Service`)
     }
     else if (btnTxt === 'On Enquiry Receival' && target==='Sales Customer'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername},Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Sales Agent Assign' && target==='Sales Customer'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Site Visit fix' && target==='Sales Customer'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\n                                                                Our {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Site Visit Completion' && target==='Sales Customer'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\n                                                                  Our {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On NotInterested' && target==='Sales Customer'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Booking' && target==='Sales Customer'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Payment Request' && target==='Sales Customer'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Payment Receival' && target==='Sales Customer'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername},  Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Payament Accepted' && target==='Sales Customer'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On CostSheet Approval' && target==='Sales Customer'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1077,7 +1077,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On Enquiry Receival' && target==='Sales Executive'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername},Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\n                                                                 Our {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1085,7 +1085,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On Sales Agent Assign' && target==='Sales Executive'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1093,7 +1093,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On Site Visit fix' && target==='Sales Executive'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1101,7 +1101,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On Site Visit Completion' && target==='Sales Executive'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1109,7 +1109,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On NotInterested' && target==='Sales Executive'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1117,14 +1117,14 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On Booking' && target==='Sales Executive'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Payment Request' && target==='Sales Executive'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1132,7 +1132,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On Payment Receival' && target==='Sales Executive'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername},  Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1140,7 +1140,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On Payment Accepted' && target==='Sales Executive'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,
@@ -1148,7 +1148,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On CostSheet Approval' && target==='Sales Executive'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1156,7 +1156,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On Enquiry Receival' && target==='Sales Manager'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername},Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1164,7 +1164,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On Sales Agent Assign' && target==='Sales  Manager'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1172,7 +1172,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On Site Visit fix' && target==='Sales  Manager'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1180,7 +1180,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On Site Visit Completion' && target==='Sales  Manager'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1188,7 +1188,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On NotInterested' && target==='Sales  Manager'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1196,7 +1196,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On Booking' && target==='Sales  Manager'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1204,7 +1204,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On Payment Request' && target==='Sales  Manager'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.                                                                  Our {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1212,7 +1212,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On Payment Receival' && target==='Sales  Manager'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername},  Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\n                                                                  Our {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1220,7 +1220,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On Payament' && target==='Sales  Manager'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1228,39 +1228,39 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On Customer Assign' && target==='Sales  Manager'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Construction Update' && target==='CRM Customer'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\n Our {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Payment Approval' && target==='CRM Customer'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Payment Rejected' && target==='CRM Customer'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       ``)
     }
     else if (btnTxt === 'On Payment' && target==='CRM Customer'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Deletion' && target==='CRM Customer'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {CustomerName},\n
       Due to wrong information, we are
       stopping all the services to you.
@@ -1268,49 +1268,49 @@ eEstate Alert Service
       eEstate Alert Service`)
     }
     else if (btnTxt === 'On Booking' && target==='CRM Customer'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Payment Request' && target==='CRM Customer'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Payment Receival' && target==='CRM Customer'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername},  Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\n                                                                  Our {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Payament Accepted' && target==='CRM Customer'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On CostSheet Approval' && target==='CRM Customer'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Payment' && target==='CRM  Executive'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Customer Assign' && target==='CRM  Executive'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {ContactName},Greetings from Excel Dwellings.\n
       {ToExecutive} has been assigned to you.\n
      Please feel to contact us fot any clarification.\n
@@ -1318,70 +1318,70 @@ eEstate Alert Service
      {companyname} URL    `)
     }
     else if (btnTxt === 'On Construction Update' && target==='CRM  Executive'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\n Our {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Payment Approval' && target==='CRM  Executive'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Payment Rejected' && target==='CRM  Executive'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername},  Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Booking' && target==='CRM  Executive'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Payment Request' && target==='CRM  Executive'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.                                                                  Our {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Payment Receival' && target==='CRM  Executive'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername},  Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.                                                                  Our {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Payment Accepted' && target==='CRM  Executive'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On CostSheet Approval' && target==='CRM Executive'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Payment' && target==='CRM Manager'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Customer Assign' && target==='CRM  Manager'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {ContactName},Greetings from Excel Dwellings.\n
       {ToExecutive} has been assigned to you.\n
      Please feel to contact us fot any clarification.\n
@@ -1389,53 +1389,53 @@ eEstate Alert Service
      {companyname} URL`)
     }
     else if (btnTxt === 'On Construction Update' && target==='CRM  Manager'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\n Our {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Payment Approval' && target==='CRM  Manager'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Payment Rejected' && target==='CRM  Manager'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       ``)
     }
     else if (btnTxt === 'On Booking' && target==='CRM  Manager'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Payment ' && target==='CRM  Manager'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,
       {companyname} URL`)
     }
     else if (btnTxt === 'On Payment Receival' && target==='CRM  Manager'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername},  Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Payament Accepted' && target==='CRM  Manager'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On CostSheet Request' && target==='CRM  Manager'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1443,14 +1443,14 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On Enquiry Receival' && target==='Finance Customer'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Sales Agent Assign' && target==='Finance Customer'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {ContactName},Greetings from Excel Dwellings.\n
       {ToExecutive} has been assigned to you.\n
      Please feel to contact us fot any clarification.\n
@@ -1458,56 +1458,56 @@ eEstate Alert Service
      {companyname} URL`)
     }
     else if (btnTxt === 'On Site Visit fix' && target==='Finance Customer'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Site Visit Completion' && target==='Finance Customer'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On NotInterested' && target==='Finance Customer'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\n                                                                 Our {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Booking' && target==='Finance Customer'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Payment Request' && target==='Finance Customer'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Payment Receival' && target==='Finance Customer'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername},  Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.                                                                  Our {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Payament Accepted' && target==='Finance Customer'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On CostSheet Approval' && target==='Finance Customer'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1515,7 +1515,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On Enquiry Receival' && target==='Finance Executive'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1523,7 +1523,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On Sales Agent Assign' && target==='Finance Executive'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {ContactName},Greetings from Excel Dwellings.\n
       {ToExecutive} has been assigned to you.\n
      Please feel to contact us fot any clarification.\n
@@ -1532,7 +1532,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On Site Visit fix' && target==='Finance Executive'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1540,7 +1540,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On Site Visit Completion' && target==='Finance Executive'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1548,7 +1548,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On NotInterested' && target==='Finance Executive'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\n                                                                 Our {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1556,14 +1556,14 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On Booking' && target==='Finance Executive'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
       {companyname} URL`)
     }
     else if (btnTxt === 'On Payment Request' && target==='Finance Executive'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.                                                                  Our {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1571,7 +1571,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On Payment Receival' && target==='Finance Executive'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername},  Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.                                                                  Our {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1579,7 +1579,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On Payment Accepted' && target==='Finance Executive'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1587,7 +1587,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On CostSheet Approval' && target==='Finance Executive'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1595,7 +1595,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On Enquiry Receival' && target==='Finance Manager'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1603,7 +1603,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On Sales Agent Assign' && target==='Finance  Manager'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {ContactName},Greetings from Excel Dwellings.\n
       {ToExecutive} has been assigned to you.\n
      Please feel to contact us fot any clarification.\n
@@ -1612,7 +1612,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On Site Visit fix' && target==='Finance  Manager'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1620,7 +1620,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On Site Visit Completion' && target==='Finance  Manager'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1628,7 +1628,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On NotInterested' && target==='Finance  Manager'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1636,7 +1636,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On Booking' && target==='Finance  Manager'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1644,7 +1644,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On Payment Request' && target==='Finance  Manager'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.                                                                  Our {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1652,7 +1652,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On Payment Receival' && target==='Finance  Manager'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername},  Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.                                                                  Our {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1660,7 +1660,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On Payament Accepted' && target==='Finance  Manager'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1668,7 +1668,7 @@ eEstate Alert Service
     }
 
     else if (btnTxt === 'On CostSheet Approval' && target==='Finance  Manager'){
-      sendWhatAppTextSms1('8838598345',
+      sendWhatAppTextSms1(`${testPhNo}`,
       `Dear {customername}, Greetings From Excel Dwellings.\n
       Thank you for contacting us. Here at Excel Dwellings we constantly strive to provide our customers with the best possible service and products.\nOur {executivename} will contact you soon. Please feel to contact us for any clarifications.
       Best regards,\n
@@ -1680,6 +1680,22 @@ eEstate Alert Service
 
   return (
     <>
+<section className='flex flex-row'>
+    <span className="ml-5 bg-gray-50 border border-gray-300 border-solid box-border w-[200px] rounded-md flex flex-row">
+
+      <input
+        type="text"
+        id="tstPhKey"
+        placeholder="Enter Target WhatsApp No..."
+        onChange={phKeyFieldFun}
+        autoComplete="on"
+        // value={searchKey}
+        className=" ml-3 w-[240px] bg-transparent focus:border-transparent focus:ring-0 focus-visible:border-transparent focus-visible:ring-0 focus:outline-none text-sm leading-7 text-gray-900  relative"
+      />
+
+      </span>
+      <span className='text-gray-300 text-xs mt-3 ml-2'>Hint: This is playground to test whatsapp notifiaction templates</span>
+      </section>
       <div className="w-full  flex flex-row">
       <div className="lg:col-span-2 mr-4">
           <div>
@@ -2051,8 +2067,8 @@ eEstate Alert Service
               <div className="bg-[#FFEDEA] p-4 rounded-xl shadow-md shadow-neutral-200 w-96">
                 <h2 className="text-sm font-semibold pb-2 border-b border-grey">{"Sales Templates"}</h2>
 
-                <div className=" justify-between mb-4">
-                  {[{ 'btnTxt': 'On Payment', 'target': 'Sales Executive' }, { 'btnTxt': 'On testing', 'target': 'Executive' }, { 'btnTxt': 'On Lead Assign', 'target': 'Sales Executive' }, { 'btnTxt': 'On Creation', 'target': 'Customer' }, { 'btnTxt': 'On Creation', 'target': 'Sales Executive' }, { 'btnTxt': 'On Creation', 'target': 'Manager' }, { 'btnTxt': 'On Creation', 'target': 'Administrator' }, { 'btnTxt': 'On Assignment', 'target': 'Customer' }, { 'btnTxt': 'On Assignment', 'target': 'Sales Executive' }, { 'btnTxt': 'On Assignment', 'target': 'Manager' }, { 'btnTxt': 'On Assignment', 'target': 'Administrator' }, { 'btnTxt': 'On Transfer', 'target': 'Customer' }, { 'btnTxt': 'On Transfer', 'target': 'Sales Executive' }, { 'btnTxt': 'On Transfer', 'target': 'Manager' }, { 'btnTxt': 'On Transfer', 'target': 'Administrator' }, { 'btnTxt': 'On De-assignment', 'target': 'Customer' },
+                    <div className=" justify-between mb-4">
+                      {[{'btnTxt': 'On Payment', 'target': 'Sales Executive' },{'btnTxt': 'On testing', 'target': 'Executive' },{'btnTxt': 'On Lead Assign', 'target': 'Sales Executive' },{'btnTxt': 'On Creation', 'target': 'Customer' },{'btnTxt': 'On Creation', 'target': 'Sales Executive' },{'btnTxt': 'On Creation', 'target': 'Manager' },{'btnTxt': 'On Creation', 'target': 'Administrator' },{'btnTxt': 'On Assignment', 'target': 'Customer' },{'btnTxt': 'On Assignment', 'target': 'Sales Executive' },{'btnTxt': 'On Assignment', 'target': 'Manager' },{'btnTxt': 'On Assignment', 'target': 'Administrator' },{'btnTxt': 'On Transfer', 'target': 'Customer' },{'btnTxt': 'On Transfer', 'target': 'Sales Executive' },{'btnTxt': 'On Transfer', 'target': 'Manager' },{'btnTxt': 'On Transfer', 'target': 'Administrator' },{'btnTxt': 'On De-assignment', 'target': 'Customer' },
 
                   { 'btnTxt': 'On De-assignment', 'target': 'Sales Executive' },
 

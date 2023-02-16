@@ -14,6 +14,7 @@ import { TextField2 } from 'src/util/formFields/TextField2'
 
 import UnitsSmallViewCard from '../unitsSmallView'
 import UnitsStatsCard from '../UnitsStatsCard/UnitsStatsCard'
+import ConstructUnitCardSmall from '../A_ConstructModule/ConstructUnitCardSmall'
 
 export default function ConstructProjectUnitsDisplay({
   pId,
@@ -62,7 +63,7 @@ export default function ConstructProjectUnitsDisplay({
           {/* <section className="px-8 bg-red-100 w-[130px] rounded-r-2xl">
           Fl-{floorDat}
         </section> */}
-          <div className=" px-4 mt-">
+          <div className=" mt-">
             {unitsFeed
               // ?.filter((da) => da?.floor == i)
               .map((data, index) => {
@@ -88,7 +89,7 @@ export default function ConstructProjectUnitsDisplay({
                       // })
                     }}
                   >
-                    <UnitsSmallViewCard
+                    <ConstructUnitCardSmall
                       kind={data}
                       feedData={unitsFeed}
                       bg="#CCFBF1"

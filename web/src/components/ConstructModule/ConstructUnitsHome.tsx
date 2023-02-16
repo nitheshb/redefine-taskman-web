@@ -21,6 +21,7 @@ import { PlusIcon } from '@heroicons/react/outline'
 import Floordetails from '../Floordetails/Floordetails'
 
 import ConstructProjectUnitsDisplay from './Const_ProjectUnitsDisplay'
+import ProjPhaseHome from '../ProjPhaseHome/ProjPhaseHome'
 const ConstructUnitsHome = ({ project }) => {
   const { projectName } = project
   const { user } = useAuth()
@@ -121,7 +122,7 @@ const ConstructUnitsHome = ({ project }) => {
 
   return (
     <div>
-      <section className=" mt-2 mr-2 py-8 mb-8 leading-7 text-gray-900 bg-white sm:py-12 md:py-16 lg:py-18 rounded-lg  ">
+      <section className=" m-1 py-4   leading-7 text-gray-900 bg-white  rounded-lg  ">
         <div className="box-border px-4 mx-auto border-solid sm:px-6 md:px-6 lg:px-8 max-w-full ">
           {/* <div className="flex flex-col  leading-7  text-gray-900 border-0 border-gray-200 ">
             <div className="flex items-center flex-shrink-0  px-0  pl-0   mb-2">
@@ -136,15 +137,19 @@ const ConstructUnitsHome = ({ project }) => {
             </div>
           </div> */}
 
-          <div className=" mt-6">
+          <div className="   ">
+
             <form className="">
-              <div className="flex">
-                <div className="relative w-full">
+              <div className="flex flex-row justify-between">
+              <span className="relative flex  items-center w-auto text-xl  leading-none pl-0">
+                Projects
+              </span>
+                <div className="relative w-[286px]">
                   <input
                     type="search"
                     id="search-dropdown"
-                    className="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg rounded-l-lg border-l-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-l-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
-                    placeholder={` Search Unit No, Customer name, Phone no, Dues, Review...`}
+                    className="block p-2.5 py-1 w-[120px] z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg rounded-l-lg border-l-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-l-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
+                    placeholder={`Unit No`}
                     required
                   />
                   <section className="absolute top-0 right-0  flex flex-row">
@@ -157,7 +162,7 @@ const ConstructUnitsHome = ({ project }) => {
                       selProjectIs={projectDetails}
                       dropDownItemsA={projects}
                     />
-                    <DropDownSearchBar
+                    {/* <DropDownSearchBar
                       type={'All Phases'}
                       id={'id'}
                       setStatusFun={{}}
@@ -165,7 +170,7 @@ const ConstructUnitsHome = ({ project }) => {
                       pickCustomViewer={selPhaseFun}
                       selProjectIs={selPhaseObj}
                       dropDownItemsA={phasesList}
-                    />
+                    /> */}
                     {/* <DropDownSearchBar
                       type={'All Payments'}
                       id={'id'}
@@ -177,7 +182,7 @@ const ConstructUnitsHome = ({ project }) => {
                     /> */}
                     <button
                       type="submit"
-                      className="p-2.5 px-8 text-sm font-medium text-white bg-blue-700 rounded-r-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                      className="px-2.5 py-1 px- text-sm font-medium text-white bg-[#734CDF] rounded-r-lg border border-[#734CDF] hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                     >
                       <svg
                         aria-hidden="true"
@@ -201,6 +206,15 @@ const ConstructUnitsHome = ({ project }) => {
               </div>
             </form>
           </div>
+          {projectDetails.uid === undefined && (
+
+            <section className='w-full'>
+          <ProjPhaseHome
+              projectDetails={projectDetails}
+              source={"ConstructModule"}
+              unitDetails={undefined}
+            />
+            </section>)}
           {projectDetails.uid === undefined && (
             <section className="grid justify-center md:grid-cols-3 lg:grid-cols-4 gap-5 lg:gap-7 my-10 ">
               <div
