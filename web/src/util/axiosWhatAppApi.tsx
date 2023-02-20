@@ -29,7 +29,7 @@ export const sendWhatAppTextSms = (clientNo, msg) => {
 }
 
 export const sendWhatAppTextSms1 = (clientNo, msg) => {
-  console.log('am i sendWhatAppTextSms')
+  console.log('am i sendWhatAppTextSms', clientNo)
 
   const options = {
     method: 'POST',

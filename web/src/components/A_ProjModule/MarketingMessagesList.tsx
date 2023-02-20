@@ -31,6 +31,10 @@ const MarkeingMessagesList = ({ title, pId, data }) => {
     widthClass: 'max-w-xl',
   })
 
+
+  const phKeyFieldFun = (e)=>{
+  setTestPhNo(e.target.value)
+  }
 const triggerFun = (txt)=>{
   const {btnTxt,target}=txt
   console.log(btnTxt, btnTxt==='On Payment', target === 'Sales Executive')
