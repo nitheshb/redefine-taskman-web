@@ -30,7 +30,7 @@ export function prettyDate(d) {
 }
 
 export function prettyDateTime(d) {
-  const date = new Date(d + 21600000 - 3600000)
+  const date = new Date(d)
   const months = [
     'Jan',
     'Feb',
@@ -46,17 +46,15 @@ export function prettyDateTime(d) {
     'Dec',
   ]
 
-  const dat =
-    date.getUTCDate() < 10 ? `0${date.getUTCDate()} ` : date.getUTCDate()
-  const hr =
-    date.getUTCHours() < 10 ? `0${date.getUTCHours()} ` : date.getUTCHours()
+  const dat = date.getDate() < 10 ? `0${date.getDate()} ` : date.getDate()
+  const hr = date.getHours() < 10 ? `0${date.getHours()} ` : date.getHours()
 
   return (
-    months[date.getUTCMonth()] +
+    months[date.getMonth()] +
     ' ' +
     dat +
     ', ' +
-    date.getUTCFullYear() +
+    date.getFullYear() +
     '   ' +
     hr +
     ':' +
