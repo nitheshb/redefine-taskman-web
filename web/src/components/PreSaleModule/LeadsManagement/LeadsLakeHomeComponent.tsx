@@ -4,10 +4,23 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import * as React from 'react'
 import { useState, useEffect } from 'react'
+
+
+import DeleteIcon from '@mui/icons-material/Delete'
+import EventNoteTwoToneIcon from '@mui/icons-material/EventNoteTwoTone'
+import IconButton from '@mui/material/IconButton'
+import { alpha } from '@mui/material/styles'
+import Toolbar from '@mui/material/Toolbar'
+import Tooltip from '@mui/material/Tooltip'
+import Typography from '@mui/material/Typography'
+import PropTypes from 'prop-types'
+import { startOfWeek, startOfDay, startOfMonth, subMonths } from 'date-fns'
+
 import LeadBankSourceStats from 'src/components/Charts_Graphs/LeadBankSourceStats'
 import RecentActivity from 'src/components/Charts_Graphs/RecentActivity'
 import LogSkelton from 'src/components/shimmerLoaders/logSkelton'
 import SiderForm from 'src/components/SiderForm/SiderForm'
+
 import {
   getAllProjects,
   getLeadsDataLake,
@@ -33,7 +46,7 @@ export default function LeadsLakeHomeComponent({ todaySch, schLoading }) {
   const [leadsRawList, setLeadsRawList] = useState([])
   const [allProjectsA, setAllProjectsA] = useState([])
   const [sortType, setSortType] = useState('Latest')
-
+  const [dateRange, setDateRange] = useState(startOfMonth(new Date()).getTime())
   const [userTodayPerfA, setUserTodayPerfA] = useState({})
 
   const [selProjectIs, setSelProject] = useState({
@@ -62,11 +75,12 @@ export default function LeadsLakeHomeComponent({ todaySch, schLoading }) {
         console.log('fetched projects list is', projectsListA)
         setLeadsRawList(projectsListA)
       },
-      (error) => setLeadsRawList([])
+      (error) => setLeadsRawList([]),
+      {dateRange}
     )
 
     return unsubscribe
-  }, [])
+  }, [dateRange])
   useEffect(() => {
     const unsubscribe = getAllProjects(
       orgId,
@@ -144,6 +158,7 @@ export default function LeadsLakeHomeComponent({ todaySch, schLoading }) {
                       setSearchKey={setSearchKey}
                       selUserProfileF={selUserProfileF}
                       allProjectsA={allProjectsA}
+                      setDateRange={setDateRange}
                     />
                   </div>
                   <div className="w-2/12 flex flex-col">

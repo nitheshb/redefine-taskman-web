@@ -121,7 +121,7 @@ export const SlimDateSelectBox = ({
       onChange(startDate?.getTime())
     }
   }, [dateRange])
-  const [value, setValue] = useState('Today')
+  const [value, setValue] = useState(label ? label : 'Today')
   const [isDatePicker, setDatePicker] = useState(false)
 
   console.log(value, 'value')
