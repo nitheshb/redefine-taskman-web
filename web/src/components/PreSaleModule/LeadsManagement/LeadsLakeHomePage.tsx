@@ -51,7 +51,6 @@ import { yearsToMonths } from 'date-fns'
 import { useTranslation } from 'react-i18next' // styled components
 
 // import uniqueId from '../../util/generatedId'
-import TodayLeadsActivitySearchView from 'src/components/TodayLeadsActivitySearchView'
 import {
   getLeadbyId1,
   getTodayTodoLeadsData,

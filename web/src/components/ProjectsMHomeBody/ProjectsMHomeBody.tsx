@@ -223,15 +223,17 @@ const ProjectsMHomeBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
   //   setValuedata(data)
   //   setValueKind(kind)
   //   setValueCurrency(currency)
+
+  //
   const chartSeries = data.series
   return (
-    <div className="px-4 pb-[0.1px] flex ">
+    // <div className="px-4 pb-[0.1px] flex bg-white shadow-md rounded-lg max-w-sm dark:bg-gray-800 dark:border-gray-700 ">
+<>
       <Link to={routes.projectEdit({ uid })}>
-        <section className=" mb-1 leading-7 text-gray-900 bg-[#E9E9F2] rounded-md  hover:text-blue-600 hover:bg-[#E9E9F2] transition duration-300 ease-in-out cursor-pointer">
-          <div className="box-border  max-w-full ">
-            <section className="flex flex-row  mr-1   text-gray-900  rounded-lg ">
-              <div className="w-60">
-                <div className="MuiPaper-elevation  MuiPaper-elevation1 MuiCard-root css-1fwf2za-MuiPaper-root-MuiCard-root bg-[#A798FF]">
+      <div className="flex flex-row mb-[2px] ">
+        <div className="w-2/4 bg-[#E9E9F2]">
+          <div className="">
+                <div className="MuiPaper-elevation  MuiPaper-elevation1 MuiCard-root css-1fwf2za-MuiPaper-root-MuiCard-root bg-[#A798FF] rounded-r-xl">
                   <Box mt={1} mb={1}>
                     <div className="flex flex-col align-middle justify-between">
                       <Link
@@ -267,23 +269,25 @@ const ProjectsMHomeBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                     </section>
                   </Box>
                 </div>
-              </div>
-              <Box mt={2} mx={2}>
-                <div className="flex flex-col">
-                  {[
-                    { item: 'Total', value: 100 },
-                    { item: 'Available', value: 80 },
-                    { item: 'Sold', value: 20 },
-                    { item: 'Blocked', value: 0 },
-                  ].map((data, i) => (
-                    <div className="flex inline-block mt-2" key={i}>
-                      <div className="flex flex-row align-middle justify-between mr-1 w-12">
-                        <h6 className="font-bodyLato font-semibold text-xs mt-1">
-                          {t(data.item)}
+              </div></div>
+        <div className="w-3/4 bg-[#E9E9F2] px-1 ">     <Box >
+          <>
+
+          <div className="flex flex-col bg-white shadow rounded-md my-2  px-2  py-2">
+          <h6 className="font-bodyLato font-semibold text-xs m-1 mb-4">
+                          {"Units"}
                         </h6>
-                        <span className="font-bodyLato text-[12px] text-[#94A4C4]"></span>
-                      </div>
-                      <div className="inline-block ml-2">
+                <div className="flex flex-row">
+
+                  {[
+                    { item: 'Total', value: 78 },
+                    { item: 'Available', value: 58 },
+                    { item: 'Sold', value: 38 },
+                    { item: 'Blocked', value: 10 },
+                  ].map((data, i) => (
+                    <div className=" w-1/4  mx-1" style={{display: "inline-block",  alignSelf: "flex-end"}}key={i}>
+
+                      <div className="">
                         <LinearProgress
                           sx={{
                             backgroundColor: 'white',
@@ -292,197 +296,128 @@ const ProjectsMHomeBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                             },
                           }}
                           variant="determinate"
-                          value={data.value}
+                          value={100}
                           style={{
                             backgroundColor: '#E5EAF2',
                             borderRadius: '3px',
-                            height: '18px',
-                            width: '10rem',
+                            height: `${data.value}px`,
+                            width: `100%`,
                           }}
                         />
+                      </div>
+                      <div className="flex  justify-center mr-1  mb-1 mt[2px]">
+                        <h6 className="font-bodyLato font-semibold text-xs mt-1">
+                          {t(data.item)}
+                        </h6>
+
                       </div>
                     </div>
                   ))}
                 </div>
-              </Box>
-              <div className="w-[1px] my-10 bg-[#DEDEE0]"></div>
-
-              <div className="flex flex-col bg-">
-                {/* <div className="bg-[#2499ef] rounded px-2 w-full mx-2 mr-4 mt-2">Total</div> */}
-                <div className="flex flex-row">
-                  <div className=" w-60">
-                    <Card2
-                      title={'Available'}
-                      color={{
-                        backGround:
-                          'linear-gradient(180deg, #E9E9F2 0%, #E9E9F2 100%)',
-                        // boxShadow: '0px 10px 20px 0px #e0c6f5',
-                        height: '114%',
-                      }}
-                      count={availableCount}
-                      area={availArea}
-                      amount={availValue}
-                      barValue={
-                        ((availableCount || 0) / (totalUnitCount || 0)) * 100
-                      }
-                      value={'25970'}
-                      png={UilUsdSquare}
-                      series={[
-                        {
-                          name: 'Sales',
-                          data: [31, 40, 28, 51, 42, 109, 100],
-                        },
-                      ]}
-                    />
-                  </div>
-                  <div className="w-[1px] my-10 bg-[#DEDEE0]"></div>
-                  <div className=" w-60 ">
-                    <Card2
-                      title={'Sold'}
-                      color={{
-                        backGround:
-                          'linear-gradient(180deg, #E9E9F2 0%, #E9E9F2 100%)',
-                        boxShadow: '0px 10px 20px 0px #e0c6f5',
-                        height: '115%',
-                      }}
-                      count={soldUnitCount || 0}
-                      area={soldArea}
-                      amount={soldValue}
-                      barValue={
-                        (soldUnitCount || 0 / totalUnitCount || 0) * 100
-                      }
-                      value={'25970'}
-                      png={UilUsdSquare}
-                      series={[
-                        {
-                          name: 'Sales',
-                          data: [31, 40, 28, 51, 42, 109, 100],
-                        },
-                      ]}
-                    />
-                  </div>
                 </div>
-              </div>
+          </>
+              </Box></div>
+        <div className="w-2/4 bg-[#E9E9F2] ">
+        <div className="flex flex-col bg-white shadow rounded-md my-2  px-2  py-2">
+          <h6 className="font-bodyLato font-semibold text-xs m-1 mb-4">
+                          {"Status"}
+                        </h6>
+                <div className="flex flex-row justify-between px-1">
 
-              {/* <div
-                className="MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-1fwf2za-MuiPaper-root-MuiCard-root ml-2 bg-[#f3f5ff]"
-                style={{ paddingBottom: '0px' }}
-              >
-                <Box
-                  sx={{
-                    '& .apexcharts-tooltip *': {
-                      fontFamily: theme.typography.fontFamily,
-                      fontWeight: 500,
-                    },
-                    '& .apexcharts-tooltip': {
-                      boxShadow: 0,
-                      borderRadius: 4,
-                      alignItems: 'center',
-                      '& .apexcharts-tooltip-text-y-value': {
-                        color: 'primary.main',
-                      },
-                      '& .apexcharts-tooltip.apexcharts-theme-light': {
-                        border: `1px solid ${theme.palette.divider}`,
-                      },
-                      '& .apexcharts-tooltip-series-group:last-child': {
-                        paddingBottom: 0,
-                      },
-                    },
-                  }}
-                >
-                  <Chart
-                    height={99}
-                    options={chartOptions}
-                    series={chartSeries}
-                    type="bar"
-                  />
-                </Box>
-              </div> */}
-            </section>
-            {false && (
-              <div className="grid grid-cols-3 gap-7 mt-10">
-                <span
-                // onClick={() =>
-                //   displayDetailView(
-                //     !unitsView,
-                //     '#ebf9f9',
-                //     projectFeedData,
-                //     'Units',
-                //     false
-                //   )
-                // }
-                >
-                  <ProjectStatsCard
-                    kind="Units"
-                    iconP="/m2.png"
-                    feedData={unitFeedData}
-                    bg="#ebf9f9"
-                    currency={false}
-                    projectData={project}
-                  />
-                </span>
+                  {[
+                    { item: 'Booked', value: 78 },
+                    { item: 'Agreement', value: 58 },
+                    { item: 'Registered', value: 38 },
+                  ].map((data, i) => (
+                    <div className=" w-1/4  mx-1" style={{display: "inline-block",  alignSelf: "flex-end"}}key={i}>
 
-                <span>
-                  <ProjectStatsCard
-                    kind="Values"
-                    iconP="/m4.png"
-                    feedData={valueFeedData}
-                    bg="#f3f5ff"
-                    currency={true}
-                    projectData={project}
-                  />
-                </span>
-                <span>
-                  <ProjectStatsCard
-                    kind="Area"
-                    iconP="/m4.png"
-                    feedData={areaFeedData}
-                    bg="#f3f5ff"
-                    currency={true}
-                  />
-                </span>
+                      <div className="flex flex-col  justify-center mr-1  mb-1 mt[2px]">
+                        <h6 className="font-bodyLato font-semibold text-xs mt-1">
+                          {t(data.value)}
+                        </h6>
+                        <h6 className="font-bodyLato text-[#828d9e] text-xs mt-1">
+                          {t(data.item)}
+                        </h6>
 
-                {/* <span>
-              <section className="flex " style={{ height: '270px' }}>
-                <PieChartProject />
-              </section>
-            </span> */}
-              </div>
-            )}
-            {/* {unitsView && (
-            <div className="grid grid-cols-1 gap-7 mt-10">
-              <PhaseDetailsCard
-                kind={selkind}
-                feedData={seldata}
-                bg={selbg}
-                currency={selcurrency}
-              />
-            </div>
-          )}
-          {areaView && (
-            <div className="grid grid-cols-1 gap-7 mt-10">
-              <PhaseDetailsCard
-                kind={areakind}
-                feedData={areaData}
-                bg={areabg}
-                currency={areaCurrency}
-              />
-            </div>
-          )}
-          {valueView && (
-            <div className="grid grid-cols-1 gap-7 mt-10">
-              <PhaseDetailsCard
-                kind={valueKind}
-                feedData={valuedata}
-                bg={valuebg}
-                currency={valueCurrency}
-              />
-            </div>
-          )} */}
-          </div>
-        </section>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex flex-row justify-between px-1 mt-3">
+
+{[
+  { item: 'Construction', value: 10 },
+  { item: 'Possession', value: 10 },
+  { item: '', value: "" },
+].map((data, i) => (
+  <div className=" w-1/4  mx-1" style={{display: "inline-block",  alignSelf: "flex-end"}}key={i}>
+
+<div className="flex flex-col  justify-center mr-1  mb-1 mt[2px]">
+                        <h6 className="font-bodyLato font-semibold text-xs mt-1">
+                          {t(data.value)}
+                        </h6>
+                        <h6 className="font-bodyLato text-[#828d9e] text-xs mt-1">
+                          {t(data.item)}
+                        </h6>
+                      </div>
+  </div>
+))}
+</div>
+                </div>
+        </div>
+        <div className="w-2/4 bg-[#E9E9F2] px-1">
+        <div className="flex flex-col bg-white shadow rounded-md my-2  px-2  py-2">
+          <h6 className="font-bodyLato font-semibold text-xs m-1 mb-4">
+                          {"Transactions"}
+                        </h6>
+                <div className="flex flex-row justify-between px-1">
+
+                  {[
+                    { item: 'Sale', value: 78 },
+                    { item: 'Collected', value: 58 },
+                    { item: 'MTD ', value: 38 },
+                  ].map((data, i) => (
+                    <div className=" w-1/4  mx-1" style={{display: "inline-block",  alignSelf: "flex-end"}}key={i}>
+
+                      <div className="flex flex-col  justify-center mr-1  mb-1 mt[2px]">
+                        <h6 className="font-bodyLato font-semibold text-xs mt-1">
+                          {t(data.value)}
+                        </h6>
+                        <h6 className="font-bodyLato text-[#828d9e] text-xs mt-1">
+                          {t(data.item)}
+                        </h6>
+
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex flex-row justify-between px-1 mt-3">
+
+{[
+  { item: 'Balance', value: 10 },
+  { item: 'Refends', value: 10 },
+  { item: '', value: "" },
+].map((data, i) => (
+  <div className=" w-1/4  mx-1" style={{display: "inline-block",  alignSelf: "flex-end"}}key={i}>
+
+<div className="flex flex-col  justify-center mr-1  mb-1 mt[2px]">
+                        <h6 className="font-bodyLato font-semibold text-xs mt-1">
+                          {t(data.value)}
+                        </h6>
+                        <h6 className="font-bodyLato text-[#828d9e] text-xs mt-1">
+                          {t(data.item)}
+                        </h6>
+                      </div>
+  </div>
+))}
+</div>
+                </div>
+        </div>
+      </div>
       </Link>
-    </div>
+
+</>
+
   )
 }
 

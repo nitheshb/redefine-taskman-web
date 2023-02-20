@@ -9,15 +9,18 @@ import { useTranslation } from 'react-i18next' // styled components
 
 // import uniqueId from '../../util/generatedId'
 import {
+  getCRMdocById1,
+  getCRMTeamTasks,
+  getFinanceTeamTasks,
   getLeadbyId1,
   getTodayTodoLeadsData,
   getTodayTodoLeadsDataByUser,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import uniqueId from 'src/util/generatedId'
+import TodayLeadsActivitySearchView from '../TodayLeadsActivitySearchView'
 
-import LLeadsTableBody from './LLeadsTableBody/LLeadsTableBody'
-import TodayLeadsActivitySearchView from './TodayLeadsActivitySearchView'
+
 
 const rowsCounter = (parent, searchKey) => {
   return parent.filter((item) => {
@@ -30,7 +33,7 @@ const rowsCounter = (parent, searchKey) => {
   })
 }
 
-const TodayLeadsActivityListHomeView = ({
+const FinanceHome = ({
   setisImportLeadsOpen,
   selUserProfileF,
   taskType,
@@ -48,28 +51,14 @@ const TodayLeadsActivityListHomeView = ({
   const [searchKey, setSearchKey] = useState(['pending'])
   const [schLoading, setSchLoading] = useState(true)
 
-  const handleChange = (_, newValue) => {
-    console.log('newvalue is ', newValue)
-    setValue(newValue)
-  }
 
-  // useEffect(() => {
-  //   console.log('table data is ', tableData2)
-  //   setTableData(tableData2)
-  // }, [])
 
   useEffect(() => {
     console.log('check if this is loading on new page check', user?.uid)
     getLeadsDataFun()
   }, [taskType, user])
 
-  // useEffect(() => {
-  //   console.log('check if this is loading on new page check', user?.uid)
-  //          //   y = searchKey.includes('upcoming')
-  //             //     ? staDA.filter((da) => x[da]['schTime'] > torrowDate)
-  //             //     : staDA.filter((da) => x[da]['schTime'] < torrowDate)
-  //   getLeadsDataFun()
-  // }, [searchKey])
+
 
   const getLeadsDataFun = async () => {
     const uid = user?.uid
@@ -80,10 +69,10 @@ const TodayLeadsActivityListHomeView = ({
       ).getTime()
 
       console.log('what is thes ==> ', taskType)
-      if (taskType === 'Today1Team' || taskType === 'UpcomingTeam') {
+      if (true) {
         setSchLoading(true)
         console.log('torw date', torrowDate)
-        const todoData = await getTodayTodoLeadsData(
+        const todoData = await getFinanceTeamTasks(
           orgId,
           (querySnapshot) => {
             let pro
@@ -97,8 +86,9 @@ const TodayLeadsActivityListHomeView = ({
               if (y.length > 0) {
                 x.uid = docSnapshot.id
                 // eslint-disable-next-line prefer-const
-                let y1 = await getLeadbyId1(orgId, x.uid)
-                await console.log('fetched value is ', x, y)
+                let y1 = await getCRMdocById1(orgId, x.uid)
+                console.log('fetched customer doc is ', y1, x.uid)
+
                 x.leadUser = await y1
                 return x
               } else {
@@ -212,6 +202,9 @@ const TodayLeadsActivityListHomeView = ({
     value !== '' ? item.role.toLowerCase() === value : item.role
   )
   return (
+    <div className="flex  flex-row  text-gray-700">
+    <div className="flex-1 overflow-auto">
+      <div className="p-3 ">
     <TodayLeadsActivitySearchView
       data={filterTable}
       searchKey={searchKey}
@@ -224,7 +217,10 @@ const TodayLeadsActivityListHomeView = ({
       selUserProfileF={selUserProfileF}
       taskType={taskType}
     />
+    </div>
+    </div>
+    </div>
   )
 }
 
-export default TodayLeadsActivityListHomeView
+export default FinanceHome

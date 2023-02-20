@@ -621,13 +621,40 @@ const AddBookingForm = ({
                                             />
                                           </div>
                                         </div>
-                                        <div className="w-full lg:w-8/12 pl-4">
+                                        {/* <div className="w-full lg:w-8/12 pl-4">
                                           <div className="relative w-full mb-3 mt-2">
                                             <TextField2
                                               label="Aadhar Upload"
                                               name="aadharUrl1"
                                               type="text"
                                             />
+                                          </div>
+                                        </div> */}
+                                               <div className="w-full lg:w-8/12 pl-4">
+                                          <div className="relative w-full mb-3 mt-2">
+                                            <div>
+                                              {uploadedFileLink ? (
+                                                <a href={uploadedFileLink}>
+                                                  View uploaded file
+                                                </a>
+                                              ) : null}
+                                              <label
+                                                htmlFor="formFile"
+                                                className="form-label cursor-pointer inline-block mb-2  font-regular text-sm "
+                                              >
+                                                Upload Aadhar Card
+                                              </label>
+                                              <input
+                                                type="file"
+                                                className="hidden"
+                                                id="formFile"
+                                                onChange={(e) =>
+                                                  handleFileUpload(
+                                                    e.target.files[0]
+                                                  )
+                                                }
+                                              />
+                                            </div>
                                           </div>
                                         </div>
                                       </div>

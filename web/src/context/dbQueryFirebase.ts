@@ -368,6 +368,46 @@ export const getTodayTodoLeadsData = (orgId, snapshot, data, error) => {
   console.log('hello ', status, itemsQuery)
   return onSnapshot(itemsQuery, snapshot, error)
 }
+export const getCRMTeamTasks = (orgId, snapshot, data, error) => {
+  const { type } = data
+
+  // type: 'upcoming'
+
+  const itemsQuery = query(
+    collection(db, `${orgId}_crm_tasks`),
+    where('staA', 'array-contains-any', ['pending', 'overdue'])
+  )
+
+  console.log('hello ', status, itemsQuery)
+  return onSnapshot(itemsQuery, snapshot, error)
+}
+
+export const getFinanceTeamTasks = (orgId, snapshot, data, error) => {
+  const { type } = data
+
+  // type: 'upcoming'
+
+  const itemsQuery = query(
+    collection(db, `${orgId}_fin_tasks`),
+    where('staA', 'array-contains-any', ['pending', 'overdue'])
+  )
+
+  console.log('hello ', status, itemsQuery)
+  return onSnapshot(itemsQuery, snapshot, error)
+}
+export const getProjectsTasks = (orgId, snapshot, data, error) => {
+  const { type } = data
+
+  // type: 'upcoming'
+
+  const itemsQuery = query(
+    collection(db, `${orgId}_project_tasks`),
+    where('staA', 'array-contains-any', ['pending', 'overdue'])
+  )
+
+  console.log('hello ', status, itemsQuery)
+  return onSnapshot(itemsQuery, snapshot, error)
+}
 export const getTodayTodoLeadsDataByUser = (orgId, snapshot, data, error) => {
   const { status, uid } = data
 
@@ -381,6 +421,18 @@ export const getTodayTodoLeadsDataByUser = (orgId, snapshot, data, error) => {
 }
 export const getLeadbyId1 = async (orgId, uid) => {
   const docRef = doc(db, `${orgId}_leads`, uid)
+  const docSnap = await getDoc(docRef)
+
+  if (docSnap.exists()) {
+    // console.log('Document data:', docSnap.data())
+    return docSnap.data()
+  } else {
+    // doc.data() will be undefined in this case
+    console.log('No such document!')
+  }
+}
+export const getCRMdocById1 = async (orgId, uid) => {
+  const docRef = doc(db, `${orgId}_customers`, uid)
   const docSnap = await getDoc(docRef)
 
   if (docSnap.exists()) {
@@ -1121,6 +1173,33 @@ export const addLeadScheduler = async (
     yo.assignedTo = assignedTo || ''
     console.log('new log set', yo)
     await setDoc(doc(db, `${orgId}_leads_sch`, did), yo)
+  }
+
+  console.log('am at addLeadLog ')
+}
+export const addModuleScheduler = async (
+  tabName,
+  did,
+  data,
+  schStsA,
+  assignedTo
+) => {
+  const xo = data?.ct
+  const yo = {
+    staA: schStsA,
+    staDA: arrayUnion(xo),
+    [xo]: data,
+  }
+  try {
+    const washingtonRef = doc(db, `${tabName}`, did)
+    console.log('check add LeadLog', washingtonRef)
+
+    await updateDoc(washingtonRef, yo)
+  } catch (error) {
+    const y1 = { ...yo }
+    yo.assignedTo = assignedTo || ''
+    console.log('new log set', yo)
+    await setDoc(doc(db, `${tabName}`, did), yo)
   }
 
   console.log('am at addLeadLog ')
