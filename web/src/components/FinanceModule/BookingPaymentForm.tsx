@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 
-import { arrayUnion } from 'firebase/firestore'
+import { arrayUnion, Timestamp } from 'firebase/firestore'
 import { Form, Formik } from 'formik'
 import { useSnackbar } from 'notistack'
 import * as Yup from 'yup'
@@ -10,6 +10,7 @@ import { useParams } from '@redwoodjs/router'
 import Confetti from 'src/components/shared/confetti'
 import { paymentMode, statesList } from 'src/constants/projects'
 import {
+  addModuleScheduler,
   addPaymentReceivedEntry,
   createBookedCustomer,
   steamBankDetailsList,
@@ -123,16 +124,57 @@ const AddPaymentDetailsForm = ({
       leadDetailsObj2
     const { uid } = selUnitDetails
     // 1)Make an entry to finance Table {source: ''}
-    console.log('secondary value si s', secondaryCustomerDetailsObj)
-    const x1 = await addPaymentReceivedEntry(
-      orgId,
-      uid,
-      { leadId: id },
-      data,
-      'leadsPage',
-      'nitheshreddy.email@gmail.com',
-      enqueueSnackbar
-    )
+    console.log('secondary value si s', customerDetailsObj, secondaryCustomerDetailsObj)
+    // const x1 = await addPaymentReceivedEntry(
+    //   orgId,
+    //   uid,
+    //   { leadId: id },
+    //   data,
+    //   'leadsPage',
+    //   'nitheshreddy.email@gmail.com',
+    //   enqueueSnackbar
+    // )
+
+    const x1 = []
+
+    x1.push('pending')
+    const finPayload = {
+      by: 'nitheshreddy.email@gmail.com',
+      type: 'schedule',
+      pri: 'priority 1',
+      notes: 'Need to verify a cheque payment of 1,00,000',
+      sts: 'pending',
+      schTime: Timestamp.now().toMillis() + 10800000, // 3 hrs
+      ct: Timestamp.now().toMillis(),
+    }
+    const crmPayload = {
+      by: 'nitheshreddy.email@gmail.com',
+      type: 'schedule',
+      pri: 'priority 1',
+      notes: 'Assign a CRM Executive to new customer Raju',
+      sts: 'pending',
+      schTime: Timestamp.now().toMillis() + 10800000, // 3 hrs
+      ct: Timestamp.now().toMillis(),
+    }
+    const projectPaylaod = {
+      by: 'nitheshreddy.email@gmail.com',
+      type: 'schedule',
+      pri: 'priority 1',
+      notes: 'CostSheet approval request for subhaEcone flat 101',
+      sts: 'pending',
+      schTime: Timestamp.now().toMillis() + 10800000, // 3 hrs
+      ct: Timestamp.now().toMillis(),
+    }
+    addModuleScheduler(`${orgId}_fin_tasks`, id, finPayload, x1, data.assignedTo)
+    addModuleScheduler(`${orgId}_crm_tasks`, id, crmPayload, x1, data.assignedTo)
+    addModuleScheduler(`${orgId}_project_tasks`, id, projectPaylaod, x1, data.assignedTo)
+
+
+    // create task in finance
+    // create task for crm
+    // create whatsApp Alert
+    // create task to project manager for cost sheet approval
+
 
     // add phaseNo , projName to selUnitDetails
     // 2)Create('')
@@ -161,8 +203,12 @@ const AddPaymentDetailsForm = ({
       id,
       {
         leadId: id,
-        projectName,
-        ...customerDetailsObj,
+        projectName: leadDetailsObj2?.Project,
+        ProjectId: leadDetailsObj2?.ProjectId,
+        // ...customerDetailsObj,
+        Name: leadDetailsObj2?.Name,
+        Mobile: leadDetailsObj2?.Mobile,
+        Email: leadDetailsObj2?.Email,
         secondaryCustomerDetailsObj: secondaryCustomerDetailsObj || {},
         assets: arrayUnion(uid),
         // [`${uid}_cs`]: leadDetailsObj2[`${uid}_cs`],
@@ -182,6 +228,8 @@ const AddPaymentDetailsForm = ({
       'nitheshreddy.email@gmail.com',
       enqueueSnackbar
     )
+
+    //
 
     // 3)Update unit record with customer record and mark it as booked
 

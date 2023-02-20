@@ -76,6 +76,7 @@ export const GlobalSearchBar = (props) => {
     document.addEventListener('click', handleClickOutside)
   }, [])
   return (
+    <>
     <span className="flex ml-5 bg-gray-50 border border-gray-300 border-solid box-border w-1/3 rounded-md">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -100,11 +101,11 @@ export const GlobalSearchBar = (props) => {
         // value={searchKey}
         className="w-52 bg-transparent focus:border-transparent focus:ring-0 focus-visible:border-transparent focus-visible:ring-0 focus:outline-none text-sm leading-7 text-gray-900 w-4/5 relative"
       />
-      {showSearchDropdown && (
+ {showSearchDropdown && (
         <div ref={refContainer}>
           {showLoader ? (
             <div
-              style={{ width: '397px' }}
+              style={{ width: '397px', right: '502px', top: '40px' }}
               className="z-10 absolute bg-white border border-gray-300 border-solid box-border rounded-r-lg p-2 min-h-[75px]"
             >
               <div className="flex justify-center">
@@ -113,7 +114,7 @@ export const GlobalSearchBar = (props) => {
             </div>
           ) : (
             <div
-              style={{ width: '397px' }}
+              style={{ width: '397px', right: '502px', top: '40px' }}
               className="z-10 absolute bg-white border border-gray-300 border-solid box-border rounded-lg mt-1 min-h-[75px]"
             >
               {searchData.length
@@ -176,5 +177,7 @@ export const GlobalSearchBar = (props) => {
         </div>
       )}
     </span>
+
+    </>
   )
 }

@@ -1,51 +1,22 @@
-// const CrmHomePage = () => {
-//   return (
-//     <>
-//       <MetaTags title="CrmHome" description="CrmHome page" />
-
-//       <h1>CrmHomePage</h1>
-//       <p>
-//         Find me in <code>./web/src/pages/CrmHomePage/CrmHomePage.tsx</code>
-//       </p>
-//       <p>
-//         My default route is named <code>crmHome</code>, link to me with `
-//         <Link to={routes.crmHome()}>CrmHome</Link>`
-//       </p>
-//     </>
-//   )
-// }
-
 import { useState, useEffect } from 'react'
-
-// import { ResponsiveBar } from '@nivo/bar'
 import { EyeIcon, PencilIcon } from '@heroicons/react/outline'
-
 import { Link, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
-
 import CrmHome from 'src/components/A_CRMcomp/CrmHome'
 import CrmTaskList from 'src/components/A_CRMcomp/CrmTaskList'
 import SlimSideMenuBar from 'src/components/A_SideMenu/slimSideMenu'
 import AllBankDetailsView from 'src/components/All_BankDetailsView'
-import ConstructUnitsHome from 'src/components/ConstructModule/ConstructUnitsHome'
 import CrmDashboardHome from 'src/components/CrmModule/CrmDashboard'
 import CrmRegisterModeHome from 'src/components/CrmModule/CrmRegisterHome'
 import CrmRepHomePageView1 from 'src/components/CrmModule/CrmRepHomePageView1'
 import CustomersEventsHome from 'src/components/CrmModule/CustomersEventsHome'
 import CustomersSearchHome2 from 'src/components/CrmModule/CustomersSearchHome2'
-import HeadSideBarDetailView from 'src/components/HeadDetailSideBar'
-import HeadSideBarDetailView2 from 'src/components/HeadDetailSideBar2'
 import HeadNavBar2 from 'src/components/HeadNavBar/HeadNavBar2'
 import ProjectsUnitInventory from 'src/components/projectUnitsInventory'
 import CrmBucketList from 'src/components/TableComp/CrmBuckets'
 import FinanceTransactionsHome from 'src/components/TableComp/FinanceTransactionsHome'
 import { getAllProjects } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
-
-import DummyBodyLayout from '../../components/DummyBodyLayout/DummyBodyLayout'
-import HeadNavBar from '../../components/HeadNavBar/HeadNavBar'
-import HeadSideBar from '../../components/HeadSideBar/HeadSideBar'
-import ProjectsMHomeBody from '../../components/ProjectsMHomeBody/ProjectsMHomeBody'
 import SiderForm from '../../components/SiderForm/SiderForm'
 
 const CrmHomePage = () => {
@@ -409,7 +380,7 @@ const CrmHomePage = () => {
               </div>
 
               <div className="px-3">
-                {(viewable === 'Today1' || viewable === 'Home') && (
+                {(viewable === 'CrmTasks' || viewable === 'Home') && (
                   <CrmHome leadsTyper={undefined} />
                 )}
                 {viewable === 'CrmTeamTasks' && (

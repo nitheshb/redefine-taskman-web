@@ -24,6 +24,7 @@ import HeadSideBar from '../../components/HeadSideBar/HeadSideBar'
 import ProjectsMHomeBody from '../../components/ProjectsMHomeBody/ProjectsMHomeBody'
 import SiderForm from '../../components/SiderForm/SiderForm'
 import MarkeingMessagesList from 'src/components/A_ProjModule/MarketingMessagesList'
+import ProjectsTaskHome from 'src/components/A_ProjModule/ProjTaskHome'
 
 const HomePage = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -436,12 +437,18 @@ const HomePage = () => {
                   </div>
                 </>
               )}
+              {(viewable === 'Home' || viewable === 'MyProjectTasks') && (
+                <ProjectsTaskHome leadsTyper={undefined} />)
+              }
               {viewable != 'inProgress' &&
+              viewable != 'Home' &&
+              viewable != 'MyProjectTasks' &&
                 viewable != 'Projects Lead Report' &&
                 viewable != 'Campaign Budget Report' &&
                 viewable != 'Bank Accounts' &&
                 viewable != 'Virtual Accounts' &&
-                viewable != 'unitsInventory' && viewable != 'Marketing'  && (
+                viewable != 'unitsInventory' &&
+                viewable != 'Marketing'  && (
                   <>
                     <div className="">
                       <div className="flex items-center justify-between py-2 pb-8 ">
@@ -489,6 +496,7 @@ const HomePage = () => {
                                       </button>
                                     </div>
                                   </div>
+                                  <section className="mx-2 rounded-xl bg-white shadow p-2">
                                       {projects.map((project) => (
                                         <ProjectsMHomeBody
                                           key={project.uid}
@@ -500,6 +508,7 @@ const HomePage = () => {
                                           isEdit={false}
                                         />
                                       ))}
+                                      </section>
                                     </section>
                                   ) : (
                                     <DummyBodyLayout />

@@ -40,7 +40,7 @@ const HeadNavBar2 = ({selModule, setSelModule}) => {
         >REDEFINE ERP .</span>
             <section className="mt-1">
             <ModuleSwitchDrop
-              type={selModule}
+              type={selModule}c
               id={'Status'}
               setStatusFun={makeFilterFun}
               filteredUnits={filteredUnits}

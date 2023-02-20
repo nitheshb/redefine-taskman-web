@@ -1,41 +1,21 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-// import { Link, routes } from '@redwoodjs/router'
 
 import { Fragment, useState, useEffect } from 'react'
 
-// import { XIcon } from '@heroicons/react/outline'
 import {
-  ExclamationCircleIcon,
-  ExclamationIcon,
   PhoneIcon,
   ShieldExclamationIcon,
-  UserIcon,
 } from '@heroicons/react/outline'
 import CheckCircleIcon from '@heroicons/react/solid/CheckCircleIcon'
 import { Box, LinearProgress, useTheme } from '@mui/material'
-import { DragDropContext, Droppable } from 'react-beautiful-dnd'
-
 import { MetaTags } from '@redwoodjs/web'
-
-import LLeadsTableView from 'src/components/LLeadsTableView/LLeadsTableView'
-import { USER_ROLES } from 'src/constants/userRoles'
 import {
-  getCRMCustomerByProject,
-  getFinanceTransactionsByStatus,
+  getCRMCustomerByProject
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
-import { CustomSelect } from 'src/util/formFields/selectBoxField'
-
-import CircleProgress from '../Charts_Graphs/CircleProgress'
-import LeadScoreProgress from '../Charts_Graphs/leadScoreProgress'
-import SemiCircleProgress from '../Charts_Graphs/SemiCircleProgress'
-import SmallCircleProgress from '../Charts_Graphs/smallCircle'
-import TaskProgress from '../Charts_Graphs/TaskProgress'
-import CardItem from '../leadsCard'
 import SiderForm from '../SiderForm/SiderForm'
 
-import FinanceTableView from './financeTableView'
 
 const agreementItems = [
   {

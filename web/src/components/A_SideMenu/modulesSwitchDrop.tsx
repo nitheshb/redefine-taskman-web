@@ -56,27 +56,47 @@ export default function ModuleSwitchDrop({
           >
             <div className="px-1 py-1 ">
               <>
-
-                <Menu.Item>
+              <Menu.Item>
                   {({ active }) => (
-                    <Link to={routes.constructModule()}>
+                    <Link to={routes.home()}>
                       <button
                         className={`${
                           active ? 'bg-violet-500 text-white' : 'text-gray-900'
                         } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                         onClick={() => {
-                          setStatusFun('1', 'Construction')
+                          setStatusFun('1', 'Projects')
                         }}
                       >
                         <FireIcon
                           className="w-5 h-5 mr-2 text-violet-500"
                           aria-hidden="true"
                         />
-                        {'Construction'}{' '}
+                        {'Projects'}{' '}
                       </button>
                     </Link>
                   )}
                 </Menu.Item>
+                <Menu.Item>
+                  {({ active }) => (
+                    <Link to={routes.leadsManager()}>
+                      <button
+                        className={`${
+                          active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                        } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                        onClick={() => {
+                          setStatusFun('1', 'Sales')
+                        }}
+                      >
+                        <FireIcon
+                          className="w-5 h-5 mr-2 text-violet-500"
+                          aria-hidden="true"
+                        />
+                        {'Sales'}{' '}
+                      </button>
+                    </Link>
+                  )}
+                </Menu.Item>
+
                 <Menu.Item>
                   {({ active }) => (
                     <Link to={routes.crmModule()}>
@@ -119,26 +139,28 @@ export default function ModuleSwitchDrop({
                   )}
                 </Menu.Item>
 
+
                 <Menu.Item>
                   {({ active }) => (
-                    <Link to={routes.usersAdmin()}>
+                    <Link to={routes.constructModule()}>
                       <button
                         className={`${
                           active ? 'bg-violet-500 text-white' : 'text-gray-900'
                         } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                         onClick={() => {
-                          setStatusFun('1', 'HR')
+                          setStatusFun('1', 'Construction')
                         }}
                       >
                         <FireIcon
                           className="w-5 h-5 mr-2 text-violet-500"
                           aria-hidden="true"
                         />
-                        {'HR'}{' '}
+                        {'Construction'}{' '}
                       </button>
                     </Link>
                   )}
                 </Menu.Item>
+
                 <Menu.Item>
                   {({ active }) => (
                     <Link to={routes.legalModule()}>
@@ -161,44 +183,30 @@ export default function ModuleSwitchDrop({
                 </Menu.Item>
                 <Menu.Item>
                   {({ active }) => (
-                    <Link to={routes.home()}>
+                    <Link to={routes.usersAdmin()}>
                       <button
                         className={`${
                           active ? 'bg-violet-500 text-white' : 'text-gray-900'
                         } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                         onClick={() => {
-                          setStatusFun('1', 'Projects')
+                          setStatusFun('1', 'HR')
                         }}
                       >
                         <FireIcon
                           className="w-5 h-5 mr-2 text-violet-500"
                           aria-hidden="true"
                         />
-                        {'Projects'}{' '}
+                        {'HR'}{' '}
                       </button>
                     </Link>
                   )}
                 </Menu.Item>
-                <Menu.Item>
-                  {({ active }) => (
-                    <Link to={routes.leadsManager()}>
-                      <button
-                        className={`${
-                          active ? 'bg-violet-500 text-white' : 'text-gray-900'
-                        } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
-                        onClick={() => {
-                          setStatusFun('1', 'Sales')
-                        }}
-                      >
-                        <FireIcon
-                          className="w-5 h-5 mr-2 text-violet-500"
-                          aria-hidden="true"
-                        />
-                        {'Sales'}{' '}
-                      </button>
-                    </Link>
-                  )}
-                </Menu.Item>
+
+
+
+
+
+
               </>
             </div>
           </Menu.Items>

@@ -78,32 +78,32 @@ const CostBreakUpPdf = ({
           others: selUnitDetails?.rate_per_sqft,
           charges: Number.isFinite(y) ? y : selUnitDetails?.rate_per_sqft,
           TotalSaleValue: Number.isFinite(y)
-            ? Number(selUnitDetails?.super_built_up_area * y)
+            ? Number(selUnitDetails?.plot_Sqf * y)
             : Number(
-                selUnitDetails?.super_built_up_area *
+                selUnitDetails?.plot_Sqf *
                   selUnitDetails?.rate_per_sqft
               ),
           // charges: y,
           gst: {
             label: '0.05',
             value: Number.isFinite(y)
-              ? Number(selUnitDetails?.super_built_up_area * y)
+              ? Number(selUnitDetails?.plot_Sqf * y)
               : Math.round(
-                  selUnitDetails?.super_built_up_area *
+                  selUnitDetails?.plot_Sqf *
                     selUnitDetails?.rate_per_sqft
                 ) * 0.05,
           },
           TotalNetSaleValueGsT:
             (Number.isFinite(y)
-              ? Number(selUnitDetails?.super_built_up_area * y)
+              ? Number(selUnitDetails?.plot_Sqf * y)
               : Number(
-                  selUnitDetails?.super_built_up_area *
+                  selUnitDetails?.plot_Sqf *
                     selUnitDetails?.rate_per_sqft
                 )) +
             (Number.isFinite(y)
-              ? Number(selUnitDetails?.super_built_up_area * y)
+              ? Number(selUnitDetails?.plot_Sqf * y)
               : Math.round(
-                  selUnitDetails?.super_built_up_area *
+                  selUnitDetails?.plot_Sqf *
                     selUnitDetails?.rate_per_sqft
                 ) * 0.05),
         },
@@ -117,10 +117,10 @@ const CostBreakUpPdf = ({
             value: 'plc_cost_sqft',
             label: 'PLC ',
           },
-          others: selUnitDetails?.PLC || 200,
-          charges: Number.isFinite(y) ? y : selUnitDetails?.PLC || 200,
+          others: selUnitDetails?.plc || 200,
+          charges: Number.isFinite(y) ? y : selUnitDetails?.plc || 200,
           TotalSaleValue: Math.round(
-            selUnitDetails?.super_built_up_area * (selUnitDetails?.PLC || 200)
+            selUnitDetails?.super_built_up_area * (selUnitDetails?.plc || 200)
           ),
           // charges: y,
           gst: {
@@ -128,18 +128,18 @@ const CostBreakUpPdf = ({
             value: Math.round(
               Number(
                 selUnitDetails?.super_built_up_area *
-                  (selUnitDetails?.PLC || 200)
+                  (selUnitDetails?.plc || 200)
               ) * 0.05
             ),
           },
           TotalNetSaleValueGsT:
             Math.round(
-              selUnitDetails?.super_built_up_area * (selUnitDetails?.PLC || 200)
+              selUnitDetails?.super_built_up_area * (selUnitDetails?.plc || 200)
             ) +
             Math.round(
               Number(
                 selUnitDetails?.super_built_up_area *
-                  (selUnitDetails?.PLC || 200)
+                  (selUnitDetails?.plc || 200)
               ) * 0.05
             ),
         },

@@ -4,36 +4,15 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import * as React from 'react'
 import { useState, useEffect } from 'react'
-
-import DeleteIcon from '@mui/icons-material/Delete'
-import EventNoteTwoToneIcon from '@mui/icons-material/EventNoteTwoTone'
-import IconButton from '@mui/material/IconButton'
-import { alpha } from '@mui/material/styles'
-import Toolbar from '@mui/material/Toolbar'
-import Tooltip from '@mui/material/Tooltip'
-import Typography from '@mui/material/Typography'
-import PropTypes from 'prop-types'
-
 import LeadBankSourceStats from 'src/components/Charts_Graphs/LeadBankSourceStats'
 import RecentActivity from 'src/components/Charts_Graphs/RecentActivity'
-import TaskProgress from 'src/components/Charts_Graphs/TaskProgress'
 import LogSkelton from 'src/components/shimmerLoaders/logSkelton'
 import SiderForm from 'src/components/SiderForm/SiderForm'
 import {
   getAllProjects,
   getLeadsDataLake,
-  steamUsersListByRole,
-  steamUserTodayProgress,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
-import CSVDownloader from 'src/util/csvDownload'
-import {
-  getDifferenceInDays,
-  getDifferenceInHours,
-  getDifferenceInMinutes,
-} from 'src/util/dateConverter'
-import { SlimSelectBox } from 'src/util/formFields/slimSelectBoxField'
-
 import LeadsDisplayTable from './LeadsDisplayTable'
 
 export default function LeadsLakeHomeComponent({ todaySch, schLoading }) {

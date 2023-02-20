@@ -22,6 +22,7 @@ import HeadSideBar from '../../components/HeadSideBar/HeadSideBar'
 import ProjectsMHomeBody from '../../components/ProjectsMHomeBody/ProjectsMHomeBody'
 import SiderForm from '../../components/SiderForm/SiderForm'
 import SlimSideMenuBar from 'src/components/A_SideMenu/slimSideMenu'
+import FinanceHome from 'src/components/A_FinanceModule/FinanceHome'
 
 const FinanceHomePagePage = () => {
   const { user } = useAuth()
@@ -366,7 +367,7 @@ const FinanceHomePagePage = () => {
               setSelModule={setSelModule}
             />
               {(viewable === 'Today1' || viewable === 'Home') && (
-                <CrmHome leadsTyper={undefined} />
+                <FinanceHome leadsTyper={undefined} />
               )}
               {viewable === 'Dashboard' && (
                 <div className="flex flex-row h-full">
