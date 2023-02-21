@@ -1705,7 +1705,7 @@ else if (btnTxt === 'On Refund Pay' && target==='Administrator'){
           <div>
             <section className="m-4 inline-block">
               <div className="bg-[#FFEDEA] p-4 rounded-xl shadow-md shadow-neutral-200 w-96">
-                <h2 className="text-sm font-semibold pb-2 border-b border-grey">{"Sales Customer Notifications"}</h2>
+                <h2 className="text-sm font-semibold pb-2 border-b border-grey">{"Lead/Clinet Notifications"}</h2>
 
                 <div className=" justify-between mb-4">
                   {[{ 'btnTxt': 'On Enquiry Receival', 'target': 'Sales Customer' },{ 'btnTxt': 'On Sales Agent Assign', 'target': 'Sales Customer' },{ 'btnTxt': 'On Site Visit fix', 'target': 'Sales Customer' },{ 'btnTxt': 'On Site Visit Completion', 'target': 'Sales Customer' },{ 'btnTxt': 'On NotInterested', 'target': 'Sales Customer' },{ 'btnTxt': 'On Booking', 'target': 'Sales Customer' },{ 'btnTxt': 'On Payment Request', 'target': 'Sales Customer' },{ 'btnTxt': 'On Payment Receival', 'target': 'Sales Customer' },{ 'btnTxt': 'On Payament Accepted', 'target': 'Sales Customer' },{ 'btnTxt': 'On CostSheet Approval', 'target': 'Sales Customer' } ].map((data, i) => (
@@ -1826,7 +1826,7 @@ else if (btnTxt === 'On Refund Pay' && target==='Administrator'){
           <div>
             <section className="m-4 inline-block">
               <div className="bg-[#FFEDEA] p-4 rounded-xl shadow-md shadow-neutral-200 w-96">
-                <h2 className="text-sm font-semibold pb-2 border-b border-grey">{"CRM Customer Notifications"}</h2>
+                <h2 className="text-sm font-semibold pb-2 border-b border-grey">{"Customer Notifications"}</h2>
 
                 <div className=" justify-between mb-4">
                   {[{ 'btnTxt': 'On Payment', 'target': 'CRM Customer' },{ 'btnTxt': 'On Customer Assign', 'target': 'CRM Customer' },{ 'btnTxt': 'On Construction Update', 'target': 'CRM Customer' },{ 'btnTxt': 'On Payment Approval', 'target': 'CRM Customer' },{ 'btnTxt': 'On Payment Rejected', 'target': 'CRM Customer' },{ 'btnTxt': 'On Payment', 'target': 'CRM Customer' },{ 'btnTxt': 'On Payment', 'target': 'CRM Customer' },{ 'btnTxt': 'On Deletion', 'target': 'CRM Customer' },{ 'btnTxt': 'On Booking', 'target': 'CRM Customer' },{ 'btnTxt': 'On Payment Request', 'target': 'CRM Customer' }, ].map((data, i) => (
@@ -1865,7 +1865,7 @@ else if (btnTxt === 'On Refund Pay' && target==='Administrator'){
           <div>
             <section className="m-4 inline-block">
               <div className="bg-[#FFEDEA] p-4 rounded-xl shadow-md shadow-neutral-200 w-96">
-                <h2 className="text-sm font-semibold pb-2 border-b border-grey">{"CRM Customer Notifications"}</h2>
+                <h2 className="text-sm font-semibold pb-2 border-b border-grey">{"CRM Executive Notifications"}</h2>
 
                 <div className=" justify-between mb-4">
                   {[{ 'btnTxt': 'On Payment', 'target': 'CRM Executive' },{ 'btnTxt': 'On Customer Assign', 'target': 'CRM Executive' },{ 'btnTxt': 'On Construction Update', 'target': 'CRM Executive' },{ 'btnTxt': 'On Payment Approval', 'target': 'CRM Executive' },{ 'btnTxt': 'On Payment Rejected', 'target': 'CRM Executive' },{ 'btnTxt': 'On Booking', 'target': 'CRM Customer' },{ 'btnTxt': 'On Payment Request', 'target': 'CRM Executive' },{ 'btnTxt': 'On Payment Receival', 'target': 'CRM Executive' },{ 'btnTxt': 'On Payment Accepted', 'target': 'CRM Customer' },{ 'btnTxt': 'On CostSheet Approval', 'target': 'CRM Executive' }, ].map((data, i) => (
@@ -1946,7 +1946,7 @@ else if (btnTxt === 'On Refund Pay' && target==='Administrator'){
     <div>
       <section className="m-4 inline-block">
         <div className="bg-[#FFEDEA] p-4 rounded-xl shadow-md shadow-neutral-200 w-96">
-          <h2 className="text-sm font-semibold pb-2 border-b border-grey">{"Finance Customer Notifications"}</h2>
+          <h2 className="text-sm font-semibold pb-2 border-b border-grey">{"Legal Team Notifications"}</h2>
 
           <div className=" justify-between mb-4">
             {[{ 'btnTxt': 'On Enquiry Receival', 'target': 'Finance Customer' },{ 'btnTxt': 'On Sales Agent Assign', 'target': 'Finance Customer' },{ 'btnTxt': 'On Site Visit fix', 'target': 'Finance Customer' },{ 'btnTxt': 'On Site Visit Completion', 'target': 'Finance Customer' },{ 'btnTxt': 'On NotInterested', 'target': 'Finance Customer' },{ 'btnTxt': 'On Booking', 'target': 'Finance Customer' },{ 'btnTxt': 'On Payment Request', 'target': 'Finance Customer' },{ 'btnTxt': 'On Payment Receival', 'target': 'Finance Customer' },{ 'btnTxt': 'On Payament Accepted', 'target': 'Finance Customer' },{ 'btnTxt': 'On CostSheet Approval', 'target': 'Finance Customer' }  ].map((data, i) => (
