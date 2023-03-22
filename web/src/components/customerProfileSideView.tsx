@@ -209,8 +209,11 @@ const reasonPurchase = [
   { label: 'Investment', value: 'investment' },
 ]
 const preferredArea = [
-  { label: 'East', value: 'east' },
-  { label: 'west', value: 'west' },
+  { label: 'East Banglore', value: 'eastBanglore' },
+  { label: 'West Banglore', value: 'westBanglore' },
+  { label: 'North Banglore', value: 'northBanglore' },
+  { label: 'South Banglore ', value: 'southBanglore' },
+
 ]
 const torrowDate = new Date(
   +new Date().setHours(0, 0, 0, 0) + 86400000
@@ -1852,7 +1855,7 @@ export default function CustomerProfileSideView({
                               // setNotInterestType(value.value)
                             }}
                             value={notInterestType}
-                            options={reasonPurchase}
+                            options={preferredArea}
                           />
                         </div>
 
@@ -2087,7 +2090,7 @@ export default function CustomerProfileSideView({
                             <textarea
                               value={takNotes}
                               onChange={(e) => setNotesTitle(e.target.value)}
-                              placeholder="Type & make a notes"
+                              placeholder="Type & make a notes *"
                               className="w-full h-full pb-10 outline-none  focus:border-blue-600 hover:border-blue-600 rounded bg-[#FFF9F2] "
                             ></textarea>
                           </div>
@@ -3156,7 +3159,7 @@ export default function CustomerProfileSideView({
                                     {showVisitFeedBackStatus && (
                                       <div className="w-full flex flex-col mb-3 mt-2">
                                         <SelectDropDownComp
-                                          label="Sites Visit Feedback*"
+                                          label="Sites Visit Feedback *"
                                           options={siteVisitFeedbackOptions}
                                           value={fbTitle}
                                           onChange={(value) => {
@@ -3173,19 +3176,26 @@ export default function CustomerProfileSideView({
                                         onChange={(e) =>
                                           setfbNotes(e.target.value)
                                         }
-                                        placeholder="Type & make a notes"
+                                        placeholder="Type & make a notes *"
                                         className="w-full h-full pb-10 outline-none  focus:border-blue-600 hover:border-blue-600 rounded bg-[#FFF9F2] "
                                       ></textarea>
                                     </div>
                                     <div className="flex flex-row mt-1">
                                       <button
                                         onClick={() => {
+
+                                          if(fbNotes != ""){
                                           setLeadStatus('visitdone')
                                           if (showNotInterested) {
                                             notInterestedFun()
                                             return
                                           }
                                           addFeedbackFun(data)
+                                        }else{
+                                          enqueueSnackbar('Please Enter Notes', {
+                                            variant: 'warning',
+                                          })
+                                        }
                                         }}
                                         className={`flex mt-2 rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium text-white bg-[#FF7A53]  hover:bg-gray-700  `}
                                       >
