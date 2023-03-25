@@ -24,7 +24,7 @@
     },
     "dependencies": {
         "@auth0/auth0-spa-js": "^1.19.2",
-        "@babel/plugin-transform-typescript": "^7.16.8",
+        "@babel/plugin-transform-typescript": "*",
         "@craco/craco": "^6.4.5",
         "@emotion/is-prop-valid": "^1.1.1",
         "@emotion/react": "^11.4.1",
