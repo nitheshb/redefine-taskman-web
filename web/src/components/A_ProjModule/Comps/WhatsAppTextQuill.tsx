@@ -4,12 +4,9 @@ import { Dialog } from '@headlessui/react'
 import { useSnackbar } from 'notistack'
 // import Quill from 'quill'
 
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import ReactQuill from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
 
-import Quill from 'quill'
-
-import 'quill/dist/quill.snow.css'
 import {
   addNotificationSupabase,
   getWbNotifyTemplate,
@@ -24,10 +21,6 @@ const WhatsAppTextQuillForm = ({ title, projectDetails, wbPayload }) => {
   const [customerName, setCustomerName] = useState('')
   const [projNam, setProjNam] = useState('')
   const [saleExecutiveNam, setSaleExecutive] = useState('')
-
-
-
-
 
   // useEffect(() => {
   //   const quill = new Quill('#editor', {
@@ -66,8 +59,7 @@ const WhatsAppTextQuillForm = ({ title, projectDetails, wbPayload }) => {
   const fetchDbValue = async () => {
     const data = await getWbNotifyTemplate(wbPayload)
 
-    if(data.length>0){
-
+    if (data.length > 0) {
       setEditorState(data[0].template)
     }
     await console.log('fetched fields are ', data)
@@ -76,11 +68,10 @@ const WhatsAppTextQuillForm = ({ title, projectDetails, wbPayload }) => {
   const checkIt = () => {
     // save it in db
 
-    let x = wbPayload;
+    const x = wbPayload
     x.template = editorState
 
-
-    addNotificationSupabase(x,enqueueSnackbar)
+    addNotificationSupabase(x, enqueueSnackbar)
   }
 
   const phKeyFieldFun = (e) => {
@@ -104,11 +95,9 @@ const WhatsAppTextQuillForm = ({ title, projectDetails, wbPayload }) => {
           return projNam
         } else if (variableName === 'CUSTOMER_NAME') {
           return customerName
-        }
-        else if (variableName === 'EXECUTIVE_NAME') {
+        } else if (variableName === 'EXECUTIVE_NAME') {
           return saleExecutiveNam
-        }
-        else {
+        } else {
           return match
         }
       }
@@ -145,8 +134,9 @@ const WhatsAppTextQuillForm = ({ title, projectDetails, wbPayload }) => {
   return (
     <div className="h-full flex flex-col py-6 bg-white shadow-xl">
       <span className="text-gray-600 text-xs mt-3 ml-4 mb-3">
-         Filling below fields & see these values will be replaced in testing message
-        </span>
+        Filling below fields & see these values will be replaced in testing
+        message
+      </span>
       <section className="flex flex-row">
         <span className="ml-5 bg-gray-50 border border-gray-300 border-solid box-border w-[200px] rounded-md flex flex-row">
           <input
@@ -170,10 +160,9 @@ const WhatsAppTextQuillForm = ({ title, projectDetails, wbPayload }) => {
             className=" ml-3 w-[200px] bg-transparent focus:border-transparent focus:ring-0 focus-visible:border-transparent focus-visible:ring-0 focus:outline-none text-sm leading-7 text-gray-900  relative"
           />
         </span>
-
       </section>
       <section className="flex flex-row">
-      <span className="text-gray-300 text-xs mt-3 ml-2 ml-5 bg-gray-50 border border-gray-300 border-solid box-border w-[200px] rounded-md flex">
+        <span className="text-gray-300 text-xs mt-3 ml-2 ml-5 bg-gray-50 border border-gray-300 border-solid box-border w-[200px] rounded-md flex">
           <input
             type="text"
             id="tstPhKey"
@@ -183,22 +172,19 @@ const WhatsAppTextQuillForm = ({ title, projectDetails, wbPayload }) => {
             value={projNam}
             className=" ml-3 w-[200px] bg-transparent focus:border-transparent focus:ring-0 focus-visible:border-transparent focus-visible:ring-0 focus:outline-none text-sm leading-7 text-gray-900  relative"
           />
-
         </span>
 
         <span className="text-gray-300 text-xs mt-3 ml-5 bg-gray-50 border border-gray-300 border-solid box-border w-[200px] rounded-md flex">
-
-
-<input
-type="text"
-id="tstPhKey"
-placeholder="{{EXECUTIVE_NAME}}."
-onChange={saleExecutiveFun}
-autoComplete="on"
-value={saleExecutiveNam}
-className=" ml-3 w-[200px] bg-transparent focus:border-transparent focus:ring-0 focus-visible:border-transparent focus-visible:ring-0 focus:outline-none text-sm leading-7 text-gray-900  relative"
-/>
-</span>
+          <input
+            type="text"
+            id="tstPhKey"
+            placeholder="{{EXECUTIVE_NAME}}."
+            onChange={saleExecutiveFun}
+            autoComplete="on"
+            value={saleExecutiveNam}
+            className=" ml-3 w-[200px] bg-transparent focus:border-transparent focus:ring-0 focus-visible:border-transparent focus-visible:ring-0 focus:outline-none text-sm leading-7 text-gray-900  relative"
+          />
+        </span>
       </section>
       <section className="bg-teal-50 h-[400px] m-5 rounded-md">
         {/* <div id="editor"></div> */}
@@ -208,13 +194,25 @@ className=" ml-3 w-[200px] bg-transparent focus:border-transparent focus:ring-0 
           // options={editorOptions}
         /> */}
 
-<ReactQuill theme="snow" value={editorState} onChange={setEditorState} />
+        <ReactQuill
+          theme="snow"
+          value={editorState}
+          onChange={setEditorState}
+        />
 
-<div className="mt-5 mt-8 text-right md:space-x-3 md:block flex flex-col-reverse">
-        <button className="mb-2 md:mb-0 bg-green-700 px-5 py-2 text-sm shadow-sm font-medium tracking-wider text-white  rounded-sm hover:shadow-lg hover:bg-green-500" onClick={() => checkIt()}>Save</button>
-        <button className="mb-2 md:mb-0 bg-green-700 px-5 py-2 text-sm shadow-sm font-medium tracking-wider text-white  rounded-sm hover:shadow-lg hover:bg-green-500" onClick={() => whatsAppTesting()}>
-          Test
-        </button>
+        <div className="mt-5 mt-8 text-right md:space-x-3 md:block flex flex-col-reverse">
+          <button
+            className="mb-2 md:mb-0 bg-green-700 px-5 py-2 text-sm shadow-sm font-medium tracking-wider text-white  rounded-sm hover:shadow-lg hover:bg-green-500"
+            onClick={() => checkIt()}
+          >
+            Save
+          </button>
+          <button
+            className="mb-2 md:mb-0 bg-green-700 px-5 py-2 text-sm shadow-sm font-medium tracking-wider text-white  rounded-sm hover:shadow-lg hover:bg-green-500"
+            onClick={() => whatsAppTesting()}
+          >
+            Test
+          </button>
         </div>
       </section>
     </div>
