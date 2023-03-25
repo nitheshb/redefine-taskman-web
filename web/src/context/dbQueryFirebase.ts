@@ -52,6 +52,20 @@ export const steamBankDetailsList = (orgId, snapshot, error) => {
   const itemsQuery = query(collection(db, `${orgId}_BankDetails`))
   return onSnapshot(itemsQuery, snapshot, error)
 }
+// get matched rows details
+export const getWbNotifyTemplate = async (payload) => {
+  const { event, target, type, scope } = payload
+  //{ event: 'on_enquiry', target: 'customer', 'template': payload , type: 'wa', scope: 'allProjects'}
+  const { data, error } = await supabase
+    .from('maahomes_notifyTemplates')
+    .select('*')
+    .eq('event', event)
+    .eq('target', target)
+    .eq('type', type)
+    .eq('scope', scope)
+
+  return data
+}
 
 // get all Virtual Accounts detials list
 export const steamVirtualAccountsList = (orgId, snapshot, error) => {
@@ -267,7 +281,7 @@ export const getLeadsByPhoneNo = async (orgId, data) => {
   const { search } = data
   const itemsQuery = query(
     collection(db, `${orgId}_leads`),
-    where('Mobile', '==', search )
+    where('Mobile', '==', search)
   )
   const citySnapshot = await getDocs(itemsQuery)
   // await citySnapshot.docs.map((doc) => doc.data())
@@ -635,7 +649,7 @@ export const checkIfUserAlreadyExists = async (cName, matchVal) => {
   // db.collection(`${orgId}_leads`).add(data)
 }
 export const getLeadsDataLake = async (orgId, snapshot, error, data) => {
-  const {dateRange} = data
+  const { dateRange } = data
   const getAllProjectsQuery = await query(
     collection(db, `${orgId}_leads_lake`),
     where('cT', '>=', dateRange)
@@ -694,7 +708,7 @@ export const getAllProjects = async (orgId, snapshot, error) => {
     collection(db, `${orgId}_projects`),
     orderBy('created', 'desc')
   )
-  console.log(getAllProjectsQuery, "dcavlvblasfjv")
+  console.log(getAllProjectsQuery, 'dcavlvblasfjv')
   return onSnapshot(getAllProjectsQuery, snapshot, error)
 }
 
@@ -799,6 +813,27 @@ export const addLeadSupabase = async (payload) => {
   //   .from('maahomes_leads')
   //   .insert([payload])
   // await console.log('error as ', error)
+}
+
+export const addNotificationSupabase = async (payload, enqueueSnackbar) => {
+  // const { data, error } = await supabase
+  //   .from('maahomes_leads')
+  //   .insert([payload])
+  // await console.log('error as ', error)
+
+  const { data, error } = await supabase
+    .from('maahomes_notifyTemplates')
+    .upsert(
+      [
+        {...payload}
+      ],
+      { upsert: true }
+    )
+
+  console.log('created stuff is ', error, data)
+  enqueueSnackbar('Notification updated Successful', {
+    variant: 'success',
+  })
 }
 export const addLead = async (orgId, data, by, msg) => {
   try {
@@ -1946,6 +1981,7 @@ export const IncrementTastCompletedCount = async (
   todayTasksIncre,
   txt
 ) => {
+  console.log('IncrementTastCompletedCount')
   await updateDoc(doc(db, `${orgId}_emp_performance`, `${userId}DD${ddMy}`), {
     [newSt]: increment(todayTasksIncre),
     all_comp: increment(todayTasksIncre),
@@ -1961,6 +1997,7 @@ export const IncrementTastTotalCount = async (
   txt
 ) => {
   // this is used when new task is created for the same day
+  console.log('IncrementTastTotalCount')
   await updateDoc(doc(db, `${orgId}_emp_performance`, `${userId}DD${ddMy}`), {
     [newSt]: increment(todayTasksIncre),
     all: increment(todayTasksIncre),
@@ -2259,15 +2296,15 @@ export const updateLeadStatus = async (
 export const updateProjectCounts = async (
   orgId,
   pId,
-data,
+  data,
   by,
   enqueueSnackbar
 ) => {
   try {
-    const {soldVal, t_collect,} = data
+    const { soldVal, t_collect } = data
     await updateDoc(doc(db, `${orgId}_projects`, pId), {
       bookUnitCount: increment(1),
-      availableCount :increment(-1),
+      availableCount: increment(-1),
       soldUnitCount: increment(1),
       // s_agreeCount: increment(1),
       // s_registerCount: increment(1),
@@ -2275,9 +2312,9 @@ data,
       // s_possCount: increment(1),
       // t_mtd: increment(1),
       soldValue: increment(soldVal),
-      t_collect:increment(t_collect),
+      t_collect: increment(t_collect),
 
-      t_bal: soldVal - t_collect ,
+      t_bal: soldVal - t_collect,
       // t_refund: increment(1)
     })
 

@@ -32,6 +32,7 @@ import {
   searchData as searchResponse,
 } from 'src/state/actions/search'
 import { useDispatch } from 'react-redux'
+import NotificationsSetupForm from '../A_ProjModule/NotificatoinsSetupFromHome'
 const SiderForm = ({
   open,
   setOpen,
@@ -60,6 +61,7 @@ const SiderForm = ({
   selSubMenu,
   selSubMenu2,
   setIsClicked,
+  wbPayload,
 }) => {
   // dont write too many here
   //  this is for customerProfileSideView
@@ -251,6 +253,13 @@ const SiderForm = ({
                     unitsViewMode={unitsViewMode}
                     setUnitsViewMode={setUnitsViewMode}
                   />
+                )}
+                  {title === 'Notification Setup' && (
+                  <NotificationsSetupForm
+                  title={title}
+                  projectDetails={projectDetails}
+                  wbPayload={wbPayload}
+                />
                 )}
                 {title === 'Project Inventory' && (
                   <InventoryViewSideForm
