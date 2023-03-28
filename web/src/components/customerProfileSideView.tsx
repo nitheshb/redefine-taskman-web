@@ -109,6 +109,7 @@ import EmailForm from './customerProfileView/emailForm'
 import Confetti from './shared/confetti'
 
 import '../styles/myStyles.css'
+import { Slider } from '@mui/material'
 
 // interface iToastInfo {
 //   open: boolean
@@ -188,32 +189,31 @@ const siteVisitFeedbackOptions = [
   // { label: 'Dead', value: 'Dead' },
 ]
 const lookingAtBudgetRange = [
-  { label: 'less than 25 lakhs', value: 'less25L' },
-  { label: 'less than 50 lakhs', value: 'less50L' },
-  { label: 'less than 1 Cr', value: 'less1Cr' },
-  { label: 'less than 1.5 Cr', value: 'less1.5Cr' },
-  { label: 'less than 2 Cr', value: 'less2Cr' },
+  { label: 'less than 25 lakhs', value: 'less25L', str: 10 },
+  { label: 'less than 50 lakhs', value: 'less50L', str: 20 },
+  { label: 'less than 1 Cr', value: 'less1Cr', str: 30 },
+  { label: 'less than 1.5 Cr', value: 'less1.5Cr', str: 40 },
+  { label: 'less than 2 Cr', value: 'less2Cr', str: 50 },
 ]
 const exitstingAsset = [
-  { label: 'Plot', value: 'plot' },
-  { label: 'Apartment', value: 'apartment' },
-  { label: 'Villa', value: 'villa' },
-  { label: 'Apartment & Villa', value: 'apart_villa' },
-  { label: 'Plot & Apartment', value: 'plot_villa' },
-  { label: 'Others', value: 'other' },
+  { label: 'Plot', value: 'plot', str: 10 },
+  { label: 'Apartment', value: 'apartment', str: 20 },
+  { label: 'Villa', value: 'villa', str: 30 },
+  { label: 'Apartment & Villa', value: 'apart_villa', str: 40 },
+  { label: 'Plot & Apartment', value: 'plot_villa', str: 50 },
+  { label: 'Others', value: 'other', str: 60 },
 ]
 const reasonPurchase = [
-  { label: 'Living', value: 'living' },
-  { label: 'Commercial', value: 'Commercial' },
-  { label: 'Rental', value: 'renatal' },
-  { label: 'Investment', value: 'investment' },
+  { label: 'Living', value: 'living', str: 10 },
+  { label: 'Commercial', value: 'Commercial', str: 20 },
+  { label: 'Rental', value: 'renatal', str: 30 },
+  { label: 'Investment', value: 'investment', str: 40 },
 ]
 const preferredArea = [
-  { label: 'East Banglore', value: 'eastBanglore' },
-  { label: 'West Banglore', value: 'westBanglore' },
-  { label: 'North Banglore', value: 'northBanglore' },
-  { label: 'South Banglore ', value: 'southBanglore' },
-
+  { label: 'East Banglore', value: 'eastBanglore', str: 10 },
+  { label: 'West Banglore', value: 'westBanglore', str: 20 },
+  { label: 'North Banglore', value: 'northBanglore', str: 30 },
+  { label: 'South Banglore ', value: 'southBanglore', str: 40 },
 ]
 const torrowDate = new Date(
   +new Date().setHours(0, 0, 0, 0) + 86400000
@@ -247,9 +247,20 @@ export default function CustomerProfileSideView({
   const [tempLeadStatus, setLeadStatus] = useState('')
   const [assignerName, setAssignerName] = useState('')
   const [assignedTo, setAssignedTo] = useState('')
+  const [optionvalues, setoptionvalues] = useState({
+    budget: '',
+    bstr: 0,
+    purchase: '',
+    pstr: 0,
+    area: '',
+    astr: 0,
+    asset: '',
+    asstr: 0,
+  })
+  const [opstr, setopstr] = useState(0)
   const [showNotInterested, setShowNotInterested] = useState(false)
   const [showJunk, setShowJunk] = useState(false)
-
+  
   const [junkReason, setJunkReason] = useState('Phone no Invalid')
   const [leadsActivityFetchedData, setLeadsFetchedActivityData] = useState([])
   const [leadSchLoading, setLeadsSchLoading] = useState(true)
@@ -354,6 +365,15 @@ export default function CustomerProfileSideView({
   const [streamfrom, setStreamFrom] = useState('')
 
   const [closePrevious, setClosePrevious] = useState(false)
+
+  useEffect(() => {
+    setopstr(
+      optionvalues.asstr +
+        optionvalues.astr +
+        optionvalues.bstr +
+        optionvalues.pstr
+    )
+  }, [optionvalues])
 
   useEffect(() => {
     //   get lead data by id
@@ -911,7 +931,6 @@ export default function CustomerProfileSideView({
     updateSchLog(orgId, id, data.ct, 'completed', schStsA)
   }
   const EditTaskOpenWindowFun = (data) => {
-
     cancelResetStatusFun()
     setEditTaskObj(data)
     setTakTitle(data?.notes || '')
@@ -925,7 +944,6 @@ export default function CustomerProfileSideView({
     // updateSchLog(orgId, id, data.ct, 'completed', schStsA)
   }
   const editTaskFun = (data) => {
-
     const inx = schStsMA.indexOf(data.ct)
     data.schTime = startDate
     data.notes = takTitle
@@ -1203,7 +1221,6 @@ export default function CustomerProfileSideView({
       setLeadStatus('junk')
       cancelResetStatusFun()
     } else if (tempLeadStatus === 'visitdone') {
-
       const covA = [
         ...(customerDetails?.coveredA || []),
         ...['visitfixed', 'visitdone'],
@@ -1811,53 +1828,105 @@ export default function CustomerProfileSideView({
                   </div>
                   {selFeature == 'lead_strength' && (
                     <>
-                      <div className="flex flex-col pt-0 my-10 mt-[30px] rounded bg-gradient-to-r from-teal-200 to-teal-400 mx-4 p-4">
-                        <div className="grid grid-cols-2 gap-8 pt-3 mx-3  mt-2">
-                          <CustomSelect
-                            name="bugetRange"
-                            label="Looking at Budget Range*"
-                            className="input mt-3"
-                            onChange={(value) => {
-                              // formik.setFieldValue('source', value.value)
-                              // setNotInterestType(value.value)
-                            }}
-                            value={notInterestType}
-                            options={lookingAtBudgetRange}
-                          />
-                          <CustomSelect
-                            name="assetPossesed"
-                            label="Any Existing Banglore Assets ?*"
-                            className="input mt-3"
-                            onChange={(value) => {
-                              // formik.setFieldValue('source', value.value)
-                              // setNotInterestType(value.value)
-                            }}
-                            value={notInterestType}
-                            options={exitstingAsset}
-                          />
-                          <CustomSelect
-                            name="reasonPurchase"
-                            label="Reason For Purchase ?*"
-                            className="input"
-                            onChange={(value) => {
-                              // formik.setFieldValue('source', value.value)
-                              // setNotInterestType(value.value)
-                            }}
-                            value={notInterestType}
-                            options={reasonPurchase}
-                          />
-                          <CustomSelect
-                            name="preferredArea"
-                            label="Preferred Area ?*"
-                            className="input"
-                            onChange={(value) => {
-                              // formik.setFieldValue('source', value.value)
-                              // setNotInterestType(value.value)
-                            }}
-                            value={notInterestType}
-                            options={preferredArea}
+                      <div className="flex flex-col pt-0 my-10 mt-[30px] rounded bg-gradient-to-b from-purple-300 to-purple-200 mx-4 p-4">
+                        <div className="border border-red-100 mt-2 mt-4 bg-white rounded-md p-4 font-bold">
+                          <div className="flex justify-between w-full ">
+                            <div>Total Lead Strength</div>
+                            <div>{`${opstr}%`}</div>
+                          </div>
+                          <Slider
+                            onChange={(e) => setopstr(e.target.value)}
+                            value={opstr}
+                            defaultValue={opstr}
+                            aria-label="Default"
+                            valueLabelDisplay="auto"
                           />
                         </div>
+                        <div className="grid grid-cols-2 gap-8 pt-3 mx-3  mt-2">
+                          <div className="mt-2">
+                            <div className="flex justify-between w-11.7/12 m-auto">
+                              <div> Looking at Budget Range*</div>
+                              <div> {`${optionvalues.bstr}%`}</div>
+                            </div>
+                            <CustomSelect
+                              name="bugetRange"
+                              className="input"
+                              onChange={(value) => {
+                                // formik.setFieldValue('source', value.value)
+
+                                setoptionvalues({
+                                  ...optionvalues,
+                                  budget: value.value,
+                                  bstr: value.str,
+                                })
+                              }}
+                              value={optionvalues.budget}
+                              options={lookingAtBudgetRange}
+                            />
+                          </div>
+                          <div className="mt-2">
+                            <div className="flex justify-between w-11.7/12 m-auto">
+                              <div>Any Existing Banglore Assets ?*</div>
+                              <div> {`${optionvalues.asstr}%`}</div>
+                            </div>
+                            <CustomSelect
+                              name="assetPossesed"
+                              className="input"
+                              onChange={(value) => {
+                                // formik.setFieldValue('source', value.value)
+                                setoptionvalues({
+                                  ...optionvalues,
+                                  asset: value.value,
+                                  asstr: value.str,
+                                })
+                              }}
+                              value={optionvalues.asset}
+                              options={exitstingAsset}
+                            />
+                          </div>
+                          <div className="mt-2">
+                            <div className="flex justify-between w-11.7/12 m-auto">
+                              <div>Reason For Purchase ?*</div>
+                              <div> {`${optionvalues.pstr}%`}</div>
+                            </div>
+                            <CustomSelect
+                              name="reasonPurchase"
+                              className="input"
+                              onChange={(value) => {
+                                // formik.setFieldValue('source', value.value)
+                                //  setNotInterestType(value.value)
+                                setoptionvalues({
+                                  ...optionvalues,
+                                  purchase: value.value,
+                                  pstr: value.str,
+                                })
+                              }}
+                              value={optionvalues.purchase}
+                              options={reasonPurchase}
+                            />
+                          </div>
+                          <div className="mt-2">
+                            <div className="flex justify-between w-11.7/12 m-auto">
+                              <div>Preferred Area ?*</div>
+                              <div> {`${optionvalues.astr}%`}</div>
+                            </div>
+                            <CustomSelect
+                              name="preferredArea"
+                              className="input"
+                              onChange={(value) => {
+                                // formik.setFieldValue('source', value.value)
+                                setoptionvalues({
+                                  ...optionvalues,
+                                  area: value.value,
+                                  astr: value.str,
+                                })
+                              }}
+                              value={optionvalues.area}
+                              options={reasonPurchase}
+                            />
+                          </div>
+                        </div>
+                        <div></div>
 
                         <div className="flex flex-row justify-end mt-6">
                           <section className="flex flex-row">
@@ -2079,6 +2148,7 @@ export default function CustomerProfileSideView({
                               className="input mt-3"
                               onChange={(value) => {
                                 // formik.setFieldValue('source', value.value)
+
                                 setNotInterestType(value.value)
                               }}
                               value={notInterestType}
@@ -3164,6 +3234,7 @@ export default function CustomerProfileSideView({
                                           value={fbTitle}
                                           onChange={(value) => {
                                             // formik.setFieldValue('source', value.value)
+
                                             setFbTitle(value.value)
                                           }}
                                         />
@@ -3183,19 +3254,21 @@ export default function CustomerProfileSideView({
                                     <div className="flex flex-row mt-1">
                                       <button
                                         onClick={() => {
-
-                                          if(fbNotes != ""){
-                                          setLeadStatus('visitdone')
-                                          if (showNotInterested) {
-                                            notInterestedFun()
-                                            return
+                                          if (fbNotes != '') {
+                                            setLeadStatus('visitdone')
+                                            if (showNotInterested) {
+                                              notInterestedFun()
+                                              return
+                                            }
+                                            addFeedbackFun(data)
+                                          } else {
+                                            enqueueSnackbar(
+                                              'Please Enter Notes',
+                                              {
+                                                variant: 'warning',
+                                              }
+                                            )
                                           }
-                                          addFeedbackFun(data)
-                                        }else{
-                                          enqueueSnackbar('Please Enter Notes', {
-                                            variant: 'warning',
-                                          })
-                                        }
                                         }}
                                         className={`flex mt-2 rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium text-white bg-[#FF7A53]  hover:bg-gray-700  `}
                                       >
