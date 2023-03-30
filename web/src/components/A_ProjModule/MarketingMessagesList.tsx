@@ -246,7 +246,7 @@ const MarkeingMessagesList = ({ title, pId, data }) => {
           </section>
         </div>
       )}
-      <div className="w-full  flex flex-row">
+      {/* <div className="w-full  flex flex-row">
         {selCat === 'enquiry_journey_status' && (
           <section className="m-4 inline-block">
             <div className="bg-[#FFEDEA] p-4 rounded-xl shadow-md shadow-neutral-200 w-96">
@@ -293,7 +293,7 @@ const MarkeingMessagesList = ({ title, pId, data }) => {
             </div>
           </section>
         )}
-      </div>
+      </div> */}
 
       {/* Crm block */}
       {selCat === 'CRM_status' && (
