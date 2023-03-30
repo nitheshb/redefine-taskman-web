@@ -5,7 +5,7 @@ import WhatsAppTextQuillForm from './Comps/WhatsAppTextQuill'
 
 const NotificationsSetupForm = ({ title, projectDetails, wbPayload }) => {
   const { enqueueSnackbar } = useSnackbar()
-
+console.log('am insidenofof')
   return (
     <div className="h-full flex flex-col py-6 bg-white shadow-xl overflow-y-scroll">
       <div className="px-4 sm:px-6  z-10 ">
