@@ -62,7 +62,7 @@ export const getWbNotifyTemplate = async (payload) => {
     .eq('event', event)
     .eq('target', target)
     .eq('type', type)
-    .eq('scope', scope)
+    .in('scope', scope)
 
   return data
 }

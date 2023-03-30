@@ -1,8 +1,5 @@
-
 import { Dialog } from '@headlessui/react'
 import { useSnackbar } from 'notistack'
-
-
 
 import WhatsAppTextQuillForm from './Comps/WhatsAppTextQuill'
 
@@ -16,17 +13,14 @@ const NotificationsSetupForm = ({ title, projectDetails, wbPayload }) => {
           {title}
         </Dialog.Title>
         <span className="text-gray-600 text-xs mt-3">
-          This is playground to Save and Test whatsapp notifiaction templates
+          Design WhatsApp template for {' '}
+          <span className="text-[#0080ff]"> {wbPayload?.target}</span>{' '}
+          <span className="text-[#0080ff]"> {wbPayload?.event}</span>{' '}
+
         </span>
       </div>
       <section className="bg-teal-50">
-        <WhatsAppTextQuillForm
-          projectDetails={projectDetails}
-          leadDetailsObj={undefined}
-          source={undefined}
-          unitDetails={undefined}
-          wbPayload={wbPayload}
-        />
+        <WhatsAppTextQuillForm wbPayload={wbPayload} />
       </section>
     </div>
   )

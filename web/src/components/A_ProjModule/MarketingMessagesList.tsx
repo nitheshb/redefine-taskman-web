@@ -38,8 +38,13 @@ const MarkeingMessagesList = ({ title, pId, data }) => {
     setTestPhNo(e.target.value)
   }
   const triggerWhatsAppFun = (data) => {
-    const {event} = data;
-    const payload = { event: event, target: 'customer', type: 'wa', scope: 'allProjects'}
+    const { event } = data
+    const payload = {
+      event: event,
+      target: 'customer',
+      type: 'wa',
+      scope: 'allProjects',
+    }
 
     setWbSelPayload(payload)
     setIsOpenSideView(true)
@@ -65,6 +70,22 @@ const MarkeingMessagesList = ({ title, pId, data }) => {
           Hint: This is playground to test whatsapp notifiaction templates
         </span>
       </section>
+      <div className="flex overflow-x-auto">
+        {[
+          { label: 'Enquiry Journey Status', value: 'enquiry_journey_status' },
+        ].map((data, i) => {
+          return (
+            <section key={i} className="flex  mt-[18px]">
+              <button>
+                <span className="flex ml-2 items-center h-6 px-3 text-xs font-semibold text-green-800 bg-green-200 rounded-full">
+                  <PencilIcon className="h-3 w-3 mr-1" aria-hidden="true" />
+                  {'enquiry Journey Statuses'}
+                </span>
+              </button>
+            </section>
+          )
+        })}
+      </div>
       <div className="w-full  flex flex-row">
         <div className="lg:col-span-2 mr-4">
           <div>
@@ -142,7 +163,6 @@ const MarkeingMessagesList = ({ title, pId, data }) => {
                             className="flex ml-2 items-center cursor-pointer h-6 px-3 text-xs  text-green-800"
                             onClick={() => {
                               triggerWhatsAppFun(data)
-
                             }}
                           >
                             whatsApp
@@ -1004,7 +1024,7 @@ const MarkeingMessagesList = ({ title, pId, data }) => {
           setOpen={setIsOpenSideView}
           title={'Notification Setup'}
           widthClass="max-w-md"
-          wbPayload= {wbSelPayload}
+          wbPayload={wbSelPayload}
         />
       </div>
     </>
