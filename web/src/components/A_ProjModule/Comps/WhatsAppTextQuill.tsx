@@ -59,7 +59,12 @@ const WhatsAppTextQuillForm = ({ wbPayload }) => {
 
   useEffect(() => {
     const { label, value } = selProjectIs
-    console.log('sel poroject details are', selProjectIs, value === 'allProjects', value)
+    console.log(
+      'sel poroject details are',
+      selProjectIs,
+      value === 'allProjects',
+      value
+    )
 
     if (value === 'allProjects') {
       setProjNam('')
@@ -125,7 +130,13 @@ const WhatsAppTextQuillForm = ({ wbPayload }) => {
     const data = await getWbNotifyTemplate(wbPayload)
 
     if (data.length > 0) {
-      setEditorState(data[0].template)
+      console.log('check it ', data)
+      // data.id ==
+      const x = data.filter((data) => {
+        // return data
+        return data.scope === selProjectIs.value
+      })
+      setEditorState(x[0].template)
     }
     await console.log('fetched fields are ', data)
   }
