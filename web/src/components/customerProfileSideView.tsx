@@ -111,6 +111,8 @@ import Confetti from './shared/confetti'
 import '../styles/myStyles.css'
 import { Slider } from '@mui/material'
 
+import { getWhatsAppTemplates } from 'src/util/TuneWhatsappMsg'
+
 // interface iToastInfo {
 //   open: boolean
 //   message: string
@@ -260,7 +262,7 @@ export default function CustomerProfileSideView({
   const [opstr, setopstr] = useState(0)
   const [showNotInterested, setShowNotInterested] = useState(false)
   const [showJunk, setShowJunk] = useState(false)
-  
+
   const [junkReason, setJunkReason] = useState('Phone no Invalid')
   const [leadsActivityFetchedData, setLeadsFetchedActivityData] = useState([])
   const [leadSchLoading, setLeadsSchLoading] = useState(true)
@@ -524,6 +526,18 @@ export default function CustomerProfileSideView({
     getCustomerDocsFun()
     getProjectsListFun()
   }, [])
+  const receiverDetails = {
+    customerName: Name,
+    executiveName: assignerName,
+    receiverPhNo: Mobile,
+  }
+  const msgPayload = {
+    projectName: Project,
+    broucherLink: '',
+    locLink: '',
+    projContactNo: '',
+    scheduleTime: startDate,
+  }
 
   const getCustomerDocsFun = () => {
     const unsubscribe = getCustomerDocs(
@@ -584,6 +598,15 @@ export default function CustomerProfileSideView({
         todayTasksIncre,
         txt,
         by
+      )
+      getWhatsAppTemplates(
+        'on_lead_assign',
+        'wa',
+        'customer',
+        // 'ProjectId',
+        ProjectId,
+        receiverDetails,
+        msgPayload
       )
     }
   }
@@ -822,14 +845,20 @@ export default function CustomerProfileSideView({
       (startDate?.getTime() || Timestamp.now().toMillis() + 10800000) <
       torrowDate
     ) {
-      IncrementTastTotalCount(
-        orgId,
-        assignedTo,
-        ddMy,
-        tempLeadStatus,
-        1,
-        `New Task-${tempLeadStatus}`
-      )
+      try {
+        IncrementTastTotalCount(
+          orgId,
+          assignedTo,
+          ddMy,
+          tempLeadStatus,
+          1,
+          `New Task-${tempLeadStatus}`
+        )
+      } catch (error) {
+        enqueueSnackbar('error in updating ur performance', {
+          variant: 'error',
+        })
+      }
     }
 
     const { name } = assignedTo
@@ -843,32 +872,38 @@ export default function CustomerProfileSideView({
         user?.email,
         enqueueSnackbar
       )
+
+      console.log('not interested', tempLeadStatus)
+
       if (tempLeadStatus === 'visitfixed') {
-        sendWhatAppTextSms1(
-          '7760959579',
-          `Greetings From MAA Homes !!\n
-        As per our conversation,  I am happy to welcome you to our project ${Project} and looking forward to seeing what we can accomplish together, I will be on hand to offer you a tour of our villa project.\n
-        Your visit is confirmed on ${prettyDateTime(
-          startDate.getTime()
-        )} \n\nWarm Regards \n${assignerName}\nMaa Homes`
+        getWhatsAppTemplates(
+          'on_sitevisit_fix',
+          'wa',
+          'customer',
+          // 'ProjectId',
+          ProjectId,
+          receiverDetails,
+          msgPayload
         )
       } else if (tempLeadStatus === 'visitdone') {
-        sendWhatAppTextSms1(
-          '7760959579',
-          `Greetings From MAA Homes !!\n
-
-          It was great meeting you at our project today, you’re one step closer to your dream home,
-          Please let me know when we can meet for further discussions and actions.
-
-         \n\nWarm Regards \n${assignerName}\nMaa Homes`
+        getWhatsAppTemplates(
+          'on_sitevisit_done',
+          'wa',
+          'customer',
+          // 'ProjectId',
+          ProjectId,
+          receiverDetails,
+          msgPayload
         )
       } else if (tempLeadStatus === 'booking') {
-        sendWhatAppTextSms1(
-          '7760959579',
-          `Greetings From MAA Homes !!\n
-          It was great to meet you at our project today, you’re one step closer to your dream home.
-          Please let me know when we can meet for further discussion and action.
-         \n\nWarm Regards \n${assignerName}\nMaa Homes`
+        getWhatsAppTemplates(
+          'on_booking',
+          'wa',
+          'customer',
+          // 'ProjectId',
+          ProjectId,
+          receiverDetails,
+          msgPayload
         )
       }
     }
@@ -952,6 +987,16 @@ export default function CustomerProfileSideView({
     setschStsA(x)
 
     editTaskDB(orgId, id, data.ct, 'pending', schStsA, data)
+    if (leadDetailsObj?.Status == 'visitfixed') {
+      getWhatsAppTemplates(
+        'on_sitevisit_reschedule',
+        'wa',
+        'customer',
+        ProjectId,
+        receiverDetails,
+        msgPayload
+      )
+    }
     cancelResetStatusFun()
   }
   const addTaskCommentFun = async (data) => {
@@ -1020,6 +1065,14 @@ export default function CustomerProfileSideView({
     await closeAllPerviousTasks('closed by Not-Interested')
     //3) set status as not interested
     await fAddNotes()
+    await getWhatsAppTemplates(
+      'on_not_interested',
+      'wa',
+      'customer',
+      ProjectId,
+      receiverDetails,
+      msgPayload
+    )
     await cancelResetStatusFun()
     return
     data.comments = [
@@ -3276,12 +3329,24 @@ export default function CustomerProfileSideView({
                                       </button>
                                       <button
                                         onClick={() => {
+                                          console.log('am i clicked')
+
                                           setLeadStatus('visitdone')
                                           if (showNotInterested) {
                                             notInterestedFun()
                                             return
                                           }
                                           addFeedbackFun(data)
+
+                                          getWhatsAppTemplates(
+                                            'on_sitevisit_done',
+                                            'wa',
+                                            'customer',
+                                            // 'ProjectId',
+                                            ProjectId,
+                                            receiverDetails,
+                                            msgPayload
+                                          )
                                         }}
                                         className={`flex mt-2 ml-4 rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium text-white bg-[#FF7A53]  hover:bg-gray-700  `}
                                       >

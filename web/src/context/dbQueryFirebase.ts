@@ -67,6 +67,20 @@ export const getWbNotifyTemplate = async (payload) => {
   return data
 }
 
+
+// get matched rows details
+export const getWbAllNotifyTemplates = async (event, scope, type, target) => {
+
+  //{ event: 'on_enquiry', target: 'customer', 'template': payload , type: 'wa', scope: 'allProjects'}
+  const { data, error } = await supabase
+    .from('maahomes_notifyTemplates')
+    .select('*')
+    .eq('event', event)
+    .eq('type', type)
+    .in('scope', scope)
+
+  return data
+}
 // get all Virtual Accounts detials list
 export const steamVirtualAccountsList = (orgId, snapshot, error) => {
   const itemsQuery = query(collection(db, `${orgId}_VirtualAccounts`))
@@ -112,12 +126,16 @@ export const getEmployeesTaskProgressDept = async (
   data,
   error
 ) => {
+  try{
   const { dateFull } = data
   const itemsQuery = query(
     collection(db, `${orgId}_emp_performance`),
     where('date', '==', dateFull)
   )
   return onSnapshot(itemsQuery, snapshot, error)
+} catch (error) {
+  console.log('erro in emp performance Upate getemployee')
+}
 }
 export const updateLeadsLogWithProject = async (
   orgId,
@@ -1934,6 +1952,7 @@ export const updateLeadAssigTo = async (
     assignedTo: value,
   })
   if (newSt != '') {
+    try{
     const todaydate = new Date()
 
     const ddMy =
@@ -1956,6 +1975,9 @@ export const updateLeadAssigTo = async (
         all: increment(-todayTasksIncre),
       }
     )
+  } catch (error) {
+    console.log('erro in emp performance LeadAssignTo')
+  }
   }
 
   await sendWhatAppTextSms1(
@@ -1982,11 +2004,15 @@ export const IncrementTastCompletedCount = async (
   txt
 ) => {
   console.log('IncrementTastCompletedCount')
+  try{
   await updateDoc(doc(db, `${orgId}_emp_performance`, `${userId}DD${ddMy}`), {
     [newSt]: increment(todayTasksIncre),
     all_comp: increment(todayTasksIncre),
     recA: arrayUnion({ tx: txt, T: Timestamp.now().toMillis() }),
   })
+} catch (error) {
+  console.log('erro in emp performance + complted Count')
+}
 }
 export const IncrementTastTotalCount = async (
   orgId,
@@ -1998,11 +2024,16 @@ export const IncrementTastTotalCount = async (
 ) => {
   // this is used when new task is created for the same day
   console.log('IncrementTastTotalCount')
-  await updateDoc(doc(db, `${orgId}_emp_performance`, `${userId}DD${ddMy}`), {
-    [newSt]: increment(todayTasksIncre),
-    all: increment(todayTasksIncre),
-    recA: arrayUnion({ tx: txt, T: Timestamp.now().toMillis() }),
-  })
+  try {
+    await updateDoc(doc(db, `${orgId}_emp_performance`, `${userId}DD${ddMy}`), {
+      [newSt]: increment(todayTasksIncre),
+      all: increment(todayTasksIncre),
+      recA: arrayUnion({ tx: txt, T: Timestamp.now().toMillis() }),
+    })
+  } catch (error) {
+    console.log('erro in emp performance Upate')
+  }
+
 }
 export const decreCountOnResheduleOtherDay = async (
   orgId,
@@ -2012,11 +2043,17 @@ export const decreCountOnResheduleOtherDay = async (
   todayTasksIncre,
   txt
 ) => {
+  try {
+
+
   await updateDoc(doc(db, `${orgId}_emp_performance`, `${userId}DD${ddMy}`), {
     [newSt]: increment(-todayTasksIncre),
     all: increment(-todayTasksIncre),
     recA: arrayUnion({ tx: txt, T: Timestamp.now().toMillis() }),
   })
+} catch (error) {
+  console.log('erro in emp performance Upate decre')
+}
 }
 export const updateLeadCustomerDetailsTo = async (
   orgId,
