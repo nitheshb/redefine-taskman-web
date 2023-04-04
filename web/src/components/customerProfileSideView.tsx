@@ -152,7 +152,10 @@ const notInterestOptions = [
   },
   { label: 'Looking for Different Area', value: 'differeent_area' },
   { label: 'Looking for Different Property', value: 'differeent_options' },
+  { label: 'Not happy with the development & quality', value: 'nh_dev_qual' },
 
+  { label: 'Need more time', value: 'Need_more_time' },
+  { label: 'just doing property research', value: 'property_research' },
   { label: 'Others', value: 'others' },
 
   // { label: 'Follow Up', value: 'followup' },
@@ -2578,7 +2581,7 @@ export default function CustomerProfileSideView({
                                 label={`Why  ${
                                   customerDetails?.Name?.toLocaleUpperCase() ||
                                   'Customer'
-                                } is  not Interestedx *`}
+                                } is  not Interested *`}
                                 className="input mt-3"
                                 onChange={(value) => {
                                   // formik.setFieldValue('source', value.value)
