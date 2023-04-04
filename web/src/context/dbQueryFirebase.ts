@@ -67,10 +67,8 @@ export const getWbNotifyTemplate = async (payload) => {
   return data
 }
 
-
 // get matched rows details
 export const getWbAllNotifyTemplates = async (event, scope, type, target) => {
-
   //{ event: 'on_enquiry', target: 'customer', 'template': payload , type: 'wa', scope: 'allProjects'}
   const { data, error } = await supabase
     .from('maahomes_notifyTemplates')
@@ -120,22 +118,48 @@ export const steamAllLeadsActivity = async (orgId, snapshot, data, error) => {
   return lead_logs
   // return onSnapshot(itemsQuery, snapshot, error)
 }
+
+// get all leadLogs from supabase
+export const streamLeadLogdWithNullProj = async (
+  orgId,
+  snapshot,
+  data,
+  error
+) => {
+  // const itemsQuery = query(doc(db, `${orgId}_leads_log', 'W6sFKhgyihlsKmmqDG0r'))
+  const { uid, cutoffDate } = data
+  // return onSnapshot(doc(db, `${orgId}_leads_log`, uid), snapshot, error)
+  const { data: lead_logs, error1: countError } = await supabase
+    .from(`${orgId}_lead_logs`)
+    .select('projectId, type,subtype,T, by, from, to, uid, Luid, payload')
+    .eq('type', 'sts_change')
+    .is('projectId', null)
+    // .isNull('projectId')
+  // .eq('from', 'visitfixed')
+
+  if (countError) {
+    console.error(countError)
+    return
+  }
+  return lead_logs
+  // return onSnapshot(itemsQuery, snapshot, error)
+}
 export const getEmployeesTaskProgressDept = async (
   orgId,
   snapshot,
   data,
   error
 ) => {
-  try{
-  const { dateFull } = data
-  const itemsQuery = query(
-    collection(db, `${orgId}_emp_performance`),
-    where('date', '==', dateFull)
-  )
-  return onSnapshot(itemsQuery, snapshot, error)
-} catch (error) {
-  console.log('erro in emp performance Upate getemployee')
-}
+  try {
+    const { dateFull } = data
+    const itemsQuery = query(
+      collection(db, `${orgId}_emp_performance`),
+      where('date', '==', dateFull)
+    )
+    return onSnapshot(itemsQuery, snapshot, error)
+  } catch (error) {
+    console.log('erro in emp performance Upate getemployee')
+  }
 }
 export const updateLeadsLogWithProject = async (
   orgId,
@@ -151,6 +175,8 @@ export const updateLeadsLogWithProject = async (
     .update({ projectId: pId })
     .eq('Luid', LeadId)
     .eq('type', 'sts_change')
+
+    console.log('updating error', lead_logs,error)
   return lead_logs
   // return onSnapshot(itemsQuery, snapshot, error)
 }
@@ -841,12 +867,7 @@ export const addNotificationSupabase = async (payload, enqueueSnackbar) => {
 
   const { data, error } = await supabase
     .from('maahomes_notifyTemplates')
-    .upsert(
-      [
-        {...payload}
-      ],
-      { upsert: true }
-    )
+    .upsert([{ ...payload }], { upsert: true })
 
   console.log('created stuff is ', error, data)
   enqueueSnackbar('Notification updated Successful', {
@@ -1952,32 +1973,35 @@ export const updateLeadAssigTo = async (
     assignedTo: value,
   })
   if (newSt != '') {
-    try{
-    const todaydate = new Date()
+    try {
+      const todaydate = new Date()
 
-    const ddMy =
-      'D' +
-      todaydate.getDate() +
-      'M' +
-      todaydate.getMonth() +
-      'Y' +
-      todaydate.getFullYear()
+      const ddMy =
+        'D' +
+        todaydate.getDate() +
+        'M' +
+        todaydate.getMonth() +
+        'Y' +
+        todaydate.getFullYear()
 
-    await updateDoc(doc(db, `${orgId}_emp_performance`, `${value}DD${ddMy}`), {
-      [newSt]: increment(todayTasksIncre),
-      all: increment(todayTasksIncre),
-      recA: arrayUnion({ tx: txt, T: Timestamp.now().toMillis() }),
-    })
-    await updateDoc(
-      doc(db, `${orgId}_emp_performance`, `${oldOwnerId}DD${ddMy}`),
-      {
-        [newSt]: increment(-todayTasksIncre),
-        all: increment(-todayTasksIncre),
-      }
-    )
-  } catch (error) {
-    console.log('erro in emp performance LeadAssignTo')
-  }
+      await updateDoc(
+        doc(db, `${orgId}_emp_performance`, `${value}DD${ddMy}`),
+        {
+          [newSt]: increment(todayTasksIncre),
+          all: increment(todayTasksIncre),
+          recA: arrayUnion({ tx: txt, T: Timestamp.now().toMillis() }),
+        }
+      )
+      await updateDoc(
+        doc(db, `${orgId}_emp_performance`, `${oldOwnerId}DD${ddMy}`),
+        {
+          [newSt]: increment(-todayTasksIncre),
+          all: increment(-todayTasksIncre),
+        }
+      )
+    } catch (error) {
+      console.log('erro in emp performance LeadAssignTo')
+    }
   }
 
   await sendWhatAppTextSms1(
@@ -2004,15 +2028,15 @@ export const IncrementTastCompletedCount = async (
   txt
 ) => {
   console.log('IncrementTastCompletedCount')
-  try{
-  await updateDoc(doc(db, `${orgId}_emp_performance`, `${userId}DD${ddMy}`), {
-    [newSt]: increment(todayTasksIncre),
-    all_comp: increment(todayTasksIncre),
-    recA: arrayUnion({ tx: txt, T: Timestamp.now().toMillis() }),
-  })
-} catch (error) {
-  console.log('erro in emp performance + complted Count')
-}
+  try {
+    await updateDoc(doc(db, `${orgId}_emp_performance`, `${userId}DD${ddMy}`), {
+      [newSt]: increment(todayTasksIncre),
+      all_comp: increment(todayTasksIncre),
+      recA: arrayUnion({ tx: txt, T: Timestamp.now().toMillis() }),
+    })
+  } catch (error) {
+    console.log('erro in emp performance + complted Count')
+  }
 }
 export const IncrementTastTotalCount = async (
   orgId,
@@ -2033,7 +2057,6 @@ export const IncrementTastTotalCount = async (
   } catch (error) {
     console.log('erro in emp performance Upate')
   }
-
 }
 export const decreCountOnResheduleOtherDay = async (
   orgId,
@@ -2044,16 +2067,14 @@ export const decreCountOnResheduleOtherDay = async (
   txt
 ) => {
   try {
-
-
-  await updateDoc(doc(db, `${orgId}_emp_performance`, `${userId}DD${ddMy}`), {
-    [newSt]: increment(-todayTasksIncre),
-    all: increment(-todayTasksIncre),
-    recA: arrayUnion({ tx: txt, T: Timestamp.now().toMillis() }),
-  })
-} catch (error) {
-  console.log('erro in emp performance Upate decre')
-}
+    await updateDoc(doc(db, `${orgId}_emp_performance`, `${userId}DD${ddMy}`), {
+      [newSt]: increment(-todayTasksIncre),
+      all: increment(-todayTasksIncre),
+      recA: arrayUnion({ tx: txt, T: Timestamp.now().toMillis() }),
+    })
+  } catch (error) {
+    console.log('erro in emp performance Upate decre')
+  }
 }
 export const updateLeadCustomerDetailsTo = async (
   orgId,

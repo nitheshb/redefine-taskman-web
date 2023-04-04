@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
@@ -719,7 +721,7 @@ export default function TodayLeadsActivitySearchView({
           </h1> */}
           <div className="flex flex-row justify-between pb-3">
             <section>
-              <h2 className="text-xl font-semibold text-black leading-light font-Playfair pb-1">
+              <h2 className="text-md font-semibold text-black leading-light font-Playfair pb-1">
                 {greet}, {user?.displayName?.toLocaleUpperCase()}
               </h2>
 
