@@ -27,6 +27,7 @@ import { CustomSelect } from 'src/util/formFields/selectBoxField'
 import { MultiSelectMultiLineField } from 'src/util/formFields/selectBoxMultiLineField'
 import { TextAreaField } from 'src/util/formFields/TextAreaField'
 import { TextField } from 'src/util/formFields/TextField'
+import { prettyDate } from 'src/util/dateConverter'
 
 const SideVisitLeadsBody = ({ title, leadsLogsPayload, dialogOpen }) => {
   const { user } = useAuth()
@@ -54,6 +55,7 @@ const SideVisitLeadsBody = ({ title, leadsLogsPayload, dialogOpen }) => {
       logData.Name = Name
 
       logData.Status = Status
+      logData.Time = prettyDate(logData?.T).toLocaleString()
       // console.log('dta is', logData)
 
       streamedTodo.push(logData)
@@ -131,22 +133,22 @@ const SideVisitLeadsBody = ({ title, leadsLogsPayload, dialogOpen }) => {
                         {i + 1}
                       </td>
                       <td className="text-sm text-gray-900 font-medium px-6 py-2 whitespace-nowrap text-left">
-                        {data?.projectName}
+                        {data?.ProjectName}
                       </td>
-                      <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                      <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
                         {data?.Name}
                       </td>
-                      <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                      <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
                         {data?.Status}
                       </td>
-                      <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                      <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
                         {data?.from}
                       </td>
-                      <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                      <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
                         {data?.to}
                       </td>
-                      <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
-                        {data?.T}
+                      <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
+                        {data?.Time}
                       </td>
                     </tr>
                   )
