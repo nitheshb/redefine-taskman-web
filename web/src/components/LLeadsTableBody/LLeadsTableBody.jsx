@@ -124,7 +124,12 @@ const headCells = [
     disablePadding: true,
     label: 'Created On',
   },
-
+  {
+    id: 'AssignedOn',
+    numeric: false,
+    disablePadding: true,
+    label: 'Assigned On',
+  },
 
   {
     id: 'Clientdetails',
@@ -867,6 +872,23 @@ export default function LLeadsTableBody({
                           <section>
                             <span className="font-bodyLato">
                               {prettyDate(row.Date).toLocaleString()}
+                            </span>
+
+                          </section>
+                        </TableCell>
+
+
+                        <TableCell
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding="none"
+                        >
+                          <section>
+                            <span className="font-bodyLato">
+                            {row.assignT != undefined
+                          ? prettyDate(row.assignT)
+                          : prettyDate(row.Date)}
                             </span>
 
                           </section>

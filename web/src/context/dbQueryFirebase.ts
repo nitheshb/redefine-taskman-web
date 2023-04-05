@@ -185,7 +185,7 @@ export const updateLeadsLogWithProject = async (
 export const steamLeadActivityLog = async (orgId, snapshot, data, error) => {
   // const itemsQuery = query(doc(db, `${orgId}_leads_log', 'W6sFKhgyihlsKmmqDG0r'))
   const { uid } = data
-  console.log('is uid g', uid)
+  console.log('is uid g', data,  uid)
   // return onSnapshot(doc(db, `${orgId}_leads_log`, uid), snapshot, error)
   const { data: lead_logs, error1 } = await supabase
     .from(`${orgId}_lead_logs`)
@@ -1942,6 +1942,7 @@ export const updateBlock_AddFloor = async (uid, floorName, enqueueSnackbar) => {
 
 export const updateLeadAssigTo = async (
   orgId,
+  projectId,
   leadDocId,
   assignedTo,
   oldOwnerId,
@@ -1972,6 +1973,20 @@ export const updateLeadAssigTo = async (
   await updateDoc(doc(db, `${orgId}_leads_sch`, leadDocId), {
     assignedTo: value,
   })
+
+  const { data1, error1 } = await supabase.from(`${orgId}_lead_logs`).insert([
+    {
+      type: 'assign_change',
+      subtype: oldOwnerId,
+      T: Timestamp.now().toMillis(),
+      Luid: leadDocId,
+      by,
+      payload: {},
+      from: oldOwnerId,
+      to: value,
+      projectId: projectId
+    },
+  ])
   if (newSt != '') {
     try {
       const todaydate = new Date()
@@ -2306,6 +2321,7 @@ export const updateLeadLastUpdateTime = async (
 }
 export const updateLeadStatus = async (
   orgId,
+  projectId,
   leadDocId,
   oldStatus,
   newStatus,
@@ -2338,6 +2354,7 @@ export const updateLeadStatus = async (
         payload: {},
         from: oldStatus,
         to: newStatus,
+        projectId: projectId
       },
     ])
 

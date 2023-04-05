@@ -268,6 +268,7 @@ const AddPaymentDetailsForm = ({
 
     updateLeadStatus(
       orgId,
+      leadDetailsObj2?.ProjectId,
       id,
       leadDetailsObj2?.Status,
       'booked',

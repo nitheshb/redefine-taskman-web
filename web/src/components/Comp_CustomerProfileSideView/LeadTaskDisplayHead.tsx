@@ -64,14 +64,14 @@ export default function LeadTaskDisplayHead({
           </div>
         </label>
       </div>
-      {data?.sts == 'completed' && hoverTasId === data?.ct && (
+      {/* {data?.sts == 'completed' && hoverTasId === data?.ct && (
         <span
           className="font-thin text-[#e91313] cursor-pointer text-[12px]  font-bodyLato text-[10px] ml-2  border-b hover:border-[#0091ae]  "
           onClick={() => undoFun(data)}
         >
           UNDO
         </span>
-      )}
+      )} */}
       {data?.sts != 'completed' && (
         <section className="flex flex-row">
           <span
@@ -80,6 +80,8 @@ export default function LeadTaskDisplayHead({
             }}
             className="inline-flex  placeholder:font-thin text-[#0091ae]  cursor-pointer font-bodyLato text-[12px] ml-2 pt-1 text-[#867777] hover:text-green-900"
           >
+
+{/* 
             <svg
               viewBox="0 0 12 12"
               className="notes_icon inline w-4 h-4 mr-1 text-[#0091ae] "
@@ -92,7 +94,12 @@ export default function LeadTaskDisplayHead({
                   d="M9.5 1A1.5 1.5 0 0 1 11 2.5v5A1.5 1.5 0 0 1 9.5 9H7.249L5.28 10.97A.75.75 0 0 1 4 10.44V9H2.5A1.5 1.5 0 0 1 1 7.5v-5A1.5 1.5 0 0 1 2.5 1h7zm0 1h-7a.5.5 0 0 0-.5.5v5a.5.5 0 0 0 .5.5H5v1.836L6.835 8H9.5a.5.5 0 0 0 .5-.5v-5a.5.5 0 0 0-.5-.5z"
                 ></path>
               </g>
-            </svg>
+            </svg> */}
+            <span
+          className="font-thin text-[#e91313] cursor-pointer text-[12px]  font-bodyLato text-[10px] ml-2  border-b hover:border-[#0091ae]  "
+        >
+          Comment
+        </span>
           </span>
           {data?.stsType === 'visitfixed' && data?.sts != 'completed' && (
             <span

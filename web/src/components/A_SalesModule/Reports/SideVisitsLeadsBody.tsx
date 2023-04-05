@@ -22,14 +22,20 @@ import {
   updateProject,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
+import { prettyDate } from 'src/util/dateConverter'
 import { CustomRadioGroup } from 'src/util/formFields/CustomRadioGroup'
 import { CustomSelect } from 'src/util/formFields/selectBoxField'
 import { MultiSelectMultiLineField } from 'src/util/formFields/selectBoxMultiLineField'
 import { TextAreaField } from 'src/util/formFields/TextAreaField'
 import { TextField } from 'src/util/formFields/TextField'
-import { prettyDate } from 'src/util/dateConverter'
 
-const SideVisitLeadsBody = ({ title, leadsLogsPayload, dialogOpen }) => {
+const SideVisitLeadsBody = ({
+  title,
+  leadsLogsPayload,
+  dialogOpen,
+  setCustomerDetails,
+  setisImportLeadsOpen,
+}) => {
   const { user } = useAuth()
   const { orgId } = user
 
@@ -49,13 +55,64 @@ const SideVisitLeadsBody = ({ title, leadsLogsPayload, dialogOpen }) => {
       const { Luid } = logData
       const x = await getLeadbyId1(orgId, Luid)
 
-      const { ProjectId, Project, Name, Status } = await x
-      // console.log('proj details are', x)
-      logData.ProjectName = Project
+      const {
+        id,
+        Name,
+        Project,
+        ProjectId,
+        Source,
+        Status,
+        by,
+        Mobile,
+        Date,
+        Email,
+        Assigned,
+        AssignedBy,
+        Notes,
+        Timeline,
+        documents,
+        Remarks,
+        notInterestedReason,
+        notInterestedNotes,
+        stsUpT,
+        assignT,
+        CT,
+        assignedTo,
+        assignedToObj,
+        coveredA
+      } = await x
+      console.log('proj details are', x)
+      // logData = x
+      logData.Project = Project
       logData.Name = Name
+      logData.id = Luid
+      logData.ProjectId = ProjectId
 
       logData.Status = Status
+      logData.Source = Source
+      logData.by = by
+      logData.Mobile = Mobile
+      logData.Date = Date
+      logData.Email = Email
+      logData.Assigned = Assigned
+      logData.AssignedBy = AssignedBy
+      logData.Notes = Notes
+      logData.Timeline = Timeline
+      logData.documents = documents
+      logData.Remarks = Remarks
+      logData.notInterestedReason = notInterestedReason
+      logData.notInterestedNotes = notInterestedNotes
+      logData.stsUpT = stsUpT
+      logData.assignT = assignT
+      logData.CT = CT
+      logData.assignedTo = assignedTo
+
+      logData.assignedToObj = assignedToObj
+      logData.coveredA = coveredA
+
       logData.Time = prettyDate(logData?.T).toLocaleString()
+
+      // logData = { ...x }
       // console.log('dta is', logData)
 
       streamedTodo.push(logData)
@@ -76,6 +133,13 @@ const SideVisitLeadsBody = ({ title, leadsLogsPayload, dialogOpen }) => {
     console.log('what matters', streamedTodo)
     setLeadsData(streamedTodo)
   }
+
+  const selLeadFun = (data) => {
+    console.log('data is ', data)
+    setisImportLeadsOpen(true)
+    setCustomerDetails(data)
+  }
+
   return (
     <div className="h-full flex flex-col py-6 bg-white shadow-xl overflow-y-scroll">
       <div className="px-4 sm:px-6  z-10">
@@ -128,12 +192,13 @@ const SideVisitLeadsBody = ({ title, leadsLogsPayload, dialogOpen }) => {
                         i % 2 === 0 ? 'bg-white border-blue-200' : 'bg-gray-100'
                       }`}
                       key={i}
+                      onClick={() => selLeadFun(data)}
                     >
                       <td className="text-sm text-gray-900 font-medium px-6 py-2 whitespace-nowrap text-left">
                         {i + 1}
                       </td>
                       <td className="text-sm text-gray-900 font-medium px-6 py-2 whitespace-nowrap text-left">
-                        {data?.ProjectName}
+                        {data?.Project}
                       </td>
                       <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
                         {data?.Name}

@@ -22,6 +22,8 @@ const ReportSideWindow = ({
   widthClass,
   unitsViewMode,
   setIsClicked,
+  setCustomerDetails,
+  setisImportLeadsOpen
 }) => {
   // dont write too many here
   //  this is for customerProfileSideView
@@ -92,14 +94,14 @@ const ReportSideWindow = ({
                     </button>
                   </div>
                 </Transition.Child>
-                {title === 'Add Task' && (
-                  <AddTaskForm title={title} dialogOpen={setOpen} />
-                )}
+
                 {title === 'Site Visit Leads' && (
                   <SideVisitLeadsBody
                     title={title}
                     dialogOpen={setOpen}
                     leadsLogsPayload={leadsLogsPayload}
+                    setCustomerDetails= {setCustomerDetails}
+                    setisImportLeadsOpen={setisImportLeadsOpen}
 
                   />
                 )}

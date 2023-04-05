@@ -156,6 +156,8 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
   const [sourceDownloadRows, setSourceDownloadRows] = React.useState([])
 
   const [projDownloadRows, setProjDownloadRows] = React.useState([])
+  const [drillDownPayload, setDrillDownPayload] = React.useState([])
+
 
   const [sourceDateRange, setSourceDateRange] = React.useState(
     startOfDay(d).getTime()
@@ -166,6 +168,9 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
 
 
   const [isOpenSideForm, setReportSideForm] = React.useState(false)
+  const [isImportLeadsOpen, setisImportLeadsOpen] = React.useState(false)
+  const [customerDetails, setCustomerDetails] = React.useState({})
+
 
   const [dateRange, setDateRange] = React.useState([null, null])
   const [isOpened, setIsOpened] = React.useState(false)
@@ -336,6 +341,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
   const showDrillDownFun = async (text, data) => {
     // Display sideForm
     setReportSideForm(true)
+    setDrillDownPayload(data)
   }
   const setEmpTaskFun = async () => {
     const x = await serialEmployeeTaskLeadData(usersCleanList)
@@ -901,7 +907,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
 
     await console.log('logs update is ',steamLeadLogs )
 
-    
+
     await steamLeadLogs.map(async (logData) => {
       const { Luid } = logData
       const x = await getLeadbyId1(orgId, Luid)
@@ -1774,57 +1780,137 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                               }`}
                               key={i}
                             >
-                              <td className="text-sm text-gray-900 font-medium px-6 py-2 whitespace-nowrap text-left">
+                              <td className="text-sm text-gray-900 font-medium px-6 py-2 whitespace-nowrap text-left" >
                                 {data?.label}
                               </td>
-                              <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
-                                {data?.Total?.length}
+                              <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"   onClick={() =>
+                                  showDrillDownFun(
+                                    'Total Visits Fixed',
+                                    data?.archieve
+                                  )
+                                }>
+                                {data?.archieve?.length}
                               </td>
-                              <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"   onClick={() =>
+                                  showDrillDownFun(
+                                    'Total Visits Fixed',
+                                    data?.inprogress
+                                  )
+                                }>
                                 {data?.inprogress?.length}
                               </td>
                               {showInproFSource && (
                                 <>
-                                  <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                                  <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"   onClick={() =>
+                                  showDrillDownFun(
+                                    'Total Visits Fixed',
+                                    data?.new
+                                  )
+                                }>
                                     {data?.new?.length}
                                   </td>
-                                  <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                                  <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"   onClick={() =>
+                                  showDrillDownFun(
+                                    'Total Visits Fixed',
+                                    data?.followup
+                                  )
+                                }>
                                     {data?.followup?.length}
                                   </td>
-                                  <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                                  <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"   onClick={() =>
+                                  showDrillDownFun(
+                                    'Total Visits Fixed',
+                                    data?.visitfixed
+                                  )
+                                }>
                                     {data?.visitfixed?.length}
                                   </td>
-                                  <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                                  <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"   onClick={() =>
+                                  showDrillDownFun(
+                                    'Total Visits Fixed',
+                                    data?.visitdone
+                                  )
+                                }>
                                     {data?.visitdone?.length}
                                   </td>
-                                  <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                                  <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
+                                    onClick={() =>
+                                      showDrillDownFun(
+                                        'Total Visits Fixed',
+                                        data?.negotiation
+                                      )
+                                    }>
                                     {data?.negotiation?.length}
                                   </td>
                                 </>
                               )}
-                              <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
+                                onClick={() =>
+                                  showDrillDownFun(
+                                    'Total Visits Fixed',
+                                    data?.booked
+                                  )
+                                }>
                                 {data?.booked?.length}
                               </td>
                               {showArchiFSource && (
                                 <>
-                                  <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                                  <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
+                                    onClick={() =>
+                                      showDrillDownFun(
+                                        'Total Visits Fixed',
+                                        data?.notinterested
+                                      )
+                                    }>
                                     {data?.notinterested?.length}
                                   </td>
-                                  <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                                  <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
+                                    onClick={() =>
+                                      showDrillDownFun(
+                                        'Total Visits Fixed',
+                                        data?.dead
+                                      )
+                                    }>
                                     {data?.dead?.length}
                                   </td>
-                                  <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                                  <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
+                                    onClick={() =>
+                                      showDrillDownFun(
+                                        'Total Visits Fixed',
+                                        data?.blocked
+                                      )
+                                    }
+                                  >
                                     {data?.blocked?.length}
                                   </td>
-                                  <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                                  <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
+                                    onClick={() =>
+                                      showDrillDownFun(
+                                        'Total Visits Fixed',
+                                        data?.junk
+                                      )
+                                    }
+                                  >
                                     {data?.junk?.length}
                                   </td>
                                 </>
                               )}
-                              <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
+                                onClick={() =>
+                                  showDrillDownFun(
+                                    'Total Visits Fixed',
+                                    data?.archieve
+                                  )
+                                }>
                                 {data?.archieve?.length}
                               </td>
-                              <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
+                                onClick={() =>
+                                  showDrillDownFun(
+                                    'Total Visits Fixed',
+                                    data?.others
+                                  )
+                                }>
                                 {data?.others?.length}
                               </td>
                             </tr>
@@ -1863,35 +1949,75 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                             </td>
                             {showInproFSource && (
                               <>
-                                <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                                <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
+
+onClick={() =>
+  showDrillDownFun(
+    'Total Visits Fixed',
+    leadLogsRawData?.filter(
+      (datObj) => datObj?.to == 'new'
+    )
+  )}
+                                >
                                   {
                                     leadLogsRawData?.filter(
                                       (datObj) => datObj?.to == 'new'
                                     ).length
                                   }
                                 </td>
-                                <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                                <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
+
+onClick={() =>
+  showDrillDownFun(
+    'Total Visits Fixed',
+    leadLogsRawData?.filter(
+      (datObj) => datObj?.to == 'followup'
+    )
+  )}
+                                >
                                   {
                                     leadLogsRawData?.filter(
                                       (datObj) => datObj?.to == 'followup'
                                     ).length
                                   }
                                 </td>
-                                <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                                <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
+
+onClick={() =>
+  showDrillDownFun(
+    'Total Visits Fixed',
+    leadLogsRawData?.filter(
+      (datObj) => datObj?.to == 'visitfixed'
+    )
+  )}>
                                   {
                                     leadLogsRawData?.filter(
                                       (datObj) => datObj?.to == 'visitfixed'
                                     ).length
                                   }
                                 </td>
-                                <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                                <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
+onClick={() =>
+  showDrillDownFun(
+    'Total Visits Fixed',
+    leadLogsRawData?.filter(
+      (datObj) => datObj?.to == 'visitdone'
+    )
+  )}>
                                   {
                                     leadLogsRawData?.filter(
                                       (datObj) => datObj?.to == 'visitdone'
                                     ).length
                                   }
                                 </td>
-                                <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                                <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
+onClick={() =>
+  showDrillDownFun(
+    'Total Visits Fixed',
+    leadLogsRawData?.filter(
+      (datObj) => datObj?.to == 'negotiation'
+    )
+  )}>
                                   {
                                     leadLogsRawData?.filter(
                                       (datObj) => datObj?.to == 'negotiation'
@@ -1900,7 +2026,14 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                                 </td>
                               </>
                             )}
-                            <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                            <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
+onClick={() =>
+  showDrillDownFun(
+    'Total Visits Fixed',
+    leadLogsRawData?.filter(
+      (datObj) => datObj?.to == 'booked'
+    )
+  )}>
                               {
                                 leadLogsRawData?.filter(
                                   (datObj) => datObj?.to == 'booked'
@@ -1909,28 +2042,57 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                             </td>
                             {showArchiFSource && (
                               <>
-                                <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                                <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
+onClick={() =>
+  showDrillDownFun(
+    'Total Visits Fixed',
+    leadLogsRawData?.filter(
+      (datObj) => datObj?.to == 'notinterested'
+    )
+  )}>
                                   {
                                     leadLogsRawData?.filter(
                                       (datObj) => datObj?.to == 'notinterested'
                                     ).length
                                   }
                                 </td>
-                                <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                                <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
+
+onClick={() =>
+  showDrillDownFun(
+    'Total Visits Fixed',
+    leadLogsRawData?.filter(
+      (datObj) => datObj?.to == 'dead'
+    )
+  )}>
                                   {
                                     leadLogsRawData?.filter(
                                       (datObj) => datObj?.to == 'dead'
                                     ).length
                                   }
                                 </td>
-                                <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                                <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
+onClick={() =>
+  showDrillDownFun(
+    'Total Visits Fixed',
+    leadLogsRawData?.filter(
+      (datObj) => datObj?.to == 'blocked'
+    )
+  )}>
                                   {
                                     leadLogsRawData?.filter(
                                       (datObj) => datObj?.to == 'blocked'
                                     ).length
                                   }
                                 </td>
-                                <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                                <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
+onClick={() =>
+  showDrillDownFun(
+    'Total Visits Fixed',
+    leadLogsRawData?.filter(
+      (datObj) => datObj?.to == 'junk'
+    )
+  )}>
                                   {
                                     leadLogsRawData?.filter(
                                       (datObj) => datObj?.to == 'junk'
@@ -1939,7 +2101,19 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                                 </td>
                               </>
                             )}
-                            <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                            <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
+onClick={() =>
+  showDrillDownFun(
+    'Total Visits Fixed',
+    leadLogsRawData?.filter(
+      (datObj) =>  [
+        'blocked',
+        'dead',
+        'notinterested',
+        'junk',
+      ].includes(datObj?.to)
+    )
+  )}>
                               {
                                 leadLogsRawData?.filter((datObj) =>
                                   [
@@ -1951,7 +2125,14 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                                 ).length
                               }
                             </td>
-                            <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                            <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
+onClick={() =>
+  showDrillDownFun(
+    'Total Visits Fixed',
+    leadLogsRawData?.filter(
+      (datObj) => datObj?.to == ''
+    )
+  )}>
                               {
                                 leadLogsRawData?.filter(
                                   (datObj) => datObj?.to == ''
@@ -3659,10 +3840,19 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
             open={isOpenSideForm}
             setOpen={setReportSideForm}
             title="Site Visit Leads"
-
-            leadsLogsPayload={leadLogsRawData}
-            widthClass="max-w-4xl"
+            setCustomerDetails= {setCustomerDetails}
+            setisImportLeadsOpen={setisImportLeadsOpen}
+            leadsLogsPayload={drillDownPayload}
+            widthClass="max-w-5xl"
           />
+
+<SiderForm
+        open={isImportLeadsOpen}
+        setOpen={setisImportLeadsOpen}
+        title={"User Profile"}
+        customerDetails={customerDetails}
+        widthClass="max-w-4xl"
+      />
         </div>
       </section>
     </div>

@@ -265,7 +265,7 @@ source={row.Source.toString()}
               />
             </svg>
           </span>
-          <span
+          {/* <span
             onClick={() => delFun(data)}
             className="inline-flex  placeholder:font-thin text-[#0091ae]  cursor-pointer font-bodyLato text-[12px] ml-2  text-[#867777] hover:text-green-900"
           >
@@ -288,7 +288,7 @@ source={row.Source.toString()}
                 <path d="m9.5 5.5v8" />
               </g>
             </svg>
-          </span>
+          </span> */}
         </section>
       )}
       {/* <span>

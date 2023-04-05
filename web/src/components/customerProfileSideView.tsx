@@ -593,6 +593,7 @@ export default function CustomerProfileSideView({
       const txt = `A New Lead is assigned to ${value.name} with ${todayTasksIncre} tasks`
       updateLeadAssigTo(
         orgId,
+        ProjectId,
         leadDocId,
         value,
         assignedTo,
@@ -869,6 +870,7 @@ export default function CustomerProfileSideView({
     if (streamCurrentStatus != tempLeadStatus) {
       updateLeadStatus(
         orgId,
+        ProjectId,
         id,
         streamCurrentStatus,
         tempLeadStatus,
@@ -1226,6 +1228,8 @@ export default function CustomerProfileSideView({
         return (tex = 'Lead Created')
       case 'sts_change':
         return (tex = ` completed --> updated `)
+      case 'assign_change':
+        return (tex = `Lead Assigned To`)
       default:
         return (tex = type)
     }
@@ -1978,7 +1982,7 @@ export default function CustomerProfileSideView({
                                 })
                               }}
                               value={optionvalues.area}
-                              options={reasonPurchase}
+                              options={preferredArea}
                             />
                           </div>
                         </div>
@@ -3488,6 +3492,44 @@ export default function CustomerProfileSideView({
                                   {activieLogNamer(data)}
                                 </span>{' '}
                                 {data?.type === 'sts_change' && (
+                                  <span className="text-xs text-red-900 ">
+                                    {'  '} {data?.to?.toUpperCase()}
+                                  </span>
+                                )}
+                              </div>
+                              <div className="text-sm font-normal">
+                                {data?.txt}
+                              </div>
+                              <span className="inline-flex items-center text-xs font-normal text-gray-500 ">
+                                <ClockIcon className=" w-3 h-3 text-gray-300" />
+
+                                <span className="text-gray-400 ml-1 mr-4">
+                                  {data?.type == 'ph'
+                                    ? timeConv(
+                                        Number(data?.time)
+                                      ).toLocaleString()
+                                    : timeConv(data?.T).toLocaleString()}
+                                </span>
+                                <span className="text-green-900 ml-2">by:</span>
+                                <span className="text-gray-400 ml-1 mr-4">
+                                  {data?.by}
+                                </span>
+                              </span>
+                            </div>
+                          )}
+
+                          {data?.type != 'ph' && (
+                            <div className="text-gray-600 font-bodyLato mx-3 my-1">
+                              <div className="text-base font-normal">
+                                {/* {data?.type === 'assign_change' && (
+                                  <span className="text-xs text-red-900 ">
+                                    {data?.from?.toUpperCase()} {'  '}
+                                  </span>
+                                )} */}
+                                <span className="text-sm text-green-900 mx-2 ">
+                                  {activieLogNamer(data)}
+                                </span>{' '}
+                                {data?.type === 'assign_change' && (
                                   <span className="text-xs text-red-900 ">
                                     {'  '} {data?.to?.toUpperCase()}
                                   </span>
