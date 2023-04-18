@@ -28,6 +28,7 @@ import ClockIcon from '@heroicons/react/solid/ClockIcon'
 import PlusCircleIcon from '@heroicons/react/solid/PlusCircleIcon'
 import {
   ArrowBackRounded,
+  ConstructionOutlined,
   DriveEtaOutlined,
   VerticalAlignBottom,
 } from '@mui/icons-material'
@@ -54,6 +55,7 @@ import {
   steamLeadNotes,
   createAttach,
   getCustomerDocs,
+  getUser,
   getAllProjects,
   updateLeadProject,
   steamLeadById,
@@ -400,7 +402,7 @@ export default function CustomerProfileSideView({
 
   const streamLeadDataFun = () => {
     const { id } = customerDetails
-
+console.log('customer details', customerDetails)
     const z = steamLeadById(
       orgId,
       (querySnapshot) => {
@@ -603,6 +605,12 @@ export default function CustomerProfileSideView({
         txt,
         by
       )
+
+      const receiverDetails = {
+        customerName: Name,
+        executiveName: value.name,
+        receiverPhNo: Mobile,
+      }
       getWhatsAppTemplates(
         'on_lead_assign',
         'wa',
@@ -1227,13 +1235,26 @@ export default function CustomerProfileSideView({
       case 'l_ctd':
         return (tex = 'Lead Created')
       case 'sts_change':
-        return (tex = ` completed --> updated `)
+        return (tex = `completed & moved to`)
       case 'assign_change':
         return (tex = `Lead Assigned To`)
       default:
         return (tex = type)
     }
     return tex
+  }
+
+  const empNameSetter = (emp_id) => {
+    const userIsA = usersList?.filter((userD) => {
+      return userD?.uid == emp_id
+    })
+    if (userIsA[0]) {
+      const { email } = userIsA[0] || []
+      return email
+    } else {
+      // const getUserDetails =  getUser(emp_id)
+      return emp_id
+    }
   }
 
   const fAddNotes = async () => {
@@ -3410,7 +3431,7 @@ export default function CustomerProfileSideView({
                     </div>
                   )}
                   <div className="font-md font-medium text-xs mb-4 text-gray-800">
-                    Timelines
+                    Timeline
                   </div>
                   <ol className="relative border-l border-gray-200 ">
                     {filterData?.map((data, i) => (
@@ -3496,42 +3517,9 @@ export default function CustomerProfileSideView({
                                     {'  '} {data?.to?.toUpperCase()}
                                   </span>
                                 )}
-                              </div>
-                              <div className="text-sm font-normal">
-                                {data?.txt}
-                              </div>
-                              <span className="inline-flex items-center text-xs font-normal text-gray-500 ">
-                                <ClockIcon className=" w-3 h-3 text-gray-300" />
-
-                                <span className="text-gray-400 ml-1 mr-4">
-                                  {data?.type == 'ph'
-                                    ? timeConv(
-                                        Number(data?.time)
-                                      ).toLocaleString()
-                                    : timeConv(data?.T).toLocaleString()}
-                                </span>
-                                <span className="text-green-900 ml-2">by:</span>
-                                <span className="text-gray-400 ml-1 mr-4">
-                                  {data?.by}
-                                </span>
-                              </span>
-                            </div>
-                          )}
-
-                          {data?.type != 'ph' && (
-                            <div className="text-gray-600 font-bodyLato mx-3 my-1">
-                              <div className="text-base font-normal">
-                                {/* {data?.type === 'assign_change' && (
-                                  <span className="text-xs text-red-900 ">
-                                    {data?.from?.toUpperCase()} {'  '}
-                                  </span>
-                                )} */}
-                                <span className="text-sm text-green-900 mx-2 ">
-                                  {activieLogNamer(data)}
-                                </span>{' '}
                                 {data?.type === 'assign_change' && (
                                   <span className="text-xs text-red-900 ">
-                                    {'  '} {data?.to?.toUpperCase()}
+                                    {'  '} {empNameSetter(data?.to)}
                                   </span>
                                 )}
                               </div>

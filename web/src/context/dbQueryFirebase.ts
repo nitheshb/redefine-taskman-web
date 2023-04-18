@@ -134,7 +134,7 @@ export const streamLeadLogdWithNullProj = async (
     .select('projectId, type,subtype,T, by, from, to, uid, Luid, payload')
     .eq('type', 'sts_change')
     .is('projectId', null)
-    // .isNull('projectId')
+  // .isNull('projectId')
   // .eq('from', 'visitfixed')
 
   if (countError) {
@@ -176,7 +176,7 @@ export const updateLeadsLogWithProject = async (
     .eq('Luid', LeadId)
     .eq('type', 'sts_change')
 
-    console.log('updating error', lead_logs,error)
+  console.log('updating error', lead_logs, error)
   return lead_logs
   // return onSnapshot(itemsQuery, snapshot, error)
 }
@@ -185,7 +185,7 @@ export const updateLeadsLogWithProject = async (
 export const steamLeadActivityLog = async (orgId, snapshot, data, error) => {
   // const itemsQuery = query(doc(db, `${orgId}_leads_log', 'W6sFKhgyihlsKmmqDG0r'))
   const { uid } = data
-  console.log('is uid g', data,  uid)
+  console.log('is uid g', data, uid)
   // return onSnapshot(doc(db, `${orgId}_leads_log`, uid), snapshot, error)
   const { data: lead_logs, error1 } = await supabase
     .from(`${orgId}_lead_logs`)
@@ -330,7 +330,14 @@ export const getLeadsByPhoneNo = async (orgId, data) => {
   const citySnapshot = await getDocs(itemsQuery)
   // await citySnapshot.docs.map((doc) => doc.data())
   console.log('my Array data is delayer 1', citySnapshot)
-  return await citySnapshot.docs.map((doc) => doc.data())
+  await citySnapshot.docs.map((doc) => {
+    console.log('value is', doc.id, doc.data())
+  })
+  return await citySnapshot.docs.map((doc) => {
+    const x = doc.data()
+    x.id = doc.id
+    return x
+  })
 }
 // get crmCustomers list
 
@@ -1984,7 +1991,7 @@ export const updateLeadAssigTo = async (
       payload: {},
       from: oldOwnerId,
       to: value,
-      projectId: projectId
+      projectId: projectId,
     },
   ])
   if (newSt != '') {
@@ -2354,7 +2361,7 @@ export const updateLeadStatus = async (
         payload: {},
         from: oldStatus,
         to: newStatus,
-        projectId: projectId
+        projectId: projectId,
       },
     ])
 

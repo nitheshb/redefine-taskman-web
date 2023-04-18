@@ -47,6 +47,7 @@ import { serialProjecVisitFixedData } from './LeadsTeamReport/serialProjectVisit
 import { serialMyData } from './LeadsTeamReport/SourceLeads'
 import SiderForm from './SiderForm/SiderForm'
 import ReportSideWindow from './SiderForm/ReportSideView'
+import LeadsCoversionGraphs from './A_SalesModule/Reports/leadsConversionRatio/LeadsCoversionGraphs'
 
 const valueFeedData = [
   { k: 'Total', v: 300, pic: '' },
@@ -111,7 +112,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
   const [empPerDayTasksCountsA, setEmpPerDayTasksCountsA] = useState([])
 
   const [sourceListTuned, setSourceListTuned] = useState([])
-  const [selCat, setSelCat] = useState('emp_tasks')
+  const [selCat, setSelCat] = useState('lead_perf')
 
   const [sourceFiltListTuned, setFiltSourceListTuned] = useState([])
   const [viewSource, selViewSource] = useState({
@@ -1071,12 +1072,13 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
             <div className="flex overflow-x-auto ml-2 border-b pb-2">
               <section className="mt-4">Reports</section>
               {[
-                { label: 'Employee Tasks', value: 'emp_tasks' },
+                { label: 'Leads Performance', value: 'lead_perf' },
                 { label: 'Site Visits', value: 'site_visits' },
                 { label: 'Source Report', value: 'source_report' },
                 { label: 'Employee Report', value: 'emp_status_report' },
                 { label: 'Project Leads Report', value: 'proj_leads_report' },
                 { label: 'Employee Leads Aging', value: 'emp_leads_report' },
+                { label: 'Employee Tasks', value: 'emp_tasks' }
               ].map((data, i) => {
                 return (
                   <section
@@ -1264,7 +1266,23 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
               </span>
             </div> */}
           </div>
-
+          {selCat === 'lead_perf' && (
+            <div
+              className="flex flex-col  mt-14 drop-shadow-md rounded-lg  px-4"
+              style={{ backgroundColor: '#ebfafa' }}
+            >
+              <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
+                  <div className="overflow-hidden">
+                    <div className=" text-md font-bold leading-none pl-0 mt-4 border-b pb-4 mb-4 ">
+                      {`Employee vs Tasks `}
+                    </div>
+                  <LeadsCoversionGraphs />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
           {selCat === 'emp_tasks' && (
             <div
               className="flex flex-col  mt-14 drop-shadow-md rounded-lg  px-4"
@@ -1508,6 +1526,9 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
           )}
 
           {selCat === 'site_visits' && (
+            <>
+
+            {/* old comp */}
             <div
               className="flex flex-col  mt-14 drop-shadow-md rounded-lg  px-4"
               style={{ backgroundColor: '#ebfafa' }}
@@ -2147,6 +2168,7 @@ onClick={() =>
                 </div>
               </div>
             </div>
+            </>
           )}
           {selCat === 'source_report' && (
             <div
