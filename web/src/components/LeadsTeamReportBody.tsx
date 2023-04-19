@@ -40,14 +40,14 @@ import CSVDownloader from 'src/util/csvDownload'
 import { prettyDate } from 'src/util/dateConverter'
 import { SlimSelectBox } from 'src/util/formFields/slimSelectBoxField'
 
+import LeadsCoversionGraphs from './A_SalesModule/Reports/leadsConversionRatio/LeadsCoversionGraphs'
 import { serialEmployeeLeadData } from './LeadsTeamReport/serialEmployeeLeadData'
 import { serialEmployeeTaskLeadData } from './LeadsTeamReport/serialEmployeeTaskLeadData'
 import { serialProjectLeadData } from './LeadsTeamReport/serialProjectLeadData'
 import { serialProjecVisitFixedData } from './LeadsTeamReport/serialProjectVisitsFixedData'
 import { serialMyData } from './LeadsTeamReport/SourceLeads'
-import SiderForm from './SiderForm/SiderForm'
 import ReportSideWindow from './SiderForm/ReportSideView'
-import LeadsCoversionGraphs from './A_SalesModule/Reports/leadsConversionRatio/LeadsCoversionGraphs'
+import SiderForm from './SiderForm/SiderForm'
 
 const valueFeedData = [
   { k: 'Total', v: 300, pic: '' },
@@ -159,7 +159,6 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
   const [projDownloadRows, setProjDownloadRows] = React.useState([])
   const [drillDownPayload, setDrillDownPayload] = React.useState([])
 
-
   const [sourceDateRange, setSourceDateRange] = React.useState(
     startOfDay(d).getTime()
   )
@@ -167,11 +166,9 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
     startOfWeek(d).getTime()
   )
 
-
   const [isOpenSideForm, setReportSideForm] = React.useState(false)
   const [isImportLeadsOpen, setisImportLeadsOpen] = React.useState(false)
   const [customerDetails, setCustomerDetails] = React.useState({})
-
 
   const [dateRange, setDateRange] = React.useState([null, null])
   const [isOpened, setIsOpened] = React.useState(false)
@@ -906,8 +903,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
       (error) => []
     )
 
-    await console.log('logs update is ',steamLeadLogs )
-
+    await console.log('logs update is ', steamLeadLogs)
 
     await steamLeadLogs.map(async (logData) => {
       const { Luid } = logData
@@ -1078,7 +1074,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                 { label: 'Employee Report', value: 'emp_status_report' },
                 { label: 'Project Leads Report', value: 'proj_leads_report' },
                 { label: 'Employee Leads Aging', value: 'emp_leads_report' },
-                { label: 'Employee Tasks', value: 'emp_tasks' }
+                { label: 'Employee Tasks', value: 'emp_tasks' },
               ].map((data, i) => {
                 return (
                   <section
@@ -1277,7 +1273,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                     <div className=" text-md font-bold leading-none pl-0 mt-4 border-b pb-4 mb-4 ">
                       {`Employee vs Tasks `}
                     </div>
-                  <LeadsCoversionGraphs />
+                    <LeadsCoversionGraphs />
                   </div>
                 </div>
               </div>
@@ -1527,647 +1523,715 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
 
           {selCat === 'site_visits' && (
             <>
+              {/* old comp */}
+              <div
+                className="flex flex-col  mt-14 drop-shadow-md rounded-lg  px-4"
+                style={{ backgroundColor: '#ebfafa' }}
+              >
+                <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
+                  <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
+                    <div className="overflow-hidden">
+                      <div className=" text-md font-bold leading-none pl-0 mt-4 border-b pb-4 mb-4 ">
+                        {`Visits Performance Counts `}
+                      </div>
 
-            {/* old comp */}
-            <div
-              className="flex flex-col  mt-14 drop-shadow-md rounded-lg  px-4"
-              style={{ backgroundColor: '#ebfafa' }}
-            >
-              <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
-                  <div className="overflow-hidden">
-                    <div className=" text-md font-bold leading-none pl-0 mt-4 border-b pb-4 mb-4 ">
-                      {`Visits Performance Counts `}
-                    </div>
+                      <section className="flex flex-row justify-between mt-[18px]">
+                        <section className="flex">
+                          {!isEdit && (
+                            // <Link to={routes.projectEdit({ uid })}>
+                            <button
+                              onClick={() => {
+                                setSourceDateRange(startOfDay(d).getTime())
+                              }}
+                            >
+                              <span
+                                className={`flex ml-2 mt-[5px] items-center h-6 px-3 text-xs ${
+                                  sourceDateRange === startOfDay(d).getTime()
+                                    ? 'font-semibold text-pink-800 bg-pink-200 '
+                                    : 'text-green-800 bg-green-200 '
+                                }rounded-full`}
+                              >
+                                <EyeIcon
+                                  className="h-3 w-3 mr-1"
+                                  aria-hidden="true"
+                                />
+                                Now
+                              </span>
+                            </button>
+                            // </Link>
+                          )}
 
-                    <section className="flex flex-row justify-between mt-[18px]">
-                      <section className="flex">
-                        {!isEdit && (
-                          // <Link to={routes.projectEdit({ uid })}>
                           <button
                             onClick={() => {
-                              setSourceDateRange(startOfDay(d).getTime())
+                              setSourceDateRange(startOfWeek(d).getTime())
                             }}
                           >
                             <span
                               className={`flex ml-2 mt-[5px] items-center h-6 px-3 text-xs ${
-                                sourceDateRange === startOfDay(d).getTime()
+                                sourceDateRange === startOfWeek(d).getTime()
                                   ? 'font-semibold text-pink-800 bg-pink-200 '
                                   : 'text-green-800 bg-green-200 '
                               }rounded-full`}
                             >
-                              <EyeIcon
+                              <CalendarIcon
                                 className="h-3 w-3 mr-1"
                                 aria-hidden="true"
                               />
-                              Now
+                              This Week
                             </span>
                           </button>
-                          // </Link>
-                        )}
-
-                        <button
-                          onClick={() => {
-                            setSourceDateRange(startOfWeek(d).getTime())
-                          }}
-                        >
-                          <span
-                            className={`flex ml-2 mt-[5px] items-center h-6 px-3 text-xs ${
-                              sourceDateRange === startOfWeek(d).getTime()
-                                ? 'font-semibold text-pink-800 bg-pink-200 '
-                                : 'text-green-800 bg-green-200 '
-                            }rounded-full`}
+                          <button
+                            onClick={() => {
+                              setSourceDateRange(startOfMonth(d).getTime())
+                            }}
                           >
-                            <CalendarIcon
-                              className="h-3 w-3 mr-1"
-                              aria-hidden="true"
-                            />
-                            This Week
-                          </span>
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSourceDateRange(startOfMonth(d).getTime())
-                          }}
-                        >
-                          <span
-                            className={`flex ml-2 mt-[5px] items-center h-6 px-3 text-xs ${
-                              sourceDateRange === startOfMonth(d).getTime()
-                                ? 'font-semibold text-pink-800 bg-pink-200 '
-                                : 'text-green-800 bg-green-200 '
-                            }rounded-full`}
+                            <span
+                              className={`flex ml-2 mt-[5px] items-center h-6 px-3 text-xs ${
+                                sourceDateRange === startOfMonth(d).getTime()
+                                  ? 'font-semibold text-pink-800 bg-pink-200 '
+                                  : 'text-green-800 bg-green-200 '
+                              }rounded-full`}
+                            >
+                              <CalendarIcon
+                                className="h-3 w-3 mr-1"
+                                aria-hidden="true"
+                              />
+                              This Month
+                            </span>
+                          </button>
+                          <button
+                            onClick={() => {
+                              setSourceDateRange(
+                                subMonths(startOfMonth(d), 6).getTime()
+                              )
+                            }}
                           >
-                            <CalendarIcon
-                              className="h-3 w-3 mr-1"
-                              aria-hidden="true"
-                            />
-                            This Month
-                          </span>
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSourceDateRange(
-                              subMonths(startOfMonth(d), 6).getTime()
-                            )
-                          }}
-                        >
-                          <span
-                            className={`flex ml-2 mt-[5px] items-center h-6 px-3 text-xs ${
-                              sourceDateRange ===
-                              subMonths(startOfMonth(d), 6).getTime()
-                                ? 'font-semibold text-pink-800 bg-pink-200 '
-                                : 'text-green-800 bg-green-200 '
-                            }rounded-full`}
-                          >
-                            <CalendarIcon
-                              className="h-3 w-3 mr-1"
-                              aria-hidden="true"
-                            />
-                            Last 6 Months
-                          </span>
-                        </button>
-                        <span className="max-h-[42px] mt-[2px] ml-3">
-                          <label className="bg-green   pl-   flex flex-row cursor-pointer">
-                            {!isOpened && (
-                              <span
-                                className={`flex ml-1 mt-[6px] items-center h-6 px-3 text-xs ${
-                                  sourceDateRange === startDate?.getTime()
-                                    ? 'font-semibold text-pink-800 bg-pink-200 '
-                                    : 'text-green-800 bg-green-200 '
-                                } rounded-full`}
-                                onClick={() => {
-                                  setIsOpened(true)
-                                }}
-                              >
-                                <CalendarIcon
-                                  className="h-3 w-3 mr-1"
-                                  aria-hidden="true"
-                                />
-                                {startDate == null ? 'Custom' : ''}
-                                {/* {sourceDateRange} -- {startDate?.getTime()} */}
-                                {startDate != null
-                                  ? prettyDate(startDate?.getTime() + 21600000)
-                                  : ''}
-                                {endDate != null ? '-' : ''}
-                                {endDate != null
-                                  ? prettyDate(endDate?.getTime() + 21600000)
-                                  : ''}
-                              </span>
-                            )}
-                            {
-                              <span
-                                className="inline"
-                                style={{
-                                  visibility: isOpened ? 'visible' : 'hidden',
-                                }}
-                              >
-                                <DatePicker
-                                  className={`z-10 pl- py-1 px-3 mt-[7px] inline text-xs text-[#0091ae] placeholder-green-800 cursor-pointer  max-w-fit   ${
+                            <span
+                              className={`flex ml-2 mt-[5px] items-center h-6 px-3 text-xs ${
+                                sourceDateRange ===
+                                subMonths(startOfMonth(d), 6).getTime()
+                                  ? 'font-semibold text-pink-800 bg-pink-200 '
+                                  : 'text-green-800 bg-green-200 '
+                              }rounded-full`}
+                            >
+                              <CalendarIcon
+                                className="h-3 w-3 mr-1"
+                                aria-hidden="true"
+                              />
+                              Last 6 Months
+                            </span>
+                          </button>
+                          <span className="max-h-[42px] mt-[2px] ml-3">
+                            <label className="bg-green   pl-   flex flex-row cursor-pointer">
+                              {!isOpened && (
+                                <span
+                                  className={`flex ml-1 mt-[6px] items-center h-6 px-3 text-xs ${
                                     sourceDateRange === startDate?.getTime()
                                       ? 'font-semibold text-pink-800 bg-pink-200 '
                                       : 'text-green-800 bg-green-200 '
                                   } rounded-full`}
-                                  onCalendarClose={() => setIsOpened(false)}
-                                  placeholderText="&#128467;	 Custom"
-                                  onChange={(update) => {
-                                    setDateRange(update)
+                                  onClick={() => {
+                                    setIsOpened(true)
+                                  }}
+                                >
+                                  <CalendarIcon
+                                    className="h-3 w-3 mr-1"
+                                    aria-hidden="true"
+                                  />
+                                  {startDate == null ? 'Custom' : ''}
+                                  {/* {sourceDateRange} -- {startDate?.getTime()} */}
+                                  {startDate != null
+                                    ? prettyDate(
+                                        startDate?.getTime() + 21600000
+                                      )
+                                    : ''}
+                                  {endDate != null ? '-' : ''}
+                                  {endDate != null
+                                    ? prettyDate(endDate?.getTime() + 21600000)
+                                    : ''}
+                                </span>
+                              )}
+                              {
+                                <span
+                                  className="inline"
+                                  style={{
+                                    visibility: isOpened ? 'visible' : 'hidden',
+                                  }}
+                                >
+                                  <DatePicker
+                                    className={`z-10 pl- py-1 px-3 mt-[7px] inline text-xs text-[#0091ae] placeholder-green-800 cursor-pointer  max-w-fit   ${
+                                      sourceDateRange === startDate?.getTime()
+                                        ? 'font-semibold text-pink-800 bg-pink-200 '
+                                        : 'text-green-800 bg-green-200 '
+                                    } rounded-full`}
+                                    onCalendarClose={() => setIsOpened(false)}
+                                    placeholderText="&#128467;	 Custom"
+                                    onChange={(update) => {
+                                      setDateRange(update)
 
-                                    console.log(
-                                      'was this updated',
-                                      update,
-                                      startDate
-                                    )
-                                  }}
-                                  selectsRange={true}
-                                  startDate={startDate}
-                                  endDate={endDate}
-                                  isClearable={true}
-                                  onClear={() => {
-                                    console.log('am i cleared')
-                                  }}
-                                  dateFormat="MMM d, yyyy "
-                                />
-                              </span>
-                            }
-                          </label>
-                        </span>
-                      </section>
-                      <div className=" flex flex-row   ">
-                        <SlimSelectBox
-                          name="project"
-                          label=""
-                          className="input min-w-[164px] "
-                          onChange={(value) => {
-                            selProjs(value)
-                          }}
-                          value={viewProjs?.value}
-                          options={[
-                            ...[
-                              { label: 'All Projects', value: 'allprojects' },
-                            ],
-                            ...projectList,
-                          ]}
-                        />
-                        <span style={{ display: '' }}>
-                          <CSVDownloader
-                            className="mr-6 h-[20px] w-[20px]"
-                            downloadRows={projDownloadRows}
-                            style={{ height: '20px', width: '20px' }}
+                                      console.log(
+                                        'was this updated',
+                                        update,
+                                        startDate
+                                      )
+                                    }}
+                                    selectsRange={true}
+                                    startDate={startDate}
+                                    endDate={endDate}
+                                    isClearable={true}
+                                    onClear={() => {
+                                      console.log('am i cleared')
+                                    }}
+                                    dateFormat="MMM d, yyyy "
+                                  />
+                                </span>
+                              }
+                            </label>
+                          </span>
+                        </section>
+                        <div className=" flex flex-row   ">
+                          <SlimSelectBox
+                            name="project"
+                            label=""
+                            className="input min-w-[164px] "
+                            onChange={(value) => {
+                              selProjs(value)
+                            }}
+                            value={viewProjs?.value}
+                            options={[
+                              ...[
+                                { label: 'All Projects', value: 'allprojects' },
+                              ],
+                              ...projectList,
+                            ]}
                           />
-                        </span>
-                      </div>
-                    </section>
-                    <table className="min-w-full text-center mt-6">
-                      <thead className="border-b">
-                        <tr>
-                          {[
-                            { label: 'Source', id: 'label' },
-                            { label: 'Total Visit Fixed', id: 'total' },
-                            { label: 'InProgress', id: 'inprogress' },
-                            { label: 'New', id: 'new' },
-                            { label: 'Followup', id: 'followup' },
-                            { label: 'VisitFixed', id: 'visitfixed' },
-                            { label: 'VisitDone', id: 'visitdone' },
-                            { label: 'Neogotiation', id: 'neogotiation' },
-                            { label: 'Booked', id: 'booked' },
-                            { label: 'NotInterested', id: 'notinterested' },
-                            { label: 'Dead', id: 'dead' },
-                            { label: 'Blocked', id: 'blocked' },
-                            { label: 'Junk', id: 'junk' },
-                            { label: 'Archieve', id: 'archieve' },
-                            { label: 'Others', id: 'others' },
-                          ].map((d, i) => (
-                            <th
-                              key={i}
-                              scope="col"
-                              className={`text-sm font-medium text-gray-900 px-6 py-4 ${
-                                ['Source'].includes(d.label) ? 'text-left' : ''
-                              }`}
-                              style={{
-                                display: viewSourceStats1A.includes(d.id)
-                                  ? ''
-                                  : 'none',
-                                color:
-                                  ['inprogress'].includes(d.id) &&
-                                  showInproFSource
-                                    ? 'blue'
-                                    : ['archieve'].includes(d.id) &&
-                                      showArchiFSource
-                                    ? 'blue'
-                                    : 'black',
-                              }}
-                              onClick={() => {
-                                if (['inprogress', 'archieve'].includes(d.id))
-                                  showColumnsSourceFun(d.id)
-                              }}
-                            >
-                              {d.label}
-                              {d.id === 'inprogress' && !showInproFSource && (
-                                <ChevronDoubleRightIcon
-                                  className="w-4 h-4 inline"
-                                  aria-hidden="true"
-                                />
-                              )}
-                              {d.id === 'inprogress' && showInproFSource && (
-                                <ChevronDoubleLeftIcon
-                                  className="w-4 h-4 inline"
-                                  aria-hidden="true"
-                                />
-                              )}
-                              {d.id === 'archieve' && !showArchiFSource && (
-                                <ChevronDoubleRightIcon
-                                  className="w-4 h-4 inline"
-                                  aria-hidden="true"
-                                />
-                              )}
-                              {d.id === 'archieve' && showArchiFSource && (
-                                <ChevronDoubleLeftIcon
-                                  className="w-4 h-4 inline"
-                                  aria-hidden="true"
-                                />
-                              )}
-                            </th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {leadsLogFilData.map((data, i) => {
-                          return (
-                            <tr
-                              className={` ${
-                                i % 2 === 0
-                                  ? 'bg-white border-blue-200'
-                                  : 'bg-gray-100'
-                              }`}
-                              key={i}
-                            >
-                              <td className="text-sm text-gray-900 font-medium px-6 py-2 whitespace-nowrap text-left" >
-                                {data?.label}
+                          <span style={{ display: '' }}>
+                            <CSVDownloader
+                              className="mr-6 h-[20px] w-[20px]"
+                              downloadRows={projDownloadRows}
+                              style={{ height: '20px', width: '20px' }}
+                            />
+                          </span>
+                        </div>
+                      </section>
+                      <table className="min-w-full text-center mt-6">
+                        <thead className="border-b">
+                          <tr>
+                            {[
+                              { label: 'Source', id: 'label' },
+                              { label: 'Total Visit Fixed', id: 'total' },
+                              { label: 'InProgress', id: 'inprogress' },
+                              { label: 'New', id: 'new' },
+                              { label: 'Followup', id: 'followup' },
+                              { label: 'VisitFixed', id: 'visitfixed' },
+                              { label: 'VisitDone', id: 'visitdone' },
+                              { label: 'Neogotiation', id: 'neogotiation' },
+                              { label: 'Booked', id: 'booked' },
+                              { label: 'NotInterested', id: 'notinterested' },
+                              { label: 'Dead', id: 'dead' },
+                              { label: 'Blocked', id: 'blocked' },
+                              { label: 'Junk', id: 'junk' },
+                              { label: 'Archieve', id: 'archieve' },
+                              { label: 'Others', id: 'others' },
+                            ].map((d, i) => (
+                              <th
+                                key={i}
+                                scope="col"
+                                className={`text-sm font-medium text-gray-900 px-6 py-4 ${
+                                  ['Source'].includes(d.label)
+                                    ? 'text-left'
+                                    : ''
+                                }`}
+                                style={{
+                                  display: viewSourceStats1A.includes(d.id)
+                                    ? ''
+                                    : 'none',
+                                  color:
+                                    ['inprogress'].includes(d.id) &&
+                                    showInproFSource
+                                      ? 'blue'
+                                      : ['archieve'].includes(d.id) &&
+                                        showArchiFSource
+                                      ? 'blue'
+                                      : 'black',
+                                }}
+                                onClick={() => {
+                                  if (['inprogress', 'archieve'].includes(d.id))
+                                    showColumnsSourceFun(d.id)
+                                }}
+                              >
+                                {d.label}
+                                {d.id === 'inprogress' && !showInproFSource && (
+                                  <ChevronDoubleRightIcon
+                                    className="w-4 h-4 inline"
+                                    aria-hidden="true"
+                                  />
+                                )}
+                                {d.id === 'inprogress' && showInproFSource && (
+                                  <ChevronDoubleLeftIcon
+                                    className="w-4 h-4 inline"
+                                    aria-hidden="true"
+                                  />
+                                )}
+                                {d.id === 'archieve' && !showArchiFSource && (
+                                  <ChevronDoubleRightIcon
+                                    className="w-4 h-4 inline"
+                                    aria-hidden="true"
+                                  />
+                                )}
+                                {d.id === 'archieve' && showArchiFSource && (
+                                  <ChevronDoubleLeftIcon
+                                    className="w-4 h-4 inline"
+                                    aria-hidden="true"
+                                  />
+                                )}
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {leadsLogFilData.map((data, i) => {
+                            return (
+                              <tr
+                                className={` ${
+                                  i % 2 === 0
+                                    ? 'bg-white border-blue-200'
+                                    : 'bg-gray-100'
+                                }`}
+                                key={i}
+                              >
+                                <td className="text-sm text-gray-900 font-medium px-6 py-2 whitespace-nowrap text-left">
+                                  {data?.label}
+                                </td>
+                                <td
+                                  className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
+                                  onClick={() =>
+                                    showDrillDownFun(
+                                      'Total Visits Fixed',
+                                      data?.archieve
+                                    )
+                                  }
+                                >
+                                  {data?.archieve?.length}
+                                </td>
+                                <td
+                                  className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
+                                  onClick={() =>
+                                    showDrillDownFun(
+                                      'Total Visits Fixed',
+                                      data?.inprogress
+                                    )
+                                  }
+                                >
+                                  {data?.inprogress?.length}
+                                </td>
+                                {showInproFSource && (
+                                  <>
+                                    <td
+                                      className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
+                                      onClick={() =>
+                                        showDrillDownFun(
+                                          'Total Visits Fixed',
+                                          data?.new
+                                        )
+                                      }
+                                    >
+                                      {data?.new?.length}
+                                    </td>
+                                    <td
+                                      className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
+                                      onClick={() =>
+                                        showDrillDownFun(
+                                          'Total Visits Fixed',
+                                          data?.followup
+                                        )
+                                      }
+                                    >
+                                      {data?.followup?.length}
+                                    </td>
+                                    <td
+                                      className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
+                                      onClick={() =>
+                                        showDrillDownFun(
+                                          'Total Visits Fixed',
+                                          data?.visitfixed
+                                        )
+                                      }
+                                    >
+                                      {data?.visitfixed?.length}
+                                    </td>
+                                    <td
+                                      className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
+                                      onClick={() =>
+                                        showDrillDownFun(
+                                          'Total Visits Fixed',
+                                          data?.visitdone
+                                        )
+                                      }
+                                    >
+                                      {data?.visitdone?.length}
+                                    </td>
+                                    <td
+                                      className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
+                                      onClick={() =>
+                                        showDrillDownFun(
+                                          'Total Visits Fixed',
+                                          data?.negotiation
+                                        )
+                                      }
+                                    >
+                                      {data?.negotiation?.length}
+                                    </td>
+                                  </>
+                                )}
+                                <td
+                                  className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
+                                  onClick={() =>
+                                    showDrillDownFun(
+                                      'Total Visits Fixed',
+                                      data?.booked
+                                    )
+                                  }
+                                >
+                                  {data?.booked?.length}
+                                </td>
+                                {showArchiFSource && (
+                                  <>
+                                    <td
+                                      className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
+                                      onClick={() =>
+                                        showDrillDownFun(
+                                          'Total Visits Fixed',
+                                          data?.notinterested
+                                        )
+                                      }
+                                    >
+                                      {data?.notinterested?.length}
+                                    </td>
+                                    <td
+                                      className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
+                                      onClick={() =>
+                                        showDrillDownFun(
+                                          'Total Visits Fixed',
+                                          data?.dead
+                                        )
+                                      }
+                                    >
+                                      {data?.dead?.length}
+                                    </td>
+                                    <td
+                                      className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
+                                      onClick={() =>
+                                        showDrillDownFun(
+                                          'Total Visits Fixed',
+                                          data?.blocked
+                                        )
+                                      }
+                                    >
+                                      {data?.blocked?.length}
+                                    </td>
+                                    <td
+                                      className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
+                                      onClick={() =>
+                                        showDrillDownFun(
+                                          'Total Visits Fixed',
+                                          data?.junk
+                                        )
+                                      }
+                                    >
+                                      {data?.junk?.length}
+                                    </td>
+                                  </>
+                                )}
+                                <td
+                                  className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
+                                  onClick={() =>
+                                    showDrillDownFun(
+                                      'Total Visits Fixed',
+                                      data?.archieve
+                                    )
+                                  }
+                                >
+                                  {data?.archieve?.length}
+                                </td>
+                                <td
+                                  className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
+                                  onClick={() =>
+                                    showDrillDownFun(
+                                      'Total Visits Fixed',
+                                      data?.others
+                                    )
+                                  }
+                                >
+                                  {data?.others?.length}
+                                </td>
+                              </tr>
+                            )
+                          })}
+
+                          {viewProjs?.value == 'allprojects' && (
+                            <tr className="border-b bg-gray-800 boder-gray-900">
+                              <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap text-left">
+                                Total
                               </td>
-                              <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"   onClick={() =>
+                              <td
+                                className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
+                                onClick={() =>
                                   showDrillDownFun(
                                     'Total Visits Fixed',
-                                    data?.archieve
+                                    leadLogsRawData
                                   )
-                                }>
-                                {data?.archieve?.length}
+                                }
+                              >
+                                {leadLogsRawData?.length}
                               </td>
-                              <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"   onClick={() =>
-                                  showDrillDownFun(
-                                    'Total Visits Fixed',
-                                    data?.inprogress
-                                  )
-                                }>
-                                {data?.inprogress?.length}
+                              <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                                {
+                                  leadLogsRawData?.filter((datObj) =>
+                                    [
+                                      'new',
+                                      'unassigned',
+                                      'followup',
+                                      'visitfixed',
+                                      'visitdone',
+                                      'negotiation',
+                                    ].includes(datObj?.to)
+                                  ).length
+                                }
                               </td>
                               {showInproFSource && (
                                 <>
-                                  <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"   onClick={() =>
-                                  showDrillDownFun(
-                                    'Total Visits Fixed',
-                                    data?.new
-                                  )
-                                }>
-                                    {data?.new?.length}
-                                  </td>
-                                  <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"   onClick={() =>
-                                  showDrillDownFun(
-                                    'Total Visits Fixed',
-                                    data?.followup
-                                  )
-                                }>
-                                    {data?.followup?.length}
-                                  </td>
-                                  <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"   onClick={() =>
-                                  showDrillDownFun(
-                                    'Total Visits Fixed',
-                                    data?.visitfixed
-                                  )
-                                }>
-                                    {data?.visitfixed?.length}
-                                  </td>
-                                  <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"   onClick={() =>
-                                  showDrillDownFun(
-                                    'Total Visits Fixed',
-                                    data?.visitdone
-                                  )
-                                }>
-                                    {data?.visitdone?.length}
-                                  </td>
-                                  <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
+                                  <td
+                                    className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
                                     onClick={() =>
                                       showDrillDownFun(
                                         'Total Visits Fixed',
-                                        data?.negotiation
+                                        leadLogsRawData?.filter(
+                                          (datObj) => datObj?.to == 'new'
+                                        )
                                       )
-                                    }>
-                                    {data?.negotiation?.length}
+                                    }
+                                  >
+                                    {
+                                      leadLogsRawData?.filter(
+                                        (datObj) => datObj?.to == 'new'
+                                      ).length
+                                    }
+                                  </td>
+                                  <td
+                                    className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
+                                    onClick={() =>
+                                      showDrillDownFun(
+                                        'Total Visits Fixed',
+                                        leadLogsRawData?.filter(
+                                          (datObj) => datObj?.to == 'followup'
+                                        )
+                                      )
+                                    }
+                                  >
+                                    {
+                                      leadLogsRawData?.filter(
+                                        (datObj) => datObj?.to == 'followup'
+                                      ).length
+                                    }
+                                  </td>
+                                  <td
+                                    className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
+                                    onClick={() =>
+                                      showDrillDownFun(
+                                        'Total Visits Fixed',
+                                        leadLogsRawData?.filter(
+                                          (datObj) => datObj?.to == 'visitfixed'
+                                        )
+                                      )
+                                    }
+                                  >
+                                    {
+                                      leadLogsRawData?.filter(
+                                        (datObj) => datObj?.to == 'visitfixed'
+                                      ).length
+                                    }
+                                  </td>
+                                  <td
+                                    className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
+                                    onClick={() =>
+                                      showDrillDownFun(
+                                        'Total Visits Fixed',
+                                        leadLogsRawData?.filter(
+                                          (datObj) => datObj?.to == 'visitdone'
+                                        )
+                                      )
+                                    }
+                                  >
+                                    {
+                                      leadLogsRawData?.filter(
+                                        (datObj) => datObj?.to == 'visitdone'
+                                      ).length
+                                    }
+                                  </td>
+                                  <td
+                                    className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
+                                    onClick={() =>
+                                      showDrillDownFun(
+                                        'Total Visits Fixed',
+                                        leadLogsRawData?.filter(
+                                          (datObj) =>
+                                            datObj?.to == 'negotiation'
+                                        )
+                                      )
+                                    }
+                                  >
+                                    {
+                                      leadLogsRawData?.filter(
+                                        (datObj) => datObj?.to == 'negotiation'
+                                      ).length
+                                    }
                                   </td>
                                 </>
                               )}
-                              <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
+                              <td
+                                className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
                                 onClick={() =>
                                   showDrillDownFun(
                                     'Total Visits Fixed',
-                                    data?.booked
+                                    leadLogsRawData?.filter(
+                                      (datObj) => datObj?.to == 'booked'
+                                    )
                                   )
-                                }>
-                                {data?.booked?.length}
+                                }
+                              >
+                                {
+                                  leadLogsRawData?.filter(
+                                    (datObj) => datObj?.to == 'booked'
+                                  ).length
+                                }
                               </td>
                               {showArchiFSource && (
                                 <>
-                                  <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
+                                  <td
+                                    className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
                                     onClick={() =>
                                       showDrillDownFun(
                                         'Total Visits Fixed',
-                                        data?.notinterested
-                                      )
-                                    }>
-                                    {data?.notinterested?.length}
-                                  </td>
-                                  <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
-                                    onClick={() =>
-                                      showDrillDownFun(
-                                        'Total Visits Fixed',
-                                        data?.dead
-                                      )
-                                    }>
-                                    {data?.dead?.length}
-                                  </td>
-                                  <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
-                                    onClick={() =>
-                                      showDrillDownFun(
-                                        'Total Visits Fixed',
-                                        data?.blocked
+                                        leadLogsRawData?.filter(
+                                          (datObj) =>
+                                            datObj?.to == 'notinterested'
+                                        )
                                       )
                                     }
                                   >
-                                    {data?.blocked?.length}
+                                    {
+                                      leadLogsRawData?.filter(
+                                        (datObj) =>
+                                          datObj?.to == 'notinterested'
+                                      ).length
+                                    }
                                   </td>
-                                  <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
+                                  <td
+                                    className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
                                     onClick={() =>
                                       showDrillDownFun(
                                         'Total Visits Fixed',
-                                        data?.junk
+                                        leadLogsRawData?.filter(
+                                          (datObj) => datObj?.to == 'dead'
+                                        )
                                       )
                                     }
                                   >
-                                    {data?.junk?.length}
+                                    {
+                                      leadLogsRawData?.filter(
+                                        (datObj) => datObj?.to == 'dead'
+                                      ).length
+                                    }
+                                  </td>
+                                  <td
+                                    className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
+                                    onClick={() =>
+                                      showDrillDownFun(
+                                        'Total Visits Fixed',
+                                        leadLogsRawData?.filter(
+                                          (datObj) => datObj?.to == 'blocked'
+                                        )
+                                      )
+                                    }
+                                  >
+                                    {
+                                      leadLogsRawData?.filter(
+                                        (datObj) => datObj?.to == 'blocked'
+                                      ).length
+                                    }
+                                  </td>
+                                  <td
+                                    className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
+                                    onClick={() =>
+                                      showDrillDownFun(
+                                        'Total Visits Fixed',
+                                        leadLogsRawData?.filter(
+                                          (datObj) => datObj?.to == 'junk'
+                                        )
+                                      )
+                                    }
+                                  >
+                                    {
+                                      leadLogsRawData?.filter(
+                                        (datObj) => datObj?.to == 'junk'
+                                      ).length
+                                    }
                                   </td>
                                 </>
                               )}
-                              <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
+                              <td
+                                className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
                                 onClick={() =>
                                   showDrillDownFun(
                                     'Total Visits Fixed',
-                                    data?.archieve
+                                    leadLogsRawData?.filter((datObj) =>
+                                      [
+                                        'blocked',
+                                        'dead',
+                                        'notinterested',
+                                        'junk',
+                                      ].includes(datObj?.to)
+                                    )
                                   )
-                                }>
-                                {data?.archieve?.length}
+                                }
+                              >
+                                {
+                                  leadLogsRawData?.filter((datObj) =>
+                                    [
+                                      'blocked',
+                                      'dead',
+                                      'notinterested',
+                                      'junk',
+                                    ].includes(datObj?.to)
+                                  ).length
+                                }
                               </td>
-                              <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
+                              <td
+                                className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
                                 onClick={() =>
                                   showDrillDownFun(
                                     'Total Visits Fixed',
-                                    data?.others
+                                    leadLogsRawData?.filter(
+                                      (datObj) => datObj?.to == ''
+                                    )
                                   )
-                                }>
-                                {data?.others?.length}
+                                }
+                              >
+                                {
+                                  leadLogsRawData?.filter(
+                                    (datObj) => datObj?.to == ''
+                                  ).length
+                                }
                               </td>
                             </tr>
-                          )
-                        })}
-
-                        {viewProjs?.value == 'allprojects' && (
-                          <tr className="border-b bg-gray-800 boder-gray-900">
-                            <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap text-left">
-                              Total
-                            </td>
-                            <td
-                              className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
-                              onClick={() =>
-                                showDrillDownFun(
-                                  'Total Visits Fixed',
-                                  leadLogsRawData
-                                )
-                              }
-                            >
-                              {leadLogsRawData?.length}
-                            </td>
-                            <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
-                              {
-                                leadLogsRawData?.filter((datObj) =>
-                                  [
-                                    'new',
-                                    'unassigned',
-                                    'followup',
-                                    'visitfixed',
-                                    'visitdone',
-                                    'negotiation',
-                                  ].includes(datObj?.to)
-                                ).length
-                              }
-                            </td>
-                            {showInproFSource && (
-                              <>
-                                <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
-
-onClick={() =>
-  showDrillDownFun(
-    'Total Visits Fixed',
-    leadLogsRawData?.filter(
-      (datObj) => datObj?.to == 'new'
-    )
-  )}
-                                >
-                                  {
-                                    leadLogsRawData?.filter(
-                                      (datObj) => datObj?.to == 'new'
-                                    ).length
-                                  }
-                                </td>
-                                <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
-
-onClick={() =>
-  showDrillDownFun(
-    'Total Visits Fixed',
-    leadLogsRawData?.filter(
-      (datObj) => datObj?.to == 'followup'
-    )
-  )}
-                                >
-                                  {
-                                    leadLogsRawData?.filter(
-                                      (datObj) => datObj?.to == 'followup'
-                                    ).length
-                                  }
-                                </td>
-                                <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
-
-onClick={() =>
-  showDrillDownFun(
-    'Total Visits Fixed',
-    leadLogsRawData?.filter(
-      (datObj) => datObj?.to == 'visitfixed'
-    )
-  )}>
-                                  {
-                                    leadLogsRawData?.filter(
-                                      (datObj) => datObj?.to == 'visitfixed'
-                                    ).length
-                                  }
-                                </td>
-                                <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
-onClick={() =>
-  showDrillDownFun(
-    'Total Visits Fixed',
-    leadLogsRawData?.filter(
-      (datObj) => datObj?.to == 'visitdone'
-    )
-  )}>
-                                  {
-                                    leadLogsRawData?.filter(
-                                      (datObj) => datObj?.to == 'visitdone'
-                                    ).length
-                                  }
-                                </td>
-                                <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
-onClick={() =>
-  showDrillDownFun(
-    'Total Visits Fixed',
-    leadLogsRawData?.filter(
-      (datObj) => datObj?.to == 'negotiation'
-    )
-  )}>
-                                  {
-                                    leadLogsRawData?.filter(
-                                      (datObj) => datObj?.to == 'negotiation'
-                                    ).length
-                                  }
-                                </td>
-                              </>
-                            )}
-                            <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
-onClick={() =>
-  showDrillDownFun(
-    'Total Visits Fixed',
-    leadLogsRawData?.filter(
-      (datObj) => datObj?.to == 'booked'
-    )
-  )}>
-                              {
-                                leadLogsRawData?.filter(
-                                  (datObj) => datObj?.to == 'booked'
-                                ).length
-                              }
-                            </td>
-                            {showArchiFSource && (
-                              <>
-                                <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
-onClick={() =>
-  showDrillDownFun(
-    'Total Visits Fixed',
-    leadLogsRawData?.filter(
-      (datObj) => datObj?.to == 'notinterested'
-    )
-  )}>
-                                  {
-                                    leadLogsRawData?.filter(
-                                      (datObj) => datObj?.to == 'notinterested'
-                                    ).length
-                                  }
-                                </td>
-                                <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
-
-onClick={() =>
-  showDrillDownFun(
-    'Total Visits Fixed',
-    leadLogsRawData?.filter(
-      (datObj) => datObj?.to == 'dead'
-    )
-  )}>
-                                  {
-                                    leadLogsRawData?.filter(
-                                      (datObj) => datObj?.to == 'dead'
-                                    ).length
-                                  }
-                                </td>
-                                <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
-onClick={() =>
-  showDrillDownFun(
-    'Total Visits Fixed',
-    leadLogsRawData?.filter(
-      (datObj) => datObj?.to == 'blocked'
-    )
-  )}>
-                                  {
-                                    leadLogsRawData?.filter(
-                                      (datObj) => datObj?.to == 'blocked'
-                                    ).length
-                                  }
-                                </td>
-                                <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
-onClick={() =>
-  showDrillDownFun(
-    'Total Visits Fixed',
-    leadLogsRawData?.filter(
-      (datObj) => datObj?.to == 'junk'
-    )
-  )}>
-                                  {
-                                    leadLogsRawData?.filter(
-                                      (datObj) => datObj?.to == 'junk'
-                                    ).length
-                                  }
-                                </td>
-                              </>
-                            )}
-                            <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
-onClick={() =>
-  showDrillDownFun(
-    'Total Visits Fixed',
-    leadLogsRawData?.filter(
-      (datObj) =>  [
-        'blocked',
-        'dead',
-        'notinterested',
-        'junk',
-      ].includes(datObj?.to)
-    )
-  )}>
-                              {
-                                leadLogsRawData?.filter((datObj) =>
-                                  [
-                                    'blocked',
-                                    'dead',
-                                    'notinterested',
-                                    'junk',
-                                  ].includes(datObj?.to)
-                                ).length
-                              }
-                            </td>
-                            <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
-onClick={() =>
-  showDrillDownFun(
-    'Total Visits Fixed',
-    leadLogsRawData?.filter(
-      (datObj) => datObj?.to == ''
-    )
-  )}>
-                              {
-                                leadLogsRawData?.filter(
-                                  (datObj) => datObj?.to == ''
-                                ).length
-                              }
-                            </td>
-                          </tr>
-                        )}
-                      </tbody>
-                    </table>
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
             </>
           )}
           {selCat === 'source_report' && (
@@ -3862,19 +3926,19 @@ onClick={() =>
             open={isOpenSideForm}
             setOpen={setReportSideForm}
             title="Site Visit Leads"
-            setCustomerDetails= {setCustomerDetails}
+            setCustomerDetails={setCustomerDetails}
             setisImportLeadsOpen={setisImportLeadsOpen}
             leadsLogsPayload={drillDownPayload}
             widthClass="max-w-5xl"
           />
 
-<SiderForm
-        open={isImportLeadsOpen}
-        setOpen={setisImportLeadsOpen}
-        title={"User Profile"}
-        customerDetails={customerDetails}
-        widthClass="max-w-4xl"
-      />
+          <SiderForm
+            open={isImportLeadsOpen}
+            setOpen={setisImportLeadsOpen}
+            title={'User Profile'}
+            customerDetails={customerDetails}
+            widthClass="max-w-4xl"
+          />
         </div>
       </section>
     </div>

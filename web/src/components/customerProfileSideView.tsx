@@ -402,7 +402,7 @@ export default function CustomerProfileSideView({
 
   const streamLeadDataFun = () => {
     const { id } = customerDetails
-console.log('customer details', customerDetails)
+    console.log('customer details', customerDetails)
     const z = steamLeadById(
       orgId,
       (querySnapshot) => {
@@ -611,15 +611,28 @@ console.log('customer details', customerDetails)
         executiveName: value.name,
         receiverPhNo: Mobile,
       }
-      getWhatsAppTemplates(
-        'on_lead_assign',
-        'wa',
-        'customer',
-        // 'ProjectId',
-        ProjectId,
-        receiverDetails,
-        msgPayload
-      )
+
+      if (x == 'new' || x == 'unassigned') {
+        getWhatsAppTemplates(
+          'on_lead_assign',
+          'wa',
+          'customer',
+          // 'ProjectId',
+          ProjectId,
+          receiverDetails,
+          msgPayload
+        )
+      } else {
+        getWhatsAppTemplates(
+          'on_reassign',
+          'wa',
+          'customer',
+          // 'ProjectId',
+          ProjectId,
+          receiverDetails,
+          msgPayload
+        )
+      }
     }
   }
   const setNewProject = (leadDocId, value) => {

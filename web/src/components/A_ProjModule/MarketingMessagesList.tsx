@@ -132,6 +132,11 @@ const MarkeingMessagesList = ({ title, pId, data }) => {
                       event: 'on_lead_assign',
                     },
                     {
+                      btnTxt: 'Lead Re-Assigned',
+                      target: 'customer',
+                      event: 'on_reassign',
+                    },
+                    {
                       btnTxt: 'On Site Visit fix',
                       target: 'customer',
                       event: 'on_sitevisit_fix',
