@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
-import SlimSideMenuBar from 'src/components/A_SideMenu/slimSideMenu'
 
+import SlimSideMenuBar from 'src/components/A_SideMenu/slimSideMenu'
 import ExecutiveHomeViewerPage from 'src/components/ExecutiveHomeViewerPage'
 import HeadSideBarDetailView from 'src/components/HeadDetailSideBar'
 import HeadNavBar2 from 'src/components/HeadNavBar/HeadNavBar2'
@@ -16,8 +16,9 @@ import TodayLeadsHomePage from 'src/components/TodayLeadsHomePage'
 import { useFileUpload } from 'src/components/useFileUpload'
 import { USER_ROLES } from 'src/constants/userRoles'
 import { useAuth } from 'src/context/firebase-auth-context'
-import ReportMain from '../../components/Reports/ReportMainCom'
+
 import HeadNavBar from '../../components/HeadNavBar/HeadNavBar'
+import ReportMain from '../../components/Reports/ReportMainCom'
 
 const LeadsManagerPage = (props) => {
   const { user } = useAuth()
@@ -31,23 +32,25 @@ const LeadsManagerPage = (props) => {
   const [isClicked, setIsClicked] = useState(false)
   const [selModule, setSelModule] = useState('Sales')
 
-  //confetti
+  //
+
+
 
   //confetti
-  const a =  window.location.pathname
+  const a = window.location.pathname
   window.history.pushState('', document.title, a)
   const showSideView1 = () => {
     setShowSideBar(!showSideBar)
   }
   useEffect(() => {
-    setIsClicked(prev => !prev)
-  },[props.clicked])
+    setIsClicked((prev) => !prev)
+  }, [props.clicked])
   useEffect(() => {
     if (user) {
       if (user?.role?.includes(USER_ROLES.CP_AGENT)) {
         setViewable('inProgress')
       } else {
-        setViewable( props.type === 'inProgress' ? 'inProgress' : 'Today1')
+        setViewable(props.type === 'inProgress' ? 'inProgress' : 'Today1')
       }
     }
   }, [user])
@@ -74,28 +77,23 @@ const LeadsManagerPage = (props) => {
                   : 'flex flex-row overflow-auto   text-gray-700 '
               }`}
             >
-
               <SlimSideMenuBar
-              pgName={'salesModule'}
-              sourceLink={'salesModule'}
-              showSideView1={undefined}
-              setViewable={setViewable}
-              viewable={viewable}
-            />
-
+                pgName={'salesModule'}
+                sourceLink={'salesModule'}
+                showSideView1={undefined}
+                setViewable={setViewable}
+                viewable={viewable}
+              />
             </div>
 
             <div className="flex-grow  items-center overflow-y-auto  px-300  py-300">
-            <HeadNavBar2
-              selModule ={selModule}
-              setSelModule={setSelModule}
-            />
+              <HeadNavBar2 selModule={selModule} setSelModule={setSelModule} />
 
               {viewable === 'inProgress' && (
                 <ExecutiveHomeViewerPage
                   leadsTyper={'inProgress'}
-                  isClicked= {isClicked}
-                  setIsClicked = {setIsClicked}
+                  isClicked={isClicked}
+                  setIsClicked={setIsClicked}
                 />
               )}
               {viewable === 'booked' && (
@@ -130,17 +128,19 @@ const LeadsManagerPage = (props) => {
 
               {viewable === 'LeadsManagerHome' && <LeadsManagementHome />}
               {viewable === 'Team Lead Report' && (
-                // <ReportMain/>
-                <LeadsTeamReportBody
-                  project={{
-                    area: 1000,
-                    builderName: 'hello',
-                    location: 'local',
-                    projectName: 'Team Leads Report',
-                    projectType: 'aprtment',
-                  }}
-                  isEdit={false}
-                />
+                <>
+                  <ReportMain />
+                  <LeadsTeamReportBody
+                    project={{
+                      area: 1000,
+                      builderName: 'hello',
+                      location: 'local',
+                      projectName: 'Team Leads Report',
+                      projectType: 'aprtment',
+                    }}
+                    isEdit={false}
+                  />
+                </>
               )}
               {viewable === 'My Lead Report' && (
                 <MyLeadsReportHome

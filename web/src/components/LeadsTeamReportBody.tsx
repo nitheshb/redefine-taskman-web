@@ -38,7 +38,10 @@ import { useAuth } from 'src/context/firebase-auth-context'
 import { sendWhatAppTextSms1 } from 'src/util/axiosWhatAppApi'
 import CSVDownloader from 'src/util/csvDownload'
 import { prettyDate } from 'src/util/dateConverter'
-import { SlimSelectBox } from 'src/util/formFields/slimSelectBoxField'
+import {
+  SlimDateSelectBox,
+  SlimSelectBox,
+} from 'src/util/formFields/slimSelectBoxField'
 
 import LeadsCoversionGraphs from './A_SalesModule/Reports/leadsConversionRatio/LeadsCoversionGraphs'
 import { serialEmployeeLeadData } from './LeadsTeamReport/serialEmployeeLeadData'
@@ -103,6 +106,26 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
   //   setValuedata(data)
   //   setValueKind(kind)
   //   setValueCurrency(currency)
+  const sourceDropDown = () => {
+    return (
+      <SlimSelectBox
+        name="project"
+        label=""
+        className="input min-w-[164px]"
+        onChange={(value) => {
+          console.log('zoro condition changed one  is', value)
+          selViewSource(value)
+          // formik.setFieldValue('project', value.value)
+        }}
+        value={viewSource?.value}
+        // options={aquaticCreatures}
+        options={[
+          ...[{ label: 'All Sources', value: 'allsources' }],
+          ...sourceListTuned,
+        ]}
+      />
+    )
+  }
   // }
   const d = new window.Date()
   const { user } = useAuth()
@@ -441,6 +464,12 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
 
     return unsubscribe
   }
+
+  // const DateSourceComponent = () => {
+  //   return (
+
+  //   )
+  // }
 
   const getUsersDataFun1 = async () => {
     const unsubscribe = steamUsersListByRole(
@@ -1270,8 +1299,42 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
               <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
                   <div className="overflow-hidden">
-                    <div className=" text-md font-bold leading-none pl-0 mt-4 border-b pb-4 mb-4 ">
-                      {`Employee vs Tasks `}
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                      }}
+                      className=" text-md font-bold leading-none pl-0 mt-4 border-b pb-4 mb-4 "
+                    >
+                      <div>Employee vs Tasks</div>
+
+                      <div>
+                        <SlimDateSelectBox
+                          onChange={async (value) => {
+                            console.log(value, 'dateValueSource')
+                            setSourceDateRange(value)
+                            //getLeadsDataFun()
+                          }}
+                        />
+                      </div>
+                      <div style={{ width: '13rem' }}>
+                        <SlimSelectBox
+                          name="project"
+                          label=""
+                          className="input min-w-[164px] "
+                          onChange={(value) => {
+                            selProjs(value)
+                          }}
+                          value={viewProjs?.value}
+                          options={[
+                            ...[
+                              { label: 'All Projects', value: 'allprojects' },
+                            ],
+                            ...projectList,
+                          ]}
+                        />
+                      </div>
                     </div>
                     <LeadsCoversionGraphs />
                   </div>
@@ -1289,6 +1352,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                   <div className="overflow-hidden">
                     <div className=" text-md font-bold leading-none pl-0 mt-4 border-b pb-4 mb-4 ">
                       {`Employee vs Tasks `}
+                      <div>DateSourceComponent()</div>
                     </div>
 
                     <section className="flex flex-row justify-between mt-[18px]">

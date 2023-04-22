@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react'
+
 import { startOfWeek, startOfDay, startOfMonth, subMonths } from 'date-fns'
+import { Responsive, WidthProvider } from 'react-grid-layout'
+
 import { sourceList, sourceListItems } from '../../constants/projects'
 import {
   getAllProjects,
@@ -17,17 +20,17 @@ import {
   updateTodayTasksTotal,
 } from '../../context/dbQueryFirebase'
 import { useAuth } from '../../context/firebase-auth-context'
+import {
+  SlimSelectBox,
+  SlimDateSelectBox,
+} from '../../util/formFields/slimSelectBoxField'
 import { serialEmployeeLeadData } from '../LeadsTeamReport/serialEmployeeLeadData'
 import { serialEmployeeTaskLeadData } from '../LeadsTeamReport/serialEmployeeTaskLeadData'
 import { serialProjectLeadData } from '../LeadsTeamReport/serialProjectLeadData'
 import { serialProjecVisitFixedData } from '../LeadsTeamReport/serialProjectVisitsFixedData'
 import { serialMyData } from '../LeadsTeamReport/SourceLeads'
+
 import ReportCard from './ReportCard'
-import {
-  SlimSelectBox,
-  SlimDateSelectBox,
-} from '../../util/formFields/slimSelectBoxField'
-import { Responsive, WidthProvider } from 'react-grid-layout'
 import '../../../../node_modules/react-grid-layout/css/styles.css'
 const ResponsiveGridLayout = WidthProvider(Responsive)
 export default function ReportMainCom() {
@@ -624,7 +627,7 @@ export default function ReportMainCom() {
         </svg>
         <h1 className="text-2xl font-bold">Reports</h1>
       </div>
-      <div style={{ width:'100vm',height:'100vh', overflow: 'scroll' }}>
+      <div style={{ width: '100vm', height: '100vh', overflow: 'scroll' }}>
         <ResponsiveGridLayout
           rowHeight={50}
           breakpoints={{ lg: 1200, md: 996, sm: 768 }}
@@ -680,7 +683,7 @@ export default function ReportMainCom() {
                 y: 2,
                 i: 'graph7',
               },
-            ]
+            ],
           }}
           width={1200}
           verticalCompact={true}
@@ -698,11 +701,10 @@ export default function ReportMainCom() {
             }}
             className="drop-shadow-md  rounded-lg "
             style={{
-              backgroundColor: '#e5e5e5'
+              backgroundColor: '#e5e5e5',
             }}
           >
-
-            <div style={{height:'100%', overflow:"scroll"}}>
+            <div style={{ height: '100%', overflow: 'scroll' }}>
               <ReportCard
                 title="Source Vs Status"
                 headers={[
@@ -731,7 +733,7 @@ export default function ReportMainCom() {
                 showArchiFSource={showArchiFSource}
                 viewSourceStats1A={viewSourceStats1A}
                 DateComponent={DateSourceComponent}
-                id='test'
+                id="test"
               />
             </div>
           </div>
@@ -746,10 +748,10 @@ export default function ReportMainCom() {
             }}
             className="drop-shadow-md  rounded-lg "
             style={{
-              backgroundColor: '#e5e5e5'
+              backgroundColor: '#e5e5e5',
             }}
           >
-            <div style={{height:'100%', overflow:"scroll"}}>
+            <div style={{ height: '100%', overflow: 'scroll' }}>
               <ReportCard
                 title="Project vs Status"
                 headers={[
@@ -778,7 +780,7 @@ export default function ReportMainCom() {
                 showArchiFSource={showArchiFProject}
                 viewSourceStats1A={viewProjectStats1A}
                 DateComponent={DateProjectComponent}
-                id='test1'
+                id="test1"
               />
             </div>
           </div>
@@ -788,10 +790,10 @@ export default function ReportMainCom() {
             data-grid={{ x: 0, y: 9, w: 7, h: 11 }}
             className="drop-shadow-md  rounded-lg "
             style={{
-              backgroundColor: '#e5e5e5'
+              backgroundColor: '#e5e5e5',
             }}
           >
-            <div  style={{height:'100%', overflow:"scroll"}}>
+            <div style={{ height: '100%', overflow: 'scroll' }}>
               <ReportCard
                 title="Employee vs Status"
                 headers={[
@@ -829,10 +831,10 @@ export default function ReportMainCom() {
             data-grid={{ x: 0, y: 9, w: 6, h: 12 }}
             className="drop-shadow-md  rounded-lg "
             style={{
-              backgroundColor: '#e5e5e5'
+              backgroundColor: '#e5e5e5',
             }}
           >
-            <div  style={{height:'100%', overflow:"scroll"}}>
+            <div style={{ height: '100%', overflow: 'scroll' }}>
               <ReportCard
                 title="Visits Performance Counts"
                 headers={[

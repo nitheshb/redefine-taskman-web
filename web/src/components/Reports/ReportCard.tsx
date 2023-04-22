@@ -1,4 +1,5 @@
 import React from 'react'
+
 import {
   ChevronDoubleLeftIcon,
   ChevronDoubleRightIcon,
@@ -6,18 +7,17 @@ import {
 
 export default function ReportCard(props) {
   return (
-    <div style={{ display: 'flex', }} className={'dragMe'}>
-      <div
-        className=" flex flex-col overscroll-x-scroll p-10 max-w-[100%]"
-      >
-        <div className="flex m-1 justify-between"
-        style={{position:"sticky", top:"0px", background:"#e5e5e5"}}
+    <div style={{ display: 'flex' }} className={'dragMe'}>
+      <div className=" flex flex-col overscroll-x-scroll p-10 max-w-[100%]">
+        <div
+          className="flex m-1 justify-between"
+          style={{ position: 'sticky', top: '0px', background: '#e5e5e5' }}
         >
           <div className="relative  flex items-center w-auto text-md font-bold leading-none pl-0 ml-1 mt-4 ">
             <div className="text-md font-bold leading-none">{props.title}</div>
           </div>
 
-          <div
+           <div
             className="relative  flex items-center w-auto text-md font-bold leading-none pl-0 ml-1 mt-4"
             style={{ gap: '50px' }}
           >
