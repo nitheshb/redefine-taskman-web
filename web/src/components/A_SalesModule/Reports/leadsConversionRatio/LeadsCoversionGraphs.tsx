@@ -10,7 +10,7 @@ const LeadsCoversionGraphs = () => {
   useEffect(() => {
     setTimeout(() => {
       setShow(true)
-    }, 100)
+    }, 500)
     return () => {
       setShow(false)
     }
@@ -24,8 +24,8 @@ const LeadsCoversionGraphs = () => {
         backgroundColor: 'white',
       }}
     >
-      {show && (
-        <div style={{ display: 'flex', flexWrap: 'wrap-reverse' }}>
+      {true && (
+        <div style={{ display: 'flex' }}>
           <div style={{ width: '15rem' }}>
             <div style={{ height: '12.5rem' }} className="bg-[#397D8A] p-6">
               <span className="text-white text-lg ">Lead Conversion Ratio</span>
@@ -68,30 +68,33 @@ const LeadsCoversionGraphs = () => {
             </div>
           </div>
 
-          <div style={{ width: '56rem' }}>
+          <div style={{ width: '50rem' }}>
             <div
               style={{
-                display: 'flex',
                 backgroundColor: 'white',
                 marginLeft: '0.7rem',
-                width: '100%',
+                width: 'fit-content',
+
               }}
             >
               <Bargraph />
             </div>
-            <div style={{ display: 'flex', width: '55rem' }}>
+            <div
+              style={{
+                padding: '1.5rem',
+                width: '52rem',
+              }}
+            >
               <div
                 style={{
-                  width: '25%',
                   display: 'flex',
-                  flexDirection: 'column',
                   justifyContent: 'space-between',
                   alignItems: 'center',
                 }}
               >
                 <div
                   style={{
-                    width: '100%',
+                    width: '14rem',
                     height: '12rem',
                     position: 'relative',
                     backgroundColor: 'white',
@@ -128,7 +131,44 @@ const LeadsCoversionGraphs = () => {
                 </div>
                 <div
                   style={{
-                    width: '100%',
+                    width: '14rem',
+                    height: '12rem',
+                    position: 'relative',
+                    backgroundColor: 'white',
+                  }}
+                >
+                  <PieChartComp />
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '40%',
+                      left: '39%',
+                      fontSize: '2rem',
+                      fontWeight: '600',
+                      color: '#4fa183',
+                    }}
+                  >
+                    30%
+                  </div>
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '80%',
+                      left: '4.5%',
+                      padding: '0 0.5rem',
+                      fontSize: '0.9rem',
+                      color: '#4fa183',
+                    }}
+                    className="bg-[#4DA283]"
+                  >
+                    <span className="text-white">
+                      Lead-to-Opportunity Ratio
+                    </span>
+                  </div>
+                </div>
+                <div
+                  style={{
+                    width: '14rem',
                     height: '12rem',
                     position: 'relative',
                   }}
@@ -160,11 +200,10 @@ const LeadsCoversionGraphs = () => {
                     <span className="text-white">Oppurtunity-to-Booking</span>
                   </div>
                 </div>
-
               </div>
               <div
                 style={{
-                  width: '45rem',
+                  width: '50rem',
 
                   display: 'flex',
                   flexDirection: 'column',

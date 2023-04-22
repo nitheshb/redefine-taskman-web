@@ -534,7 +534,7 @@ const LineGraph = () => {
   return (
     <div>
       <LineChart
-        width={650}
+        width={750}
         height={60}
         data={data}
         margin={{
