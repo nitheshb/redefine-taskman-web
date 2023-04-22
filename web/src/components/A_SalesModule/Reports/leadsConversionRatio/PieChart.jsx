@@ -1,18 +1,18 @@
 import React from 'react'
-import { PieChart, Pie, Cell } from 'recharts';
 
+import { PieChart, Pie, Cell } from 'recharts'
 
 const PieChartComp = () => {
-  const RADIAN = Math.PI / 200;
+  const RADIAN = Math.PI / 200
   const data = [
     { name: 'A', value: 90, color: '#4fa183' },
     { name: 'B', value: 45, color: '#ececec' },
-  ];
-  const cx = 110;
-  const cy = 80;
-  const iR = 60;
-  const oR = 75;
-  const value = 100;
+  ]
+  const cx = 110
+  const cy = 80
+  const iR = 60
+  const oR = 75
+  const value = 100
 
   // const needle = (value, data, cx, cy, iR, oR, color) => {
   //   let total = 0;
@@ -41,7 +41,7 @@ const PieChartComp = () => {
 
   return (
     <div>
-      <PieChart width={400} height={500}  >
+      <PieChart width={400} height={500}>
         <Pie
           dataKey="value"
           startAngle={225}
@@ -53,13 +53,11 @@ const PieChartComp = () => {
           outerRadius={oR}
           fill="#8884d8"
           stroke="none"
-
         >
           {data.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={entry.color} />
           ))}
         </Pie>
-
       </PieChart>
     </div>
   )

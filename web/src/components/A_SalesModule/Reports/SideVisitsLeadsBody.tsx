@@ -79,7 +79,7 @@ const SideVisitLeadsBody = ({
         CT,
         assignedTo,
         assignedToObj,
-        coveredA
+        coveredA,
       } = await x
       console.log('proj details are', x)
       // logData = x
