@@ -24,7 +24,7 @@ const LeadsCoversionGraphs = () => {
         backgroundColor: 'white',
       }}
     >
-      {true && (
+      {show && (
         <div style={{ display: 'flex' }}>
           <div style={{ width: '15rem' }}>
             <div style={{ height: '12.5rem' }} className="bg-[#397D8A] p-6">
@@ -74,7 +74,6 @@ const LeadsCoversionGraphs = () => {
                 backgroundColor: 'white',
                 marginLeft: '0.7rem',
                 width: 'fit-content',
-
               }}
             >
               <Bargraph />
