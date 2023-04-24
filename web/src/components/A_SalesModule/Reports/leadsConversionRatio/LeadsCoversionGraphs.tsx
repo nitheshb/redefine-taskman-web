@@ -9,6 +9,34 @@ import PieChartComp from './PieChart'
 const LeadsCoversionGraphs = ({ sourceRawFilData, showDrillDownFun }) => {
   const [show, setShow] = useState(false)
 
+  const [pieVals, setPieVals] = useState({
+    val1: 0,
+    val2: 0,
+    val3: 0,
+  })
+
+  useEffect(() => {
+    console.log('otttt')
+    if (sourceRawFilData && sourceRawFilData.length > 0) {
+      console.log('innn')
+      const val1 = Math.round(
+        (sourceRawFilData.filter((datObj) =>
+          [
+            'followup',
+            'visitfixed',
+            'visitdone',
+            'booked',
+            'negotiation',
+          ].includes(datObj?.Status)
+        ).length /
+          sourceRawFilData.length) *
+          100
+      )
+      const val2 = 100 - val1
+      setPieVals({ val1, val2, val3: 50 })
+    }
+  }, [sourceRawFilData])
+
   useEffect(() => {
     setTimeout(() => {
       setShow(true)
@@ -17,6 +45,8 @@ const LeadsCoversionGraphs = ({ sourceRawFilData, showDrillDownFun }) => {
       setShow(false)
     }
   }, [])
+
+  console.log(pieVals, 'dhvaejfv')
 
   console.log(show)
   return (
@@ -68,51 +98,41 @@ const LeadsCoversionGraphs = ({ sourceRawFilData, showDrillDownFun }) => {
                 },
                 {
                   stausTitle: 'InProgress',
-                  data:
-                    sourceRawFilData.filter((datObj) =>
-                      [
-                        'new',
-                        'unassigned',
-                        'followup',
-                        'visitfixed',
-                        'visitdone',
-                        'negotiation',
-                      ].includes(datObj?.Status))
-
-
+                  data: sourceRawFilData.filter((datObj) =>
+                    [
+                      'new',
+                      'unassigned',
+                      'followup',
+                      'visitfixed',
+                      'visitdone',
+                      'negotiation',
+                    ].includes(datObj?.Status)
+                  ),
                 },
                 {
                   stausTitle: 'Booked',
-                  data:
-                    sourceRawFilData.filter(
-                      (datObj) => datObj?.Status == 'booked'
-                    )
-
+                  data: sourceRawFilData.filter(
+                    (datObj) => datObj?.Status == 'booked'
+                  ),
                 },
                 {
                   stausTitle: 'Not Interested',
-                  data:
-                    sourceRawFilData.filter(
-                      (datObj) => datObj?.Status == 'notinterested'
-                    )
-
+                  data: sourceRawFilData.filter(
+                    (datObj) => datObj?.Status == 'notinterested'
+                  ),
                 },
                 {
                   stausTitle: 'Dead',
-                  data:
-                    sourceRawFilData.filter(
-                      (datObj) => datObj?.Status == 'dead'
-                    )
-
+                  data: sourceRawFilData.filter(
+                    (datObj) => datObj?.Status == 'dead'
+                  ),
                 },
 
                 {
                   stausTitle: 'Junk',
-                  data:
-                    sourceRawFilData.filter(
-                      (datObj) => datObj?.Status == 'junk'
-                    )
-
+                  data: sourceRawFilData.filter(
+                    (datObj) => datObj?.Status == 'junk'
+                  ),
                 },
 
                 // { stausTitle: 'Site Vists', count: '295' },
@@ -174,7 +194,7 @@ const LeadsCoversionGraphs = ({ sourceRawFilData, showDrillDownFun }) => {
                     backgroundColor: 'white',
                   }}
                 >
-                  <PieChartComp />
+                  <PieChartComp pieVal={pieVals.val1} />
                   <div
                     style={{
                       position: 'absolute',
@@ -185,20 +205,7 @@ const LeadsCoversionGraphs = ({ sourceRawFilData, showDrillDownFun }) => {
                       color: '#4fa183',
                     }}
                   >
-                    {Math.round(
-                      (sourceRawFilData.filter((datObj) =>
-                        [
-                          'followup',
-                          'visitfixed',
-                          'visitdone',
-                          'booked',
-                          'negotiation',
-                        ].includes(datObj?.Status)
-                      ).length /
-                        sourceRawFilData?.length) *
-                        100
-                    )}
-                    %
+                    {pieVals.val1}%
                   </div>
                   <div
                     style={{
@@ -222,7 +229,7 @@ const LeadsCoversionGraphs = ({ sourceRawFilData, showDrillDownFun }) => {
                     backgroundColor: 'white',
                   }}
                 >
-                  <PieChartComp />
+                  <PieChartComp pieVal={pieVals.val2} />
                   <div
                     style={{
                       position: 'absolute',
@@ -233,21 +240,7 @@ const LeadsCoversionGraphs = ({ sourceRawFilData, showDrillDownFun }) => {
                       color: '#4fa183',
                     }}
                   >
-                    {100 -
-                      Math.round(
-                        (sourceRawFilData.filter((datObj) =>
-                          [
-                            'followup',
-                            'visitfixed',
-                            'visitdone',
-                            'booked',
-                            'negotiation',
-                          ].includes(datObj?.Status)
-                        ).length /
-                          sourceRawFilData?.length) *
-                          100
-                      )}{' '}
-                    %
+                    {pieVals.val2}%
                   </div>
                   <div
                     style={{
@@ -270,7 +263,7 @@ const LeadsCoversionGraphs = ({ sourceRawFilData, showDrillDownFun }) => {
                     position: 'relative',
                   }}
                 >
-                  <PieChartComp />
+                  <PieChartComp pieVal={pieVals.val3} />
                   <div
                     style={{
                       position: 'absolute',
@@ -281,7 +274,7 @@ const LeadsCoversionGraphs = ({ sourceRawFilData, showDrillDownFun }) => {
                       color: '#4fa183',
                     }}
                   >
-                    30%
+                    {pieVals.val3}
                   </div>
                   <div
                     style={{

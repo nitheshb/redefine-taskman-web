@@ -2,11 +2,12 @@ import React from 'react'
 
 import { PieChart, Pie, Cell } from 'recharts'
 
-const PieChartComp = () => {
+const PieChartComp = ({ pieVal }) => {
+  console.log(pieVal, 'pievallllll')
   const RADIAN = Math.PI / 200
   const data = [
-    { name: 'A', value: 60, color: '#4fa183' },
-    { name: 'B', value: 45, color: '#ececec' },
+    { name: 'A', value: pieVal, color: '#4fa183' },
+    { name: 'B', value: 100 - pieVal, color: '#ececec' },
   ]
   const cx = 110
   const cy = 80

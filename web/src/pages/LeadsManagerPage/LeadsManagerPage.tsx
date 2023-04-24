@@ -34,8 +34,6 @@ const LeadsManagerPage = (props) => {
 
   //
 
-
-
   //confetti
   const a = window.location.pathname
   window.history.pushState('', document.title, a)
