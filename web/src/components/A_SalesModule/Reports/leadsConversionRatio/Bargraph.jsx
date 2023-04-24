@@ -21,7 +21,7 @@ const Bargraph = () => {
     )
   }
   const data = [
-    { name: 'Page A', uv: 100, pv: 200, amt: 400 },
+    { name: 'Page A', uv: 100, pv: 200, amt: 400, value:'newone' },
     { name: 'Page B', uv: 400, pv: 200, amt: 240 },
     { name: 'Page C', uv: 200, pv: 200, amt: 400 },
     { name: 'Page D', uv: 500, pv: 500, amt: 240 },

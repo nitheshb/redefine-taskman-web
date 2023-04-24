@@ -1,12 +1,12 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react'
 
-import Bargraph from './Bargraph'
-import LineGraph from './LineGraph'
-import PieChartComp from './PieChart'
+import Bargraph from '../leadsConversionRatio/Bargraph'
+import LineGraph from '../leadsConversionRatio/LineGraph'
+import PieChartComp from '../leadsConversionRatio/PieChart'
 
-const LeadsCoversionGraphs = ({ sourceRawFilData, showDrillDownFun }) => {
+const SiteVisitM = ({ leadLogsRawData, showDrillDownFun }) => {
   const [show, setShow] = useState(false)
 
   useEffect(() => {
@@ -29,28 +29,24 @@ const LeadsCoversionGraphs = ({ sourceRawFilData, showDrillDownFun }) => {
       {show && (
         <div style={{ display: 'flex' }}>
           <div style={{ width: '15rem' }}>
-            <div style={{ height: '12.5rem' }} className="bg-[#397D8A] p-6">
-              <span className="text-white text-lg ">Lead Conversion Ratio</span>
+            <div
+              style={{ height: '12.5rem' }}
+              className="bg-[#397D8A] p-6 cursor-pointer"
+              onClick={() =>
+                showDrillDownFun(
+                  'Total Visits Fixed',
+                  leadLogsRawData?.filter((datObj) => datObj?.to == 'visitdone')
+                )
+              }
+            >
+              <span className="text-white text-lg ">Total Visits Done</span>
               <div className="text-white text-[44px] my-5">
                 {`${
-                  sourceRawFilData.filter((datObj) =>
-                    [
-                      'followup',
-                      'visitfixed',
-                      'visitdone',
-                      'booked',
-                      'negotiation',
-                    ].includes(datObj?.Status)
-                  ).length
-                }`}
-                :{' '}
-                {`${
-                  sourceRawFilData.filter(
-                    (datObj) => datObj?.Status == 'booked'
-                  ).length
+                  leadLogsRawData?.filter((datObj) => datObj?.to == 'visitdone')
+                    .length
                 }`}
               </div>
-              <div className="text-white text-sm">Qualified vs Bookings </div>
+              <div className="text-white text-sm">during * days </div>
             </div>
             <div
               style={{
@@ -62,57 +58,18 @@ const LeadsCoversionGraphs = ({ sourceRawFilData, showDrillDownFun }) => {
             >
               {[
                 {
-                  stausTitle: 'Leads',
-                  data: sourceRawFilData,
-                  count: `${sourceRawFilData?.length}`,
+                  stausTitle: "Visit's Fixed",
+                  count: `${leadLogsRawData?.length}`,
+                  value: 'visitsfixed',
                 },
                 {
-                  stausTitle: 'InProgress',
-                  data:
-                    sourceRawFilData.filter((datObj) =>
-                      [
-                        'new',
-                        'unassigned',
-                        'followup',
-                        'visitfixed',
-                        'visitdone',
-                        'negotiation',
-                      ].includes(datObj?.Status))
-
-
-                },
-                {
-                  stausTitle: 'Booked',
-                  data:
-                    sourceRawFilData.filter(
-                      (datObj) => datObj?.Status == 'booked'
-                    )
-
-                },
-                {
-                  stausTitle: 'Not Interested',
-                  data:
-                    sourceRawFilData.filter(
-                      (datObj) => datObj?.Status == 'notinterested'
-                    )
-
-                },
-                {
-                  stausTitle: 'Dead',
-                  data:
-                    sourceRawFilData.filter(
-                      (datObj) => datObj?.Status == 'dead'
-                    )
-
-                },
-
-                {
-                  stausTitle: 'Junk',
-                  data:
-                    sourceRawFilData.filter(
-                      (datObj) => datObj?.Status == 'junk'
-                    )
-
+                  stausTitle: "Visit's Done",
+                  value: 'visitdone',
+                  count: `${
+                    leadLogsRawData?.filter(
+                      (datObj) => datObj?.to == 'visitdone'
+                    ).length
+                  }`,
                 },
 
                 // { stausTitle: 'Site Vists', count: '295' },
@@ -132,27 +89,27 @@ const LeadsCoversionGraphs = ({ sourceRawFilData, showDrillDownFun }) => {
                     fontSize: '1.3rem',
                     width: '100%',
                   }}
-                  onClick={() =>
-                    showDrillDownFun(`Total ${item?.stausTitle}`, item?.data)
-                  }
+                  onClick={() => {
+                    if (item.value == 'visitdone') {
+                      showDrillDownFun(
+                        `${item?.stausTitle}`,
+                        leadLogsRawData?.filter(
+                          (datObj) => datObj?.to == 'visitdone'
+                        )
+                      )
+                    } else {
+                      showDrillDownFun(`${item?.stausTitle}`, leadLogsRawData)
+                    }
+                  }}
                 >
                   <div className="text-white">{item?.stausTitle}</div>
-                  <div className="text-white">{item?.data?.length}</div>
+                  <div className="text-white">{item?.count}</div>
                 </div>
               ))}
             </div>
           </div>
 
           <div style={{ width: '50rem' }}>
-            <div
-              style={{
-                backgroundColor: 'white',
-                marginLeft: '0.7rem',
-                width: 'fit-content',
-              }}
-            >
-              <Bargraph />
-            </div>
             <div
               style={{
                 padding: '1.5rem',
@@ -186,16 +143,10 @@ const LeadsCoversionGraphs = ({ sourceRawFilData, showDrillDownFun }) => {
                     }}
                   >
                     {Math.round(
-                      (sourceRawFilData.filter((datObj) =>
-                        [
-                          'followup',
-                          'visitfixed',
-                          'visitdone',
-                          'booked',
-                          'negotiation',
-                        ].includes(datObj?.Status)
+                      (leadLogsRawData?.filter(
+                        (datObj) => datObj?.to == 'visitdone'
                       ).length /
-                        sourceRawFilData?.length) *
+                        leadLogsRawData?.length) *
                         100
                     )}
                     %
@@ -204,14 +155,14 @@ const LeadsCoversionGraphs = ({ sourceRawFilData, showDrillDownFun }) => {
                     style={{
                       position: 'absolute',
                       top: '80%',
-                      left: '4.5%',
+                      left: '14.7%',
                       padding: '0 0.5rem',
                       fontSize: '0.9rem',
                       color: '#4fa183',
                     }}
                     className="bg-[#4DA283]"
                   >
-                    <span className="text-white">New Lead-to-Opportunity</span>
+                    <span className="text-white">Visit Fixed-to-Done</span>
                   </div>
                 </div>
                 <div
@@ -233,34 +184,29 @@ const LeadsCoversionGraphs = ({ sourceRawFilData, showDrillDownFun }) => {
                       color: '#4fa183',
                     }}
                   >
-                    {100 -
-                      Math.round(
-                        (sourceRawFilData.filter((datObj) =>
-                          [
-                            'followup',
-                            'visitfixed',
-                            'visitdone',
-                            'booked',
-                            'negotiation',
-                          ].includes(datObj?.Status)
-                        ).length /
-                          sourceRawFilData?.length) *
-                          100
-                      )}{' '}
+                    {Math.round(
+                      (leadLogsRawData?.filter(
+                        (datObj) => datObj?.to == 'negotiation'
+                      ).length /
+                        leadLogsRawData?.filter(
+                          (datObj) => datObj?.from == 'visitfixed'
+                        ).length) *
+                        100
+                    )}{' '}
                     %
                   </div>
                   <div
                     style={{
                       position: 'absolute',
                       top: '80%',
-                      left: '18.5%',
+                      left: '13.5%',
                       padding: '0 0.5rem',
                       fontSize: '0.9rem',
                       color: '#4fa183',
                     }}
                     className="bg-[#4DA283]"
                   >
-                    <span className="text-white">New Lead-to-Junk</span>
+                    <span className="text-white">Visit Done-Negotiation</span>
                   </div>
                 </div>
                 <div
@@ -281,7 +227,17 @@ const LeadsCoversionGraphs = ({ sourceRawFilData, showDrillDownFun }) => {
                       color: '#4fa183',
                     }}
                   >
-                    30%
+                    {Math.round(
+                      ((leadLogsRawData?.filter((datObj) =>
+                        ['blocked', 'dead', 'notinterested', 'junk'].includes(
+                          datObj?.to
+                        )
+                      ).length || 0) /
+                        leadLogsRawData?.filter(
+                          (datObj) => datObj?.from == 'visitfixed'
+                        ).length || 0) * 100
+                    )}
+                    %
                   </div>
                   <div
                     style={{
@@ -294,7 +250,7 @@ const LeadsCoversionGraphs = ({ sourceRawFilData, showDrillDownFun }) => {
                     }}
                     className="bg-[#4DA283]"
                   >
-                    <span className="text-white">Oppurtunity-to-Booking</span>
+                    <span className="text-white">Visit Done-to-Archieve</span>
                   </div>
                 </div>
               </div>
@@ -500,4 +456,4 @@ const LeadsCoversionGraphs = ({ sourceRawFilData, showDrillDownFun }) => {
   )
 }
 
-export default LeadsCoversionGraphs
+export default SiteVisitM

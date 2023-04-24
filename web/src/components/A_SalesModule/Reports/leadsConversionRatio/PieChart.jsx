@@ -5,7 +5,7 @@ import { PieChart, Pie, Cell } from 'recharts'
 const PieChartComp = () => {
   const RADIAN = Math.PI / 200
   const data = [
-    { name: 'A', value: 90, color: '#4fa183' },
+    { name: 'A', value: 60, color: '#4fa183' },
     { name: 'B', value: 45, color: '#ececec' },
   ]
   const cx = 110

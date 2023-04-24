@@ -31,6 +31,7 @@ import { TextField } from 'src/util/formFields/TextField'
 
 const SideVisitLeadsBody = ({
   title,
+  subtitle,
   leadsLogsPayload,
   dialogOpen,
   setCustomerDetails,
@@ -144,7 +145,7 @@ const SideVisitLeadsBody = ({
     <div className="h-full flex flex-col py-6 bg-white shadow-xl overflow-y-scroll">
       <div className="px-4 sm:px-6  z-10">
         <Dialog.Title className=" font-semibold text-xl mr-auto ml-3  font-Playfair tracking-wider">
-          {title}
+          {subtitle || title} ({leadsLogsPayload.length || 0})
         </Dialog.Title>
       </div>
 

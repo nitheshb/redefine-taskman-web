@@ -129,7 +129,7 @@ const LeadsManagerPage = (props) => {
               {viewable === 'LeadsManagerHome' && <LeadsManagementHome />}
               {viewable === 'Team Lead Report' && (
                 <>
-                  <ReportMain />
+                  {/* <ReportMain /> */}
                   <LeadsTeamReportBody
                     project={{
                       area: 1000,

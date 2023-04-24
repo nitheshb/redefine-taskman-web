@@ -17,7 +17,8 @@ const ReportSideWindow = ({
   open,
   setOpen,
   title,
-  leadsLogsPayload ,
+  subtitle,
+  leadsLogsPayload,
   onCloseDisabled = false,
   widthClass,
   unitsViewMode,
@@ -98,6 +99,7 @@ const ReportSideWindow = ({
                 {title === 'Site Visit Leads' && (
                   <SideVisitLeadsBody
                     title={title}
+                    subtitle={subtitle}
                     dialogOpen={setOpen}
                     leadsLogsPayload={leadsLogsPayload}
                     setCustomerDetails= {setCustomerDetails}

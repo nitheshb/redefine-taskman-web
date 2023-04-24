@@ -44,6 +44,7 @@ import {
 } from 'src/util/formFields/slimSelectBoxField'
 
 import LeadsCoversionGraphs from './A_SalesModule/Reports/leadsConversionRatio/LeadsCoversionGraphs'
+import SiteVisitM from './A_SalesModule/Reports/SiteVisitM'
 import { serialEmployeeLeadData } from './LeadsTeamReport/serialEmployeeLeadData'
 import { serialEmployeeTaskLeadData } from './LeadsTeamReport/serialEmployeeTaskLeadData'
 import { serialProjectLeadData } from './LeadsTeamReport/serialProjectLeadData'
@@ -195,6 +196,8 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
 
   const [dateRange, setDateRange] = React.useState([null, null])
   const [isOpened, setIsOpened] = React.useState(false)
+  const [subTitle, setSubTitle] = React.useState("false")
+
   const [startDate, endDate] = dateRange
   const [viewSourceStats1A, SetViewSourceStats1A] = useState([
     'label',
@@ -363,6 +366,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
     // Display sideForm
     setReportSideForm(true)
     setDrillDownPayload(data)
+    setSubTitle(text)
   }
   const setEmpTaskFun = async () => {
     const x = await serialEmployeeTaskLeadData(usersCleanList)
@@ -1307,36 +1311,40 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                       }}
                       className=" text-md font-bold leading-none pl-0 mt-4 border-b pb-4 mb-4 "
                     >
-                      <div>Employee vs Tasks</div>
-
-                      <div>
-                        <SlimDateSelectBox
-                          onChange={async (value) => {
-                            console.log(value, 'dateValueSource')
-                            setSourceDateRange(value)
-                            //getLeadsDataFun()
-                          }}
-                        />
-                      </div>
-                      <div style={{ width: '13rem' }}>
-                        <SlimSelectBox
-                          name="project"
-                          label=""
-                          className="input min-w-[164px] "
-                          onChange={(value) => {
-                            selProjs(value)
-                          }}
-                          value={viewProjs?.value}
-                          options={[
-                            ...[
-                              { label: 'All Projects', value: 'allprojects' },
-                            ],
-                            ...projectList,
-                          ]}
-                        />
+                      <div>Lead Performance</div>
+                      <div className="flex flex-row">
+                        <div>
+                          <SlimDateSelectBox
+                            onChange={async (value) => {
+                              console.log(value, 'dateValueSource')
+                              setSourceDateRange(value)
+                              //getLeadsDataFun()
+                            }}
+                          />
+                        </div>
+                        <div style={{ width: '13rem' }} className="ml-2 mt-1">
+                          <SlimSelectBox
+                            name="project"
+                            label=""
+                            className="input min-w-[164px] "
+                            onChange={(value) => {
+                              selProjs(value)
+                            }}
+                            value={viewProjs?.value}
+                            options={[
+                              ...[
+                                { label: 'All Projects', value: 'allprojects' },
+                              ],
+                              ...projectList,
+                            ]}
+                          />
+                        </div>
                       </div>
                     </div>
-                    <LeadsCoversionGraphs />
+                    <LeadsCoversionGraphs
+                      sourceRawFilData={sourceRawFilData}
+                      showDrillDownFun={showDrillDownFun}
+                    />
                   </div>
                 </div>
               </div>
@@ -1778,6 +1786,10 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                           </span>
                         </div>
                       </section>
+                      <SiteVisitM
+                        leadLogsRawData={leadLogsRawData}
+                        showDrillDownFun={showDrillDownFun}
+                      />
                       <table className="min-w-full text-center mt-6">
                         <thead className="border-b">
                           <tr>
@@ -3990,6 +4002,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
             open={isOpenSideForm}
             setOpen={setReportSideForm}
             title="Site Visit Leads"
+            subtitle={subTitle}
             setCustomerDetails={setCustomerDetails}
             setisImportLeadsOpen={setisImportLeadsOpen}
             leadsLogsPayload={drillDownPayload}
