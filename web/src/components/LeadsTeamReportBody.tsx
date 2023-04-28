@@ -43,6 +43,7 @@ import {
   SlimSelectBox,
 } from 'src/util/formFields/slimSelectBoxField'
 
+import EmpTasksReportM from './A_SalesModule/Reports/EmpTasks/empTasksReportM'
 import LeadsCoversionGraphs from './A_SalesModule/Reports/leadsConversionRatio/LeadsCoversionGraphs'
 import SiteVisitM from './A_SalesModule/Reports/SiteVisitM'
 import { serialEmployeeLeadData } from './LeadsTeamReport/serialEmployeeLeadData'
@@ -196,7 +197,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
 
   const [dateRange, setDateRange] = React.useState([null, null])
   const [isOpened, setIsOpened] = React.useState(false)
-  const [subTitle, setSubTitle] = React.useState("false")
+  const [subTitle, setSubTitle] = React.useState('false')
 
   const [startDate, endDate] = dateRange
   const [viewSourceStats1A, SetViewSourceStats1A] = useState([
@@ -1417,7 +1418,12 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                       </span> */}
                       </div>
                     </section>
-                    <table className="min-w-full text-center mt-6">
+                    <EmpTasksReportM
+                      leadLogsRawData={leadLogsRawData}
+                      showDrillDownFun={showDrillDownFun}
+                      empPerDayTasksCountsA={empPerDayTasksCountsA}
+                    />
+                    <table className="text-center mt-6">
                       <thead className="border-b">
                         <tr>
                           {[
@@ -1431,10 +1437,10 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                             { label: 'Visit Fixed', id: 'visitfixed' },
                             { label: 'Visit Done', id: 'visitdone' },
                             { label: 'Visit Cancel', id: 'visitCancel' },
-                            { label: 'Booked', id: 'booked' },
-                            { label: 'Dead', id: 'dead' },
-                            { label: 'Blocked', id: 'blocked' },
-                            { label: 'Junk', id: 'junk' },
+                            // { label: 'Booked', id: 'booked' },
+                            // { label: 'Dead', id: 'dead' },
+                            // { label: 'Blocked', id: 'blocked' },
+                            // { label: 'Junk', id: 'junk' },
 
                             { label: 'Negotiations', id: 'negotiation' },
                             { label: 'Others', id: 'others' },
@@ -1500,7 +1506,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                                 {data?.visitCancel_comp || 0}/{' '}
                                 {data?.visitCancel || 0}
                               </td>
-                              <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {/* <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
                                 {data?.booked_comp || 0}/ {data?.booked || 0}
                               </td>
                               <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
@@ -1511,7 +1517,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                               </td>
                               <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
                                 {data?.junk_comp || 0}/ {data?.junk || 0}
-                              </td>
+                              </td> */}
                               <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
                                 {data?.negotiation_comp || 0}/
                                 {data?.negotiation || 0}
@@ -1795,7 +1801,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                           <tr>
                             {[
                               { label: 'Source', id: 'label' },
-                              { label: 'Total Visit Fixed', id: 'total' },
+                              { label: 'Total Visit Done', id: 'total' },
                               { label: 'InProgress', id: 'inprogress' },
                               { label: 'New', id: 'new' },
                               { label: 'Followup', id: 'followup' },
@@ -1884,11 +1890,11 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                                   onClick={() =>
                                     showDrillDownFun(
                                       'Total Visits Fixed',
-                                      data?.archieve
+                                      data?.visitdone
                                     )
                                   }
                                 >
-                                  {data?.archieve?.length}
+                                  {data?.visitdone?.length}
                                 </td>
                                 <td
                                   className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
@@ -2055,11 +2061,17 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                                 onClick={() =>
                                   showDrillDownFun(
                                     'Total Visits Fixed',
-                                    leadLogsRawData
+                                    leadLogsRawData?.filter(
+                                      (datObj) => datObj?.to == 'visitdone'
+                                    )
                                   )
                                 }
                               >
-                                {leadLogsRawData?.length}
+                                {
+                                  leadLogsRawData?.filter(
+                                    (datObj) => datObj?.to == 'visitdone'
+                                  ).length
+                                }
                               </td>
                               <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
                                 {

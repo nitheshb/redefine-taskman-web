@@ -9,6 +9,7 @@ import { DeviceMobileIcon, MailIcon, TrashIcon } from '@heroicons/react/outline'
 import { setHours, setMinutes } from 'date-fns'
 import { Timestamp } from 'firebase/firestore'
 import { Form, Formik } from 'formik'
+import { useSnackbar } from 'notistack'
 import DatePicker from 'react-datepicker'
 import NumberFormat from 'react-number-format'
 import Select from 'react-select'
@@ -44,7 +45,6 @@ import { currentStatusDispFun } from 'src/util/leadStatusDispFun'
 
 import AssigedToDropComp from './assignedToDropComp'
 import Loader from './Loader/Loader'
-import { useSnackbar } from 'notistack'
 
 const AddLeadForm = ({ title, dialogOpen, customerDetails }) => {
   const d = new window.Date()
@@ -61,6 +61,10 @@ const AddLeadForm = ({ title, dialogOpen, customerDetails }) => {
   const [startDate, setStartDate] = useState(d)
   const [customerDetailsTuned, setCustomerDetailsTuned] = useState({})
   useEffect(() => {
+    console.log('my project data is ', customerDetails)
+    loadDataFun(customerDetails, sourceList, projectList)
+  }, [customerDetails, sourceList, projectList])
+  const loadDataFun = async (customerDetails, sourceList, projectList) => {
     if (customerDetails) {
       const custObj = customerDetails
       const {
@@ -71,12 +75,29 @@ const AddLeadForm = ({ title, dialogOpen, customerDetails }) => {
         source,
         projectName,
       } = customerDetails
-      const sourceListMatch = sourceListItems?.filter((sourObj) => {
+      const sourceListMatch = await sourceListItems?.filter((sourObj) => {
         return sourObj?.rep.includes(source)
       })
-      const projectListMatch = projectList?.filter((projObj) => {
-        return projObj?.value == projectName
+      const projectListMatch = await projectList?.filter((projObj) => {
+        console.log(
+          'my project data is',
+          projectName,
+          'mnd',
+          projObj.value.replace(/\s/g, ''),
+          'cd',
+          projectName?.replace(/\s/g, '')
+        )
+        return (
+          projObj?.value?.replace(/\s/g, '') == projectName?.replace(/\s/g, '')
+        )
       })
+
+      console.log(
+        'my project data is ',
+        projectName,
+        customerDetails,
+        projectListMatch
+      )
       custObj.name = responderName
       custObj.email = responderEmail
       custObj.phone = responderPhone?.slice(-10)
@@ -84,12 +105,11 @@ const AddLeadForm = ({ title, dialogOpen, customerDetails }) => {
       custObj.source = sourceListMatch[0]?.value || ''
       custObj.project = projectListMatch[0]?.projectName || ''
       custObj.projectId = projectListMatch[0]?.uid || ''
-
-      setCustomerDetailsTuned(custObj)
-      console.log('customerDetailsTuned', customerDetailsTuned)
+      custObj.value = projectListMatch[0]?.projectName || ''
+      await setCustomerDetailsTuned(custObj)
+      await console.log('my project data is ', customerDetailsTuned, custObj)
     }
-  }, [customerDetails, sourceList, projectList])
-
+  }
   useEffect(() => {
     const unsubscribe = steamUsersListByRole(
       orgId,
@@ -554,7 +574,6 @@ const AddLeadForm = ({ title, dialogOpen, customerDetails }) => {
                                 customerDetailsTuned?.id,
                                 {
                                   status: binReason,
-
                                 }
                               )
                               await setLoading(false)
@@ -576,7 +595,6 @@ const AddLeadForm = ({ title, dialogOpen, customerDetails }) => {
                                 customerDetailsTuned?.id,
                                 {
                                   status: binReason,
-
                                 }
                               )
                               await setLoading(false)

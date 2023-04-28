@@ -274,7 +274,7 @@ const LeadsCoversionGraphs = ({ sourceRawFilData, showDrillDownFun }) => {
                       color: '#4fa183',
                     }}
                   >
-                    {pieVals.val3}
+                    {pieVals.val3}%
                   </div>
                   <div
                     style={{
@@ -287,7 +287,7 @@ const LeadsCoversionGraphs = ({ sourceRawFilData, showDrillDownFun }) => {
                     }}
                     className="bg-[#4DA283]"
                   >
-                    <span className="text-white">Oppurtunity-to-Booking</span>
+                    <span className="text-white">Opportunity-to-Booking</span>
                   </div>
                 </div>
               </div>

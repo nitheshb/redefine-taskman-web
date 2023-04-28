@@ -6,7 +6,11 @@ import Bargraph from '../leadsConversionRatio/Bargraph'
 import LineGraph from '../leadsConversionRatio/LineGraph'
 import PieChartComp from '../leadsConversionRatio/PieChart'
 
-const SiteVisitM = ({ leadLogsRawData, showDrillDownFun }) => {
+const EmpTasksReportM = ({
+  empPerDayTasksCountsA,
+  leadLogsRawData,
+  showDrillDownFun,
+}) => {
   const [show, setShow] = useState(false)
   const [pieVals, setPieVals] = useState({
     val1: 0,
@@ -22,7 +26,6 @@ const SiteVisitM = ({ leadLogsRawData, showDrillDownFun }) => {
       setShow(false)
     }
   }, [])
-
 
   useEffect(() => {
     console.log('otttt')
@@ -67,14 +70,21 @@ const SiteVisitM = ({ leadLogsRawData, showDrillDownFun }) => {
                 )
               }
             >
-              <span className="text-white text-lg ">Total Visits Done</span>
+              <span className="text-white text-lg ">
+                Today Completed
+              </span>
               <div className="text-white text-[44px] my-5">
-                {`${
-                  leadLogsRawData?.filter((datObj) => datObj?.to == 'visitdone')
-                    .length
-                }`}
+              {empPerDayTasksCountsA.reduce(function (sum, task) {
+                  return sum + task.all_comp
+                }, 0)}
               </div>
-              <div className="text-white text-sm">during * days </div>
+              <div className="text-white text-sm">
+                {' '}
+                Tasks out of{' '}
+                {empPerDayTasksCountsA.reduce(function (sum, task) {
+                  return sum + task.all
+                }, 0)}
+              </div>
             </div>
             <div
               style={{
@@ -86,12 +96,12 @@ const SiteVisitM = ({ leadLogsRawData, showDrillDownFun }) => {
             >
               {[
                 {
-                  stausTitle: "Visit's Fixed",
+                  stausTitle: "New",
                   count: `${leadLogsRawData?.length}`,
                   value: 'visitsfixed',
                 },
                 {
-                  stausTitle: "Visit's Done",
+                  stausTitle: "Follow Up",
                   value: 'visitdone',
                   count: `${
                     leadLogsRawData?.filter(
@@ -159,7 +169,7 @@ const SiteVisitM = ({ leadLogsRawData, showDrillDownFun }) => {
                     backgroundColor: 'white',
                   }}
                 >
-                  <PieChartComp  pieVal={pieVals.val1}/>
+                  <PieChartComp pieVal={pieVals.val1} />
                   <div
                     style={{
                       position: 'absolute',
@@ -201,7 +211,7 @@ const SiteVisitM = ({ leadLogsRawData, showDrillDownFun }) => {
                     backgroundColor: 'white',
                   }}
                 >
-                  <PieChartComp pieVal={pieVals.val2}/>
+                  <PieChartComp pieVal={pieVals.val2} />
                   <div
                     style={{
                       position: 'absolute',
@@ -244,7 +254,7 @@ const SiteVisitM = ({ leadLogsRawData, showDrillDownFun }) => {
                     position: 'relative',
                   }}
                 >
-                  <PieChartComp pieVal={pieVals.val3}/>
+                  <PieChartComp pieVal={pieVals.val3} />
                   <div
                     style={{
                       position: 'absolute',
@@ -282,200 +292,7 @@ const SiteVisitM = ({ leadLogsRawData, showDrillDownFun }) => {
                   </div>
                 </div>
               </div>
-              <div
-                style={{
-                  width: '50rem',
-
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}
-              >
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}
-                >
-                  <div
-                    style={{
-                      height: '100%',
-                      width: '100%',
-                      display: 'flex',
-                      padding: '0.5rem',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <div>
-                      <div
-                        style={{
-                          fontSize: '1.2rem',
-                          color: 'black',
-                          fontWeight: '600',
-                        }}
-                      >
-                        Daniel
-                      </div>
-                      <div
-                        style={{
-                          fontSize: '0.8rem',
-                          color: 'grey',
-                        }}
-                      >
-                        SALES MANAGER
-                      </div>
-                    </div>
-                    <div>
-                      <div
-                        style={{
-                          fontSize: '1.2rem',
-                          color: 'black',
-                          textAlign: 'center',
-                          fontWeight: '600',
-                        }}
-                      >
-                        3 %
-                      </div>
-                      <div
-                        style={{
-                          fontSize: '0.8rem',
-                          color: 'grey',
-                        }}
-                      >
-                        CONVERSION RATE
-                      </div>
-                    </div>
-                  </div>
-                  <div>
-                    <LineGraph />
-                  </div>
-                </div>
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}
-                >
-                  <div
-                    style={{
-                      height: '100%',
-                      width: '100%',
-                      display: 'flex',
-                      padding: '0.5rem',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <div>
-                      <div
-                        style={{
-                          fontSize: '1.2rem',
-                          color: 'black',
-                          fontWeight: '600',
-                        }}
-                      >
-                        Daniel
-                      </div>
-                      <div
-                        style={{
-                          fontSize: '0.8rem',
-                          color: 'grey',
-                        }}
-                      >
-                        SALES MANAGER
-                      </div>
-                    </div>
-                    <div>
-                      <div
-                        style={{
-                          fontSize: '1.2rem',
-                          color: 'black',
-                          textAlign: 'center',
-                          fontWeight: '600',
-                        }}
-                      >
-                        3 %
-                      </div>
-                      <div
-                        style={{
-                          fontSize: '0.8rem',
-                          color: 'grey',
-                        }}
-                      >
-                        CONVERSION RATE
-                      </div>
-                    </div>
-                  </div>
-                  <div>
-                    <LineGraph />
-                  </div>
-                </div>
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}
-                >
-                  <div
-                    style={{
-                      height: '100%',
-                      width: '100%',
-                      display: 'flex',
-                      padding: '0.5rem',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <div>
-                      <div
-                        style={{
-                          fontSize: '1.2rem',
-                          color: 'black',
-                          fontWeight: '600',
-                        }}
-                      >
-                        Daniel
-                      </div>
-                      <div
-                        style={{
-                          fontSize: '0.8rem',
-                          color: 'grey',
-                        }}
-                      >
-                        SALES MANAGER
-                      </div>
-                    </div>
-                    <div>
-                      <div
-                        style={{
-                          fontSize: '1.2rem',
-                          color: 'black',
-                          textAlign: 'center',
-                          fontWeight: '600',
-                        }}
-                      >
-                        3 %
-                      </div>
-                      <div
-                        style={{
-                          fontSize: '0.8rem',
-                          color: 'grey',
-                        }}
-                      >
-                        CONVERSION RATE
-                      </div>
-                    </div>
-                  </div>
-                  <div>
-                    <LineGraph />
-                  </div>
-                </div>
-              </div>
+             
             </div>
           </div>
         </div>
@@ -484,4 +301,4 @@ const SiteVisitM = ({ leadLogsRawData, showDrillDownFun }) => {
   )
 }
 
-export default SiteVisitM
+export default EmpTasksReportM

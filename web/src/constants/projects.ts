@@ -175,7 +175,7 @@ export const sourceListItems = [
   {
     label: 'Facebook Ad',
     value: 'facebookad',
-    rep: ['facebookad', 'Facebook', 'facebook'],
+    rep: ['facebookad', 'Facebook', 'facebook', 'fb'],
   },
   {
     label: 'Google Adwords',
@@ -187,7 +187,7 @@ export const sourceListItems = [
   {
     label: 'Instagram Ad',
     value: 'instagramad',
-    rep: ['instagramad', 'Instagram', 'instagram'],
+    rep: ['instagramad', 'Instagram', 'instagram', 'ig'],
   },
   { label: 'Live Chat', value: 'Live Chat', rep: ['Live Chat', 'Livechat'] },
   {
