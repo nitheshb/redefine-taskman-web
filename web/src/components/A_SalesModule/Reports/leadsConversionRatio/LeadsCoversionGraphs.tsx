@@ -2,11 +2,22 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useEffect, useState } from 'react'
 
+import ChevronDoubleLeftIcon from '@heroicons/react/solid/ChevronDoubleLeftIcon'
+import ChevronDoubleRightIcon from '@heroicons/react/solid/ChevronDoubleRightIcon'
+
+import CSVDownloader from 'src/util/csvDownload'
+import { SlimSelectBox } from 'src/util/formFields/slimSelectBoxField'
+
 import Bargraph from './Bargraph'
 import LineGraph from './LineGraph'
 import PieChartComp from './PieChart'
 
-const LeadsCoversionGraphs = ({ sourceRawFilData, showDrillDownFun }) => {
+const LeadsCoversionGraphs = ({
+  sourceRawFilData,
+  showDrillDownFun,
+  leadsFetchedRawData,
+  projectFilList,
+}) => {
   const [show, setShow] = useState(false)
 
   const [pieVals, setPieVals] = useState({
@@ -164,7 +175,7 @@ const LeadsCoversionGraphs = ({ sourceRawFilData, showDrillDownFun }) => {
           </div>
 
           <div style={{ width: '50rem' }}>
-            <div
+            {/* <div
               style={{
                 backgroundColor: 'white',
                 marginLeft: '0.7rem',
@@ -172,7 +183,7 @@ const LeadsCoversionGraphs = ({ sourceRawFilData, showDrillDownFun }) => {
               }}
             >
               <Bargraph />
-            </div>
+            </div> */}
             <div
               style={{
                 padding: '1.5rem',
@@ -291,7 +302,7 @@ const LeadsCoversionGraphs = ({ sourceRawFilData, showDrillDownFun }) => {
                   </div>
                 </div>
               </div>
-              <div
+              {/* <div
                 style={{
                   width: '50rem',
 
@@ -484,7 +495,361 @@ const LeadsCoversionGraphs = ({ sourceRawFilData, showDrillDownFun }) => {
                     <LineGraph />
                   </div>
                 </div>
-              </div>
+              </div> */}
+
+              <section className="flex flex-row justify-between mt-[18px]">
+                {/* <div className=" flex flex-row   ">
+                        <SlimSelectBox
+                          name="project"
+                          label=""
+                          className="input min-w-[164px] "
+                          onChange={(value) => {
+                            selProjs(value)
+                          }}
+                          value={viewProjs?.value}
+                          options={[
+                            ...[
+                              { label: 'All Projects', value: 'allprojects' },
+                            ],
+                            ...projectList,
+                          ]}
+                        />
+                        <span style={{ display: '' }}>
+                          <CSVDownloader
+                            className="mr-6 h-[20px] w-[20px]"
+                            downloadRows={projDownloadRows}
+                            style={{ height: '20px', width: '20px' }}
+                          />
+                        </span>
+                      </div> */}
+              </section>
+              <table className="min-w-full cardborder text-center mt-6">
+                <thead className="border-b">
+                  <tr>
+                    {[
+                      { label: 'Source', id: 'label' },
+                      { label: 'Total', id: 'total' },
+                      { label: 'InProgress', id: 'inprogress' },
+                      { label: 'Booked', id: 'booked' },
+                      { label: 'Archieve', id: 'archieve' },
+                      { label: 'Others', id: 'others' },
+                      // { label: 'Followup', id: 'followup' },
+                      // { label: 'VisitFixed', id: 'visitfixed' },
+                      // { label: 'VisitDone', id: 'visitdone' },
+                      // { label: 'Neogotiation', id: 'neogotiation' },
+                      // { label: 'Booked', id: 'booked' },
+                      // { label: 'NotInterested', id: 'notinterested' },
+                      // { label: 'Dead', id: 'dead' },
+                      // { label: 'Blocked', id: 'blocked' },
+                      // { label: 'Junk', id: 'junk' },
+                      // { label: 'Archieve', id: 'archieve' },
+                      // { label: 'Others', id: 'others' },
+                    ].map((d, i) => (
+                      <th
+                        key={i}
+                        scope="col"
+                        className={`text-sm font-semibold font-medium text-gray-900 px-6 py-4 ${
+                          ['Source'].includes(d.label) ? 'text-left' : ''
+                        }`}
+                        // style={{
+                        //   display: viewSourceStats1A.includes(d.id)
+                        //     ? ''
+                        //     : 'none',
+                        //   color:
+                        //     ['inprogress'].includes(d.id) && showInproFSource
+                        //       ? 'blue'
+                        //       : ['archieve'].includes(d.id) && showArchiFSource
+                        //       ? 'blue'
+                        //       : 'black',
+                        // }}
+                        // onClick={() => {
+                        //   if (['inprogress', 'archieve'].includes(d.id))
+                        //     showColumnsSourceFun(d.id)
+                        // }}
+                      >
+                        {d.label}
+                        {/* {d.id === 'inprogress' && !showInproFSource && (
+                          <ChevronDoubleRightIcon
+                            className="w-4 h-4 inline"
+                            aria-hidden="true"
+                          />
+                        )}
+                        {d.id === 'inprogress' && showInproFSource && (
+                          <ChevronDoubleLeftIcon
+                            className="w-4 h-4 inline"
+                            aria-hidden="true"
+                          />
+                        )}
+                        {d.id === 'archieve' && !showArchiFSource && (
+                          <ChevronDoubleRightIcon
+                            className="w-4 h-4 inline"
+                            aria-hidden="true"
+                          />
+                        )}
+                        {d.id === 'archieve' && showArchiFSource && (
+                          <ChevronDoubleLeftIcon
+                            className="w-4 h-4 inline"
+                            aria-hidden="true"
+                          />
+                        )} */}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {projectFilList.map((data, i) => {
+                    return (
+                      <tr
+                        className={` ${
+                          i % 2 === 0
+                            ? 'bg-white border-blue-200'
+                            : 'bg-gray-100'
+                        }`}
+                        key={i}
+                      >
+                        <td className="text-sm text-gray-900 font-medium px-6 py-2 whitespace-nowrap text-left">
+                          {data?.label}
+                        </td>
+                        <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                          {data?.Total?.length}
+                        </td>
+                        <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                          {data?.inprogress?.length}
+                        </td>
+                        {/* {showInproFSource && (
+                          <>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.new?.length}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.followup?.length}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.visitfixed?.length}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.visitdone?.length}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.negotiation?.length}
+                            </td>
+                          </>
+                        )} */}
+                        <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                          {data?.booked?.length}
+                        </td>
+                        {/* {showArchiFSource && (
+                          <>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.notinterested?.length}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.dead?.length}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.blocked?.length}
+                            </td>
+                            <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                              {data?.junk?.length}
+                            </td>
+                          </>
+                        )} */}
+                        <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                          {data?.archieve?.length}
+                        </td>
+                        <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                          {data?.others?.length}
+                        </td>
+                      </tr>
+                    )
+                  })}
+                  <tr className="border-b bg-gray-800 boder-gray-900">
+                    <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap text-left">
+                      Total
+                    </td>
+                    <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                      {leadsFetchedRawData?.length}
+                    </td>
+                    <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                      {
+                        leadsFetchedRawData?.filter((datObj) =>
+                          [
+                            'new',
+                            'unassigned',
+                            'followup',
+                            'visitfixed',
+                            'visitdone',
+                            'negotiation',
+                          ].includes(datObj?.Status)
+                        ).length
+                      }
+                    </td>
+                    <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                      {
+                        leadsFetchedRawData?.filter((datObj) =>
+                          [
+                            'new',
+                            'unassigned',
+                            'followup',
+                            'visitfixed',
+                            'visitdone',
+                            'negotiation',
+                          ].includes(datObj?.Status)
+                        ).length
+                      }
+                    </td>
+                    <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                      {
+                        leadsFetchedRawData?.filter((datObj) =>
+                          [
+                            'new',
+                            'unassigned',
+                            'followup',
+                            'visitfixed',
+                            'visitdone',
+                            'negotiation',
+                          ].includes(datObj?.Status)
+                        ).length
+                      }
+                    </td>
+                    <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                      {
+                        leadsFetchedRawData?.filter((datObj) =>
+                          [
+                            'new',
+                            'unassigned',
+                            'followup',
+                            'visitfixed',
+                            'visitdone',
+                            'negotiation',
+                          ].includes(datObj?.Status)
+                        ).length
+                      }
+                    </td>
+                  </tr>
+                  {/* {viewProjs?.value == 'allprojects' && (
+                    <tr className="border-b bg-gray-800 boder-gray-900">
+                      <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap text-left">
+                        Total
+                      </td>
+                      <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                        {leadsFetchedRawData.length}
+                      </td>
+                      <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                        {
+                          leadsFetchedRawData.filter((datObj) =>
+                            [
+                              'new',
+                              'unassigned',
+                              'followup',
+                              'visitfixed',
+                              'visitdone',
+                              'negotiation',
+                            ].includes(datObj?.Status)
+                          ).length
+                        }
+                      </td>
+                      {showInproFSource && (
+                        <>
+                          <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                            {
+                              leadsFetchedRawData.filter(
+                                (datObj) => datObj?.Status == 'new'
+                              ).length
+                            }
+                          </td>
+                          <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                            {
+                              leadsFetchedRawData.filter(
+                                (datObj) => datObj?.Status == 'followup'
+                              ).length
+                            }
+                          </td>
+                          <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                            {
+                              leadsFetchedRawData.filter(
+                                (datObj) => datObj?.Status == 'visitfixed'
+                              ).length
+                            }
+                          </td>
+                          <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                            {
+                              leadsFetchedRawData.filter(
+                                (datObj) => datObj?.Status == 'visitdone'
+                              ).length
+                            }
+                          </td>
+                          <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                            {
+                              leadsFetchedRawData.filter(
+                                (datObj) => datObj?.Status == 'negotiation'
+                              ).length
+                            }
+                          </td>
+                        </>
+                      )}
+                      <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                        {
+                          leadsFetchedRawData.filter(
+                            (datObj) => datObj?.Status == 'booked'
+                          ).length
+                        }
+                      </td>
+                      {showArchiFSource && (
+                        <>
+                          <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                            {
+                              leadsFetchedRawData.filter(
+                                (datObj) => datObj?.Status == 'notinterested'
+                              ).length
+                            }
+                          </td>
+                          <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                            {
+                              leadsFetchedRawData.filter(
+                                (datObj) => datObj?.Status == 'dead'
+                              ).length
+                            }
+                          </td>
+                          <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                            {
+                              leadsFetchedRawData.filter(
+                                (datObj) => datObj?.Status == 'blocked'
+                              ).length
+                            }
+                          </td>
+                          <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                            {
+                              leadsFetchedRawData.filter(
+                                (datObj) => datObj?.Status == 'junk'
+                              ).length
+                            }
+                          </td>
+                        </>
+                      )}
+                      <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                        {
+                          leadsFetchedRawData.filter((datObj) =>
+                            [
+                              'blocked',
+                              'dead',
+                              'notinterested',
+                              'junk',
+                            ].includes(datObj?.Status)
+                          ).length
+                        }
+                      </td>
+                      <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                        {
+                          leadsFetchedRawData.filter(
+                            (datObj) => datObj?.Status == ''
+                          ).length
+                        }
+                      </td>
+                    </tr>
+                  )} */}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>

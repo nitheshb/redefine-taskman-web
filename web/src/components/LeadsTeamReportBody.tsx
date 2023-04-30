@@ -62,7 +62,31 @@ const valueFeedData = [
   { k: 'Dead', v: 75, pic: '' },
   { k: 'Not Interested', v: 50, pic: '' },
 ]
+const calculatePercentage = (data) => {
+  let totalCount = 0
+  data &&
+    data.map((item) => {
+      totalCount = totalCount + item.Total.length
+    })
+  return (
+    data &&
+    data
+      .map((item) => {
+        const per = item.Total.length / totalCount
+        return {
+          ...item,
+          percetage: Math.ceil(isNaN(per) ? 0 * 100 : per * 100),
+        }
+      })
+      .sort((a, b) => b.percetage - a.percetage)
+  )
+}
 
+const MycalculatePercentage = (total, count) => {
+  const per = total / count;
+ return Math.ceil(isNaN(per) ? 0 * 100 : per * 100)
+
+}
 const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
   // const [unitsView, setUnitsView] = useState(false)
   // const [areaView, setAreaView] = useState(false)
@@ -118,14 +142,13 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
           console.log('zoro condition changed one  is', value)
           selViewSource(value)
           // formik.setFieldValue('project', value.value)
-        }}
+        } }
         value={viewSource?.value}
         // options={aquaticCreatures}
         options={[
           ...[{ label: 'All Sources', value: 'allsources' }],
           ...sourceListTuned,
-        ]}
-      />
+        ]} placeholder={undefined}      />
     )
   }
   // }
@@ -1104,11 +1127,12 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
               {[
                 { label: 'Leads Performance', value: 'lead_perf' },
                 { label: 'Site Visits', value: 'site_visits' },
-                { label: 'Source Report', value: 'source_report' },
-                { label: 'Employee Report', value: 'emp_status_report' },
-                { label: 'Project Leads Report', value: 'proj_leads_report' },
-                { label: 'Employee Leads Aging', value: 'emp_leads_report' },
                 { label: 'Employee Tasks', value: 'emp_tasks' },
+
+                // { label: 'Source Report', value: 'source_report' },
+                // { label: 'Employee Report', value: 'emp_status_report' },
+                // { label: 'Project Leads Report', value: 'proj_leads_report' },
+                //  { label: 'Employee Leads Aging', value: 'emp_leads_report' },
               ].map((data, i) => {
                 return (
                   <section
@@ -1320,32 +1344,37 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                               console.log(value, 'dateValueSource')
                               setSourceDateRange(value)
                               //getLeadsDataFun()
-                            }}
-                          />
+                            } } label={sourceDateRange} placeholder={undefined}                          />
                         </div>
-                        <div style={{ width: '13rem' }} className="ml-2 mt-1">
+                        {/* <div style={{ width: '13rem' }} className="ml-2 mt-1">
                           <SlimSelectBox
                             name="project"
                             label=""
                             className="input min-w-[164px] "
                             onChange={(value) => {
                               selProjs(value)
-                            }}
+                            } }
                             value={viewProjs?.value}
                             options={[
                               ...[
                                 { label: 'All Projects', value: 'allprojects' },
                               ],
                               ...projectList,
-                            ]}
+                            ]} placeholder={undefined}                          />
+                        </div> */}
+                        <span style={{ display: '' }}>
+                          <CSVDownloader
+                            className="mr-6 h-[20px] w-[20px]"
+                            downloadRows={sourceRawFilData}
+                            style={{ height: '20px', width: '20px' }}
                           />
-                        </div>
+                        </span>
                       </div>
                     </div>
                     <LeadsCoversionGraphs
                       sourceRawFilData={sourceRawFilData}
                       showDrillDownFun={showDrillDownFun}
-                    />
+                      projectFilList= {projectFilList}                   />
                   </div>
                 </div>
               </div>
@@ -1359,12 +1388,12 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
               <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
                   <div className="overflow-hidden">
-                    <div className=" text-md font-bold leading-none pl-0 mt-4 border-b pb-4 mb-4 ">
-                      {`Employee vs Tasks `}
-                      <div>DateSourceComponent()</div>
+                    <div className="flex flex-row justify-between pl-0 mt-4 border-b pb-4 mb-4 ">
+                    <div className=" text-md font-bold leading-none mt-2">
+                      {`Employee Tasks Overview`}
+                      {/* <div>DateSourceComponent()</div> */}
                     </div>
-
-                    <section className="flex flex-row justify-between mt-[18px]">
+                    <section className="flex flex-row justify-between">
                       <section></section>
                       <div className=" flex   ">
                         <div
@@ -1374,7 +1403,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                             GenerateTasksDailyReportForEmp()
                           }}
                         >
-                          Generate Daily Task Report
+                          Generate Today Report
                         </div>
 
                         {resettingEmpValues && <span>InProgress</span>}
@@ -1418,16 +1447,25 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                       </span> */}
                       </div>
                     </section>
+                    </div>
+
+
                     <EmpTasksReportM
                       leadLogsRawData={leadLogsRawData}
                       showDrillDownFun={showDrillDownFun}
                       empPerDayTasksCountsA={empPerDayTasksCountsA}
-                    />
-                    <table className="text-center mt-6">
+                      MycalculatePercentage={MycalculatePercentage}
+
+
+                   />
+
+
+                    {/* hiding this table till we setup tables */}
+                    <table className="text-center mt-6 hidden">
                       <thead className="border-b">
                         <tr>
                           {[
-                            { label: 'sNo', id: 'no' },
+
                             { label: 'Name', id: 'label' },
                             { label: 'Rnr', id: 'all' },
                             { label: 'Busy', id: 'new' },
@@ -1448,7 +1486,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                             <th
                               key={i}
                               scope="col"
-                              className={`text-sm font-medium text-gray-900 px-6 py-4 ${
+                              className={`text-sm font-medium font-semibold text-gray-900 px-6 py-4 ${
                                 ['Name'].includes(d.label) ? 'text-left' : ''
                               }`}
                               onClick={() => {
@@ -1472,11 +1510,9 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                               }`}
                               key={i}
                             >
+
                               <td className="text-sm text-gray-900 font-medium px-6 py-2 whitespace-nowrap text-left">
-                                {i + 1}
-                              </td>
-                              <td className="text-sm text-gray-900 font-medium px-6 py-2 whitespace-nowrap text-left">
-                                {data?.emp}
+                              {i + 1}{")"}{data?.emp}
                               </td>
                               <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
                                 {data?.rnr || 0}
@@ -1610,7 +1646,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                   <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
                     <div className="overflow-hidden">
                       <div className=" text-md font-bold leading-none pl-0 mt-4 border-b pb-4 mb-4 ">
-                        {`Visits Performance Counts `}
+                        {`Site Visit's Overview`}
                       </div>
 
                       <section className="flex flex-row justify-between mt-[18px]">
@@ -1767,30 +1803,29 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                             </label>
                           </span>
                         </section>
-                        <div className=" flex flex-row   ">
+                        {/* <div className=" flex flex-row   ">
                           <SlimSelectBox
                             name="project"
                             label=""
                             className="input min-w-[164px] "
                             onChange={(value) => {
                               selProjs(value)
-                            }}
+                            } }
                             value={viewProjs?.value}
                             options={[
                               ...[
                                 { label: 'All Projects', value: 'allprojects' },
                               ],
                               ...projectList,
-                            ]}
-                          />
+                            ]} placeholder={undefined}                          />
                           <span style={{ display: '' }}>
                             <CSVDownloader
                               className="mr-6 h-[20px] w-[20px]"
-                              downloadRows={projDownloadRows}
+                              downloadRows={leadLogsRawData}
                               style={{ height: '20px', width: '20px' }}
                             />
                           </span>
-                        </div>
+                        </div> */}
                       </section>
                       <SiteVisitM
                         leadLogsRawData={leadLogsRawData}
@@ -1819,7 +1854,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                               <th
                                 key={i}
                                 scope="col"
-                                className={`text-sm font-medium text-gray-900 px-6 py-4 ${
+                                className={`text-sm font-semibold font-medium text-gray-900 px-6 py-4 ${
                                   ['Source'].includes(d.label)
                                     ? 'text-left'
                                     : ''
@@ -2322,7 +2357,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
               </div>
             </>
           )}
-          {selCat === 'source_report' && (
+          {selCat === 'lead_perf' && (
             <div
               className="flex flex-col  mt-4 drop-shadow-md rounded-lg  px-4"
               style={{ backgroundColor: '#ebfafa' }}
@@ -2330,10 +2365,60 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
               <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
                   <div className="overflow-hidden">
-                    <div className=" text-md font-bold leading-none pl-0 mt-4 border-b pb-4 mb-4 ">
-                      {`Source vs Status `}
+                    <div className="flex flex-row justify-between border-b mt-4 pb-2">
+                    <div className=" text-md font-bold leading-none pl-0 mt-2  mb-4 ">
+                      {`Source Performance `}
                     </div>
-                    <section className="flex flex-row text-blue">
+                    <div className=" flex flex-row   ">
+                        <span className="mr-4">
+                          <SlimSelectBox
+                            name="project"
+                            label=""
+                            className="input min-w-[164px]"
+                            onChange={(value) => {
+                              console.log(
+                                'zoro condition changed one  is',
+                                value
+                              )
+                              selViewSource(value)
+                              // formik.setFieldValue('project', value.value)
+                            } }
+                            value={viewSource?.value}
+                            // options={aquaticCreatures}
+                            options={[
+                              ...[
+                                { label: 'All Sources', value: 'allsources' },
+                              ],
+                              ...sourceListTuned,
+                            ]} placeholder={undefined}                          />
+                        </span>
+                        <SlimSelectBox
+                          name="project"
+                          label=""
+                          className="input min-w-[164px] ml-4"
+                          onChange={(value) => {
+                            console.log('zoro condition changed one  is', value)
+                            setSelProject(value)
+                            // formik.setFieldValue('project', value.value)
+                          } }
+                          value={selProjectIs?.value}
+                          // options={aquaticCreatures}
+                          options={[
+                            ...[
+                              { label: 'All Projects', value: 'allprojects' },
+                            ],
+                            ...projectList,
+                          ]} placeholder={undefined}                        />
+                        <span style={{ display: '' }}>
+                          <CSVDownloader
+                            className="mr-6 h-[20px] w-[20px]"
+                            downloadRows={sourceDownloadRows}
+                            style={{ height: '20px', width: '20px' }}
+                          />
+                        </span>
+                      </div>
+                    </div>
+                    {/* <section className="flex flex-row text-blue">
                       <div
                         onClick={() => {
                           updateProjectNameInlogs()
@@ -2352,7 +2437,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                       </div>
 
                       {}
-                    </section>
+                    </section> */}
 
                     <section className="flex flex-row justify-between mt-[18px]">
                       <section className="flex">
@@ -2503,58 +2588,9 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                           </label>
                         </span>
                       </section>
-                      <div className=" flex flex-row   ">
-                        <span className="mr-4">
-                          <SlimSelectBox
-                            name="project"
-                            label=""
-                            className="input min-w-[164px]"
-                            onChange={(value) => {
-                              console.log(
-                                'zoro condition changed one  is',
-                                value
-                              )
-                              selViewSource(value)
-                              // formik.setFieldValue('project', value.value)
-                            }}
-                            value={viewSource?.value}
-                            // options={aquaticCreatures}
-                            options={[
-                              ...[
-                                { label: 'All Sources', value: 'allsources' },
-                              ],
-                              ...sourceListTuned,
-                            ]}
-                          />
-                        </span>
-                        <SlimSelectBox
-                          name="project"
-                          label=""
-                          className="input min-w-[164px] ml-4"
-                          onChange={(value) => {
-                            console.log('zoro condition changed one  is', value)
-                            setSelProject(value)
-                            // formik.setFieldValue('project', value.value)
-                          }}
-                          value={selProjectIs?.value}
-                          // options={aquaticCreatures}
-                          options={[
-                            ...[
-                              { label: 'All Projects', value: 'allprojects' },
-                            ],
-                            ...projectList,
-                          ]}
-                        />
-                        <span style={{ display: '' }}>
-                          <CSVDownloader
-                            className="mr-6 h-[20px] w-[20px]"
-                            downloadRows={sourceDownloadRows}
-                            style={{ height: '20px', width: '20px' }}
-                          />
-                        </span>
-                      </div>
+
                     </section>
-                    <table className="min-w-full text-center mt-6">
+                    <table className="w-[700px] text-center font-semibold mt-6 cardborder">
                       <thead className="border-b">
                         <tr>
                           {[
@@ -2579,7 +2615,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                             <th
                               key={i}
                               scope="col"
-                              className={`text-sm font-medium text-gray-900 px-6 py-4 ${
+                              className={`text-sm font-medium font-semibold text-gray-900 px-6 py-4 ${
                                 ['Source'].includes(d.label) ? 'text-left' : ''
                               }`}
                               style={{
@@ -3031,7 +3067,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                               )
                               selEmp1(value)
                               // formik.setFieldValue('project', value.value)
-                            }}
+                            } }
                             value={viewEmp1?.value}
                             // options={aquaticCreatures}
                             options={[
@@ -3042,8 +3078,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                                 },
                               ],
                               ...empListTuned,
-                            ]}
-                          />
+                            ]} placeholder={undefined}                          />
                         </span>
                         <SlimSelectBox
                           name="project"
@@ -3051,15 +3086,14 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                           className="input min-w-[164px] "
                           onChange={(value) => {
                             setSelProjectEmp(value)
-                          }}
+                          } }
                           value={selProjectEmpIs?.value}
                           options={[
                             ...[
                               { label: 'All Projects', value: 'allprojects' },
                             ],
                             ...projectList,
-                          ]}
-                        />
+                          ]} placeholder={undefined}                        />
                         <span style={{ display: '' }}>
                           <CSVDownloader
                             className="mr-6 h-[20px] w-[20px]"
@@ -3069,7 +3103,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                         </span>
                       </div>
                     </section>
-                    <table className="min-w-full text-center mt-6">
+                    <table className="min-w-full font-semibold text-center mt-6">
                       <thead className="border-b">
                         <tr>
                           {[
@@ -3514,15 +3548,14 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                           className="input min-w-[164px] "
                           onChange={(value) => {
                             selProjs(value)
-                          }}
+                          } }
                           value={viewProjs?.value}
                           options={[
                             ...[
                               { label: 'All Projects', value: 'allprojects' },
                             ],
                             ...projectList,
-                          ]}
-                        />
+                          ]} placeholder={undefined}                        />
                         <span style={{ display: '' }}>
                           <CSVDownloader
                             className="mr-6 h-[20px] w-[20px]"
@@ -3532,7 +3565,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                         </span>
                       </div>
                     </section>
-                    <table className="min-w-full text-center mt-6">
+                    <table className="min-w-full font-semibold text-center mt-6">
                       <thead className="border-b">
                         <tr>
                           {[
@@ -3858,7 +3891,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                       </span> */}
                       </div>
                     </section>
-                    <table className="min-w-full text-center mt-6">
+                    <table className="min-w-full  font-semibold text-center mt-6">
                       <thead className="border-b">
                         <tr>
                           {[
@@ -3875,7 +3908,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                             <th
                               key={i}
                               scope="col"
-                              className={`text-sm font-medium text-gray-900 px-6 py-4 ${
+                              className={`text-sm font-medium font-semibold text-gray-900 px-6 py-4 ${
                                 ['Name'].includes(d.label) ? 'text-left' : ''
                               }`}
                               onClick={() => {
@@ -4018,16 +4051,14 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
             setCustomerDetails={setCustomerDetails}
             setisImportLeadsOpen={setisImportLeadsOpen}
             leadsLogsPayload={drillDownPayload}
-            widthClass="max-w-5xl"
-          />
+            widthClass="max-w-5xl" unitsViewMode={undefined} setIsClicked={undefined}          />
 
           <SiderForm
             open={isImportLeadsOpen}
             setOpen={setisImportLeadsOpen}
             title={'User Profile'}
             customerDetails={customerDetails}
-            widthClass="max-w-4xl"
-          />
+            widthClass="max-w-4xl" pId={undefined} phaseFeed={undefined} BlockFeed={undefined} myBlock={undefined} projectDetails={undefined} phaseDetails={undefined} blockDetails={undefined} unitViewerrr={undefined} unitsViewMode={undefined} setUnitsViewMode={undefined} leadDetailsObj={undefined} projectsList={undefined} viewLegalDocData={undefined} viewUnitConstData={undefined} transactionData={undefined} selCustomerPayload={undefined} selUnitDetails={undefined} selSubMenu={undefined} selSubMenu2={undefined} setIsClicked={undefined} wbPayload={undefined}          />
         </div>
       </section>
     </div>

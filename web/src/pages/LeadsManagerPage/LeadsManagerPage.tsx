@@ -52,6 +52,8 @@ const LeadsManagerPage = (props) => {
       }
     }
   }, [user])
+
+
   return (
     <>
       <div className="flex w-screen h-screen text-gray-700">

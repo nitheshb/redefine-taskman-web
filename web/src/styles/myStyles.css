@@ -446,5 +446,15 @@
   background-color: #2499EF;
 }
 
+.cardborder {
+  border-radius: 6px;
+    position: relative;
+    box-shadow: 0 2px 6px -2px rgba(0,106,194,0.2);
+    border: solid 1px #ebf0f6;
+    background-color: #fff;
+    box-sizing: border-box;
+
+}
+
 
 

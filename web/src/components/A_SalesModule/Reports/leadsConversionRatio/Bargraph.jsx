@@ -21,33 +21,31 @@ const Bargraph = () => {
     )
   }
   const data = [
-    { name: 'Page A', uv: 100, pv: 200, amt: 400, value:'newone' },
-    { name: 'Page B', uv: 400, pv: 200, amt: 240 },
-    { name: 'Page C', uv: 200, pv: 200, amt: 400 },
-    { name: 'Page D', uv: 500, pv: 500, amt: 240 },
-    { name: 'Page A', uv: 0, pv: 200, amt: 400 },
-    { name: 'Page B', uv: 400, pv: 200, amt: 240 },
-    { name: 'Page C', uv: 200, pv: 200, amt: 400 },
-    { name: 'Page D', uv: 500, pv: 500, amt: 240 },
-    { name: 'Page A', uv: 100, pv: 200, amt: 400 },
-    { name: 'Page B', uv: 400, pv: 200, amt: 240 },
-    { name: 'Page C', uv: 200, pv: 200, amt: 400 },
-    { name: 'Page D', uv: 500, pv: 500, amt: 240 },
-    { name: 'Page A', uv: 100, pv: 200, amt: 400 },
-    { name: 'Page B', uv: 400, pv: 200, amt: 240 },
-    { name: 'Page C', uv: 200, pv: 200, amt: 400 },
-    { name: 'Page D', uv: 500, pv: 500, amt: 240 },
-    { name: 'Page B', uv: 400, pv: 200, amt: 240 },
-    { name: 'Page C', uv: 200, pv: 200, amt: 400 },
-    { name: 'Page D', uv: 500, pv: 500, amt: 240 },
+    { name: 'Adventures', uv: 100, pv: 200, amt: 400, value:'newone' },
+    { name: 'CP Skagen', uv: 400, pv: 200, amt: 240 },
+    { name: 'Direct Contact', uv: 200, pv: 200, amt: 400 },
+    { name: 'FB', uv: 500, pv: 500, amt: 240 },
+    { name: 'G-ads', uv: 0, pv: 200, amt: 400 },
+    { name: 'Hoardings', uv: 400, pv: 200, amt: 240 },
+    { name: 'Housing.com', uv: 200, pv: 200, amt: 400 },
+    { name: 'Instagram', uv: 500, pv: 500, amt: 240 },
+    { name: 'Live Chat', uv: 100, pv: 200, amt: 400 },
+    { name: 'Magic Bricks', uv: 400, pv: 200, amt: 240 },
+    { name: 'M Cube', uv: 200, pv: 200, amt: 400 },
+    { name: 'Hoardings', uv: 400, pv: 200, amt: 240 },
+    { name: 'Housing.com', uv: 200, pv: 200, amt: 400 },
+    { name: 'Instagram', uv: 500, pv: 500, amt: 240 },
+    { name: 'Live Chat', uv: 100, pv: 200, amt: 400 },
+    { name: 'Magic Bricks', uv: 400, pv: 200, amt: 240 },
+    { name: 'M Cube', uv: 200, pv: 200, amt: 400 },
   ]
   return (
     <div>
       <BarChart width={800} height={200} data={data}>
         d
         {/* <XAxis dataKey="name" stroke="#8884d8" />
-        <YAxis /> */}
-        {/* <Tooltip wrapperStyle={{ width: 100, backgroundColor: '#ccc' }} /> */}
+        <YAxis />
+        <Tooltip wrapperStyle={{ width: 100, backgroundColor: '#ccc' }} /> */}
         {/* <Legend width={100} wrapperStyle={{ top: 40, right: 20, backgroundColor: '#f5f5f5', border: '1px solid #d5d5d5', borderRadius: 10, lineHeight: '20px' }} /> */}
         {/* <CartesianGrid stroke="#ccc" strokeDasharray="5 5" /> */}
         <Bar

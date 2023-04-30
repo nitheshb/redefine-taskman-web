@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react'
@@ -10,6 +11,7 @@ const EmpTasksReportM = ({
   empPerDayTasksCountsA,
   leadLogsRawData,
   showDrillDownFun,
+  MycalculatePercentage,
 }) => {
   const [show, setShow] = useState(false)
   const [pieVals, setPieVals] = useState({
@@ -70,11 +72,9 @@ const EmpTasksReportM = ({
                 )
               }
             >
-              <span className="text-white text-lg ">
-                Today Completed
-              </span>
+              <span className="text-white text-lg ">Today Completed</span>
               <div className="text-white text-[44px] my-5">
-              {empPerDayTasksCountsA.reduce(function (sum, task) {
+                {empPerDayTasksCountsA.reduce(function (sum, task) {
                   return sum + task.all_comp
                 }, 0)}
               </div>
@@ -96,12 +96,12 @@ const EmpTasksReportM = ({
             >
               {[
                 {
-                  stausTitle: "New",
+                  stausTitle: 'New',
                   count: `${leadLogsRawData?.length}`,
                   value: 'visitsfixed',
                 },
                 {
-                  stausTitle: "Follow Up",
+                  stausTitle: 'Follow Up',
                   value: 'visitdone',
                   count: `${
                     leadLogsRawData?.filter(
@@ -147,154 +147,102 @@ const EmpTasksReportM = ({
             </div>
           </div>
 
-          <div style={{ width: '50rem' }}>
-            <div
-              style={{
-                padding: '1.5rem',
-                width: '52rem',
-              }}
-            >
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}
-              >
-                <div
-                  style={{
-                    width: '14rem',
-                    height: '12rem',
-                    position: 'relative',
-                    backgroundColor: 'white',
-                  }}
-                >
-                  <PieChartComp pieVal={pieVals.val1} />
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '40%',
-                      left: '39%',
-                      fontSize: '2rem',
-                      fontWeight: '600',
-                      color: '#4fa183',
-                    }}
+          <table className=" text-center mx-3 cardborder" style ={{}}>
+            <thead className="border-b">
+              <tr>
+                {[
+                  { label: 'sNo', id: 'no' },
+                  { label: 'Name', id: 'label' },
+                  { label: '', id: 'label' },
+
+                  { label: 'Total Tasks', id: 'total' },
+                  { label: 'Completed', id: 'booked' },
+                  { label: 'RNR', id: 'booked' },
+                  { label: 'Busy', id: 'booked' },
+                ].map((d, i) => (
+                  <th
+                    key={i}
+                    scope="col"
+                    className={`text-sm font-semibold text-gray-900 font-semibold px-6 py-4 ${
+                      ['Name'].includes(d.label) ? 'text-left' : ''
+                    }`}
                   >
-                    {Math.round(
-                      (leadLogsRawData?.filter(
-                        (datObj) => datObj?.to == 'visitdone'
-                      ).length /
-                        leadLogsRawData?.length) *
-                        100
-                    )}
-                    %
-                  </div>
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '80%',
-                      left: '14.7%',
-                      padding: '0 0.5rem',
-                      fontSize: '0.9rem',
-                      color: '#4fa183',
-                    }}
-                    className="bg-[#4DA283]"
+                    {d.label}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {empPerDayTasksCountsA.map((data, i) => {
+                return (
+                  <tr
+                    className={` ${
+                      i % 2 === 0 ? 'bg-white border-blue-200' : 'bg-gray-100'
+                    }`}
+                    key={i}
                   >
-                    <span className="text-white">Visit Fixed-to-Done</span>
-                  </div>
-                </div>
-                <div
-                  style={{
-                    width: '14rem',
-                    height: '12rem',
-                    position: 'relative',
-                    backgroundColor: 'white',
-                  }}
-                >
-                  <PieChartComp pieVal={pieVals.val2} />
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '40%',
-                      left: '39%',
-                      fontSize: '2rem',
-                      fontWeight: '600',
-                      color: '#4fa183',
-                    }}
-                  >
-                    {Math.round(
-                      (leadLogsRawData?.filter(
-                        (datObj) => datObj?.to == 'negotiation'
-                      ).length /
-                        leadLogsRawData?.filter(
-                          (datObj) => datObj?.from == 'visitfixed'
-                        ).length) *
-                        100
-                    )}{' '}
-                    %
-                  </div>
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '80%',
-                      left: '13.5%',
-                      padding: '0 0.5rem',
-                      fontSize: '0.9rem',
-                      color: '#4fa183',
-                    }}
-                    className="bg-[#4DA283]"
-                  >
-                    <span className="text-white">Visit Done-Negotiation</span>
-                  </div>
-                </div>
-                <div
-                  style={{
-                    width: '14rem',
-                    height: '12rem',
-                    position: 'relative',
-                  }}
-                >
-                  <PieChartComp pieVal={pieVals.val3} />
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '40%',
-                      left: '39%',
-                      fontSize: '2rem',
-                      fontWeight: '600',
-                      color: '#4fa183',
-                    }}
-                  >
-                    {Math.round(
-                      ((leadLogsRawData?.filter((datObj) =>
-                        ['blocked', 'dead', 'notinterested', 'junk'].includes(
-                          datObj?.to
-                        )
-                      ).length || 0) /
-                        leadLogsRawData?.filter(
-                          (datObj) => datObj?.from == 'visitfixed'
-                        ).length || 0) * 100
-                    )}
-                    %
-                  </div>
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '80%',
-                      left: '9%',
-                      padding: '0 0.5rem',
-                      fontSize: '0.9rem',
-                      color: '#4fa183',
-                    }}
-                    className="bg-[#4DA283]"
-                  >
-                    <span className="text-white">Visit Done-to-Archieve</span>
-                  </div>
-                </div>
-              </div>
-             
-            </div>
-          </div>
+                    <td className="text-sm text-gray-900 font-medium px-6 py-2 whitespace-nowrap text-left">
+                      {i + 1}
+                    </td>
+                    <td className="text-sm text-gray-900 font-medium px-6 py-2 whitespace-nowrap text-left">
+                      {data?.emp}
+                    </td>
+                    <td>
+                      <div
+                        style={{ width: '200px', background: '#e4f2f4' }}
+                        className="rounded-lg "
+                      >
+                        <div
+                          className={` opacity-100  rounded-lg `}
+                          style={{
+
+                            width: `${MycalculatePercentage(
+                              data?.all_comp || 0,
+                              data?.all || 0
+                            )}%`,
+
+                            background:
+                              'linear-gradient(to left, #4cb8c4, #3cd3ad)',
+                          }}
+                        >
+                          <span className=" leading-normal text-red-900 pl-2">
+                            {`${MycalculatePercentage(
+                              data?.all_comp || 0,
+                              data?.all || 0
+                            )}%`}
+                          </span>
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
+                      onClick={() =>
+                        showDrillDownFun('Total Visits Fixed', data?.visitdone)
+                      }
+                    >
+                      {/* {data?.all_comp || 0}/{data?.all || 0} */}
+                      {data?.all || 0}
+                    </td>
+                    <td
+                      className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
+                      onClick={() =>
+                        showDrillDownFun('Total Visits Fixed', data?.inprogress)
+                      }
+                    >
+                      {data?.all_comp || 0}
+                      {/* {data?.inprogress?.length} */}
+                    </td>
+                    <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                      {data?.rnr || 0}
+                    </td>
+                    <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
+                      {data?.busy || 0}
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
         </div>
       )}
     </div>

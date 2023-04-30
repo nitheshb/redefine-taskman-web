@@ -115,7 +115,18 @@ export const steamAllLeadsActivity = async (orgId, snapshot, data, error) => {
     .eq('from', 'visitfixed')
     .gte('T', cutoffDate)
 
-  return lead_logs
+//  below logic merges the duplicate logs with Luid and from 'visitfixed'
+// coverA contains all merge from array
+  const result = Object.values(lead_logs.reduce((obj, item) => {
+    if (!obj[item.Luid]) {
+      obj[item.Luid] = { ...item, coverA: [item.to] };
+    } else {
+      obj[item.Luid].coverA.push(item.to);
+    }
+    return obj;
+  }, {}));
+  return result
+  // return lead_logs
   // return onSnapshot(itemsQuery, snapshot, error)
 }
 
@@ -318,7 +329,11 @@ export const getLeadsByDate = async (orgId, data) => {
   const citySnapshot = await getDocs(itemsQuery)
   // await citySnapshot.docs.map((doc) => doc.data())
   console.log('my Array data is delayer 1', citySnapshot)
-  return await citySnapshot.docs.map((doc) => doc.data())
+  return await citySnapshot.docs.map((doc) => {
+    const x = doc.data()
+    x.id = doc.id
+    return x
+  })
 }
 //for global search
 export const getLeadsByPhoneNo = async (orgId, data) => {

@@ -28,6 +28,8 @@ import { CustomSelect } from 'src/util/formFields/selectBoxField'
 import { MultiSelectMultiLineField } from 'src/util/formFields/selectBoxMultiLineField'
 import { TextAreaField } from 'src/util/formFields/TextAreaField'
 import { TextField } from 'src/util/formFields/TextField'
+import SkeletonLoaderPage from 'src/pages/SkeletonLoader/skeletonLoaderPage'
+import LogSkelton from 'src/components/shimmerLoaders/logSkelton'
 
 const SideVisitLeadsBody = ({
   title,
@@ -43,6 +45,7 @@ const SideVisitLeadsBody = ({
   const { enqueueSnackbar } = useSnackbar()
 
   const [leadsData, setLeadsData] = useState([])
+  const [loadingIcon, setLoadingIcon] = useState(false)
 
   useEffect(() => {
     console.log('use effect stuff', leadsLogsPayload)
@@ -51,88 +54,77 @@ const SideVisitLeadsBody = ({
 
   const leadsSerialDatafun = async () => {
     const streamedTodo = []
+    setLoadingIcon(true)
+    try {
+      const y = await Promise.all(
+        leadsLogsPayload.map(async (logData) => {
+          const { Luid } = logData;
+          const x = await getLeadbyId1(orgId, Luid);
+          const {
+            id,
+            Name,
+            Project,
+            ProjectId,
+            Source,
+            Status,
+            by,
+            Mobile,
+            Date,
+            Email,
+            Assigned,
+            AssignedBy,
+            Notes,
+            Timeline,
+            documents,
+            Remarks,
+            notInterestedReason,
+            notInterestedNotes,
+            stsUpT,
+            assignT,
+            CT,
+            assignedTo,
+            assignedToObj,
+            coveredA,
+          } = await x;
 
-    const y = await leadsLogsPayload.map(async (logData) => {
-      const { Luid } = logData
-      const x = await getLeadbyId1(orgId, Luid)
-
-      const {
-        id,
-        Name,
-        Project,
-        ProjectId,
-        Source,
-        Status,
-        by,
-        Mobile,
-        Date,
-        Email,
-        Assigned,
-        AssignedBy,
-        Notes,
-        Timeline,
-        documents,
-        Remarks,
-        notInterestedReason,
-        notInterestedNotes,
-        stsUpT,
-        assignT,
-        CT,
-        assignedTo,
-        assignedToObj,
-        coveredA,
-      } = await x
-      console.log('proj details are', x)
-      // logData = x
-      logData.Project = Project
-      logData.Name = Name
-      logData.id = Luid
-      logData.ProjectId = ProjectId
-
-      logData.Status = Status
-      logData.Source = Source
-      logData.by = by
-      logData.Mobile = Mobile
-      logData.Date = Date
-      logData.Email = Email
-      logData.Assigned = Assigned
-      logData.AssignedBy = AssignedBy
-      logData.Notes = Notes
-      logData.Timeline = Timeline
-      logData.documents = documents
-      logData.Remarks = Remarks
-      logData.notInterestedReason = notInterestedReason
-      logData.notInterestedNotes = notInterestedNotes
-      logData.stsUpT = stsUpT
-      logData.assignT = assignT
-      logData.CT = CT
-      logData.assignedTo = assignedTo
-
-      logData.assignedToObj = assignedToObj
-      logData.coveredA = coveredA
-
-      logData.Time = prettyDate(logData?.T).toLocaleString()
-
-      // logData = { ...x }
-      // console.log('dta is', logData)
-
-      streamedTodo.push(logData)
-      return logData
-      // updateLeadsLogWithProject(
-      //   orgId,
-      //   'snap',
-      //   {
-      //     LeadId: Luid,
-      //     pId: ProjectId,
-      //   },
-      //   (error) => []
-      // )
-      setLeadsData(streamedTodo)
-      console.log('use effect stuff', leadsLogsPayload)
-    })
+          logData.Project = Project;
+          logData.Name = Name;
+          logData.id = Luid;
+          logData.ProjectId = ProjectId;
+          logData.Status = Status;
+          logData.Source = Source;
+          logData.by = by;
+          logData.Mobile = Mobile;
+          logData.Date = Date;
+          logData.Email = Email;
+          logData.Assigned = Assigned;
+          logData.AssignedBy = AssignedBy;
+          logData.Notes = Notes;
+          logData.Timeline = Timeline;
+          logData.documents = documents;
+          logData.Remarks = Remarks;
+          logData.notInterestedReason = notInterestedReason;
+          logData.notInterestedNotes = notInterestedNotes;
+          logData.stsUpT = stsUpT;
+          logData.assignT = assignT;
+          logData.CT = CT;
+          logData.assignedTo = assignedTo;
+          logData.assignedToObj = assignedToObj;
+          logData.coveredA = coveredA;
+          logData.Time = prettyDate(logData?.T).toLocaleString();
+          return logData;
+        })
+      );
+      setLeadsData(y);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoadingIcon(false)
+    }
 
     console.log('what matters', streamedTodo)
-    setLeadsData(streamedTodo)
+  await  setLeadsData(streamedTodo)
+
   }
 
   const selLeadFun = (data) => {
@@ -158,14 +150,14 @@ const SideVisitLeadsBody = ({
               options={projectPlans}
               onChange={setSelected}
             /> */}
-
+            {loadingIcon ? <LogSkelton /> :
             <table className="min-w-full text-center mt-6">
               <thead className="border-b">
                 <tr>
                   {' '}
                   {[
                     { label: 'sNo', id: 'no' },
-                    { label: 'ProjName', id: 'label' },
+                    { label: 'Project', id: 'label' },
                     { label: 'Lead Name', id: 'all' },
                     { label: 'Lead Status', id: 'new' },
                     { label: 'From', id: 'all' },
@@ -176,7 +168,9 @@ const SideVisitLeadsBody = ({
                       key={i}
                       scope="col"
                       className={`text-sm font-medium text-gray-900 px-6 py-4 ${
-                        ['Name'].includes(d.label) ? 'text-left' : ''
+                        ['Project', 'Lead Name'].includes(d.label)
+                          ? 'text-left'
+                          : ''
                       }`}
                     >
                       {d.label}
@@ -201,7 +195,7 @@ const SideVisitLeadsBody = ({
                       <td className="text-sm text-gray-900 font-medium px-6 py-2 whitespace-nowrap text-left">
                         {data?.Project}
                       </td>
-                      <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
+                      <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap text-left">
                         {data?.Name}
                       </td>
                       <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
@@ -211,7 +205,9 @@ const SideVisitLeadsBody = ({
                         {data?.from}
                       </td>
                       <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
-                        {data?.to}
+                        {data?.coverA?.includes('visitdone')
+                          ? 'visitdone'
+                          : data?.to}
                       </td>
                       <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
                         {data?.Time}
@@ -221,6 +217,7 @@ const SideVisitLeadsBody = ({
                 })}
               </tbody>
             </table>
+}
           </div>
           <div className="mt-0"></div>
         </div>

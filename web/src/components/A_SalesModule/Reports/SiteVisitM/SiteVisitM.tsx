@@ -95,7 +95,7 @@ const SiteVisitM = ({ leadLogsRawData, showDrillDownFun }) => {
                   value: 'visitdone',
                   count: `${
                     leadLogsRawData?.filter(
-                      (datObj) => datObj?.to == 'visitdone'
+                      (datObj) => datObj?.coverA.includes('visitdone')
                     ).length
                   }`,
                 },
@@ -122,7 +122,8 @@ const SiteVisitM = ({ leadLogsRawData, showDrillDownFun }) => {
                       showDrillDownFun(
                         `${item?.stausTitle}`,
                         leadLogsRawData?.filter(
-                          (datObj) => datObj?.to == 'visitdone'
+                          (datObj) => datObj?.coverA.includes('visitdone')
+
                         )
                       )
                     } else {
@@ -282,7 +283,7 @@ const SiteVisitM = ({ leadLogsRawData, showDrillDownFun }) => {
                   </div>
                 </div>
               </div>
-              <div
+              {/* <div
                 style={{
                   width: '50rem',
 
@@ -475,7 +476,7 @@ const SiteVisitM = ({ leadLogsRawData, showDrillDownFun }) => {
                     <LineGraph />
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

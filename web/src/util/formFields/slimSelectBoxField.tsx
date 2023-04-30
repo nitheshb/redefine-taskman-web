@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import Select from 'react-select'
-import DatePicker from 'react-datepicker'
+
 import CloseTwoToneIcon from '@mui/icons-material/CloseTwoTone'
 import { startOfWeek, startOfDay, startOfMonth, subMonths } from 'date-fns'
+import { setLabels } from 'react-chartjs-2/dist/utils'
+import DatePicker from 'react-datepicker'
+import Select from 'react-select'
 const customStyles = {
   control: (base) => ({
     ...base,
@@ -53,7 +55,6 @@ export const SlimSelectBox = ({
         value={defaultValue(options, value)}
         placeholder={placeholder || label || 'All Projects'}
         onChange={(value) => {
-
           onChange(value)
         }}
         options={options}
@@ -121,12 +122,25 @@ export const SlimDateSelectBox = ({
       onChange(startDate?.getTime())
     }
   }, [dateRange])
+
+  useEffect(() => {
+    if (label === startOfDay(d).getTime()) {
+      setValue('Today')
+    } else if (label === startOfWeek(d).getTime()) {
+      setValue('This Week')
+    } else if (label === startOfMonth(d).getTime()) {
+      setValue('This Month')
+    }else if (label === subMonths(startOfMonth(d), 6).getTime()) {
+      setValue('Last 6 months')
+    }
+  }, [label])
+
   const [value, setValue] = useState(label ? label : 'Today')
   const [isDatePicker, setDatePicker] = useState(false)
 
   console.log(value, 'value')
   return (
-    <div style={{width:'200px'}}>
+    <div style={{ width: '200px' }}>
       {/* {label != '' && label != 'Assign To' && (
         <label className="label font-regular text-sm ">{label}</label>
       )} */}
