@@ -30,16 +30,22 @@ export const getWhatsAppTemplates = async (
 }
 
 export const whatsAppTesting = (editorState, receiverDetails, msgPayload) => {
-  const { receiverPhNo, customerName, executiveName } = receiverDetails
+  const {
+    receiverPhNo,
+    customerName,
+    executiveName,
+    executivePh,
+    executiveEmail,
+  } = receiverDetails
   const { projectName, broucherLink, locLink, projContactNo, scheduleTime } =
     msgPayload
-    console.log('sch time is', scheduleTime)
-    let setTime;
-    try {
-      setTime =  prettyDateTime(scheduleTime?.getTime())
-    } catch (error) {
-      setTime = prettyDateTime(scheduleTime)
-    }
+  console.log('sch time is', scheduleTime)
+  let setTime
+  try {
+    setTime = prettyDateTime(scheduleTime?.getTime())
+  } catch (error) {
+    setTime = prettyDateTime(scheduleTime)
+  }
   const variableRegex = /{{\s*([a-zA-Z0-9_]+)\s*}}/g
   const replacedText = editorState.replace(
     variableRegex,
@@ -50,6 +56,10 @@ export const whatsAppTesting = (editorState, receiverDetails, msgPayload) => {
         return customerName
       } else if (variableName === 'EXECUTIVE_NAME') {
         return executiveName
+      } else if (variableName === 'EXECUTIVE_CONTACT_NO') {
+        return executivePh || ''
+      } else if (variableName === 'EXECUTIVE_EMAIL') {
+        return executiveEmail || ''
       } else if (variableName === 'PROJECT_BROUCHER_LINK') {
         return broucherLink
       } else if (variableName === 'PROJECT_LOCATOIN_LINK') {
@@ -95,5 +105,4 @@ export const whatsAppTesting = (editorState, receiverDetails, msgPayload) => {
 
   sendWhatAppTextSms1(`${'8123826341'}`, `${plainText}`)
   sendWhatAppTextSms1(`${'9849000525'}`, `${plainText}`)
-
 }

@@ -610,6 +610,8 @@ export default function CustomerProfileSideView({
         customerName: Name,
         executiveName: value.name,
         receiverPhNo: Mobile,
+        executivePh: value?.offPh,
+        executiveEmail: value?.email
       }
 
       if (x == 'new' || x == 'unassigned') {
