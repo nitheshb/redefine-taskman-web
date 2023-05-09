@@ -28,21 +28,43 @@ const SiteVisitM = ({ leadLogsRawData, showDrillDownFun }) => {
     console.log('otttt')
     if (leadLogsRawData && leadLogsRawData.length > 0) {
       console.log('innn')
+      // const val1 = Math.round(
+      //   (leadLogsRawData.filter((datObj) =>
+      //     [
+      //       'followup',
+      //       'visitfixed',
+      //       'visitdone',
+      //       'booked',
+      //       'negotiation',
+      //     ].includes(datObj?.Status)
+      //   ).length /
+      //     leadLogsRawData.length) *
+      //     100
+      // )
       const val1 = Math.round(
-        (leadLogsRawData.filter((datObj) =>
-          [
-            'followup',
-            'visitfixed',
-            'visitdone',
-            'booked',
-            'negotiation',
-          ].includes(datObj?.Status)
+        (leadLogsRawData?.filter(
+          (datObj) => datObj?.to == 'visitdone'
         ).length /
-          leadLogsRawData.length) *
+          leadLogsRawData?.length) *
           100
       )
-      const val2 = 100 - val1
-      setPieVals({ val1, val2, val3: 50 })
+      const val2 = Math.round(
+        (leadLogsRawData?.filter(
+          (datObj) => datObj?.to == 'negotiation'
+        ).length /
+          leadLogsRawData?.length) *
+          100
+      )
+      const val3 = Math.round(
+        (leadLogsRawData?.filter(
+          (datObj) => datObj?.to == 'notinterested'
+        ).length /
+          leadLogsRawData?.filter(
+            (datObj) => datObj?.from == 'visitfixed'
+          )) *
+          100
+      )
+      setPieVals({ val1, val2, val3 })
     }
   }, [leadLogsRawData])
 

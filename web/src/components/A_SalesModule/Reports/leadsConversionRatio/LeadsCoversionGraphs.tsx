@@ -27,7 +27,15 @@ const LeadsCoversionGraphs = ({
   })
 
   useEffect(() => {
-    console.log('otttt')
+    console.log('otttt', sourceRawFilData.filter((datObj) =>
+    [
+      'followup',
+      'visitfixed',
+      'visitdone',
+      'booked',
+      'negotiation',
+    ].includes(datObj?.Status)
+  ).length)
     if (sourceRawFilData && sourceRawFilData.length > 0) {
       console.log('innn')
       const val1 = Math.round(

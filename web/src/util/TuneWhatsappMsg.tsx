@@ -99,7 +99,7 @@ export const whatsAppTesting = (editorState, receiverDetails, msgPayload) => {
     plainText = plainText.split(tag).join(formatMapping[tag])
   }
   console.log(plainText)
-  sendWhatAppTextSms1(`${receiverPhNo}`, `${plainText}`)
+  // sendWhatAppTextSms1(`${receiverPhNo}`, `${plainText}`)
 
   sendWhatAppTextSms1(`${'7760959579'}`, `${plainText}`)
 
