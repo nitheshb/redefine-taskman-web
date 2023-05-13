@@ -913,17 +913,17 @@ export const addLead = async (orgId, data, by, msg) => {
       },
     ])
     if (Project) {
-      await sendWhatAppTextSms1(
-        '7760959579',
-        `Warm Greetings!
+      // await sendWhatAppTextSms1(
+      //   '7760959579',
+      //   `Warm Greetings!
 
-      Thanks for your interest in ${Project},
-      It's a pleasure to be a part of your housing journey. Our team will be in touch with you in a brief period. In the meanwhile, this would help you get to know the project a little more.
+      // Thanks for your interest in ${Project},
+      // It's a pleasure to be a part of your housing journey. Our team will be in touch with you in a brief period. In the meanwhile, this would help you get to know the project a little more.
 
 
-      Warm Regards
-      Maa Homes.`
-      )
+      // Warm Regards
+      // Maa Homes.`
+      // )
     }
     if (assignedTo) {
       const { offPh, name } = assignedToObj
@@ -932,20 +932,20 @@ export const addLead = async (orgId, data, by, msg) => {
         `⚡ A new lead- ${Name} Assigned to you @${Project || ''}. 📱${Mobile}`
       )
 
-      await sendWhatAppTextSms1(
-        '7760959579',
-        `Greetings from MAA Homes, I am ${name}
+      // await sendWhatAppTextSms1(
+      //   '7760959579',
+      //   `Greetings from MAA Homes, I am ${name}
 
-      This is ${name} from Maa Homes,
+      // This is ${name} from Maa Homes,
 
-        Regarding your interest in ${Project}, I’m pleased to be your point of contact throughout this journey. I would like to understand your requirements & do let me know if you have any doubts about ${Project}.
-        Looking forward to a fruitful relationship.
+      //   Regarding your interest in ${Project}, I’m pleased to be your point of contact throughout this journey. I would like to understand your requirements & do let me know if you have any doubts about ${Project}.
+      //   Looking forward to a fruitful relationship.
 
 
-      Warm Regards
-      ${name}
-      Maa Homes`
-      )
+      // Warm Regards
+      // ${name}
+      // Maa Homes`
+      // )
     }
     await console.log('what is this supbase', data3, errorx)
     // await addLeadLog(orgId, x.id, {

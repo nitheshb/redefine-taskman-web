@@ -648,6 +648,22 @@ export default function CustomerProfileSideView({
     }
     setSelProjectIs(value)
     updateLeadProject(orgId, leadDocId, x)
+
+
+    const receiverDetails = {
+      customerName: Name,
+      executiveName: assignerName,
+      receiverPhNo: Mobile,
+    }
+    getWhatsAppTemplates(
+      'on_reassign',
+      'wa',
+      'customer',
+      // 'ProjectId',
+      x.ProjectId,
+      receiverDetails,
+      msgPayload
+    )
     // updateLeadAssigTo(leadDocId, value, by)
   }
 
