@@ -583,6 +583,7 @@ export default function CustomerProfileSideView({
   }, [customerDetails])
 
   const setAssigner = (leadDocId, value) => {
+    const projId = selProjectIs?.uid || ProjectId
     if (assignedTo != value.value) {
       setAssignerName(value.name)
       setAssignedTo(value.value)
@@ -595,7 +596,7 @@ export default function CustomerProfileSideView({
       const txt = `A New Lead is assigned to ${value.name} with ${todayTasksIncre} tasks`
       updateLeadAssigTo(
         orgId,
-        ProjectId,
+        projId,
         leadDocId,
         value,
         assignedTo,
@@ -611,7 +612,7 @@ export default function CustomerProfileSideView({
         executiveName: value.name,
         receiverPhNo: Mobile,
         executivePh: value?.offPh,
-        executiveEmail: value?.email
+        executiveEmail: value?.email,
       }
 
       if (x == 'new' || x == 'unassigned') {
@@ -620,7 +621,7 @@ export default function CustomerProfileSideView({
           'wa',
           'customer',
           // 'ProjectId',
-          ProjectId,
+          projId,
           receiverDetails,
           msgPayload
         )
@@ -630,7 +631,7 @@ export default function CustomerProfileSideView({
           'wa',
           'customer',
           // 'ProjectId',
-          ProjectId,
+          projId,
           receiverDetails,
           msgPayload
         )
@@ -649,21 +650,20 @@ export default function CustomerProfileSideView({
     setSelProjectIs(value)
     updateLeadProject(orgId, leadDocId, x)
 
-
-    const receiverDetails = {
-      customerName: Name,
-      executiveName: assignerName,
-      receiverPhNo: Mobile,
-    }
-    getWhatsAppTemplates(
-      'on_reassign',
-      'wa',
-      'customer',
-      // 'ProjectId',
-      x.ProjectId,
-      receiverDetails,
-      msgPayload
-    )
+    // const receiverDetails = {
+    //   customerName: Name,
+    //   executiveName: assignerName,
+    //   receiverPhNo: Mobile,
+    // }
+    // getWhatsAppTemplates(
+    //   'on_reassign',
+    //   'wa',
+    //   'customer',
+    //   // 'ProjectId',
+    //   x.ProjectId,
+    //   receiverDetails,
+    //   msgPayload
+    // )
     // updateLeadAssigTo(leadDocId, value, by)
   }
 

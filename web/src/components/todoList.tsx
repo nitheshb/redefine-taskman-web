@@ -19,6 +19,7 @@ import {
 import uniqueId from 'src/util/generatedId'
 
 import LLeadsTableBody from '../LLeadsTableBody/LLeadsTableBody'
+import SiderForm from './SiderForm/SiderForm'
 
 const torrowDate = new Date(
   +new Date().setHours(0, 0, 0, 0) + 86400000
@@ -43,6 +44,8 @@ const TodoListView = ({
   const { orgId } = user
   const [tableData, setTableData] = useState([])
   const [tabHeadFieldsA, settabHeadFieldsA] = useState([])
+  const [isImportLeadsOpen1, setisImportLeadsOpen1] = useState(false)
+
   // const [leadsFetchedData, setLeadsFetchedData] = useState([])
 
   useEffect(() => {
@@ -96,6 +99,11 @@ const TodoListView = ({
     value !== '' ? item.role.toLowerCase() === value : item.role
   )
 
+   const openingTaskAddWindow = () => {
+    console.log('i was clicked')
+    setisImportLeadsOpen1(true)
+  }
+
   const archieveTab = [
     { lab: 'Archieve', val: 'all' },
     { lab: 'Dead', val: 'dead' },
@@ -109,6 +117,7 @@ const TodoListView = ({
     { lab: 'Uncleared', val: 'uncleared' },
   ]
   return (
+    <>
     <Box pb={4}>
       <div className=" w-full">
         <div className="bg-white py-4 md:py-7 px-4 md:px-4 xl:px-6 rounded">
@@ -175,7 +184,9 @@ const TodoListView = ({
                 </div>
               </a>
             </div>
-            <button className="focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 mt-4 sm:mt-0 inline-flex items-start justify-start px-6 py-3 bg-indigo-700 hover:bg-indigo-600 focus:outline-none rounded">
+            <button className="focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 mt-4 sm:mt-0 inline-flex items-start justify-start px-6 py-3 bg-indigo-700 hover:bg-indigo-600 focus:outline-none rounded"
+                    onClick={() => openingTaskAddWindow()}
+                    >
               <p className="text-sm font-medium leading-none text-white">
                 Add Task
               </p>
@@ -585,6 +596,14 @@ const TodoListView = ({
         </Grid>
       </Card> */}
     </Box>
+    <SiderForm
+    open={isImportLeadsOpen1}
+    setOpen={setisImportLeadsOpen1}
+    title={'Add Task'}
+   // customerDetails={selUserProfile}
+    widthClass="max-w-2xl"
+  />
+  </>
   )
 }
 

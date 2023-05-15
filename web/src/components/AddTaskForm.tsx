@@ -306,6 +306,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                 project: '',
                 projectId: '',
                 assignedTo: '',
+                followers: [],
                 budget: '',
                 deptVal: '',
                 myRole: '',
@@ -381,7 +382,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                             />
                           </span>
                         </div>
-
+{/*
                         <div className="flex ml-4 mt-1 h-[36px]">
                           <Listbox value={selected} onChange={setSelected}>
                             <div className="relative mt-1">
@@ -442,8 +443,32 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                               </Transition>
                             </div>
                           </Listbox>
-                        </div>
+                        </div> */}
                       </div>
+                      <div className="flex flex-row mt-1 mb-5">
+                        <div>
+                          <div className="w-full flex flex-col mb-3 mt-[6px]  h-[36px] max-w-[250px] min-w-[250px]">
+                            <SlimSelectBox
+                              name="followers"
+                              label="Add Participants"
+                              className="input mt-"
+                              onChange={(value) => {
+                                formik.setFieldValue('followers', [value.value])
+                                // formik.setFieldValue('assignedToObj', value)
+                              }}
+                              value={formik.values.followers[0] || []}
+                              options={usersList}
+                            />
+
+                            <p
+                              className="text-sm text-red-500 hidden mt-3"
+                              id="error"
+                            >
+                              Please fill out this field.
+                            </p>
+                          </div>
+                        </div>
+                        </div>
                     </div>
                     {/* <span className="text-[#0091ae]">
                     Save

@@ -46,7 +46,7 @@ export const SlimSelectBox = ({
 
   return (
     <div className="">
-      {label != '' && label != 'Assign To' && (
+      {label != '' && !['Assign To', 'Add Participants'].includes(label) && (
         <label className="label font-regular text-sm ">{label}</label>
       )}
       <Select
