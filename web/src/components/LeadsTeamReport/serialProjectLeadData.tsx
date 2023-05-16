@@ -1,12 +1,13 @@
 export function serialProjectLeadData(projectListA, fullData) {
   let z = []
+  console.log('full data for projects with raw is ', fullData)
   return projectListA.map((souceObj) => {
     const x = souceObj
 
     z = [...z, souceObj?.value]
     if (x.label === 'others') {
       x.Total = fullData.filter((datObj) => !z.includes(datObj?.ProjectId))
-
+      x.TotalNew = fullData.filter((datObj) => !z.includes(datObj?.ProjectId))
       x.inprogress = fullData.filter(
         (datObj) =>
           !z.includes(datObj?.ProjectId) &&
@@ -19,6 +20,19 @@ export function serialProjectLeadData(projectListA, fullData) {
             'negotiation',
           ].includes(datObj?.Status)
       )
+      x.inprogress_new = fullData.filter(
+        (datObj) =>
+          !z.includes(datObj?.ProjectId) &&
+          [
+            'new',
+            'unassigned',
+            'followup',
+            'visitfixed',
+            'visitdone',
+            'negotiation',
+          ].includes(datObj?.Status)
+      )
+
       x.new = fullData.filter(
         (datObj) =>
           !z.includes(datObj?.ProjectId) &&
@@ -49,6 +63,9 @@ export function serialProjectLeadData(projectListA, fullData) {
       x.booked = fullData.filter(
         (datObj) => !z.includes(datObj?.ProjectId) && datObj?.Status == 'booked'
       )
+      x.booked_new = fullData.filter(
+        (datObj) => !z.includes(datObj?.ProjectId) && datObj?.Status == 'booked'
+      )
       x.Dead = fullData.filter(
         (datObj) => !z.includes(datObj?.ProjectId) && datObj?.Status == 'Dead'
       )
@@ -75,12 +92,33 @@ export function serialProjectLeadData(projectListA, fullData) {
           !z.includes(datObj?.ProjectId) &&
           ['blocked', 'dead', 'notinterested', 'junk'].includes(datObj?.Status)
       )
+      x.archieve_new = fullData.filter(
+        (datObj) =>
+          !z.includes(datObj?.ProjectId) &&
+          ['blocked', 'dead', 'notinterested', 'junk'].includes(datObj?.Status)
+      )
       x.others = []
     } else {
+
       x.Total = fullData.filter(
-        (datObj) => datObj?.ProjectId === souceObj?.value
+        (datObj) => datObj?.ProjectId == souceObj?.value
+      )
+      x.TotalNew = fullData.filter(
+        (datObj) => datObj?.ProjectId == souceObj?.value
       )
       x.inprogress = fullData.filter(
+        (datObj) =>
+          datObj?.ProjectId === souceObj?.value &&
+          [
+            'new',
+            'unassigned',
+            'followup',
+            'visitfixed',
+            'visitdone',
+            'negotiation',
+          ].includes(datObj?.Status)
+      )
+      x.inprogress_new = fullData.filter(
         (datObj) =>
           datObj?.ProjectId === souceObj?.value &&
           [
@@ -126,6 +164,10 @@ export function serialProjectLeadData(projectListA, fullData) {
         (datObj) =>
           datObj?.ProjectId === souceObj?.value && datObj?.Status == 'booked'
       )
+      x.booked_new = fullData.filter(
+        (datObj) =>
+          datObj?.ProjectId === souceObj?.value && datObj?.Status == 'booked'
+      )
       x.Dead = fullData.filter(
         (datObj) =>
           datObj?.ProjectId === souceObj?.value && datObj?.Status == 'Dead'
@@ -156,12 +198,17 @@ export function serialProjectLeadData(projectListA, fullData) {
           datObj?.ProjectId === souceObj?.value &&
           ['blocked', 'dead', 'notinterested', 'junk'].includes(datObj?.Status)
       )
+      x.archieve_new = fullData.filter(
+        (datObj) =>
+          datObj?.ProjectId === souceObj?.value &&
+          ['blocked', 'dead', 'notinterested', 'junk'].includes(datObj?.Status)
+      )
       x.others = fullData.filter(
         (datObj) =>
           datObj?.ProjectId === souceObj?.value && datObj?.Status == ''
       )
     }
-
+    console.log('full data for projects with raw is ',x.Total.length , x, )
     return x
   })
 }

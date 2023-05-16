@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useEffect, useState } from 'react'
@@ -27,15 +28,22 @@ const LeadsCoversionGraphs = ({
   })
 
   useEffect(() => {
-    console.log('otttt', sourceRawFilData.filter((datObj) =>
-    [
-      'followup',
-      'visitfixed',
-      'visitdone',
-      'booked',
-      'negotiation',
-    ].includes(datObj?.Status)
-  ).length)
+    console.log('full data for projects with raw is =>', projectFilList)
+  }, [projectFilList])
+
+  useEffect(() => {
+    console.log(
+      'otttt',
+      sourceRawFilData.filter((datObj) =>
+        [
+          'followup',
+          'visitfixed',
+          'visitdone',
+          'booked',
+          'negotiation',
+        ].includes(datObj?.Status)
+      ).length
+    )
     if (sourceRawFilData && sourceRawFilData.length > 0) {
       console.log('innn')
       const val1 = Math.round(
@@ -618,11 +626,27 @@ const LeadsCoversionGraphs = ({
                         <td className="text-sm text-gray-900 font-medium px-6 py-2 whitespace-nowrap text-left">
                           {data?.label}
                         </td>
-                        <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
-                          {data?.Total?.length}
+                        <td
+                          className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
+                          onClick={() =>
+                            showDrillDownFun(
+                              `${data?.label} Total Leads`,
+                              data?.TotalNew
+                            )
+                          }
+                        >
+                          {data?.TotalNew?.length}
                         </td>
-                        <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
-                          {data?.inprogress?.length}
+                        <td
+                          className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
+                          onClick={() =>
+                            showDrillDownFun(
+                              `${data?.label} Inprogress Leads`,
+                              data?.inprogress_new
+                            )
+                          }
+                        >
+                          {data?.inprogress_new?.length}
                         </td>
                         {/* {showInproFSource && (
                           <>
@@ -643,8 +667,16 @@ const LeadsCoversionGraphs = ({
                             </td>
                           </>
                         )} */}
-                        <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
-                          {data?.booked?.length}
+                        <td
+                          className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
+                          onClick={() =>
+                            showDrillDownFun(
+                              `${data?.label} Booked Leads`,
+                              data?.booked_new
+                            )
+                          }
+                        >
+                          {data?.booked_new?.length}
                         </td>
                         {/* {showArchiFSource && (
                           <>
@@ -662,8 +694,16 @@ const LeadsCoversionGraphs = ({
                             </td>
                           </>
                         )} */}
-                        <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
-                          {data?.archieve?.length}
+                        <td
+                          className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap"
+                          onClick={() =>
+                            showDrillDownFun(
+                              `${data?.label} Archieve Leads`,
+                              data?.archieve_new
+                            )
+                          }
+                        >
+                          {data?.archieve_new?.length}
                         </td>
                         <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap">
                           {data?.others?.length}
@@ -675,10 +715,32 @@ const LeadsCoversionGraphs = ({
                     <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap text-left">
                       Total
                     </td>
-                    <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                    <td
+                      className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
+                      onClick={() =>
+                        showDrillDownFun(`Total Leads`, leadsFetchedRawData)
+                      }
+                    >
                       {leadsFetchedRawData?.length}
                     </td>
-                    <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                    <td
+                      className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
+                      onClick={() =>
+                        showDrillDownFun(
+                          `Inprogress Leads`,
+                          leadsFetchedRawData?.filter((datObj) =>
+                            [
+                              'new',
+                              'unassigned',
+                              'followup',
+                              'visitfixed',
+                              'visitdone',
+                              'negotiation',
+                            ].includes(datObj?.Status)
+                          )
+                        )
+                      }
+                    >
                       {
                         leadsFetchedRawData?.filter((datObj) =>
                           [
@@ -692,22 +754,44 @@ const LeadsCoversionGraphs = ({
                         ).length
                       }
                     </td>
-                    <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
+                    <td
+                      className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
+                      onClick={() =>
+                        showDrillDownFun(`Total Leads`, leadsFetchedRawData)
+                      }
+                    >
                       {
                         leadsFetchedRawData?.filter((datObj) =>
-                          [
-                            'new',
-                            'unassigned',
-                            'followup',
-                            'visitfixed',
-                            'visitdone',
-                            'negotiation',
-                          ].includes(datObj?.Status)
+                          ['booked'].includes(datObj?.Status)
+                        ).length
+                      }
+                    </td>
+                    <td
+                      className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap"
+                      onClick={() =>
+                        showDrillDownFun(
+                          `Archieve Leads`,
+                          leadsFetchedRawData?.filter((datObj) =>
+                            [
+                              'blocked',
+                              'dead',
+                              'notinterested',
+                              'junk',
+                            ].includes(datObj?.Status)
+                          )
+                        )
+                      }
+                    >
+                      {
+                        leadsFetchedRawData?.filter((datObj) =>
+                          ['blocked', 'dead', 'notinterested', 'junk'].includes(
+                            datObj?.Status
+                          )
                         ).length
                       }
                     </td>
                     <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
-                      {
+                      {/* {
                         leadsFetchedRawData?.filter((datObj) =>
                           [
                             'new',
@@ -718,21 +802,8 @@ const LeadsCoversionGraphs = ({
                             'negotiation',
                           ].includes(datObj?.Status)
                         ).length
-                      }
-                    </td>
-                    <td className="text-sm text-white font-medium px-6 py-2 whitespace-nowrap">
-                      {
-                        leadsFetchedRawData?.filter((datObj) =>
-                          [
-                            'new',
-                            'unassigned',
-                            'followup',
-                            'visitfixed',
-                            'visitdone',
-                            'negotiation',
-                          ].includes(datObj?.Status)
-                        ).length
-                      }
+                      } */}
+                      0
                     </td>
                   </tr>
                   {/* {viewProjs?.value == 'allprojects' && (

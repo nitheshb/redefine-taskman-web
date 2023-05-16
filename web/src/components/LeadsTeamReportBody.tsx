@@ -1374,7 +1374,9 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                     <LeadsCoversionGraphs
                       sourceRawFilData={sourceRawFilData}
                       showDrillDownFun={showDrillDownFun}
-                      projectFilList= {projectFilList}                   />
+                      projectFilList= {projectListTuned}
+                      leadsFetchedRawData={leadsFetchedRawData}    />             />
+
                   </div>
                 </div>
               </div>

@@ -23,7 +23,6 @@ const SiteVisitM = ({ leadLogsRawData, showDrillDownFun }) => {
     }
   }, [])
 
-
   useEffect(() => {
     console.log('otttt')
     if (leadLogsRawData && leadLogsRawData.length > 0) {
@@ -42,27 +41,30 @@ const SiteVisitM = ({ leadLogsRawData, showDrillDownFun }) => {
       //     100
       // )
       const val1 = Math.round(
-        (leadLogsRawData?.filter(
-          (datObj) => datObj?.to == 'visitdone'
-        ).length /
+        (leadLogsRawData?.filter((datObj) => datObj?.to == 'visitdone').length /
           leadLogsRawData?.length) *
           100
       )
+      // const val2 = Math.round(
+      //   (leadLogsRawData?.filter((datObj) => datObj?.to == 'negotiation')
+      //     .length /
+      //     leadLogsRawData?.length) *
+      //     100
+      // )
       const val2 = Math.round(
-        (leadLogsRawData?.filter(
-          (datObj) => datObj?.to == 'negotiation'
-        ).length /
-          leadLogsRawData?.length) *
+        (leadLogsRawData?.filter((datObj) => datObj?.to == 'notinterested')
+          .length /
+          leadLogsRawData?.filter((datObj) => datObj?.from == 'visitfixed')
+            .length) *
           100
       )
+
       const val3 = Math.round(
-        (leadLogsRawData?.filter(
-          (datObj) => datObj?.to == 'notinterested'
-        ).length /
-          leadLogsRawData?.filter(
-            (datObj) => datObj?.from == 'visitfixed'
-          )) *
-          100
+        ((leadLogsRawData?.filter((datObj) =>
+          ['blocked', 'dead', 'junk'].includes(datObj?.to)
+        ).length || 0) /
+          leadLogsRawData?.filter((datObj) => datObj?.from == 'visitfixed')
+            .length || 0) * 100
       )
       setPieVals({ val1, val2, val3 })
     }
@@ -116,8 +118,8 @@ const SiteVisitM = ({ leadLogsRawData, showDrillDownFun }) => {
                   stausTitle: "Visit's Done",
                   value: 'visitdone',
                   count: `${
-                    leadLogsRawData?.filter(
-                      (datObj) => datObj?.coverA.includes('visitdone')
+                    leadLogsRawData?.filter((datObj) =>
+                      datObj?.coverA.includes('visitdone')
                     ).length
                   }`,
                 },
@@ -143,9 +145,8 @@ const SiteVisitM = ({ leadLogsRawData, showDrillDownFun }) => {
                     if (item.value == 'visitdone') {
                       showDrillDownFun(
                         `${item?.stausTitle}`,
-                        leadLogsRawData?.filter(
-                          (datObj) => datObj?.coverA.includes('visitdone')
-
+                        leadLogsRawData?.filter((datObj) =>
+                          datObj?.coverA.includes('visitdone')
                         )
                       )
                     } else {
@@ -182,7 +183,7 @@ const SiteVisitM = ({ leadLogsRawData, showDrillDownFun }) => {
                     backgroundColor: 'white',
                   }}
                 >
-                  <PieChartComp  pieVal={pieVals.val1}/>
+                  <PieChartComp pieVal={pieVals.val1} />
                   <div
                     style={{
                       position: 'absolute',
@@ -206,6 +207,26 @@ const SiteVisitM = ({ leadLogsRawData, showDrillDownFun }) => {
                     style={{
                       position: 'absolute',
                       top: '80%',
+                      left: '40.7%',
+                      padding: '0 0.5rem',
+                      fontSize: '0.9rem',
+                      color: '#4fa183',
+                    }}
+                    onClick={() =>
+                      showDrillDownFun(
+                        'Total Visits Done',
+                        leadLogsRawData?.filter((datObj) => datObj?.to == 'visitdone')
+                      )
+                    }
+                  >
+                    <span className="">{leadLogsRawData?.filter(
+                        (datObj) => datObj?.to == 'visitdone'
+                      ).length } </span>
+                  </div>
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '95%',
                       left: '14.7%',
                       padding: '0 0.5rem',
                       fontSize: '0.9rem',
@@ -224,7 +245,7 @@ const SiteVisitM = ({ leadLogsRawData, showDrillDownFun }) => {
                     backgroundColor: 'white',
                   }}
                 >
-                  <PieChartComp pieVal={pieVals.val2}/>
+                  <PieChartComp pieVal={pieVals.val2} />
                   <div
                     style={{
                       position: 'absolute',
@@ -237,7 +258,7 @@ const SiteVisitM = ({ leadLogsRawData, showDrillDownFun }) => {
                   >
                     {Math.round(
                       (leadLogsRawData?.filter(
-                        (datObj) => datObj?.to == 'negotiation'
+                        (datObj) => datObj?.to == 'notinterested'
                       ).length /
                         leadLogsRawData?.filter(
                           (datObj) => datObj?.from == 'visitfixed'
@@ -250,6 +271,27 @@ const SiteVisitM = ({ leadLogsRawData, showDrillDownFun }) => {
                     style={{
                       position: 'absolute',
                       top: '80%',
+                      left: '40.7%',
+                      padding: '0 0.5rem',
+                      fontSize: '0.9rem',
+                      color: '#4fa183',
+                    }}
+                    onClick={() =>
+                      showDrillDownFun(
+                        'Total Visits Done',
+                        leadLogsRawData?.filter((datObj) => datObj?.from == 'visitfixed' && datObj?.to == 'notinterested')
+                      )
+                    }
+                  >
+                    <span className="">{
+                        leadLogsRawData?.filter((datObj) => datObj?.from == 'visitfixed' && datObj?.to == 'notinterested')
+
+                    .length } </span>
+                  </div>
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '95%',
                       left: '13.5%',
                       padding: '0 0.5rem',
                       fontSize: '0.9rem',
@@ -257,7 +299,9 @@ const SiteVisitM = ({ leadLogsRawData, showDrillDownFun }) => {
                     }}
                     className="bg-[#4DA283]"
                   >
-                    <span className="text-white">Visit Done-Negotiation</span>
+                    <span className="text-white">
+                      VisitFixed - Not Interested
+                    </span>
                   </div>
                 </div>
                 <div
@@ -267,7 +311,7 @@ const SiteVisitM = ({ leadLogsRawData, showDrillDownFun }) => {
                     position: 'relative',
                   }}
                 >
-                  <PieChartComp pieVal={pieVals.val3}/>
+                  <PieChartComp pieVal={pieVals.val3} />
                   <div
                     style={{
                       position: 'absolute',
@@ -280,9 +324,7 @@ const SiteVisitM = ({ leadLogsRawData, showDrillDownFun }) => {
                   >
                     {Math.round(
                       ((leadLogsRawData?.filter((datObj) =>
-                        ['blocked', 'dead', 'notinterested', 'junk'].includes(
-                          datObj?.to
-                        )
+                        ['blocked', 'dead', 'junk'].includes(datObj?.to)
                       ).length || 0) /
                         leadLogsRawData?.filter(
                           (datObj) => datObj?.from == 'visitfixed'
@@ -294,6 +336,27 @@ const SiteVisitM = ({ leadLogsRawData, showDrillDownFun }) => {
                     style={{
                       position: 'absolute',
                       top: '80%',
+                      left: '40.7%',
+                      padding: '0 0.5rem',
+                      fontSize: '0.9rem',
+                      color: '#4fa183',
+                    }}
+                    onClick={() =>
+                      showDrillDownFun(
+                        'Total Visits Done',
+                        leadLogsRawData?.filter((datObj) => datObj?.from == 'visitfixed' && ['blocked', 'dead', 'junk'].includes(datObj?.to))
+                      )
+                    }
+                  >
+                    <span className="">{
+                        leadLogsRawData?.filter((datObj) => datObj?.from == 'visitfixed' && ['blocked', 'dead', 'junk'].includes(datObj?.to))
+
+                    .length } </span>
+                  </div>
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '95%',
                       left: '9%',
                       padding: '0 0.5rem',
                       fontSize: '0.9rem',
@@ -301,7 +364,7 @@ const SiteVisitM = ({ leadLogsRawData, showDrillDownFun }) => {
                     }}
                     className="bg-[#4DA283]"
                   >
-                    <span className="text-white">Visit Done-to-Archieve</span>
+                    <span className="text-white">Visit Done-to-Junk/dead</span>
                   </div>
                 </div>
               </div>
