@@ -19,6 +19,7 @@ import {
 import uniqueId from 'src/util/generatedId'
 
 import LLeadsTableBody from '../LLeadsTableBody/LLeadsTableBody'
+
 import SiderForm from './SiderForm/SiderForm'
 
 const torrowDate = new Date(
@@ -99,7 +100,7 @@ const TodoListView = ({
     value !== '' ? item.role.toLowerCase() === value : item.role
   )
 
-   const openingTaskAddWindow = () => {
+  const openingTaskAddWindow = () => {
     console.log('i was clicked')
     setisImportLeadsOpen1(true)
   }
@@ -118,138 +119,224 @@ const TodoListView = ({
   ]
   return (
     <>
-    <Box pb={4}>
-      <div className=" w-full">
-        <div className="bg-white py-4 md:py-7 px-4 md:px-4 xl:px-6 rounded">
-          <div className="sm:flex items-center justify-between">
-            <div className="flex items-center">
-              <a
-                className={`rounded-full focus:outline-none focus:ring-2  focus:bg-indigo-50 focus:ring-indigo-800`}
-                onClick={() => setSearchKey(['completed', 'pending'])}
+      <Box pb={4}>
+        <div className=" w-full">
+          <div className="bg-white py-4 md:py-7 px-4 md:px-4 xl:px-6 rounded">
+            <section className="flex flex-row w-full">
+              <section className="bg-white rounded  flex flex-col p-4 ml-1 mb-2 w-100 border border-[#eaeaea] w-[212px] ">
+                <section className="flex flex-row">
+                  <section className="bg-[#F1EEF6] p-[11px] rounded mr-1">
+                    <img
+                      className="px-1"
+                      src="/Award_3.png"
+                      alt="/Award_3.png"
+                    />
+                  </section>
+                  <section className="ml-3 flex flex-col">
+                    <h5 className="text-sm">Sale Tasks</h5>
+                    <h2 className="text-xl font-semibold text-black leading-light font-Playfair pb-1">
+                      {
+                        taskListA?.filter(
+                          (d) =>
+                            searchKey.includes(d['sts']) ||
+                            searchKey.includes('upcoming')
+                        ).length
+                      }
+                    </h2>
+                  </section>
+                </section>
+              </section>
+              <section
+                className="bg-white rounded  flex flex-col p-4 ml-1 mb-2 w-100 border border-[#eaeaea]
+
+              w-[212px] "
               >
-                <div
-                  className={`py-2 px-8 rounded-full hover:text-indigo-700 hover:bg-indigo-100  ${
-                    searchKey.includes('completed') &&
-                    searchKey.includes('pending')
-                      ? 'bg-indigo-100 text-indigo-700'
-                      : 'text-gray-600'
-                  }`}
-                >
-                  All
-                </div>
-              </a>
-              <a
-                className="rounded-full focus:outline-none focus:ring-2 focus:bg-indigo-50 focus:ring-indigo-800 ml-4 sm:ml-8"
-                href="javascript:void(0)"
-                onClick={() => setSearchKey(['completed'])}
+                <section className="flex flex-row">
+                  <section className="bg-[#F1EEF6] p-[11px] rounded mr-1">
+                    <img
+                      className="px-1"
+                      src="/Award_3.png"
+                      alt="/Award_3.png"
+                    />
+                  </section>
+                  <section className="ml-3 flex flex-col">
+                    <h5 className="text-sm">Personal Tasks</h5>
+                    <h2 className="text-xl font-semibold text-black leading-light font-Playfair pb-1">
+                      {
+                        taskListA?.filter(
+                          (d) =>
+                            searchKey.includes(d['sts']) ||
+                            searchKey.includes('upcoming')
+                        ).length
+                      }
+                    </h2>
+                  </section>
+                </section>
+              </section>
+              <section
+                className="bg-white rounded  flex flex-col p-4 ml-1 mb-2 w-100 border border-[#eaeaea] bg-[#DCCBFA] 
+
+w-[212px] "
               >
-                <div
-                  className={`py-2 px-8 rounded-full hover:text-indigo-700 hover:bg-indigo-100  ${
-                    searchKey.includes('completed') && searchKey.length === 1
-                      ? 'bg-indigo-100 text-indigo-700'
-                      : 'text-gray-600'
-                  }`}
+                <section className="flex flex-row">
+                  <section className="bg-[#F1EEF6] p-[11px] rounded mr-1">
+                    <img
+                      className="px-1"
+                      src="/Award_3.png"
+                      alt="/Award_3.png"
+                    />
+                  </section>
+                  <section className="ml-3 flex flex-col">
+                    <h5 className="text-sm">Business Tasks</h5>
+                    <h2 className="text-xl font-semibold text-black leading-light font-Playfair pb-1">
+                      {
+                        taskListA?.filter(
+                          (d) =>
+                            searchKey.includes(d['sts']) ||
+                            searchKey.includes('upcoming')
+                        ).length
+                      }
+                    </h2>
+                  </section>
+                </section>
+              </section>
+
+            </section>
+
+            <div className="border border-gray-100 rounded">
+
+            <div className="sm:flex items-center justify-between mx-2 bg-[#DCCBFA] rounded">
+              <div className="flex items-center">
+                <a
+                  className={`rounded-full focus:outline-none focus:ring-2  focus:bg-indigo-50 focus:ring-indigo-800`}
+                  onClick={() => setSearchKey(['completed', 'pending'])}
                 >
-                  <p>Done</p>
-                </div>
-              </a>
-              <a
-                className="rounded-full focus:outline-none focus:ring-2 focus:bg-indigo-50 focus:ring-indigo-800 ml-4 sm:ml-8"
-                href="javascript:void(0)"
-                onClick={() => setSearchKey(['pending'])}
-              >
-                <div
-                  className={`py-2 px-8 rounded-full hover:text-indigo-700 hover:bg-indigo-100  ${
-                    searchKey.includes('pending') && searchKey.length === 1
-                      ? 'bg-indigo-100 text-indigo-700'
-                      : 'text-gray-600'
-                  }`}
+                  <div
+                    className={`px-8 rounded-full hover:text-indigo-700 hover:bg-indigo-100  ${
+                      searchKey.includes('completed') &&
+                      searchKey.includes('pending')
+                        ? 'bg-indigo-100 text-indigo-700'
+                        : 'text-gray-600'
+                    }`}
+                  >
+                    All
+                  </div>
+                </a>
+                <a
+                  className="rounded-full focus:outline-none focus:ring-2 focus:bg-indigo-50 focus:ring-indigo-800 ml-4 sm:ml-8"
+                  href="javascript:void(0)"
+                  onClick={() => setSearchKey(['completed'])}
                 >
-                  <p>Todo</p>
-                </div>
-              </a>
-              <a
-                className="rounded-full focus:outline-none focus:ring-2 focus:bg-indigo-50 focus:ring-indigo-800 ml-4 sm:ml-8"
-                href="javascript:void(0)"
-                onClick={() => setSearchKey(['upcoming'])}
-              >
-                <div
-                  className={`py-2 px-8 rounded-full hover:text-indigo-700 hover:bg-indigo-100  ${
-                    searchKey.includes('upcoming') && searchKey.length === 1
-                      ? 'bg-indigo-100 text-indigo-700'
-                      : 'text-gray-600'
-                  }`}
+                  <div
+                    className={`px-8 rounded-full hover:text-indigo-700 hover:bg-indigo-100  ${
+                      searchKey.includes('completed') && searchKey.length === 1
+                        ? 'bg-indigo-100 text-indigo-700'
+                        : 'text-gray-600'
+                    }`}
+                  >
+                    <p>Assigned to me</p>
+                  </div>
+                </a>
+                <a
+                  className="rounded-full focus:outline-none focus:ring-2 focus:bg-indigo-50 focus:ring-indigo-800 ml-4 sm:ml-8"
+                  href="javascript:void(0)"
+                  onClick={() => setSearchKey(['pending'])}
                 >
-                  <p>Up Coming</p>
-                </div>
-              </a>
-            </div>
-            <button className="focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 mt-4 sm:mt-0 inline-flex items-start justify-start px-6 py-3 bg-indigo-700 hover:bg-indigo-600 focus:outline-none rounded"
-                    onClick={() => openingTaskAddWindow()}
-                    >
-              <p className="text-sm font-medium leading-none text-white">
-                Add Task
-              </p>
-            </button>
-          </div>
-          {taskListA.length === 0 && (
-            <div className="py-8 px-8 mt-10 flex flex-col items-center bg-red-100 rounded">
-              <div className="font-md font-medium text-xs mb-4 text-gray-800 items-center">
-                <img
-                  className="w-[180px] h-[180px] inline"
-                  alt=""
-                  src="../note-widget.svg"
-                />
+                  <div
+                    className={` px-8 rounded-full hover:text-indigo-700 hover:bg-indigo-100  ${
+                      searchKey.includes('pending') && searchKey.length === 1
+                        ? 'bg-indigo-100 text-indigo-700'
+                        : 'text-gray-600'
+                    }`}
+                  >
+                    <p>Created by me</p>
+                  </div>
+                </a>
+                <a
+                  className="rounded-full focus:outline-none focus:ring-2 focus:bg-indigo-50 focus:ring-indigo-800 ml-4 sm:ml-8"
+                  href="javascript:void(0)"
+                  onClick={() => setSearchKey(['upcoming'])}
+                >
+                  <div
+                    className={`px-8 rounded-full hover:text-indigo-700 hover:bg-indigo-100  ${
+                      searchKey.includes('upcoming') && searchKey.length === 1
+                        ? 'bg-indigo-100 text-indigo-700'
+                        : 'text-gray-600'
+                    }`}
+                  >
+                    <p>Participants</p>
+                  </div>
+                </a>
               </div>
-              <h3 className="mb-1 text-sm font-semibold text-gray-900">
-                No Tasks Found
-              </h3>
-              <time className="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
-                <span className="text-blue-600"> Add New Task</span>
-              </time>
+              <button
+                className="focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 sm:mt-0 inline-flex items-start justify-start px-6 my-[3px] py-2 mr-2
+                 focus:outline-none rounded "
+                onClick={() => openingTaskAddWindow()}
+              >
+                <p className="text-sm font-medium leading-none text-indigo-700">
+                 Add Task
+                </p>
+              </button>
+              </div>
             </div>
-          )}
-          <div className="mt-7 overflow-x-auto">
-            <table className="w-full whitespace-nowrap">
-              <tbody>
-                {
-                  // [
-                  //   {
-                  //     title: 'Marketing Keynote Presentation1',
-                  //     p: 'Urgent',
-                  //     date: '04/07',
-                  //     due: 'Today',
-                  //   },
-                  // ]
-                  taskListA
-                    ?.filter(
-                      (d) =>
-                        searchKey.includes(d['sts']) ||
-                        searchKey.includes('upcoming')
-                    )
-                    .map((dat, i) => (
-                      <tr
-                        tabIndex={0}
-                        className="focus:outline-none h-16 border border-gray-100 rounded"
-                        key={i}
-                        onClick={() => {
-                          console.log('macho 1', dat?.leadUser, dat)
-                          const y = dat.leadUser
-                          y.id = dat?.uid
-                          console.log('macho 1', y)
-                          selUserProfileF('User Profile', y)
-                        }}
-                      >
-                        <td>
-                          <div className="ml-5">
-                            <div className="rounded-sm h-5 w-5 flex flex-shrink-0 justify-center items-center relative">
-                              {/* <input
+            {taskListA.length === 0 && (
+              <div className="py-8 px-8 mt-10 flex flex-col items-center bg-red-100 rounded">
+                <div className="font-md font-medium text-xs mb-4 text-gray-800 items-center">
+                  <img
+                    className="w-[180px] h-[180px] inline"
+                    alt=""
+                    src="../note-widget.svg"
+                  />
+                </div>
+                <h3 className="mb-1 text-sm font-semibold text-gray-900">
+                  No Tasks Found
+                </h3>
+                <time className="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
+                  <span className="text-blue-600"> Add New Task</span>
+                </time>
+              </div>
+            )}
+            <div className="overflow-x-auto">
+              <table className="w-full whitespace-nowrap">
+                <tbody>
+                  {
+                    // [
+                    //   {
+                    //     title: 'Marketing Keynote Presentation1',
+                    //     p: 'Urgent',
+                    //     date: '04/07',
+                    //     due: 'Today',
+                    //   },
+                    // ]
+                    taskListA
+                      ?.filter(
+                        (d) =>
+                          searchKey.includes(d['sts']) ||
+                          searchKey.includes('upcoming')
+                      )
+                      .map((dat, i) => (
+                        <tr
+                          tabIndex={0}
+                          className="focus:outline-none h-16 border border-gray-100 rounded"
+                          key={i}
+                          onClick={() => {
+                            console.log('macho 1', dat?.leadUser, dat)
+                            const y = dat.leadUser
+                            y.id = dat?.uid
+                            console.log('macho 1', y)
+                            selUserProfileF('User Profile', y)
+                          }}
+                        >
+                          <td>
+                            <div className="ml-5">
+                              <div className="rounded-sm h-5 w-5 flex flex-shrink-0 justify-center items-center relative">
+                                {/* <input
                                 placeholder="checkbox"
                                 type="checkbox"
                                 className="focus:opacity-100 checkbox opacity-0 absolute cursor-pointer w-full h-full"
                               /> */}
-                              {i + 1}
-                              {/* <div className="check-icon hidden bg-indigo-700 text-white rounded-sm">
+                                {i + 1}
+                                {/* <div className="check-icon hidden bg-indigo-700 text-white rounded-sm">
                                 <svg
                                   className="icon icon-tabler icon-tabler-check"
                                   xmlns="http://www.w3.org/2000/svg"
@@ -266,41 +353,41 @@ const TodoListView = ({
                                   <path d="M5 12l5 5l10 -10"></path>
                                 </svg>
                               </div> */}
-                            </div>
-                          </div>
-                        </td>
-                        <td className=" max-w-[300px]">
-                          <div className="flex items-center ">
-                            <div className="flex flex-col">
-                              <p className="text-base max-w-[350px] overflow-ellipsis overflow-hidden font-semibold leading-none text-blue-800 mr-2 mt-2">
-                                {dat?.notes}
-                              </p>
-                              <div className="flex flex-row">
-                                <p className="text-[9px]   leading-none  pr-2 text-green-800  mt-[6px]  py-[4px]  rounded-full   mb-1 mr-2  ">
-                                  {dat?.leadUser?.Project?.toUpperCase()}
-                                </p>
-
-                                {/* <p className="text-[11px]  leading-none text-red-800  mt-1  py-[4px]  rounded-full  text-2xl  mb-1 mr-2  ">
-                                  {dat?.pri}
-                                </p> */}
-                                <p className="text-[9px]  leading-none text-red-800  mt-[6px] font-bodyLato  py-[4px]  rounded-full   mb-1 mr-4  ">
-                                  {dat?.leadUser?.Status?.toUpperCase()}
-                                </p>
-                                <p className="text-[9px]  leading-none text-gray-600  mt-[6px] font-bodyLato  py-[4px]  rounded-full    mb-1 mr-2  ">
-                                  {dat?.sts?.toUpperCase()}
-                                </p>
-                                <p
-                                  className={`text-[9px]  leading-none ${
-                                    user?.uid == dat?.leadUser?.assignedTo
-                                      ? 'text-green-800'
-                                      : 'text-red-800 '
-                                  }   mt-[6px] font-bodyLato  py-[4px]  rounded-full    mb-1 mr-2  `}
-                                >
-                                  {dat?.leadUser?.assignedToObj?.name?.toUpperCase()}
-                                </p>
                               </div>
                             </div>
-                            {/*
+                          </td>
+                          <td className=" max-w-[300px]">
+                            <div className="flex items-center ">
+                              <div className="flex flex-col">
+                                <p className="text-base max-w-[350px] overflow-ellipsis overflow-hidden font-semibold leading-none text-blue-800 mr-2 mt-2">
+                                  {dat?.notes}
+                                </p>
+                                <div className="flex flex-row">
+                                  <p className="text-[9px]   leading-none  pr-2 text-green-800  mt-[6px]  py-[4px]  rounded-full   mb-1 mr-2  ">
+                                    {dat?.leadUser?.Project?.toUpperCase()}
+                                  </p>
+
+                                  {/* <p className="text-[11px]  leading-none text-red-800  mt-1  py-[4px]  rounded-full  text-2xl  mb-1 mr-2  ">
+                                  {dat?.pri}
+                                </p> */}
+                                  <p className="text-[9px]  leading-none text-red-800  mt-[6px] font-bodyLato  py-[4px]  rounded-full   mb-1 mr-4  ">
+                                    {dat?.leadUser?.Status?.toUpperCase()}
+                                  </p>
+                                  <p className="text-[9px]  leading-none text-gray-600  mt-[6px] font-bodyLato  py-[4px]  rounded-full    mb-1 mr-2  ">
+                                    {dat?.sts?.toUpperCase()}
+                                  </p>
+                                  <p
+                                    className={`text-[9px]  leading-none ${
+                                      user?.uid == dat?.leadUser?.assignedTo
+                                        ? 'text-green-800'
+                                        : 'text-red-800 '
+                                    }   mt-[6px] font-bodyLato  py-[4px]  rounded-full    mb-1 mr-2  `}
+                                  >
+                                    {dat?.leadUser?.assignedToObj?.name?.toUpperCase()}
+                                  </p>
+                                </div>
+                              </div>
+                              {/*
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="16"
@@ -321,10 +408,10 @@ const TodoListView = ({
                               strokeLinejoin="round"
                             ></path>
                           </svg> */}
-                          </div>
-                        </td>
-                        <td className="pl-24">
-                          {/* <div className="flex items-center">
+                            </div>
+                          </td>
+                          <td className="pl-24">
+                            {/* <div className="flex items-center">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="20"
@@ -353,16 +440,16 @@ const TodoListView = ({
                             {dat?.pri}
                           </p>
                         </div> */}
-                        </td>
-                        <td className="pl-5">
-                          <div className="flex flex-col">
-                            <p className="text-[12px] leading-none text-gray-600 ml-2 mt-2">
-                              {formatToPhone(dat?.leadUser?.Mobile)}
-                            </p>
-                            <p className="text-[11px] leading-none text-gray-600 ml-2 mt-2">
-                              {dat?.leadUser?.Name}
-                            </p>
-                            {/* <svg
+                          </td>
+                          <td className="pl-5">
+                            <div className="flex flex-col">
+                              <p className="text-[12px] leading-none text-gray-600 ml-2 mt-2">
+                                {formatToPhone(dat?.leadUser?.Mobile)}
+                              </p>
+                              <p className="text-[11px] leading-none text-gray-600 ml-2 mt-2">
+                                {dat?.leadUser?.Name}
+                              </p>
+                              {/* <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="20"
                             height="20"
@@ -412,14 +499,14 @@ const TodoListView = ({
                               strokeLinejoin="round"
                             ></path>
                           </svg> */}
-                            <p className="text-sm leading-none text-gray-600 ml-2">
-                              {/* {prettyDateTime(dat['schTime'])} */}
-                            </p>
-                          </div>
-                        </td>
-                        <td className="pl-5">
-                          <div className="flex flex-row">
-                            {/* <svg
+                              <p className="text-sm leading-none text-gray-600 ml-2">
+                                {/* {prettyDateTime(dat['schTime'])} */}
+                              </p>
+                            </div>
+                          </td>
+                          <td className="pl-5">
+                            <div className="flex flex-row">
+                              {/* <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="20"
                             height="20"
@@ -470,41 +557,41 @@ const TodoListView = ({
                             ></path>
                           </svg> */}
 
-                            <button className="py-3 px-3 text-[13px] focus:outline-none leading-none text-red-700 rounded">
-                              {Math.abs(
-                                getDifferenceInMinutes(dat['schTime'], '')
-                              ) > 60
-                                ? Math.abs(
-                                    getDifferenceInMinutes(dat['schTime'], '')
-                                  ) > 1440
-                                  ? `${getDifferenceInDays(
+                              <button className="py-3 px-3 text-[13px] focus:outline-none leading-none text-red-700 rounded">
+                                {Math.abs(
+                                  getDifferenceInMinutes(dat['schTime'], '')
+                                ) > 60
+                                  ? Math.abs(
+                                      getDifferenceInMinutes(dat['schTime'], '')
+                                    ) > 1440
+                                    ? `${getDifferenceInDays(
+                                        dat['schTime'],
+                                        ''
+                                      )} Days `
+                                    : `${getDifferenceInHours(
+                                        dat['schTime'],
+                                        ''
+                                      )} Hours `
+                                  : `${getDifferenceInMinutes(
                                       dat['schTime'],
                                       ''
-                                    )} Days `
-                                  : `${getDifferenceInHours(
-                                      dat['schTime'],
-                                      ''
-                                    )} Hours `
-                                : `${getDifferenceInMinutes(
-                                    dat['schTime'],
-                                    ''
-                                  )} Min`}
-                              {getDifferenceInMinutes(dat['schTime'], '') < 0
-                                ? 'Due'
-                                : 'Left'}
-                              <p className="text-[11px] leading-none text-gray-600 ml-2 mt-2">
-                                {prettyDateTime(dat['schTime'])}
-                              </p>
-                            </button>
-                          </div>
-                        </td>
-                        {/* <td className="pl-4">
+                                    )} Min`}
+                                {getDifferenceInMinutes(dat['schTime'], '') < 0
+                                  ? 'Due'
+                                  : 'Left'}
+                                <p className="text-[11px] leading-none text-gray-600 ml-2 mt-2">
+                                  {prettyDateTime(dat['schTime'])}
+                                </p>
+                              </button>
+                            </div>
+                          </td>
+                          {/* <td className="pl-4">
 
                           <span className="ml-4 px-4 py-[4px] inline-flex text-xs leading-5 font-semibold rounded-full  text-green-800">
                             {dat?.sts}
                           </span>
                         </td> */}
-                        {/* <td>
+                          {/* <td>
                         <div className="relative px-1">
                           <button
                             className="focus:ring-2 rounded-md focus:outline-none"
@@ -524,17 +611,17 @@ const TodoListView = ({
                           </div>
                         </div>
                       </td> */}
-                      </tr>
-                    ))
-                }
+                        </tr>
+                      ))
+                  }
 
-                <tr className="h-3"></tr>
-              </tbody>
-            </table>
+                  <tr className="h-3"></tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-      </div>
-      {/* <script src="./index.js"></script>
+        {/* <script src="./index.js"></script>
         <style>.checkbox:checked + .check-icon {
   display: flex;
 }
@@ -552,7 +639,7 @@ const TodoListView = ({
                 list.classList.toggle("hidden");
             }</script> */}
 
-      {/* <Card
+        {/* <Card
         sx={{
           boxShadow: 4,
         }}
@@ -595,15 +682,15 @@ const TodoListView = ({
           </Grid>
         </Grid>
       </Card> */}
-    </Box>
-    <SiderForm
-    open={isImportLeadsOpen1}
-    setOpen={setisImportLeadsOpen1}
-    title={'Add Task'}
-   // customerDetails={selUserProfile}
-    widthClass="max-w-2xl"
-  />
-  </>
+      </Box>
+      <SiderForm
+        open={isImportLeadsOpen1}
+        setOpen={setisImportLeadsOpen1}
+        title={'Add Task'}
+        // customerDetails={selUserProfile}
+        widthClass="max-w-2xl"
+      />
+    </>
   )
 }
 

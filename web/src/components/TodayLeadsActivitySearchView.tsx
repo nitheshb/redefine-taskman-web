@@ -720,35 +720,10 @@ export default function TodayLeadsActivitySearchView({
           {/* <h1 className="font-Playfair box-border px-0 pt-0 pb-2  md:pb-4 m-0 text-3xl font-bold tracking-wide  text-gray-900 align-baseline border-0 xl:text-3xl xl:tracking-normal md:text-3xl md:tracking-tight">
             {greet}, {user?.displayName?.toLocaleUpperCase()}
           </h1> */}
-          <div className="flex flex-row justify-between pb-3">
-            <section>
-              <h2 className="text-md font-semibold text-black leading-light font-Playfair pb-1">
-                {greet}, {user?.displayName?.toLocaleUpperCase()}
-              </h2>
+          {/* <div className="flex flex-row justify-between pb-3"> */}
 
-              {/* { listings.map(listing => <JobCard listing={listing} key={listing.id} filtering={filterListings} />) } */}
-              <h2 className="text-sm text-gray-700 ">
-                You've got {'  '}
-                <span className="inline-flex text-md leading-5 font-semibold rounded-full  text-green-800">
-                  {/* {schFetData.length} */}
-                  {/* {schFetCleanData.length} */}
+          {/* <div className="flex items-center justify-between">
 
-                  {
-                    schFetCleanData?.filter(
-                      (d) =>
-                        searchKey.includes(d['sts']) ||
-                        searchKey.includes('upcoming')
-                    ).length
-                  }
-                </span>{' '}
-                tasks
-                {/* leads{' '} */}
-                {/* {taskType === 'Today1'
-                  ? 'with schedules for Today'
-                  : 'with coming up schedules in the next days'}{' '} */}
-              </h2>
-            </section>
-            <div className="flex items-center justify-between">
               <p
                 tabIndex={0}
                 className="focus:outline-none text-base sm:text-lg md:text-xl lg:text-2xl font-bold leading-normal text-gray-800"
@@ -795,8 +770,9 @@ export default function TodayLeadsActivitySearchView({
                       ]}
                     />
                   </div>
-                )}
-                {/* <span className="inline-flex p-1 border bg-gray-200 rounded-md">
+                )} */}
+
+          {/* <span className="inline-flex p-1 border bg-gray-200 rounded-md">
                   <button
                     className={`px-2  rounded ${
                       leadByViewLayout ? 'bg-white shadow' : ''
@@ -840,7 +816,7 @@ export default function TodayLeadsActivitySearchView({
                     </svg>
                   </button>
                 </span> */}
-                {/* <div className="ml-2 py-3 px-4 flex items-center text-sm font-medium leading-none text-gray-600 bg-gray-200 hover:bg-gray-300 cursor-pointer rounded max-h-[35px]">
+          {/* <div className="ml-2 py-3 px-4 flex items-center text-sm font-medium leading-none text-gray-600 bg-gray-200 hover:bg-gray-300 cursor-pointer rounded max-h-[35px]">
                   <p>Sort By:</p>
                   <select
                     aria-label="select"
@@ -851,9 +827,9 @@ export default function TodayLeadsActivitySearchView({
                     <option className="text-sm text-indigo-800">Oldest</option>
                   </select>
                 </div> */}
-              </section>
-            </div>
-          </div>
+          {/* </section> */}
+          {/* </div> */}
+          {/* </div> */}
 
           {
             schLoading &&
@@ -895,7 +871,29 @@ export default function TodayLeadsActivitySearchView({
                     />
                   </div>
                   <div className="w-2/12 flex flex-col">
-                    <section className="ml-2">
+                    <section className="bg-white rounded  flex flex-col p-4 ml-1 mb-2 w-100 ">
+                      <h5 className="text-sm">{greet}...!</h5>
+                      <h2 className="text-md font-semibold text-black leading-light font-Playfair pb-1">
+                        {user?.displayName?.toLocaleUpperCase()}
+                      </h2>
+
+                      {/* <h2 className="text-sm text-gray-700 ">
+                You've got {'  '}
+                <span className="inline-flex text-md leading-5 font-semibold rounded-full  text-green-800">
+
+                  {
+                    schFetCleanData?.filter(
+                      (d) =>
+                        searchKey.includes(d['sts']) ||
+                        searchKey.includes('upcoming')
+                    ).length
+                  }
+                </span>{' '}
+                tasks
+
+              </h2> */}
+                    </section>
+                    <section className="ml-1">
                       <TaskProgress userTodayPerfA={userTodayPerfA} />
                       <div className="mt-2">
                         <RecentActivity
@@ -919,11 +917,8 @@ export default function TodayLeadsActivitySearchView({
 
           {leadByViewLayout && todaySch && (
             <div className=" w-full">
-              {/* <div className="px-4 md:pb-10 pb-3 md:pb-3">
-
-              </div> */}
-
               <div className="bg-white py-4 md:py-7 px-4 md:px-4 xl:px-6 rounded">
+             
                 <div className="sm:flex items-center justify-between">
                   <div className="flex items-center">
                     <a
