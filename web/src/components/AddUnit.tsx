@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 
 import { Dialog } from '@headlessui/react'
 import { RadioGroup } from '@headlessui/react'
+import Divider from '@mui/material/Divider'
 import { Timestamp } from 'firebase/firestore'
 import { Form, Formik } from 'formik'
 import NumberFormat from 'react-number-format'
@@ -298,7 +299,6 @@ const AddUnit = ({
     { label: 'NA', value: 'NA' },
     { label: 'Bank', value: 'bank' },
     { label: '3rd Party Investor', value: '3rd_party_investor' },
-
   ]
   const validate = Yup.object({
     unit_no: Yup.string()
@@ -385,12 +385,12 @@ const AddUnit = ({
                                   <abbr title="required"></abbr>
                                 </label>
                                 <div className="flex flex-row">
-                                <div className="font-md text-xs text-gray-500 mb-[2] tracking-wide">
-                                  Phase-I
-                                </div>
-                                <div className="font-md text-xs text-gray-500 mb-[2] ml-3 tracking-wide">
-                                  0 Units
-                                </div>
+                                  <div className="font-md text-xs text-gray-500 mb-[2] tracking-wide">
+                                    Phase-I
+                                  </div>
+                                  <div className="font-md text-xs text-gray-500 mb-[2] ml-3 tracking-wide">
+                                    0 Units
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -409,7 +409,6 @@ const AddUnit = ({
                         </div>
                       </div>
                     </div>
-
                   </section>
                   <section className="my-10 rounded-lg bg-white border border-gray-100 px-4 m-4 mt-4">
                     <Form>
@@ -425,127 +424,54 @@ const AddUnit = ({
                         </div>
                       </div>
 
-                      {/* 2 */}
-                      <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-1">
-                        {projectDetails?.projectType?.name === 'Apartment' && (
+                      <section className="my-10 rounded-lg bg-white border border-gray-100 px-4 my-4 mt-4">
+                        <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-1">
                           <div className="mb-3 space-y-2 w-full text-xs mt-4">
                             <TextField
-                              label="Floor*"
-                              name="floor"
-                              type="number"
+                              label="unit no*"
+                              name="unit_no"
+                              type="text"
                             />
                           </div>
-                        )}
-                        <div className="mb-3 space-y-2 w-full text-xs mt-4">
-                          <TextField
-                            label="unit no*"
-                            name="unit_no"
-                            type="text"
-                          />
-                        </div>
-                        <div className="mb-3 space-y-2 w-full text-xs mt-4">
-                          <TextField
-                            label="Size *"
-                            name="sqft_rate"
-                            type="text"
-                          />
+                          <div className="mb-3 space-y-2 w-full text-xs mt-4">
+                            <TextField
+                              label="Survey No"
+                              name="survey_no"
+                              type="text"
+                            />
+                          </div>
+                          <div className="mb-3 space-y-2 w-full text-xs mt-4">
+                            <TextField
+                              label="Katha No"
+                              name="Katha_no"
+                              type="text"
+                            />
+                          </div>
+                          <div className="mb-3 space-y-2 w-full text-xs mt-4">
+                            <TextField
+                              label="PID No"
+                              name="PID_no"
+                              type="text"
+                            />
+                          </div>
                         </div>
 
-                        {projectDetails?.projectType?.name != 'Apartment' && (
-                          <div className="mb-3 space-y-2 w-full text-xs mt-4">
+                        <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-1">
+                          <div className="mb-3 space-y-2 w-full text-xs mt-">
                             <TextField
                               label="Area Sqft*"
                               name="area"
                               type="number"
                             />
                           </div>
-                        )}
-                         <div className="mb-3 space-y-2 w-full text-xs mt-4">
-                          <TextField
-                            label="Rate per Sqft *"
-                            name="sqft_rate"
-                            type="number"
-                          />
-                        </div>
-                      </div>
 
-                      {/* 2a */}
-                      <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-1">
-
-                        <div className="mb-3 space-y-2 w-full text-xs mt-">
-                          <TextField
-                            label="East"
-                            name="unit_no"
-                            type="text"
-                          />
-                        </div>
-                        <div className="mb-3 space-y-2 w-full text-xs">
-                          <TextField
-                            label="West"
-                            name="sqft_rate"
-                            type="text"
-                          />
-                        </div>
-
-                        {projectDetails?.projectType?.name != 'Apartment' && (
-                          <div className="mb-3 space-y-2 w-full text-xs ">
+                          <div className="mb-3 space-y-2 w-full text-xs mt-">
                             <TextField
-                              label="North"
-                              name="area"
+                              label="Rate per Sqft *"
+                              name="sqft_rate"
                               type="number"
                             />
                           </div>
-                        )}
-                         <div className="mb-3 space-y-2 w-full text-xs ">
-                          <TextField
-                            label="South"
-                            name="sqft_rate"
-                            type="number"
-                          />
-                        </div>
-                      </div>
-                      {/* 3 */}
-                      <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-1">
-                        {projectDetails?.projectType?.name === 'Apartment' && (
-                          <div className="w-full flex flex-row mb-3">
-                            <CustomSelect
-                              name="bedRooms"
-                              label="BedRooms*"
-                              className="input mt-"
-                              onChange={(value) => {
-                                formik.setFieldValue('bedRooms', value.value)
-                              }}
-                              value={formik.values.bedRooms}
-                              options={unitTypeList}
-                            />
-                            <CustomSelect
-                              name="bathrooms"
-                              label="Bathrooms"
-                              className="input ml-4"
-                              onChange={(value) => {
-                                formik.setFieldValue('bathrooms', value.value)
-                              }}
-                              value={formik.values.bathrooms}
-                              options={bathTypeList}
-                            />
-                          </div>
-                        )}
-
-
-<div className="w-full flex flex-col mb-3">
-                          <CustomSelect
-                            name="facing"
-                            label="Facing*"
-                            className="input mt-"
-                            onChange={(value) => {
-                              formik.setFieldValue('facing', value.value)
-                            }}
-                            value={formik.values.facing}
-                            // options={aquaticCreatures}
-                            options={facingTypeList}
-                          />
-                        </div>
-                        {projectDetails?.projectType?.name != 'Apartment' && (
                           <div className="mb-3 space-y-2 w-full text-xs mt-">
                             <TextField
                               label="PLC per sqft*"
@@ -553,78 +479,146 @@ const AddUnit = ({
                               type="number"
                             />
                           </div>
-                        )}
-
-
-                      </div>
-                      {/* 4 */}
-                      {projectDetails?.projectType?.name === 'Apartment' && (
-                        <>
-                          <div className="mt-8">
-                            <label className="font-semibold text-[#053219]  text-sm  mb-1  ">
-                              More Details<abbr title="required">*</abbr>
-                            </label>
-                          </div>
-                          <div className="border-t-4 rounded-xl w-16 mt-1  border-green-600"></div>
-                          <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-6">
-                            <div className="mb-3 space-y-2 w-full text-xs mt-">
-                              <TextField
-                                label="Carpet Area*"
-                                name="carpet_area"
-                                type="number"
-                              />
-                            </div>
-
-                            <div className="mb-3 space-y-2 w-full text-xs mt-">
-                              <TextField
-                                label="Build Up Area*"
-                                name="buildup_area"
-                                type="number"
-                              />
-                            </div>
-
-                            <div className="mb-3 space-y-2 w-full text-xs mt-">
-                              <TextField
-                                label="Super Build Up Area*"
-                                name="super_build_up_area"
-                                type="number"
-                              />
-                            </div>
-                          </div>
-                        </>
-                      )}
-
-                      {/* 5 */}
-
-                      <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-1">
-                      <div className="w-full flex flex-col mb-3">
-                          <CustomSelect
-                            name="facing"
-                            label="Status*"
-                            className="input mt-"
-                            onChange={(value) => {
-                              // formik.setFieldValue('facing', value.value)
-                            }}
-                            value={formik.values.facing}
-                            // options={aquaticCreatures}
-                            options={statusList}
-                          />
                         </div>
-                        <div className="w-full flex flex-col mb-3">
-                          <CustomSelect
-                            name="facing"
-                            label="Release Status*"
-                            className="input mt-"
-                            onChange={(value) => {
-                              // formik.setFieldValue('facing', value.value)
-                            }}
-                            value={formik.values.facing}
-                            // options={aquaticCreatures}
-                            options={releaseStausList}
-                          />
+                        <Divider style={{ borderColor: '#efefef' }} />
+                        <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-4">
+                          <div className="mb-3 space-y-2 w-full text-xs mt-">
+                            <TextField
+                              label="Size*"
+                              name="unit_no"
+                              type="text"
+                            />
+                          </div>
+
+                          <div className="w-full flex flex-col mb-3">
+                            <CustomSelect
+                              name="facing"
+                              label="Facing*"
+                              className="input mt-"
+                              onChange={(value) => {
+                                formik.setFieldValue('facing', value.value)
+                              }}
+                              value={formik.values.facing}
+                              // options={aquaticCreatures}
+                              options={facingTypeList}
+                            />
+                          </div>
+                        </div>
+                        <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-1">
+                          <div className="mb-3 space-y-2 w-full text-xs mt-">
+                            <TextField
+                              label="East"
+                              name="unit_no"
+                              type="text"
+                            />
+                          </div>
+                          <div className="mb-3 space-y-2 w-full text-xs">
+                            <TextField
+                              label="West"
+                              name="sqft_rate"
+                              type="text"
+                            />
+                          </div>
+
+                          {projectDetails?.projectType?.name != 'Apartment' && (
+                            <div className="mb-3 space-y-2 w-full text-xs ">
+                              <TextField
+                                label="North"
+                                name="area"
+                                type="number"
+                              />
+                            </div>
+                          )}
+                          <div className="mb-3 space-y-2 w-full text-xs ">
+                            <TextField
+                              label="South"
+                              name="sqft_rate"
+                              type="number"
+                            />
+                          </div>
+                          <div className="mb-3 space-y-2 w-full text-xs mt-">
+                            <TextField
+                              label="East-West"
+                              name="unit_no"
+                              type="number"
+                            />
+                          </div>
+                          <div className="mb-3 space-y-2 w-full text-xs">
+                            <TextField
+                              label="North-South"
+                              name="sqft_rate"
+                              type="number"
+                            />
+                          </div>
                         </div>
 
-                        {/* <div className="w-full flex flex-col mb-3">
+                        <Divider style={{ borderColor: '#efefef' }} />
+
+                        <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-4">
+                          <div className="mb-3 space-y-2 w-full text-xs mt-">
+                            <TextField
+                              label="East Schedule By"
+                              name="unit_no"
+                              type="text"
+                            />
+                          </div>
+                          <div className="mb-3 space-y-2 w-full text-xs">
+                            <TextField
+                              label="West By"
+                              name="sqft_rate"
+                              type="text"
+                            />
+                          </div>
+
+                          {projectDetails?.projectType?.name != 'Apartment' && (
+                            <div className="mb-3 space-y-2 w-full text-xs ">
+                              <TextField
+                                label="North By"
+                                name="area"
+                                type="number"
+                              />
+                            </div>
+                          )}
+                          <div className="mb-3 space-y-2 w-full text-xs ">
+                            <TextField
+                              label="South By"
+                              name="sqft_rate"
+                              type="number"
+                            />
+                          </div>
+
+                        </div>
+
+                        <Divider style={{ borderColor: '#efefef' }} />
+                        <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-4">
+                          <div className="w-full flex flex-col mb-3">
+                            <CustomSelect
+                              name="facing"
+                              label="Status*"
+                              className="input mt-"
+                              onChange={(value) => {
+                                // formik.setFieldValue('facing', value.value)
+                              }}
+                              value={formik.values.facing}
+                              // options={aquaticCreatures}
+                              options={statusList}
+                            />
+                          </div>
+                          <div className="w-full flex flex-col mb-3">
+                            <CustomSelect
+                              name="facing"
+                              label="Release Status*"
+                              className="input mt-"
+                              onChange={(value) => {
+                                // formik.setFieldValue('facing', value.value)
+                              }}
+                              value={formik.values.facing}
+                              // options={aquaticCreatures}
+                              options={releaseStausList}
+                            />
+                          </div>
+
+                          {/* <div className="w-full flex flex-col mb-3">
                           <CustomSelect
                             name="facing"
                             label="Owner Name*"
@@ -637,33 +631,31 @@ const AddUnit = ({
                             options={facingTypeList}
                           />
                         </div> */}
-
                         </div>
 
                         <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-1">
-
-                        <div className="mb-3 space-y-2 w-full text-xs mt-1">
+                          <div className="mb-3 space-y-2 w-full text-xs mt-1">
                             <TextField
                               label="Owner Name*"
                               name="area"
                               type="text"
                             />
                           </div>
-                        <div className="w-full flex flex-col mb-3 mt-1">
-
-                          <CustomSelect
-                            name="facing"
-                            label="Mortgage Type*"
-                            className="input mt-"
-                            onChange={(value) => {
-                              // formik.setFieldValue('facing', value.value)
-                            }}
-                            value={formik.values.facing}
-                            // options={aquaticCreatures}
-                            options={mortgageType}
-                          />
+                          <div className="w-full flex flex-col mb-3 mt-1">
+                            <CustomSelect
+                              name="facing"
+                              label="Mortgage Type*"
+                              className="input mt-"
+                              onChange={(value) => {
+                                // formik.setFieldValue('facing', value.value)
+                              }}
+                              value={formik.values.facing}
+                              // options={aquaticCreatures}
+                              options={mortgageType}
+                            />
+                          </div>
                         </div>
-                        </div>
+                      </section>
                       {/* 6 */}
 
                       <div className="mb-8">
