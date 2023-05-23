@@ -17,6 +17,7 @@ import { useRouterStateSetter } from '@redwoodjs/router/dist/router-context'
 
 import {
   addUnit,
+  addPlotUnit,
   checkIfUnitAlreadyExists,
   getAllProjects,
   steamUsersListByRole,
@@ -186,33 +187,110 @@ const AddUnit = ({
   }
   const onSubmitFun = async (data, resetForm) => {
     console.log(data)
-
     setLoading(true)
 
+    // const {
+    //   area,
+    //   bathrooms,
+    //   bedRooms,
+    //   buildup_area,
+    //   carpet_area,
+    //   facing,
+    //   sqft_rate,
+    //   floor,
+    //   super_build_up_area,
+    //   unit_no,
+    // } = data
+
+
     const {
-      area,
-      bathrooms,
-      bedRooms,
-      buildup_area,
-      carpet_area,
-      facing,
-      sqft_rate,
-      floor,
-      super_build_up_area,
       unit_no,
+      survey_no,
+      Katha_no,
+      PID_no,
+      area,
+      sqft_rate,
+      plc_per_sqft,
+      size,
+      facing,
+      east_d,
+      west_d,
+      north_d,
+      south_d,
+      east_west_d,
+      north_south_d,
+
+      east_sch_by,
+      west_sch_by,
+      status,
+
+      release_status,
+      mortgage_type,
     } = data
     // updateUserRole(uid, deptVal, myRole, email, 'nitheshreddy.email@gmail.com')
 
     const foundLength = await checkIfUnitAlreadyExists(
-      'spark_units',
+      `${orgId}_units`,
       projectDetails?.uid,
-      phaseDetails?.uid,
-      blockDetails?.uid,
+      phaseDetails?.uid || 1,
+      blockDetails?.uid || 1,
       unit_no
 
       // myBlock?.uid,
       // dRow['unit_no']
     )
+    const leadData1 = {
+      pId: projectDetails?.uid,
+      phaseId: phaseDetails?.uid || 1,
+      blockId: blockDetails?.uid || 1,
+      Date: Timestamp.now().toMillis(),
+      unit_no: unit_no,
+      survey_no: survey_no,
+
+      Katha_no: Katha_no,
+      PID_no: PID_no,
+      area: area,
+      sqft_rate: sqft_rate,
+      plc_per_sqft: plc_per_sqft,
+      size: size,
+      facing: facing,
+      east_d: east_d,
+      west_d: west_d,
+      north_d: north_d,
+      south_d: south_d,
+      east_west_d: east_west_d,
+      north_south_d: north_south_d,
+      east_sch_by: east_sch_by,
+      west_sch_by: west_sch_by,
+      status: status,
+      release_status: release_status,
+      mortgage_type: mortgage_type,
+      intype: 'Form',
+      unit_type: 'plot',
+      by: user?.email,
+    }
+    console.log('user is ', user)
+    if (foundLength?.length > 0) {
+      console.log('foundLENGTH IS ', foundLength)
+      setFormMessage('Unit Already Exists')
+      setLoading(false)
+    } else {
+      console.log('foundLENGTH IS empty ', foundLength)
+
+      // proceed to copy
+      await addPlotUnit(orgId, leadData1, user?.email, `Unit Created by form `)
+
+      // msg2
+      resetForm()
+      setFormMessage('Saved Successfully..!')
+      setLoading(false)
+    }
+    return ;
+    setLoading(true)
+
+
+    // updateUserRole(uid, deptVal, myRole, email, 'nitheshreddy.email@gmail.com')
+
     const leadData = {
       Date: Timestamp.now().toMillis(),
       bed_rooms: bedRooms,
@@ -281,7 +359,6 @@ const AddUnit = ({
     { label: 'North-East', value: 'North-East' },
     { label: 'North-West', value: 'North-West' },
   ]
-
   const statusList = [
     { label: 'Select the Status', value: '' },
     { label: 'Available', value: 'available' },
@@ -289,6 +366,7 @@ const AddUnit = ({
     { label: 'Blocked by Management', value: 'blocked_management' },
     { label: 'Sold', value: 'sold' },
   ]
+
   const releaseStausList = [
     { label: 'Release Status', value: '' },
     { label: 'Yes', value: 'yes' },
@@ -307,26 +385,26 @@ const AddUnit = ({
     // lastName: Yup.string()
     //   .max(20, 'Must be 20 characters or less')
     //   .required('Required'),
-    sqft_rate: Yup.number().required('sqft rate is required'),
-    bedRooms:
-      projectDetails?.projectType?.name === 'Apartment'
-        ? Yup.string().required('bedRooms is required')
-        : Yup.string().notRequired(),
-    floor: Yup.number().required('floor is required'),
-    bathrooms:
-      projectDetails?.projectType?.name === 'Apartment'
-        ? Yup.string().required('bathrooms is required')
-        : Yup.string().notRequired(),
-    // bathrooms: Yup.string().required('bathrooms is required'),
-    area:
-      projectDetails?.projectType?.name === 'Plots'
-        ? Yup.number().required('area is required')
-        : Yup.number().notRequired(),
+    // sqft_rate: Yup.number().required('sqft rate is required'),
+    // bedRooms:
+    //   projectDetails?.projectType?.name === 'Apartment'
+    //     ? Yup.string().required('bedRooms is required')
+    //     : Yup.string().notRequired(),
+    // floor: Yup.number().required('floor is required'),
+    // bathrooms:
+    //   projectDetails?.projectType?.name === 'Apartment'
+    //     ? Yup.string().required('bathrooms is required')
+    //     : Yup.string().notRequired(),
+    // // bathrooms: Yup.string().required('bathrooms is required'),
+    // area:
+    //   projectDetails?.projectType?.name === 'Plots'
+    //     ? Yup.number().required('area is required')
+    //     : Yup.number().notRequired(),
 
-    facing: Yup.string().required('facing is required'),
-    carpet_area: Yup.number().required('Carpet Area is required'),
-    buildup_area: Yup.number().required('Buildup Area is required'),
-    super_build_up_area: Yup.number().required('Sqft Rate is required'),
+    // facing: Yup.string().required('facing is required'),
+    // carpet_area: Yup.number().required('Carpet Area is required'),
+    // buildup_area: Yup.number().required('Buildup Area is required'),
+    // super_build_up_area: Yup.number().required('Sqft Rate is required'),
   })
   const resetter = () => {
     setSelected({})
@@ -350,15 +428,31 @@ const AddUnit = ({
             <Formik
               initialValues={{
                 unit_no: '',
-                sqft_rate: 0,
-                bedRooms: '',
-                floor: 0,
-                bathrooms: '',
+                survey_no: '',
+                Katha_no: '',
+                PID_no: '',
                 area: 0,
+                sqft_rate: 0,
+                plc_per_sqft: 0,
+                size: '',
                 facing: '',
-                carpet_area: 0,
-                buildup_area: 0,
-                super_build_up_area: 0,
+                east_d: 0,
+                west_d: 0,
+                north_d: 0,
+                south_d: 0,
+                east_west_d: 0,
+                north_south_d: 0,
+
+                east_sch_by: '',
+                west_sch_by: '',
+                status: '',
+
+                release_status: '',
+                mortgage_type: '',
+                // bathrooms: '',
+                // carpet_area: 0,
+                // buildup_area: 0,
+                // super_build_up_area: 0,
               }}
               validationSchema={validate}
               onSubmit={(values, { resetForm }) => {
@@ -428,7 +522,7 @@ const AddUnit = ({
                         <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-1">
                           <div className="mb-3 space-y-2 w-full text-xs mt-4">
                             <TextField
-                              label="unit no*"
+                              label="Unit no*"
                               name="unit_no"
                               type="text"
                             />
@@ -475,7 +569,7 @@ const AddUnit = ({
                           <div className="mb-3 space-y-2 w-full text-xs mt-">
                             <TextField
                               label="PLC per sqft*"
-                              name="area"
+                              name="plc_per_sqft"
                               type="number"
                             />
                           </div>
@@ -483,11 +577,7 @@ const AddUnit = ({
                         <Divider style={{ borderColor: '#efefef' }} />
                         <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-4">
                           <div className="mb-3 space-y-2 w-full text-xs mt-">
-                            <TextField
-                              label="Size*"
-                              name="unit_no"
-                              type="text"
-                            />
+                            <TextField label="Size*" name="size" type="text" />
                           </div>
 
                           <div className="w-full flex flex-col mb-3">
@@ -506,25 +596,17 @@ const AddUnit = ({
                         </div>
                         <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-1">
                           <div className="mb-3 space-y-2 w-full text-xs mt-">
-                            <TextField
-                              label="East"
-                              name="unit_no"
-                              type="text"
-                            />
+                            <TextField label="East" name="east_d" type="text" />
                           </div>
                           <div className="mb-3 space-y-2 w-full text-xs">
-                            <TextField
-                              label="West"
-                              name="sqft_rate"
-                              type="text"
-                            />
+                            <TextField label="West" name="west_d" type="text" />
                           </div>
 
                           {projectDetails?.projectType?.name != 'Apartment' && (
                             <div className="mb-3 space-y-2 w-full text-xs ">
                               <TextField
                                 label="North"
-                                name="area"
+                                name="north_d"
                                 type="number"
                               />
                             </div>
@@ -532,21 +614,21 @@ const AddUnit = ({
                           <div className="mb-3 space-y-2 w-full text-xs ">
                             <TextField
                               label="South"
-                              name="sqft_rate"
+                              name="south_d"
                               type="number"
                             />
                           </div>
                           <div className="mb-3 space-y-2 w-full text-xs mt-">
                             <TextField
                               label="East-West"
-                              name="unit_no"
+                              name="east_west_d"
                               type="number"
                             />
                           </div>
                           <div className="mb-3 space-y-2 w-full text-xs">
                             <TextField
                               label="North-South"
-                              name="sqft_rate"
+                              name="north_south_d"
                               type="number"
                             />
                           </div>
@@ -558,98 +640,83 @@ const AddUnit = ({
                           <div className="mb-3 space-y-2 w-full text-xs mt-">
                             <TextField
                               label="East Schedule By"
-                              name="unit_no"
+                              name="east_sch_by"
                               type="text"
                             />
                           </div>
                           <div className="mb-3 space-y-2 w-full text-xs">
                             <TextField
                               label="West By"
-                              name="sqft_rate"
+                              name="west_sch_by"
+                              type="text"
+                            />
+                          </div>
+                          <div className="mb-3 space-y-2 w-full text-xs ">
+                            <TextField
+                              label="North By"
+                              name="north_sch_by"
                               type="text"
                             />
                           </div>
 
-                          {projectDetails?.projectType?.name != 'Apartment' && (
-                            <div className="mb-3 space-y-2 w-full text-xs ">
-                              <TextField
-                                label="North By"
-                                name="area"
-                                type="number"
-                              />
-                            </div>
-                          )}
                           <div className="mb-3 space-y-2 w-full text-xs ">
                             <TextField
                               label="South By"
-                              name="sqft_rate"
-                              type="number"
+                              name="south_sch_by"
+                              type="text"
                             />
                           </div>
-
                         </div>
 
                         <Divider style={{ borderColor: '#efefef' }} />
                         <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-4">
                           <div className="w-full flex flex-col mb-3">
                             <CustomSelect
-                              name="facing"
+                              name="status"
                               label="Status*"
                               className="input mt-"
                               onChange={(value) => {
-                                // formik.setFieldValue('facing', value.value)
+                                formik.setFieldValue('status', value.value)
                               }}
-                              value={formik.values.facing}
+                              value={formik.values.status}
                               // options={aquaticCreatures}
                               options={statusList}
                             />
                           </div>
                           <div className="w-full flex flex-col mb-3">
                             <CustomSelect
-                              name="facing"
+                              name="release_status"
                               label="Release Status*"
                               className="input mt-"
                               onChange={(value) => {
-                                // formik.setFieldValue('facing', value.value)
+                                formik.setFieldValue(
+                                  'release_status',
+                                  value.value
+                                )
                               }}
-                              value={formik.values.facing}
+                              value={formik.values.release_status}
                               // options={aquaticCreatures}
                               options={releaseStausList}
                             />
                           </div>
-
-                          {/* <div className="w-full flex flex-col mb-3">
-                          <CustomSelect
-                            name="facing"
-                            label="Owner Name*"
-                            className="input mt-"
-                            onChange={(value) => {
-                              // formik.setFieldValue('facing', value.value)
-                            }}
-                            value={formik.values.facing}
-                            // options={aquaticCreatures}
-                            options={facingTypeList}
-                          />
-                        </div> */}
                         </div>
 
                         <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-1">
                           <div className="mb-3 space-y-2 w-full text-xs mt-1">
-                            <TextField
-                              label="Owner Name*"
-                              name="area"
-                              type="text"
-                            />
+                            <TextField label="area" name="area" type="number" />
                           </div>
                           <div className="w-full flex flex-col mb-3 mt-1">
                             <CustomSelect
-                              name="facing"
+                              name="mortgage_type"
                               label="Mortgage Type*"
                               className="input mt-"
                               onChange={(value) => {
-                                // formik.setFieldValue('facing', value.value)
+                                formik.setFieldValue(
+                                  'mortgage_type',
+                                  value.value
+                                )
                               }}
-                              value={formik.values.facing}
+                              value={formik.values.mortgage_type}
                               // options={aquaticCreatures}
                               options={mortgageType}
                             />

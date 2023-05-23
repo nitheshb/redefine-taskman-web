@@ -115,16 +115,18 @@ export const steamAllLeadsActivity = async (orgId, snapshot, data, error) => {
     .eq('from', 'visitfixed')
     .gte('T', cutoffDate)
 
-//  below logic merges the duplicate logs with Luid and from 'visitfixed'
-// coverA contains all merge from array
-  const result = Object.values(lead_logs.reduce((obj, item) => {
-    if (!obj[item.Luid]) {
-      obj[item.Luid] = { ...item, coverA: [item.to] };
-    } else {
-      obj[item.Luid].coverA.push(item.to);
-    }
-    return obj;
-  }, {}));
+  //  below logic merges the duplicate logs with Luid and from 'visitfixed'
+  // coverA contains all merge from array
+  const result = Object.values(
+    lead_logs.reduce((obj, item) => {
+      if (!obj[item.Luid]) {
+        obj[item.Luid] = { ...item, coverA: [item.to] }
+      } else {
+        obj[item.Luid].coverA.push(item.to)
+      }
+      return obj
+    }, {})
+  )
   return result
   // return lead_logs
   // return onSnapshot(itemsQuery, snapshot, error)
@@ -566,7 +568,7 @@ export const getUnits = (orgId, snapshot, data, error) => {
   const itemsQuery = query(
     collection(db, `${orgId}_units`),
     where('pId', '==', pId),
-    where('blockId', '==', blockId),
+    where('blockId', '==', blockId || 1),
     orderBy('unit_no', 'asc')
   )
 
@@ -665,7 +667,7 @@ export const checkIfUnitAlreadyExists = async (
 ) => {
   // db.collection(`${orgId}_leads').doc().set(data)
   // db.collection('')
-  console.log('inoinel', pId, phaseId, blockId, unitId)
+  console.log('inoinel', pId, phaseId || 1, blockId || 1, unitId)
   const q = await query(
     collection(db, cName),
     where('unit_no', '==', unitId),
@@ -916,11 +918,8 @@ export const addLead = async (orgId, data, by, msg) => {
       // await sendWhatAppTextSms1(
       //   '7760959579',
       //   `Warm Greetings!
-
       // Thanks for your interest in ${Project},
       // It's a pleasure to be a part of your housing journey. Our team will be in touch with you in a brief period. In the meanwhile, this would help you get to know the project a little more.
-
-
       // Warm Regards
       // Maa Homes.`
       // )
@@ -940,7 +939,6 @@ export const addLead = async (orgId, data, by, msg) => {
 
       //   Regarding your interest in ${Project}, I’m pleased to be your point of contact throughout this journey. I would like to understand your requirements & do let me know if you have any doubts about ${Project}.
       //   Looking forward to a fruitful relationship.
-
 
       // Warm Regards
       // ${name}
@@ -1043,6 +1041,155 @@ export const addCustomer = async (
     variant: 'success',
   })
   resetForm()
+  return
+}
+
+export const addPlotUnit = async (orgId, data, by, msg) => {
+  const {
+    pId,
+    phaseId,
+    blockId,
+    unit_no,
+    survey_no,
+    Katha_no,
+    PID_no,
+    area,
+    sqft_rate,
+    plc_per_sqft,
+    size,
+    facing,
+    east_d,
+    west_d,
+    north_d,
+    south_d,
+    east_west_d,
+    north_south_d,
+
+    east_sch_by,
+    west_sch_by,
+    status,
+
+    release_status,
+    mortgage_type,
+  } = data
+
+  // get the cost sheet charges obj & successully create total unit cost
+  const assetVal = area * sqft_rate + (area * plc_per_sqft || 0)
+  const yo = {
+    // totalEstValue: increment(plot_value + construct_value),
+    // totalEstPlotVal: increment(plot_value),
+    // totalEstConstuctVal: increment(construct_value),
+    // plotcost: 10,
+    // constCost: 10,
+    // plcCharges: 10,
+    // discount: 10,
+    // totalUnitCost: 100,
+    // legal: 10,
+    // clubhousecharges: 10,
+    // bescom_bwssb: 10,
+    // totalPlotArea: plot_Sqf,
+    // totalConstructArea: super_built_up_area,
+    // // totalArea: increment(area),
+    // totalUnitCount: 1,
+    totalUnitCount: increment(1),
+    availableCount: status === 'available' ? increment(1) : increment(0),
+    soldUnitCount: status === 'sold' ? increment(1) : increment(0),
+    blockedUnitCount: ['blocked_customer', 'blocked_management'].includes(
+      status
+    )
+      ? increment(1)
+      : increment(0),
+    totalValue: increment(assetVal),
+    soldValue: status === 'sold' ? increment(assetVal) : increment(0),
+    blockedValue: ['blocked_customer', 'blocked_management'].includes(
+      status
+    ) ? increment(assetVal) : increment(0),
+    totalEstPlotVal: increment(assetVal),
+    totalArea: increment(area),
+    soldArea: status === 'sold' ? increment(area) : increment(0),
+    blockedArea: ['blocked_customer', 'blocked_management'].includes(
+      status
+    ) ? increment(area) : increment(0),
+    totalPlotArea: increment(area),
+  }
+
+  const x = await addDoc(collection(db, `${orgId}_units`), data)
+  const y = await updateProjectComputedData(orgId,pId, yo )
+  await console.log('x value is', x, x.id)
+
+  return
+  // await addLeadLog(x.id, {
+  //   s: 's',
+  //   type: 'status',
+  //   subtype: 'added',
+  //   T: Timestamp.now().toMillis(),
+  //   txt: msg,
+  //   by,
+  // })
+
+  // add task to scheduler to Intro call in 3 hrs
+
+  addUnitComputedValues(
+    `${orgId}_projects`,
+    pId,
+    plot_Sqf || 0,
+    super_built_up_area || 0,
+    plot_Sqf * plot_cost_sqf || 0,
+    super_built_up_area * construct_cost_sqf || 0,
+    1
+  )
+  addUnitComputedValues(
+    'phases',
+    phaseId,
+    plot_Sqf || 0,
+    super_built_up_area || 0,
+    plot_Sqf * plot_cost_sqf || 0,
+    super_built_up_area * construct_cost_sqf || 0,
+    1
+  )
+  addUnitComputedValues(
+    'blocks',
+    blockId,
+    plot_Sqf || 0,
+    super_built_up_area || 0,
+    plot_Sqf * plot_cost_sqf || 0,
+    super_built_up_area * construct_cost_sqf || 0,
+    1
+  )
+
+  // add data to bank account
+  // 1) get bank account id of project
+  // 2) convert owner name to something friendly
+
+  // 1) get bank account id of project
+  // builderbankId
+  addUnitBankComputed(
+    orgId,
+    `${orgId}_BankDetails`,
+    builderbankId,
+    plot_Sqf || 0,
+    super_built_up_area || 0,
+    plot_Sqf * plot_cost_sqf || 0,
+    super_built_up_area * construct_cost_sqf || 0,
+    1
+  )
+  // 2) convert owner name to something friendly
+  const owner_docId = owner_name
+    ?.replace(/[^A-Za-z\s!?]/g, '')
+    .replaceAll(' ', '')
+    .toLocaleLowerCase()
+
+  addUnitBankComputed(
+    orgId,
+    `${orgId}_VirtualAccounts`,
+    owner_docId,
+    plot_Sqf || 0,
+    super_built_up_area || 0,
+    plot_Sqf * plot_cost_sqf || 0,
+    super_built_up_area * construct_cost_sqf || 0,
+    1
+  )
+
   return
 }
 export const addUnit = async (orgId, data, by, msg) => {
@@ -1201,6 +1348,17 @@ export const addLeadNotes = async (orgId, id, data) => {
     await updateDoc(washingtonRef, yo)
   } catch (error) {
     await setDoc(doc(db, `${orgId}_leads_notes`, id), yo)
+  }
+}
+export const updateProjectComputedData = async (orgId, id, data) => {
+  try {
+    const washingtonRef = doc(db, `${orgId}_projects`, id)
+    console.log('check add LeadLog', washingtonRef)
+
+    await updateDoc(washingtonRef, data)
+  } catch (error) {
+  console.log('error in updation')
+    // await setDoc(doc(db, `${orgId}_leads_notes`, id), yo)
   }
 }
 export const updateLeadLakeStatus = async (orgId, id, data) => {
@@ -1763,7 +1921,7 @@ export const addPhasePaymentScheduleCharges = async (
       variant: 'success',
     })
   } catch (e) {
-    console.log(' error is here', e)
+    console.log(' error is here', e, chargePayload, uid)
     enqueueSnackbar(e.message, {
       variant: 'error',
     })

@@ -294,7 +294,7 @@ const PaymentScheduleForm = ({ title, data, source, blocksViewFeature }) => {
       // await createPayment(update, enqueueSnackbar)
       await addPhasePaymentScheduleCharges(
         orgId,
-        uid,
+        uid || projectId,
         update,
         blocksViewFeature === 'Construction_Payment_Schedule'
           ? 'ConstructPayScheduleObj'

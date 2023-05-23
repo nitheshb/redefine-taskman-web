@@ -339,6 +339,14 @@ export const costSheetAdditionalChargesA = [
     value: 'carparking',
     label: 'Car Parking',
   },
+  {
+    value: 'clubhouse_charges',
+    label: 'Club House Charges',
+  },
+  {
+    value: 'clubhouse_membership',
+    label: 'Club House Membership',
+  },
 
   {
     value: 'electricity_watersewage',
