@@ -202,6 +202,7 @@ export const sourceListItems = [
     ],
   },
   { label: 'MCube', value: 'mcube', rep: ['mcube', 'Mcube'] },
+  { label: 'MyGate', value: 'mygate', rep: ['MyGate', 'Mygate'] },
   {
     label: 'News Paper',
     value: 'newspaper',
