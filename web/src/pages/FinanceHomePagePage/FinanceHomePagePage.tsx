@@ -7,6 +7,8 @@ import { Link, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
 
 import CrmHome from 'src/components/A_CRMcomp/CrmHome'
+import FinanceHome from 'src/components/A_FinanceModule/FinanceHome'
+import SlimSideMenuBar from 'src/components/A_SideMenu/slimSideMenu'
 import AllBankDetailsView from 'src/components/All_BankDetailsView'
 import HeadSideBarDetailView from 'src/components/HeadDetailSideBar'
 import HeadSideBarDetailView2 from 'src/components/HeadDetailSideBar2'
@@ -21,8 +23,7 @@ import HeadNavBar from '../../components/HeadNavBar/HeadNavBar'
 import HeadSideBar from '../../components/HeadSideBar/HeadSideBar'
 import ProjectsMHomeBody from '../../components/ProjectsMHomeBody/ProjectsMHomeBody'
 import SiderForm from '../../components/SiderForm/SiderForm'
-import SlimSideMenuBar from 'src/components/A_SideMenu/slimSideMenu'
-import FinanceHome from 'src/components/A_FinanceModule/FinanceHome'
+import HeadNavBarAccounts from 'src/components/HeadNavBar/HeadNavBarAccounts'
 
 const FinanceHomePagePage = () => {
   const { user } = useAuth()
@@ -34,7 +35,9 @@ const FinanceHomePagePage = () => {
   const handleNewProjectClose = () => setIsNewProjectOpen(false)
   const handleEditProjectClose = () => setIsEditProjectOpen(false)
   const [projects, setProjects] = useState([])
-  const [viewable, setViewable] = useState('Home')
+  // const [viewable, setViewable] = useState('Home')
+  const [viewable, setViewable] = useState('Payments')
+
   const [selModule, setSelModule] = useState('Finance')
 
   const getProjects = async () => {
@@ -360,12 +363,11 @@ const FinanceHomePagePage = () => {
               viewable={viewable}
             />
 
-
             <div className="w-full flex-grow  my- border-t  items-center overflow-y-auto bg-blue h-[98%]  py-300">
-            <HeadNavBar2
-              selModule ={selModule}
-              setSelModule={setSelModule}
-            />
+              <HeadNavBarAccounts
+                selModule={selModule}
+                setSelModule={setSelModule}
+              />
               {(viewable === 'Today1' || viewable === 'Home') && (
                 <FinanceHome leadsTyper={undefined} />
               )}

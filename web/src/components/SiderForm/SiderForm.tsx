@@ -33,6 +33,7 @@ import {
 } from 'src/state/actions/search'
 import { useDispatch } from 'react-redux'
 import NotificationsSetupForm from '../A_ProjModule/NotificatoinsSetupFromHome'
+import AddPaymentDetailsForm from '../FinanceModule/BookingPaymentForm'
 const SiderForm = ({
   open,
   setOpen,
@@ -238,6 +239,10 @@ const SiderForm = ({
                 {title === 'Add Lead' && (
                   <AddLeadForm title={title} dialogOpen={setOpen} />
                 )}
+                {title === 'New Transaction' && (
+                  <CaptureUnitPayment title={title} dialogOpen={setOpen} />
+                )}
+
                 {title === 'Edit to Push Lead' && (
                   <AddLeadForm
                     title={title}

@@ -1,5 +1,8 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import { useState, useEffect, useRef } from 'react'
 
+import { format, parse } from 'date-fns'
 import { arrayUnion, Timestamp } from 'firebase/firestore'
 import { Form, Formik } from 'formik'
 import { useSnackbar } from 'notistack'
@@ -22,6 +25,7 @@ import { useAuth } from 'src/context/firebase-auth-context'
 import { CustomSelect } from 'src/util/formFields/selectBoxField'
 import { MultiSelectMultiLineField } from 'src/util/formFields/selectBoxMultiLineField'
 import { TextField2 } from 'src/util/formFields/TextField2'
+import CaptureUnitPayment from './CapturePayment'
 
 const AddPaymentDetailsForm = ({
   title,
@@ -38,13 +42,14 @@ const AddPaymentDetailsForm = ({
   projectDetails,
 }) => {
   const { user } = useAuth()
-  const { orgId } = user
+  const { orgId, email, displayName, department, role, phone } = user
   const [loading, setLoading] = useState(false)
   const [openAreaFields, setOpenAreaFields] = useState(false)
   const [bankDetailsA, setBankDetailsA] = useState([])
+  const [paymentModex, setPaymentModex] = useState('Cheque')
 
   const { enqueueSnackbar } = useSnackbar()
-  const { uid } = useParams()
+
   const bankData = {}
   const confettiRef = useRef(null)
   let T_elgible = 0
@@ -96,7 +101,7 @@ const AddPaymentDetailsForm = ({
     const { amount } = data
     const { projectName } = projectDetails
     fullPs.map((dataObj) => {
-      if (dataObj?.elgible) {0
+      if (dataObj?.elgible) {
         T_elgible = dataObj?.value + T_elgible
         stepsComp = stepsComp + 1
         T_transaction = T_transaction + (amount || undefined)
@@ -125,16 +130,20 @@ const AddPaymentDetailsForm = ({
       leadDetailsObj2
     const { uid } = selUnitDetails
     // 1)Make an entry to finance Table {source: ''}
-    console.log('secondary value si s', customerDetailsObj, secondaryCustomerDetailsObj)
-    // const x1 = await addPaymentReceivedEntry(
-    //   orgId,
-    //   uid,
-    //   { leadId: id },
-    //   data,
-    //   'leadsPage',
-    //   'nitheshreddy.email@gmail.com',
-    //   enqueueSnackbar
-    // )
+    console.log(
+      'secondary value si s',
+      customerDetailsObj,
+      secondaryCustomerDetailsObj
+    )
+    const paymentCB = await addPaymentReceivedEntry(
+      orgId,
+      uid,
+      { leadId: id },
+      data,
+      'leadsPage',
+      'nitheshreddy.email@gmail.com',
+      enqueueSnackbar
+    )
 
     const x1 = []
 
@@ -166,16 +175,32 @@ const AddPaymentDetailsForm = ({
       schTime: Timestamp.now().toMillis() + 10800000, // 3 hrs
       ct: Timestamp.now().toMillis(),
     }
-    addModuleScheduler(`${orgId}_fin_tasks`, id, finPayload, x1, data.assignedTo)
-    addModuleScheduler(`${orgId}_crm_tasks`, id, crmPayload, x1, data.assignedTo)
-    addModuleScheduler(`${orgId}_project_tasks`, id, projectPaylaod, x1, data.assignedTo)
-
+    addModuleScheduler(
+      `${orgId}_fin_tasks`,
+      id,
+      finPayload,
+      x1,
+      data.assignedTo
+    )
+    addModuleScheduler(
+      `${orgId}_crm_tasks`,
+      id,
+      crmPayload,
+      x1,
+      data.assignedTo
+    )
+    addModuleScheduler(
+      `${orgId}_project_tasks`,
+      id,
+      projectPaylaod,
+      x1,
+      data.assignedTo
+    )
 
     // create task in finance
     // create task for crm
     // create whatsApp Alert
     // create task to project manager for cost sheet approval
-
 
     // add phaseNo , projName to selUnitDetails
     // 2)Create('')
@@ -231,9 +256,7 @@ const AddPaymentDetailsForm = ({
     )
 
     //
-
     // 3)Update unit record with customer record and mark it as booked
-
     // customerDetailsObj
     const otherData = leadDetailsObj2[`${uid}_others`]
     const unitUpdate = {
@@ -278,7 +301,7 @@ const AddPaymentDetailsForm = ({
     updateProjectCounts(
       orgId,
       leadDetailsObj2?.ProjectId,
-       {soldVal: T_elgible, t_collect : amount},
+      { soldVal: T_elgible, t_collect: amount },
       'nitheshreddy.email@gmail.com',
       enqueueSnackbar
     )
@@ -325,182 +348,7 @@ const AddPaymentDetailsForm = ({
       <div className="grid gap-8 grid-cols-1">
         <div className="flex flex-col rounded-lg bg-white mt-10">
           <div className="mt-0">
-            <Formik
-              enableReinitialize={true}
-              initialValues={initialState}
-              validationSchema={validateSchema}
-              onSubmit={(values, { resetForm }) => {
-                onSubmit(values, resetForm)
-              }}
-            >
-              {(formik) => (
-                <Form>
-                  <div className="form">
-                    {/* Phase Details */}
-
-                    <section className="  bg-blueGray-50">
-                      <div className="w-full mx-auto ">
-                        <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-[#F9FBFB] border-0">
-                          <div className="rounded-t bg-[#F1F5F9] mb-0 px-3 py-2">
-                            <div className="text-center flex justify-between">
-                              <p className="text-xs font-extrabold tracking-tight uppercase font-body my-1">
-                                Payment Entry
-                              </p>
-                            </div>
-                          </div>
-                          <div className="flex-auto px-2 py-4 ">
-                            <section
-                              className="bg-[#fff] p-4 rounded-md "
-                              style={{
-                                boxShadow: '0 1px 12px #f2f2f2',
-                              }}
-                            >
-                              <h6 className="text-blueGray-400 text-sm mt-3 ml-3 mb-6 font-bold uppercase">
-                                Booking Amount Details
-                              </h6>
-                              <div className="flex flex-wrap">
-                                <div className="w-full lg:w-6/12 px-4">
-                                  <div className="w-full mb-3">
-                                    <CustomSelect
-                                      name="mode"
-                                      label="Payment Mode"
-                                      className="input"
-                                      onChange={({ value }) => {
-                                        formik.setFieldValue('mode', value)
-                                      }}
-                                      value={formik.values.mode}
-                                      options={paymentMode}
-                                    />
-                                  </div>
-                                </div>
-                                <div className="w-full lg:w-6/12 px-4">
-                                  <div className=" mb-3 w-full">
-                                    <MultiSelectMultiLineField
-                                      label="Towards Account"
-                                      name="towardsBankDocId"
-                                      onChange={(payload) => {
-                                        console.log(
-                                          'changed value is ',
-                                          payload
-                                        )
-                                        const { value, id, accountName } =
-                                          payload
-                                        formik.setFieldValue(
-                                          'builderName',
-                                          accountName
-                                        )
-                                        formik.setFieldValue(
-                                          'landlordBankDocId',
-                                          id
-                                        )
-
-                                        formik.setFieldValue(
-                                          'towardsBankDocId',
-                                          id
-                                        )
-                                      }}
-                                      value={formik.values.towardsBankDocId}
-                                      options={bankDetailsA}
-                                    />
-                                  </div>
-                                </div>
-                                <div className="w-full lg:w-6/12 px-4">
-                                  {/* <div className="relative w-full mb-3">
-                                    <TextField2
-                                      label="Mode"
-                                      name="mode"
-                                      type="text"
-                                    />
-                                  </div> */}
-                                  <div className="relative w-full mb-3">
-                                    <TextField2
-                                      label="Amount"
-                                      name="amount"
-                                      type="number"
-                                    />
-                                  </div>
-                                </div>
-
-                                <div className="w-full lg:w-6/12 px-4">
-                                  <div className="relative w-full mb-3">
-                                    <TextField2
-                                      label="Cheque No/Reference No"
-                                      name="chequeno"
-                                      type="text"
-                                    />
-                                  </div>
-                                </div>
-                                <div className="w-full lg:w-6/12 px-4">
-                                  <div className="relative w-full mb-3">
-                                    <TextField2
-                                      label="Dated"
-                                      name="dated"
-                                      type="text"
-                                    />
-                                  </div>
-                                </div>
-                                <div className="w-full lg:w-6/12 px-4">
-                                  <div className="relative w-full mb-3">
-                                    <TextField2
-                                      label="Paid To"
-                                      name="paidTo"
-                                      type="text"
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                              <hr className="mt-6 border-b-1 border-blueGray-300" />
-
-                              <h6 className="text-blueGray-400 text-sm mt-3 ml-3 pt-4 mb-6 font-bold uppercase">
-                                Source Of Booking
-                              </h6>
-                              <div className="flex flex-wrap">
-                                <div className="w-full lg:w-12/12 px-4">
-                                  <div className="relative w-full mb-3">
-                                    <TextField2
-                                      label="Source"
-                                      name="bookingSource"
-                                      type="text"
-                                    />
-                                  </div>
-                                </div>
-                                <div className="w-full lg:w-12/12 px-4">
-                                  <div className="relative w-full mb-3">
-                                    <TextField2
-                                      label="Booked By"
-                                      name="bookedBy"
-                                      type="text"
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                              <hr className="mt-6 border-b-1 border-blueGray-300" />
-                              <Confetti ref={confettiRef} />
-                              <div className="mt-5 text-right md:space-x-3 md:block flex flex-col-reverse mb-6">
-                                <button
-                                  className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
-                                  onClick={handleClick}
-                                  type="button"
-                                >
-                                  Receipt Download
-                                </button>
-                                <button
-                                  className="bg-green-400 text-gray-600 active:bg-pink-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
-                                  type="submit"
-                                  disabled={loading}
-                                >
-                                  {'Book'}
-                                </button>
-                              </div>
-                            </section>
-                          </div>
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </Form>
-              )}
-            </Formik>
+           <CaptureUnitPayment />
           </div>
         </div>
       </div>

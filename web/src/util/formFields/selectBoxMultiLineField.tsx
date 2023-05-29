@@ -230,7 +230,7 @@ export const MultiSelectMultiLineField = ({
         components={{ Option: MyOption }}
         value={defaultValue(options, value)}
         valueComponent={GravatarValue}
-        className="text-sm  mt-1"
+        className="text-sm  mt-1 border-none"
       />
     </div>
     // <div>

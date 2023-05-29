@@ -1601,6 +1601,25 @@ export const addPaymentReceivedEntry = async (
   by,
   enqueueSnackbar
 ) => {
+
+  const logPayload ={
+    'id': '',
+    'particular': '',
+    'date': '',
+    'amount': '',
+    'to': '',
+    'toUidnvoiceNo':'',
+    'fromName': '',
+    'fromUi': '',
+    'mode': '',
+    'status': '', // review
+    'dated': '',
+    'appliedTo': '',
+    'receivedBy': '',
+    'receivedByUid': '',
+
+  }
+  console.log('Check',logPayload )
   try {
     const updated = {
       ...customerDetails,
@@ -1910,6 +1929,7 @@ export const addPhasePaymentScheduleCharges = async (
 ) => {
   const usersUpdate = {}
 
+  console.log('paymentSchedule is ', uid, chargePayload, type, enqueueSnackbar)
   const uuxid = uuidv4()
   usersUpdate[uuxid] = chargePayload
   chargePayload.myId = uuxid

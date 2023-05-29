@@ -71,7 +71,9 @@ const CostBreakUpSheet = ({
   const [newSqftPrice, setNewSqftPrice] = useState(0)
   const [onStep, setOnStep] = useState('costsheet')
   const [soldPrice, setSoldPrice] = useState(0)
-  const [csMode, setCsMode] = useState('both')
+  const [csMode, setCsMode] = useState('plot_cs')
+  const [showGstCol, setShowGstCol] = useState(true)
+
   const [newPlotCostSheetA, setNewPlotCostSheetA] = useState([])
   const [newPlotCsObj, setNewPlotCsObj] = useState([])
   const [newPlotPS, setNewPlotPS] = useState([])
@@ -85,7 +87,14 @@ const CostBreakUpSheet = ({
     console.log('new cost sheet value is ', newPlotCsObj)
   }, [newPlotCsObj])
   useEffect(() => {
-    console.log('leadDetailsObj1 are', leadDetailsObj1)
+    console.log('macho is ', projectDetails)
+    const { projectType } = projectDetails
+    if (projectType.name === 'Plots') {
+      setCsMode('plot_cs')
+    } else {
+      setCsMode('both')
+    }
+    // projectDetails
   }, [])
 
   useEffect(() => {
@@ -581,13 +590,8 @@ const CostBreakUpSheet = ({
                             component={() => (
                               <Checkbox
                                 color="primary"
-                                // checked={formik.values.isGSTChecked}
-                                // onChange={() =>
-                                //   formik.setFieldValue(
-                                //     'isGSTChecked',
-                                //     !formik.values.isGSTChecked
-                                //   )
-                                // }
+                                checked={showGstCol}
+                                onClick={() => setShowGstCol(!showGstCol)}
                               />
                             )}
                           />
@@ -609,7 +613,7 @@ const CostBreakUpSheet = ({
                         {(formik) => (
                           <Form ref={ref}>
                             <section
-                              className="bg-[#fff] p-2 rounded-md "
+                              className="bg-[#fff] p-2 rounded-md border border-black "
                               style={{
                                 boxShadow: '0 1px 12px #f2f2f2',
                               }}
@@ -652,6 +656,7 @@ const CostBreakUpSheet = ({
                                   setCostSheetA={setNewPlotCostSheetA}
                                   setNewPS={setNewPlotPS}
                                   newPlotPS={newPlotPS}
+                                  showGstCol={showGstCol}
                                 />
                               )}
                               {csMode === 'construct_cs' && (

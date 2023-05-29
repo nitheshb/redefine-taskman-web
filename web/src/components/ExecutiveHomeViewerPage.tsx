@@ -994,6 +994,7 @@ const ExecutiveHomeViewerPage = ({ leadsTyper, isClicked, setIsClicked }) => {
         unitsViewMode={unitsViewMode}
         setUnitsViewMode={setUnitsViewMode}
         setIsClicked={setIsClicked}
+       
       />
     </>
   )

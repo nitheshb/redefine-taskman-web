@@ -313,8 +313,8 @@ export default function CustomerProfileSideView({
 
   const [selProjectIs, setSelProjectIs] = useState({
     projectName: '',
-    uid: '',
-  })
+    uid: ''
+      })
   // email formik
   const emailFormik = useFormik({
     initialValues: {
@@ -343,6 +343,7 @@ export default function CustomerProfileSideView({
     id,
     Name,
     Project,
+    projectType,
     ProjectId,
     Source,
     // Status,
@@ -386,6 +387,23 @@ export default function CustomerProfileSideView({
     //   get lead data by id
     streamLeadDataFun()
   }, [])
+
+  useEffect(() => {
+    //   get project Id
+    // add project details
+
+    // projectList
+    console.log('my stuff ',selProjectIs?.uid, ProjectId)
+
+    const z = projectList.filter((da) => {
+      return da.uid == (selProjectIs?.uid || ProjectId)
+    })
+    const z1 = {
+      ...z[0]
+    }
+    setSelProjectIs(z1)
+    console.log('my stuff ', z, selProjectIs, z1, ProjectId)
+  }, [projectList,customerDetails ])
 
   useEffect(() => {
     const { schTime } = addTaskCommentObj
@@ -463,11 +481,12 @@ export default function CustomerProfileSideView({
   useEffect(() => {
     setAssignedTo(customerDetails?.assignedTo)
     setAssignerName(customerDetails?.assignedToObj?.label)
-    setSelProjectIs({ projectName: Project, uid: ProjectId })
+    // setSelProjectIs({ projectName: Project, uid: ProjectId })
     setStatusTimeLineA(
       [...statusTimeLineA, ...(customerDetails?.coveredA?.a || [])] || ['new']
     )
 
+    console.log('project o', projectType)
     // setLeadStatus(Status)
   }, [customerDetails])
   // adopt this

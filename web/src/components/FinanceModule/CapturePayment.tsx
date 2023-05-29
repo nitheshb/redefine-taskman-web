@@ -20,6 +20,7 @@ import { useAuth } from 'src/context/firebase-auth-context'
 import { CustomSelect } from 'src/util/formFields/selectBoxField'
 import { MultiSelectMultiLineField } from 'src/util/formFields/selectBoxMultiLineField'
 import { TextField2 } from 'src/util/formFields/TextField2'
+import { format } from 'date-fns'
 
 const CaptureUnitPayment = ({
   title,
@@ -36,10 +37,13 @@ const CaptureUnitPayment = ({
   projectDetails,
 }) => {
   const { user } = useAuth()
-  const { orgId } = user
+  const { orgId, displayName, phone } = user
   const [loading, setLoading] = useState(false)
   const [openAreaFields, setOpenAreaFields] = useState(false)
   const [bankDetailsA, setBankDetailsA] = useState([])
+
+  const [paymentModex, setPaymentModex] = useState('Cheque')
+
 
   const { enqueueSnackbar } = useSnackbar()
   const { uid } = useParams()
@@ -147,7 +151,7 @@ const CaptureUnitPayment = ({
       <div className="grid gap-8 grid-cols-1">
         <div className="flex flex-col h-screen bg-white">
           <div className="mt-0">
-            <Formik
+          <Formik
               enableReinitialize={true}
               initialValues={initialState}
               validationSchema={validateSchema}
@@ -166,36 +170,77 @@ const CaptureUnitPayment = ({
                           <div className="rounded-t bg-[#F1F5F9] mb-0 px-3 py-2">
                             <div className="text-center flex justify-between">
                               <p className="text-xs font-extrabold tracking-tight uppercase font-body my-1">
-                                Capture Payment
+                                Payment Entry
                               </p>
                             </div>
                           </div>
-                          <div className="flex-auto px-2 py- ">
+                          <div className="flex-auto px-2 py-4 mx-auto">
                             <section
-                              className="bg-[#fff] p-4 rounded-md "
+                              className="bg-[#fff] p-4 rounded-md w-[500px] border border-black"
                               style={{
                                 boxShadow: '0 1px 12px #f2f2f2',
                               }}
                             >
-                              <div className="flex flex-wrap">
-                                <div className="w-full lg:w-6/12 px-4">
+                              <div className="flex flex-row justify-between">
+                                <img
+                                  className="w-[89px] h-[42px] ml-4 mt-[15px]"
+                                  alt="barcode"
+                                  src="/maahomes_logo.png"
+                                />
+                                <div className="flex flex-col">
+                                  <h6 className="text-blueGray-400 text-sm mt-4 ml-3 mb- font-bold uppercase">
+                                    Payment Receipt
+                                  </h6>
+                                  <span className="text-center text-[13px] font-light">
+                                    {format(new Date(), 'dd-MMMM-yy')}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="flex flex-wrap mt-10">
+                                <div className="w-full px-4 mb-4">
+                                  {paymentMode.map((dat, i) => {
+                                    return (
+                                      <span
+                                        className={`my-2 mr-2 border rounded-md px-2 py-1 cursor-pointer hover:bg-[#318B96] hover:text-white ${
+                                          paymentModex == dat.label
+                                            ? 'bg-[#318B96] text-white'
+                                            : ''
+                                        }`}
+                                        key={i}
+                                        onClick={() => {
+                                          setPaymentModex(dat.label)
+                                        }}
+                                      >
+                                        {dat.label}
+                                      </span>
+                                    )
+                                  })}
+                                </div>
+
+                                {/* <div className="w-full lg:w-6/12 px-4">
                                   <div className="w-full mb-3">
                                     <CustomSelect
                                       name="mode"
                                       label="Payment Mode"
                                       className="input"
                                       onChange={({ value }) => {
+                                        console.log(
+                                          'hello',
+                                          formik.values.mode,
+                                          value
+                                        )
                                         formik.setFieldValue('mode', value)
                                       }}
                                       value={formik.values.mode}
                                       options={paymentMode}
                                     />
                                   </div>
-                                </div>
-                                <div className="w-full lg:w-6/12 ">
+                                </div> */}
+
+                                <div className="w-full  px-4 mt-3">
                                   <div className=" mb-3 w-full">
                                     <MultiSelectMultiLineField
-                                      label="Towards Account"
+                                      label="Paid Towards Account"
                                       name="towardsBankDocId"
                                       onChange={(payload) => {
                                         console.log(
@@ -223,7 +268,7 @@ const CaptureUnitPayment = ({
                                     />
                                   </div>
                                 </div>
-                                <div className="w-full lg:w-6/12 px-4">
+                                <div className="w-full lg:w-4/12 px-4">
                                   {/* <div className="relative w-full mb-3">
                                     <TextField2
                                       label="Mode"
@@ -240,16 +285,16 @@ const CaptureUnitPayment = ({
                                   </div>
                                 </div>
 
-                                <div className="w-full lg:w-6/12 px-4">
+                                <div className="w-full lg:w-4/12 px-4">
                                   <div className="relative w-full mb-3">
                                     <TextField2
-                                      label="Cheque No/Reference No"
+                                      label="Cheque/Ref No"
                                       name="chequeno"
                                       type="text"
                                     />
                                   </div>
                                 </div>
-                                <div className="w-full lg:w-6/12 px-4">
+                                <div className="w-full lg:w-4/12 px-4">
                                   <div className="relative w-full mb-3">
                                     <TextField2
                                       label="Dated"
@@ -258,7 +303,7 @@ const CaptureUnitPayment = ({
                                     />
                                   </div>
                                 </div>
-                                <div className="w-full lg:w-6/12 px-4">
+                                <div className="w-full  px-4">
                                   <div className="relative w-full mb-3">
                                     <TextField2
                                       label="Paid To"
@@ -268,23 +313,64 @@ const CaptureUnitPayment = ({
                                   </div>
                                 </div>
                               </div>
+                              <div className="flex flex-row-reverse mt-4 mx-4">
+                                <div>
+                                  <div className="text-md font-weight-[700] text-[13px]">
+                                    Acknowledged By
+                                  </div>
+                                  <div className="text-center font-semibold text-[13px]">
+                                    {displayName.toLowerCase()}
+                                  </div>
+                                </div>
+                              </div>
+                              {/* <hr className="mt-6 border-b-1 border-blueGray-300" /> */}
 
+                              {/* <h6 className="text-blueGray-400 text-sm mt-3 ml-3 pt-4 mb-6 font-bold uppercase">
+                                Source Of Booking
+                              </h6> */}
+                              {/* <div className="flex flex-wrap">
+                                <div className="w-full lg:w-12/12 px-4">
+                                  <div className="relative w-full mb-3">
+                                    <TextField2
+                                      label="Source"
+                                      name="bookingSource"
+                                      type="text"
+                                    />
+                                  </div>
+                                </div>
+                                <div className="w-full lg:w-12/12 px-4">
+                                  <div className="relative w-full mb-3">
+                                    <TextField2
+                                      label="Booked By"
+                                      name="bookedBy"
+                                      type="text"
+                                    />
+                                  </div>
+                                </div>
+                              </div> */}
                               <hr className="mt-6 border-b-1 border-blueGray-300" />
                               <Confetti ref={confettiRef} />
                               <div className="mt-5 text-right md:space-x-3 md:block flex flex-col-reverse mb-6">
                                 <button
-                                  className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+                                  className="bg-[#318B96] text-white active:bg-pink-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
                                   onClick={handleClick}
                                   type="button"
                                 >
-                                  Receipt Download
+                                  Reset
                                 </button>
                                 <button
-                                  className="bg-green-400 text-gray-600 active:bg-pink-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+                                  className="bg-[#318B96] text-white active:bg-pink-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+                                  onClick={handleClick}
+                                  type="button"
+                                >
+                                  Download
+                                </button>
+                                <button
+                                  className="bg-[#318B96] text-white active:bg-green-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
                                   type="submit"
                                   disabled={loading}
                                 >
-                                  {'Save'}
+                                  {'Capture Payment'}
                                 </button>
                               </div>
                             </section>
