@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 
+import { format } from 'date-fns'
 import { arrayUnion } from 'firebase/firestore'
 import { Form, Formik } from 'formik'
 import { useSnackbar } from 'notistack'
@@ -11,7 +12,9 @@ import Confetti from 'src/components/shared/confetti'
 import { paymentMode, statesList } from 'src/constants/projects'
 import {
   addPaymentReceivedEntry,
+  addPaymentReceivedEntrySup,
   createBookedCustomer,
+  createNewCustomerS,
   steamBankDetailsList,
   updateLeadStatus,
   updateUnitAsBooked,
@@ -20,12 +23,12 @@ import { useAuth } from 'src/context/firebase-auth-context'
 import { CustomSelect } from 'src/util/formFields/selectBoxField'
 import { MultiSelectMultiLineField } from 'src/util/formFields/selectBoxMultiLineField'
 import { TextField2 } from 'src/util/formFields/TextField2'
-import { format } from 'date-fns'
 
 const CaptureUnitPayment = ({
   title,
   selUnitDetails,
   leadDetailsObj2,
+  onSubmitFun,
   dialogOpen,
   newPlotCsObj,
   newPlotCostSheetA,
@@ -43,7 +46,6 @@ const CaptureUnitPayment = ({
   const [bankDetailsA, setBankDetailsA] = useState([])
 
   const [paymentModex, setPaymentModex] = useState('Cheque')
-
 
   const { enqueueSnackbar } = useSnackbar()
   const { uid } = useParams()
@@ -76,6 +78,73 @@ const CaptureUnitPayment = ({
 
     return unsubscribe
   }, [])
+
+  const onSubmitSupabase = async (data, resetForm) => {
+
+    onSubmitFun(data, resetForm)
+
+    return;
+    // get booking details, leadId, unitDetails,
+    //  from existing object send values of
+    //  booking
+    // copy unit data as it is
+    // copy lead data as it is
+    //  unit details
+
+    // 1)Make an entry to finance Table {source: ''}
+    // 2)Create new record in Customer Table
+    // 3)Update unit record with customer record and mark it as booked
+    // 4)update lead status to book
+
+    //   const x = await addDoc(collection(db, 'spark_leads'), data)
+    // await console.log('x value is', x, x.id)
+
+    const { uid } = selUnitDetails
+    // 1)Make an entry to finance Table {source: ''}
+
+    // create customer
+
+    // update unit record with booked status
+
+    // update payment schedule
+    // log cost sheet
+    // capture transaction
+    // entry  payment log
+    // entry payment sheet
+
+    console.log('check this value ', user, leadDetailsObj2)
+    const { Status } = leadDetailsObj2
+    createNewCustomerS(
+      orgId,
+      projectDetails?.uid,
+      selUnitDetails?.uid,
+      leadDetailsObj2,
+      Status,
+      'booked',
+      user?.email,
+      enqueueSnackbar
+    )
+
+    return
+
+    const x1 = await addPaymentReceivedEntrySup(
+      orgId,
+      uid,
+      { leadId: 'id' },
+      data,
+      'leadsPage',
+      'nitheshreddy.email@gmail.com',
+      enqueueSnackbar
+    )
+
+    // add phaseNo , projName to selUnitDetails
+    // 2)Create('')
+
+    // 3)Update unit record with customer record and mark it as booked
+
+    // 4)update lead status to book
+    // updateLeadStatus(leadDocId, newStatus)
+  }
 
   const onSubmit = async (data, resetForm) => {
     // get booking details, leadId, unitDetails,
@@ -151,12 +220,12 @@ const CaptureUnitPayment = ({
       <div className="grid gap-8 grid-cols-1">
         <div className="flex flex-col h-screen bg-white">
           <div className="mt-0">
-          <Formik
+            <Formik
               enableReinitialize={true}
               initialValues={initialState}
               validationSchema={validateSchema}
               onSubmit={(values, { resetForm }) => {
-                onSubmit(values, resetForm)
+                onSubmitSupabase(values, resetForm)
               }}
             >
               {(formik) => (

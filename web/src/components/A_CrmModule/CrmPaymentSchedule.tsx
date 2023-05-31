@@ -7,6 +7,8 @@ const CrmUnitPaymentSchedule = ({ selCustomerPayload, assets, totalIs }) => {
   const { user } = useAuth()
   const { orgId } = user
 
+
+
   return (
     <>
 
@@ -42,9 +44,13 @@ const CrmUnitPaymentSchedule = ({ selCustomerPayload, assets, totalIs }) => {
               </thead>
 
               <tbody>
-                {selCustomerPayload?.[`${assets[0]}_fullPs`]?.map((d1, inx) => {
+                {selCustomerPayload?.fullPs?.map((d1, inx) => {
                   totalIs =
-                    selCustomerPayload?.[`${assets[0]}_T_review`] - d1?.value
+                    selCustomerPayload?.T_review
+
+                  //      {[].map((d1, inx) => {
+                  // totalIs = 0
+                    // selCustomerPayload?.[`${assets[0]}_T_review`] - d1?.value
                   return (
                     <tr key={inx} className="border-b-[0.05px] border-gray-300">
                       <th className=" text-[10px] text-left text-gray-700 ">
@@ -61,9 +67,10 @@ const CrmUnitPaymentSchedule = ({ selCustomerPayload, assets, totalIs }) => {
                         {d1?.elgible ? 'Yes' : 'No'}
                       </td>
                       <td className="text-[10px] text-right text-gray-800 ">
-                        {totalIs > d1?.value?.toLocaleString('en-IN')
+                        {/* {totalIs > d1?.value?.toLocaleString('en-IN')
                           ? d1?.value?.toLocaleString('en-IN')
-                          : 0}
+                          : 0} */}
+                          {d1?.elgible ? totalIs : 0}
                       </td>
                     </tr>
                   )
@@ -103,14 +110,15 @@ const CrmUnitPaymentSchedule = ({ selCustomerPayload, assets, totalIs }) => {
               </thead>
               <tbody>
                 {' '}
-                {[
-                  { component: { label: 'Unit Cost' } },
-                  { component: { label: 'PLC' } },
-                ]?.map((d1, inx) => (
+                {
+                 selCustomerPayload?.plotCS
+                ?.map((d1, inx) => (
                   <tr key={inx} className="border-b-[0.05px] border-gray-300">
                     <th className="w-[40%] text-[10px] text-left text-gray-700  ">
                       {d1?.component?.label}
                     </th>
+
+
                     <td className="w-[15%] text-[10px] text-right text-gray-700 "></td>
                     <td className="w-[15%] text-[10px] text-right text-gray-700 ">
                       {d1?.TotalSaleValue?.toLocaleString('en-IN')}
@@ -130,7 +138,10 @@ const CrmUnitPaymentSchedule = ({ selCustomerPayload, assets, totalIs }) => {
                   <td className="w-[15%] font-bold text-[10px] text-right text-gray-800 "></td>
                   <td className="w-[15%] font-bold  text-[10px] text-right text-gray-800 "></td>
                   <td className="w-[15%] font-bold  text-[10px] text-right text-gray-800 "></td>
-                  <td className="w-[15%] font-bold  text-[10px] text-right text-gray-800 "></td>
+                  <td className="w-[15%] font-bold  text-[10px] text-right text-gray-800 ">{selCustomerPayload?.plotCS?.reduce(
+      (partialSum, obj) => partialSum + Number(obj?.TotalNetSaleValueGsT),
+      0
+    )?.toLocaleString('en-IN')}</td>
                 </tr>
               </tbody>
             </table>

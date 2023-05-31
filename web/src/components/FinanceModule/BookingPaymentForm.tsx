@@ -13,9 +13,13 @@ import { useParams } from '@redwoodjs/router'
 import Confetti from 'src/components/shared/confetti'
 import { paymentMode, statesList } from 'src/constants/projects'
 import {
+  addAccountslogS,
   addModuleScheduler,
   addPaymentReceivedEntry,
+  capturePaymentS,
   createBookedCustomer,
+  createNewCustomerS,
+  insertPSS,
   steamBankDetailsList,
   updateLeadStatus,
   updateProjectCounts,
@@ -25,6 +29,7 @@ import { useAuth } from 'src/context/firebase-auth-context'
 import { CustomSelect } from 'src/util/formFields/selectBoxField'
 import { MultiSelectMultiLineField } from 'src/util/formFields/selectBoxMultiLineField'
 import { TextField2 } from 'src/util/formFields/TextField2'
+
 import CaptureUnitPayment from './CapturePayment'
 
 const AddPaymentDetailsForm = ({
@@ -87,7 +92,76 @@ const AddPaymentDetailsForm = ({
     return unsubscribe
   }, [])
 
-  const onSubmit = async (data, resetForm) => {
+  const createNewCustoreSupa = async (data) => {
+    // enter customer details too
+    const { Status } = leadDetailsObj2
+
+    createNewCustomerS(
+      orgId,
+      projectDetails?.uid,
+      selUnitDetails?.uid,
+      leadDetailsObj2,
+      Status,
+      'booked',
+      user?.email,
+      enqueueSnackbar
+    )
+  }
+
+  const updateUnitBooked = async (data, resetForm) => {
+    // enter customer details too
+  }
+
+  const updatePS = async (data, resetForm) => {
+    insertPSS(
+      orgId,
+      projectDetails?.uid,
+      selUnitDetails?.uid,
+      leadDetailsObj2,
+      data,
+      user?.email,
+      enqueueSnackbar
+    )
+  }
+  const updateCS = async (data, resetForm) => {}
+  const capturePayment = async (data, resetForm) => {
+    // enter payment log
+ const x =  await  capturePaymentS(
+      orgId,
+      projectDetails?.uid,
+      selUnitDetails?.uid,
+      leadDetailsObj2,
+      data,
+      user?.email,
+      enqueueSnackbar
+    )
+
+    return x
+  }
+
+  const capturePayment_log = async (data,txId, resetForm) => {
+    // enter payment log
+    const payload = {
+      oldStatus: '',
+      newStatus: '',
+      amount: data?.amount,
+      type: 'l_ctd',
+      TransactionUid: txId
+    }
+    const x = await addAccountslogS(
+      orgId,
+      projectDetails?.uid,
+      selUnitDetails?.uid,
+      leadDetailsObj2,
+      payload,
+      user?.email,
+      enqueueSnackbar
+    )
+  await console.log('xo o is ', x)
+  }
+
+  const onSubmitFun = async (data, resetForm) => {
+
     console.log(
       'submitted data is ',
       newPlotCostSheetA,
@@ -111,6 +185,20 @@ const AddPaymentDetailsForm = ({
     T_balance = T_elgible - T_review
     console.log('newPlotPS', newPlotPS, newConstructPS, fullPs, T_elgible)
 
+    createNewCustoreSupa(data,resetForm )
+    fullPs.map((dataObj, i) => {
+      dataObj.order = i
+      updatePS(dataObj, resetForm)
+
+    })
+  const  y =  await  capturePayment(data, resetForm)
+    // get paymentTxn id
+  let txId;
+ if(await y.length>0) {
+  txId= y[0].id
+}
+    await capturePayment_log(data,txId, resetForm)
+
     // get booking details, leadId, unitDetails,
     //  from existing object send values of
     //  booking
@@ -125,6 +213,8 @@ const AddPaymentDetailsForm = ({
 
     //   const x = await addDoc(collection(db, 'spark_leads'), data)
     // await console.log('x value is', x, x.id)
+
+    // I) createNewCustoreSupa
 
     const { id, purpose, customerDetailsObj, secondaryCustomerDetailsObj } =
       leadDetailsObj2
@@ -262,7 +352,7 @@ const AddPaymentDetailsForm = ({
     const unitUpdate = {
       leadId: id,
       status: 'booked',
-      customerDetailsObj,
+      customerDetailsObj:  customerDetailsObj || {},
       secondaryCustomerDetailsObj: secondaryCustomerDetailsObj || {},
       ...otherData,
     }
@@ -348,7 +438,12 @@ const AddPaymentDetailsForm = ({
       <div className="grid gap-8 grid-cols-1">
         <div className="flex flex-col rounded-lg bg-white mt-10">
           <div className="mt-0">
-           <CaptureUnitPayment />
+            <CaptureUnitPayment
+              selUnitDetails={selUnitDetails}
+              projectDetails={projectDetails}
+              leadDetailsObj2={leadDetailsObj2}
+              onSubmitFun={onSubmitFun}
+            />
           </div>
         </div>
       </div>
