@@ -371,7 +371,7 @@ const CustomersSearchHome2 = ({ project }) => {
         title={'customer_summary_full_view'}
         projectDetails={projectDetails}
         unitsViewMode={false}
-        widthClass="max-w-md"
+        widthClass="max-w-3xl"
 
         selCustomerPayload={selCustomerIs}
       />

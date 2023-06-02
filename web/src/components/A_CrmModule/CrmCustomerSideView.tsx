@@ -23,7 +23,7 @@ import { VerticalAlignBottom } from '@mui/icons-material'
 import { DateTimePicker } from '@mui/lab'
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker'
 import TimePicker from '@mui/lab/TimePicker'
-import { TextField } from '@mui/material'
+import { Checkbox, TextField } from '@mui/material'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
@@ -78,6 +78,14 @@ import SiderForm from '../SiderForm/SiderForm'
 
 import CrmUnitSummary from './A_CrmUnitSummary'
 import CrmUnitPsHome from './CustomerFinanceStatement'
+import CrmPaymentSummary from './CrmPaymentSummary'
+
+import AssigedToDropComp from '../assignedToDropComp'
+
+import { USER_ROLES } from 'src/constants/userRoles'
+import UnitFullSummary from './CrmUnitFullSummary'
+
+
 
 // interface iToastInfo {
 //   open: boolean
@@ -136,247 +144,374 @@ export default function CustomerSideViewCRM({
   openUserProfile,
 
   selCustomerPayload,
-
 }) {
   const { user } = useAuth()
   const { enqueueSnackbar } = useSnackbar()
 
   const { orgId } = user
 
-
   // const [leadStatus, setLeadStatus] = useState([])
   const [selFeature, setFeature] = useState('summary')
+  const [unitView, setUnitView] = useState(false)
 
   const [openCapturePayment, setOpenCapturePayment] = useState(false)
+  const [selProjectIs, setSelProjectIs] = useState({
+    projectName: '',
+    uid: '',
+  })
 
   const d = new window.Date()
-
-
-
 
   const openPaymentFun = () => {
     setOpenCapturePayment(true)
   }
+  useEffect(() => {
+    console.log('first', selCustomerPayload)
+  }, [selCustomerPayload])
 
   return (
     <div
       className={`bg-white   h-screen    ${openUserProfile ? 'hidden' : ''} `}
     >
-      <div className="rounded-t bg-[#F1F5F9] mb-0 px-3 pt-2">
-        <div className="flex flex-row justify-between">
-          <div className="flex flex-col justify-between">
-            <p className="text-md font-bold tracking-tight uppercase font-body my-[2px]  ml-2">
-              {selCustomerPayload?.Name}
-              {selCustomerPayload?.projectName}
-            </p>
-            <p className="text-xs tracking-tight uppercase font-body my-[2px] ml-2">
-            Wallet: Rs {selCustomerPayload?.remaining_money}
+      <div className=" pb-[2px] px-3 mt-0 rounded-xs border-b bg-[#F2F5F8]">
+        <div className="-mx-3 flex  sm:-mx-4 px-3">
+          <div className="w-full  xl:w-4/12  ">
+            {/* <div className="">
+                <div className="font-semibold text-[#053219]  text-sm  mt-3 mb-1  tracking-wide font-bodyLato">
+                  <span className="mb-[4px] text-xl uppercase">{Name}</span>
 
+                  <div className="mt-1">
+                    <div className="font-md text-sm text-gray-500 mb-[2] tracking-wide">
+                      <MailIcon className="w-3 h-3 inline text-[#058527] " />{' '}
+                      {Email}
+                    </div>
+                    <div className="font-md text-sm text-gray-500 mb-[2] tracking-wide ">
+                      <DeviceMobileIcon className="w-3 h-3 inline text-[#058527] " />{' '}
+                      {Mobile?.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3')}
+                    </div>
+                  </div>
+                </div>
+              </div> */}
+            <div className="flex flex-col justify-between">
+              <p className="text-md font-bold tracking-tight uppercase font-body my-[2px]  ml-2">
+                {selCustomerPayload?.Name}
+                {selCustomerPayload?.projectName}
+              </p>
+              <p className="text-xs tracking-tight  font-body my-[2px] ml-2">
+                Purchased: Rs {selCustomerPayload?.remaining_money}
+              </p>
+              <p className="text-xs tracking-tight  font-body my-[2px] ml-2">
+                Due: Rs {selCustomerPayload?.remaining_money}
+              </p>
+              <p className="text-xs tracking-tight  font-body my-[2px] ml-2">
+                No of Assets: {selCustomerPayload?.my_assets?.length}
+              </p>
+              <p className="text-xs tracking-tight  font-body my-[2px] ml-2">
+                CRM: ['Agent1']
+              </p>
 
-            </p>
-            <p className="text-xs tracking-tight  font-body my-[2px] ml-2">
-            Due: Rs {selCustomerPayload?.remaining_money}
-
-            </p>
-            <p className="text-xs tracking-tight  font-body my-[2px] ml-2">
-            No of Assets: {selCustomerPayload?.my_assets?.length}
-            </p>
-            <p className="text-xs tracking-tight  font-body my-[2px] ml-2">
-            Assigned To: ['Agent1']
-            </p>
-
-            <div>
-
+              <div></div>
             </div>
           </div>
-          <div className="text-center items-center mr-2 mt-3">
-            <div
-              className="text-center items-center align-middle text-blue-500 text-xs cursor-pointer hover:underline"
-              onClickCapture={() => {
-                openPaymentFun()
-              }}
-            >
-              CAPTURE PAYMENT
+          <div className="w-full px-1  xl:w-8/12 mt-1 mb-1 bg-white  pl-3 pt-2 ">
+            <div className="relative z-10 my-1 pb-2  rounded-md bg-white">
+              <div className="grid grid-cols-2 gap-5">
+                <section className="flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md">
+                  <section className="flex flow-row justify-between mb-1">
+                    <div className="font-md text-xs text-gray-700 tracking-wide">
+                      Wallet
+                    </div>
+                    <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
+                      Rs {selCustomerPayload?.remaining_money}
+                    </div>
+                  </section>
+                  <section className="flex flow-row justify-between mb-1">
+                    <div className="font-md text-xs text-gray-500  tracking-wide">
+                      Elgible
+                    </div>
+                    <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
+                      Rs {selCustomerPayload?.remaining_money}
+                    </div>
+                  </section>
+                  <section className="flex flow-row justify-between mb-1">
+                    <div className="font-md text-xs text-gray-500  tracking-wide">
+                      Paid
+                    </div>
+                    <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
+                      Rs {selCustomerPayload?.remaining_money}
+                    </div>
+                  </section>
+                  <section className="flex flow-row justify-between mb-1">
+                    <div className="font-md text-xs text-gray-500  tracking-wide">
+                      Due
+                    </div>
+                    <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
+                      Rs {selCustomerPayload?.remaining_money}
+                    </div>
+                  </section>
+                </section>
+
+                <section>
+                  <div>
+                    <div className="text-center items-center mr-2 mt-3">
+                      <div>
+                        <Checkbox
+                          color="primary"
+                          // checked={salesPerson?.projAccessA?.includes(selProjId)}
+                          checked={unitView}
+                          onChange={(e) => {
+                            console.log('earnet')
+                            setUnitView(!unitView)
+                            // addRemoveProjectAccessFun(salesPerson)
+                          }}
+                          inputProps={{
+                            'aria-label': 'select all desserts',
+                          }}
+                        />
+                        Assets view
+                      </div>
+                      <div
+                        className="text-center p-[10px] bg-[#318896] text-white rounded-3xl items-center align-middle text-xs cursor-pointer hover:underline"
+                        onClickCapture={() => {
+                          openPaymentFun()
+                        }}
+                      >
+                        CAPTURE PAYMENT
+                      </div>
+                      <div className="text-center items-center mr-2 mt-3"></div>
+                    </div>
+                  </div>
+                </section>
+              </div>
             </div>
           </div>
         </div>
-        <>
-          <div className="">
+        <div className="flex flex-row justify-between">
+          <div
+            className="relative flex flex-col  group"
+            // style={{ alignItems: 'end' }}
+          >
+            <div
+              className="absolute bottom-0 right-0 flex-col items-center hidden mb-6 group-hover:flex"
+              // style={{  width: '300px' }}
+              style={{ zIndex: '9999' }}
+            >
+              <span
+                className="rounded italian relative mr-2 z-100000 p-2 text-xs leading-none text-white whitespace-no-wrap bg-black shadow-lg"
+                style={{
+                  color: 'black',
+                  background: '#e2c062',
+                  maxWidth: '300px',
+                }}
+              >
+                <div className="italic flex flex-col">
+                  <div className="font-bodyLato">
+                    {/* {Source?.toString() || 'NA'} */}
+                  </div>
+                </div>
+              </span>
+              <div
+                className="w-3 h-3  -mt-2 rotate-45 bg-black"
+                style={{ background: '#e2c062', marginRight: '12px' }}
+              ></div>
+            </div>
+            <span className="font-bodyLato text-[#867777] text-xs mt-2">
+              {/* <HighlighterStyle
+                            searchKey={searchKey}
+                            source={row.Source.toString()}
+                          /> */}
+
+              {/* {Source?.toString() || 'NA'} */}
+            </span>
+          </div>
+        </div>
+      </div>
+      {!unitView && (
+        <div className="rounded-t bg-[#F1F5F9] mb-0 px-3 ">
+          <>
             <div className="">
-              {/* <div className="font-md font-medium text-xs  text-gray-800">
+              <div className="">
+                {/* <div className="font-md font-medium text-xs  text-gray-800">
                           Notes
                         </div> */}
 
-              <div className=" border-gray-900  bg-[#F1F5F9] rounded-t-lg ">
-                <ul
-                  className="flex   rounded-t-lg overflow-x-scroll"
-                  id="myTab"
-                  data-tabs-toggle="#myTabContent"
-                  role="tablist"
-                >
-                  {[
-                    // { lab: 'Schedules', val: 'appointments' },
-                    { lab: 'Summary', val: 'summary' },
-                    { lab: 'Tasks', val: 'tasks' },
+                <div className=" border-gray-900  bg-[#F1F5F9] rounded-t-lg ">
+                  <ul
+                    className="flex   rounded-t-lg overflow-x-scroll"
+                    id="myTab"
+                    data-tabs-toggle="#myTabContent"
+                    role="tablist"
+                  >
+                    {[
+                      // { lab: 'Schedules', val: 'appointments' },
+                      { lab: 'Summary', val: 'summary' },
+                      { lab: 'Profile', val: 'Profile' },
 
-                    // { lab: 'Attachments', val: 'attachments' },
-                    // { lab: 'Phone', val: 'phone' },
+                      { lab: 'Assets Information', val: 'unit_information' },
 
-                    { lab: 'Unit Information', val: 'unit_information' },
-                    { lab: 'Commercials', val: 'finance_info' },
-                    { lab: 'Legal', val: 'legal_info' },
 
-                    // { lab: 'Phone', val: 'phone' },
-                    { lab: 'Timeline', val: 'timeline' },
-                  ].map((d, i) => {
-                    return (
-                      <li
-                        key={i}
-                        className="mr-2 ml-2 text-sm font-bodyLato"
-                        role="presentation"
-                      >
-                        <button
-                          className={`inline-block py-3 mr-3 px-1 text-sm font-medium text-center text-black rounded-t-lg border-b-2  hover:text-black hover:border-gray-300   ${
-                            selFeature === d.val
-                              ? 'border-black text-black'
-                              : 'border-transparent'
-                          }`}
-                          type="button"
-                          role="tab"
-                          onClick={() => setFeature(d.val)}
+                      // { lab: 'Phone', val: 'phone' },
+                      { lab: 'Timeline', val: 'timeline' },
+                    ].map((d, i) => {
+                      return (
+                        <li
+                          key={i}
+                          className="mr-2 ml-2 text-sm font-bodyLato"
+                          role="presentation"
                         >
-                          {`${d.lab} `}
-                          {/* <span className="bg-gray-100 px-2 py-1 rounded-full">
-                          {/* {rowsCounter(leadsFetchedData, d.val).length} */}
-                        </button>
-                      </li>
-                    )
-                  })}
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          {selFeature === 'tasks' && (
-            <div className="py-8 px-8 flex flex-col items-center">
-              <div className="font-md font-medium text-xs mb-4 text-gray-800 items-center">
-                <img
-                  className="w-[200px] h-[200px] inline"
-                  alt=""
-                  src="/all-complete.svg"
-                />
-              </div>
-              <h3 className="mb-1 text-sm font-semibold text-gray-900 ">
-                You are clean
-              </h3>
-              <time className="block mb-2 text-sm font-normal leading-none text-gray-400 ">
-                Sitback & Relax <span className="text-blue-600">Add Task</span>
-              </time>
-            </div>
-          )}
-
-          {selFeature === 'timeline' && (
-            <div className="py-8 px-8  border bg-[#F6F7FF]">
-              {filterData.length == 0 && (
-                <div className="py-8 px-8 flex flex-col items-center">
-                  <div className="font-md font-medium text-xs mb-4 text-gray-800 items-center">
-                    <img
-                      className="w-[80px] h-[80px] inline"
-                      alt=""
-                      src="/templates.svg"
-                    />
-                  </div>
-                  <h3 className="mb-1 text-xs font-semibold text-gray-900 ">
-                    Timeline is Empty
-                  </h3>
-                  <time className="block mb-2 text-xs font-normal leading-none text-gray-400 ">
-                    This scenario is very rare to view
-                  </time>
-                </div>
-              )}
-              <div className="font-md font-medium text-xs mb-4 text-gray-800">
-                Timelines
-              </div>
-              <ol className="relative border-l border-gray-200 ">
-                {filterData.map((data, i) => (
-                  <section key={i} className="">
-                    <a
-                      href="#"
-                      className="block items-center p-3 sm:flex hover:bg-gray-100 "
-                    >
-                      {/* <PlusCircleIcon className="mr-3 mb-3 w-10 h-10 rounded-full sm:mb-0" /> */}
-                      {data?.type == 'status' && (
-                        <span className="flex absolute -left-3 justify-center items-center w-6 h-6 bg-blue-200 rounded-full ring-8 ring-white  ">
-                          <svg
-                            className="w-3 h-3 text-blue-600 \"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg"
+                          <button
+                            className={`inline-block py-3 mr-3 px-1 text-sm font-medium text-center text-black rounded-t-lg border-b-2  hover:text-black hover:border-gray-300   ${
+                              selFeature === d.val
+                                ? 'border-black text-black'
+                                : 'border-transparent'
+                            }`}
+                            type="button"
+                            role="tab"
+                            onClick={() => setFeature(d.val)}
                           >
-                            <path
-                              fillRule="evenodd"
-                              d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                              clipRule="evenodd"
-                            ></path>
-                          </svg>
-                        </span>
-                      )}
-                      {data?.type == 'ph' && (
-                        <>
-                          <span className="flex absolute -left-3 justify-center items-center w-6 h-6 bg-green-200 rounded-full ring-8 ring-white ">
+                            {`${d.lab} `}
+                            {/* <span className="bg-gray-100 px-2 py-1 rounded-full">
+                          {/* {rowsCounter(leadsFetchedData, d.val).length} */}
+                          </button>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                </div>
+                {/* <CrmUnitFinanceHistory
+              selCustomerPayload={selCustomerPayload}
+              assets={assets}
+              totalIs={totalIs}
+              unitTransactionsA={unitTransactionsA}
+            /> */}
+              </div>
+            </div>
+
+            {selFeature === 'tasks' && (
+              <div className="py-8 px-8 flex flex-col items-center">
+                <div className="font-md font-medium text-xs mb-4 text-gray-800 items-center">
+                  <img
+                    className="w-[200px] h-[200px] inline"
+                    alt=""
+                    src="/all-complete.svg"
+                  />
+                </div>
+                <h3 className="mb-1 text-sm font-semibold text-gray-900 ">
+                  You are clean
+                </h3>
+                <time className="block mb-2 text-sm font-normal leading-none text-gray-400 ">
+                  Sitback & Relax{' '}
+                  <span className="text-blue-600">Add Task</span>
+                </time>
+              </div>
+            )}
+
+            {selFeature === 'timeline' && (
+              <div className="py-8 px-8  border bg-[#F6F7FF]">
+                {filterData.length == 0 && (
+                  <div className="py-8 px-8 flex flex-col items-center">
+                    <div className="font-md font-medium text-xs mb-4 text-gray-800 items-center">
+                      <img
+                        className="w-[80px] h-[80px] inline"
+                        alt=""
+                        src="/templates.svg"
+                      />
+                    </div>
+                    <h3 className="mb-1 text-xs font-semibold text-gray-900 ">
+                      Timeline is Empty
+                    </h3>
+                    <time className="block mb-2 text-xs font-normal leading-none text-gray-400 ">
+                      This scenario is very rare to view
+                    </time>
+                  </div>
+                )}
+                <div className="font-md font-medium text-xs mb-4 text-gray-800">
+                  Timelines
+                </div>
+                <ol className="relative border-l border-gray-200 ">
+                  {filterData.map((data, i) => (
+                    <section key={i} className="">
+                      <a
+                        href="#"
+                        className="block items-center p-3 sm:flex hover:bg-gray-100 "
+                      >
+                        {/* <PlusCircleIcon className="mr-3 mb-3 w-10 h-10 rounded-full sm:mb-0" /> */}
+                        {data?.type == 'status' && (
+                          <span className="flex absolute -left-3 justify-center items-center w-6 h-6 bg-blue-200 rounded-full ring-8 ring-white  ">
                             <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-3 w-3 text-blue-600 "
-                              viewBox="0 0 20 20"
+                              className="w-3 h-3 text-blue-600 \"
                               fill="currentColor"
+                              viewBox="0 0 20 20"
+                              xmlns="http://www.w3.org/2000/svg"
                             >
-                              <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                              <path
+                                fillRule="evenodd"
+                                d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                                clipRule="evenodd"
+                              ></path>
                             </svg>
                           </span>
+                        )}
+                        {data?.type == 'ph' && (
+                          <>
+                            <span className="flex absolute -left-3 justify-center items-center w-6 h-6 bg-green-200 rounded-full ring-8 ring-white ">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-3 w-3 text-blue-600 "
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                              >
+                                <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                              </svg>
+                            </span>
+                            <div className="text-gray-600  m-3">
+                              <div className="text-base font-normal">
+                                <span className="font-medium text-green-900 ">
+                                  {'Rajiv'}
+                                </span>{' '}
+                                called{' '}
+                                <span className="text-sm text-red-900 ">
+                                  {Name}
+                                </span>{' '}
+                              </div>
+                              <div className="text-sm font-normal">
+                                {data?.txt}
+                              </div>
+                              <span className="inline-flex items-center text-xs font-normal text-gray-500 ">
+                                <ClockIcon className="mr-1 w-3 h-3" />
+                                {data?.type == 'ph'
+                                  ? timeConv(
+                                      Number(data?.time)
+                                    ).toLocaleString()
+                                  : timeConv(data?.T).toLocaleString()}
+                                {'    '}
+                                <span className="text-red-900 ml-4 mr-4">
+                                  {Number(data?.duration)} sec
+                                </span>
+                                or
+                                <span className="text-red-900 ml-4">
+                                  {parseInt(data?.duration / 60)} min
+                                </span>
+                              </span>
+                            </div>
+                          </>
+                        )}
+                        {data?.type != 'ph' && (
                           <div className="text-gray-600  m-3">
                             <div className="text-base font-normal">
                               <span className="font-medium text-green-900 ">
-                                {'Rajiv'}
+                                {data?.type?.toUpperCase()}
                               </span>{' '}
-                              called{' '}
+                              set by{' '}
                               <span className="text-sm text-red-900 ">
-                                {Name}
+                                {data?.by}
                               </span>{' '}
                             </div>
                             <div className="text-sm font-normal">
                               {data?.txt}
                             </div>
                             <span className="inline-flex items-center text-xs font-normal text-gray-500 ">
-                              <ClockIcon className="mr-1 w-3 h-3" />
-                              {data?.type == 'ph'
-                                ? timeConv(Number(data?.time)).toLocaleString()
-                                : timeConv(data?.T).toLocaleString()}
-                              {'    '}
-                              <span className="text-red-900 ml-4 mr-4">
-                                {Number(data?.duration)} sec
-                              </span>
-                              or
-                              <span className="text-red-900 ml-4">
-                                {parseInt(data?.duration / 60)} min
-                              </span>
-                            </span>
-                          </div>
-                        </>
-                      )}
-                      {data?.type != 'ph' && (
-                        <div className="text-gray-600  m-3">
-                          <div className="text-base font-normal">
-                            <span className="font-medium text-green-900 ">
-                              {data?.type?.toUpperCase()}
-                            </span>{' '}
-                            set by{' '}
-                            <span className="text-sm text-red-900 ">
-                              {data?.by}
-                            </span>{' '}
-                          </div>
-                          <div className="text-sm font-normal">{data?.txt}</div>
-                          <span className="inline-flex items-center text-xs font-normal text-gray-500 ">
-                            {/* <svg
+                              {/* <svg
                           className="mr-1 w-3 h-3"
                           fill="currentColor"
                           viewBox="0 0 20 20"
@@ -389,23 +524,30 @@ export default function CustomerSideViewCRM({
                           ></path>
                         </svg> */}
 
-                            <ClockIcon className="mr-1 w-3 h-3" />
-                            {data?.type == 'ph'
-                              ? timeConv(Number(data?.time)).toLocaleString()
-                              : timeConv(data?.T).toLocaleString()}
-                          </span>
-                        </div>
-                      )}
-                    </a>
-                  </section>
-                ))}
-              </ol>
-            </div>
-          )}
-        </>
-      </div>
+                              <ClockIcon className="mr-1 w-3 h-3" />
+                              {data?.type == 'ph'
+                                ? timeConv(Number(data?.time)).toLocaleString()
+                                : timeConv(data?.T).toLocaleString()}
+                            </span>
+                          </div>
+                        )}
+                      </a>
+                    </section>
+                  ))}
+                </ol>
+              </div>
+            )}
+          </>
+        </div>
+      )}
 
+      {unitView && (
+        <UnitFullSummary
+        customerDetails={selCustomerPayload}
+        selCustomerPayload={selCustomerPayload}
+      />
 
+      )}
 
       {selFeature === 'legal_info' && <></>}
       <SiderForm

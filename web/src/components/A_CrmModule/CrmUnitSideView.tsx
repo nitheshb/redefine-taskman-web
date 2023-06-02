@@ -12,6 +12,8 @@ import {
   BadgeCheckIcon,
   DocumentIcon,
   EyeIcon,
+  MailIcon,
+  DeviceMobileIcon,
   ViewBoardsIcon,
   ViewGridIcon,
   XIcon,
@@ -78,6 +80,14 @@ import SiderForm from '../SiderForm/SiderForm'
 
 import CrmUnitSummary from './A_CrmUnitSummary'
 import CrmUnitPsHome from './CustomerFinanceStatement'
+
+import AssigedToDropComp from '../assignedToDropComp'
+
+import { USER_ROLES } from 'src/constants/userRoles'
+
+import CrmPaymentSummary from './CrmPaymentSummary'
+
+import UnitFullSummary from './CrmUnitFullSummary'
 
 // interface iToastInfo {
 //   open: boolean
@@ -219,15 +229,33 @@ export default function UnitSideViewCRM({
     amount,
     fromObj,
     toAccount,
+    stsUpT,
+    assignT,
+    CT,
   } = customerDetails
 
   const { assets } = selCustomerPayload
   const totalIs = 0
-useEffect(() => {
-  console.log('myData is ',   customerDetails,
-  selCustomerPayload,
-  selSubMenu,)
-}, [])
+  useEffect(() => {
+    const count = projectList.filter(
+      (dat) => dat.uid == selCustomerPayload?.pId
+    )
+
+    console.log('myData is ', selCustomerPayload?.pId, projectList)
+    if (count.length > 0) {
+      setSelProjectIs(count[0])
+      console.log('myData is ', selProjectIs, count[0])
+    }
+
+    console.log(
+      'myData is ',
+      customerDetails,
+      selCustomerPayload,
+      selSubMenu,
+      projectList,
+      selProjectIs
+    )
+  }, [projectList])
 
   useEffect(() => {
     const unsubscribe = steamUsersListByRole(
@@ -405,7 +433,7 @@ useEffect(() => {
         await console.log('my Array data is set it')
       },
       {
-        unitId: selCustomerPayload?.id ,
+        unitId: selCustomerPayload?.id,
       },
       () => setUnitTransactionsA([])
     )
@@ -697,638 +725,182 @@ useEffect(() => {
     <div
       className={`bg-white   h-screen    ${openUserProfile ? 'hidden' : ''} `}
     >
-      <div className="rounded-t bg-[#F1F5F9] mb-0 px-3 pt-2">
-        <div className="flex flex-row justify-between">
-          <div className="flex flex-col justify-between">
-            <p className="text-md font-bold tracking-tight uppercase font-body my-[2px]  ml-2">
-              {selCustomerPayload?.unit_no}
-              ,PHASE-I,
-              {selCustomerPayload?.projectName}
-            </p>
-            <p className="text-xs tracking-tight uppercase font-body my-[2px] ml-2">
-              {selCustomerPayload?.customerName1} &{' '}
-              {selCustomerPayload?.secondaryCustomerDetailsObj?.customerName2}
-            </p>
-            <p className="text-xs tracking-tight  font-body my-[2px] ml-2">
-              <span className="">{selCustomerPayload?.phoneNo1}</span>
-              <span className="ml-2">{selCustomerPayload?.email1}</span>
-            </p>
-          </div>
-          <div className="text-center items-center mr-2 mt-3">
-            <div
-              className="text-center items-center align-middle text-blue-500 text-xs cursor-pointer hover:underline"
-              onClickCapture={() => {
-                openPaymentFun()
-              }}
-            >
-              CAPTURE PAYMENT
-            </div>
-          </div>
-        </div>
-        <>
-          <div className="">
-            <div className="">
-              {/* <div className="font-md font-medium text-xs  text-gray-800">
-                          Notes
-                        </div> */}
+      <div className=" pb-[2px] px-3 mt-0 rounded-xs border-b bg-[#F2F5F8]">
+        <div className="-mx-3 flex  sm:-mx-4 px-3">
+          <div className="w-full  xl:w-4/12  ">
+            {/* <div className="">
+                <div className="font-semibold text-[#053219]  text-sm  mt-3 mb-1  tracking-wide font-bodyLato">
+                  <span className="mb-[4px] text-xl uppercase">{Name}</span>
 
-              <div className=" border-gray-900  bg-[#F1F5F9] rounded-t-lg ">
-                <ul
-                  className="flex   rounded-t-lg overflow-x-scroll"
-                  id="myTab"
-                  data-tabs-toggle="#myTabContent"
-                  role="tablist"
-                >
-                  {[
-                    // { lab: 'Schedules', val: 'appointments' },
-                    { lab: 'Summary', val: 'summary' },
-                    { lab: 'Tasks', val: 'tasks' },
-
-                    // { lab: 'Attachments', val: 'attachments' },
-                    // { lab: 'Phone', val: 'phone' },
-
-                    { lab: 'Unit Information', val: 'unit_information' },
-                    { lab: 'Commercials', val: 'finance_info' },
-                    { lab: 'Legal', val: 'legal_info' },
-
-                    // { lab: 'Phone', val: 'phone' },
-                    { lab: 'Timeline', val: 'timeline' },
-                  ].map((d, i) => {
-                    return (
-                      <li
-                        key={i}
-                        className="mr-2 ml-2 text-sm font-bodyLato"
-                        role="presentation"
-                      >
-                        <button
-                          className={`inline-block py-3 mr-3 px-1 text-sm font-medium text-center text-black rounded-t-lg border-b-2  hover:text-black hover:border-gray-300   ${
-                            selFeature === d.val
-                              ? 'border-black text-black'
-                              : 'border-transparent'
-                          }`}
-                          type="button"
-                          role="tab"
-                          onClick={() => setFeature(d.val)}
-                        >
-                          {`${d.lab} `}
-                          {/* <span className="bg-gray-100 px-2 py-1 rounded-full">
-                          {/* {rowsCounter(leadsFetchedData, d.val).length} */}
-                        </button>
-                      </li>
-                    )
-                  })}
-                </ul>
-              </div>
-            </div>
-          </div>
-          {selFeature === 'attachments' && (
-            <div className="border px-4 bg-[#F6F7FF]">
-              {docsList.length === 0 && (
-                <div className="py-8 px-8 flex flex-col items-center mt-6">
-                  <div className="font-md font-medium text-xs mb-4 text-gray-800 items-center">
-                    <img
-                      className="w-[80px] h-[80px] inline"
-                      alt=""
-                      src="/empty-dashboard.svg"
-                    />
-                  </div>
-                  <h3 className="mb-1 text-xs font-semibold text-gray-900 ">
-                    No Attachments
-                  </h3>
-                  <button onClick={() => showAddAttachF()}>
-                    <time className="block mb-2 text-xs font-normal leading-none text-gray-400 ">
-                      Better always attach a string
-                      <span className="text-blue-600 text-xs">
-                        {' '}
-                        Add Dcoument
-                      </span>
-                    </time>
-                  </button>
-                </div>
-              )}
-
-              {attach && (
-                <div className="flex justify-center mt-4">
-                  <div className="mb-3 w-96 px-10 bg-[#FFF9F2] rounded-md py-3 pb-6">
-                    <div className="w-full flex flex-col mb-3 mt-2">
-                      <CustomSelect
-                        name="source"
-                        label="Document Type *"
-                        className="input mt-3"
-                        onChange={(value) => {
-                          // formik.setFieldValue('source', value.value)
-                          setAttachType(value.value)
-                        }}
-                        value={attachType}
-                        options={attachTypes}
-                      />
+                  <div className="mt-1">
+                    <div className="font-md text-sm text-gray-500 mb-[2] tracking-wide">
+                      <MailIcon className="w-3 h-3 inline text-[#058527] " />{' '}
+                      {Email}
                     </div>
-                    <label
-                      htmlFor="formFile"
-                      className="form-label inline-block mb-2  font-regular text-sm "
-                    >
-                      Upload file
-                    </label>
-                    <form onSubmit={docUploadHandler}>
-                      <input
-                        className="form-control
-    block
-    w-full
-    px-3
-    py-1.5
-    text-base
-    font-normal
-    text-gray-700
-    bg-white bg-clip-padding
-    border border-solid border-gray-300
-    rounded
-    transition
-    ease-in-out
-    m-0
-    focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                        type="file"
-                        id="formFile"
-                      />
-                      <div className="flex flex-row mt-3">
-                        <button
-                          // onClick={() => fAddSchedule()}
-                          type="submit"
-                          className={`flex mt-2 rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium text-white bg-[#FF7A53]  hover:bg-gray-700  `}
-                        >
-                          <span className="ml-1 ">Upload</span>
-                        </button>
-                        <button
-                          // onClick={() => fSetLeadsType('Add Lead')}
-                          onClick={() => setAttach(false)}
-                          className={`flex mt-2 ml-4  rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium border  hover:bg-gray-700  `}
-                        >
-                          <span className="ml-1 ">Cancel</span>
-                        </button>
-                      </div>
-                    </form>
-
-                    {/* <h3> {progress}</h3> */}
-                  </div>
-                </div>
-              )}
-
-              {docsList.length > 0 && (
-                <div className="py-8">
-                  <div className="flex justify-between">
-                    <h2 className="text-xl font-semibold leading-tight">
-                      Customer attachments
-                    </h2>
-                    <button onClick={() => showAddAttachF()}>
-                      <time className="block mb-2 text-sm font-normal leading-none text-gray-400 ">
-                        <span className="text-blue-600"> Add Dcoument</span>
-                      </time>
-                    </button>
-                  </div>
-                  <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
-                    <div className="inline-block min-w-full shadow-md rounded-lg overflow-hidden">
-                      <table className="min-w-full leading-normal">
-                        <thead>
-                          <tr>
-                            <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                              Name
-                            </th>
-
-                            <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                              Created On / By
-                            </th>
-                            <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                              Status
-                            </th>
-                            {/* <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100"></th> */}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {docsList.map((dat, i) => {
-                            return (
-                              <tr key={i} className=" border-b">
-                                <td className="px-5 py-5 bg-white text-sm ">
-                                  <div className="flex">
-                                    <div className="">
-                                      <p className="text-gray-900 whitespace-no-wrap overflow-ellipsis">
-                                        {dat.name}
-                                      </p>
-                                      <p className="text-blue-600 whitespace-no-wrap">
-                                        {dat.type}
-                                      </p>
-                                    </div>
-                                  </div>
-                                </td>
-
-                                <td className="px-5 py-5 bg-white text-sm ">
-                                  <p className="text-gray-900 whitespace-no-wrap">
-                                    {prettyDate(dat.cTime)}
-                                  </p>
-                                  <p className="text-gray-600 whitespace-no-wrap overflow-ellipsis">
-                                    {dat.by}
-                                  </p>
-                                </td>
-                                <td className="px-5 py-5 bg-white text-sm">
-                                  <>
-                                    {/* <span className="relative inline px-3 py-1 font-semibold text-red-900 leading-tight">
-                                    <span
-                                      aria-hidden
-                                      className="absolute inset-0 bg-red-200 opacity-50 rounded-full"
-                                    ></span>
-                                    <span className="relative">Approved</span>
-                                  </span> */}
-
-                                    <DownloadIcon
-                                      onClick={() => downloadFile(dat.url)}
-                                      className="w-5 h-5 text-gray-400 ml-3 cursor-pointer"
-                                      aria-hidden="true"
-                                    />
-                                  </>
-                                </td>
-                              </tr>
-                            )
-                          })}
-                        </tbody>
-                      </table>
+                    <div className="font-md text-sm text-gray-500 mb-[2] tracking-wide ">
+                      <DeviceMobileIcon className="w-3 h-3 inline text-[#058527] " />{' '}
+                      {Mobile?.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3')}
                     </div>
                   </div>
                 </div>
-              )}
+              </div> */}
+            <div className="flex flex-col justify-between">
+              <p className="text-md font-bold tracking-tight uppercase font-body  ml-2">
+                {selCustomerPayload?.unit_no}
+                <span className="ml-1 font-normal text-blue-800 text-xs">
+                  {selCustomerPayload?.status}
+                </span>
+              </p>
+              <p className="ml-2">{selProjectIs?.value}</p>
+              <p className="text-xs tracking-tight uppercase font-body mt-[2px] ml-2">
+                {selCustomerPayload?.customerDetailsObj?.customerName1} &{' '}
+                {selCustomerPayload?.secondaryCustomerDetailsObj?.customerName2}
+              </p>
+              <p className="text-xs tracking-tight  font-body my-[2px] ml-2">
+                <span className="">
+                  {selCustomerPayload?.customerDetailsObj?.phoneNo1}
+                </span>
+                <span className="ml-2">
+                  {selCustomerPayload?.customerDetailsObj?.email1}
+                </span>
+              </p>
             </div>
-          )}
-          {selFeature === 'tasks' && (
-            <div className="py-8 px-8 flex flex-col items-center">
-              <div className="font-md font-medium text-xs mb-4 text-gray-800 items-center">
-                <img
-                  className="w-[200px] h-[200px] inline"
-                  alt=""
-                  src="/all-complete.svg"
-                />
-              </div>
-              <h3 className="mb-1 text-sm font-semibold text-gray-900 ">
-                You are clean
-              </h3>
-              <time className="block mb-2 text-sm font-normal leading-none text-gray-400 ">
-                Sitback & Relax <span className="text-blue-600">Add Task</span>
-              </time>
-            </div>
-          )}
-
-          {selFeature === 'timeline' && (
-            <div className="py-8 px-8  border bg-[#F6F7FF]">
-              {filterData.length == 0 && (
-                <div className="py-8 px-8 flex flex-col items-center">
-                  <div className="font-md font-medium text-xs mb-4 text-gray-800 items-center">
-                    <img
-                      className="w-[80px] h-[80px] inline"
-                      alt=""
-                      src="/templates.svg"
-                    />
-                  </div>
-                  <h3 className="mb-1 text-xs font-semibold text-gray-900 ">
-                    Timeline is Empty
-                  </h3>
-                  <time className="block mb-2 text-xs font-normal leading-none text-gray-400 ">
-                    This scenario is very rare to view
-                  </time>
-                </div>
-              )}
-              <div className="font-md font-medium text-xs mb-4 text-gray-800">
-                Timelines
-              </div>
-              <ol className="relative border-l border-gray-200 ">
-                {filterData.map((data, i) => (
-                  <section key={i} className="">
-                    <a
-                      href="#"
-                      className="block items-center p-3 sm:flex hover:bg-gray-100 "
-                    >
-                      {/* <PlusCircleIcon className="mr-3 mb-3 w-10 h-10 rounded-full sm:mb-0" /> */}
-                      {data?.type == 'status' && (
-                        <span className="flex absolute -left-3 justify-center items-center w-6 h-6 bg-blue-200 rounded-full ring-8 ring-white  ">
-                          <svg
-                            className="w-3 h-3 text-blue-600 \"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                              clipRule="evenodd"
-                            ></path>
-                          </svg>
-                        </span>
-                      )}
-                      {data?.type == 'ph' && (
-                        <>
-                          <span className="flex absolute -left-3 justify-center items-center w-6 h-6 bg-green-200 rounded-full ring-8 ring-white ">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-3 w-3 text-blue-600 "
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                            >
-                              <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
-                            </svg>
-                          </span>
-                          <div className="text-gray-600  m-3">
-                            <div className="text-base font-normal">
-                              <span className="font-medium text-green-900 ">
-                                {'Rajiv'}
-                              </span>{' '}
-                              called{' '}
-                              <span className="text-sm text-red-900 ">
-                                {Name}
-                              </span>{' '}
-                            </div>
-                            <div className="text-sm font-normal">
-                              {data?.txt}
-                            </div>
-                            <span className="inline-flex items-center text-xs font-normal text-gray-500 ">
-                              <ClockIcon className="mr-1 w-3 h-3" />
-                              {data?.type == 'ph'
-                                ? timeConv(Number(data?.time)).toLocaleString()
-                                : timeConv(data?.T).toLocaleString()}
-                              {'    '}
-                              <span className="text-red-900 ml-4 mr-4">
-                                {Number(data?.duration)} sec
-                              </span>
-                              or
-                              <span className="text-red-900 ml-4">
-                                {parseInt(data?.duration / 60)} min
-                              </span>
-                            </span>
-                          </div>
-                        </>
-                      )}
-                      {data?.type != 'ph' && (
-                        <div className="text-gray-600  m-3">
-                          <div className="text-base font-normal">
-                            <span className="font-medium text-green-900 ">
-                              {data?.type?.toUpperCase()}
-                            </span>{' '}
-                            set by{' '}
-                            <span className="text-sm text-red-900 ">
-                              {data?.by}
-                            </span>{' '}
-                          </div>
-                          <div className="text-sm font-normal">{data?.txt}</div>
-                          <span className="inline-flex items-center text-xs font-normal text-gray-500 ">
-                            {/* <svg
-                          className="mr-1 w-3 h-3"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M4.083 9h1.946c.089-1.546.383-2.97.837-4.118A6.004 6.004 0 004.083 9zM10 2a8 8 0 100 16 8 8 0 000-16zm0 2c-.076 0-.232.032-.465.262-.238.234-.497.623-.737 1.182-.389.907-.673 2.142-.766 3.556h3.936c-.093-1.414-.377-2.649-.766-3.556-.24-.56-.5-.948-.737-1.182C10.232 4.032 10.076 4 10 4zm3.971 5c-.089-1.546-.383-2.97-.837-4.118A6.004 6.004 0 0115.917 9h-1.946zm-2.003 2H8.032c.093 1.414.377 2.649.766 3.556.24.56.5.948.737 1.182.233.23.389.262.465.262.076 0 .232-.032.465-.262.238-.234.498-.623.737-1.182.389-.907.673-2.142.766-3.556zm1.166 4.118c.454-1.147.748-2.572.837-4.118h1.946a6.004 6.004 0 01-2.783 4.118zm-6.268 0C6.412 13.97 6.118 12.546 6.03 11H4.083a6.004 6.004 0 002.783 4.118z"
-                            clipRule="evenodd"
-                          ></path>
-                        </svg> */}
-
-                            <ClockIcon className="mr-1 w-3 h-3" />
-                            {data?.type == 'ph'
-                              ? timeConv(Number(data?.time)).toLocaleString()
-                              : timeConv(data?.T).toLocaleString()}
-                          </span>
+          </div>
+          <div className="w-full px-1  xl:w-8/12 mt-1 mb-1 bg-white  pl-3 pt-2 ">
+            <div className="relative z-10 my-1 pb-2  rounded-md bg-white">
+              <div className="grid grid-cols-3 gap-5">
+                <CrmPaymentSummary selCustomerPayload={selCustomerPayload} />
+                <section className="flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md">
+                  <section className="flex flow-row justify-between mb-1">
+                    <div className="font-md text-xs text-gray-700 tracking-wide">
+                      CRM Owner
+                    </div>
+                    <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
+                      {!user?.role?.includes(USER_ROLES.CP_AGENT) && (
+                        <div>
+                          <AssigedToDropComp
+                            assignerName={assignerName}
+                            id={id}
+                            setAssigner={setAssigner}
+                            usersList={usersList}
+                            align={undefined}
+                          />
                         </div>
                       )}
-                    </a>
+                      {user?.role?.includes(USER_ROLES.CP_AGENT) && (
+                        <span className="text-left text-sm">
+                          {' '}
+                          {assignerName}
+                        </span>
+                      )}
+                    </div>
                   </section>
-                ))}
-              </ol>
+                  <section className="flex flow-row justify-between mb-1">
+                    <div className="font-md text-xs text-gray-500  tracking-wide">
+                      Last Activity
+                    </div>
+                    <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
+                      <span className="text-[#867777] ck ml-2">
+                        {stsUpT === undefined
+                          ? 'NA'
+                          : prettyDateTime(stsUpT) || 'NA'}
+                      </span>
+                    </div>
+                  </section>
+                  <section className="flex flow-row justify-between mb-1">
+                    <div className="font-md text-xs text-gray-500  tracking-wide">
+                      Booked On
+                    </div>
+                    <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
+                      <span className="text-[#867777] ck ml-2">
+                        {CT != undefined ? prettyDateTime(CT) : 'NA'}
+                      </span>
+                    </div>
+                  </section>
+                </section>
+
+                <section>
+                  <div>
+                    <div className="text-center items-center mr-2 mt-3">
+                      <div
+                        className="text-center p-[10px] bg-[#318896] text-white rounded-3xl items-center align-middle text-xs cursor-pointer hover:underline"
+                        onClickCapture={() => {
+                          openPaymentFun()
+                        }}
+                      >
+                        CAPTURE PAYMENT
+                      </div>
+                      <div className="text-center items-center mr-2 mt-3">
+                        <div
+                          className="text-center items-center align-middle p-[10px] bg-[#318896] text-white rounded-3xl text-xs cursor-pointer hover:underline"
+                          onClickCapture={() => {
+                            openPaymentFun()
+                          }}
+                        >
+                          RAISE NEW DEMAND
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              </div>
             </div>
-          )}
-        </>
+          </div>
+        </div>
+        <div className="flex flex-row justify-between">
+          <div className="px-3 py-2 flex flex-row  text-xs  border-t border-[#ebebeb] font-thin   font-bodyLato text-[12px]  py-[6px] ">
+            Recent Comments:{' '}
+            <span className="text-[#867777] ml-1 ">
+              {' '}
+              {leadDetailsObj?.Remarks || 'NA'}
+            </span>
+          </div>
+          <div
+            className="relative flex flex-col  group"
+            // style={{ alignItems: 'end' }}
+          >
+            <div
+              className="absolute bottom-0 right-0 flex-col items-center hidden mb-6 group-hover:flex"
+              // style={{  width: '300px' }}
+              style={{ zIndex: '9999' }}
+            >
+              <span
+                className="rounded italian relative mr-2 z-100000 p-2 text-xs leading-none text-white whitespace-no-wrap bg-black shadow-lg"
+                style={{
+                  color: 'black',
+                  background: '#e2c062',
+                  maxWidth: '300px',
+                }}
+              >
+                <div className="italic flex flex-col">
+                  <div className="font-bodyLato">
+                    {Source?.toString() || 'NA'}
+                  </div>
+                </div>
+              </span>
+              <div
+                className="w-3 h-3  -mt-2 rotate-45 bg-black"
+                style={{ background: '#e2c062', marginRight: '12px' }}
+              ></div>
+            </div>
+            <span className="font-bodyLato text-[#867777] text-xs mt-2">
+              {/* <HighlighterStyle
+                            searchKey={searchKey}
+                            source={row.Source.toString()}
+                          /> */}
+
+              {Source?.toString() || 'NA'}
+            </span>
+          </div>
+        </div>
       </div>
 
-      {selFeature === 'unit_information' && (
-        <>
-          <div className="flex flex-col  my-10 rounded-lg bg-white border border-gray-100 px-4 m-4 mt-4">
-            <div className="py-3 grid grid-cols-3 mb-4">
-              <section className="flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md">
-                <section className="flex flow-row justify-between mb-1">
-                  <div className="font-md text-xs text-gray-700 tracking-wide">
-                    Unit No
-                  </div>
-                  <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {selCustomerPayload?.unit_no}
-                  </div>
-                </section>
-                <section className="flex flow-row justify-between mb-1">
-                  <div className="font-md text-xs text-gray-500  tracking-wide">
-                    Size
-                    <span className="text-[10px] text-black-500 ml-1">
-                      (sqft)
-                    </span>
-                  </div>
-                  <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {selCustomerPayload?.builtup_area?.toLocaleString('en-IN')}
-                  </div>
-                </section>
-                <section className="flex flow-row justify-between mb-1">
-                  <div className="font-md text-xs text-gray-500  tracking-wide">
-                    Facing
-                  </div>
-                  <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {selCustomerPayload?.facing}
-                  </div>
-                </section>
-                <section className="flex flow-row justify-between mb-1">
-                  <div className="font-md text-xs text-gray-500  tracking-wide">
-                    BUA
-                  </div>
-                  <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {selCustomerPayload?.builtup_area?.toLocaleString('en-IN')}
-                  </div>
-                </section>
-              </section>
-              <section className="flex flex-col mx-4 bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md ">
-                <section className="flex flow-row justify-between mb-1">
-                  <div className="font-md text-xs text-gray-700 tracking-wide">
-                    East
-                  </div>
-                  <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {selCustomerPayload?.east?.toLocaleString('en-IN')}
-                  </div>
-                </section>
-                <section className="flex flow-row justify-between mb-1">
-                  <div className="font-md text-xs text-gray-500  tracking-wide">
-                    West
-                  </div>
-                  <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {selCustomerPayload?.west?.toLocaleString('en-IN')}
-                  </div>
-                </section>
-                <section className="flex flow-row justify-between mb-1">
-                  <div className="font-md text-xs text-gray-500  tracking-wide">
-                    South
-                  </div>
-                  <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {selCustomerPayload?.south?.toLocaleString('en-IN')}
-                  </div>
-                </section>
-                <section className="flex flow-row justify-between mb-1">
-                  <div className="font-md text-xs text-gray-500  tracking-wide">
-                    North
-                  </div>
-                  <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {selCustomerPayload?.north?.toLocaleString('en-IN')}
-                  </div>
-                </section>
-              </section>
-              <section className="flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md ">
-                <section className="flex flow-row justify-between mb-1">
-                  <div className="font-md text-xs text-gray-700 tracking-wide">
-                    Cost
-                  </div>
-                  <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {/* {(
-                      data?.unitDetail?.builtup_area *
-                      data?.unitDetail?.rate_per_sqft
-                    )?.toLocaleString('en-IN')} */}
-                    {selCustomerPayload?.rate_per_sqft?.toLocaleString('en-IN')}
-                  </div>
-                </section>
-                <section className="flex flow-row justify-between mb-1">
-                  <div className="font-md text-xs text-gray-500  tracking-wide">
-                    PLC
-                  </div>
-                  <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {selCustomerPayload?.builtup_area?.toLocaleString('en-IN')}
-                  </div>
-                </section>
-                <section className="flex flow-row justify-between mb-1">
-                  <div className="font-md text-xs text-gray-500  tracking-wide">
-                    Total
-                  </div>
-                  <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {selCustomerPayload?.facing}
-                  </div>
-                </section>
-                <section className="flex flow-row justify-between mb-1">
-                  <div className="font-md text-xs text-gray-500  tracking-wide">
-                    KathaId
-                  </div>
-                  <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {selCustomerPayload?.kathaId}
-                  </div>
-                </section>
-              </section>
-            </div>
-          </div>
-        </>
-      )}
-      {selFeature === 'summary' && (
-        <div className="py-3 px-3 m-4 mt-2 rounded-lg border border-gray-100 h-[100%] overflow-y-scroll">
-          <CrmUnitSummary
-            selCustomerPayload={selCustomerPayload}
-            assets={assets}
-            totalIs={totalIs}
-            unitTransactionsA={unitTransactionsA}
-          />
-        </div>
-      )}
-      {['finance_info', 'summary'].includes(selFeature) && (
-        <>
-          <div className="py-3 px-3 m-4 mt-2 rounded-lg border border-gray-100 h-[100%] overflow-y-scroll">
-            <CrmUnitPsHome
-              financeMode={financeMode}
-              setFinanceMode={setFinanceMode}
-              selCustomerPayload={selCustomerPayload}
-              assets={assets}
-              totalIs={totalIs}
-              unitTransactionsA={unitTransactionsA}
-            />
-          </div>
-          {selFeature === 'summary' && (
-            <div className="py-3 px-3 m-4 mt-2 rounded-lg border border-gray-100 h-[100%] overflow-y-scroll">
-              <section className="flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md ">
-                <section className="flex flow-row justify-between mb-1">
-                  <div className="font-md text-xs text-gray-500  tracking-wide">
-                    Amount
-                  </div>
-                  <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    Rs 1,20,000
-                  </div>
-                </section>
-              </section>
+      <UnitFullSummary
+        customerDetails={customerDetails}
+        selCustomerPayload={selCustomerPayload}
+      />
 
-              <div className="mt-2  grid grid-cols-2">
-                <section className="mr-2 flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md ">
-                  <section className="flex flex-row justify-between mb-1">
-                    <div className="font-md text-xs text-gray-500  tracking-wide">
-                      From
-                    </div>
-                    <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                      Imps
-                    </div>
-                  </section>
-                  <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    data
-                  </div>
-                </section>
-                <section className="flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md ">
-                  <section className="flex flex-row  justify-between mb-1">
-                    <div className="font-md text-xs text-gray-500  tracking-wide">
-                      To
-                    </div>
-                    <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                      date
-                    </div>
-                  </section>
-                  <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    data
-                  </div>
-                </section>
-              </div>
-              <div className="my-2  grid grid-cols-2 ">
-                <section className="mr-2 flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md ">
-                  <section className="flex flex-row justify-between mb-1">
-                    <div className="font-md text-xs text-gray-500  tracking-wide">
-                      Date
-                    </div>
-                    <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                      31/11/2022
-                    </div>
-                  </section>
-                  <section className="flex flex-row justify-between mb-1">
-                    <div className="font-md text-xs text-gray-500  tracking-wide">
-                      Ref No
-                    </div>
-                    <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                      00022344x45
-                    </div>
-                  </section>
-                  <section className="flex flex-row  justify-between mb-1">
-                    <div className="font-md text-xs text-gray-500  tracking-wide">
-                      By
-                    </div>
-                    <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                      date
-                    </div>
-                  </section>
-                </section>
-                <section className="flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md ">
-                  <section className="flex flex-row justify-between mb-1">
-                    <div className="font-md text-xs text-gray-500  tracking-wide">
-                      Owner
-                    </div>
-                    <div className="font-md text-xs tracking-wide font-semibold text-slate-900 "></div>
-                  </section>
-                  <section className="flex flex-row  justify-between mb-1">
-                    <div className="font-md text-xs text-gray-500  tracking-wide">
-                      Status
-                    </div>
-                    <div className="font-md text-xs tracking-wide font-semibold text-slate-900 "></div>
-                  </section>
-                </section>
-              </div>
-            </div>
-          )}
-        </>
-      )}
+
 
       {selFeature === 'legal_info' && <></>}
       <SiderForm

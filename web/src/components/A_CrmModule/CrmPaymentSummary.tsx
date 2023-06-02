@@ -8,7 +8,7 @@ const CrmPaymentSummary = ({ selCustomerPayload, assets }) => {
   const { orgId } = user
 
   return (
-    <section className="flex flex-col bg-[#F6F7FF] p-3 mt-3 border border-[#e5e7f8] rounded-md ">
+    <section className="flex flex-col bg-[#F6F7FF] p-3  border border-[#e5e7f8] rounded-md ">
 
 <section className="flex flow-row justify-between mb-1">
         <div className="font-md text-xs text-gray-500  tracking-wide">
