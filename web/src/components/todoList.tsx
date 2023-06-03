@@ -46,7 +46,7 @@ const TodoListView = ({
   const [tableData, setTableData] = useState([])
   const [tabHeadFieldsA, settabHeadFieldsA] = useState([])
   const [isImportLeadsOpen1, setisImportLeadsOpen1] = useState(false)
-  const[isClicked,setisClicked]=useState<string>("clicked_1")
+  const[isClicked,setisClicked]=useState('clicked_1')
 
   // const [leadsFetchedData, setLeadsFetchedData] = useState([])
 
@@ -59,7 +59,10 @@ const TodoListView = ({
     //   .catch((error) => {
     //     // setTableData(tableData1)
     //     console.log(error)
-    //   })
+    //   })\
+
+
+
 
     const tabHeadFieldsA1 =
       leadsTyper === 'inProgress'
@@ -125,13 +128,14 @@ const TodoListView = ({
           <div className="bg-white py-4 md:py-7 px-4 md:px-4 xl:px-6 rounded">
             <section className="flex flex-row w-full ">
             <button
-              onClick={() => setisClicked("clicked_1")}
+
+              onClick={() => setisClicked('clicked_1')  }
               > <section
-                className={`bg-white rounded  flex flex-col p-4 ml-1 mb-2 w-100 border border-[#eaeaea]   w-[212px] "
+                className={` rounded  flex flex-col p-4 ml-1 mb-2 w-100 border border-[#eaeaea]   w-[212px]
                 ${
-                  isClicked.includes('clicked_1')
-                    ? 'bg-fuchsia-400 transition-all scale-105 mr-2'
-                    : ' hover:bg-fuchsia-300 transform hover:scale-95'
+                  isClicked.includes("clicked_1")
+                    ? 'bg-fuchsia-400 scale-105 ml-3 active:bg-fuchsia-500 transition-all scale-105 mr-2'
+                    : 'bg-white hover:bg-fuchsia-300 transform hover:scale-95'
                 }`}
 
 
@@ -161,11 +165,11 @@ const TodoListView = ({
              <button
               onClick={() => setisClicked("clicked_2")}
               > <section
-                className={`bg-white rounded  flex flex-col p-4 ml-1 mb-2 w-100 border border-[#eaeaea]   w-[212px] "
+                className={` rounded  flex flex-col p-4 ml-1 mb-2 w-100 border border-[#eaeaea]   w-[212px] "
                 ${
                   isClicked.includes('clicked_2')
-                    ? 'bg-fuchsia-400 transition-all scale-105 mr-2 ml-3'
-                    : ' hover:bg-fuchsia-300 transform hover:scale-95'
+                    ? 'bg-fuchsia-400 scale-105 ml-3 active:bg-fuchsia-500 transition-all scale-105 mr-2 ml-3'
+                    : 'bg-white hover:bg-fuchsia-300 transform hover:scale-95'
                 }`}
 
 
@@ -196,11 +200,11 @@ const TodoListView = ({
               <button
               onClick={() => setisClicked("clicked_3")}
               > <section
-                className={`bg-white rounded  flex flex-col p-4 ml-1 mb-2 w-100 border border-[#eaeaea]   w-[212px] "
+                className={` rounded  flex flex-col p-4 ml-1 mb-2 w-100 border border-[#eaeaea]   w-[212px] "
                 ${
                   isClicked.includes('clicked_3')
-                    ? 'bg-fuchsia-400 transition-all scale-105 ml-3'
-                    : ' hover:bg-fuchsia-300 transform hover:scale-95'
+                    ? 'bg-fuchsia-400 scale-105 ml-3 active:bg-fuchsia-500 transition-all scale-105 ml-3'
+                    : 'bg-white hover:bg-fuchsia-300 transform hover:scale-95'
                 }`}
 
 
