@@ -130,7 +130,7 @@ const TodoListView = ({
                 className={`bg-white rounded  flex flex-col p-4 ml-1 mb-2 w-100 border border-[#eaeaea]   w-[212px] "
                 ${
                   isClicked.includes('clicked_1')
-                    ? 'bg-fuchsia-500 transition-all scale-105 mr-2'
+                    ? 'bg-fuchsia-400 transition-all scale-105 mr-2'
                     : ' hover:bg-fuchsia-300 transform hover:scale-95'
                 }`}
 
@@ -164,7 +164,7 @@ const TodoListView = ({
                 className={`bg-white rounded  flex flex-col p-4 ml-1 mb-2 w-100 border border-[#eaeaea]   w-[212px] "
                 ${
                   isClicked.includes('clicked_2')
-                    ? 'bg-fuchsia-500 transition-all scale-105 mr-2 ml-3'
+                    ? 'bg-fuchsia-400 transition-all scale-105 mr-2 ml-3'
                     : ' hover:bg-fuchsia-300 transform hover:scale-95'
                 }`}
 
@@ -199,7 +199,7 @@ const TodoListView = ({
                 className={`bg-white rounded  flex flex-col p-4 ml-1 mb-2 w-100 border border-[#eaeaea]   w-[212px] "
                 ${
                   isClicked.includes('clicked_3')
-                    ? 'bg-fuchsia-500 transition-all scale-105 ml-3'
+                    ? 'bg-fuchsia-400 transition-all scale-105 ml-3'
                     : ' hover:bg-fuchsia-300 transform hover:scale-95'
                 }`}
 
