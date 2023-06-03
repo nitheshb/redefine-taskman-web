@@ -46,6 +46,7 @@ const TodoListView = ({
   const [tableData, setTableData] = useState([])
   const [tabHeadFieldsA, settabHeadFieldsA] = useState([])
   const [isImportLeadsOpen1, setisImportLeadsOpen1] = useState(false)
+  const[isClicked,setisClicked]=useState<string>("clicked_1")
 
   // const [leadsFetchedData, setLeadsFetchedData] = useState([])
 
@@ -122,8 +123,19 @@ const TodoListView = ({
       <Box pb={4}>
         <div className=" w-full">
           <div className="bg-white py-4 md:py-7 px-4 md:px-4 xl:px-6 rounded">
-            <section className="flex flex-row w-full">
-              <section className="bg-white rounded  flex flex-col p-4 ml-1 mb-2 w-100 border border-[#eaeaea] w-[212px] ">
+            <section className="flex flex-row w-full ">
+            <button
+              onClick={() => setisClicked("clicked_1")}
+              > <section
+                className={`bg-white rounded  flex flex-col p-4 ml-1 mb-2 w-100 border border-[#eaeaea]   w-[212px] "
+                ${
+                  isClicked.includes('clicked_1')
+                    ? 'bg-fuchsia-500 transition-all scale-105 mr-2'
+                    : ' hover:bg-fuchsia-300 transform hover:scale-95'
+                }`}
+
+
+                 >
                 <section className="flex flex-row">
                   <section className="bg-[#F1EEF6] p-[11px] rounded mr-1">
                     <img
@@ -145,13 +157,20 @@ const TodoListView = ({
                     </h2>
                   </section>
                 </section>
-              </section>
-              <section
-                className="bg-white rounded  flex flex-col p-4 ml-1 mb-2 w-100 border border-[#eaeaea]
+              </section> </button>
+             <button
+              onClick={() => setisClicked("clicked_2")}
+              > <section
+                className={`bg-white rounded  flex flex-col p-4 ml-1 mb-2 w-100 border border-[#eaeaea]   w-[212px] "
+                ${
+                  isClicked.includes('clicked_2')
+                    ? 'bg-fuchsia-500 transition-all scale-105 mr-2 ml-3'
+                    : ' hover:bg-fuchsia-300 transform hover:scale-95'
+                }`}
 
-              w-[212px] "
+
               >
-                <section className="flex flex-row">
+                <section className="flex flex-row ">
                   <section className="bg-[#F1EEF6] p-[11px] rounded mr-1">
                     <img
                       className="px-1"
@@ -159,7 +178,7 @@ const TodoListView = ({
                       alt="/Award_3.png"
                     />
                   </section>
-                  <section className="ml-3 flex flex-col">
+                  <section className="ml-3 flex flex-col ">
                     <h5 className="text-sm">Personal Tasks</h5>
                     <h2 className="text-xl font-semibold text-black leading-light font-Playfair pb-1">
                       {
@@ -172,111 +191,119 @@ const TodoListView = ({
                     </h2>
                   </section>
                 </section>
-              </section>
-              <section
-                className="bg-white rounded  flex flex-col p-4 ml-1 mb-2 w-100 border border-[#eaeaea] bg-[#DCCBFA] 
+              </section> </button>
 
-w-[212px] "
+              <button
+              onClick={() => setisClicked("clicked_3")}
+              > <section
+                className={`bg-white rounded  flex flex-col p-4 ml-1 mb-2 w-100 border border-[#eaeaea]   w-[212px] "
+                ${
+                  isClicked.includes('clicked_3')
+                    ? 'bg-fuchsia-500 transition-all scale-105 ml-3'
+                    : ' hover:bg-fuchsia-300 transform hover:scale-95'
+                }`}
+
+
               >
-                <section className="flex flex-row">
-                  <section className="bg-[#F1EEF6] p-[11px] rounded mr-1">
-                    <img
-                      className="px-1"
-                      src="/Award_3.png"
-                      alt="/Award_3.png"
-                    />
-                  </section>
-                  <section className="ml-3 flex flex-col">
-                    <h5 className="text-sm">Business Tasks</h5>
-                    <h2 className="text-xl font-semibold text-black leading-light font-Playfair pb-1">
-                      {
-                        taskListA?.filter(
-                          (d) =>
-                            searchKey.includes(d['sts']) ||
-                            searchKey.includes('upcoming')
-                        ).length
-                      }
-                    </h2>
-                  </section>
-                </section>
-              </section>
+                      <section className="flex flex-row">
+                        <section className="bg-[#F1EEF6] p-[11px] rounded mr-1">
+                          <img
+                            className="px-1"
+                            src="/Award_3.png"
+                            alt="/Award_3.png"
+                          />
+                        </section>
+                        <section className="ml-3 flex flex-col">
+                          <h5 className="text-sm">Business Tasks</h5>
+                          <h2 className="text-xl font-semibold text-black leading-light font-Playfair pb-1">
+                            {
+                              taskListA?.filter(
+                                (d) =>
+                                  searchKey.includes(d['sts']) ||
+                                  searchKey.includes('upcoming')
+                              ).length
+                            }
+                          </h2>
+                        </section>
+                      </section>
+                    </section> </button>
+             </section>
 
-            </section>
 
             <div className="border border-gray-100 rounded">
-
-            <div className="sm:flex items-center justify-between mx-2 bg-[#DCCBFA] rounded">
-              <div className="flex items-center">
-                <a
-                  className={`rounded-full focus:outline-none focus:ring-2  focus:bg-indigo-50 focus:ring-indigo-800`}
-                  onClick={() => setSearchKey(['completed', 'pending'])}
-                >
-                  <div
-                    className={`px-8 rounded-full hover:text-indigo-700 hover:bg-indigo-100  ${
-                      searchKey.includes('completed') &&
-                      searchKey.includes('pending')
-                        ? 'bg-indigo-100 text-indigo-700'
-                        : 'text-gray-600'
-                    }`}
+              <div className="sm:flex items-center justify-between bg-[#DCCBFA] rounded">
+                <div className="flex items-center">
+                  <a
+                    className={`rounded-full focus:outline-none focus:ring-2  focus:bg-indigo-50 focus:ring-indigo-800`}
+                    onClick={() => setSearchKey(['completed', 'pending'])}
                   >
-                    All
-                  </div>
-                </a>
-                <a
-                  className="rounded-full focus:outline-none focus:ring-2 focus:bg-indigo-50 focus:ring-indigo-800 ml-4 sm:ml-8"
-                  href="javascript:void(0)"
-                  onClick={() => setSearchKey(['completed'])}
-                >
-                  <div
-                    className={`px-8 rounded-full hover:text-indigo-700 hover:bg-indigo-100  ${
-                      searchKey.includes('completed') && searchKey.length === 1
-                        ? 'bg-indigo-100 text-indigo-700'
-                        : 'text-gray-600'
-                    }`}
+                    <div
+                      className={`px-8 rounded-full hover:text-indigo-700 hover:bg-indigo-100  ${
+                        searchKey.includes('completed') &&
+                        searchKey.includes('pending')
+                          ? 'bg-indigo-100 text-indigo-700'
+                          : 'text-gray-600'
+                      }`}
+                    >
+                      All
+                    </div>
+                  </a>
+                  <a
+                    className="rounded-full focus:outline-none focus:ring-2 focus:bg-indigo-50 focus:ring-indigo-800 ml-4 sm:ml-8"
+                    href="javascript:void(0)"
+                    onClick={() => setSearchKey(['completed'])}
                   >
-                    <p>Assigned to me</p>
-                  </div>
-                </a>
-                <a
-                  className="rounded-full focus:outline-none focus:ring-2 focus:bg-indigo-50 focus:ring-indigo-800 ml-4 sm:ml-8"
-                  href="javascript:void(0)"
-                  onClick={() => setSearchKey(['pending'])}
-                >
-                  <div
-                    className={` px-8 rounded-full hover:text-indigo-700 hover:bg-indigo-100  ${
-                      searchKey.includes('pending') && searchKey.length === 1
-                        ? 'bg-indigo-100 text-indigo-700'
-                        : 'text-gray-600'
-                    }`}
+                    <div
+                      className={`px-8 rounded-full hover:text-indigo-700 hover:bg-indigo-100  ${
+                        searchKey.includes('completed') &&
+                        searchKey.length === 1
+                          ? 'bg-indigo-100 text-indigo-700'
+                          : 'text-gray-600'
+                      }`}
+                    >
+                      <p>Assigned to me</p>
+                    </div>
+                  </a>
+                  <a
+                    className="rounded-full focus:outline-none focus:ring-2 focus:bg-indigo-50 focus:ring-indigo-800 ml-4 sm:ml-8"
+                    href="javascript:void(0)"
+                    onClick={() => setSearchKey(['pending'])}
                   >
-                    <p>Created by me</p>
-                  </div>
-                </a>
-                <a
-                  className="rounded-full focus:outline-none focus:ring-2 focus:bg-indigo-50 focus:ring-indigo-800 ml-4 sm:ml-8"
-                  href="javascript:void(0)"
-                  onClick={() => setSearchKey(['upcoming'])}
-                >
-                  <div
-                    className={`px-8 rounded-full hover:text-indigo-700 hover:bg-indigo-100  ${
-                      searchKey.includes('upcoming') && searchKey.length === 1
-                        ? 'bg-indigo-100 text-indigo-700'
-                        : 'text-gray-600'
-                    }`}
+                    <div
+                      className={` px-8 rounded-full hover:text-indigo-700 hover:bg-indigo-100  ${
+                        searchKey.includes('pending') && searchKey.length === 1
+                          ? 'bg-indigo-100 text-indigo-700'
+                          : 'text-gray-600'
+                      }`}
+                    >
+                      <p>Created by me</p>
+                    </div>
+                  </a>
+                  <a
+                    className="rounded-full focus:outline-none focus:ring-2 focus:bg-indigo-50 focus:ring-indigo-800 ml-4 sm:ml-8"
+                    href="javascript:void(0)"
+                    onClick={() => setSearchKey(['upcoming'])}
                   >
-                    <p>Participants</p>
-                  </div>
-                </a>
-              </div>
-              <button
-                className="focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 sm:mt-0 inline-flex items-start justify-start px-6 my-[3px] py-2 mr-2
+                    <div
+                      className={`px-8 rounded-full hover:text-indigo-700 hover:bg-indigo-100  ${
+                        searchKey.includes('upcoming') && searchKey.length === 1
+                          ? 'bg-indigo-100 text-indigo-700'
+                          : 'text-gray-600'
+                      }`}
+                    >
+                      <p>Participants</p>
+                    </div>
+                  </a>
+                </div>
+                <button
+                  className="focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 sm:mt-0 inline-flex items-start justify-start px-6 my-[3px] py-2 mr-2
                  focus:outline-none rounded "
-                onClick={() => openingTaskAddWindow()}
-              >
-                <p className="text-sm font-medium leading-none text-indigo-700">
-                 Add Task
-                </p>
-              </button>
+                  onClick={() => openingTaskAddWindow()}
+                >
+                  <p className="text-sm font-medium leading-none text-indigo-700">
+                    Add Task
+                  </p>
+                </button>
               </div>
             </div>
             {taskListA.length === 0 && (
