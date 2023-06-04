@@ -12,7 +12,6 @@ import {
   ScaleIcon,
   PuzzleIcon,
 } from '@heroicons/react/outline'
-import CheckCircleIcon from '@heroicons/react/solid/CheckCircleIcon'
 import { Box, LinearProgress, useTheme } from '@mui/material'
 
 import { MetaTags } from '@redwoodjs/web'
@@ -20,6 +19,7 @@ import { MetaTags } from '@redwoodjs/web'
 import {
   getCRMCustomerByProject,
   getBookedUnitsByProject,
+  getAllProjects,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 
@@ -127,9 +127,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
 
   const [selSubMenu1, setSelSubMenu1] = useState('summary')
 
-  selSubMenu
 
-  const [value, setValue] = useState('latest')
   const DocumentationHeadA = [
     { lab: 'All Transactions', val: 'all' },
     { lab: 'For onBoarding', val: 'latest' },
@@ -366,39 +364,12 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
   const [tableData, setTableDataA] = useState(preRegisterDummy)
 
   const [selCategory, setSelCategory] = useState('booking_review')
-
-  const QueriesHeadA = [
-    { lab: 'All', val: 'all' },
-    { lab: 'Finance', val: 'latest' },
-    { lab: 'Legal', val: 'legal' },
-    { lab: 'Construction', val: 'cleared' },
-    { lab: 'Other', val: 'rejected' },
-  ]
-  const FinanceHeadA = [
-    { lab: 'All', val: 'all' },
-    { lab: 'Customer Estimates', val: 'latest' },
-    { lab: 'Bank Estimates', val: 'legal' },
-    { lab: 'Payment Review', val: 'cleared' },
-    { lab: 'Other', val: 'rejected' },
-  ]
-  const LegalHeadA = [
-    { lab: 'All', val: 'all' },
-    { lab: 'EC', val: 'latest' },
-    { lab: 'Agreement Doc', val: 'legal' },
-    { lab: 'Registration Doc', val: 'cleared' },
-    { lab: 'Other', val: 'rejected' },
-  ]
-  const ConstructionHeadA = [
-    { lab: 'All', val: 'all' },
-    { lab: 'For onBoarding', val: 'latest' },
-    { lab: 'For Agreement', val: 'latest' },
-    { lab: 'For Registration', val: 'legal' },
-    { lab: 'For Bank Loan', val: 'cleared' },
-    { lab: 'Other', val: 'rejected' },
-  ]
+  useEffect(() => {
+    console.log(' crm units data is ', leadsFetchedData)
+  }, [])
 
   useEffect(() => {
-    getLeadsDataFun()
+    inFun()
   }, [])
   useEffect(() => {
     if (selMenTitle === 'agreeement_home') {
@@ -409,6 +380,30 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
       setSelMenuItem(modifyItems)
     }
   }, [selMenTitle])
+
+  const inFun = async () => {
+    await getProjectsListFun()
+    await getLeadsDataFun(projectList)
+  }
+
+  const getProjectsListFun = () => {
+    const unsubscribe = getAllProjects(
+      orgId,
+      (querySnapshot) => {
+        const projectsListA = querySnapshot.docs.map((docSnapshot) =>
+          docSnapshot.data()
+        )
+        projectsListA.map((user) => {
+          user.label = user.projectName
+          user.value = user.projectName
+        })
+        console.log('fetched proejcts list is', projectsListA)
+        setprojectList(projectsListA)
+      },
+      (error) => setprojectList([])
+    )
+    return unsubscribe
+  }
 
   useEffect(() => {
     // if (selCategory === 'manage') {
@@ -449,7 +444,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
     })
   }
 
-  const getLeadsDataFun = async () => {
+  const getLeadsDataFun = async (projectList) => {
     console.log('login role detials', user)
     const { access, uid } = user
 
@@ -460,11 +455,18 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
           const usersListA = querySnapshot.docs.map((docSnapshot) => {
             const x = docSnapshot.data()
             x.id = docSnapshot.id
+            const y = projectList.filter((proj)=> proj?.uid == x?.pId)
+            console.log(',my prject sel is ', projectList)
+            if(y.length > 0) {
+              console.log(',my prject sel is ', y)
+              x.projName = y[0].projectName
+            }
             return x
           })
           // setBoardData
           console.log('my Array data is ', usersListA, leadsFetchedData)
           // await serealizeData(usersListA)
+
           await setLeadsFetchedData(usersListA)
           await console.log('my Array data is set it', leadsFetchedData)
         },
@@ -489,6 +491,11 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
           const usersListA = querySnapshot.docs.map((docSnapshot) => {
             const x = docSnapshot.data()
             x.id = docSnapshot.id
+            const y = projectList.filter((proj)=> proj?.id == x?.pId)
+            if(y.length > 0) {
+              x.projName = y[0].projectName
+            }
+
             return x
           })
           // setBoardData
@@ -674,7 +681,9 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                         phoneNo1,
                         unit_no,
                         T_balance,
-                        T_elgible
+                        T_elgible,
+                        pId,
+                        projName
                       } = finData
                       return (
                         <section
@@ -704,13 +713,14 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       <span className="font-semibold text-sm app-color-black">
                                         {/* {finData?.[`${assets[0]}_unitDetails`]
                                           ?.unit_no || ''} */}
-                                          {unit_no}
+                                        {unit_no}
                                       </span>
                                       <span className="text-xs">
-                                        {customerDetailsObj?.customerName1 || 1}
+                                        {customerDetailsObj?.customerName1 ||
+                                          'NA'}
                                       </span>
                                       <span className="font-normal text-xs app-color-gray-1">
-                                        Eco Stonex
+                                        {projName}
                                       </span>
                                     </section>
                                   </section>

@@ -844,6 +844,15 @@ export const getAllProjects = async (orgId, snapshot, error) => {
   console.log(getAllProjectsQuery, 'dcavlvblasfjv')
   return onSnapshot(getAllProjectsQuery, snapshot, error)
 }
+export const getAllSources = async (orgId, snapshot, error) => {
+  console.log('org is ', orgId)
+  const getAllProjectsQuery = await query(
+    collection(db, `${orgId}_LeadSources`),
+    orderBy('label')
+  )
+  console.log(getAllProjectsQuery, 'dcavlvblasfjv')
+  return onSnapshot(getAllProjectsQuery, snapshot, error)
+}
 
 export const getProjectByUid = async (orgId, uid: string, snapshot, error) => {
   try {
@@ -1984,6 +1993,28 @@ export const updateAccessRoles = async (
     return enqueueSnackbar(e.message, { variant: 'error' })
   }
 }
+export const addNewSourceComp = async (
+  orgId,
+  sourcePayload,
+  enqueueSnackbar
+) => {
+
+  const uuxid = uuidv4()
+
+  sourcePayload.myId = uuxid
+  sourcePayload.rep = [sourcePayload.value]
+  try {
+   await setDoc(doc(db, `${orgId}_LeadSources`, uuxid), { ...sourcePayload })
+    enqueueSnackbar('New Source added ...!', {
+      variant: 'success',
+    })
+  } catch (e) {
+    console.log(' error is source addition', e)
+    enqueueSnackbar(e.message, {
+      variant: 'error',
+    })
+  }
+}
 export const addPhaseAdditionalCharges = async (
   orgId,
   uid,
@@ -2001,6 +2032,27 @@ export const addPhaseAdditionalCharges = async (
       [type]: arrayUnion(chargePayload),
     })
     enqueueSnackbar('Charges added successfully', {
+      variant: 'success',
+    })
+  } catch (e) {
+    console.log(' error is here', e)
+    enqueueSnackbar(e.message, {
+      variant: 'error',
+    })
+  }
+}
+export const updateLeadSourcesItem = async (
+  orgId,
+  uid,
+  payload,
+  enqueueSnackbar
+) => {
+  try {
+    await updateDoc(doc(db, `${orgId}_LeadSources`, uid), {
+      ...payload
+    })
+
+    enqueueSnackbar('Source Edited successfully', {
       variant: 'success',
     })
   } catch (e) {
@@ -2414,15 +2466,17 @@ export const createNewCustomerS = async (
   enqueueSnackbar
 ) => {
   try {
-    console.log('wow it should be here', leadDocId, newStatus)
 
     const leadDocId = leadDetailsObj2.id
     const { Name } = leadDetailsObj2
 
-    const { datax, errorx } = await supabase.from(`${orgId}_customers`).insert([
+    console.log('wow it should be here', leadDocId, newStatus, Name)
+
+
+    const { data, error } = await supabase.from(`${orgId}_customers`).insert([
       {
         Name: Name,
-        id: leadDocId,
+        // id: leadDocId,
         my_assets: [unitId],
         T: Timestamp.now().toMillis(),
         Luid: leadDocId,
@@ -2430,28 +2484,38 @@ export const createNewCustomerS = async (
         projects: [projectId],
       },
     ])
-    await console.log('customer data is ', datax, errorx)
-    return
-    await updateDoc(doc(db, `${orgId}_leads`, leadDocId), {
-      Status: newStatus,
-      coveredA: arrayUnion(oldStatus),
-      stsUpT: Timestamp.now().toMillis(),
-      leadUpT: Timestamp.now().toMillis(),
-    })
+    await console.log('customer data is ', data, error,     {
+      Name: Name,
+      // id: leadDocId,
+      my_assets: [unitId],
+      T: Timestamp.now().toMillis(),
+      Luid: leadDocId,
+      added_by: by,
+      projects: [projectId],
+    },)
+    return data
 
-    const { data1, error1 } = await supabase.from(`${orgId}_lead_logs`).insert([
-      {
-        type: 'sts_change',
-        subtype: oldStatus,
-        T: Timestamp.now().toMillis(),
-        Luid: leadDocId,
-        by,
-        payload: {},
-        from: oldStatus,
-        to: newStatus,
-        projectId: projectId,
-      },
-    ])
+    return
+    // await updateDoc(doc(db, `${orgId}_leads`, leadDocId), {
+    //   Status: newStatus,
+    //   coveredA: arrayUnion(oldStatus),
+    //   stsUpT: Timestamp.now().toMillis(),
+    //   leadUpT: Timestamp.now().toMillis(),
+    // })
+
+    // const { data1, error1 } = await supabase.from(`${orgId}_lead_logs`).insert([
+    //   {
+    //     type: 'sts_change',
+    //     subtype: oldStatus,
+    //     T: Timestamp.now().toMillis(),
+    //     Luid: leadDocId,
+    //     by,
+    //     payload: {},
+    //     from: oldStatus,
+    //     to: newStatus,
+    //     projectId: projectId,
+    //   },
+    // ])
 
     console.log('chek if ther is any erro in supa', data1, error1)
     enqueueSnackbar(`Status Updated to ${newStatus}`, {
@@ -2503,6 +2567,7 @@ export const capturePaymentS = async (
   orgId,
   projectId,
   unitId,
+  custNo,
   leadDetailsObj2,
   paylaod,
   by,
@@ -2521,7 +2586,7 @@ export const capturePaymentS = async (
         towards: builderName,
         towards_id: towardsBankDocId,
         mode,
-        custId: leadDocId,
+        custId: custNo,
         customerName: Name,
         receive_by: payto,
         txt_dated: Timestamp.now().toMillis(), // modify this to dated time entred by user
@@ -2845,7 +2910,7 @@ export const updateLeadStatus = async (
     //   txt: msg,
     //   by,
     // })
-    const { data1, error1 } = await supabase.from(`${orgId}_lead_logs`).insert([
+    const { data, error } = await supabase.from(`${orgId}_lead_logs`).insert([
       {
         type: 'sts_change',
         subtype: oldStatus,
@@ -2859,7 +2924,7 @@ export const updateLeadStatus = async (
       },
     ])
 
-    console.log('chek if ther is any erro in supa', data1, error1)
+    console.log('chek if ther is any erro in supa', data, error)
     enqueueSnackbar(`Status Updated to ${newStatus}`, {
       variant: 'success',
     })
@@ -3153,6 +3218,21 @@ export const deletePayment = async (uid, enqueueSnackbar) => {
     })
   }
 }
+
+export const deleteSourceList = async (orgId, uid, enqueueSnackbar) => {
+  try {
+    await deleteDoc(doc(db, `${orgId}_LeadSources`, uid))
+
+    enqueueSnackbar('Source deleted successfully', {
+      variant: 'success',
+    })
+  } catch (e) {
+    enqueueSnackbar(e.message, {
+      variant: 'error',
+    })
+  }
+}
+
 
 export const deleteAdditionalCharge = async (uid, enqueueSnackbar) => {
   try {

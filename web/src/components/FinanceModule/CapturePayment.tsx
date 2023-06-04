@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import { useState, useEffect, useRef } from 'react'
 
 import { format } from 'date-fns'
@@ -45,7 +47,7 @@ const CaptureUnitPayment = ({
   const [openAreaFields, setOpenAreaFields] = useState(false)
   const [bankDetailsA, setBankDetailsA] = useState([])
 
-  const [paymentModex, setPaymentModex] = useState('Cheque')
+  const [paymentModex, setPaymentModex] = useState('cheque')
 
   const { enqueueSnackbar } = useSnackbar()
   const { uid } = useParams()
@@ -81,7 +83,9 @@ const CaptureUnitPayment = ({
 
   const onSubmitSupabase = async (data, resetForm) => {
 
-    onSubmitFun(data, resetForm)
+    await onSubmitFun(data, resetForm)
+
+   await confettiRef.current.fire()
 
     return;
     // get booking details, leadId, unitDetails,
@@ -271,13 +275,17 @@ const CaptureUnitPayment = ({
                                     return (
                                       <span
                                         className={`my-2 mr-2 border rounded-md px-2 py-1 cursor-pointer hover:bg-[#318B96] hover:text-white ${
-                                          paymentModex == dat.label
+                                          paymentModex == dat.value
                                             ? 'bg-[#318B96] text-white'
                                             : ''
                                         }`}
                                         key={i}
                                         onClick={() => {
-                                          setPaymentModex(dat.label)
+                                          setPaymentModex(dat.value)
+                                          formik.setFieldValue(
+                                            'mode',
+                                            dat.value
+                                          )
                                         }}
                                       >
                                         {dat.label}

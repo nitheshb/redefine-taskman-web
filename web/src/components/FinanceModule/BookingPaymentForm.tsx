@@ -96,7 +96,7 @@ const AddPaymentDetailsForm = ({
     // enter customer details too
     const { Status } = leadDetailsObj2
 
-    createNewCustomerS(
+    return await createNewCustomerS(
       orgId,
       projectDetails?.uid,
       selUnitDetails?.uid,
@@ -124,12 +124,13 @@ const AddPaymentDetailsForm = ({
     )
   }
   const updateCS = async (data, resetForm) => {}
-  const capturePayment = async (data, resetForm) => {
+  const capturePayment = async (custNo,data, resetForm) => {
     // enter payment log
- const x =  await  capturePaymentS(
+    const x = await capturePaymentS(
       orgId,
       projectDetails?.uid,
       selUnitDetails?.uid,
+      custNo,
       leadDetailsObj2,
       data,
       user?.email,
@@ -139,14 +140,14 @@ const AddPaymentDetailsForm = ({
     return x
   }
 
-  const capturePayment_log = async (data,txId, resetForm) => {
+  const capturePayment_log = async (data, txId, resetForm) => {
     // enter payment log
     const payload = {
       oldStatus: '',
       newStatus: '',
       amount: data?.amount,
       type: 'l_ctd',
-      TransactionUid: txId
+      TransactionUid: txId,
     }
     const x = await addAccountslogS(
       orgId,
@@ -157,11 +158,10 @@ const AddPaymentDetailsForm = ({
       user?.email,
       enqueueSnackbar
     )
-  await console.log('xo o is ', x)
+    await console.log('xo o is ', x)
   }
 
   const onSubmitFun = async (data, resetForm) => {
-
     console.log(
       'submitted data is ',
       newPlotCostSheetA,
@@ -185,19 +185,29 @@ const AddPaymentDetailsForm = ({
     T_balance = T_elgible - T_review
     console.log('newPlotPS', newPlotPS, newConstructPS, fullPs, T_elgible)
 
-    createNewCustoreSupa(data,resetForm )
+    const customerfbA = await createNewCustoreSupa(data, resetForm)
+
     fullPs.map((dataObj, i) => {
       dataObj.order = i
       updatePS(dataObj, resetForm)
-
     })
-  const  y =  await  capturePayment(data, resetForm)
+
+    // customerfbA
+    let custNo
+    if ((await customerfbA.length) > 0) {
+      custNo = customerfbA[0].id
+    }else {
+      return
+    }
+    const y = await capturePayment(custNo,data, resetForm, )
     // get paymentTxn id
-  let txId;
- if(await y.length>0) {
-  txId= y[0].id
-}
-    await capturePayment_log(data,txId, resetForm)
+    let txId
+    if ((await y.length) > 0) {
+      txId = y[0].id
+    }else{
+      return
+    }
+    await capturePayment_log(data, txId, resetForm)
 
     // get booking details, leadId, unitDetails,
     //  from existing object send values of
@@ -352,7 +362,7 @@ const AddPaymentDetailsForm = ({
     const unitUpdate = {
       leadId: id,
       status: 'booked',
-      customerDetailsObj:  customerDetailsObj || {},
+      customerDetailsObj: customerDetailsObj || {},
       secondaryCustomerDetailsObj: secondaryCustomerDetailsObj || {},
       ...otherData,
     }
