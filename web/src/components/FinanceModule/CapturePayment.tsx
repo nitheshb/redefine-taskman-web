@@ -302,8 +302,8 @@ const CaptureUnitPayment = ({
                                     />
                                   </div>
                                 </div>
-                                <div className="w-full mt-3 lg:w-4/12 px-4  ">
-                                  <div className="relative w-full mb-5 mt-[-1px] ">
+                                <div className="w-full mt-3 lg:w-4/12 px-3  ">
+                                  <div className="relative  mb-5 mt-[-1px] ">
 
                                     {/* <TextField2
                                       label="Dated"
@@ -313,7 +313,7 @@ const CaptureUnitPayment = ({
                                      <span className="inline">
 
                           <DatePicker
-                            className=" pl-2 h-8 outline-none border-t-0 border-l-0 border-r-0 border-b border-gray-500  border-solid mt-[-4px] pb-1  min-w-[117px] inline  text-[#0091ae]   lg:w-4/12 w-full min-w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] px-4"
+                            className=" h-8 outline-none border-t-0 border-l-0 border-r-0 border-b border-gray-500  border-solid mt-[-4px] pb-1  min-w-[125px]  inline  text-[#0091ae]   lg:w-4/12 w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] px-2"
                             // className="date"
                             label="Dated"
                             selected={startDate}
