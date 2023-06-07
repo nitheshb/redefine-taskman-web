@@ -3,9 +3,13 @@
 import { useState, useEffect, useRef } from 'react'
 
 import { format } from 'date-fns'
+
 import { arrayUnion } from 'firebase/firestore'
 import { Form, Formik } from 'formik'
 import { useSnackbar } from 'notistack'
+import DatePicker from 'react-datepicker'
+import { setHours, setMinutes } from 'date-fns'
+
 import * as Yup from 'yup'
 
 import { useParams } from '@redwoodjs/router'
@@ -41,11 +45,15 @@ const CaptureUnitPayment = ({
   phase,
   projectDetails,
 }) => {
+  const d = new window.Date()
+
   const { user } = useAuth()
   const { orgId, displayName, phone } = user
   const [loading, setLoading] = useState(false)
   const [openAreaFields, setOpenAreaFields] = useState(false)
   const [bankDetailsA, setBankDetailsA] = useState([])
+  const [startDate, setStartDate] = useState(d)
+
 
   const [paymentModex, setPaymentModex] = useState('cheque')
 
@@ -315,7 +323,7 @@ const CaptureUnitPayment = ({
                                 </div> */}
 
                                 <div className="w-full  px-4 mt-3">
-                                  <div className=" mb-3 w-full">
+                                  <div className=" mb-4 w-full">
                                     <MultiSelectMultiLineField
                                       label="Paid Towards Account"
                                       name="towardsBankDocId"
@@ -345,7 +353,7 @@ const CaptureUnitPayment = ({
                                     />
                                   </div>
                                 </div>
-                                <div className="w-full lg:w-4/12 px-4">
+                                <div className="w-full lg:w-4/12 px-3">
                                   {/* <div className="relative w-full mb-3">
                                     <TextField2
                                       label="Mode"
@@ -353,7 +361,7 @@ const CaptureUnitPayment = ({
                                       type="text"
                                     />
                                   </div> */}
-                                  <div className="relative w-full mb-3">
+                                  <div className="relative w-full mb-5">
                                     <TextField2
                                       label="Amount"
                                       name="amount"
@@ -362,8 +370,8 @@ const CaptureUnitPayment = ({
                                   </div>
                                 </div>
 
-                                <div className="w-full lg:w-4/12 px-4">
-                                  <div className="relative w-full mb-3">
+                                <div className="w-full lg:w-4/12 px-3">
+                                  <div className="relative w-full mb-5">
                                     <TextField2
                                       label="Cheque/Ref No"
                                       name="chequeno"
@@ -371,16 +379,38 @@ const CaptureUnitPayment = ({
                                     />
                                   </div>
                                 </div>
-                                <div className="w-full lg:w-4/12 px-4">
-                                  <div className="relative w-full mb-3">
-                                    <TextField2
+                                <div className="w-full mt-3 lg:w-4/12 px-4  ">
+                                  <div className="relative w-full mb-5 mt-[-1px] ">
+
+                                    {/* <TextField2
                                       label="Dated"
                                       name="dated"
                                       type="text"
-                                    />
+                                    /> */}
+                                     <span className="inline">
+
+                          <DatePicker
+                            className=" pl-2 h-8 outline-none border-t-0 border-l-0 border-r-0 border-b border-gray-500  border-solid mt-[-4px] pb-1  min-w-[117px] inline  text-[#0091ae]   lg:w-4/12 w-full min-w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] px-4"
+                            // className="date"
+                            label="Dated"
+                            selected={startDate}
+                            onChange={(date) => {
+                              formik.setFieldValue('enquiryDat', date.getTime())
+                              setStartDate(date)
+                              // console.log(startDate)
+                            }}
+                            timeFormat="HH:mm"
+                            injectTimes={[
+                              setHours(setMinutes(d, 1), 0),
+                              setHours(setMinutes(d, 5), 12),
+                              setHours(setMinutes(d, 59), 23),
+                            ]}
+                            dateFormat="MMMM d, yyyy"
+                          />
+</span>
                                   </div>
                                 </div>
-                                <div className="w-full  px-4">
+                                <div className="w-full  px-3">
                                   <div className="relative w-full mb-3">
                                     <TextField2
                                       label="Paid To"
