@@ -4,7 +4,15 @@ import { Fragment, useState } from 'react'
 
 import { Dialog, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
+import { useDispatch } from 'react-redux'
 
+import {
+  searchValue as searchedVal,
+  searchData as searchResponse,
+} from 'src/state/actions/search'
+
+import UnitSideViewCRM from '../A_CrmModule/CrmUnitSideView'
+import NotificationsSetupForm from '../A_ProjModule/NotificatoinsSetupFromHome'
 import AddBankDetailsForm from '../addBankDetailsForm'
 import AddBlockForm from '../AddBlockForm/AddBlockForm'
 import AdditionalChargesForm from '../AdditionalChargesForm/AdditionalChargesForm'
@@ -13,11 +21,11 @@ import AddPhaseForm from '../AddPhaseForm/AddPhaseForm'
 import AddTaskForm from '../AddTaskForm'
 import AddUnit from '../AddUnit'
 import ConstructUnitsDetails from '../ConstructModule/ConstructUnitsDetails'
-import UnitSideViewCRM from '../CrmModule/CrmUnitSideView'
 import CrmUnitSideView from '../crmUnitSideView'
 import CustomerProfileSideView from '../customerProfileSideView'
 import DialogFormBody from '../DialogFormBody/DialogFormBody'
 import InventoryViewSideForm from '../DialogFormBody/InventoryViewSideView'
+import AddPaymentDetailsForm from '../FinanceModule/BookingPaymentForm'
 import CaptureUnitPayment from '../FinanceModule/CapturePayment'
 import LegalDocsUplaodHome from '../LeadUplodCsv/Legal_Docs_upload'
 import LeadsDropHomes from '../LeadUplodCsv/uploadHome'
@@ -27,13 +35,9 @@ import PaymentScheduleForm from '../PaymentScheduleForm/PaymentScheduleForm'
 import ProjPhaseHome from '../ProjPhaseHome/ProjPhaseHome'
 import TransactionUpdateSideView from '../transactionUpdateSideView'
 import ViewUnitDetails from '../ViewUnitDetails'
-import {
-  searchValue as searchedVal,
-  searchData as searchResponse,
-} from 'src/state/actions/search'
-import { useDispatch } from 'react-redux'
-import NotificationsSetupForm from '../A_ProjModule/NotificatoinsSetupFromHome'
-import AddPaymentDetailsForm from '../FinanceModule/BookingPaymentForm'
+import CrmCustomerSummary from '../A_CrmModule/A_CrmCustomerSummary'
+import CustomerSideViewCRM from '../A_CrmModule/CrmCustomerSideView'
+
 const SiderForm = ({
   open,
   setOpen,
@@ -213,6 +217,14 @@ const SiderForm = ({
                     viewUnitConstData={viewUnitConstData}
                   />
                 )}
+                {title === 'customer_summary_full_view' && (
+                  <CustomerSideViewCRM
+                    title={title}
+                    dialogOpen={setOpen}
+
+                    selCustomerPayload={selCustomerPayload}
+                  />
+                )}
                 {title === 'View Unit' && (
                   <ViewUnitDetails
                     title={title}
@@ -259,12 +271,12 @@ const SiderForm = ({
                     setUnitsViewMode={setUnitsViewMode}
                   />
                 )}
-                  {title === 'Notification Setup' && (
+                {title === 'Notification Setup' && (
                   <NotificationsSetupForm
-                  title={title}
-                  projectDetails={projectDetails}
-                  wbPayload={wbPayload}
-                />
+                    title={title}
+                    projectDetails={projectDetails}
+                    wbPayload={wbPayload}
+                  />
                 )}
                 {title === 'Project Inventory' && (
                   <InventoryViewSideForm

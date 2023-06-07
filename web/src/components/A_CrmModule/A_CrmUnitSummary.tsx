@@ -11,7 +11,7 @@ import CrmUnitDetailsView1 from './CrmUnitDetailsView1'
 import CrmUnitFinanceHistory from './CrmUnitFinanceHistory'
 import CrmUnitHeader from './CrmUnitHeader'
 
-const CrmCustomerSummary = ({
+const CrmUnitSummary = ({
   selCustomerPayload,
   assets,
   totalIs,
@@ -63,7 +63,7 @@ const CrmCustomerSummary = ({
 
         {/* 1 } customer details */}
         {/* Unit details */}
-        
+
         <CrmUnitCustomerDetailsView1
           Name={selCustomerPayload?.customerName1}
           Mobile={selCustomerPayload?.phoneNo1}
@@ -127,4 +127,4 @@ const CrmCustomerSummary = ({
   )
 }
 
-export default CrmCustomerSummary
+export default CrmUnitSummary

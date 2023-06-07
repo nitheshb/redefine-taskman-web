@@ -54,8 +54,8 @@ const CrmUnitFinanceHistory = ({
 
               <tbody>
                 {unitTransactionsA?.map((d1, inx) => {
-                  totalIs =
-                    selCustomerPayload?.[`${assets[0]}_T_review`] - d1?.value
+                  totalIs = 0
+                    // selCustomerPayload?.[`${assets[0]}_T_review`] - d1?.value
                   return (
                     <tr key={inx} className="border-b-[0.05px] border-gray-300">
                       <th className=" text-[10px] text-left text-gray-700 ">

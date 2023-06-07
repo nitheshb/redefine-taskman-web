@@ -64,7 +64,7 @@ export default function ModuleSwitchDrop({
             className={`${
               ['Facing', 'show'].includes(type) ? 'right-0' : 'left-0'
             }  absolute  w-[360px] mt-2 origin-top-left bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-[9000]`}
-            style={{ 'z-index': '9' }}
+            // style={{ 'z-index': '9' }}
           >
             <div className="px-1 py-1 ">
               <>
