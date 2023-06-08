@@ -1,8 +1,12 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { getWbAllNotifyTemplates } from 'src/context/dbQueryFirebase'
+import { useAuth } from 'src/context/firebase-auth-context'
 
 import { sendWhatAppTextSms1 } from './axiosWhatAppApi'
 import { prettyDateTime } from './dateConverter'
+const { user } = useAuth()
 
+const { orgId } = user
 export const getWhatsAppTemplates = async (
   event,
   type,
@@ -12,6 +16,7 @@ export const getWhatsAppTemplates = async (
   msgPayload
 ) => {
   console.log('triggerting whatsAppStuff')
+
   const scope = [projectId, 'allProjects']
   const templateA = await getWbAllNotifyTemplates(event, scope, type, target)
   console.log('triggerting whatsAppStuff', templateA)
@@ -99,10 +104,12 @@ export const whatsAppTesting = (editorState, receiverDetails, msgPayload) => {
     plainText = plainText.split(tag).join(formatMapping[tag])
   }
   console.log(plainText)
-  sendWhatAppTextSms1(`${receiverPhNo}`, `${plainText}`)
+  if (orgId === 'maahomes') {
+    sendWhatAppTextSms1(`${receiverPhNo}`, `${plainText}`)
 
-  sendWhatAppTextSms1(`${'7760959579'}`, `${plainText}`)
+    sendWhatAppTextSms1(`${'7760959579'}`, `${plainText}`)
 
-  sendWhatAppTextSms1(`${'8123826341'}`, `${plainText}`)
-  sendWhatAppTextSms1(`${'9849000525'}`, `${plainText}`)
+    sendWhatAppTextSms1(`${'8123826341'}`, `${plainText}`)
+    sendWhatAppTextSms1(`${'9849000525'}`, `${plainText}`)
+  }
 }
