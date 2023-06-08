@@ -684,7 +684,7 @@ export default function UnitFullSummary({
     <div
       className={`bg-white   h-screen    ${openUserProfile ? 'hidden' : ''} `}
     >
-     
+
       <div className="rounded-t bg-[#F1F5F9] mb-0 px-3">
 
         <>
@@ -702,18 +702,15 @@ export default function UnitFullSummary({
                   role="tablist"
                 >
                   {[
-                    // { lab: 'Schedules', val: 'appointments' },
+                    { lab: 'Applicant details', val: 'applicant_info' },
+                    { lab: 'Unit details', val: 'unit_information' },
+                    { lab: 'Cost & Payments', val: 'finance_info' },
+                    { lab: 'Loan details', val: 'loan_info' },
+                    { lab: 'Agreement  details', val: 'agreement_info' },
+                    { lab: 'Brokerage  details', val: 'brokerage_info' },
+                    // { lab: 'Docs', val: 'docs_info' },
                     { lab: 'Summary', val: 'summary' },
                     { lab: 'Tasks', val: 'tasks' },
-
-                    // { lab: 'Attachments', val: 'attachments' },
-                    // { lab: 'Phone', val: 'phone' },
-
-                    { lab: 'Unit Information', val: 'unit_information' },
-                    { lab: 'Commercials', val: 'finance_info' },
-                    { lab: 'Legal', val: 'legal_info' },
-
-                    // { lab: 'Phone', val: 'phone' },
                     { lab: 'Timeline', val: 'timeline' },
                   ].map((d, i) => {
                     return (

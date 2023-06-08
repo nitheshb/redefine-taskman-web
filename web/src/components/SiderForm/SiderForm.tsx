@@ -11,6 +11,8 @@ import {
   searchData as searchResponse,
 } from 'src/state/actions/search'
 
+import CrmCustomerSummary from '../A_CrmModule/A_CrmCustomerSummary'
+import CustomerSideViewCRM from '../A_CrmModule/CrmCustomerSideView'
 import UnitSideViewCRM from '../A_CrmModule/CrmUnitSideView'
 import NotificationsSetupForm from '../A_ProjModule/NotificatoinsSetupFromHome'
 import AddBankDetailsForm from '../addBankDetailsForm'
@@ -35,8 +37,6 @@ import PaymentScheduleForm from '../PaymentScheduleForm/PaymentScheduleForm'
 import ProjPhaseHome from '../ProjPhaseHome/ProjPhaseHome'
 import TransactionUpdateSideView from '../transactionUpdateSideView'
 import ViewUnitDetails from '../ViewUnitDetails'
-import CrmCustomerSummary from '../A_CrmModule/A_CrmCustomerSummary'
-import CustomerSideViewCRM from '../A_CrmModule/CrmCustomerSideView'
 
 const SiderForm = ({
   open,
@@ -171,10 +171,31 @@ const SiderForm = ({
                       myBlock={myBlock}
                     />
                   ))}
+                {title === 'Import Plot Units' && (
+                  <LeadsDropHomes
+                    title={title}
+                    dialogOpen={setOpen}
+                    pId={pId}
+                    myPhase={phaseDetails}
+                    myBlock={myBlock}
+                  />
+                )}
 
                 {title === 'Add Unit' && (
                   <AddUnit
                     title={title}
+                    phaseFeed={phaseFeed}
+                    BlockFeed={BlockFeed}
+                    dialogOpen={setOpen}
+                    projectDetails={projectDetails}
+                    phaseDetails={phaseDetails}
+                    blockDetails={blockDetails}
+                  />
+                )}
+                {title === 'Edit Plot' && (
+                  <AddUnit
+                    title={title}
+                    data={data}
                     phaseFeed={phaseFeed}
                     BlockFeed={BlockFeed}
                     dialogOpen={setOpen}
@@ -221,7 +242,6 @@ const SiderForm = ({
                   <CustomerSideViewCRM
                     title={title}
                     dialogOpen={setOpen}
-
                     selCustomerPayload={selCustomerPayload}
                   />
                 )}

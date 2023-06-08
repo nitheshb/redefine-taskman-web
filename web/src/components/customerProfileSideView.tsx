@@ -21,6 +21,9 @@ import {
   EyeIcon,
   ViewBoardsIcon,
   ViewGridIcon,
+  ArrowDownIcon,
+  ArrowUpIcon,
+  AdjustmentsIcon,
   XIcon,
 } from '@heroicons/react/solid'
 import { SelectorIcon, DownloadIcon } from '@heroicons/react/solid'
@@ -254,6 +257,8 @@ export default function CustomerProfileSideView({
   const [tempLeadStatus, setLeadStatus] = useState('')
   const [assignerName, setAssignerName] = useState('')
   const [assignedTo, setAssignedTo] = useState('')
+  const [timeHide, setTimeHide] = useState(false)
+
   const [optionvalues, setoptionvalues] = useState({
     budget: '',
     bstr: 0,
@@ -313,8 +318,8 @@ export default function CustomerProfileSideView({
 
   const [selProjectIs, setSelProjectIs] = useState({
     projectName: '',
-    uid: ''
-      })
+    uid: '',
+  })
   // email formik
   const emailFormik = useFormik({
     initialValues: {
@@ -393,17 +398,17 @@ export default function CustomerProfileSideView({
     // add project details
 
     // projectList
-    console.log('my stuff ',selProjectIs?.uid, ProjectId)
+    console.log('my stuff ', selProjectIs?.uid, ProjectId)
 
     const z = projectList.filter((da) => {
       return da.uid == (selProjectIs?.uid || ProjectId)
     })
     const z1 = {
-      ...z[0]
+      ...z[0],
     }
     setSelProjectIs(z1)
     console.log('my stuff ', z, selProjectIs, z1, ProjectId)
-  }, [projectList,customerDetails ])
+  }, [projectList, customerDetails])
 
   useEffect(() => {
     const { schTime } = addTaskCommentObj
@@ -1547,146 +1552,126 @@ export default function CustomerProfileSideView({
     <div
       className={`bg-white   h-screen    ${openUserProfile ? 'hidden' : ''} `}
     >
-      <div className="">
+      {/* <div className="">
         <div className="p-3 flex justify-between">
           <span className="text-md mt-1 font-semibold font-Playfair text-xl mr-auto ml-2 text-[#053219] tracking-wide">
             Lead Details
           </span>
-          {/* <XIcon className="w-5 h-5 mt-[2px]" /> */}
+          <XIcon className="w-5 h-5 mt-[2px]" />
         </div>
-      </div>
+      </div> */}
       <div className="h-screen overflow-y-auto">
-        <div className=" pb-[2px] px-3 m-4 mt-0 rounded-xs  mb-1  bg-[#F2F5F8]">
-          <div className="-mx-3 flex  sm:-mx-4 px-3">
-            <div className="w-full px-3 sm:px-4 xl:w-4/12  ">
+        <div className=" pb-[2px] px-3  mt-0 rounded-xs  bg-[#F2F5F8]">
+          <div className="-mx-3 flex  sm:-mx-4 px-3 flex justify-between">
+            <div className="w-full pl-1 pt-[2px] xl:w-4/12  ">
               <div className="">
                 <div className="font-semibold text-[#053219]  text-sm  mt-3 mb-1  tracking-wide font-bodyLato">
-                  <span className="mb-[4px] text-xl uppercase">{Name}</span>
-
-                  <div className="mt-1">
-                    <div className="font-md text-sm text-gray-500 mb-[2] tracking-wide">
-                      <MailIcon className="w-4 h-4 inline text-[#058527] " />{' '}
-                      {Email}
-                    </div>
-                    <div className="font-md text-sm text-gray-500 mb-[2] tracking-wide ">
-                      <DeviceMobileIcon className="w-4 h-4 inline text-[#058527] " />{' '}
-                      {Mobile?.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3')}
+                  <div className="flex flex-row">
+                    {/* <div className="w-7 h-7 mt-[3px] rounded-full bg-gradient-to-r from-violet-200 to-pink-200 "></div> */}
+                    <div className="flex flex-col ml-[6px]">
+                      <div className=" flex flex-row">
+                        <span className="  text-[16px] uppercase">{Name}</span>
+                        <div className=" text-sm  ml-[4px]  px-[3px] pt-[px] rounded  text-[#FF8C02] ">
+                          {currentStatusDispFun(leadDetailsObj?.Status)}{' '}
+                        </div>
+                      </div>
+                      <div className="flex flex-row">
+                        <div className="font-md text-sm text-gray-500 mb-[2] tracking-wide ">
+                          <DeviceMobileIcon className="w-3 h-3 inline text-[#058527] " />{' '}
+                          <span className="mr-[2px] mt-[1px] text-[12px]">
+                            {Mobile?.replace(
+                              /(\d{3})(\d{3})(\d{4})/,
+                              '$1-$2-$3'
+                            )}
+                          </span>
+                        </div>
+                        <div className="font-md text-sm text-gray-500 mb-[2] ml-[6px] tracking-wide">
+                          <MailIcon className="w-3 h-3 inline text-[#058527] " />{' '}
+                          {Email}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="w-full px-1  xl:w-8/12 mt-1 mb-1 bg-white  pl-3 pt-2 ">
-              <div className="relative z-10 my-1 bg-white">
-                <div className="grid grid-cols-3 gap-5">
-                  <section className="">
-                    <div
-                      className="flex flex-row  cursor-pointer"
-                      onClick={() => setUnitsViewMode(!unitsViewMode)}
-                    >
-                      <div className="font-md text-xs text-gray-500 mb-[2px] tracking-wide mr-4">
-                        Project {}
-                      </div>
-                      {selProjectIs?.uid?.length > 4 &&
-                        (unitsViewMode ? (
-                          <XIcon
-                            className="h-4 w-4 mr-1 mb-[2px] inline text-blue-600"
-                            aria-hidden="true"
-                          />
-                        ) : (
-                          // <ViewGridIcon
-                          //   className="h-4 w-4 mr-1 mb-[2px] inline text-blue-600"
-                          //   aria-hidden="true"
-                          // />
-                          <span className="px-[3px] py-[1px]  text-[#FF8C02] hover:border-b-1 hover:border-[#FF8C02] text-[10px] text-[#] font-semibold">
-                            {' '}
-                            View Units
-                          </span>
-                        ))}
-                    </div>
-                    <div className="font-semibold text-sm text-slate-900 tracking-wide overflow-ellipsis">
-                      {/* {Project} */}
-                      {/* projectList */}
+            <div className=" px-1 mt-[10px] mb-1 bg-white rounded shadow pl-3 py-2 ">
+              <div className="flex flex-row ">
+                <section>
+                  <div className="font-md text-xs text-gray-500 mb-[px] tracking-wide mr-4">
+                    Assigned To {}
+                  </div>
+                  {!user?.role?.includes(USER_ROLES.CP_AGENT) && (
+                    <div>
                       <AssigedToDropComp
-                        assignerName={selProjectIs?.projectName || Project}
+                        assignerName={assignerName}
                         id={id}
-                        align="right"
-                        setAssigner={setNewProject}
-                        usersList={projectList}
+                        setAssigner={setAssigner}
+                        usersList={usersList}
+                        align={undefined}
                       />
                     </div>
-                  </section>
-
-                  <section>
-                    <div className="font-md text-xs text-gray-500 mb-[px] tracking-wide mr-4">
-                      Assigned To {}
+                  )}
+                  {user?.role?.includes(USER_ROLES.CP_AGENT) && (
+                    <span className="text-left text-sm"> {assignerName}</span>
+                  )}
+                </section>
+                <section className=" ml-2">
+                  <div className="flex flex-row ">
+                    <div className="font-md text-xs text-gray-500 mb-[2px] tracking-wide mr-4">
+                      Project {}
                     </div>
-                    {!user?.role?.includes(USER_ROLES.CP_AGENT) && (
-                      <div>
-                        <AssigedToDropComp
-                          assignerName={assignerName}
-                          id={id}
-                          setAssigner={setAssigner}
-                          usersList={usersList}
-                          align={undefined}
-                        />
+                  </div>
+                  <div className="font-semibold text-sm text-slate-900 tracking-wide overflow-ellipsis">
+                    {/* {Project} */}
+                    {/* projectList */}
+                    <AssigedToDropComp
+                      assignerName={selProjectIs?.projectName || Project}
+                      id={id}
+                      align="right"
+                      setAssigner={setNewProject}
+                      usersList={projectList}
+                    />
+                  </div>
+                </section>
+                <section>
+                  <div>
+                    <div className="text-center items-center mr-2 mt-[1px]">
+                      <div
+                        className="text-center p-[10px] bg-gradient-to-r from-violet-200 to-pink-200 text-black rounded-3xl items-center align-middle text-xs cursor-pointer hover:underline"
+                        onClickCapture={() => {
+                          setUnitsViewMode(!unitsViewMode)
+                        }}
+                      >
+                        {selProjectIs?.uid?.length > 4 &&
+                          (unitsViewMode ? (
+                            // <XIcon
+                            //   className="h-4 w-4  inline text-white"
+                            //   aria-hidden="true"
+                            // />
+                            <span className="px-[3px]   text-black  text-[10px] text-[#] font-semibold">
+                            {' '}
+                           Show Lead
+                          </span>
+                          ) : (
+                            // <ViewGridIcon
+                            //   className="h-4 w-4 mr-1 mb-[2px] inline text-blue-600"
+                            //   aria-hidden="true"
+                            // />
+                            <span className="px-[3px]   text-white-300  text-[10px] text-[#] font-semibold">
+                              {' '}
+                              Quotation
+                            </span>
+                          ))}
                       </div>
-                    )}
-                    {user?.role?.includes(USER_ROLES.CP_AGENT) && (
-                      <span className="text-left text-sm"> {assignerName}</span>
-                    )}
-                  </section>
-                  <section>
-                    <div className="font-md text-xs text-gray-500 mb-[0px] tracking-wide mr-4">
-                      Current Status {}
                     </div>
-                    <div className="font-semibold text-[#053219] text-sm  mt- px-[3px] pt-[2px] rounded ">
-                      {currentStatusDispFun(leadDetailsObj?.Status)}{' '}
-                      {/* {leadDetailsObj?.Status != tempLeadStatus
-                        ? `--> ${' '}${tempLeadStatus}`
-                        : ''} */}
-                    </div>
-                  </section>
-                </div>
-                <div className="w-full border-b border-[#ebebeb] mt-4"></div>
-                <div className=" w-full  pt-1 font-md text-xs text-gray-500 mb-[2px] tracking-wide mr-4 grid grid-cols-3 gap-5">
-                  {' '}
-                  <section>
-                    <span className="font-thin   font-bodyLato text-[9px]  py-[6px]">
-                      Created On
-                      <span className="text-[#867777] ck ml-2">
-                        {CT != undefined
-                          ? prettyDateTime(CT)
-                          : prettyDateTime(Date)}
-                      </span>
-                    </span>
-                  </section>
-                  <section>
-                    <span className="font-thin   font-bodyLato text-[9px]  py-[6px]">
-                      Updated On :
-                      <span className="text-[#867777] ck ml-2">
-                        {stsUpT === undefined
-                          ? 'NA'
-                          : prettyDateTime(stsUpT) || 'NA'}
-                      </span>
-                    </span>
-                  </section>
-                  <section>
-                    <span className="font-thin text-[#867777]   font-bodyLato text-[9px]  py-[6px]">
-                      Assigned On
-                      <span className="text-[#867777] ck ml-2">
-                        {assignT != undefined
-                          ? prettyDateTime(assignT)
-                          : prettyDateTime(Date)}
-                      </span>
-                    </span>
-                  </section>
-                </div>
+                  </div>
+                </section>
               </div>
             </div>
           </div>
           <div className="flex flex-row justify-between">
-            <div className="px-3 py-2 flex flex-row  text-xs  border-t border-[#ebebeb] font-thin   font-bodyLato text-[12px]  py-[6px] ">
+            <div className=" py-2 flex flex-row  text-xs  border-t border-[#ebebeb] font-thin   font-bodyLato text-[12px]  py-[6px] ">
               Recent Comments:{' '}
               <span className="text-[#867777] ml-1 ">
                 {' '}
@@ -1721,43 +1706,79 @@ export default function CustomerProfileSideView({
                   style={{ background: '#e2c062', marginRight: '12px' }}
                 ></div>
               </div>
-              <span className="font-bodyLato text-[#867777] text-xs mt-2">
-                {/* <HighlighterStyle
+              <div className=" flex flex-row ">
+                <span className="font-bodyLato text-[#867777] text-xs mt-2">
+                  {/* <HighlighterStyle
                             searchKey={searchKey}
                             source={row.Source.toString()}
                           /> */}
 
-                {Source?.toString() || 'NA'}
-              </span>
+                  {Source?.toString() || 'NA'}
+                </span>
+                <div
+                  className=" cursor-pointer hover:underline"
+                  onClickCapture={() => {
+                    setTimeHide(!timeHide)
+                  }}
+                >
+                  {selProjectIs?.uid?.length > 4 &&
+                    (timeHide ? (
+                      <XIcon
+                        className="h-4 w-4  inline text-green"
+                        aria-hidden="true"
+                      />
+                    ) : (
+                      <span className="px-[3px]  ml-1  text-[#318896]  text-[10px] text-[#] font-semibold">
+                        {' '}
+                        <AdjustmentsIcon
+                        className="h-4 w-4  inline text-[#318896] "
+                        aria-hidden="true"
+                      />
+                      </span>
+                    ))}
+                </div>
+              </div>
             </div>
           </div>
+
+
+         {timeHide && (
+         <>
+             <div className="w-full border-b border-[#ebebeb]"></div>
+        <div className=" w-full  pt-1 font-md text-xs text-gray-500 mb-[2px] tracking-wide mr-4 flex flex-row justify-between">
+            {' '}
+            <section>
+              <span className="font-thin   font-bodyLato text-[9px]  py-[6px]">
+                Created On
+                <span className="text-[#867777] ck ml-2">
+                  {CT != undefined ? prettyDateTime(CT) : prettyDateTime(Date)}
+                </span>
+              </span>
+            </section>
+            <section>
+              <span className="font-thin   font-bodyLato text-[9px]  py-[6px]">
+                Updated On :
+                <span className="text-[#867777] ck ml-2">
+                  {stsUpT === undefined ? 'NA' : prettyDateTime(stsUpT) || 'NA'}
+                </span>
+              </span>
+            </section>
+            <section>
+              <span className="font-thin text-[#867777]   font-bodyLato text-[9px]  py-[6px]">
+                Assigned On
+                <span className="text-[#867777] ck ml-2">
+                  {assignT != undefined
+                    ? prettyDateTime(assignT)
+                    : prettyDateTime(Date)}
+                </span>
+              </span>
+            </section>
+          </div>
+          </> )}
         </div>
-        {/* <div>
-          <span className="mx-[11px]">
-            <span className="font-bold text-xs">Remarks : </span>
-            <span>{Remarks}</span>
-          </span>
-        </div>
-        <div>
-          <span className="mx-[11px]">
-            <span className="font-bold text-xs">
-              Not Interested Reason : {notInterestedReason}
-            </span>
-            <span>{Remarks}</span>
-          </span>
-        </div>
-        <div>
-          <span className="mx-[11px]">
-            <span className="font-bold text-xs">
-              {' '}
-              Not Interested Notes : {notInterestedNotes}{' '}
-            </span>
-            <span>{Remarks}</span>
-          </span>
-        </div> */}
 
         <div
-          className="flex flex-row justify-between   py-3 px-3 m-4 mt-0 mb-0 rounded-xs bg-[#F2F5F8]"
+          className="flex flex-row justify-between   py-3 px-3  mt-[0.5px] mb-0 rounded-xs bg-[#F2F5F8]"
           style={{ flex: '4 0 100%' }}
         >
           {StatusListA.map((statusFlowObj, i) => (
@@ -1897,7 +1918,7 @@ export default function CustomerProfileSideView({
         )}
         {!unitsViewMode && (
           <>
-            <section className=" pb-8 py-3 px-3 m-4 mt-1 rounded-xs bg-[#F2F5F8]">
+            <section className=" pb-8 pt-1 px-2 mt-[0.5px] rounded-xs bg-[#F2F5F8]">
               <div className="">
                 <div className="">
                   {/* <div className="font-md font-medium text-xs  text-gray-800">
@@ -1913,8 +1934,8 @@ export default function CustomerProfileSideView({
                     >
                       {[
                         { lab: 'Tasks', val: 'appointments' },
-                        // { lab: 'Tasks', val: 'tasks' },
-                        { lab: 'Notes', val: 'notes' },
+                        { lab: 'Quotations', val: 'notes' },
+                        // { lab: 'Notes', val: 'notes' },
                         // { lab: 'Documents', val: 'documents' },
                         // { lab: 'Phone', val: 'phone' },
                         { lab: 'Email', val: 'email' },

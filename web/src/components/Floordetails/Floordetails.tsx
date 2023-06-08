@@ -1,5 +1,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
+import { useState, useEffect } from 'react'
+
 import {
   PuzzleIcon,
   ArrowsExpandIcon,
@@ -8,16 +10,8 @@ import {
   EyeIcon,
   PlusIcon,
 } from '@heroicons/react/outline'
-import { useState, useEffect } from 'react'
-
-import FloorStatsCard from 'src/components/FloorStatsCard/FloorStatsCard'
-import UnitsStatsCard from 'src/components/UnitsStatsCard/UnitsStatsCard'
-import { getUnits, updateBlock_AddFloor } from 'src/context/dbQueryFirebase'
-import SiderForm from '../SiderForm/SiderForm'
-import UnitsSmallViewCard from '../unitsSmallView'
+import { DriveEtaSharp } from '@mui/icons-material'
 import { useSnackbar } from 'notistack'
-import { Link, routes } from '@redwoodjs/router'
-
 import {
   BarChart,
   Bar,
@@ -29,10 +23,19 @@ import {
   PieChart,
   Pie,
 } from 'recharts'
+
+import { Link, routes } from '@redwoodjs/router'
+
+import FloorStatsCard from 'src/components/FloorStatsCard/FloorStatsCard'
+import UnitsStatsCard from 'src/components/UnitsStatsCard/UnitsStatsCard'
+import { getUnits, updateBlock_AddFloor } from 'src/context/dbQueryFirebase'
+import { useAuth } from 'src/context/firebase-auth-context'
+
+import AssigedToDropComp from '../assignedToDropComp'
 import PieChartProject from '../comps/pieChartProject'
 import DropCompUnitStatus from '../dropDownUnitStatus'
-import { DriveEtaSharp } from '@mui/icons-material'
-import { useAuth } from 'src/context/firebase-auth-context'
+import SiderForm from '../SiderForm/SiderForm'
+import UnitsSmallViewCard from '../unitsSmallView'
 
 const Floordetails = ({
   block = 'A',
@@ -47,6 +50,8 @@ const Floordetails = ({
   setShowCostSheetWindow,
   setSelMode,
   leadDetailsObj,
+  setPhaseFun,
+  selPhaseName,
 }) => {
   const {
     totalValue,
@@ -148,6 +153,7 @@ const Floordetails = ({
     })
   }
   useEffect(() => {
+    console.log('source ', source)
     getUnitsFun()
   }, [])
   useEffect(() => {
@@ -427,39 +433,7 @@ const Floordetails = ({
   }
 
   return (
-    <div className="lg:col-span-10 border ">
-      <div className=" border-gray-800 bg-[#203129]  text-white">
-        <ul
-          className="flex justify-  rounded-t-lg border-b  "
-          id="myTab"
-          data-tabs-toggle="#myTabContent"
-          role="tablist"
-        >
-          {[
-            { lab: 'Report', val: 'Report' },
-            { lab: 'Units', val: 'Units' },
-          ].map((d, i) => {
-            return (
-              <li key={i} className="mr-2" role="presentation">
-                <button
-                  className={`inline-block py-3 px-4 text-sm font-medium text-center rounded-t-lg border-b-2  hover:text-blue hover:border-gray-300   ${
-                    blocksViewFeature === d.val
-                      ? 'border-red border-b-10 rounded-xs'
-                      : 'border-transparent'
-                  }`}
-                  type="button"
-                  role="tab"
-                  onClick={() => setBlocksViewFeature(d.val)}
-                >
-                  {`${d.lab} `}
-                  {/* <span className="bg-gray-100 px-2 py-1 rounded-full">
-                          {/* {rowsCounter(leadsFetchedData, d.val).length} */}
-                </button>
-              </li>
-            )
-          })}
-        </ul>
-      </div>
+    <div className="lg:col-span-10  ">
       {blocksViewFeature === 'Report' && (
         <>
           {' '}
@@ -629,7 +603,7 @@ const Floordetails = ({
       {blocksViewFeature === 'Units' && (
         <>
           <section className="bg-white">
-            <div className="flex justify-between items-center mt-6 px-4 bg-white border-y py-2">
+            {/* <div className="flex justify-between items-center  px-4 bg-white border-b py-2">
               <div className="flex flex-row max-w-full">
                 <p className="text-sm font-semibold text-[#0091ae]">
                   <span className="text-gray-700">
@@ -682,22 +656,32 @@ const Floordetails = ({
                   pickedValue={filFacing}
                 />
               </div>
-            </div>
+            </div> */}
 
-            <section className="flex flex-row px-6 py-4 justify-between">
-              <span> </span>
+            <section className="flex flex-row px-6 py-1 justify-between">
+              <section className="text-sm mt-1 pr-2 font-blue text-[13px] italic flex flex-row ">
+                <span className="relative z-10 flex flex-row items-center w-auto text-sm font-bold leading-none pl-0 mt-[px]">
+                  {/* {phase?.phaseName} */}
+                  {/* selPhaseIs, setSelPhaseIs */}
+                  <AssigedToDropComp
+                    assignerName={selPhaseName}
+                    id={'id'}
+                    setAssigner={setPhaseFun}
+                    usersList={phaseFeed}
+                  />
+                </span>
+                <span className="font-blue text-[13px] italic">showing</span>
+                {'   '}
+                <span className="font-semibold font-blue mx-1">
+                  {filteredUnits.length}
+                </span>{' '}
+                in{' '}
+                <span className="font-semibold font-blue mx-1">
+                  {unitsFeed.length}
+                </span>{' '}
+                units
+              </section>
               <section className="flex flex-row">
-                <section className="text-sm mt-[2px] pr-2 font-blue text-[13px] italic">
-                  <span className="font-blue text-[13px] italic">showing</span>{' '}
-                  <span className="font-semibold font-blue">
-                    {filteredUnits.length}
-                  </span>{' '}
-                  in{' '}
-                  <span className="font-semibold font-blue">
-                    {unitsFeed.length}
-                  </span>{' '}
-                  units
-                </section>
                 <section className="text-sm mt-[2px] px-2 rounded flex flex-row border">
                   <span className="w-3 h-3 mt-[4px] mr-1 bg-[#E8A190]"></span>{' '}
                   <span>Available</span>
@@ -705,6 +689,53 @@ const Floordetails = ({
                   <span>Booked</span>
                   <span className="w-3 h-3 ml-2 mt-[4px] mr-1 bg-[#E9E9E9]"></span>{' '}
                   <span>Blocked</span>
+                </section>
+                <section className="mt-[-3px]">
+                  <div>
+                    <DropCompUnitStatus
+                      type={'Status'}
+                      id={'Status'}
+                      setStatusFun={makeFilterFun}
+                      filteredUnits={filteredUnits}
+                      pickedValue={filStatus}
+                    />
+
+                    {/* <DropCompUnitStatus
+                  type={'bedrooms'}
+                  id={'bed_rooms'}
+                  setStatusFun={makeFilterFun}
+                  filteredUnits={filteredUnits}
+                  pickedValue={filBedRooms}
+                />
+                <DropCompUnitStatus
+                  type={'bathrooms'}
+                  id={'bath_rooms'}
+                  setStatusFun={makeFilterFun}
+                  filteredUnits={filteredUnits}
+                  pickedValue={filBathrooms}
+                />
+                <DropCompUnitStatus
+                  type={'Size'}
+                  id={'super_built_up_area'}
+                  setStatusFun={makeFilterFun}
+                  filteredUnits={filteredUnits}
+                  pickedValue={filSuperBuildUpArea}
+                /> */}
+                    {/* <DropCompUnitStatus
+                  type={'Price'}
+                  id={'rate_per_sqft'}
+                  setStatusFun={makeFilterFun}
+                  filteredUnits={filteredUnits}
+                  pickedValue={filRatePerSqft}
+                /> */}
+                    {/* <DropCompUnitStatus
+                  type={'Facing'}
+                  id={'facing'}
+                  setStatusFun={makeFilterFun}
+                  filteredUnits={filteredUnits}
+                  pickedValue={filFacing}
+                /> */}
+                  </div>
                 </section>
                 <section className="flex">
                   <button
@@ -789,7 +820,141 @@ const Floordetails = ({
                 })}
               </ul>
             )}
-            {!['Apartments'].includes(projectDetails?.projectType?.name) && (
+            {['Plots'].includes(projectDetails?.projectType?.name) && (
+              <ul className="">
+                <li className="py-2">
+                  <section>
+                    {/* <section className="px-8 bg-red-100 w-[130px] rounded-r-2xl">
+                      Fl-{floorDat}
+                    </section> */}
+                    <div className=" px-4 mt-">
+                      {filteredUnits
+                        // ?.filter((da) => da?.floor == i)
+                        .map((data, index) => {
+                          return unitShrink ? (
+                            <div
+                              className=" mb-1  mx-1 inline-block"
+                              key={index}
+                              // onClick={() => handleDetailView_Close(data)}
+                              onClick={() => {
+                                console.log('check is ', leadDetailsObj)
+                                if (source === 'projectManagement') {
+                                  setSliderInfo({
+                                    open: true,
+                                    title: 'Edit Plot',
+                                    sliderData: {
+                                      unitDetail: data,
+                                      phaseDetail: phaseFeed,
+                                      leadDetailsObj: leadDetailsObj,
+                                    },
+                                    widthClass: 'max-w-4xl',
+                                  })
+                                } else {
+                                  setSliderInfo({
+                                    open: true,
+                                    title: 'View Unit',
+                                    sliderData: {
+                                      unitDetail: data,
+                                      phaseDetail: phaseFeed,
+                                      leadDetailsObj: leadDetailsObj,
+                                    },
+                                    widthClass: 'max-w-4xl',
+                                  })
+                                }
+                              }}
+                            >
+                              <div>
+                                <div className="maincontainer">
+                                  <div className="back">
+                                  <div
+      className={` min-w-[125px] min-h-[64px] max-h-[68px] z-10 flex flex-col  max-w-md p-1 mx-auto my-0 rounded-sm cursor-pointer border border-black`}
+    >
+
+
+      {data?.status==="available" && <div className="flex flex-col items-right justify-between">
+
+      <div className='flex flex-row justify-between items-right'>
+      <h3 className="m-0 ml-2 text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200">
+          Book
+        </h3>
+        <h3 className="m-0 mr-2 text-sm  leading-tight tracking-tight text-blue-800 border-0 border-blue-800 ">
+          Quote
+        </h3>
+        </div>
+
+        <div className='flex flex-row justify-between items-right'>
+        <h3 className="m-0 ml-2 mt-3 text-sm  leading-tight tracking-tight text-blue-800 text-black border-0 border-blue-200  ">
+          Block
+        </h3>
+        <h3 className="m-0 mr-2 mt-3 mr-[21px] text-sm  leading-tight tracking-tight text-blue-800 border-0 border-blue-800 ">
+          Edit
+        </h3>
+        </div>
+
+
+
+      </div>}
+      {data?.status==="booked" && <div className="flex flex-col items-right justify-between">
+
+      <div className='flex flex-row justify-between items-right'>
+      <h3 className="m-0 ml-2 mt-4 text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200">
+          Booking Details
+        </h3>
+        </div>
+      </div>}
+
+      {data?.status==="blocked" && <div className="flex flex-col items-right justify-between">
+
+<div className='flex flex-row justify-between items-right'>
+<h3 className="m-0 ml-2 mt-4 text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200">
+    Blocked Details
+  </h3>
+  </div>
+</div>}
+
+
+
+    </div>
+                                  </div>
+                                  <div className="front">
+                                    <div className="image">
+                                    <UnitsSmallViewCard
+                                kind={data}
+                                feedData={unitFeedData}
+                                bg="#CCFBF1"
+                                setShowCostSheetWindow={setShowCostSheetWindow}
+                                setSelUnitDetails={setSelUnitDetails}
+                                setSelMode={setSelMode}
+                              />  </div>
+                                  </div>
+                                </div>
+
+
+                              </div>
+                            </div>
+                          ) : (
+                            <div
+                              className="px-[4px] mt-2 inline-block cursor-pointer"
+                              key={index}
+                              onClick={() => handleDetailView_Close(data)}
+                            >
+                              <UnitsStatsCard
+                                kind={data}
+                                feedData={unitFeedData}
+                                bg="#fef7f7"
+                              />
+
+                            </div>
+                          )
+                        })}
+                    </div>
+                  </section>
+                </li>
+              </ul>
+            )}
+            {!['Apartments', 'Plots'].includes(
+              projectDetails?.projectType?.name
+            ) && (
               <ul className="">
                 <li className="py-2">
                   <section>
@@ -920,6 +1085,7 @@ const Floordetails = ({
                   </div>
                 </div>
                 {/* 2 */}
+                {/* projectDetails?.projectType?.name */}
                 <div
                   className="cursor-pointer  z-10 flex flex-col  max-w-md p-2 my-0  mx-4 rounded-sm inline-block  min-h-[50px]  min-w-[100px] border border-dotted border-black rounded-md"
                   onClick={() => {
@@ -929,6 +1095,8 @@ const Floordetails = ({
                         projectDetails?.projectType?.name
                       )
                         ? 'Import Units'
+                        : ['Plots'].includes(projectDetails?.projectType?.name)
+                        ? 'Import Plot Units'
                         : 'Import Project Units',
                       sliderData: {
                         phase: {},

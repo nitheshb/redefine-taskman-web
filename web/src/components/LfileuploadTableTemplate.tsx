@@ -31,6 +31,7 @@ import Highlighter from 'react-highlight-words'
 
 import {
   addLead,
+  addPlotUnit,
   addUnit,
   getLedsData1,
   getProjById1,
@@ -312,6 +313,18 @@ const EnhancedTableToolbar = (props) => {
 
     return unsubscribe
   }
+  const insertPlotToDb = async (records) => {
+    const mappedArry = await Promise.all(
+      records.map(async (data, index) => {
+        await addPlotUnit(orgId, data, user?.email, `Unit Created by bulk `)
+        //  setUploadedUnitsCount(index + 1)
+        //   return await addUnit(orgId, newData, user?.email, 'Unit Created by csv')
+
+        console.log('am inside addLeadstoDB')
+      })
+    )
+    await setUnitUploadMessage(true)
+  }
   const addUnitsToDB = async (records, pId) => {
     setUnitUploadMessage(false)
     // upload successfully
@@ -323,6 +336,10 @@ const EnhancedTableToolbar = (props) => {
     // phase details of zero
     console.log('proj details is', projPayload)
     const { ConstructOtherChargesObj, additonalChargesObj } = projPayload[0]
+
+    if (title === 'Import Plot Units') {
+      insertPlotToDb(records)
+    }
     return
     const mappedArry = await Promise.all(
       records.map(async (data, index) => {
@@ -427,7 +444,9 @@ const EnhancedTableToolbar = (props) => {
           </IconButton>
         </Tooltip>
       ) : sourceTab != 'all' &&
-        ['Import Units', 'Import Project Units'].includes(title) ? (
+        ['Import Units', 'Import Project Units', 'Import Plot Units'].includes(
+          title
+        ) ? (
         <span style={{ display: 'flex' }}>
           {sourceTab === 'validR' && !unitUploadMessage && (
             <span className="ml-3">
@@ -437,7 +456,9 @@ const EnhancedTableToolbar = (props) => {
           {unitUploadMessage && (
             <IconButton
               aria-label="done"
-              onClick={() => addUnitsToDB(rowsAfterSearchKey, pId)}
+              onClick={() => {
+                addUnitsToDB(rowsAfterSearchKey, pId)
+              }}
             >
               <FileUploadTwoToneIcon />
             </IconButton>
@@ -523,7 +544,152 @@ export default function LfileuploadTableTemplate({
   const [searchKey, setSearchKey] = React.useState('')
 
   React.useEffect(() => {
-    if (title === 'Import Project Units') {
+    if (title === 'Import Plot Units') {
+      columns = [
+        { id: 'unit_no', label: 'Plot No', minWidth: 80 },
+        {
+          id: 'status',
+          label: 'status',
+          minWidth: 10,
+          align: 'left',
+          format: (value) => value.toLocaleString('en-US'),
+        },
+        {
+          id: 'facing',
+          label: 'Plot Type*',
+          minWidth: 10,
+          align: 'left',
+          format: (value) => value.toLocaleString('en-US'),
+        },
+        {
+          id: 'survey_no',
+          label: 'Survey No',
+          minWidth: 10,
+          align: 'left',
+          format: (value) => value.toLocaleString('en-US'),
+        },
+        {
+          id: 'Katha_no',
+          label: 'Katha No',
+          minWidth: 10,
+          align: 'left',
+          format: (value) => value.toLocaleString('en-US'),
+        },
+        {
+          id: 'PID_no',
+          label: 'PID No',
+          minWidth: 10,
+          align: 'left',
+          format: (value) => value.toLocaleString('en-US'),
+        },
+        {
+          id: 'area',
+          label: 'Plot area *(Sq.Ft)',
+          minWidth: 10,
+          align: 'left',
+          format: (value) => value.toLocaleString('en-US'),
+        },
+        {
+          id: 'area_sqm',
+          label: 'Plot Area*(Sq.m)',
+          minWidth: 10,
+          align: 'left',
+          format: (value) => value.toLocaleString('en-US'),
+        },
+        {
+          id: 'sqft_rate',
+          label: 'Rate/Sqft',
+          minWidth: 10,
+          align: 'left',
+          format: (value) => value.toLocaleString('en-US'),
+        },
+        {
+          id: 'plc_per_sqft',
+          label: 'PLC Per Sqft',
+          minWidth: 10,
+          align: 'left',
+          format: (value) => value.toLocaleString('en-US'),
+        },
+        {
+          id: 'size',
+          label: 'Plot Size*',
+          minWidth: 10,
+          align: 'left',
+          format: (value) => value.toFixed(2),
+        },
+        {
+          id: 'east_d',
+          label: 'East Dimension*(m)',
+          minWidth: 10,
+          align: 'left',
+          format: (value) => value.toFixed(2),
+        },
+        {
+          id: 'west_d',
+          label: 'West Dimension*(m)',
+          minWidth: 10,
+          align: 'left',
+          format: (value) => value.toFixed(2),
+        },
+        {
+          id: 'north_d',
+          label: 'North Dimension*(m)',
+          minWidth: 10,
+          align: 'left',
+          format: (value) => value.toFixed(2),
+        },
+        {
+          id: 'south_d',
+          label: 'South Dimension*(m)"',
+          minWidth: 10,
+          align: 'left',
+          format: (value) => value.toFixed(2),
+        },
+
+        {
+          id: 'north_sch_by',
+          label: 'North Schedule Dimension*',
+          minWidth: 10,
+          align: 'left',
+          format: (value) => value.toFixed(2),
+        },
+        {
+          id: 'south_sch_by',
+          label: 'South Schedule Dimension*',
+          minWidth: 10,
+          align: 'left',
+          format: (value) => value.toFixed(2),
+        },
+        {
+          id: 'east_sch_by',
+          label: 'East Schedule Dimension*',
+          minWidth: 10,
+          align: 'left',
+          format: (value) => value.toFixed(2),
+        },
+        {
+          id: 'west_sch_by',
+          label: 'West Schedule Dimension*',
+          minWidth: 10,
+          align: 'left',
+          format: (value) => value.toFixed(2),
+        },
+        {
+          id: 'release_status',
+          label: 'Release Status',
+          minWidth: 10,
+          align: 'left',
+          format: (value) => value.toFixed(2),
+        },
+        {
+          id: 'mortgage_type',
+          label: 'Mortgage Type',
+          minWidth: 10,
+          align: 'left',
+          format: (value) => value.toFixed(2),
+        },
+      ]
+    } else if (title === 'Import Project Units') {
       columns = [
         { id: 'unit_no', label: 'unit_no', minWidth: 80 },
         // { id: 'floor', label: 'floor', minWidth: 100 },

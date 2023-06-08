@@ -16,7 +16,7 @@ export default function DropDownSearchBar({
         <div>
           <Menu.Button className="inline-flex justify-center w-full px-0 py-0 text-sm font-semibold text-black-500 bg- rounded-md bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
             <>
-              <span className=" text-[12px] tracking-wide text-[#0091ae] ">
+              <span className=" text-[12px] tracking-wide text-[#0091ae] max-w-[150px] min-w-[150px] text-ellipsis whitespace-nowrap ">
                 {selProjectIs?.projectName ||
                   selProjectIs?.phaseName ||
                   type?.toLocaleUpperCase()}

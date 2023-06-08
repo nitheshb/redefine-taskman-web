@@ -22,6 +22,7 @@ import { getAllProjects } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 
 import SiderForm from '../../components/SiderForm/SiderForm'
+import UnitsInventoryHome from 'src/components/A_ProjModule/UnitsInvertoryHome'
 
 const CrmHomePage = () => {
   const { user } = useAuth()
@@ -419,6 +420,14 @@ const CrmHomePage = () => {
                 )}
                 {viewable === 'MyCustomers-II' && (
                   <CustomersSearchHome2
+                    project={{
+                      projectName: 'Projects',
+                    }}
+                    isEdit={undefined}
+                  />
+                )}
+                   {viewable === 'units_inventory' && (
+                  <UnitsInventoryHome
                     project={{
                       projectName: 'Projects',
                     }}

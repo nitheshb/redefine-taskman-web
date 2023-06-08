@@ -241,8 +241,9 @@ const ProjectsMHomeBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
         <div className="flex flex-row mb-[2px] ">
           <div className="w-2/4 bg-[#E9E9F2]">
             <div className="">
-              <div className="MuiPaper-elevation  MuiPaper-elevation1 MuiCard-root css-1fwf2za-MuiPaper-root-MuiCard-root bg-[#A798FF] rounded-r-xl">
+              <div className="MuiPaper-elevation  MuiPaper-elevation1 MuiCard-root css-1fwf2za-MuiPaper-root-MuiCard-root bg-gradient-to-r from-indigo-400 to-cyan-400 rounded-r-xl">
                 <Box mt={3} mb={1}>
+
                   <div className="flex flex-col align-middle justify-between">
                     <Link
                       className="flex flex-col items-center"
@@ -264,14 +265,14 @@ const ProjectsMHomeBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                       </span>
                     </section> */}
                   <section className="flex flex-row justify-between mt-2">
-                    <span className="text-sm  font-light  font text-gray-100 ">
+                    <span className="text-sm  font-light  font text-gray-800 ">
                       {location}
                     </span>
                     <section>
-                      <span className="text-sm  font-light  font text-gray-100 ">
+                      <span className="text-sm  font-light  font text-gray-800 ">
                         {area}
                       </span>
-                      <span className="text-[10px]  font-light ml-1 font text-gray-100 ">
+                      <span className="text-[10px]  font-light ml-1 font text-gray-600 ">
                         sqft
                       </span>
                     </section>
@@ -312,13 +313,13 @@ const ProjectsMHomeBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                             sx={{
                               backgroundColor: 'white',
                               '& .MuiLinearProgress-bar': {
-                                backgroundColor: '#A798FF',
+                                backgroundColor: '#57c0d0',
                               },
                             }}
                             variant="determinate"
                             value={100}
                             style={{
-                              backgroundColor: '#E5EAF2',
+                              backgroundColor: '#22D3EE',
                               borderRadius: '3px',
                               height: `${58 * (data.value / totalUnitCount)}px`,
                               width: `100%`,

@@ -28,7 +28,7 @@ const CrmCustomerSummary = ({
 
   return (
     <PDFExport paperSize="A4" margin="1cm" ref={pdfUnitSummaryComp}>
-      <div className="py-3 px-3 m-4 mt-2 rounded-lg border border-gray-100 h-[100%] overflow-y-scroll">
+      <div className="py-3 px-3 m-4 mt-2 rounded-lg border border-gray-100 h-[100%] overflow-y-scroll overflow-auto no-scrollbar">
         {/* customer details */}
         {/* Unit details */}
         {/* payment schedule */}
