@@ -181,6 +181,8 @@ export default function TransactionUpdateSideView({
   const [addSch, setAddSch] = useState(false)
   const [attach, setAttach] = useState(false)
   const [loader, setLoader] = useState(false)
+  const [viewDetails, setViewDetails] = useState(false)
+
   const [projectList, setprojectList] = useState([])
 
   const [selProjectIs, setSelProjectIs] = useState({
@@ -212,6 +214,10 @@ export default function TransactionUpdateSideView({
     fromObj,
     toAccount,
   } = customerDetails
+
+  useEffect(() => {
+    console.log('finance details', transactionData)
+  }, [])
 
   useEffect(() => {
     const unsubscribe = steamUsersListByRole(
@@ -649,70 +655,122 @@ export default function TransactionUpdateSideView({
           <p className="text-xs font-extrabold tracking-tight uppercase font-body my-[2px] p-1 ml-2">
             Transaction
           </p>
-        </div>
-      </div>
-      <div className="py-3 px-3 m-4 mt-2 rounded-lg border border-gray-100 h-screen overflow-y-auto">
-        <div className="flex flex-row justify-between">
-          {/* <div className="px-3  font-md font-medium text-sm mt-3 mb-2 text-gray-800">
-            Customer Details
-          </div> */}
-
-          <div className="inline mt-2 ml-2 mb-5">
-            <div className="">
-              <label className="font-semibold text-[#053219]  text-sm  mt-3 mb-1  tracking-wide ">
-                Transaction Details<abbr title="required"></abbr>
-              </label>
-            </div>
-
-            <div className="border-t-4 rounded-xl w-16 mt-1 border-green-600"></div>
-          </div>
-          <div className="p-3 flex flex-col">
+          <section>
+          <div
+            className=" flex flex-col"
+            onClick={() => setViewDetails(!viewDetails)}
+          >
             <span
               className={`items-center h-6 px-3 py-1 mt-1 text-xs font-semibold text-green-500 bg-green-100 rounded-full
                       `}
             >
-              {'In-Progress'}
+              {'In-Review'}
             </span>
           </div>
-        </div>
-        <section className="flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md ">
-          <section className="flex flow-row justify-between mb-1">
-            <div className="font-md text-xs text-gray-500  tracking-wide">
-              Amount
-            </div>
-            <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-              Rs {transactionData?.amount?.toLocaleString('en-IN')}
-            </div>
           </section>
-        </section>
-        <div className="mt-2  grid grid-cols-2">
-          <section className="mr-2 flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md ">
-            <section className="flex flex-row justify-between mb-1">
+        </div>
+      </div>
+      <div className="py-3 px-3 m-4 mt-2 rounded-lg border border-gray-100 h-screen overflow-y-auto overflow-auto no-scrollbar">
+        <div className="mt-2  grid grid-cols-2 ">
+          <section className=" flex flex-col  p-3   ">
+            <section className="flex flex-col justify-between mb-1">
               <div className="font-md text-xs text-gray-500  tracking-wide">
                 From
               </div>
-              <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
+              <div className="font-md text-xs mt-1 tracking-wide font-semibold text-slate-900 ">
+                {transactionData?.customerName}
+              </div>
+            </section>
+          </section>
+          <section className=" flex flex-col  p-3   ">
+            <section className="flex flex-col justify-between mb-1">
+              <div className="font-md text-xs text-gray-500  tracking-wide">
+                Trxn Id
+              </div>
+              <div className="font-md text-xs mt-1 tracking-wide font-semibold text-slate-900 ">
+                {transactionData?.txt_id}
+              </div>
+            </section>
+          </section>
+        </div>
+        <div className="mt-2  grid grid-cols-2 border-t border-[#e5e7f8]">
+          <section className=" flex flex-col  p-3   ">
+            <section className="flex flex-col justify-between mb-1">
+              <div className="font-md text-xs text-gray-500  tracking-wide">
+                Towards
+              </div>
+              <div className="font-md text-xs mt-1 tracking-wide font-semibold text-[#462c52]  bg-[#f4e1fc] py-1 px-2">
+                {transactionData?.towards}
+              </div>
+            </section>
+          </section>
+          <section className=" flex flex-col  p-3   ">
+            <section className="flex flex-col justify-between mb-1">
+              <div className="font-md text-xs text-gray-500  tracking-wide">
+                Mode
+              </div>
+              <div className="font-md text-xs mt-[6px] tracking-wide font-semibold text-slate-900 ">
                 {transactionData?.mode}
               </div>
             </section>
-            <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-              {transactionData?.landlordBankDocId}
-            </div>
-          </section>
-          <section className="flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md ">
-            <section className="flex flex-row  justify-between mb-1">
-              <div className="font-md text-xs text-gray-500  tracking-wide">
-                To
-              </div>
-              <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                {transactionData?.dated}
-              </div>
-            </section>
-            <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-              {transactionData?.towardsBankDocId}
-            </div>
           </section>
         </div>
+        <div className="mt-2  grid grid-cols-2 border-t border-[#e5e7f8]">
+          <section className=" flex flex-col  p-3   ">
+            <section className="flex flex-col justify-between mb-1">
+              <div className="font-md text-xs text-gray-500  tracking-wide">
+                Value
+              </div>
+              <div className="font-md text-xl mt-1 tracking-wide font-semibold text-[#245949] ">
+                ₹{transactionData?.totalAmount || 0}
+              </div>
+            </section>
+          </section>
+          <section className=" flex flex-col  p-3   ">
+            <section className="flex flex-col justify-between  ">
+              <div className="font-md text-xs text-gray-500  tracking-wide">
+                Date
+              </div>
+              <div className="font-md text-xs mt-1 tracking-wide font-semibold text-[#68582e] p-2  bg-[#feeacc]">
+                {transactionData?.txt_dated}
+              </div>
+            </section>
+          </section>
+        </div>
+        <div className="my-2  grid grid-cols-2 mt-4 border-t border-[#e5e7f8]">
+          <button
+            className="mb-2 md:mb-0 mr-2 hover:scale-110 focus:outline-none              hover:bg-[#5671fc]
+
+
+                                  h-8
+                                  border duration-200 ease-in-out
+                                  border-green-700 transition
+                                   px-5  text-sm shadow-sm font-medium tracking-wider text-black rounded-sm hover:shadow-lg hover:bg-green-500"
+            onClick={() => {
+              // setActionMode('unitBookingMode')
+            }}
+            // disabled={loading}
+          >
+            Reject
+          </button>
+          <button
+            className="mb-2 md:mb-0  hover:scale-110 focus:outline-none              hover:bg-[#5671fc]
+                                  bg-green-700
+                                  text-teal-100
+                                  h-8
+                                  border duration-200 ease-in-out
+                                  border-green-700 transition
+                                   px-5  text-sm shadow-sm font-medium tracking-wider text-white rounded-sm hover:shadow-lg hover:bg-green-500"
+            onClick={() => {
+              // setActionMode('unitBookingMode')
+            }}
+            // disabled={loading}
+          >
+            Approve
+          </button>
+        </div>
+        {viewDetails &&
+        <>
         <div className="my-2  grid grid-cols-2 ">
           <section className="mr-2 flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md ">
             <section className="flex flex-row justify-between mb-1">
@@ -769,59 +827,6 @@ export default function TransactionUpdateSideView({
           </section>
         </div>
 
-        {/* <div className="border-b mt-3">
-          <div className="py-2 px-1">
-            <div className="px-3  font-md font-medium text-sm mb-3  text-gray-800">
-              Assigner Details
-            </div>
-            <div className="px-3  flex justify-between">
-              <section>
-                <div className="font-md text-xs text-gray-500 mb-[2]">
-                  Assigned To
-                </div>
-                <div className="font-lg text-sm text-slate-900 min-w-[200%] bg-red-50">
-
-                  <CustomSelect
-                    name="roleName"
-                    label=""
-                    className="input mt-3"
-                    onChange={(value) => {
-                      // formik.setFieldValue('myRole', value.value)
-                      console.log('i was changed', value, usersList)
-                      setAssigner(id, value)
-                    }}
-                    value={assignedTo}
-                    options={usersList}
-                  />
-                </div>
-              </section>
-              <section>
-                <div className="font-md text-xs text-gray-500 mb-[2]">
-                  Assigned On
-                </div>
-
-                <div className="font-lg text-sm text-slate-900">26 July</div>
-              </section>
-            </div>
-
-            <div className="px-3 py-1 mb-3 mt-3 flex justify-between">
-              <div>
-                <div className="font-md text-xs mt-2 text-gray-500 mb-[2]">
-                  Assigned By
-                </div>
-                <div className="font-lg text-sm text-slate-900">
-                  {AssignedBy || 'NA'}
-                </div>
-              </div>
-              <div>
-                <div className="font-md text-xs mt-2 text-gray-500 mb-[2]">
-                  Last Activist
-                </div>
-                <div className="font-lg text-sm text-slate-900">3 days ago</div>
-              </div>
-            </div>
-          </div>
-        </div> */}
 
         {unitsViewMode && (
           <>
@@ -1336,6 +1341,7 @@ export default function TransactionUpdateSideView({
             )}
           </>
         )}
+        </>}
       </div>
     </div>
   )

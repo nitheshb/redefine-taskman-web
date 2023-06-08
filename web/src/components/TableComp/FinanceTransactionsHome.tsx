@@ -37,6 +37,8 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
   const { user } = useAuth()
   const { orgId } = user
   const [isImportLeadsOpen, setisImportLeadsOpen] = useState(false)
+  const [openTransactionDetails, setOpenTransactionDetails] = useState(false)
+
 
   // kanban board
   const [ready, setReady] = useState(false)
@@ -176,7 +178,7 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
 
   const viewTransaction = (docData) => {
     setTransactionData(docData)
-    setisImportLeadsOpen(!isImportLeadsOpen)
+    setOpenTransactionDetails(!openTransactionDetails)
   }
   return (
     <>
@@ -623,8 +625,8 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
         </div>
       </div>
       <SiderForm
-        open={isImportLeadsOpen}
-        setOpen={setisImportLeadsOpen}
+        open={openTransactionDetails}
+        setOpen={setOpenTransactionDetails}
         title={'Transaction'}
         customerDetails={selUserProfile}
         widthClass="max-w-md"
