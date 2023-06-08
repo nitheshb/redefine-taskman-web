@@ -379,9 +379,21 @@ const AddUnit = ({
     { label: '3rd Party Investor', value: '3rd_party_investor' },
   ]
   const validate = Yup.object({
-    unit_no: Yup.string()
+    unit_no: Yup.string().required('Unit no. is required'),
+    area:Yup.number().required('Area is required').typeError('Area must be a valid number')
+    .positive('Area must be a positive number'),
+    sqft_rate:Yup.number().required('Rate per Sqft is required').typeError('Rate per sqft must be a valid number')
+    .positive('Rate per sqft must be a positive number'),
+    plc_per_sqft:Yup.number().required('Plc per sqft is required').typeError('Plc per sqft must be a valid number')
+    .positive('Plc per sqft must be a positive number'),
+    size:Yup.string().required('Size is required'),
+    facing:Yup.string().required('Facing is required field'),
+    status:Yup.string().required('Status is required field'),
+    release_status: Yup.string().required('Release status is required field'),
+    mortgage_type: Yup.string().required('Mortage Type is required field')
+
       // .max(15, 'Must be 15 characters or less')
-      .required('Unit_no is Required'),
+
     // lastName: Yup.string()
     //   .max(20, 'Must be 20 characters or less')
     //   .required('Required'),
@@ -526,6 +538,8 @@ const AddUnit = ({
                               name="unit_no"
                               type="text"
                             />
+
+
                           </div>
                           <div className="mb-3 space-y-2 w-full text-xs mt-4">
                             <TextField
@@ -592,6 +606,8 @@ const AddUnit = ({
                               // options={aquaticCreatures}
                               options={facingTypeList}
                             />
+                             {formik.errors.facing && formik.touched.facing ? (<p className="text-red-700 mt-2">{formik.errors.facing}</p> ):null}
+
                           </div>
                         </div>
                         <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-1">
@@ -674,7 +690,7 @@ const AddUnit = ({
                             <CustomSelect
                               name="status"
                               label="Status*"
-                              className="input mt-"
+                              className="input mt-1"
                               onChange={(value) => {
                                 formik.setFieldValue('status', value.value)
                               }}
@@ -682,8 +698,9 @@ const AddUnit = ({
                               // options={aquaticCreatures}
                               options={statusList}
                             />
+                            {formik.errors.status && formik.touched.status ? (<p className="text-red-700 mt-2">{formik.errors.status}</p> ):null}
                           </div>
-                          <div className="w-full flex flex-col mb-3">
+                          <div className="w-full flex flex-col mb-3 mt-1">
                             <CustomSelect
                               name="release_status"
                               label="Release Status*"
@@ -698,6 +715,8 @@ const AddUnit = ({
                               // options={aquaticCreatures}
                               options={releaseStausList}
                             />
+                           {formik.errors.release_status && formik.touched.release_status ? (<p className="text-red-700 mt-2">{formik.errors.release_status}</p> ):null}
+
                           </div>
                         </div>
 
@@ -720,6 +739,7 @@ const AddUnit = ({
                               // options={aquaticCreatures}
                               options={mortgageType}
                             />
+                            {formik.errors.mortgage_type && formik.touched.mortgage_type ? (<p className="text-red-700 mt-2">{formik.errors.mortgage_type}</p> ):null}
                           </div>
                         </div>
                       </section>
