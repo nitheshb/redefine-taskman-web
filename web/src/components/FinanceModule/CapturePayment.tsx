@@ -208,6 +208,14 @@ const CaptureUnitPayment = ({
   }
 
   const validateSchema = Yup.object({
+    chequeno: Yup.string().required('Cheque number is required')
+    .matches(/^[0-9]{6}$/, 'Cheque number must be 6 digits'),
+    amount:Yup.number()
+    .required('Amount is required')
+    .positive('Amount must be a positive number')
+    .integer('Amount must be an integer'),
+    dated:Yup.date().required('Date is required'),
+    paidTo:Yup.string().required('Paid to is required')
     // date: Yup.string().required('Bank Required'),
     // amount: Yup.string().required('Required'),
     // payto: Yup.string().required('Required'),
@@ -237,6 +245,8 @@ const CaptureUnitPayment = ({
               initialValues={initialState}
               validationSchema={validateSchema}
               onSubmit={(values, { resetForm }) => {
+                onSubmit(values, resetForm)
+
                 onSubmitSupabase(values, resetForm)
               }}
             >
@@ -378,9 +388,10 @@ const CaptureUnitPayment = ({
                                       type="text"
                                     />
                                   </div>
+
                                 </div>
-                                <div className="w-full mt-3 lg:w-4/12 px-4  ">
-                                  <div className="relative w-full mb-5 mt-[-1px] ">
+                                <div className="w-full mt-3 lg:w-4/12 px-3  ">
+                                  <div className="relative  mb-5 mt-[-1px] ">
 
                                     {/* <TextField2
                                       label="Dated"
@@ -390,12 +401,12 @@ const CaptureUnitPayment = ({
                                      <span className="inline">
 
                           <DatePicker
-                            className=" pl-2 h-8 outline-none border-t-0 border-l-0 border-r-0 border-b border-gray-500  border-solid mt-[-4px] pb-1  min-w-[117px] inline  text-[#0091ae]   lg:w-4/12 w-full min-w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] px-4"
-                            // className="date"
+                            className=" h-8 outline-none border-t-0 border-l-0 border-r-0 border-b border-gray-500  border-solid mt-[-4px] pb-1  min-w-[125px]  inline  text-[#0091ae]   lg:w-4/12 w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] px-2"
+                            name="dated"
                             label="Dated"
                             selected={startDate}
                             onChange={(date) => {
-                              formik.setFieldValue('enquiryDat', date.getTime())
+                              formik.setFieldValue('date', date.getTime())
                               setStartDate(date)
                               // console.log(startDate)
                             }}

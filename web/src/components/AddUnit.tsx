@@ -467,9 +467,21 @@ const AddUnit = ({
     { label: '3rd Party Investor', value: '3rd_party_investor' },
   ]
   const validate = Yup.object({
-    unit_no: Yup.string()
+    unit_no: Yup.string().required('Unit no. is required'),
+    area:Yup.number().required('Area is required').typeError('Area must be a valid number')
+    .positive('Area must be a positive number'),
+    sqft_rate:Yup.number().required('Rate per Sqft is required').typeError('Rate per sqft must be a valid number')
+    .positive('Rate per sqft must be a positive number'),
+    plc_per_sqft:Yup.number().required('Plc per sqft is required').typeError('Plc per sqft must be a valid number')
+    .positive('Plc per sqft must be a positive number'),
+    size:Yup.string().required('Size is required'),
+    facing:Yup.string().required('Facing is required field'),
+    status:Yup.string().required('Status is required field'),
+    release_status: Yup.string().required('Release status is required field'),
+    mortgage_type: Yup.string().required('Mortage Type is required field')
+
       // .max(15, 'Must be 15 characters or less')
-      .required('Unit_no is Required'),
+
     // lastName: Yup.string()
     //   .max(20, 'Must be 20 characters or less')
     //   .required('Required'),
@@ -573,46 +585,92 @@ const AddUnit = ({
                         </div>
                       </div>
 
-                      <section className="my-10 mx-3  my-4 mt-4">
-                        <section className="mt-1 px-4 rounded-lg bg-white border border-gray-100 shadow">
-                          <section className="flex flex-row  pt-2 ">
-                          <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
-                            <span className="ml-1 leading-[15px] ">
-                              <label className="font-semibold text-[#053219]  text-[13px] leading-[15px] mb-1  ">
-                                Unit<abbr title="required"></abbr>
-                              </label>
-                            </span>
-                          </section>
-                          <div className="md:flex flex-row md:space-x-4 w-full text-xs  ">
-                            <div className=" space-y-2 w-full text-xs mt-2">
-                              <TextField
-                                label="Unit no*"
-                                name="unit_no"
-                                type="text"
-                              />
-                            </div>
-                            <div className="space-y-2 w-full text-xs mt-2">
-                              <TextField
-                                label="Area Sqft*"
-                                name="area"
-                                type="number"
-                              />
-                            </div>
 
-                            <div className=" space-y-2 w-full text-xs mt-2">
-                              <TextField
-                                label="Rate per Sqft *"
-                                name="sqft_rate"
-                                type="number"
-                              />
-                            </div>
-                            <div className="space-y-2 w-full text-xs mt-2">
-                              <TextField
-                                label="PLC per sqft*"
-                                name="plc_per_sqft"
-                                type="number"
-                              />
-                            </div>
+                      <section className="my-10 rounded-lg bg-white border border-gray-100 px-4 my-4 mt-4">
+                        <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-1">
+                          <div className="mb-3 space-y-2 w-full text-xs mt-4">
+                            <TextField
+                              label="Unit no*"
+                              name="unit_no"
+                              type="text"
+                            />
+
+
+                          </div>
+                          <div className="mb-3 space-y-2 w-full text-xs mt-4">
+                            <TextField
+                              label="Survey No"
+                              name="survey_no"
+                              type="text"
+                            />
+                          </div>
+                          <div className="mb-3 space-y-2 w-full text-xs mt-4">
+                            <TextField
+                              label="Katha No"
+                              name="Katha_no"
+                              type="text"
+                            />
+                          </div>
+                          <div className="mb-3 space-y-2 w-full text-xs mt-4">
+                            <TextField
+                              label="PID No"
+                              name="PID_no"
+                              type="text"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-1">
+                          <div className="mb-3 space-y-2 w-full text-xs mt-">
+                            <TextField
+                              label="Area Sqft*"
+                              name="area"
+                              type="number"
+                            />
+                          </div>
+
+                          <div className="mb-3 space-y-2 w-full text-xs mt-">
+                            <TextField
+                              label="Rate per Sqft *"
+                              name="sqft_rate"
+                              type="number"
+                            />
+                          </div>
+                          <div className="mb-3 space-y-2 w-full text-xs mt-">
+                            <TextField
+                              label="PLC per sqft*"
+                              name="plc_per_sqft"
+                              type="number"
+                            />
+                          </div>
+                        </div>
+                        <Divider style={{ borderColor: '#efefef' }} />
+                        <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-4">
+                          <div className="mb-3 space-y-2 w-full text-xs mt-">
+                            <TextField label="Size*" name="size" type="text" />
+                          </div>
+
+                          <div className="w-full flex flex-col mb-3">
+                            <CustomSelect
+                              name="facing"
+                              label="Facing*"
+                              className="input mt-"
+                              onChange={(value) => {
+                                formik.setFieldValue('facing', value.value)
+                              }}
+                              value={formik.values.facing}
+                              // options={aquaticCreatures}
+                              options={facingTypeList}
+                            />
+                             {formik.errors.facing && formik.touched.facing ? (<p className="text-red-700 mt-2">{formik.errors.facing}</p> ):null}
+
+                          </div>
+                        </div>
+                        <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-1">
+                          <div className="mb-3 space-y-2 w-full text-xs mt-">
+                            <TextField label="East" name="east_d" type="text" />
+
+                   
                           </div>
                         </section>
 
@@ -742,56 +800,42 @@ const AddUnit = ({
                               />
                             </div>
 
-                            <div className="mb-3 space-y-2 w-full text-xs ">
-                              <TextField
-                                label="South By"
-                                name="south_sch_by"
-                                type="text"
-                              />
-                            </div>
+
+                        <Divider style={{ borderColor: '#efefef' }} />
+                        <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-4">
+                          <div className="w-full flex flex-col mb-3">
+                            <CustomSelect
+                              name="status"
+                              label="Status*"
+                              className="input "
+                              onChange={(value) => {
+                                formik.setFieldValue('status', value.value)
+                              }}
+                              value={formik.values.status}
+                              // options={aquaticCreatures}
+                              options={statusList}
+                            />
+                            {formik.errors.status && formik.touched.status ? (<p className="text-red-700 mt-2">{formik.errors.status}</p> ):null}
                           </div>
-                        </section>
+                          <div className="w-full flex flex-col mb-3 ">
+                            <CustomSelect
+                              name="release_status"
+                              label="Release Status*"
+                              className="input "
+                              onChange={(value) => {
+                                formik.setFieldValue(
+                                  'release_status',
+                                  value.value
+                                )
+                              }}
+                              value={formik.values.release_status}
+                              // options={aquaticCreatures}
+                              options={releaseStausList}
+                            />
+                           {formik.errors.release_status && formik.touched.release_status ? (<p className="text-red-700 mt-2">{formik.errors.release_status}</p> ):null}
 
-                        <section className="mt-1 px-4 rounded-lg bg-white border border-gray-100 shadow">
-                          <section className="flex flex-row  pt-2 ">
-                          <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
 
-                            <span className="ml-1 leading-[15px] ">
-                              <label className="font-semibold text-[#053219]  text-[13px] leading-[15px] mb-1  ">
-                                Status<abbr title="required"></abbr>
-                              </label>
-                            </span>
-                          </section>
-                          <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-2">
-                            <div className="w-full flex flex-col mb-3">
-                              <CustomSelect
-                                name="status"
-                                label="Status*"
-                                className="input mt-"
-                                onChange={(value) => {
-                                  formik.setFieldValue('status', value.value)
-                                }}
-                                value={formik.values.status}
-                                // options={aquaticCreatures}
-                                options={statusList}
-                              />
-                            </div>
-                            <div className="w-full flex flex-col mb-3">
-                              <CustomSelect
-                                name="release_status"
-                                label="Release Status*"
-                                className="input mt-"
-                                onChange={(value) => {
-                                  formik.setFieldValue(
-                                    'release_status',
-                                    value.value
-                                  )
-                                }}
-                                value={formik.values.release_status}
-                                // options={aquaticCreatures}
-                                options={releaseStausList}
-                              />
-                            </div>
+                         
                           </div>
                           <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-1">
                             <div className="w-full flex flex-col mb-3 mt-1">
@@ -811,40 +855,25 @@ const AddUnit = ({
                               />
                             </div>
                           </div>
-                        </section>
 
-                        <section className="mt-1 px-4 rounded-lg bg-white border border-gray-100 shadow">
-                          <section className="flex flex-row  pt-2 ">
-                          <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
+                          <div className="w-full flex flex-col mb-3 mt-1">
+                            <CustomSelect
+                              name="mortgage_type"
+                              label="Mortgage Type*"
+                              className="input "
+                              onChange={(value) => {
+                                formik.setFieldValue(
+                                  'mortgage_type',
+                                  value.value
+                                )
+                              }}
+                              value={formik.values.mortgage_type}
+                              // options={aquaticCreatures}
+                              options={mortgageType}
+                            />
+                            {formik.errors.mortgage_type && formik.touched.mortgage_type ? (<p className="text-red-700 mt-2">{formik.errors.mortgage_type}</p> ):null}
 
-                            <span className="ml-1 leading-[15px] ">
-                              <label className="font-semibold text-[#053219]  text-[13px] leading-[15px] mb-1  ">
-                                Additonal Details<abbr title="required"></abbr>
-                              </label>
-                            </span>
-                          </section>
-                          <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-2 ">
-                            <div className=" space-y-2 w-full text-xs ">
-                              <TextField
-                                label="Survey No"
-                                name="survey_no"
-                                type="text"
-                              />
-                            </div>
-                            <div className=" space-y-2 w-full text-xs ">
-                              <TextField
-                                label="Katha No"
-                                name="Katha_no"
-                                type="text"
-                              />
-                            </div>
-                            <div className=" space-y-2 w-full text-xs ">
-                              <TextField
-                                label="PID No"
-                                name="PID_no"
-                                type="text"
-                              />
-                            </div>
+
                           </div>
                         </section>
                       </section>
