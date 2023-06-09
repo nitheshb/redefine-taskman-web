@@ -690,7 +690,7 @@ const AddUnit = ({
                             <CustomSelect
                               name="status"
                               label="Status*"
-                              className="input mt-1"
+                              className="input "
                               onChange={(value) => {
                                 formik.setFieldValue('status', value.value)
                               }}
@@ -700,11 +700,11 @@ const AddUnit = ({
                             />
                             {formik.errors.status && formik.touched.status ? (<p className="text-red-700 mt-2">{formik.errors.status}</p> ):null}
                           </div>
-                          <div className="w-full flex flex-col mb-3 mt-1">
+                          <div className="w-full flex flex-col mb-3 ">
                             <CustomSelect
                               name="release_status"
                               label="Release Status*"
-                              className="input mt-"
+                              className="input "
                               onChange={(value) => {
                                 formik.setFieldValue(
                                   'release_status',
@@ -728,7 +728,7 @@ const AddUnit = ({
                             <CustomSelect
                               name="mortgage_type"
                               label="Mortgage Type*"
-                              className="input mt-"
+                              className="input "
                               onChange={(value) => {
                                 formik.setFieldValue(
                                   'mortgage_type',
