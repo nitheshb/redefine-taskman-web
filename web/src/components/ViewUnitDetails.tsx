@@ -30,6 +30,7 @@ const ViewUnitDetails = ({
   phaseDetails,
   blockDetails,
   leadDetailsObj,
+  unitViewActionType
 }) => {
   const { user } = useAuth()
   const { orgId } = user
@@ -39,6 +40,11 @@ const ViewUnitDetails = ({
   const [projectList, setprojectList] = useState([])
   const [phaseList, setphaseList] = useState([])
   const [blockList, setblockList] = useState([])
+
+  useEffect(() => {
+    setActionMode(unitViewActionType)
+  }, [unitViewActionType])
+
   useEffect(() => {
     const unsubscribe = steamUsersListByRole(
       orgId,

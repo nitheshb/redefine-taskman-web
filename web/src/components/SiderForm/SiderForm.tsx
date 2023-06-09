@@ -67,6 +67,7 @@ const SiderForm = ({
   selSubMenu2,
   setIsClicked,
   wbPayload,
+  unitViewActionType,
 }) => {
   // dont write too many here
   //  this is for customerProfileSideView
@@ -256,6 +257,7 @@ const SiderForm = ({
                     phaseDetails={phaseDetails}
                     blockDetails={blockDetails}
                     leadDetailsObj={data?.leadDetailsObj}
+                    unitViewActionType={unitViewActionType}
                   />
                 )}
 

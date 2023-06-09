@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import { useState, useEffect } from 'react'
@@ -116,6 +117,7 @@ const Floordetails = ({
   const { enqueueSnackbar } = useSnackbar()
   const unitFeedData = {}
   const [unitsFeed, setUnitsFeed] = useState([])
+  const [actionType, setActionType] = useState('quoteMode')
   const [reportFeed, setReportFeed] = useState(unitStatsData)
   const [blocksViewFeature, setBlocksViewFeature] = useState('Units')
   const [unitShrink, setUnitShrink] = useState(true)
@@ -866,70 +868,85 @@ const Floordetails = ({
                               <div>
                                 <div className="maincontainer">
                                   <div className="back">
-                                  <div
-      className={` min-w-[125px] min-h-[64px] max-h-[68px] z-10 flex flex-col  max-w-md p-1 mx-auto my-0 rounded-sm cursor-pointer border border-black`}
-    >
+                                    <div
+                                      className={` min-w-[125px] min-h-[64px] max-h-[68px] z-10 flex flex-col  max-w-md p-1 mx-auto my-0 rounded-sm cursor-pointer border border-black`}
+                                    >
+                                      {data?.status === 'available' && (
+                                        <div className="flex flex-col items-right justify-between">
+                                          <div className="flex flex-row justify-between items-right">
+                                            <h3
+                                              className="m-0 ml-2 text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200 h-[16px] hover:border-b hover:border-blue-800"
+                                              onClick={() => setActionType('unitBookingMode')}
+                                            >
+                                              Book
+                                            </h3>
+                                            <h3 className="m-0 mr-2 text-sm  leading-tight tracking-tight text-blue-800 border-0 border-blue-800 h-[16px] hover:border-b hover:border-blue-800"
+                                              onClick={() => setActionType('quoteMode')}
+                                              >
+                                              Quote
+                                            </h3>
+                                          </div>
 
+                                          <div className="flex flex-row justify-between items-right">
+                                            <h3 className="m-0 ml-2 mt-3 text-sm  leading-tight tracking-tight text-blue-800 text-black border-0 border-blue-200 h-[16px] hover:border-b hover:border-blue-800  "
+                                              onClick={() => setActionType('unitBlockMode')}
+                                              >
+                                              Block
+                                            </h3>
+                                            {source === 'projectManagement' &&<h3 className="m-0 mr-2 mt-3 mr-[21px] text-sm  leading-tight tracking-tight text-blue-800 border-0 border-blue-800 h-[16px]  hover:border-b hover:border-blue-800"
+                                              onClick={() =>   {
+                                                setSliderInfo({
+                                                  open: true,
+                                                  title: 'Edit Plot',
+                                                  sliderData: {
+                                                    unitDetail: data,
+                                                    phaseDetail: phaseFeed,
+                                                    leadDetailsObj: leadDetailsObj,
+                                                  },
+                                                  widthClass: 'max-w-4xl',
+                                                })}}
+                                              >
+                                              Edit
+                                            </h3>}
+                                          </div>
+                                        </div>
+                                      )}
+                                      {data?.status === 'booked' && (
+                                        <div className="flex flex-col items-right justify-between">
+                                          <div className="flex flex-row justify-between items-right">
+                                            <h3 className="m-0 ml-2 mt-4 text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200">
+                                              Booking Details
+                                            </h3>
+                                          </div>
+                                        </div>
+                                      )}
 
-      {data?.status==="available" && <div className="flex flex-col items-right justify-between">
-
-      <div className='flex flex-row justify-between items-right'>
-      <h3 className="m-0 ml-2 text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200">
-          Book
-        </h3>
-        <h3 className="m-0 mr-2 text-sm  leading-tight tracking-tight text-blue-800 border-0 border-blue-800 ">
-          Quote
-        </h3>
-        </div>
-
-        <div className='flex flex-row justify-between items-right'>
-        <h3 className="m-0 ml-2 mt-3 text-sm  leading-tight tracking-tight text-blue-800 text-black border-0 border-blue-200  ">
-          Block
-        </h3>
-        <h3 className="m-0 mr-2 mt-3 mr-[21px] text-sm  leading-tight tracking-tight text-blue-800 border-0 border-blue-800 ">
-          Edit
-        </h3>
-        </div>
-
-
-
-      </div>}
-      {data?.status==="booked" && <div className="flex flex-col items-right justify-between">
-
-      <div className='flex flex-row justify-between items-right'>
-      <h3 className="m-0 ml-2 mt-4 text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200">
-          Booking Details
-        </h3>
-        </div>
-      </div>}
-
-      {data?.status==="blocked" && <div className="flex flex-col items-right justify-between">
-
-<div className='flex flex-row justify-between items-right'>
-<h3 className="m-0 ml-2 mt-4 text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200">
-    Blocked Details
-  </h3>
-  </div>
-</div>}
-
-
-
-    </div>
+                                      {data?.status === 'blocked' && (
+                                        <div className="flex flex-col items-right justify-between">
+                                          <div className="flex flex-row justify-between items-right">
+                                            <h3 className="m-0 ml-2 mt-4 text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200">
+                                              Blocked Details
+                                            </h3>
+                                          </div>
+                                        </div>
+                                      )}
+                                    </div>
                                   </div>
                                   <div className="front">
                                     <div className="image">
-                                    <UnitsSmallViewCard
-                                kind={data}
-                                feedData={unitFeedData}
-                                bg="#CCFBF1"
-                                setShowCostSheetWindow={setShowCostSheetWindow}
-                                setSelUnitDetails={setSelUnitDetails}
-                                setSelMode={setSelMode}
-                              />  </div>
+                                      <UnitsSmallViewCard
+                                        kind={data}
+                                        feedData={unitFeedData}
+                                        bg="#CCFBF1"
+                                        setShowCostSheetWindow={
+                                          setShowCostSheetWindow
+                                        }
+                                        setSelUnitDetails={setSelUnitDetails}
+                                        setSelMode={setSelMode}
+                                      />{' '}
+                                    </div>
                                   </div>
                                 </div>
-
-
                               </div>
                             </div>
                           ) : (
@@ -943,7 +960,6 @@ const Floordetails = ({
                                 feedData={unitFeedData}
                                 bg="#fef7f7"
                               />
-
                             </div>
                           )
                         })}
@@ -1172,6 +1188,7 @@ const Floordetails = ({
         projectDetails={projectDetails}
         phaseDetails={phaseDetails}
         blockDetails={selBlock}
+        unitViewActionType={actionType}
       />
     </div>
   )
