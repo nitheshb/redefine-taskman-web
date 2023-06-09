@@ -32,6 +32,7 @@ export default function CSVDownloader({
         Status: item.Status,
         from: item.from,
         to: item?.coverA?.includes('visitdone') ? 'visitdone' : item?.to,
+        Source: item?.Source,
         Assigned_to: item?.assignedToObj?.name,
         Date: item.Time,
       }

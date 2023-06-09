@@ -11,7 +11,7 @@ import CrmUnitDetailsView1 from './CrmUnitDetailsView1'
 import CrmUnitFinanceHistory from './CrmUnitFinanceHistory'
 import CrmUnitHeader from './CrmUnitHeader'
 
-const CrmCustomerSummary = ({
+const CrmUnitSummary = ({
   selCustomerPayload,
   assets,
   totalIs,
@@ -23,7 +23,7 @@ const CrmCustomerSummary = ({
 
   return (
     <PDFExport paperSize="A4" margin="1cm" ref={pdfUnitSummaryComp}>
-      <div className="py-3 px-3 m-4 mt-2 rounded-lg border border-gray-100 h-[100%] overflow-y-scroll">
+      <div className="py-3 px-3 m-4 mt-2 rounded-lg border border-gray-100 h-[100%] overflow-y-scroll overflow-auto no-scrollbar">
         {/* customer details */}
         {/* Unit details */}
         {/* payment schedule */}
@@ -63,7 +63,7 @@ const CrmCustomerSummary = ({
 
         {/* 1 } customer details */}
         {/* Unit details */}
-        
+
         <CrmUnitCustomerDetailsView1
           Name={selCustomerPayload?.customerName1}
           Mobile={selCustomerPayload?.phoneNo1}
@@ -127,4 +127,4 @@ const CrmCustomerSummary = ({
   )
 }
 
-export default CrmCustomerSummary
+export default CrmUnitSummary

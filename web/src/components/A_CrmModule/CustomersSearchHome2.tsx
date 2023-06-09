@@ -11,7 +11,10 @@ import { Link } from '@redwoodjs/router'
 import DropCompUnitStatus from 'src/components/dropDownUnitStatus'
 import DummyBodyLayout from 'src/components/DummyBodyLayout/DummyBodyLayout'
 import SiderForm from 'src/components/SiderForm/SiderForm'
-import { getAllProjects } from 'src/context/dbQueryFirebase'
+import {
+  getAllProjects,
+  streamGetCustomersS,
+} from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import 'flowbite'
 import DropDownSearchBar from 'src/components/dropDownSearchBar'
@@ -22,13 +25,13 @@ const CustomersSearchHome2 = ({ project }) => {
   const { user } = useAuth()
 
   const { orgId } = user
-  const [projects, setProjects] = useState([])
+  const [customerRawData, setCustomerRawData] = useState([])
   const [payments, setPayments] = useState([])
 
   const [isOpenSideView, setIsOpenSideView] = useState(false)
   const [isDocViewOpenSideView, setIsDocViewOpenSideView] = useState(false)
   const [projectDetails, setProjectDetails] = useState({})
-  const [viewDocData, setViewDocData] = useState({})
+  const [selCustomerIs, setCustomerIs] = useState({})
 
   const [filteredUnits, setFilteredUnits] = useState([])
   const [filStatus, setFilStatus] = useState(['available', 'booked', 'blocked'])
@@ -82,6 +85,19 @@ const CustomersSearchHome2 = ({ project }) => {
     getProjects()
   }, [])
   const getProjects = async () => {
+    const { access, uid } = user
+
+    const streamrawData = await streamGetCustomersS(
+      orgId,
+      'snap',
+      {
+        uid,
+      },
+      (error) => []
+    )
+    await setCustomerRawData(streamrawData)
+    return
+
     const unsubscribe = getAllProjects(
       orgId,
       (querySnapshot) => {
@@ -92,10 +108,10 @@ const CustomersSearchHome2 = ({ project }) => {
           user.label = user?.projectName
           user.value = user?.uid
         })
-        setProjects([...projects])
+        setCustomerRawData([...projects])
         console.log('project are ', projects)
       },
-      () => setProjects([])
+      () => setCustomerRawData([])
     )
     return unsubscribe
   }
@@ -105,7 +121,7 @@ const CustomersSearchHome2 = ({ project }) => {
   }
 
   const dispDoc = (docData) => {
-    setViewDocData(docData)
+    setCustomerIs(docData)
     setIsDocViewOpenSideView(!isDocViewOpenSideView)
   }
 
@@ -133,7 +149,7 @@ const CustomersSearchHome2 = ({ project }) => {
                   <input
                     type="search"
                     id="search-dropdown"
-                    className="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg rounded-l-lg border-l-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-l-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
+                    className="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg rounded-l-lg border-l-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                     placeholder={` Search Unit No, Customer name, Phone no, Dues, Review...`}
                     required
                   />
@@ -145,7 +161,7 @@ const CustomersSearchHome2 = ({ project }) => {
                       viewUnitStatusA={filteredUnits}
                       pickCustomViewer={selProjctFun}
                       selProjectIs={projectDetails}
-                      dropDownItemsA={projects}
+                      dropDownItemsA={customerRawData}
                     />
                     <DropDownSearchBar
                       type={'All Registration'}
@@ -167,7 +183,7 @@ const CustomersSearchHome2 = ({ project }) => {
                     />
                     <button
                       type="submit"
-                      className="p-2.5 px-8 text-sm font-medium text-white bg-blue-700 rounded-r-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                      className="p-2.5 px-8 text-sm font-medium text-white bg-blue-700 rounded-r-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 "
                     >
                       <svg
                         aria-hidden="true"
@@ -193,59 +209,43 @@ const CustomersSearchHome2 = ({ project }) => {
           </div>
 
           <section className="grid justify-center md:grid-cols-3 lg:grid-cols-4 gap-5 lg:gap-7 my-10 ">
-            <div
-              className="cursor-pointer flex flex-col  max-w-md p-2 my-0  mx-4 rounded-sm inline-block  min-h-[50px]  min-w-[100px] border border-dotted border-black rounded-md"
-              onClick={() => {
-                setSliderInfo({
-                  open: true,
-                  title: ['Apartments'].includes(
-                    projectDetails?.projectType?.name
-                  )
-                    ? 'Import Units'
-                    : 'Import Project Units',
-                  sliderData: {
-                    phase: {},
-                    block: {},
-                  },
-                  widthClass: 'max-w-6xl',
-                })
-              }}
-            >
-              <div
-                className="flex flex-col items-center justify-between"
-                onClick={() => setIsOpenSideView(!isOpenSideView)}
-              >
-                <PlusIcon className="h-8 w-8 mr-1 mt-14" aria-hidden="true" />
-                <h3 className="m-0  text-sm  mt-1 font-semibold  leading-tight tracking-tight text-black border-0 border-gray-200 text-xl ">
-                  Upload Document
-                </h3>
-              </div>
-              <div className="flex flex-row justify-between px-2">
-                <span className="flex flex-row items-center justify-between mr-2">
-                  <span className="text-sm font-"></span>
-                </span>
-              </div>
-            </div>
-            {projects.length > 0 ? (
-              projects.map((project, i) => (
+            {customerRawData.length > 0 ? (
+              customerRawData.map((customerD, i) => (
                 // <span key={i}>{project?.projectName}</span>
                 <>
                   <div
                     key={i}
                     className=" cursor-pointer relative max-w-md mx-auto md:max-w-2xl  min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded-xl  mr-8 transition duration-300 ease-in-out hover:scale-105 hover:drop-shadow-2xl bg-white bg-opacity-50 shadow-xl bg-gradient-to-br from-green-50 to-cyan-100"
-                    onClick={() => dispDoc(project)}
+                    onClick={() => dispDoc(customerD)}
                   >
-                    <div className="px-4 py-2 mb-4 flex flex-col">
-                      <span>#103459</span>
+                    <div className="px-4 py-2 mb-4 flex flex-col ">
+                      <div className="flex flex-row justify-between">
+                        <span>#{customerD?.id}</span>
+
+                        <div className="text-xs text-slate-400 mt-2 font-bold uppercase">
+                          KYC {customerD?.kyc_status ? 'Done' : 'Pending'}
+                        </div>
+                      </div>
 
                       <h3 className="text-lg text-slate-700 font-bold  leading-normal mb-1 mt-">
-                        {project?.projectName}
+                        {customerD?.Name}
                       </h3>
+
+                      {/* <div className="text-xs mt-0 mb-2 text-slate-400 font-bold uppercase">
+                        Booked On: {customerD?.created_at}
+                      </div> */}
+
                       <div className="text-xs mt-0 mb-2 text-slate-400 font-bold uppercase">
-                        Nithesh B 31/11/2022
+                        Wallet: Rs {customerD?.remaining_money}
                       </div>
                       <div className="text-xs mt-0 mb-2 text-slate-400 font-bold uppercase">
-                        Sale Agreement
+                        Due: Rs {customerD?.remaining_money}
+                      </div>
+                      <div className="text-xs mt-0 mb-2 text-slate-400 font-bold uppercase">
+                        No of Assets: {customerD?.my_assets?.length}
+                      </div>
+                      <div className="text-xs mt-0 mb-2 text-slate-400 font-bold uppercase">
+                        Assigned To: ['Agent1']
                       </div>
 
                       {/* <div className="text-center mt-2 mb-4">
@@ -363,17 +363,17 @@ const CustomersSearchHome2 = ({ project }) => {
         projectDetails={projectDetails}
         unitsViewMode={false}
         widthClass="max-w-2xl"
-        projectsList={projects}
+        projectsList={customerRawData}
       />
       <SiderForm
         open={isDocViewOpenSideView}
         setOpen={setIsDocViewOpenSideView}
-        title={'disp_unit_constDetails'}
+        title={'customer_summary_full_view'}
         projectDetails={projectDetails}
         unitsViewMode={false}
-        widthClass="max-w-md"
-        projectsList={projects}
-        viewLegalDocData={viewDocData}
+        widthClass="max-w-3xl"
+
+        selCustomerPayload={selCustomerIs}
       />
     </div>
   )

@@ -47,7 +47,7 @@ const UnitsSmallViewCard = ({ kind, feedData, bg,  setSelUnitDetails,
 
   return (
     <div
-      className={` min-w-[125px] z-10 flex flex-col  max-w-md p-2 mx-auto my-0 rounded-sm cursor-pointer`}
+      className={` min-w-[125px] z-10 flex flex-col  max-w-md p-2 mx-auto my-0 rounded-sm cursor-pointer border border-black`}
       style={{ backgroundColor: bgColor }}
     >
       <div className="flex flex-row items-center justify-between">
@@ -62,8 +62,8 @@ const UnitsSmallViewCard = ({ kind, feedData, bg,  setSelUnitDetails,
       </div>
       <div className="flex flex-row justify-between px-2">
         <span className="flex flex-row items-center justify-between mr-2">
-          <span className="text-sm font-">
-            {kind?.super_built_up_area || 0} sqft
+          <span className="text-[10px] font-">
+            {kind?.super_built_up_area || kind?.area || 0} sqft
 
           </span>
         </span>

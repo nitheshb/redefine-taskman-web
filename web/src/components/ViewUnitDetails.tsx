@@ -127,6 +127,9 @@ const ViewUnitDetails = ({
   const [selected, setSelected] = useState({})
   const [devType, setdevType] = useState(devTypeA[0])
   const [unitDetailCat, setUnitDetailCat] = useState('overview')
+  const [showUnitDetails, setShowUnitDetials] = useState(false)
+  const [actionMode, setActionMode] = useState('quoteMode')
+
   const phoneRegExp =
     /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/
 
@@ -268,27 +271,93 @@ const ViewUnitDetails = ({
     setFormMessage('')
   }
   return (
-    <div className="h-full flex flex-col py-6 bg-white shadow-xl overflow-y-scroll">
-      <div className="px-4 sm:px-6  z-10 flex items-center justify-between">
-        <Dialog.Title className=" font-semibold text-xl mr-auto ml-2 text-[#053219] w-full">
+    <div className="h-full flex flex-col  bg-[#f3f6f8] shadow-xl overflow-y-scroll">
+      <div className="px-4 sm:px-6 pt-4 z-10 flex items-center justify-between ">
+        <Dialog.Title className=" font-semibold text-xl mr-auto  text-[#053219] w-full">
           <div className="flex flex-row justify-between">
-            <>
-              <div className="font-semibold text-[#053219]  text-sm  mb-[1] tracking-wide">
+            <div className="flex flex-col">
+              <div className="font-semibold text-[#053219]  text-xl  mb-[1] tracking-wide">
                 {data?.unitDetail?.unit_no}
                 <span
-                  className={`items-center h-6 px-3 py-1 ml-3 mt-1 text-xs font-semibold text-green-500 bg-green-100 rounded-full mr-2
+                  className={`items-center h-6  py-1 mt-1 ml-[1px] text-xs font-semibold text-gray-500  rounded-full mr-2
+                      `}
+                >
+                  Unit
+                </span>
+                <span
+                  className={`items-center h-6 px-3 py-1 ml-3 mt-1 text-xs font-semibold text-green-600 bg-green-200 rounded-full mr-2
                       `}
                 >
                   {data?.unitDetail?.status}
                 </span>
               </div>
-            </>
+              <div className="font text-[12px] text-gray-500 tracking-wide overflow-ellipsis overflow-hidden">
+                {projectDetails?.projectName}
+              </div>
+            </div>
 
             {/* 2 */}
             <div className=" flex flex-row">
-              <div className="font text-sm text-slate-900 tracking-wide overflow-ellipsis overflow-hidden">
-                {projectDetails?.projectName}
-              </div>
+              <span
+                className={`items-center cursor-pointer h-6 px-3 py-1  mt-1 text-xs font-semibold text-green-600 bg-green-200 rounded-full mr-2
+                      `}
+                onClick={() => {
+                  setShowUnitDetials(!showUnitDetails)
+                }}
+              >
+                {showUnitDetails ? "Hide unit details": "View unit details" }
+              </span>
+              {data?.unitDetail?.status === 'available' &&
+              <>
+              <button
+                onClick={() => {
+                  setActionMode('quoteMode')
+                }}
+                type="button"
+                className="mb-4 mx-1 mr-1 md:mb-0 hover:scale-110 focus:outline-none bg-white px-5  text-sm shadow-sm font-medium tracking-wider border text-gray-600 rounded-sm hover:shadow-lg hover:bg-gray-100         hover:bg-teal-200
+                                  bg-teal-100
+                                  text-teal-700
+                                  h-8
+                                  border duration-200 ease-in-out
+                                  border-green-700 transition"
+              >
+                {' '}
+                Quote{' '}
+              </button>
+              <button
+                onClick={() => {
+                  setActionMode('unitBlockMode')
+                }}
+                type="button"
+                className="mb-4 mx-1 mr-2 md:mb-0 hover:scale-110 focus:outline-none bg-white px-5  text-sm shadow-sm font-medium tracking-wider border text-gray-600 rounded-sm hover:shadow-lg hover:bg-gray-100         hover:bg-teal-200
+                                  bg-teal-100
+                                  text-teal-700
+                                  h-8
+                                  border duration-200 ease-in-out
+                                  border-green-700 transition"
+              >
+                {' '}
+                Block{' '}
+              </button>
+              <button
+                className="mb-2 md:mb-0  hover:scale-110 focus:outline-none              hover:bg-[#5671fc]
+                                  bg-green-700
+                                  text-teal-100
+                                  h-8
+                                  border duration-200 ease-in-out
+                                  border-green-700 transition
+                                   px-5  text-sm shadow-sm font-medium tracking-wider text-white rounded-sm hover:shadow-lg hover:bg-green-500"
+                                   onClick={() => {
+                                    setActionMode('unitBookingMode')
+                                  }}
+                disabled={loading}
+                // onClick={() => submitFormFun(formik)}
+              >
+                {/* {loading && <Loader />} */}
+                Book unit
+              </button>
+              </>
+}
               {/* <span
                 className={`items-center h-6 px-3 py-1 mt-1 text-xs font-semibold text-green-500 bg-green-100 rounded-full
                       `}
@@ -327,7 +396,7 @@ const ViewUnitDetails = ({
             >
               {(formik) => (
                 <div className="mt-4">
-                  <div className="py-3 grid grid-cols-3 mb-4">
+                 {showUnitDetails && <div className="py-3 grid grid-cols-3 mb-4">
                     <section className="flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md">
                       <section className="flex flow-row justify-between mb-1">
                         <div className="font-md text-xs text-gray-700 tracking-wide">
@@ -442,7 +511,7 @@ const ViewUnitDetails = ({
                         </div>
                       </section>
                     </section>
-                  </div>
+                  </div> }
                   {data?.unitDetail?.status === 'available' && (
                     <CostBreakUpSheet
                       selMode={'Detail View'}
@@ -453,6 +522,7 @@ const ViewUnitDetails = ({
                       projectDetails={projectDetails}
                       setShowCostSheetWindow={() => {}}
                       selUnitDetails={data?.unitDetail}
+                      actionMode={actionMode}
                     />
                   )}
 

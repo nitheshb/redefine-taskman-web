@@ -8,28 +8,11 @@ import { Menu } from '@headlessui/react'
 import { Listbox, Transition } from '@headlessui/react'
 import { ArrowRightIcon } from '@heroicons/react/outline'
 import CalendarIcon from '@heroicons/react/outline/CalendarIcon'
-import {
-  BadgeCheckIcon,
-  DocumentIcon,
-  EyeIcon,
-  ViewBoardsIcon,
-  ViewGridIcon,
-  XIcon,
-} from '@heroicons/react/solid'
-import { CheckIcon, SelectorIcon, DownloadIcon } from '@heroicons/react/solid'
+
+import {  DownloadIcon } from '@heroicons/react/solid'
 import ClockIcon from '@heroicons/react/solid/ClockIcon'
-import PlusCircleIcon from '@heroicons/react/solid/PlusCircleIcon'
-import { VerticalAlignBottom } from '@mui/icons-material'
-import { DateTimePicker } from '@mui/lab'
-import DesktopDatePicker from '@mui/lab/DesktopDatePicker'
-import TimePicker from '@mui/lab/TimePicker'
-import { TextField } from '@mui/material'
-import { LocalizationProvider } from '@mui/x-date-pickers'
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
-import DatePicker from 'react-datepicker'
-import { useDropzone } from 'react-dropzone'
-import toast from 'react-hot-toast'
+
 import { v4 as uuidv4 } from 'uuid'
 
 import {
@@ -76,8 +59,14 @@ import { useSnackbar } from 'notistack'
 
 import SiderForm from '../SiderForm/SiderForm'
 
-import CrmCustomerSummary from './CrmCustomerSummary'
+import CrmUnitSummary from './A_CrmUnitSummary'
 import CrmUnitPsHome from './CustomerFinanceStatement'
+
+import AssigedToDropComp from '../assignedToDropComp'
+
+import { USER_ROLES } from 'src/constants/userRoles'
+
+import CrmPaymentSummary from './CrmPaymentSummary'
 
 // interface iToastInfo {
 //   open: boolean
@@ -132,7 +121,7 @@ const notInterestOptions = [
   // { label: 'RNR', value: 'rnr' },
   // { label: 'Dead', value: 'Dead' },
 ]
-export default function UnitSideViewCRM({
+export default function UnitFullSummary({
   openUserProfile,
   rustomerDetails,
   unitViewerrr,
@@ -219,10 +208,33 @@ export default function UnitSideViewCRM({
     amount,
     fromObj,
     toAccount,
+    stsUpT,
+    assignT,
+    CT,
   } = customerDetails
 
   const { assets } = selCustomerPayload
   const totalIs = 0
+  useEffect(() => {
+    const count = projectList.filter(
+      (dat) => dat.uid == selCustomerPayload?.pId
+    )
+
+    console.log('myData is ', selCustomerPayload?.pId, projectList)
+    if (count.length > 0) {
+      setSelProjectIs(count[0])
+      console.log('myData is ', selProjectIs, count[0])
+    }
+
+    console.log(
+      'myData is ',
+      customerDetails,
+      selCustomerPayload,
+      selSubMenu,
+      projectList,
+      selProjectIs
+    )
+  }, [projectList])
 
   useEffect(() => {
     const unsubscribe = steamUsersListByRole(
@@ -294,27 +306,7 @@ export default function UnitSideViewCRM({
     if (fet === 'appoint') {
       return
     }
-    //  else if (fet === 'ph') {
-    //   const unsubscribe = steamLeadPhoneLog(orgId,
-    //     (doc) => {
-    //       console.log('my total fetched list is yo yo 1', doc.data())
-    //       const usersList = doc.data()
-    //       const usersListA = []
 
-    //       Object.entries(usersList).forEach((entry) => {
-    //         const [key, value] = entry
-    //         usersListA.push(value)
-    //         console.log('my total fetched list is 3', `${key}: ${value}`)
-    //       })
-    //       console.log('my total fetched list is', usersListA.length)
-    //       // setLeadsFetchedActivityData(usersListA)
-    //     },
-    //     {
-    //       uid: id,
-    //     },
-    //     (error) => setLeadsFetchedActivityData([])
-    //   )
-    // }
     else {
       leadsActivityFetchedData.map((data) => {
         console.log('value of filtered feature count before', data)
@@ -400,7 +392,7 @@ export default function UnitSideViewCRM({
         await console.log('my Array data is set it')
       },
       {
-        unitId: selCustomerPayload?.uid,
+        unitId: selCustomerPayload?.id,
       },
       () => setUnitTransactionsA([])
     )
@@ -692,34 +684,9 @@ export default function UnitSideViewCRM({
     <div
       className={`bg-white   h-screen    ${openUserProfile ? 'hidden' : ''} `}
     >
-      <div className="rounded-t bg-[#F1F5F9] mb-0 px-3 pt-2">
-        <div className="flex flex-row justify-between">
-          <div className="flex flex-col justify-between">
-            <p className="text-md font-bold tracking-tight uppercase font-body my-[2px]  ml-2">
-              {selCustomerPayload?.[`${assets[0]}_unitDetails`]?.unit_no}
-              ,PHASE-I,
-              {selCustomerPayload?.projectName}
-            </p>
-            <p className="text-xs tracking-tight uppercase font-body my-[2px] ml-2">
-              {selCustomerPayload?.customerName1} &{' '}
-              {selCustomerPayload?.secondaryCustomerDetailsObj?.customerName2}
-            </p>
-            <p className="text-xs tracking-tight  font-body my-[2px] ml-2">
-              <span className="">{selCustomerPayload?.phoneNo1}</span>
-              <span className="ml-2">{selCustomerPayload?.email1}</span>
-            </p>
-          </div>
-          <div className="text-center items-center mr-2 mt-3">
-            <div
-              className="text-center items-center align-middle text-blue-500 text-xs cursor-pointer hover:underline"
-              onClickCapture={() => {
-                openPaymentFun()
-              }}
-            >
-              CAPTURE PAYMENT
-            </div>
-          </div>
-        </div>
+
+      <div className="rounded-t bg-[#F1F5F9] mb-0 px-3">
+
         <>
           <div className="">
             <div className="">
@@ -729,24 +696,21 @@ export default function UnitSideViewCRM({
 
               <div className=" border-gray-900  bg-[#F1F5F9] rounded-t-lg ">
                 <ul
-                  className="flex   rounded-t-lg overflow-x-scroll"
+                  className="flex   rounded-t-lg"
                   id="myTab"
                   data-tabs-toggle="#myTabContent"
                   role="tablist"
                 >
                   {[
-                    // { lab: 'Schedules', val: 'appointments' },
+                    { lab: 'Applicant details', val: 'applicant_info' },
+                    { lab: 'Unit details', val: 'unit_information' },
+                    { lab: 'Cost & Payments', val: 'finance_info' },
+                    { lab: 'Loan details', val: 'loan_info' },
+                    { lab: 'Agreement  details', val: 'agreement_info' },
+                    { lab: 'Brokerage  details', val: 'brokerage_info' },
+                    // { lab: 'Docs', val: 'docs_info' },
                     { lab: 'Summary', val: 'summary' },
                     { lab: 'Tasks', val: 'tasks' },
-
-                    // { lab: 'Attachments', val: 'attachments' },
-                    // { lab: 'Phone', val: 'phone' },
-
-                    { lab: 'Unit Information', val: 'unit_information' },
-                    { lab: 'Commercials', val: 'finance_info' },
-                    { lab: 'Legal', val: 'legal_info' },
-
-                    // { lab: 'Phone', val: 'phone' },
                     { lab: 'Timeline', val: 'timeline' },
                   ].map((d, i) => {
                     return (
@@ -1108,7 +1072,7 @@ export default function UnitSideViewCRM({
                     Unit No
                   </div>
                   <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {selCustomerPayload?.[`${assets[0]}_unitDetails`]?.unit_no}
+                    {selCustomerPayload?.unit_no}
                   </div>
                 </section>
                 <section className="flex flow-row justify-between mb-1">
@@ -1119,9 +1083,7 @@ export default function UnitSideViewCRM({
                     </span>
                   </div>
                   <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {selCustomerPayload?.[
-                      `${assets[0]}_unitDetails`
-                    ]?.builtup_area?.toLocaleString('en-IN')}
+                    {selCustomerPayload?.builtup_area?.toLocaleString('en-IN')}
                   </div>
                 </section>
                 <section className="flex flow-row justify-between mb-1">
@@ -1129,7 +1091,7 @@ export default function UnitSideViewCRM({
                     Facing
                   </div>
                   <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {selCustomerPayload?.[`${assets[0]}_unitDetails`]?.facing}
+                    {selCustomerPayload?.facing}
                   </div>
                 </section>
                 <section className="flex flow-row justify-between mb-1">
@@ -1137,9 +1099,7 @@ export default function UnitSideViewCRM({
                     BUA
                   </div>
                   <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {selCustomerPayload?.[
-                      `${assets[0]}_unitDetails`
-                    ].builtup_area?.toLocaleString('en-IN')}
+                    {selCustomerPayload?.builtup_area?.toLocaleString('en-IN')}
                   </div>
                 </section>
               </section>
@@ -1149,9 +1109,7 @@ export default function UnitSideViewCRM({
                     East
                   </div>
                   <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {selCustomerPayload?.[
-                      `${assets[0]}_unitDetails`
-                    ].east?.toLocaleString('en-IN')}
+                    {selCustomerPayload?.east?.toLocaleString('en-IN')}
                   </div>
                 </section>
                 <section className="flex flow-row justify-between mb-1">
@@ -1159,9 +1117,7 @@ export default function UnitSideViewCRM({
                     West
                   </div>
                   <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {selCustomerPayload?.[
-                      `${assets[0]}_unitDetails`
-                    ]?.west?.toLocaleString('en-IN')}
+                    {selCustomerPayload?.west?.toLocaleString('en-IN')}
                   </div>
                 </section>
                 <section className="flex flow-row justify-between mb-1">
@@ -1169,9 +1125,7 @@ export default function UnitSideViewCRM({
                     South
                   </div>
                   <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {selCustomerPayload?.[
-                      `${assets[0]}_unitDetails`
-                    ]?.south?.toLocaleString('en-IN')}
+                    {selCustomerPayload?.south?.toLocaleString('en-IN')}
                   </div>
                 </section>
                 <section className="flex flow-row justify-between mb-1">
@@ -1179,9 +1133,7 @@ export default function UnitSideViewCRM({
                     North
                   </div>
                   <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {selCustomerPayload?.[
-                      `${assets[0]}_unitDetails`
-                    ]?.north?.toLocaleString('en-IN')}
+                    {selCustomerPayload?.north?.toLocaleString('en-IN')}
                   </div>
                 </section>
               </section>
@@ -1195,9 +1147,7 @@ export default function UnitSideViewCRM({
                       data?.unitDetail?.builtup_area *
                       data?.unitDetail?.rate_per_sqft
                     )?.toLocaleString('en-IN')} */}
-                    {selCustomerPayload?.[
-                      `${assets[0]}_unitDetails`
-                    ]?.rate_per_sqft?.toLocaleString('en-IN')}
+                    {selCustomerPayload?.rate_per_sqft?.toLocaleString('en-IN')}
                   </div>
                 </section>
                 <section className="flex flow-row justify-between mb-1">
@@ -1205,9 +1155,7 @@ export default function UnitSideViewCRM({
                     PLC
                   </div>
                   <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {selCustomerPayload?.[
-                      `${assets[0]}_unitDetails`
-                    ]?.builtup_area?.toLocaleString('en-IN')}
+                    {selCustomerPayload?.builtup_area?.toLocaleString('en-IN')}
                   </div>
                 </section>
                 <section className="flex flow-row justify-between mb-1">
@@ -1215,7 +1163,7 @@ export default function UnitSideViewCRM({
                     Total
                   </div>
                   <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {selCustomerPayload?.[`${assets[0]}_unitDetails`]?.facing}
+                    {selCustomerPayload?.facing}
                   </div>
                 </section>
                 <section className="flex flow-row justify-between mb-1">
@@ -1223,7 +1171,7 @@ export default function UnitSideViewCRM({
                     KathaId
                   </div>
                   <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {selCustomerPayload?.[`${assets[0]}_unitDetails`]?.kathaId}
+                    {selCustomerPayload?.kathaId}
                   </div>
                 </section>
               </section>
@@ -1233,7 +1181,7 @@ export default function UnitSideViewCRM({
       )}
       {selFeature === 'summary' && (
         <div className="py-3 px-3 m-4 mt-2 rounded-lg border border-gray-100 h-[100%] overflow-y-scroll">
-          <CrmCustomerSummary
+          <CrmUnitSummary
             selCustomerPayload={selCustomerPayload}
             assets={assets}
             totalIs={totalIs}

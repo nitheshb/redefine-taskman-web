@@ -451,7 +451,7 @@ const AddBookingForm = ({
         </div>
 
         <div className="grid gap-8 grid-cols-1">
-          <div className="flex flex-col rounded-lg bg-white mt-10">
+          <div className="flex flex-col rounded-lg bg-white ">
             <div className="mt-0">
               <Formik
                 enableReinitialize={true}

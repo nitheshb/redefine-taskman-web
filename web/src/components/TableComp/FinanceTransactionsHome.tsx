@@ -13,7 +13,10 @@ import { MetaTags } from '@redwoodjs/web'
 
 import LLeadsTableView from 'src/components/LLeadsTableView/LLeadsTableView'
 import { USER_ROLES } from 'src/constants/userRoles'
-import { getFinanceTransactionsByStatus } from 'src/context/dbQueryFirebase'
+import {
+  getFinanceTransactionsByStatus,
+  streamGetAllTransactions,
+} from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import CSVDownloader from 'src/util/csvDownload'
 import { CustomSelect } from 'src/util/formFields/selectBoxField'
@@ -34,6 +37,8 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
   const { user } = useAuth()
   const { orgId } = user
   const [isImportLeadsOpen, setisImportLeadsOpen] = useState(false)
+  const [openTransactionDetails, setOpenTransactionDetails] = useState(false)
+
 
   // kanban board
   const [ready, setReady] = useState(false)
@@ -74,6 +79,17 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
     console.log('login role detials', user)
     const { access, uid } = user
 
+    const steamLeadLogs = await streamGetAllTransactions(
+      orgId,
+      'snap',
+      {
+        uid,
+      },
+      (error) => []
+    )
+    await setFinFetchedData(steamLeadLogs)
+
+    return
     if (access?.includes('manage_leads')) {
       const unsubscribe = getFinanceTransactionsByStatus(
         orgId,
@@ -162,7 +178,7 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
 
   const viewTransaction = (docData) => {
     setTransactionData(docData)
-    setisImportLeadsOpen(!isImportLeadsOpen)
+    setOpenTransactionDetails(!openTransactionDetails)
   }
   return (
     <>
@@ -463,13 +479,19 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
                               <span className="ml-4">FROM</span>
                             </th>
                             <th className="text-left text-xs app-color-black py-2">
-                              <span className="ml-4">To</span>
+                              <span className="ml-4">DATED AS</span>
                             </th>
                             <th className="text-left text-xs app-color-black py-2">
-                              TRANSACTION DETAILS
+                              MODE
+                            </th>
+                            <th className="text-left text-xs app-color-black py-2">
+                              DETAILS
                             </th>
                             <th className="text-right text-xs app-color-black py-2">
                               <span className="mr-10">AMOUNT</span>
+                            </th>
+                            <th className="text-right text-xs app-color-black py-2">
+                              <span className="mr-10">ASSIGNED TO</span>
                             </th>
                             <th className="text-right text-xs app-color-black py-2">
                               <span className="mr-10">STATUS</span>
@@ -510,10 +532,10 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
                                   <div className="mr-2 w-[3px] rounded-2xl  bg-violet-300 "></div>
                                   <div className="flex flex-col">
                                     <span className="font-semibold text-sm app-color-black">
-                                      {finData?.fromObj?.name || 'NA'}
+                                      {finData?.customerName || finData?.fromObj?.name || 'NA'}
                                     </span>
                                     <span className="font-normal text-xs app-color-gray-1">
-                                      {'52346673647'}
+                                    {finData?.towards}
                                     </span>
                                     <span className="font-normal text-xs app-color-gray-1">
                                       {finData?.fromObj?.bankName}
@@ -526,22 +548,9 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
                               </td>
                               <td>
                                 <div className="flex flex-row ml-4 py-2">
-                                  <div className="mr-2 w-[3px] rounded-2xl bg-violet-300  "></div>
-                                  <div className="flex flex-col">
-                                    <span className="font-semibold text-sm app-color-black">
-                                      {finData?.toAccount?.name}
+                                  <span className="font-normal text-xs app-color-gray-1">
+                                      {finData?.txt_dated}
                                     </span>
-                                    <span className="font-normal text-xs app-color-gray-1">
-                                      {/* {finData?.toAccount?.accountNo} */}
-                                      {finData?.towardsBankDocId}
-                                    </span>
-                                    <span className="font-normal text-xs app-color-gray-1">
-                                      {finData?.toAccount?.bankName}
-                                    </span>
-                                    <span className="font-normal text-xs app-color-gray-1">
-                                      {finData?.toAccount?.branch}
-                                    </span>
-                                  </div>
                                 </div>
                               </td>
                               <td>
@@ -552,7 +561,7 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
                                       {finData?.mode}
                                     </span>
                                     <span className="font-normal text-xs app-color-gray-1">
-                                      {finData?.transactionNo}
+                                      {finData?.txt_id}
                                     </span>
                                     <span className="font-normal text-xs app-color-gray-1">
                                       {finData?.dated}
@@ -560,9 +569,27 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
                                   </div>
                                 </div>
                               </td>
+                              <td>
+                                <div className="flex flex-row py-2">
+                                  {/* <div className="mr-2 w-[3px]  bg-gray-100 "></div> */}
+                                  <div className="flex flex-col">
+                                    <span className="font-normal text-xs app-color-gray-1">
+                                      {finData?.txt_id}
+                                    </span>
+                                    <span className="font-normal text-xs app-color-gray-1">
+                                      {finData?.txt_dated}
+                                    </span>
+                                  </div>
+                                </div>
+                              </td>
                               <td className="text-right">
                                 <span className="text-right font-semibold text-sm app-color-gray-1 mr-10">
-                                  Rs {finData?.amount}
+                                  Rs {finData?.totalAmount}
+                                </span>
+                              </td>
+                              <td className="text-center">
+                                <span className="text-center font-semibold text-sm app-color-gray-1 mr-10">
+                                  {finData?.assignedTo || 'NA'}
                                 </span>
                               </td>
 
@@ -598,8 +625,8 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
         </div>
       </div>
       <SiderForm
-        open={isImportLeadsOpen}
-        setOpen={setisImportLeadsOpen}
+        open={openTransactionDetails}
+        setOpen={setOpenTransactionDetails}
         title={'Transaction'}
         customerDetails={selUserProfile}
         widthClass="max-w-md"

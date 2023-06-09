@@ -69,33 +69,8 @@ const ProjectEditPage = ({
             />
             <div className="flex-grow   items-center overflow-y-auto no-scrollbar  h-[98%]  px-300  pt-300">
               <HeadNavBar2 selModule={''} setSelModule={''} />
-              <div className="mx-3">
-                <div className="flex items-center flex-shrink-0 h-16 px-0  pl-0  ">
-                  {/* <h1 className="text-lg font-medium">redefine.</h1> */}
-                  <span className="relative  flex items-center w-auto text-xl  leading-none pl-0">
-                    Project Details
-                  </span>
-                  <button
-                    onClick={() => setIsAddPhaseOpen(true)}
-                    className="flex items-center justify-center h-10 px-4  bg-gray-200 ml-auto text-sm font-medium rounded hover:bg-gray-300"
-                  >
-                    <svg
-                      className="w-5 h-5"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                      />
-                    </svg>
-                    <span className="ml-2 leading-none">Add Phase</span>
-                  </button>
-                </div>
+              <div className="mx-1 mt-1">
+
                 {project?.projectName ? (
                   <>
                     <ProjectsMHomeBody

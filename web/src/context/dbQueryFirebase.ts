@@ -157,6 +157,53 @@ export const streamLeadLogdWithNullProj = async (
   return lead_logs
   // return onSnapshot(itemsQuery, snapshot, error)
 }
+
+// get all AccountTransactions from supabase
+export const streamGetAllTransactions = async (
+  orgId,
+  snapshot,
+  data,
+  error
+) => {
+  // const itemsQuery = query(doc(db, `${orgId}_leads_log', 'W6sFKhgyihlsKmmqDG0r'))
+  const { uid, cutoffDate } = data
+  // return onSnapshot(doc(db, `${orgId}_leads_log`, uid), snapshot, error)
+  const { data: lead_logs, error: countError } = await supabase
+    .from(`${orgId}_accounts`)
+    .select('*')
+  // .eq('type', 'sts_change')
+  // .is('projectId', null)
+  // .isNull('projectId')
+  // .eq('from', 'visitfixed')
+
+  if (countError) {
+    console.error(countError)
+    return
+  }
+  return lead_logs
+  // return onSnapshot(itemsQuery, snapshot, error)
+}
+
+// get all Get Customers from supabase
+export const streamGetCustomersS = async (orgId, snapshot, data, error) => {
+  // const itemsQuery = query(doc(db, `${orgId}_leads_log', 'W6sFKhgyihlsKmmqDG0r'))
+  const { uid, cutoffDate } = data
+  // return onSnapshot(doc(db, `${orgId}_leads_log`, uid), snapshot, error)
+  const { data: lead_logs, error: countError } = await supabase
+    .from(`${orgId}_customers`)
+    .select('*')
+  // .eq('type', 'sts_change')
+  // .is('projectId', null)
+  // .isNull('projectId')
+  // .eq('from', 'visitfixed')
+
+  if (countError) {
+    console.error(countError)
+    return
+  }
+  return lead_logs
+  // return onSnapshot(itemsQuery, snapshot, error)
+}
 export const getEmployeesTaskProgressDept = async (
   orgId,
   snapshot,
@@ -368,6 +415,19 @@ export const getCRMCustomerByProject = (orgId, snapshot, data, error) => {
   console.log('hello ', status, itemsQuery)
   return onSnapshot(itemsQuery, snapshot, error)
 }
+
+// get crmCustomers list
+
+export const getBookedUnitsByProject = (orgId, snapshot, data, error) => {
+  const { status } = data
+
+  const itemsQuery = query(
+    collection(db, `${orgId}_units`),
+    where('status', '==', 'booked')
+  )
+  console.log('hello ', status, itemsQuery)
+  return onSnapshot(itemsQuery, snapshot, error)
+}
 // get finance transactions
 export const getFinanceTransactionsByStatus = (
   orgId,
@@ -387,7 +447,7 @@ export const getFinanceTransactionsByStatus = (
 // get finance transactions of Unit
 export const getFinanceForUnit = (orgId, snapshot, data, error) => {
   const { unitId } = data
-
+  console.log('hello ', unitId)
   const itemsQuery = query(
     collection(db, `${orgId}_fincance`),
     where('unitId', '==', unitId)
@@ -779,6 +839,15 @@ export const getAllProjects = async (orgId, snapshot, error) => {
   console.log(getAllProjectsQuery, 'dcavlvblasfjv')
   return onSnapshot(getAllProjectsQuery, snapshot, error)
 }
+export const getAllSources = async (orgId, snapshot, error) => {
+  console.log('org is ', orgId)
+  const getAllProjectsQuery = await query(
+    collection(db, `${orgId}_LeadSources`),
+    orderBy('label')
+  )
+  console.log(getAllProjectsQuery, 'dcavlvblasfjv')
+  return onSnapshot(getAllProjectsQuery, snapshot, error)
+}
 
 export const getProjectByUid = async (orgId, uid: string, snapshot, error) => {
   try {
@@ -1076,21 +1145,6 @@ export const addPlotUnit = async (orgId, data, by, msg) => {
   // get the cost sheet charges obj & successully create total unit cost
   const assetVal = area * sqft_rate + (area * plc_per_sqft || 0)
   const yo = {
-    // totalEstValue: increment(plot_value + construct_value),
-    // totalEstPlotVal: increment(plot_value),
-    // totalEstConstuctVal: increment(construct_value),
-    // plotcost: 10,
-    // constCost: 10,
-    // plcCharges: 10,
-    // discount: 10,
-    // totalUnitCost: 100,
-    // legal: 10,
-    // clubhousecharges: 10,
-    // bescom_bwssb: 10,
-    // totalPlotArea: plot_Sqf,
-    // totalConstructArea: super_built_up_area,
-    // // totalArea: increment(area),
-    // totalUnitCount: 1,
     totalUnitCount: increment(1),
     availableCount: status === 'available' ? increment(1) : increment(0),
     soldUnitCount: status === 'sold' ? increment(1) : increment(0),
@@ -1101,21 +1155,165 @@ export const addPlotUnit = async (orgId, data, by, msg) => {
       : increment(0),
     totalValue: increment(assetVal),
     soldValue: status === 'sold' ? increment(assetVal) : increment(0),
-    blockedValue: ['blocked_customer', 'blocked_management'].includes(
-      status
-    ) ? increment(assetVal) : increment(0),
+    blockedValue: ['blocked_customer', 'blocked_management'].includes(status)
+      ? increment(assetVal)
+      : increment(0),
     totalEstPlotVal: increment(assetVal),
     totalArea: increment(area),
     soldArea: status === 'sold' ? increment(area) : increment(0),
-    blockedArea: ['blocked_customer', 'blocked_management'].includes(
-      status
-    ) ? increment(area) : increment(0),
+    blockedArea: ['blocked_customer', 'blocked_management'].includes(status)
+      ? increment(area)
+      : increment(0),
     totalPlotArea: increment(area),
   }
 
   const x = await addDoc(collection(db, `${orgId}_units`), data)
-  const y = await updateProjectComputedData(orgId,pId, yo )
+  const y = await updateProjectComputedData(orgId, pId, yo)
   await console.log('x value is', x, x.id)
+
+  return
+  // await addLeadLog(x.id, {
+  //   s: 's',
+  //   type: 'status',
+  //   subtype: 'added',
+  //   T: Timestamp.now().toMillis(),
+  //   txt: msg,
+  //   by,
+  // })
+
+  // add task to scheduler to Intro call in 3 hrs
+
+  addUnitComputedValues(
+    `${orgId}_projects`,
+    pId,
+    plot_Sqf || 0,
+    super_built_up_area || 0,
+    plot_Sqf * plot_cost_sqf || 0,
+    super_built_up_area * construct_cost_sqf || 0,
+    1
+  )
+  addUnitComputedValues(
+    'phases',
+    phaseId,
+    plot_Sqf || 0,
+    super_built_up_area || 0,
+    plot_Sqf * plot_cost_sqf || 0,
+    super_built_up_area * construct_cost_sqf || 0,
+    1
+  )
+  addUnitComputedValues(
+    'blocks',
+    blockId,
+    plot_Sqf || 0,
+    super_built_up_area || 0,
+    plot_Sqf * plot_cost_sqf || 0,
+    super_built_up_area * construct_cost_sqf || 0,
+    1
+  )
+
+  // add data to bank account
+  // 1) get bank account id of project
+  // 2) convert owner name to something friendly
+
+  // 1) get bank account id of project
+  // builderbankId
+  addUnitBankComputed(
+    orgId,
+    `${orgId}_BankDetails`,
+    builderbankId,
+    plot_Sqf || 0,
+    super_built_up_area || 0,
+    plot_Sqf * plot_cost_sqf || 0,
+    super_built_up_area * construct_cost_sqf || 0,
+    1
+  )
+  // 2) convert owner name to something friendly
+  const owner_docId = owner_name
+    ?.replace(/[^A-Za-z\s!?]/g, '')
+    .replaceAll(' ', '')
+    .toLocaleLowerCase()
+
+  addUnitBankComputed(
+    orgId,
+    `${orgId}_VirtualAccounts`,
+    owner_docId,
+    plot_Sqf || 0,
+    super_built_up_area || 0,
+    plot_Sqf * plot_cost_sqf || 0,
+    super_built_up_area * construct_cost_sqf || 0,
+    1
+  )
+
+  return
+}
+export const editPlotUnit = async (orgId, uid, data, by, msg, enqueueSnackbar) => {
+  const {
+    pId,
+    phaseId,
+    blockId,
+    unit_no,
+    survey_no,
+    Katha_no,
+    PID_no,
+    area,
+    sqft_rate,
+    plc_per_sqft,
+    size,
+    facing,
+    east_d,
+    west_d,
+    north_d,
+    south_d,
+    east_west_d,
+    north_south_d,
+
+    east_sch_by,
+    west_sch_by,
+    status,
+
+    release_status,
+    mortgage_type,
+  } = data
+
+  // get the cost sheet charges obj & successully create total unit cost
+  const assetVal = area * sqft_rate + (area * plc_per_sqft || 0)
+  // const yo = {
+
+  //   availableCount: status === 'available' ? increment(1) : increment(0),
+  //   soldUnitCount: status === 'sold' ? increment(1) : increment(0),
+  //   blockedUnitCount: ['blocked_customer', 'blocked_management'].includes(
+  //     status
+  //   )
+  //     ? increment(1)
+  //     : increment(0),
+  //   totalValue: increment(assetVal),
+  //   soldValue: status === 'sold' ? increment(assetVal) : increment(0),
+  //   blockedValue: ['blocked_customer', 'blocked_management'].includes(status)
+  //     ? increment(assetVal)
+  //     : increment(0),
+  //   totalEstPlotVal: increment(assetVal),
+  //   totalArea: increment(area),
+  //   soldArea: status === 'sold' ? increment(area) : increment(0),
+  //   blockedArea: ['blocked_customer', 'blocked_management'].includes(status)
+  //     ? increment(area)
+  //     : increment(0),
+  //   totalPlotArea: increment(area),
+  // }
+try {
+  await updateDoc(doc(db, `${orgId}_units`, uid), {
+    ...data,
+  })
+  enqueueSnackbar('Plot updated successfully', {
+    variant: 'success',
+  })
+} catch (error) {
+  enqueueSnackbar('Plot details Updation Failed', {
+    variant: 'success',
+  })
+}
+
+  // const y = await updateProjectComputedData(orgId, pId, yo)
+
 
   return
   // await addLeadLog(x.id, {
@@ -1357,7 +1555,7 @@ export const updateProjectComputedData = async (orgId, id, data) => {
 
     await updateDoc(washingtonRef, data)
   } catch (error) {
-  console.log('error in updation')
+    console.log('error in updation')
     // await setDoc(doc(db, `${orgId}_leads_notes`, id), yo)
   }
 }
@@ -1592,6 +1790,55 @@ export const createBlock = async (element, enqueueSnackbar, resetForm) => {
     })
   }
 }
+export const addPaymentReceivedEntrySup = async (
+  orgId,
+  unitDocId,
+  customerDetails,
+  paymentDetails,
+  createdByDept,
+  by,
+  enqueueSnackbar
+) => {
+  const logPayload = {
+    id: '',
+    particular: '',
+    date: '',
+    amount: '',
+    to: '',
+    toUidnvoiceNo: '',
+    fromName: '',
+    fromUi: '',
+    mode: '',
+    status: '', // review
+    dated: '',
+    appliedTo: '',
+    receivedBy: '',
+    receivedByUid: '',
+  }
+  console.log('Check', logPayload)
+  try {
+    const updated = {
+      ...customerDetails,
+      ...paymentDetails,
+      createdByDept,
+      status: 'review',
+      against: 'unit',
+      unitId: unitDocId,
+      created: Timestamp.now().toMillis(),
+    }
+    // const ref = doc(db, `${orgId}_fincance', unitDocId)
+    const x = await addDoc(collection(db, `${orgId}_fincance`), updated)
+
+    enqueueSnackbar('Payment Captured..!', {
+      variant: 'success',
+    })
+    return x.id
+  } catch (e) {
+    enqueueSnackbar(e.message, {
+      variant: 'error',
+    })
+  }
+}
 export const addPaymentReceivedEntry = async (
   orgId,
   unitDocId,
@@ -1601,25 +1848,23 @@ export const addPaymentReceivedEntry = async (
   by,
   enqueueSnackbar
 ) => {
-
-  const logPayload ={
-    'id': '',
-    'particular': '',
-    'date': '',
-    'amount': '',
-    'to': '',
-    'toUidnvoiceNo':'',
-    'fromName': '',
-    'fromUi': '',
-    'mode': '',
-    'status': '', // review
-    'dated': '',
-    'appliedTo': '',
-    'receivedBy': '',
-    'receivedByUid': '',
-
+  const logPayload = {
+    id: '',
+    particular: '',
+    date: '',
+    amount: '',
+    to: '',
+    toUidnvoiceNo: '',
+    fromName: '',
+    fromUi: '',
+    mode: '',
+    status: '', // review
+    dated: '',
+    appliedTo: '',
+    receivedBy: '',
+    receivedByUid: '',
   }
-  console.log('Check',logPayload )
+  console.log('Check', logPayload)
   try {
     const updated = {
       ...customerDetails,
@@ -1872,6 +2117,27 @@ export const updateAccessRoles = async (
     return enqueueSnackbar(e.message, { variant: 'error' })
   }
 }
+export const addNewSourceComp = async (
+  orgId,
+  sourcePayload,
+  enqueueSnackbar
+) => {
+  const uuxid = uuidv4()
+
+  sourcePayload.myId = uuxid
+  sourcePayload.rep = [sourcePayload.value]
+  try {
+    await setDoc(doc(db, `${orgId}_LeadSources`, uuxid), { ...sourcePayload })
+    enqueueSnackbar('New Source added ...!', {
+      variant: 'success',
+    })
+  } catch (e) {
+    console.log(' error is source addition', e)
+    enqueueSnackbar(e.message, {
+      variant: 'error',
+    })
+  }
+}
 export const addPhaseAdditionalCharges = async (
   orgId,
   uid,
@@ -1889,6 +2155,27 @@ export const addPhaseAdditionalCharges = async (
       [type]: arrayUnion(chargePayload),
     })
     enqueueSnackbar('Charges added successfully', {
+      variant: 'success',
+    })
+  } catch (e) {
+    console.log(' error is here', e)
+    enqueueSnackbar(e.message, {
+      variant: 'error',
+    })
+  }
+}
+export const updateLeadSourcesItem = async (
+  orgId,
+  uid,
+  payload,
+  enqueueSnackbar
+) => {
+  try {
+    await updateDoc(doc(db, `${orgId}_LeadSources`, uid), {
+      ...payload,
+    })
+
+    enqueueSnackbar('Source Edited successfully', {
       variant: 'success',
     })
   } catch (e) {
@@ -2291,6 +2578,219 @@ export const decreCountOnResheduleOtherDay = async (
     console.log('erro in emp performance Upate decre')
   }
 }
+export const createNewCustomerS = async (
+  orgId,
+  projectId,
+  unitId,
+  leadDetailsObj2,
+  oldStatus,
+  newStatus,
+  by,
+  enqueueSnackbar
+) => {
+  try {
+    const leadDocId = leadDetailsObj2.id
+    const { Name } = leadDetailsObj2
+
+    console.log('wow it should be here', leadDocId, newStatus, Name)
+
+    const { data, error } = await supabase.from(`${orgId}_customers`).insert([
+      {
+        Name: Name,
+        // id: leadDocId,
+        my_assets: [unitId],
+        T: Timestamp.now().toMillis(),
+        Luid: leadDocId,
+        added_by: by,
+        projects: [projectId],
+      },
+    ])
+    await console.log('customer data is ', data, error, {
+      Name: Name,
+      // id: leadDocId,
+      my_assets: [unitId],
+      T: Timestamp.now().toMillis(),
+      Luid: leadDocId,
+      added_by: by,
+      projects: [projectId],
+    })
+    return data
+
+    return
+    // await updateDoc(doc(db, `${orgId}_leads`, leadDocId), {
+    //   Status: newStatus,
+    //   coveredA: arrayUnion(oldStatus),
+    //   stsUpT: Timestamp.now().toMillis(),
+    //   leadUpT: Timestamp.now().toMillis(),
+    // })
+
+    // const { data1, error1 } = await supabase.from(`${orgId}_lead_logs`).insert([
+    //   {
+    //     type: 'sts_change',
+    //     subtype: oldStatus,
+    //     T: Timestamp.now().toMillis(),
+    //     Luid: leadDocId,
+    //     by,
+    //     payload: {},
+    //     from: oldStatus,
+    //     to: newStatus,
+    //     projectId: projectId,
+    //   },
+    // ])
+
+    console.log('chek if ther is any erro in supa', data1, error1)
+    enqueueSnackbar(`Status Updated to ${newStatus}`, {
+      variant: 'success',
+    })
+  } catch (e) {
+    enqueueSnackbar(e.message, {
+      variant: 'error',
+    })
+  }
+}
+export const insertPSS = async (
+  orgId,
+  projectId,
+  unitId,
+  leadDetailsObj2,
+  paylaod,
+  by,
+  enqueueSnackbar
+) => {
+  try {
+    const leadDocId = leadDetailsObj2.id
+    const { Name } = leadDetailsObj2
+    const {
+      description,
+      elgFrom,
+      elgible,
+      percentage,
+      stage,
+      value,
+      zeroDay,
+      order,
+    } = paylaod
+
+    const { datax, errorx } = await supabase.from(`${orgId}_ps_list`).insert([
+      {
+        projectId,
+        unitId,
+        status: 'wait',
+        payment_status: 'NA',
+        description,
+        elgFrom,
+        elgible,
+        percentage,
+        stage,
+        value,
+        zeroDay,
+        order,
+      },
+    ])
+    enqueueSnackbar(`Insert Ps`, {
+      variant: 'success',
+    })
+  } catch (e) {
+    enqueueSnackbar(e.message, {
+      variant: 'error',
+    })
+  }
+}
+export const capturePaymentS = async (
+  orgId,
+  projectId,
+  unitId,
+  custNo,
+  leadDetailsObj2,
+  paylaod,
+  by,
+  enqueueSnackbar
+) => {
+  try {
+    const leadDocId = leadDetailsObj2.id
+    const { Name } = leadDetailsObj2
+    const {
+      amount,
+      builderName,
+      chequeno,
+      dated,
+      landloardBankDocId,
+      mode,
+      payto,
+      towardsBankDocId,
+    } = paylaod
+
+    const { data, error } = await supabase.from(`${orgId}_accounts`).insert([
+      {
+        projectId,
+        unit_id: [unitId],
+        towards: builderName,
+        towards_id: towardsBankDocId,
+        mode,
+        custId: custNo,
+        customerName: Name,
+        receive_by: payto,
+        txt_dated: Timestamp.now().toMillis(), // modify this to dated time entred by user
+        status: 'captured',
+        totalAmount: amount,
+      },
+    ])
+    enqueueSnackbar(`Captured Payment`, {
+      variant: 'success',
+    })
+    return data
+  } catch (e) {
+    enqueueSnackbar(e.message, {
+      variant: 'error',
+    })
+  }
+}
+
+export const addAccountslogS = async (
+  orgId,
+  projectId,
+  unitId,
+  leadDetailsObj2,
+  paylaod,
+  by,
+  enqueueSnackbar
+) => {
+  try {
+    const leadDocId = leadDetailsObj2.id
+    const { Name } = leadDetailsObj2
+
+    const { oldStatus, newStatus, amount, type, TransactionUid } = paylaod
+
+    const { data, error } = await supabase
+      .from(`${orgId}_account_logs`)
+      .insert([
+        {
+          type,
+          subtype: oldStatus,
+          T: Timestamp.now().toMillis(),
+          TransactionUid,
+          by,
+          payload: {},
+          from: oldStatus,
+          to: newStatus,
+          unitId,
+          amount: 10.0,
+        },
+      ])
+
+    await console.log('data is ', data, error)
+    enqueueSnackbar(`Captured Payment`, {
+      variant: 'success',
+    })
+
+    return data
+  } catch (e) {
+    enqueueSnackbar(e.message, {
+      variant: 'error',
+    })
+  }
+}
+
 export const updateLeadCustomerDetailsTo = async (
   orgId,
   leadDocId,
@@ -2544,7 +3044,7 @@ export const updateLeadStatus = async (
     //   txt: msg,
     //   by,
     // })
-    const { data1, error1 } = await supabase.from(`${orgId}_lead_logs`).insert([
+    const { data, error } = await supabase.from(`${orgId}_lead_logs`).insert([
       {
         type: 'sts_change',
         subtype: oldStatus,
@@ -2558,7 +3058,7 @@ export const updateLeadStatus = async (
       },
     ])
 
-    console.log('chek if ther is any erro in supa', data1, error1)
+    console.log('chek if ther is any erro in supa', data, error)
     enqueueSnackbar(`Status Updated to ${newStatus}`, {
       variant: 'success',
     })
@@ -2844,6 +3344,20 @@ export const deletePayment = async (uid, enqueueSnackbar) => {
     await deleteDoc(doc(db, 'paymentSchedule', uid))
 
     enqueueSnackbar('Payment deleted successfully', {
+      variant: 'success',
+    })
+  } catch (e) {
+    enqueueSnackbar(e.message, {
+      variant: 'error',
+    })
+  }
+}
+
+export const deleteSourceList = async (orgId, uid, enqueueSnackbar) => {
+  try {
+    await deleteDoc(doc(db, `${orgId}_LeadSources`, uid))
+
+    enqueueSnackbar('Source deleted successfully', {
       variant: 'success',
     })
   } catch (e) {

@@ -8,7 +8,7 @@ export const TextField = ({ label, ...props }) => {
     <div className="mb-2 w-full">
       <label
         htmlFor={field.name}
-        className="label font-regular text-sm block mb-1"
+        className="label font-regular text-[12px] block mb-1 text-gray-700"
       >
         {label}
       </label>
@@ -19,7 +19,7 @@ export const TextField = ({ label, ...props }) => {
       /> */}
       <input
         className={` ${meta.touched && meta.error && 'is-invalid'} ${
-          field.name === 'blockName' ? 'rounded-xs' : ' h-10 rounded-md '
+          field.name === 'blockName' ? 'rounded-xs' : ' h-8 rounded-md '
         }
            w-full min-w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] px-4`}
         {...field}

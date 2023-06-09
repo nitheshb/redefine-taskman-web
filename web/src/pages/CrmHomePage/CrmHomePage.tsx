@@ -1,23 +1,28 @@
 import { useState, useEffect } from 'react'
+
 import { EyeIcon, PencilIcon } from '@heroicons/react/outline'
+
 import { Link, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
+
 import CrmHome from 'src/components/A_CRMcomp/CrmHome'
 import CrmTaskList from 'src/components/A_CRMcomp/CrmTaskList'
+import CrmDashboardHome from 'src/components/A_CrmModule/CrmDashboard'
+import CrmRegisterModeHome from 'src/components/A_CrmModule/CrmRegisterHome'
+import CrmRepHomePageView1 from 'src/components/A_CrmModule/CrmRepHomePageView1'
+import CustomersEventsHome from 'src/components/A_CrmModule/CustomersEventsHome'
+import CustomersSearchHome2 from 'src/components/A_CrmModule/CustomersSearchHome2'
 import SlimSideMenuBar from 'src/components/A_SideMenu/slimSideMenu'
 import AllBankDetailsView from 'src/components/All_BankDetailsView'
-import CrmDashboardHome from 'src/components/CrmModule/CrmDashboard'
-import CrmRegisterModeHome from 'src/components/CrmModule/CrmRegisterHome'
-import CrmRepHomePageView1 from 'src/components/CrmModule/CrmRepHomePageView1'
-import CustomersEventsHome from 'src/components/CrmModule/CustomersEventsHome'
-import CustomersSearchHome2 from 'src/components/CrmModule/CustomersSearchHome2'
 import HeadNavBar2 from 'src/components/HeadNavBar/HeadNavBar2'
 import ProjectsUnitInventory from 'src/components/projectUnitsInventory'
 import CrmBucketList from 'src/components/TableComp/CrmBuckets'
 import FinanceTransactionsHome from 'src/components/TableComp/FinanceTransactionsHome'
 import { getAllProjects } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
+
 import SiderForm from '../../components/SiderForm/SiderForm'
+import UnitsInventoryHome from 'src/components/A_ProjModule/UnitsInvertoryHome'
 
 const CrmHomePage = () => {
   const { user } = useAuth()
@@ -363,10 +368,7 @@ const CrmHomePage = () => {
               viewable={viewable}
             /> */}
             <div className="flex-grow  items-center overflow-y-auto  h-[98%]  px-300  py-300">
-            <HeadNavBar2
-              selModule ={selModule}
-              setSelModule={setSelModule}
-            />
+              <HeadNavBar2 selModule={selModule} setSelModule={setSelModule} />
               <div className="px-1">
                 {viewable === 'crmDashboard' && (
                   <CrmDashboardHome
@@ -418,6 +420,14 @@ const CrmHomePage = () => {
                 )}
                 {viewable === 'MyCustomers-II' && (
                   <CustomersSearchHome2
+                    project={{
+                      projectName: 'Projects',
+                    }}
+                    isEdit={undefined}
+                  />
+                )}
+                   {viewable === 'units_inventory' && (
+                  <UnitsInventoryHome
                     project={{
                       projectName: 'Projects',
                     }}

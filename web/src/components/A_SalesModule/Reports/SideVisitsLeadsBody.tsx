@@ -183,6 +183,7 @@ const SideVisitLeadsBody = ({
                       { label: 'Status', id: 'new' },
                       { label: 'From', id: 'all' },
                       { label: 'To', id: 'all' },
+                      { label: 'Source', id: 'new' },
                       { label: 'Date', id: 'new' },
                       { label: 'Executive', id: 'all' },
                     ].map((d, i) => (
@@ -235,6 +236,9 @@ const SideVisitLeadsBody = ({
                           {data?.coverA?.includes('visitdone')
                             ? 'visitdone'
                             : data?.to}
+                        </td>
+                        <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
+                          {data?.Source}
                         </td>
                         <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
                           {data?.Time}
