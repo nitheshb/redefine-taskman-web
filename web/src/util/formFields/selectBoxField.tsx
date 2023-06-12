@@ -1,6 +1,6 @@
 import React from 'react'
 import Select from 'react-select'
-
+import { ErrorMessage } from 'formik'
 const customStyles = {
   control: (provided, state) => ({
     ...provided,
@@ -68,11 +68,12 @@ export const CustomSelect = ({
             styles={customStyles}
           />
         </label>
-        {/* <ErrorMessage
+        <ErrorMessage
         component="div"
         name={name}
-        className="error-message text-red-700 text-xs px-2"
-      /> */}
+        className="error-message text-red-700 text-xs px-2 "
+      />
+
       </div>
     </label>
   )
