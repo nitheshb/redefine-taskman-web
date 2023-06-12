@@ -34,6 +34,7 @@ import { CustomSelect } from 'src/util/formFields/selectBoxField'
 import { TextField } from 'src/util/formFields/TextField'
 
 import Loader from './Loader/Loader'
+import { validate_AddUnit } from './Schemas'
 
 const AddUnit = ({
   title,
@@ -466,10 +467,12 @@ const AddUnit = ({
     { label: 'Bank', value: 'bank' },
     { label: '3rd Party Investor', value: '3rd_party_investor' },
   ]
-  const validate = Yup.object({
-    unit_no: Yup.string()
+  // const validate = Yup.object({
+
+
+    // unit_no: Yup.string()
       // .max(15, 'Must be 15 characters or less')
-      .required('Unit_no is Required'),
+      // .required('Unit_no is Required'),
     // lastName: Yup.string()
     //   .max(20, 'Must be 20 characters or less')
     //   .required('Required'),
@@ -493,7 +496,7 @@ const AddUnit = ({
     // carpet_area: Yup.number().required('Carpet Area is required'),
     // buildup_area: Yup.number().required('Buildup Area is required'),
     // super_build_up_area: Yup.number().required('Sqft Rate is required'),
-  })
+  // })
   const resetter = () => {
     setSelected({})
     setFormMessage('')
@@ -541,7 +544,7 @@ const AddUnit = ({
                 // buildup_area: 0,
                 // super_build_up_area: 0,
               }}
-              validationSchema={validate}
+              validationSchema={validate_AddUnit}
               onSubmit={(values, { resetForm }) => {
                 console.log('ami submitted', values)
                 if (title === 'Edit Plot') {
@@ -645,6 +648,7 @@ const AddUnit = ({
                                 // options={aquaticCreatures}
                                 options={facingTypeList}
                               />
+
                             </div>
                           </div>
                         </section>
@@ -782,6 +786,7 @@ const AddUnit = ({
                                 label="Release Status*"
                                 className="input mt-"
                                 onChange={(value) => {
+
                                   formik.setFieldValue(
                                     'release_status',
                                     value.value

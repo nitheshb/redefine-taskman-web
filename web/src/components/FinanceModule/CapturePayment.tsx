@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 
 import { format } from 'date-fns'
 
+
 import { arrayUnion } from 'firebase/firestore'
 import { Form, Formik } from 'formik'
 import { useSnackbar } from 'notistack'
@@ -29,6 +30,7 @@ import { useAuth } from 'src/context/firebase-auth-context'
 import { CustomSelect } from 'src/util/formFields/selectBoxField'
 import { MultiSelectMultiLineField } from 'src/util/formFields/selectBoxMultiLineField'
 import { TextField2 } from 'src/util/formFields/TextField2'
+import { validate_capturePayment } from '../Schemas'
 
 const CaptureUnitPayment = ({
   title,
@@ -207,7 +209,7 @@ const CaptureUnitPayment = ({
     bookedBy: '',
   }
 
-  const validateSchema = Yup.object({
+  // const validateSchema = Yup.object({
     // date: Yup.string().required('Bank Required'),
     // amount: Yup.string().required('Required'),
     // payto: Yup.string().required('Required'),
@@ -215,7 +217,7 @@ const CaptureUnitPayment = ({
     // drawnonbank: Yup.string().required('Required'),
     // chequeno: Yup.string().required('Required'),
     // dated: Yup.string().required('Required'),
-  })
+  // })
 
   const submitFormFun = (formik) => {
     formik.handleSubmit()
@@ -235,9 +237,10 @@ const CaptureUnitPayment = ({
             <Formik
               enableReinitialize={true}
               initialValues={initialState}
-              validationSchema={validateSchema}
+              validationSchema={validate_capturePayment}
               onSubmit={(values, { resetForm }) => {
                 onSubmitSupabase(values, resetForm)
+                console.log(values)
               }}
             >
               {(formik) => (
@@ -379,7 +382,7 @@ const CaptureUnitPayment = ({
                                     />
                                   </div>
                                 </div>
-                                <div className="w-full mt-3 lg:w-4/12 px-4  ">
+                                <div className="w-full mt-3 lg:w-4/12 px-3  ">
                                   <div className="relative w-full mb-5 mt-[-1px] ">
 
                                     {/* <TextField2
@@ -390,8 +393,7 @@ const CaptureUnitPayment = ({
                                      <span className="inline">
 
                           <DatePicker
-                            className=" pl-2 h-8 outline-none border-t-0 border-l-0 border-r-0 border-b border-gray-500  border-solid mt-[-4px] pb-1  min-w-[117px] inline  text-[#0091ae]   lg:w-4/12 w-full min-w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] px-4"
-                            // className="date"
+                            className="h-8 outline-none border-t-0 border-l-0 border-r-0 border-b border-gray-500  border-solid mt-[-4px] pb-1  min-w-[125px]  inline  text-[#0091ae]   lg:w-4/12 w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] "
                             label="Dated"
                             selected={startDate}
                             onChange={(date) => {
@@ -414,7 +416,7 @@ const CaptureUnitPayment = ({
                                   <div className="relative w-full mb-3">
                                     <TextField2
                                       label="Paid To"
-                                      name="paidTo"
+                                      name="payto"
                                       type="text"
                                     />
                                   </div>
