@@ -416,7 +416,7 @@ const CaptureUnitPayment = ({
                                   <div className="relative w-full mb-3">
                                     <TextField2
                                       label="Paid To"
-                                      name="paidTo"
+                                      name="payto"
                                       type="text"
                                     />
                                   </div>

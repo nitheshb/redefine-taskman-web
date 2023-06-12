@@ -1,6 +1,7 @@
 import * as Yup from 'yup'
 
 export const validate_capturePayment = Yup.object({
+  payto: Yup.string().required('Paid to is required'),
   chequeno: Yup.string()
     .required('Cheque number is required')
     .matches(/^[0-9]{6}$/, 'Cheque number must be 6 digits'),
@@ -9,7 +10,7 @@ export const validate_capturePayment = Yup.object({
     .positive('Amount must be a positive number')
     .integer('Amount must be an integer'),
   dated: Yup.date().required('Date is required'),
-  paidTo: Yup.string().required('Paid to is required'),
+  towardsBankDocId:Yup.string().required('Paid Towards Account is required ')
 })
 
 export const validate_AddUnit = Yup.object({
