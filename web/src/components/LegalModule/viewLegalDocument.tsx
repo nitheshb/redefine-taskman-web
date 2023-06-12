@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useEffect, useState } from 'react'
 
 import { Dialog } from '@headlessui/react'
@@ -13,6 +15,7 @@ import { TextField2 } from 'src/util/formFields/TextField2'
 import { MultipleFileUploadField } from '../LeadUplodCsv/MultipleFileUploadField'
 
 import DocRow from './Docu_row'
+import SiderForm from '../SiderForm/SiderForm'
 
 export default function LegalDocsViewHome({
   title,
@@ -24,6 +27,21 @@ export default function LegalDocsViewHome({
 }) {
   const [existingCols, setexistingCols] = useState([])
   const [selFeature, setFeature] = useState('summary')
+  const [sliderInfo, setSliderInfo] = useState({
+    open: false,
+    title: 'legal_doc',
+    sliderData: {},
+    widthClass: 'max-w-xl',
+  })
+  const handleSliderClose = () => {
+    setSliderInfo({
+      open: false,
+      title: '',
+      sliderData: {},
+      widthClass: 'max-w-xl',
+    })
+  }
+
   const initialState = {
     amount: '',
     towardsBankDocId: '',
@@ -337,7 +355,17 @@ export default function LegalDocsViewHome({
                                     <h2 className="font-medium flex-grow">
                                       Unit Document
                                     </h2>
-                                    <span className=" ml-2 text-blue-500 hover:underline">
+                                    <span
+                                      className=" ml-2 text-blue-500 hover:underline"
+                                      onClick={() => {
+                                        setSliderInfo({
+                                          open: true,
+                                          title: 'legal_doc_upload',
+                                          sliderData: {},
+                                          widthClass: 'max-w-xl',
+                                        })
+                                      }}
+                                    >
                                       Add Doc
                                     </span>
                                   </div>
@@ -396,6 +424,15 @@ export default function LegalDocsViewHome({
           </div>
         </div>
       </div>
+      <SiderForm
+        open={sliderInfo.open}
+        setOpen={handleSliderClose}
+        title={sliderInfo.title}
+        data={sliderInfo.sliderData}
+        widthClass={sliderInfo.widthClass}
+        pId={pId}
+        phaseDetails={myPhase}
+      />
     </div>
   )
 }

@@ -127,7 +127,6 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
 
   const [selSubMenu1, setSelSubMenu1] = useState('summary')
 
-
   const DocumentationHeadA = [
     { lab: 'All Transactions', val: 'all' },
     { lab: 'For onBoarding', val: 'latest' },
@@ -455,9 +454,9 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
           const usersListA = querySnapshot.docs.map((docSnapshot) => {
             const x = docSnapshot.data()
             x.id = docSnapshot.id
-            const y = projectList.filter((proj)=> proj?.uid == x?.pId)
+            const y = projectList.filter((proj) => proj?.uid == x?.pId)
             console.log(',my prject sel is ', projectList)
-            if(y.length > 0) {
+            if (y.length > 0) {
               console.log(',my prject sel is ', y)
               x.projName = y[0].projectName
             }
@@ -491,8 +490,8 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
           const usersListA = querySnapshot.docs.map((docSnapshot) => {
             const x = docSnapshot.data()
             x.id = docSnapshot.id
-            const y = projectList.filter((proj)=> proj?.id == x?.pId)
-            if(y.length > 0) {
+            const y = projectList.filter((proj) => proj?.id == x?.pId)
+            if (y.length > 0) {
               x.projName = y[0].projectName
             }
 
@@ -569,20 +568,23 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
               </div> */}
               <div className=" border-gray-900  bg-[#F1F5F9] rounded-t-lg ">
                 <ul
-                  className="flex justify-center  rounded-t-lg "
+                  className="flex   rounded-t-lg "
                   id="myTab"
                   data-tabs-toggle="#myTabContent"
                   role="tablist"
                 >
                   {[
                     // { lab: 'Schedules', val: 'appointments' },
-                    { lab: 'Booked Units', val: 'booking_review' },
-                    { lab: 'Pre Agreement', val: 'pre_register' },
+                    { lab: 'Booking Pipeline', val: 'booking_review' },
+                    { lab: 'Agreement Pipeline', val: 'pre_register' },
 
                     // { lab: 'Attachments', val: 'attachments' },
                     // { lab: 'Phone', val: 'phone' },
 
-                    { lab: 'Post Agreement', val: 'post_register' },
+                    { lab: 'SD/Registration Pipeline', val: 'post_register' },
+
+                    { lab: 'Registerd', val: 'registered' },
+
                     { lab: 'Queries', val: 'queries' },
                   ].map((d, i) => {
                     return (
@@ -683,7 +685,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                         T_balance,
                         T_elgible,
                         pId,
-                        projName
+                        projName,
                       } = finData
                       return (
                         <section
@@ -831,14 +833,14 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                               <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2">
                                 <div className="flex flex-row justify-between px-1">
                                   {[
-                                    {
-                                      item: 'Manager',
+                                     {
+                                      item: 'Payment',
                                       value: 78,
                                       icon: ChartPieIcon,
                                     },
                                     {
-                                      item: 'Welcome ',
-                                      value: 58,
+                                      item: 'Manager',
+                                      value: 78,
                                       icon: ChartPieIcon,
                                     },
                                     {
@@ -846,6 +848,12 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       value: 38,
                                       icon: NewspaperIcon,
                                     },
+                                    {
+                                      item: 'Welcome ',
+                                      value: 58,
+                                      icon: ChartPieIcon,
+                                    },
+
                                   ].map((data, i) => (
                                     <div
                                       className=" w-[100px] bg-[#F1F5F9] p-3 rounded-md mx-1"
@@ -1030,8 +1038,9 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                     ></img>
                                     <section className="flex flex-col ml-2 max-w-[100px] ">
                                       <span className="font-semibold text-sm app-color-black">
-                                        {finData?.[`${assets[0]}_unitDetails`]
-                                          ?.unit_no || ''}
+                                        {/* {finData?.[`${assets[0]}_unitDetails`]
+                                          ?.unit_no || ''} */}
+                                        {finData?.assetName}
                                       </span>
                                       <span className="text-xs">
                                         {customerName1}
@@ -1101,7 +1110,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                           </div>
                                         )
                                       )}
-                                      {[{ item: 'Balance', value: 6 }].map(
+                                      {[{ item: 'Due', value: 6 }].map(
                                         (data, i) => (
                                           <div
                                             className=" w-2/4  "
@@ -1149,18 +1158,18 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                 <div className="flex flex-row justify-between px-1">
                                   {[
                                     {
-                                      item: 'Manager',
+                                      item: 'Amount Due',
                                       value: 78,
                                       icon: ChartPieIcon,
                                     },
                                     {
-                                      item: 'Customer ',
+                                      item: 'ATS Creation',
                                       value: 58,
                                       icon: ChartPieIcon,
                                     },
                                   ].map((data, i) => (
                                     <div
-                                      className=" w-[100px] bg-[#F1F5F9] p-3 rounded-md mx-1"
+                                      className=" w-[120px] bg-[#F1F5F9] p-3 rounded-md mx-1"
                                       style={{
                                         display: 'inline-block',
                                         alignSelf: 'flex-end',
@@ -1187,19 +1196,20 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                               <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2">
                                 <div className="flex flex-row justify-between px-1">
                                   {[
+
                                     {
-                                      item: 'Agre Draft',
-                                      value: 78,
+                                      item: 'Customer Sign',
+                                      value: 58,
                                       icon: ChartPieIcon,
                                     },
                                     {
-                                      item: 'Agre Appro ',
-                                      value: 58,
+                                      item: 'Builder Sign',
+                                      value: 78,
                                       icon: ChartPieIcon,
                                     },
                                   ].map((data, i) => (
                                     <div
-                                      className=" w-[100px] bg-[#F1F5F9] p-3 rounded-md mx-1"
+                                      className=" w-[120px] bg-[#F1F5F9] p-3 rounded-md mx-1"
                                       style={{
                                         display: 'inline-block',
                                         alignSelf: 'flex-end',
@@ -1295,6 +1305,377 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                       )
                     })}
                   {selCategory === 'post_register' &&
+                    tableData.map((finData, i) => {
+                      const {
+                        uid,
+                        assets,
+                        customerDetailsObj,
+                        customerName1,
+                        phoneNo1,
+                      } = finData
+                      return (
+                        <section
+                          key={i}
+                          className="border mb-1 bg-[#E9E9F2] shadow rounded-md  shadow"
+                        >
+                          <section className="flex flex-row">
+                            <div className="">
+                              <div className="flex flex-row  mt- mr-[1px] py-1">
+                                <div
+                                  className="flex flex-col bg-gradient-to-r from-[#A798FF] to-[#c8c2f1] text-black p-2 rounded-sm py-2 w-[170px] h-[82px] ml-1"
+                                  onClick={() =>
+                                    viewTransaction(
+                                      finData,
+                                      'unit_information',
+                                      'unit_information'
+                                    )
+                                  }
+                                >
+                                  <section className="flex flex-row">
+                                    <img
+                                      className="w-10 h-10 mr-2"
+                                      alt=""
+                                      src="/apart.svg"
+                                    ></img>
+                                    <section className="flex flex-col ml-2 max-w-[100px] ">
+                                      <span className="font-semibold text-sm app-color-black">
+                                        {finData?.assetName}
+                                      </span>
+                                      <span className="text-xs">
+                                        {finData?.ownerName}
+                                      </span>
+
+                                      <span className="text-xs">
+                                        {' '}
+                                        {finData?.ph}
+                                      </span>
+                                      <span className="font-normal text-xs app-color-gray-1">
+                                        Eco Stone
+                                      </span>
+                                    </section>
+                                  </section>
+
+                                  {/* <span className="font-normal text-xs app-color-gray-1">
+                                  {finData?.ph}
+                                </span> */}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="w-3/4  h-[78px] bg-[#E9E9F2] px-1 ">
+                              {' '}
+                              <Box>
+                                <>
+                                  <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2">
+                                    <div className="flex flex-row justify-between mx-1">
+                                      <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
+                                        {'1,11,10,340'}
+                                      </h6>
+                                      <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
+                                        {'7,10,340'}
+                                      </h6>
+                                    </div>
+                                    <div className="flex flex-row mx-1">
+                                      {[{ item: 'Total', value: 6 }].map(
+                                        (data, i) => (
+                                          <div
+                                            className=" w-3/4  "
+                                            style={{
+                                              display: 'inline-block',
+                                              alignSelf: 'flex-end',
+                                            }}
+                                            key={i}
+                                          >
+                                            <div className="">
+                                              <LinearProgress
+                                                sx={{
+                                                  backgroundColor: 'white',
+                                                  '& .MuiLinearProgress-bar': {
+                                                    backgroundColor: '#A798FF',
+                                                  },
+                                                }}
+                                                variant="determinate"
+                                                value={100}
+                                                style={{
+                                                  backgroundColor: '#E5EAF2',
+                                                  borderRadius: '3px',
+                                                  borderTopRightRadius: '0px',
+                                                  borderBottomRightRadius:
+                                                    '0px',
+                                                  height: `${data.value}px`,
+                                                  width: `100%`,
+                                                }}
+                                              />
+                                            </div>
+                                            <div className="flex  justify-left mr-1  mb-1 mt-[4px]">
+                                              <h6 className="font-bodyLato font-semibold text-xs mt-1">
+                                                {data.item}
+                                              </h6>
+                                            </div>
+                                          </div>
+                                        )
+                                      )}
+                                      {[{ item: 'Due', value: 6 }].map(
+                                        (data, i) => (
+                                          <div
+                                            className=" w-2/4  "
+                                            style={{
+                                              display: 'inline-block',
+                                              alignSelf: 'flex-end',
+                                            }}
+                                            key={i}
+                                          >
+                                            <div className="">
+                                              <LinearProgress
+                                                sx={{
+                                                  backgroundColor: 'white',
+                                                  '& .MuiLinearProgress-bar': {
+                                                    backgroundColor: '#E87F7F',
+                                                  },
+                                                }}
+                                                variant="determinate"
+                                                value={100}
+                                                style={{
+                                                  backgroundColor: '#E87F7F',
+                                                  borderRadius: '3px',
+                                                  borderTopLeftRadius: '0px',
+                                                  borderBottomLeftRadius: '0px',
+                                                  height: `${data.value}px`,
+                                                  width: `100%`,
+                                                }}
+                                              />
+                                            </div>
+                                            <div className="flex  justify-end mr-1  mb-1 mt-[4px]">
+                                              <h6 className="font-bodyLato font-semibold text-xs mt-1">
+                                                {data.item}
+                                              </h6>
+                                            </div>
+                                          </div>
+                                        )
+                                      )}
+                                    </div>
+                                  </div>
+                                </>
+                              </Box>
+                            </div>
+                            <div className="w-3/4  bg-[#E9E9F2] px-1 ">
+                              {' '}
+                              <Box>
+                                <>
+                                  <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2  h-[78px]">
+                                    <div className="flex flex-row justify-between mx-1">
+                                      <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
+                                        {'Construction'}
+                                      </h6>
+                                      <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
+                                        {'20%'}
+                                      </h6>
+                                    </div>
+                                    <div className="flex flex-row mx-1">
+                                      {[{ item: '', value: 6 }].map(
+                                        (data, i) => (
+                                          <div
+                                            className=" w-3/4  "
+                                            style={{
+                                              display: 'inline-block',
+                                              alignSelf: 'flex-end',
+                                            }}
+                                            key={i}
+                                          >
+                                            <div className="">
+                                              <LinearProgress
+                                                sx={{
+                                                  backgroundColor: 'white',
+                                                  '& .MuiLinearProgress-bar': {
+                                                    backgroundColor: '#A798FF',
+                                                  },
+                                                }}
+                                                variant="determinate"
+                                                value={100}
+                                                style={{
+                                                  backgroundColor: '#E5EAF2',
+                                                  borderRadius: '3px',
+                                                  borderTopRightRadius: '0px',
+                                                  borderBottomRightRadius:
+                                                    '0px',
+                                                  height: `${data.value}px`,
+                                                  width: `100%`,
+                                                }}
+                                              />
+                                            </div>
+                                            <div className="flex  justify-left mr-1  mb-1 mt-[4px]">
+                                              <h6 className="font-bodyLato font-semibold text-xs mt-1">
+                                                {data.item}
+                                              </h6>
+                                            </div>
+                                          </div>
+                                        )
+                                      )}
+                                      {[{ item: '', value: 6 }].map(
+                                        (data, i) => (
+                                          <div
+                                            className=" w-2/4  "
+                                            style={{
+                                              display: 'inline-block',
+                                              alignSelf: 'flex-end',
+                                            }}
+                                            key={i}
+                                          >
+                                            <div className="">
+                                              <LinearProgress
+                                                sx={{
+                                                  backgroundColor: 'white',
+                                                  '& .MuiLinearProgress-bar': {
+                                                    backgroundColor: '#E87F7F',
+                                                  },
+                                                }}
+                                                variant="determinate"
+                                                value={100}
+                                                style={{
+                                                  backgroundColor: '#E87F7F',
+                                                  borderRadius: '3px',
+                                                  borderTopLeftRadius: '0px',
+                                                  borderBottomLeftRadius: '0px',
+                                                  height: `${data.value}px`,
+                                                  width: `100%`,
+                                                }}
+                                              />
+                                            </div>
+                                            <div className="flex  justify-end mr-1  mb-1 mt-[4px]">
+                                              <h6 className="font-bodyLato font-semibold text-xs mt-1">
+                                                {data.item}
+                                              </h6>
+                                            </div>
+                                          </div>
+                                        )
+                                      )}
+                                    </div>
+                                  </div>
+                                </>
+                              </Box>
+                            </div>
+                            <div className=" bg-[#E9E9F2] px-1">
+                              <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2">
+                                <div className="flex flex-row justify-between px-1">
+                                  {[
+                                     {
+                                      item: 'Amount Due',
+                                      value: 78,
+                                      icon: ChartPieIcon,
+                                    },
+                                    {
+                                      item: 'SD Creation',
+                                      value: 78,
+                                      icon: ChartPieIcon,
+                                    },
+                                    {
+                                      item: 'Stamp Duty',
+                                      value: 58,
+                                      icon: NewspaperIcon,
+                                    },
+                                    {
+                                      item: 'K2 Challan',
+                                      value: 58,
+                                      icon: NewspaperIcon,
+                                    },
+                                  ].map((data, i) => (
+                                    <div
+                                      className=" w-[100px] bg-[#F1F5F9] p-3 rounded-md mx-1"
+                                      style={{
+                                        display: 'inline-block',
+                                        alignSelf: 'flex-end',
+                                      }}
+                                      key={i}
+                                    >
+                                      <div className="flex flex-col items-center justify-center mr-1  mb-1 mt[2px]">
+                                        <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                          <data.icon
+                                            className="h-4 w-4 text-gray-600 group-hover:text-indigo-600"
+                                            aria-hidden="true"
+                                          />
+                                        </div>
+                                        <h6 className="font-bodyLato text-[#828d9e] text-xs mt-1">
+                                          {data.item}
+                                        </h6>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="w-1/4  bg-[#E9E9F2] px-1">
+                              <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2">
+                                <div className="flex flex-row justify-between px-1">
+                                  {[
+                                    {
+                                      item: 'Loan',
+                                      value: 38,
+                                      icon: NewspaperIcon,
+                                    },
+                                  ].map((data, i) => (
+                                    <div
+                                      className=" w-[100px] bg-[#F1F5F9] p-3 rounded-md mx-1"
+                                      style={{
+                                        display: 'inline-block',
+                                        alignSelf: 'flex-end',
+                                      }}
+                                      key={i}
+                                    >
+                                      <div className="flex flex-col items-center justify-center mr-1  mb-1 mt[2px]">
+                                        <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                          <data.icon
+                                            className="h-4 w-4 text-gray-600 group-hover:text-indigo-600"
+                                            aria-hidden="true"
+                                          />
+                                        </div>
+                                        <h6 className="font-bodyLato text-[#828d9e] text-xs mt-1">
+                                          {data.item}
+                                        </h6>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="w-1/4 bg-[#E9E9F2] px-1">
+                              <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2">
+                                <div className="flex flex-row justify-between px-1">
+                                  {[
+                                    {
+                                      item: 'Modify',
+                                      value: 78,
+                                      icon: ChartPieIcon,
+                                    },
+                                  ].map((data, i) => (
+                                    <div
+                                      className=" w-[100px] bg-[#F1F5F9] p-3 rounded-md mx-1"
+                                      style={{
+                                        display: 'inline-block',
+                                        alignSelf: 'flex-end',
+                                      }}
+                                      key={i}
+                                    >
+                                      <div className="flex flex-col items-center justify-center mr-1  mb-1 mt[2px]">
+                                        <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                          <data.icon
+                                            className="h-4 w-4 text-gray-600 group-hover:text-indigo-600"
+                                            aria-hidden="true"
+                                          />
+                                        </div>
+                                        <h6 className="font-bodyLato text-[#828d9e] text-xs mt-1">
+                                          {data.item}
+                                        </h6>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          </section>
+                        </section>
+                      )
+                    })}
+                  {selCategory === 'registered' &&
                     tableData.map((finData, i) => {
                       const {
                         uid,
@@ -1548,23 +1929,33 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                 <div className="flex flex-row justify-between px-1">
                                   {[
                                     {
-                                      item: 'Reg Draft',
+                                      item: 'ATS Amount',
                                       value: 78,
                                       icon: ChartPieIcon,
                                     },
                                     {
-                                      item: 'Stamp Duty',
-                                      value: 58,
-                                      icon: NewspaperIcon,
+                                      item: 'ATB  Creation',
+                                      value: 78,
+                                      icon: ChartPieIcon,
                                     },
                                     {
-                                      item: 'Registration',
+                                      item: 'ATB  Approval',
+                                      value: 78,
+                                      icon: ChartPieIcon,
+                                    },
+                                    {
+                                      item: 'Posession',
                                       value: 58,
                                       icon: NewspaperIcon,
                                     },
+                                    // {
+                                    //   item: 'Registration',
+                                    //   value: 58,
+                                    //   icon: NewspaperIcon,
+                                    // },
                                   ].map((data, i) => (
                                     <div
-                                      className=" w-[100px] bg-[#F1F5F9] p-3 rounded-md mx-1"
+                                      className=" w-[120px] bg-[#F1F5F9] p-3 rounded-md mx-1"
                                       style={{
                                         display: 'inline-block',
                                         alignSelf: 'flex-end',

@@ -47,6 +47,7 @@ import AddPaymentDetailsForm from './FinanceModule/BookingPaymentForm'
 import Loader from './Loader/Loader'
 import PaymentScheduleSheet from './paymentScheduleSheet'
 import UnitTransactionForm from './UnitBillTransactionForm'
+import SiderForm from './SiderForm/SiderForm'
 
 const CostBreakUpSheet = ({
   selMode,
@@ -261,6 +262,9 @@ const CostBreakUpSheet = ({
   const [streamCoveredA, setStreamCoveredA] = useState([])
   const [streamCurrentStatus, setStreamCurrentStatus] = useState('new')
   const [streamfrom, setStreamFrom] = useState('')
+  const [isImportLeadsOpen, setisImportLeadsOpen] = useState(false)
+
+
 
   const phoneRegExp =
     /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/
@@ -785,13 +789,19 @@ const CostBreakUpSheet = ({
                             </section>
                             <div className="flex flex-col mt-2 p-4 ">
                               <div className="mt-5 text-right md:space-x-3 md:block flex flex-col-reverse mb-6">
+
+
                                 <button
-                                  onClick={() => dialogOpen(false)}
+                                  onClick={() => {
+                                    setisImportLeadsOpen(true)
+                                    // dialogOpen(false)
+                                  }
+                                }
                                   type="button"
                                   className="mb-4 md:mb-0 bg-white px-5 py-2 text-sm shadow-sm font-medium tracking-wider border text-gray-600 rounded-sm hover:shadow-lg hover:bg-gray-100"
                                 >
                                   {' '}
-                                  Send to WhatsApp{' '}
+                                 Preview & send to customer{' '}
                                 </button>
                                 {/* <Pdf targetRef={ref} filename="post.pdf">
                               {({ toPdf }) => (
@@ -922,6 +932,26 @@ const CostBreakUpSheet = ({
           </article>
         </div>
       </section>
+      <SiderForm
+                open={isImportLeadsOpen}
+                setOpen={setisImportLeadsOpen}
+                title="costSheetPreview"
+                widthClass="max-w-4xl"
+                csMode={csMode}
+                projectDetails={projectDetails}
+                pdfExportComponent={pdfExportComponent}
+                selPhaseObj={selPhaseObj}
+                headerContent={{}}
+                leadDetailsObj={leadDetailsObj1}
+                selUnitDetails={selUnitDetails}
+                newPlotCsObj={newPlotCsObj}
+                costSheetA={newPlotCostSheetA || []}
+                // setNewPlotCsObj={setNewPlotCsObj}
+                // setCostSheetA={setNewPlotCostSheetA}
+                // setNewPS={setNewPlotPS}
+                // newPlotPS={newPlotPS}
+                // showGstCol={showGstCol}
+      />
     </>
   )
 }

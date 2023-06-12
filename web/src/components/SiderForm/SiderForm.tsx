@@ -37,37 +37,45 @@ import PaymentScheduleForm from '../PaymentScheduleForm/PaymentScheduleForm'
 import ProjPhaseHome from '../ProjPhaseHome/ProjPhaseHome'
 import TransactionUpdateSideView from '../transactionUpdateSideView'
 import ViewUnitDetails from '../ViewUnitDetails'
+import CostBreakUpPdfPreview from 'src/util/costBreakUpPdfPreview'
 
 const SiderForm = ({
-  open,
-  setOpen,
-  title,
+  BlockFeed,
+  blockDetails,
   customerDetails = {},
+  csMode,
+  costSheetA,
   data = {},
+  headerContent,
+  myBlock,
+  newPlotCostSheetA,
+  newPlotPS,
+  open,
   onCloseDisabled = false,
   pId,
+  pdfExportComponent,
   phaseFeed,
-  BlockFeed,
-  myBlock,
   projectDetails,
   phaseDetails,
-  blockDetails,
-  widthClass,
-  unitViewerrr,
-  unitsViewMode,
-  setUnitsViewMode,
-  leadDetailsObj,
   projectsList,
-  viewLegalDocData,
-  viewUnitConstData,
-  transactionData,
+  leadDetailsObj,
+  setUnitsViewMode,
   selCustomerPayload,
   selUnitDetails,
+  selPhaseObj,
   selSubMenu,
   selSubMenu2,
   setIsClicked,
-  wbPayload,
+  setOpen,
+  title,
+  transactionData,
+  unitViewerrr,
+  unitsViewMode,
   unitViewActionType,
+  viewLegalDocData,
+  viewUnitConstData,
+  wbPayload,
+  widthClass,
 }) => {
   // dont write too many here
   //  this is for customerProfileSideView
@@ -353,6 +361,16 @@ const SiderForm = ({
                     myBlock={myBlock}
                   />
                 )}
+                {title === 'legal_doc_upload' && (
+                  <LeadsDropHomes
+                    title={title}
+                    dialogOpen={setOpen}
+                    pId={pId}
+                    source={'legal_doc_upload'}
+                    myPhase={phaseDetails}
+                    myBlock={myBlock}
+                  />
+                )}
                 {title === 'Approvals' && (
                   <LeadsDropHomes
                     title={title}
@@ -411,6 +429,20 @@ const SiderForm = ({
                 )}
                 {title === 'capturePayment' && (
                   <CaptureUnitPayment selUnitDetails={selUnitDetails} />
+                )}
+
+                {title === 'costSheetPreview' && (
+                  <CostBreakUpPdfPreview
+                    csMode={csMode}
+                    costSheetA={newPlotCostSheetA || []}
+                    headerContent={headerContent}
+                    leadDetailsObj1={leadDetailsObj}
+                    newPlotPS={newPlotPS}
+                    projectDetails={projectDetails}
+                    pdfExportComponent={pdfExportComponent}
+                    selPhaseObj={selPhaseObj}
+                    selUnitDetails={selUnitDetails}
+                  />
                 )}
               </div>
             </Transition.Child>

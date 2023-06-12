@@ -11,6 +11,7 @@ import {
   EyeIcon,
   PlusIcon,
 } from '@heroicons/react/outline'
+import { CheckCircleIcon } from '@heroicons/react/solid'
 import { DriveEtaSharp } from '@mui/icons-material'
 import { useSnackbar } from 'notistack'
 import {
@@ -125,6 +126,7 @@ const Floordetails = ({
   const [filStatus, setFilStatus] = useState(['available', 'booked', 'blocked'])
   const [filBedRooms, setFilBedRooms] = useState([1, 2, 3, 4])
   const [filBathrooms, setFilBathrooms] = useState([1, 2, 3, 4])
+  const [selStatus, setFilSelStatus] = useState('all')
 
   const [filSuperBuildUpArea, setFilSuperBuiltUpArea] = useState([35397, 59895])
 
@@ -684,45 +686,78 @@ const Floordetails = ({
                 units
               </section>
               <section className="flex flex-row">
-                <section className="text-sm mt-[2px] px-2 rounded flex flex-row border">
-                  <span className="w-3 h-3 mt-[4px] mr-1 bg-[#E8A190]"></span>{' '}
-                  <span>Available</span>
-                  <span className="w-3 h-3 ml-2 mt-[4px] mr-1 bg-[#D3F6E3]"></span>{' '}
-                  <span>Booked</span>
-                  <span className="w-3 h-3 ml-2 mt-[4px] mr-1 bg-[#E9E9E9]"></span>{' '}
-                  <span>Blocked</span>
+                <section className="text-sm mt-[2px]  rounded flex flex-row border">
+                  <section
+                    className={`flex flex-row pr-2 ${
+                      selStatus === 'available' ? 'bg-[#c6fff0]' : ''
+                    }`}
+                    onClick={() => {
+                      setFilSelStatus('available')
+                    }}
+                  >
+                    <span className="ml-2 w-3 h-3 mt-[4px] rounded-md mr-1 bg-[#E8A190] inline-block"></span>{' '}
+                    <span className="mr-1 text-[10px] ">Available</span>
+                    {unitsFeed?.filter((d) => d?.status === 'available').length}
+                  </section>
+                  <section
+                    className={`flex flex-row border-x ${
+                      selStatus === 'booked' ? 'bg-[#c6fff0]' : ''
+                    }`}
+                    onClick={() => {
+                      setFilSelStatus('booked')
+                    }}
+                  >
+                    <span className="w-3 h-3 ml-1 mt-[4px] rounded-md mr-1 bg-[#D3F6E3]"></span>{' '}
+                    <span className="mr-1 text-[10px] ">Booked</span>
+                    <section className="mr-1">
+                      {unitsFeed?.filter((d) => d?.status === 'booked').length}
+                    </section>
+                  </section>
+                  <section
+                    className={`flex flex-row ${
+                      selStatus === 'blocked' ? 'bg-[#c6fff0]' : ''
+                    }`}
+                    onClick={() => {
+                      setFilSelStatus('blocked')
+                    }}
+                  >
+                    <span className="w-3 h-3 ml-2 mr-2 mt-[4px] rounded-md mr-1 bg-[#E9E9E9]"></span>{' '}
+                    <span className="mr-1 text-[10px]"> Blocked</span>
+                    {unitsFeed?.filter((d) => d?.status === 'blocked').length}
+                  </section>
                 </section>
+
                 <section className="mt-[-3px]">
                   <div>
-                    <DropCompUnitStatus
+                    {/* <DropCompUnitStatus
                       type={'Status'}
                       id={'Status'}
                       setStatusFun={makeFilterFun}
                       filteredUnits={filteredUnits}
                       pickedValue={filStatus}
-                    />
+                    /> */}
 
+                    <DropCompUnitStatus
+                      type={'bedrooms'}
+                      id={'bed_rooms'}
+                      setStatusFun={makeFilterFun}
+                      filteredUnits={filteredUnits}
+                      pickedValue={filBedRooms}
+                    />
                     {/* <DropCompUnitStatus
-                  type={'bedrooms'}
-                  id={'bed_rooms'}
-                  setStatusFun={makeFilterFun}
-                  filteredUnits={filteredUnits}
-                  pickedValue={filBedRooms}
-                />
-                <DropCompUnitStatus
                   type={'bathrooms'}
                   id={'bath_rooms'}
                   setStatusFun={makeFilterFun}
                   filteredUnits={filteredUnits}
                   pickedValue={filBathrooms}
-                />
-                <DropCompUnitStatus
-                  type={'Size'}
-                  id={'super_built_up_area'}
-                  setStatusFun={makeFilterFun}
-                  filteredUnits={filteredUnits}
-                  pickedValue={filSuperBuildUpArea}
                 /> */}
+                    <DropCompUnitStatus
+                      type={'Size'}
+                      id={'super_built_up_area'}
+                      setStatusFun={makeFilterFun}
+                      filteredUnits={filteredUnits}
+                      pickedValue={filSuperBuildUpArea}
+                    />
                     {/* <DropCompUnitStatus
                   type={'Price'}
                   id={'rate_per_sqft'}
@@ -730,13 +765,13 @@ const Floordetails = ({
                   filteredUnits={filteredUnits}
                   pickedValue={filRatePerSqft}
                 /> */}
-                    {/* <DropCompUnitStatus
-                  type={'Facing'}
-                  id={'facing'}
-                  setStatusFun={makeFilterFun}
-                  filteredUnits={filteredUnits}
-                  pickedValue={filFacing}
-                /> */}
+                    <DropCompUnitStatus
+                      type={'Facing'}
+                      id={'facing'}
+                      setStatusFun={makeFilterFun}
+                      filteredUnits={filteredUnits}
+                      pickedValue={filFacing}
+                    />
                   </div>
                 </section>
                 <section className="flex">
@@ -876,38 +911,51 @@ const Floordetails = ({
                                           <div className="flex flex-row justify-between items-right">
                                             <h3
                                               className="m-0 ml-2 text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200 h-[16px] hover:border-b hover:border-blue-800"
-                                              onClick={() => setActionType('unitBookingMode')}
+                                              onClick={() =>
+                                                setActionType('unitBookingMode')
+                                              }
                                             >
                                               Book
                                             </h3>
-                                            <h3 className="m-0 mr-2 text-sm  leading-tight tracking-tight text-blue-800 border-0 border-blue-800 h-[16px] hover:border-b hover:border-blue-800"
-                                              onClick={() => setActionType('quoteMode')}
-                                              >
+                                            <h3
+                                              className="m-0 mr-2 text-sm  leading-tight tracking-tight text-blue-800 border-0 border-blue-800 h-[16px] hover:border-b hover:border-blue-800"
+                                              onClick={() =>
+                                                setActionType('quoteMode')
+                                              }
+                                            >
                                               Quote
                                             </h3>
                                           </div>
 
                                           <div className="flex flex-row justify-between items-right">
-                                            <h3 className="m-0 ml-2 mt-3 text-sm  leading-tight tracking-tight text-blue-800 text-black border-0 border-blue-200 h-[16px] hover:border-b hover:border-blue-800  "
-                                              onClick={() => setActionType('unitBlockMode')}
-                                              >
+                                            <h3
+                                              className="m-0 ml-2 mt-3 text-sm  leading-tight tracking-tight text-blue-800 text-black border-0 border-blue-200 h-[16px] hover:border-b hover:border-blue-800  "
+                                              onClick={() =>
+                                                setActionType('unitBlockMode')
+                                              }
+                                            >
                                               Block
                                             </h3>
-                                            {source === 'projectManagement' &&<h3 className="m-0 mr-2 mt-3 mr-[21px] text-sm  leading-tight tracking-tight text-blue-800 border-0 border-blue-800 h-[16px]  hover:border-b hover:border-blue-800"
-                                              onClick={() =>   {
-                                                setSliderInfo({
-                                                  open: true,
-                                                  title: 'Edit Plot',
-                                                  sliderData: {
-                                                    unitDetail: data,
-                                                    phaseDetail: phaseFeed,
-                                                    leadDetailsObj: leadDetailsObj,
-                                                  },
-                                                  widthClass: 'max-w-4xl',
-                                                })}}
+                                            {source === 'projectManagement' && (
+                                              <h3
+                                                className="m-0 mr-2 mt-3 mr-[21px] text-sm  leading-tight tracking-tight text-blue-800 border-0 border-blue-800 h-[16px]  hover:border-b hover:border-blue-800"
+                                                onClick={() => {
+                                                  setSliderInfo({
+                                                    open: true,
+                                                    title: 'Edit Plot',
+                                                    sliderData: {
+                                                      unitDetail: data,
+                                                      phaseDetail: phaseFeed,
+                                                      leadDetailsObj:
+                                                        leadDetailsObj,
+                                                    },
+                                                    widthClass: 'max-w-4xl',
+                                                  })
+                                                }}
                                               >
-                                              Edit
-                                            </h3>}
+                                                Edit
+                                              </h3>
+                                            )}
                                           </div>
                                         </div>
                                       )}

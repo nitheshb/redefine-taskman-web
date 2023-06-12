@@ -1992,7 +1992,8 @@ export const createPhaseAssets = async (
     })
     return docRef
   } catch (error) {
-    console.log('error in db', error, pId)
+    console.log('uploaded file url i s', url)
+    console.log('error in db', error, url,pId)
   }
 }
 export const createUserToWorkReport = async (tableName, data) => {
