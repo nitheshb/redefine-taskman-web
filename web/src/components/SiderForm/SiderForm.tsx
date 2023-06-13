@@ -10,10 +10,12 @@ import {
   searchValue as searchedVal,
   searchData as searchResponse,
 } from 'src/state/actions/search'
+import CostBreakUpPdfPreview from 'src/util/costBreakUpPdfPreview'
 
 import CrmCustomerSummary from '../A_CrmModule/A_CrmCustomerSummary'
 import CustomerSideViewCRM from '../A_CrmModule/CrmCustomerSideView'
 import UnitSideViewCRM from '../A_CrmModule/CrmUnitSideView'
+import ViewDocxFile from '../A_LegalModule/viewDocxFile'
 import NotificationsSetupForm from '../A_ProjModule/NotificatoinsSetupFromHome'
 import AddBankDetailsForm from '../addBankDetailsForm'
 import AddBlockForm from '../AddBlockForm/AddBlockForm'
@@ -37,7 +39,6 @@ import PaymentScheduleForm from '../PaymentScheduleForm/PaymentScheduleForm'
 import ProjPhaseHome from '../ProjPhaseHome/ProjPhaseHome'
 import TransactionUpdateSideView from '../transactionUpdateSideView'
 import ViewUnitDetails from '../ViewUnitDetails'
-import CostBreakUpPdfPreview from 'src/util/costBreakUpPdfPreview'
 
 const SiderForm = ({
   BlockFeed,
@@ -444,6 +445,8 @@ const SiderForm = ({
                     selUnitDetails={selUnitDetails}
                   />
                 )}
+
+                {title === 'viewDocx' && <ViewDocxFile />}
               </div>
             </Transition.Child>
           </div>

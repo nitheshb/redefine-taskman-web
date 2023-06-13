@@ -705,7 +705,7 @@ const AddUnit = ({
                             </div>
                             <div className="mb-3 space-y-2 w-full text-xs">
                               <TextField
-                                label="North-Sou"
+                                label="North-South"
                                 name="north_south_d"
                                 type="number"
                               />
@@ -726,21 +726,21 @@ const AddUnit = ({
                           <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-2 ">
                             <div className="mb-3 space-y-2 w-full text-xs mt-">
                               <TextField
-                                label="East Schedule By"
+                                label="East by"
                                 name="east_sch_by"
                                 type="text"
                               />
                             </div>
                             <div className="mb-3 space-y-2 w-full text-xs">
                               <TextField
-                                label="West By"
+                                label="West by"
                                 name="west_sch_by"
                                 type="text"
                               />
                             </div>
                             <div className="mb-3 space-y-2 w-full text-xs ">
                               <TextField
-                                label="North By"
+                                label="North by"
                                 name="north_sch_by"
                                 type="text"
                               />
@@ -748,7 +748,7 @@ const AddUnit = ({
 
                             <div className="mb-3 space-y-2 w-full text-xs ">
                               <TextField
-                                label="South By"
+                                label="South by"
                                 name="south_sch_by"
                                 type="text"
                               />
