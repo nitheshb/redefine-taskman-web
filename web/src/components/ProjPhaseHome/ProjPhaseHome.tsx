@@ -24,10 +24,10 @@ import FinanceHomeList from '../A_ProjModule/FinanceHomeList'
 import LegalHomeList from '../A_ProjModule/LegalHomeList'
 import SalesHomeList from '../A_ProjModule/SalesHomeList'
 import TemplatesHomeList from '../A_ProjModule/TemplatesHomeList'
+import AddApplicantDetails from '../AddApplicantDetails'
 import AdditionalChargesForm from '../AdditionalChargesForm/AdditionalChargesForm'
 import AssigedToDropComp from '../assignedToDropComp'
 import BlockingUnitForm from '../BlockingUnitForm'
-import AddBookingForm from '../bookingForm'
 import CostBreakUpSheet from '../costBreakUpSheet'
 import CostSheetSetup from '../costSheetSetup'
 import DropCompUnitStatus from '../dropDownUnitStatus'
@@ -90,7 +90,11 @@ const ProjPhaseHome = ({
   let projId
 
   useEffect(() => {
-    console.log('new customer object selecton is',projectDetails, leadDetailsObj)
+    console.log(
+      'new customer object selecton is',
+      projectDetails,
+      leadDetailsObj
+    )
     setLeadDetailsObj1(leadDetailsObj)
   }, [leadDetailsObj])
 
@@ -269,85 +273,90 @@ const ProjPhaseHome = ({
                 >
                   <div className="box-border mx-auto border-solid max-w-full ">
                     <div className="flex flex-col  leading-7  text-gray-900 border-0 border-gray-200 ">
+                      {source === 'projectManagement' && (
+                        <div className="flex flex-row border-b justify-between border-grey  mb-2 ">
+                          <div className=" border-gray-800 ">
+                            <ul
+                              className="flex justify-  rounded-t-lg"
+                              id="myTab"
+                              data-tabs-toggle="#myTabContent"
+                              role="tablist"
+                            >
+                              {[
+                                { lab: 'Units', val: 'Blocks' },
+                                {
+                                  lab: 'Finance',
+                                  val: 'Finance',
+                                  subval: 'bankdetails',
+                                },
+                                {
+                                  lab: 'Legal',
+                                  val: 'Legal',
+                                  subval: 'projectApprovals',
+                                },
+                                {
+                                  lab: 'Sales',
+                                  val: 'Sales',
+                                  subval: 'saleTemplates',
+                                },
+                                {
+                                  lab: 'CRM',
+                                  val: 'CRM',
+                                  subval: 'bankDetails',
+                                },
+                                {
+                                  lab: 'Construction',
+                                  val: 'Construction',
+                                  subval: 'bankdetails',
+                                },
+                                // { lab: 'Report', val: 'Report' },
 
-                    {source === 'projectManagement' && (    <div className='flex flex-row border-b justify-between border-grey  mb-2 '>
-
-                     <div className=" border-gray-800 ">
-                        <ul
-                          className="flex justify-  rounded-t-lg"
-                          id="myTab"
-                          data-tabs-toggle="#myTabContent"
-                          role="tablist"
-                        >
-                          {[
-
-                            { lab: 'Units', val: 'Blocks' },
-                            {
-                              lab: 'Finance',
-                              val: 'Finance',
-                              subval: 'bankdetails',
-                            },
-                            {
-                              lab: 'Legal',
-                              val: 'Legal',
-                              subval: 'projectApprovals',
-                            },
-                            {
-                              lab: 'Sales',
-                              val: 'Sales',
-                              subval: 'saleTemplates',
-                            },
-                            { lab: 'CRM', val: 'CRM', subval: 'bankDetails' },
-                            {
-                              lab: 'Construction',
-                              val: 'Construction',
-                              subval: 'bankdetails',
-                            },
-                            // { lab: 'Report', val: 'Report' },
-
-
-                            { lab: 'Templates', val: 'Templates' },
-                          ].map((d, i) => {
-                            return (
-                              <li key={i} className="mr-2" role="presentation">
-                                <button
-                                  className={`inline-block py-3 px-4 text-sm font-medium text-center rounded-t-lg border-b-2  hover:text-blue hover:border-gray-300   ${
-                                    phaseViewFeature === d.val
-                                      ? 'border-black border-b-3'
-                                      : 'border-transparent'
-                                  }`}
-                                  type="button"
-                                  role="tab"
-                                  onClick={() => selCat(d.val, d?.subval)}
-                                >
-                                  {`${d.lab} `}
-                                  {/* <span className="bg-gray-100 px-2 py-1 rounded-full">
+                                { lab: 'Templates', val: 'Templates' },
+                              ].map((d, i) => {
+                                return (
+                                  <li
+                                    key={i}
+                                    className="mr-2"
+                                    role="presentation"
+                                  >
+                                    <button
+                                      className={`inline-block py-3 px-4 text-sm font-medium text-center rounded-t-lg border-b-2  hover:text-blue hover:border-gray-300   ${
+                                        phaseViewFeature === d.val
+                                          ? 'border-black border-b-3'
+                                          : 'border-transparent'
+                                      }`}
+                                      type="button"
+                                      role="tab"
+                                      onClick={() => selCat(d.val, d?.subval)}
+                                    >
+                                      {`${d.lab} `}
+                                      {/* <span className="bg-gray-100 px-2 py-1 rounded-full">
                           {/* {rowsCounter(leadsFetchedData, d.val).length} */}
-                                </button>
-                              </li>
-                            )
-                          })}
-                        </ul>
-                      </div>
+                                    </button>
+                                  </li>
+                                )
+                              })}
+                            </ul>
+                          </div>
 
-                      <div className="flex items-center flex-shrink-0  px-0  pl-0 ">
-                        <img
-                          className="w-8 h-8 mr-2"
-                          alt=""
-                          src="/m3.png"
-                        ></img>
-                        <span className="relative z-10 flex items-center w-auto text-md font-bold leading-none pl-0 mt-[px]">
-                          {/* {phase?.phaseName} */}
-                          {/* selPhaseIs, setSelPhaseIs */}
-                          <AssigedToDropComp
-                            assignerName={selPhaseName}
-                            id={'id'}
-                            setAssigner={setPhaseFun}
-                            usersList={phasesList}
-                          />
-                        </span>
+                          <div className="flex items-center flex-shrink-0  px-0  pl-0 ">
+                            <img
+                              className="w-8 h-8 mr-2"
+                              alt=""
+                              src="/m3.png"
+                            ></img>
+                            <span className="relative z-10 flex items-center w-auto text-md font-bold leading-none pl-0 mt-[px]">
+                              {/* {phase?.phaseName} */}
+                              {/* selPhaseIs, setSelPhaseIs */}
+                              <AssigedToDropComp
+                                assignerName={selPhaseName}
+                                id={'id'}
+                                setAssigner={setPhaseFun}
+                                usersList={phasesList}
+                              />
+                            </span>
 
-                        {/* <section className="flex ml-auto mt-[18px] mb-3">
+                            {/* <section className="flex ml-auto mt-[18px] mb-3">
                     <button
                       onClick={() => {
                         setButtonId({
@@ -466,10 +475,9 @@ const ProjPhaseHome = ({
                       More Details
                     </button>
                   </section> */}
-                      </div>
-                      </div>
-                    )}
-
+                          </div>
+                        </div>
+                      )}
 
                       {phaseViewFeature === 'Report' && (
                         <>

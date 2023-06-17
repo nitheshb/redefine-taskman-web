@@ -278,7 +278,7 @@ const ViewUnitDetails = ({
   }
   return (
     <div className="h-full flex flex-col  bg-[#f3f6f8] shadow-xl overflow-y-scroll">
-      <div className="px-4 sm:px-6 pt-4 z-10 flex items-center justify-between ">
+      <div className="px-3 sm:px-6 pt-2 z-10 flex items-center justify-between ">
         <Dialog.Title className=" font-semibold text-xl mr-auto  text-[#053219] w-full">
           <div className="flex flex-row justify-between">
             <div className="flex flex-col">
@@ -288,10 +288,10 @@ const ViewUnitDetails = ({
                   className={`items-center h-6  py-1 mt-1 ml-[1px] text-xs font-semibold text-gray-500  rounded-full mr-2
                       `}
                 >
-                  Unit
+                  Unit No
                 </span>
                 <span
-                  className={`items-center h-6 px-3 py-1 ml-3 mt-1 text-xs font-semibold text-green-600 bg-green-200 rounded-full mr-2
+                  className={`items-center h-6 px-2 py-1 ml-2 text-xs font-semibold text-green-600 bg-green-200 rounded-full mr-2
                       `}
                 >
                   {data?.unitDetail?.status}
@@ -305,8 +305,7 @@ const ViewUnitDetails = ({
             {/* 2 */}
             <div className=" flex flex-row">
               <span
-                className={`items-center cursor-pointer h-6 px-3 py-1  mt-1 text-xs font-semibold text-green-600 bg-green-200 rounded-full mr-2
-                      `}
+                className={`items-center cursor-pointer h-6 px-3 py-1  mt-1 text-xs font-semibold text-blue-600  mr-2 `}
                 onClick={() => {
                   setShowUnitDetials(!showUnitDetails)
                 }}
@@ -320,12 +319,8 @@ const ViewUnitDetails = ({
                       setActionMode('quoteMode')
                     }}
                     type="button"
-                    className={`mb-4 mx-1 mr-2 md:mb-0  hover:scale-110 focus:outline-none              hover:bg-teal-100
-                    ${
-                      actionMode == 'quoteMode'
-                        ? 'bg-teal-100 '
-                        : ''
-                    }
+                    className={`mb-4 mx-1 mr-2 md:mb-0 hover:scale-110 focus:outline-none hover:bg-teal-100
+                    ${actionMode == 'quoteMode' ? 'bg-teal-100 ' : ''}
                     text-green-700
                     h-8
                     border duration-200 ease-in-out
@@ -340,7 +335,7 @@ const ViewUnitDetails = ({
                       setActionMode('unitBlockMode')
                     }}
                     type="button"
-                                  className={`mb-4 mx-1 mr-2 md:mb-0  hover:scale-110 focus:outline-none              hover:bg-teal-100
+                    className={`mb-4 mx-1 mr-2 md:mb-0 hover:scale-110 focus:outline-none hover:bg-teal-100
                                   ${
                                     actionMode == 'unitBlockMode'
                                       ? 'bg-teal-100 '
@@ -356,7 +351,7 @@ const ViewUnitDetails = ({
                     Block{' '}
                   </button>
                   <button
-                    className={`mb-2 md:mb-0  hover:scale-110 focus:outline-none              hover:bg-teal-100
+                    className={`mb-2 md:mb-0 hover:scale-110 focus:outline-none hover:bg-teal-100
                                   ${
                                     actionMode == 'unitBookingMode'
                                       ? 'bg-teal-100 '
@@ -366,7 +361,7 @@ const ViewUnitDetails = ({
                                   h-8
                                   border duration-200 ease-in-out
                                   border-green-700 transition
-                                   px-5  text-sm shadow-sm font-medium tracking-wider  rounded-sm hover:shadow-lg hover:bg-green-500`}
+                                  px-5 text-sm shadow-sm font-medium tracking-wider rounded-sm hover:shadow-lg hover:bg-green-500`}
                     onClick={() => {
                       setActionMode('unitBookingMode')
                     }}
@@ -390,7 +385,7 @@ const ViewUnitDetails = ({
       </div>
 
       <div className="grid  gap-8 grid-cols-1">
-        <div className="flex flex-col  my-10 rounded-lg bg-white border border-gray-100 px-4 m-4 mt-4">
+        <div className="flex flex-col  mb-2  bg-white border border-gray-100">
           <div className="mt-0">
             {/* new one */}
 
@@ -415,9 +410,9 @@ const ViewUnitDetails = ({
               }}
             >
               {(formik) => (
-                <div className="mt-4">
+                <div className="">
                   {showUnitDetails && (
-                    <div className="py-3 grid grid-cols-3 mb-4">
+                    <div className="py-3 grid grid-cols-3 mb-2">
                       <section className="flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md">
                         <section className="flex flow-row justify-between mb-1">
                           <div className="font-md text-xs text-gray-700 tracking-wide">

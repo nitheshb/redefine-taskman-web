@@ -575,7 +575,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                 >
                   {[
                     // { lab: 'Schedules', val: 'appointments' },
-                    { lab: 'Booking Pipeline', val: 'booking_review' },
+                    { lab: 'Booking Review', val: 'booking_review' },
                     { lab: 'Agreement Pipeline', val: 'pre_register' },
 
                     // { lab: 'Attachments', val: 'attachments' },
@@ -696,7 +696,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                             <div className="">
                               <div className="flex flex-row  mt- mr-[1px] py-1">
                                 <div
-                                  className="flex flex-col bg-gradient-to-r from-[#A798FF] to-[#c8c2f1] text-black p-2 rounded-sm py-4 w-[170px] h-[82px] ml-1"
+                                  className="flex flex-col bg-gradient-to-r from-[#A798FF] to-[#c8c2f1] text-black p-2 rounded-sm py-4 w-[240px] h-[82px] ml-1"
                                   onClick={() =>
                                     viewTransaction(
                                       finData,
@@ -706,12 +706,12 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                   }
                                 >
                                   <section className="flex flex-row">
-                                    <img
+                                    {/* <img
                                       className="w-10 h-10 mr-2"
                                       alt=""
                                       src="/apart.svg"
-                                    ></img>
-                                    <section className="flex flex-col ml-2 max-w-[100px] ">
+                                    ></img> */}
+                                    <section className="flex flex-col ml-2">
                                       <span className="font-semibold text-sm app-color-black">
                                         {/* {finData?.[`${assets[0]}_unitDetails`]
                                           ?.unit_no || ''} */}
@@ -726,18 +726,17 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       </span>
                                     </section>
                                   </section>
-
                                   {/* <span className="font-normal text-xs app-color-gray-1">
                                   {finData?.ph}
                                 </span> */}
                                 </div>
                               </div>
                             </div>
-                            <div className="w-3/4 bg-[#E9E9F2] px-1 ">
+                            <div className="w-3/4 bg-[#E9E9F2] px-1">
                               {' '}
                               <Box>
                                 <>
-                                  <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2">
+                                  <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2 min-w-[180px]">
                                     <div className="flex flex-row justify-between mx-1">
                                       <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
                                         {T_elgible}
@@ -833,7 +832,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                               <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2">
                                 <div className="flex flex-row justify-between px-1">
                                   {[
-                                     {
+                                    {
                                       item: 'Payment',
                                       value: 78,
                                       icon: ChartPieIcon,
@@ -848,12 +847,11 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       value: 38,
                                       icon: NewspaperIcon,
                                     },
-                                    {
-                                      item: 'Welcome ',
-                                      value: 58,
-                                      icon: ChartPieIcon,
-                                    },
-
+                                    // {
+                                    //   item: 'Welcome ',
+                                    //   value: 58,
+                                    //   icon: ChartPieIcon,
+                                    // },
                                   ].map((data, i) => (
                                     <div
                                       className=" w-[100px] bg-[#F1F5F9] p-3 rounded-md mx-1"
@@ -884,15 +882,11 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                 <div className="flex flex-row justify-between px-1">
                                   {[
                                     {
-                                      item: 'PS',
+                                      item: 'CS Customer Approval',
                                       value: 78,
                                       icon: ChartPieIcon,
                                     },
-                                    {
-                                      item: 'CS',
-                                      value: 58,
-                                      icon: ChartPieIcon,
-                                    },
+
                                     {
                                       item: 'Loan',
                                       value: 38,
@@ -900,7 +894,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                     },
                                   ].map((data, i) => (
                                     <div
-                                      className=" w-[100px] bg-[#F1F5F9] p-3 rounded-md mx-1"
+                                      className=" w-[180px] bg-[#F1F5F9] p-3 rounded-md mx-1"
                                       style={{
                                         display: 'inline-block',
                                         alignSelf: 'flex-end',
@@ -1192,21 +1186,16 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                 </div>
                               </div>
                             </div>
-                            <div className="w-2/4 bg-[#E9E9F2] px-1">
+                            <div className="bg-[#E9E9F2] px-1">
                               <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2">
                                 <div className="flex flex-row justify-between px-1">
                                   {[
-
                                     {
-                                      item: 'Customer Sign',
+                                      item: 'ATS Approval',
                                       value: 58,
                                       icon: ChartPieIcon,
                                     },
-                                    {
-                                      item: 'Builder Sign',
-                                      value: 78,
-                                      icon: ChartPieIcon,
-                                    },
+
                                   ].map((data, i) => (
                                     <div
                                       className=" w-[120px] bg-[#F1F5F9] p-3 rounded-md mx-1"
@@ -1232,7 +1221,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                 </div>
                               </div>
                             </div>
-                            <div className="w-2/4 bg-[#E9E9F2] px-1">
+                            <div className=" bg-[#E9E9F2] px-1">
                               <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2">
                                 <div className="flex flex-row justify-between px-1">
                                   {[
@@ -1266,7 +1255,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                 </div>
                               </div>
                             </div>
-                            <div className="w-2/4 bg-[#E9E9F2] px-1">
+                            {/* <div className="w-2/4 bg-[#E9E9F2] px-1">
                               <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2">
                                 <div className="flex flex-row justify-between px-1">
                                   {[
@@ -1299,7 +1288,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                   ))}
                                 </div>
                               </div>
-                            </div>
+                            </div> */}
                           </section>
                         </section>
                       )
@@ -1557,7 +1546,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                               <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2">
                                 <div className="flex flex-row justify-between px-1">
                                   {[
-                                     {
+                                    {
                                       item: 'Amount Due',
                                       value: 78,
                                       icon: ChartPieIcon,
@@ -1637,7 +1626,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                 </div>
                               </div>
                             </div>
-                            <div className="w-1/4 bg-[#E9E9F2] px-1">
+                            {/* <div className="w-1/4 bg-[#E9E9F2] px-1">
                               <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2">
                                 <div className="flex flex-row justify-between px-1">
                                   {[
@@ -1670,7 +1659,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                   ))}
                                 </div>
                               </div>
-                            </div>
+                            </div> */}
                           </section>
                         </section>
                       )
@@ -2013,7 +2002,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                 </div>
                               </div>
                             </div>
-                            <div className="w-1/4 bg-[#E9E9F2] px-1">
+                            {/* <div className="w-1/4 bg-[#E9E9F2] px-1">
                               <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2">
                                 <div className="flex flex-row justify-between px-1">
                                   {[
@@ -2046,7 +2035,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                   ))}
                                 </div>
                               </div>
-                            </div>
+                            </div> */}
                           </section>
                         </section>
                       )

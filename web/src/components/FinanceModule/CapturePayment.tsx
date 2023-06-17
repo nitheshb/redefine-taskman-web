@@ -3,14 +3,11 @@
 import { useState, useEffect, useRef } from 'react'
 
 import { format } from 'date-fns'
-
-
+import { setHours, setMinutes } from 'date-fns'
 import { arrayUnion } from 'firebase/firestore'
 import { Form, Formik } from 'formik'
 import { useSnackbar } from 'notistack'
 import DatePicker from 'react-datepicker'
-import { setHours, setMinutes } from 'date-fns'
-
 import * as Yup from 'yup'
 
 import { useParams } from '@redwoodjs/router'
@@ -30,6 +27,7 @@ import { useAuth } from 'src/context/firebase-auth-context'
 import { CustomSelect } from 'src/util/formFields/selectBoxField'
 import { MultiSelectMultiLineField } from 'src/util/formFields/selectBoxMultiLineField'
 import { TextField2 } from 'src/util/formFields/TextField2'
+
 import { validate_capturePayment } from '../Schemas'
 
 const CaptureUnitPayment = ({
@@ -50,12 +48,11 @@ const CaptureUnitPayment = ({
   const d = new window.Date()
 
   const { user } = useAuth()
-  const { orgId, displayName, phone } = user
+  const { orgId, displayName, email, phone } = user
   const [loading, setLoading] = useState(false)
   const [openAreaFields, setOpenAreaFields] = useState(false)
   const [bankDetailsA, setBankDetailsA] = useState([])
   const [startDate, setStartDate] = useState(d)
-
 
   const [paymentModex, setPaymentModex] = useState('cheque')
 
@@ -68,6 +65,10 @@ const CaptureUnitPayment = ({
     console.log(' projectDetails', projectDetails, selUnitDetails)
     confettiRef.current.fire()
   }
+
+  useEffect(() => {
+   console.log('unit details are ', selUnitDetails)
+  }, [])
 
   useEffect(() => {
     const unsubscribe = steamBankDetailsList(
@@ -92,12 +93,12 @@ const CaptureUnitPayment = ({
   }, [])
 
   const onSubmitSupabase = async (data, resetForm) => {
-
+    console.log('inside supabase support', data)
     await onSubmitFun(data, resetForm)
 
-   await confettiRef.current.fire()
+    await confettiRef?.current?.fire()
 
-    return;
+    return
     // get booking details, leadId, unitDetails,
     //  from existing object send values of
     //  booking
@@ -197,26 +198,28 @@ const CaptureUnitPayment = ({
     // 4)update lead status to book
     // updateLeadStatus(leadDocId, newStatus)
   }
-
+  const datee = new Date().getTime()
   const initialState = {
     amount: bankData?.amount || '',
     towardsBankDocId: '',
-    mode: bankData?.mode || 'cheque',
+    mode: bankData?.mode || paymentModex,
     payto: bankData?.payto || '',
-    chequeno: bankData?.chequeno || '',
-    dated: bankData?.dated || '',
+    payReason: bankData?.payReason || '',
+    bank_ref_no: bankData?.bank_ref_no || '',
+    dated: bankData?.dated || datee,
     bookingSource: '',
-    bookedBy: '',
+    bookedBy: bankData?.bookedBy || email,
+    status: 'review'
   }
 
   // const validateSchema = Yup.object({
-    // date: Yup.string().required('Bank Required'),
-    // amount: Yup.string().required('Required'),
-    // payto: Yup.string().required('Required'),
-    // mode: Yup.string().required('Bank Required'),
-    // drawnonbank: Yup.string().required('Required'),
-    // chequeno: Yup.string().required('Required'),
-    // dated: Yup.string().required('Required'),
+  // date: Yup.string().required('Bank Required'),
+  // amount: Yup.string().required('Required'),
+  // payto: Yup.string().required('Required'),
+  // mode: Yup.string().required('Bank Required'),
+  // drawnonbank: Yup.string().required('Required'),
+  // bank_ref_no: Yup.string().required('Required'),
+  // dated: Yup.string().required('Required'),
   // })
 
   const submitFormFun = (formik) => {
@@ -377,46 +380,48 @@ const CaptureUnitPayment = ({
                                   <div className="relative w-full mb-5">
                                     <TextField2
                                       label="Cheque/Ref No"
-                                      name="chequeno"
+                                      name="bank_ref_no"
                                       type="text"
                                     />
                                   </div>
                                 </div>
                                 <div className="w-full mt-3 lg:w-4/12 px-3  ">
                                   <div className="relative w-full mb-5 mt-[-1px] ">
-
                                     {/* <TextField2
                                       label="Dated"
                                       name="dated"
                                       type="text"
                                     /> */}
-                                     <span className="inline">
-
-                          <DatePicker
-                            className="h-8 outline-none border-t-0 border-l-0 border-r-0 border-b border-gray-500  border-solid mt-[-4px] pb-1  min-w-[125px]  inline  text-[#0091ae]   lg:w-4/12 w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] "
-                            label="Dated"
-                            selected={startDate}
-                            onChange={(date) => {
-                              formik.setFieldValue('enquiryDat', date.getTime())
-                              setStartDate(date)
-                              // console.log(startDate)
-                            }}
-                            timeFormat="HH:mm"
-                            injectTimes={[
-                              setHours(setMinutes(d, 1), 0),
-                              setHours(setMinutes(d, 5), 12),
-                              setHours(setMinutes(d, 59), 23),
-                            ]}
-                            dateFormat="MMMM d, yyyy"
-                          />
-</span>
+                                    <span className="inline">
+                                      <DatePicker
+                                        className="h-8 outline-none border-t-0 border-l-0 border-r-0 border-b border-gray-500  border-solid mt-[-4px] pb-1  min-w-[125px]  inline  text-[#0091ae]   lg:w-4/12 w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] "
+                                        label="Dated"
+                                        name="dated"
+                                        selected={startDate}
+                                        onChange={(date) => {
+                                          formik.setFieldValue(
+                                            'dated',
+                                            date.getTime()
+                                          )
+                                          setStartDate(date)
+                                          // console.log(startDate)
+                                        }}
+                                        timeFormat="HH:mm"
+                                        injectTimes={[
+                                          setHours(setMinutes(d, 1), 0),
+                                          setHours(setMinutes(d, 5), 12),
+                                          setHours(setMinutes(d, 59), 23),
+                                        ]}
+                                        dateFormat="MMMM d, yyyy"
+                                      />
+                                    </span>
                                   </div>
                                 </div>
                                 <div className="w-full  px-3">
                                   <div className="relative w-full mb-3">
                                     <TextField2
-                                      label="Paid To"
-                                      name="payto"
+                                      label="Payment reason"
+                                      name="payReason"
                                       type="text"
                                     />
                                   </div>
@@ -425,7 +430,7 @@ const CaptureUnitPayment = ({
                               <div className="flex flex-row-reverse mt-4 mx-4">
                                 <div>
                                   <div className="text-md font-weight-[700] text-[13px]">
-                                    Acknowledged By
+                                    Received By
                                   </div>
                                   <div className="text-center font-semibold text-[13px]">
                                     {displayName.toLowerCase()}

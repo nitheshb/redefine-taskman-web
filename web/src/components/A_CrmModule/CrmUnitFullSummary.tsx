@@ -8,11 +8,11 @@ import { Menu } from '@headlessui/react'
 import { Listbox, Transition } from '@headlessui/react'
 import { ArrowRightIcon } from '@heroicons/react/outline'
 import CalendarIcon from '@heroicons/react/outline/CalendarIcon'
-
-import {  DownloadIcon } from '@heroicons/react/solid'
+import { DownloadIcon } from '@heroicons/react/solid'
 import ClockIcon from '@heroicons/react/solid/ClockIcon'
+import { setHours, setMinutes } from 'date-fns'
+import { Timestamp } from 'firebase/firestore'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
-
 import { v4 as uuidv4 } from 'uuid'
 
 import {
@@ -46,11 +46,11 @@ import {
 } from 'src/util/dateConverter'
 import { CustomSelect } from 'src/util/formFields/selectBoxField'
 
+import DocRow from '../LegalModule/Docu_row'
+
 import SortComp from './sortComp'
 
 import 'react-datepicker/dist/react-datepicker.css'
-import { setHours, setMinutes } from 'date-fns'
-import { Timestamp } from 'firebase/firestore'
 
 import Loader from './Loader/Loader'
 import AddBookingForm from './bookingForm'
@@ -67,6 +67,10 @@ import AssigedToDropComp from '../assignedToDropComp'
 import { USER_ROLES } from 'src/constants/userRoles'
 
 import CrmPaymentSummary from './CrmPaymentSummary'
+
+import AddApplicantDetails from '../AddApplicantDetails'
+import BankSelectionSwitchDrop from '../A_LoanModule/BankSelectionDroopDown'
+import LoanApplyFlowHome from '../A_LoanModule/LoanApplyFlowHome'
 
 // interface iToastInfo {
 //   open: boolean
@@ -138,6 +142,8 @@ export default function UnitFullSummary({
 
   const { orgId } = user
   const [fetchedUsersList, setfetchedUsersList] = useState([])
+
+
   const [usersList, setusersList] = useState([])
 
   // const [leadStatus, setLeadStatus] = useState([])
@@ -305,9 +311,7 @@ export default function UnitFullSummary({
 
     if (fet === 'appoint') {
       return
-    }
-
-    else {
+    } else {
       leadsActivityFetchedData.map((data) => {
         console.log('value of filtered feature count before', data)
       })
@@ -488,10 +492,9 @@ export default function UnitFullSummary({
         const usersListA = []
 
         const sMapStsA = []
-        const { staA, staDA } = usersList
-        console.log('this is what we found', staA)
-        setschStsA(staA)
-        setschStsMA(staDA)
+        console.log('this is what we found', usersList?.staA)
+        setschStsA(usersList?.staA || [])
+        setschStsMA(usersList?.staDA || [])
         // delete usersList['staA']
         // delete usersList['staDA']
         Object.entries(usersList).forEach((entry) => {
@@ -684,9 +687,7 @@ export default function UnitFullSummary({
     <div
       className={`bg-white   h-screen    ${openUserProfile ? 'hidden' : ''} `}
     >
-
       <div className="rounded-t bg-[#F1F5F9] mb-0 px-3">
-
         <>
           <div className="">
             <div className="">
@@ -702,6 +703,7 @@ export default function UnitFullSummary({
                   role="tablist"
                 >
                   {[
+                    { lab: 'Summary', val: 'summary' },
                     { lab: 'Applicant details', val: 'applicant_info' },
                     { lab: 'Unit details', val: 'unit_information' },
                     { lab: 'Cost & Payments', val: 'finance_info' },
@@ -709,7 +711,6 @@ export default function UnitFullSummary({
                     { lab: 'Agreement  details', val: 'agreement_info' },
                     { lab: 'Brokerage  details', val: 'brokerage_info' },
                     // { lab: 'Docs', val: 'docs_info' },
-                    { lab: 'Summary', val: 'summary' },
                     { lab: 'Tasks', val: 'tasks' },
                     { lab: 'Timeline', val: 'timeline' },
                   ].map((d, i) => {
@@ -1061,12 +1062,21 @@ export default function UnitFullSummary({
           )}
         </>
       </div>
-
+      {selFeature === 'applicant_info' && (
+        <div className="  mt-2 pb-[250px] overflow-auto no-scrollbar  h-[100%] overflow-y-scroll">
+          <AddApplicantDetails
+            source="fromBookedUnit"
+            title="Booking Form"
+            selUnitDetails={selCustomerPayload}
+            leadDetailsObj2={selCustomerPayload}
+          />
+        </div>
+      )}
       {selFeature === 'unit_information' && (
         <>
           <div className="flex flex-col  my-10 rounded-lg bg-white border border-gray-100 px-4 m-4 mt-4">
             <div className="py-3 grid grid-cols-3 mb-4">
-              <section className="flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md">
+              <section className="flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md mb-2">
                 <section className="flex flow-row justify-between mb-1">
                   <div className="font-md text-xs text-gray-700 tracking-wide">
                     Unit No
@@ -1083,7 +1093,7 @@ export default function UnitFullSummary({
                     </span>
                   </div>
                   <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {selCustomerPayload?.builtup_area?.toLocaleString('en-IN')}
+                    {selCustomerPayload?.area?.toLocaleString('en-IN')}
                   </div>
                 </section>
                 <section className="flex flow-row justify-between mb-1">
@@ -1103,13 +1113,13 @@ export default function UnitFullSummary({
                   </div>
                 </section>
               </section>
-              <section className="flex flex-col mx-4 bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md ">
+              <section className="flex flex-col mx-4 bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md mb-2 ">
                 <section className="flex flow-row justify-between mb-1">
                   <div className="font-md text-xs text-gray-700 tracking-wide">
                     East
                   </div>
                   <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {selCustomerPayload?.east?.toLocaleString('en-IN')}
+                    {selCustomerPayload?.east_d?.toLocaleString('en-IN')}
                   </div>
                 </section>
                 <section className="flex flow-row justify-between mb-1">
@@ -1117,7 +1127,7 @@ export default function UnitFullSummary({
                     West
                   </div>
                   <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {selCustomerPayload?.west?.toLocaleString('en-IN')}
+                    {selCustomerPayload?.west_d?.toLocaleString('en-IN')}
                   </div>
                 </section>
                 <section className="flex flow-row justify-between mb-1">
@@ -1125,7 +1135,7 @@ export default function UnitFullSummary({
                     South
                   </div>
                   <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {selCustomerPayload?.south?.toLocaleString('en-IN')}
+                    {selCustomerPayload?.south_d?.toLocaleString('en-IN')}
                   </div>
                 </section>
                 <section className="flex flow-row justify-between mb-1">
@@ -1133,11 +1143,45 @@ export default function UnitFullSummary({
                     North
                   </div>
                   <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                    {selCustomerPayload?.north?.toLocaleString('en-IN')}
+                    {selCustomerPayload?.north_d?.toLocaleString('en-IN')}
                   </div>
                 </section>
               </section>
-              <section className="flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md ">
+              <section className="flex flex-col mx-4 bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md mb-2">
+                <section className="flex flow-row justify-between mb-1">
+                  <div className="font-md text-xs text-gray-700 tracking-wide">
+                    East By
+                  </div>
+                  <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
+                    {selCustomerPayload?.east_sch_by?.toLocaleString('en-IN')}
+                  </div>
+                </section>
+                <section className="flex flow-row justify-between mb-1">
+                  <div className="font-md text-xs text-gray-500  tracking-wide">
+                    West By
+                  </div>
+                  <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
+                    {selCustomerPayload?.west_sch_by?.toLocaleString('en-IN')}
+                  </div>
+                </section>
+                <section className="flex flow-row justify-between mb-1">
+                  <div className="font-md text-xs text-gray-500  tracking-wide">
+                    South By
+                  </div>
+                  <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
+                    {selCustomerPayload?.south_sch_by?.toLocaleString('en-IN')}
+                  </div>
+                </section>
+                <section className="flex flow-row justify-between mb-1">
+                  <div className="font-md text-xs text-gray-500  tracking-wide">
+                    North By
+                  </div>
+                  <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
+                    {selCustomerPayload?.north_sch_by?.toLocaleString('en-IN')}
+                  </div>
+                </section>
+              </section>
+              <section className="flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md mb-2 ">
                 <section className="flex flow-row justify-between mb-1">
                   <div className="font-md text-xs text-gray-700 tracking-wide">
                     Cost
@@ -1180,7 +1224,7 @@ export default function UnitFullSummary({
         </>
       )}
       {selFeature === 'summary' && (
-        <div className="py-3 px-3 m-4 mt-2 rounded-lg border border-gray-100 h-[100%] overflow-y-scroll">
+        <div className="  mt-2 pb-[250px] overflow-auto no-scrollbar  h-[100%] overflow-y-scroll">
           <CrmUnitSummary
             selCustomerPayload={selCustomerPayload}
             assets={assets}
@@ -1191,7 +1235,7 @@ export default function UnitFullSummary({
       )}
       {['finance_info', 'summary'].includes(selFeature) && (
         <>
-          <div className="py-3 px-3 m-4 mt-2 rounded-lg border border-gray-100 h-[100%] overflow-y-scroll">
+          <div className="py-3 px-3 pb-[250px] m-4 mt-2 rounded-lg border border-gray-100 h-[100%] overflow-y-scroll">
             <CrmUnitPsHome
               financeMode={financeMode}
               setFinanceMode={setFinanceMode}
@@ -1287,6 +1331,86 @@ export default function UnitFullSummary({
             </div>
           )}
         </>
+      )}
+
+      {selFeature === 'loan_info' && (
+<LoanApplyFlowHome />
+      )}
+      {selFeature === 'agreement_info' && (
+        <section className="bg-white w-full md:px-10 md:mb-20">
+          <div className="max-w-3xl mx-auto py-4 text-sm text-gray-700">
+            <div className="flex p-4 items-center justify-between">
+              <div className="flex flex-row">
+                <h2 className="font-medium flex-grow">Unit Document</h2>
+                <span
+                  className=" ml-2 text-blue-500 hover:underline"
+                  onClick={() => {
+                    setSliderInfo({
+                      open: true,
+                      title: 'legal_doc_upload',
+                      sliderData: {},
+                      widthClass: 'max-w-xl',
+                    })
+                  }}
+                >
+                  Add Doc
+                </span>
+              </div>
+              <p className="mr4">Date Created</p>
+              {/* <Icon name="folder" size="3xl" color="gray" /> */}
+            </div>
+          </div>
+          {[
+            { id: 1234, name: 'EC', time: '22-Nov-2022' },
+            {
+              id: 1235,
+              name: 'Agreement',
+              time: '24-Nov-2022',
+            },
+            {
+              id: 1236,
+              name: 'Register Doc',
+              time: '2-Dec-2022',
+            },
+          ].length === 0 ? (
+            <div className="w-full text-center py-5">No documents</div>
+          ) : (
+            ''
+          )}
+          {[
+            { id: 1234, name: 'EC', time: '22-Nov-2022' },
+            {
+              id: 1235,
+              name: 'Agreement',
+              time: '24-Nov-2022',
+            },
+            {
+              id: 1236,
+              name: 'Register Doc',
+              time: '2-Dec-2022',
+            },
+          ]?.map((doc, i) => (
+            <section
+              key={i}
+              onClick={() => {
+                // show sidebar and display the worddoc
+                setSliderInfo({
+                  open: true,
+                  title: 'viewDocx',
+                  sliderData: {},
+                  widthClass: 'max-w-xl',
+                })
+              }}
+            >
+              <DocRow
+                id={doc?.id}
+                key={doc?.id}
+                fileName={doc?.name}
+                date={doc?.time}
+              />
+            </section>
+          ))}
+        </section>
       )}
 
       {selFeature === 'legal_info' && <></>}

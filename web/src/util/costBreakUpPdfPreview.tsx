@@ -54,6 +54,10 @@ const CostBreakUpPdfPreview = ({
   useEffect(() => {
     // setNewPlotCsObj(costSheetA)
   }, [newSqftPrice])
+  useEffect(() => {
+   console.log('first', costSheetA)
+  }, [])
+
 
   useEffect(() => {
     const {

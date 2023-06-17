@@ -26,7 +26,7 @@ import AddTaskForm from '../AddTaskForm'
 import AddUnit from '../AddUnit'
 import ConstructUnitsDetails from '../ConstructModule/ConstructUnitsDetails'
 import CrmUnitSideView from '../crmUnitSideView'
-import CustomerProfileSideView from '../customerProfileSideView'
+import LeadProfileSideView from '../LeadProfileSideView'
 import DialogFormBody from '../DialogFormBody/DialogFormBody'
 import InventoryViewSideForm from '../DialogFormBody/InventoryViewSideView'
 import AddPaymentDetailsForm from '../FinanceModule/BookingPaymentForm'
@@ -50,9 +50,11 @@ const SiderForm = ({
   headerContent,
   myBlock,
   newPlotCostSheetA,
+  newPlotCostSheetB,
   newPlotPS,
   open,
   onCloseDisabled = false,
+  paymentCaptureFun,
   pId,
   pdfExportComponent,
   phaseFeed,
@@ -294,7 +296,7 @@ const SiderForm = ({
                   />
                 )}
                 {title === 'User Profile' && (
-                  <CustomerProfileSideView
+                  <LeadProfileSideView
                     openUserProfile={false}
                     customerDetails={customerDetails}
                     unitViewerrr={unitViewerrr}
@@ -429,7 +431,10 @@ const SiderForm = ({
                   />
                 )}
                 {title === 'capturePayment' && (
-                  <CaptureUnitPayment selUnitDetails={selUnitDetails} />
+                  <CaptureUnitPayment
+                    selUnitDetails={selUnitDetails}
+                    onSubmitFun={paymentCaptureFun}
+                  />
                 )}
 
                 {title === 'costSheetPreview' && (

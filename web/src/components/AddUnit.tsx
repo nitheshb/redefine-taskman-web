@@ -226,6 +226,7 @@ const AddUnit = ({
       plc_per_sqft,
       size,
       facing,
+      unit_d,
       east_d,
       west_d,
       north_d,
@@ -267,6 +268,7 @@ const AddUnit = ({
       plc_per_sqft: plc_per_sqft,
       size: size,
       facing: facing,
+      unit_d: unit_d,
       east_d: east_d,
       west_d: west_d,
       north_d: north_d,
@@ -357,6 +359,7 @@ const AddUnit = ({
       plc_per_sqft,
       size,
       facing,
+      unit_d,
       east_d,
       west_d,
       north_d,
@@ -388,6 +391,7 @@ const AddUnit = ({
       plc_per_sqft: plc_per_sqft,
       size: size,
       facing: facing,
+      unit_d,
       east_d: east_d,
       west_d: west_d,
       north_d: north_d,
@@ -528,6 +532,7 @@ const AddUnit = ({
                 plc_per_sqft: unitDetails?.plc_per_sqft || 0,
                 size: unitDetails?.size || '',
                 facing: unitDetails?.facing || '',
+                unit_d: unitDetails?.unit_d || '',
                 east_d: unitDetails?.east_d || 0,
                 west_d: unitDetails?.west_d || 0,
                 north_d: unitDetails?.north_d || 0,
@@ -633,6 +638,13 @@ const AddUnit = ({
                               <TextField
                                 label="Size*"
                                 name="size"
+                                type="text"
+                              />
+                            </div>
+                            <div className="mb-3 space-y-2 w-full text-xs mt-">
+                              <TextField
+                                label="Unit Dimension*"
+                                name="unit_d"
                                 type="text"
                               />
                             </div>

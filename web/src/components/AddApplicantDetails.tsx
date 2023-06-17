@@ -21,6 +21,7 @@ import {
   checkIfLeadAlreadyExists,
   getAllProjects,
   steamUsersListByRole,
+  updateUnitCustomerDetailsTo,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import {
@@ -35,7 +36,8 @@ import { TextField2 } from 'src/util/formFields/TextField2'
 import Loader from './Loader/Loader'
 import { useFileUpload } from './useFileUpload'
 
-const AddBookingForm = ({
+const AddApplicantDetails = ({
+  source,
   title,
   leadDetailsObj2,
   selUnitDetails,
@@ -418,14 +420,25 @@ const AddBookingForm = ({
     const { id } = leadDetailsObj2
     console.log('did you find my id', id, leadDetailsObj2)
 
-    updateLeadCustomerDetailsTo(
-      orgId,
-      id,
-      updateDoc,
-      'nitheshreddy.email@gmail.com',
-      enqueueSnackbar,
-      resetForm
-    )
+    if (source === 'fromBookedUnit') {
+      updateUnitCustomerDetailsTo(
+        orgId,
+        id,
+        updateDoc,
+        'nitheshreddy.email@gmail.com',
+        enqueueSnackbar,
+        resetForm
+      )
+    } else {
+      updateLeadCustomerDetailsTo(
+        orgId,
+        id,
+        updateDoc,
+        'nitheshreddy.email@gmail.com',
+        enqueueSnackbar,
+        resetForm
+      )
+    }
 
     // const updatedData = {
     //   ...data,
@@ -630,7 +643,7 @@ const AddBookingForm = ({
                                             />
                                           </div>
                                         </div> */}
-                                               <div className="w-full lg:w-8/12 pl-4">
+                                        <div className="w-full lg:w-8/12 pl-4">
                                           <div className="relative w-full mb-3 mt-2">
                                             <div>
                                               {uploadedFileLink ? (
@@ -945,4 +958,4 @@ const AddBookingForm = ({
   )
 }
 
-export default AddBookingForm
+export default AddApplicantDetails

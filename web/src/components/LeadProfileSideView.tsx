@@ -95,7 +95,7 @@ import StatusDropComp from './statusDropComp'
 import AssigedToDropComp from './assignedToDropComp'
 import Loader from './Loader/Loader'
 import ProjPhaseHome from './ProjPhaseHome/ProjPhaseHome'
-import AddBookingForm from './bookingForm'
+import AddApplicantDetails from './AddApplicantDetails'
 
 import { useSnackbar } from 'notistack'
 import { async } from '@firebase/util'
@@ -237,7 +237,7 @@ const ddMy =
   'Y' +
   todaydate.getFullYear()
 
-export default function CustomerProfileSideView({
+export default function LeadProfileSideView({
   openUserProfile,
   customerDetails,
   unitViewerrr,
@@ -2676,7 +2676,7 @@ export default function CustomerProfileSideView({
                 <>
                   <Formik
                     initialValues={initialState1}
-                  //  validationSchema={validateSchema1}
+                    //  validationSchema={validateSchema1}
                     // onSubmit={(values, { resetForm }) => {
                     //   console.log('values of form is ', values)
                     // }}

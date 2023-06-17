@@ -16,6 +16,7 @@ import { TextFieldFlat } from './formFields/TextFieldFlatType'
 import '../styles/myStyles.css'
 
 const CostBreakUpPdf = ({
+
   projectDetails,
   csMode,
   pdfExportComponent,
@@ -26,6 +27,7 @@ const CostBreakUpPdf = ({
   newPlotCsObj,
   costSheetA,
   setCostSheetA,
+  setAddiChargesObj,
   setNewPS,
   newPlotPS,
   showGstCol,
@@ -54,6 +56,8 @@ const CostBreakUpPdf = ({
   const { unit_no, katha_no, plc_per_sqft, sqft_rate, area } = selUnitDetails
 
   useEffect(() => {
+    console.log('gen costSheetA', costSheetA)
+
     setTotalFun()
   }, [costSheetA, selPhaseObj])
 
@@ -74,13 +78,22 @@ const CostBreakUpPdf = ({
 
     const plotTotalSaleValue = Number.isFinite(y)
       ? Number(selUnitDetails?.area * y)
-      : Number(selUnitDetails?.area * selUnitDetails?.rate_per_sqft)
+      : Number(
+          selUnitDetails?.area * (selUnitDetails?.rate_per_sqft || sqft_rate)
+        )
 
     const plot_gstValue = Math.round(plotTotalSaleValue) * 0.05
-
+    console.log(
+      'gen costSheetA values are ',
+      Number.isFinite(y),
+      y,
+      selUnitDetails?.area,
+      selUnitDetails?.rate_per_sqft
+    )
     let x = []
     if (csMode === 'plot_cs') {
       setPartBPayload(additonalChargesObj)
+      setAddiChargesObj(additonalChargesObj)
       setPSPayload(paymentScheduleObj)
       x = [
         {
@@ -278,6 +291,7 @@ const CostBreakUpPdf = ({
       }
     } catch (error) {
       console.log('error at feching the leadDetails Obj')
+      console.log('gen costSheetA', x)
       merged = [...x, ...additonalChargesObj]
     }
 
@@ -287,7 +301,7 @@ const CostBreakUpPdf = ({
       initformValues[`${x}`] = d?.charges
     })
     setInitialValuesA(initformValues)
-
+    console.log('gen costSheetA', x)
     setCostSheetA(x)
   }, [selPhaseObj, leadDetailsObj1, csMode])
 
@@ -414,6 +428,7 @@ const CostBreakUpPdf = ({
     y[inx].TotalSaleValue = total
     y[inx].gst.value = gstTotal
     y[inx].TotalNetSaleValueGsT = total + gstTotal
+    console.log('gen costSheetA', y)
 
     setCostSheetA(y)
     setTotalFun()
@@ -711,7 +726,6 @@ const CostBreakUpPdf = ({
                           </table>
                         </div>
                       </div>
-
                     </div>
                     {/* end of paper */}
                   </div>

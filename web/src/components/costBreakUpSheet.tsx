@@ -41,13 +41,13 @@ import { TextField } from 'src/util/formFields/TextField'
 import { TextField2 } from 'src/util/formFields/TextField2'
 import { TextFieldFlat } from 'src/util/formFields/TextFieldFlatType'
 
+import AddApplicantDetails from './AddApplicantDetails'
 import BlockingUnitForm from './BlockingUnitForm'
-import AddBookingForm from './bookingForm'
 import AddPaymentDetailsForm from './FinanceModule/BookingPaymentForm'
 import Loader from './Loader/Loader'
 import PaymentScheduleSheet from './paymentScheduleSheet'
-import UnitTransactionForm from './UnitBillTransactionForm'
 import SiderForm from './SiderForm/SiderForm'
+import UnitTransactionForm from './UnitBillTransactionForm'
 
 const CostBreakUpSheet = ({
   selMode,
@@ -82,6 +82,7 @@ const CostBreakUpSheet = ({
   const [newConstructCsObj, setNewConstructCsObj] = useState([])
   const [newConstructCostSheetA, setNewConstructCostSheetA] = useState([])
   const [newConstructPS, setNewConstructPS] = useState([])
+  const [newAdditonalChargesObj, setNewAdditonalChargesObj] = useState([])
   const [StatusListA, setStatusListA] = useState([])
 
   const pdfExportComponent = useRef(null)
@@ -93,14 +94,12 @@ const CostBreakUpSheet = ({
   useEffect(() => {
     if (actionMode === 'quoteMode') {
       setStatusListA([
-
         {
           label: 'Quotation',
           value: 'costsheet',
           logo: 'RefreshIcon',
           color: ' bg-violet-500',
-        }
-
+        },
       ])
       setOnStep('costsheet')
     } else if (actionMode === 'unitBlockMode') {
@@ -125,7 +124,6 @@ const CostBreakUpSheet = ({
         },
       ])
       setOnStep('blocksheet')
-
     } else if (actionMode === 'unitBookingMode') {
       setStatusListA([
         {
@@ -146,12 +144,9 @@ const CostBreakUpSheet = ({
           logo: 'FireIcon',
           color: ' bg-violet-500',
         },
-
       ])
       setOnStep('customerDetails')
-
     }
-
   }, [actionMode])
 
   useEffect(() => {
@@ -263,8 +258,6 @@ const CostBreakUpSheet = ({
   const [streamCurrentStatus, setStreamCurrentStatus] = useState('new')
   const [streamfrom, setStreamFrom] = useState('')
   const [isImportLeadsOpen, setisImportLeadsOpen] = useState(false)
-
-
 
   const phoneRegExp =
     /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/
@@ -757,6 +750,7 @@ const CostBreakUpSheet = ({
                                   setNewPlotCsObj={setNewPlotCsObj}
                                   newPlotCsObj={newPlotCsObj}
                                   costSheetA={newPlotCostSheetA}
+                                  setAddiChargesObj={setNewAdditonalChargesObj}
                                   setCostSheetA={setNewPlotCostSheetA}
                                   setNewPS={setNewPlotPS}
                                   newPlotPS={newPlotPS}
@@ -789,19 +783,16 @@ const CostBreakUpSheet = ({
                             </section>
                             <div className="flex flex-col mt-2 p-4 ">
                               <div className="mt-5 text-right md:space-x-3 md:block flex flex-col-reverse mb-6">
-
-
                                 <button
                                   onClick={() => {
                                     setisImportLeadsOpen(true)
                                     // dialogOpen(false)
-                                  }
-                                }
+                                  }}
                                   type="button"
                                   className="mb-4 md:mb-0 bg-white px-5 py-2 text-sm shadow-sm font-medium tracking-wider border text-gray-600 rounded-sm hover:shadow-lg hover:bg-gray-100"
                                 >
                                   {' '}
-                                 Preview & send to customer{' '}
+                                  Preview & send to customer{' '}
                                 </button>
                                 {/* <Pdf targetRef={ref} filename="post.pdf">
                               {({ toPdf }) => (
@@ -874,7 +865,7 @@ const CostBreakUpSheet = ({
                 />
               )} */}
               {['customerDetails', 'allsheets'].includes(onStep) && (
-                <AddBookingForm
+                <AddApplicantDetails
                   title="Booking Form"
                   selUnitDetails={selUnitDetails}
                   leadDetailsObj2={leadDetailsObj1}
@@ -891,6 +882,7 @@ const CostBreakUpSheet = ({
                   newPlotCostSheetA={newPlotCostSheetA}
                   newConstructCsObj={newConstructCsObj}
                   newConstructCostSheetA={newConstructCostSheetA}
+                  newAdditonalChargesObj={newAdditonalChargesObj}
                   newConstructPS={newConstructPS}
                   newPlotPS={newPlotPS}
                   projectDetails={projectDetails}
@@ -933,24 +925,25 @@ const CostBreakUpSheet = ({
         </div>
       </section>
       <SiderForm
-                open={isImportLeadsOpen}
-                setOpen={setisImportLeadsOpen}
-                title="costSheetPreview"
-                widthClass="max-w-4xl"
-                csMode={csMode}
-                projectDetails={projectDetails}
-                pdfExportComponent={pdfExportComponent}
-                selPhaseObj={selPhaseObj}
-                headerContent={{}}
-                leadDetailsObj={leadDetailsObj1}
-                selUnitDetails={selUnitDetails}
-                newPlotCsObj={newPlotCsObj}
-                costSheetA={newPlotCostSheetA || []}
-                // setNewPlotCsObj={setNewPlotCsObj}
-                // setCostSheetA={setNewPlotCostSheetA}
-                // setNewPS={setNewPlotPS}
-                // newPlotPS={newPlotPS}
-                // showGstCol={showGstCol}
+        open={isImportLeadsOpen}
+        setOpen={setisImportLeadsOpen}
+        title="costSheetPreview"
+        widthClass="max-w-4xl"
+        csMode={csMode}
+        projectDetails={projectDetails}
+        pdfExportComponent={pdfExportComponent}
+        selPhaseObj={selPhaseObj}
+        headerContent={{}}
+        leadDetailsObj={leadDetailsObj1}
+        selUnitDetails={selUnitDetails}
+        newPlotCsObj={newPlotCsObj}
+        costSheetA={costSheetA || newPlotCostSheetA || []}
+        newPlotCostSheetA={costSheetA || newPlotCostSheetA || []}
+        // setNewPlotCsObj={setNewPlotCsObj}
+        // setCostSheetA={setNewPlotCostSheetA}
+        // setNewPS={setNewPlotPS}
+        // newPlotPS={newPlotPS}
+        // showGstCol={showGstCol}
       />
     </>
   )

@@ -18,6 +18,7 @@ import {
   streamGetAllTransactions,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
+import { supabase } from 'src/context/supabase'
 import CSVDownloader from 'src/util/csvDownload'
 import { CustomSelect } from 'src/util/formFields/selectBoxField'
 import {
@@ -38,7 +39,6 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
   const { orgId } = user
   const [isImportLeadsOpen, setisImportLeadsOpen] = useState(false)
   const [openTransactionDetails, setOpenTransactionDetails] = useState(false)
-
 
   // kanban board
   const [ready, setReady] = useState(false)
@@ -62,6 +62,51 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
   ]
   useEffect(() => {
     getLeadsDataFun()
+  }, [])
+
+  useEffect(() => {
+    // Subscribe to real-time changes in the `${orgId}_accounts` table
+    const subscription = supabase
+      .from(`${orgId}_accounts`)
+      .on('*', (payload) => {
+        // When a change occurs, update the 'leadLogs' state with the latest data
+        console.log('account records', payload)
+        // Check if the updated data has the id 12
+        const updatedData = payload.new
+        const { id } = payload.old
+        const updatedLeadLogs = [...finFetchedData]
+        setFinFetchedData((prevLogs) => {
+          const existingLog = prevLogs.find((log) => log.id === id)
+
+          if (existingLog) {
+            console.log('Existing record found!')
+            const updatedLogs = prevLogs.map((log) =>
+              log.id === id ? payload.new : log
+            )
+            return [...updatedLogs]
+          } else {
+            console.log('New record added!')
+            return [...prevLogs, payload.new]
+          }
+        })
+        // const index = updatedLeadLogs.findIndex((log) => log.id === id)
+        // if (index !== -1) {
+        //   console.log('check it ..........!')
+        //   updatedLeadLogs[index] = updatedData
+        // } else {
+        //   // Add new record to the 'leadLogs' state
+        //   updatedLeadLogs.push(updatedData)
+        // }
+
+        // // Update the 'leadLogs' state with the latest data
+        // setFinFetchedData(updatedLeadLogs)
+      })
+      .subscribe()
+
+    // Clean up the subscription when the component unmounts
+    return () => {
+      supabase.removeSubscription(subscription)
+    }
   }, [])
 
   const rowsCounter = (parent, searchKey) => {
@@ -532,10 +577,12 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
                                   <div className="mr-2 w-[3px] rounded-2xl  bg-violet-300 "></div>
                                   <div className="flex flex-col">
                                     <span className="font-semibold text-sm app-color-black">
-                                      {finData?.customerName || finData?.fromObj?.name || 'NA'}
+                                      {finData?.customerName ||
+                                        finData?.fromObj?.name ||
+                                        'NA'}
                                     </span>
                                     <span className="font-normal text-xs app-color-gray-1">
-                                    {finData?.towards}
+                                      {finData?.towards}
                                     </span>
                                     <span className="font-normal text-xs app-color-gray-1">
                                       {finData?.fromObj?.bankName}
@@ -549,8 +596,8 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
                               <td>
                                 <div className="flex flex-row ml-4 py-2">
                                   <span className="font-normal text-xs app-color-gray-1">
-                                      {finData?.txt_dated}
-                                    </span>
+                                    {finData?.txt_dated}
+                                  </span>
                                 </div>
                               </td>
                               <td>
