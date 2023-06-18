@@ -54,6 +54,7 @@ import {
   updateLeadProject,
   getFinanceForUnit,
   capturePaymentS,
+  updateUnitStatus,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import { storage } from 'src/context/firebaseConfig'
@@ -104,7 +105,7 @@ const people = [
 const StatusListA = [
   {
     label: 'Booking Review',
-    value: 'booking_review',
+    value: 'booked',
     logo: 'FireIcon',
     color: 'bg-violet-500',
   },
@@ -116,13 +117,13 @@ const StatusListA = [
   },
   {
     label: 'SD/Registration Pipleline',
-    value: 'visitfixed',
+    value: 'sd_pipeline',
     logo: 'FireIcon',
     color: 'bg-violet-500',
   },
   {
     label: 'Registered',
-    value: 'visitdone',
+    value: 'registered',
     logo: 'DuplicateInactiveIcon',
     color: 'bg-violet-500',
   },
@@ -219,6 +220,8 @@ export default function UnitSideViewCRM({
   const [projectList, setprojectList] = useState([])
   const [financeMode, setFinanceMode] = useState('schedule')
   const [timeHide, setTimeHide] = useState(false)
+  const [statusValidError, setStatusValidError] = useState(false)
+  const [newStatusErrorList, setNewStatusErrorList] = useState('')
 
   const [selProjectIs, setSelProjectIs] = useState({
     projectName: '',
@@ -488,9 +491,71 @@ export default function UnitSideViewCRM({
 
   const setStatusFun = async (leadDocId, newStatus) => {
     setLoader(true)
-    setUnitStatus(newStatus)
-    updateUnitStatus(orgId, unitId)
 
+    // if newStatus  make check list
+    const dataObj = { status: newStatus?.value }
+    console.log('payment stuff is ', selCustomerPayload)
+    const { fullPs } = selCustomerPayload
+
+    if (
+      newStatus?.value === 'agreement_pipeline' &&
+      selCustomerPayload?.kyc_status &&
+      selCustomerPayload?.man_cs_approval
+    ) {
+      setUnitStatus(newStatus)
+      const sum = fullPs.reduce((accumulator, currentValue) => {
+        if (currentValue.order === 2) {
+          return accumulator + currentValue.value
+        }
+        return accumulator
+      }, 0)
+      dataObj.T_elgible_new = sum
+      updateUnitStatus(
+        orgId,
+        selCustomerPayload?.id,
+        dataObj,
+        user.email,
+        enqueueSnackbar
+      )
+    } else if (
+      newStatus?.value === 'ats_pipeline' &&
+      selCustomerPayload?.T_balance <= 0 &&
+      selCustomerPayload?.ats_creation &&
+      selCustomerPayload?.both_ats_approval
+    ) {
+      setUnitStatus(newStatus)
+      updateUnitStatus(
+        orgId,
+        selCustomerPayload?.id,
+        dataObj,
+        user.email,
+        enqueueSnackbar
+      )
+    } else {
+      setStatusValidError(true)
+      console.log('is this in statusvalidat or ')
+      let errorList = ''
+      if (newStatus?.value === 'agreement_pipeline' && !selCustomerPayload?.kyc_status) {
+        errorList = errorList + 'KYC,'
+      }
+      if (newStatus?.value === 'agreement_pipeline' && !selCustomerPayload?.man_cs_approval) {
+        errorList = errorList + 'Manger Costsheet Approval,'
+      }
+      if ( newStatus?.value === 'ats_pipeline' && selCustomerPayload?.T_balance<=0) {
+        errorList = errorList + 'Due Payment,'
+      }
+      if ( newStatus?.value === 'ats_pipeline' && !selCustomerPayload?.ats_creation) {
+        errorList = errorList + 'ATS Creation,'
+      }
+      if ( newStatus?.value === 'ats_pipeline' && !selCustomerPayload?.both_ats_approval) {
+        errorList = errorList + 'Manger or Customer Costsheet Approval,'
+      }
+
+      errorList = errorList + 'is mandatory to proceed'
+      setNewStatusErrorList(errorList)
+    }
+
+    return
     const arr = ['notinterested', 'visitdone', 'visitcancel']
     arr.includes(newStatus) ? setFeature('notes') : setFeature('appointments')
     arr.includes(newStatus) ? setAddNote(true) : setAddSch(true)
@@ -790,6 +855,7 @@ export default function UnitSideViewCRM({
             <div className="flex flex-col justify-between">
               <p className="text-md font-bold tracking-tight uppercase font-body  ml-2">
                 {selCustomerPayload?.unit_no}
+
                 <span className="ml-1 font-normal text-blue-800 text-xs">
                   {selCustomerPayload?.status}
                 </span>
@@ -892,6 +958,23 @@ export default function UnitSideViewCRM({
             </div>
           </div>
         </div>
+        {statusValidError && (
+          <div className=" border-b border-[#ffe6bc]  bg-[#ffe6bc]">
+            <div className="w-full border-b border-[#ffe6bc]  bg-[#f69c10] "></div>
+            <div className=" w-full flex flex-row justify-between pt-1 font-md text-xs text-gray-500 mb-[2px] tracking-wide mr-4 ml-1 flex flex-row">
+              {' '}
+              <section>
+                <span className="font-Rubik  text-[#844b00] font-[500]   text-[11px]  py-[6px]">
+                  {newStatusErrorList}
+                </span>
+              </section>
+              <XIcon
+                className="h-4 w-4 mr-2 inline text-green"
+                aria-hidden="true"
+              />
+            </div>
+          </div>
+        )}
         <div className="flex flex-row justify-between">
           <div className="px-1 py-2 flex flex-row  text-xs  border-t border-[#ebebeb] font-thin   font-bodyLato text-[12px]  py-[6px] ">
             Recent Comments:{' '}

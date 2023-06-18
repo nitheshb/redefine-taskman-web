@@ -423,10 +423,24 @@ export const getBookedUnitsByProject = (orgId, snapshot, data, error) => {
 
   const itemsQuery = query(
     collection(db, `${orgId}_units`),
-    where('status', '==', 'booked')
+    where('status', 'in', status)
   )
   console.log('hello ', status, itemsQuery)
   return onSnapshot(itemsQuery, snapshot, error)
+}
+export const getUnassignedCRMunits = (orgId, snapshot, data, error) => {
+  const { status } = data
+  console.log('hello ', status)
+  try {
+    const itemsQuery = query(
+      collection(db, `${orgId}_units`),
+      where('assignedTo', '>', null)
+    )
+    console.log('hello ', status, itemsQuery)
+    return onSnapshot(itemsQuery, snapshot, error)
+  } catch (error) {
+    console.log('error in hello', error)
+  }
 }
 // get finance transactions
 export const getFinanceTransactionsByStatus = (
@@ -2726,7 +2740,7 @@ export const capturePaymentS = async (
       payto,
       towardsBankDocId,
       category,
-      bank_ref_no
+      bank_ref_no,
     } = paylaod
 
     const { data, error } = await supabase.from(`${orgId}_accounts`).insert([
@@ -2743,7 +2757,7 @@ export const capturePaymentS = async (
         status: paylaod?.status || 'review',
         payReason: paylaod?.payReason,
         totalAmount: amount,
-        bank_ref: bank_ref_no
+        bank_ref: bank_ref_no,
       },
     ])
     const paymentCB = await addPaymentReceivedEntry(
@@ -2909,18 +2923,20 @@ export const updateUnitStatus = async (
   enqueueSnackbar
 ) => {
   try {
-    console.log('data is', unitId, data)
+    console.log('data is===>', unitId, data)
     await updateDoc(doc(db, `${orgId}_units`, unitId), {
-      ...data,
+      status: data?.status,
+      T_elgible: increment(data?.T_elgible_new),
+      T_balance: increment(data?.T_elgible_new),
     })
-    enqueueSnackbar('Customer Details added successfully', {
+    enqueueSnackbar('Unit Status Updated', {
       variant: 'success',
     })
   } catch (error) {
-    console.log('customer details updation failed', error, {
+    console.log('Unit Status  updation failed', error, {
       ...data,
     })
-    enqueueSnackbar('Customer Details updation failed BBB', {
+    enqueueSnackbar('Unit Status updation failed BBB', {
       variant: 'error',
     })
   }

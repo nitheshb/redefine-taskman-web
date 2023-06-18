@@ -207,7 +207,71 @@ const CustomersSearchHome2 = ({ project }) => {
               </div>
             </form>
           </div>
+          <section className="grid justify-center md:grid-cols-3 lg:grid-cols-4 gap-1 lg:gap-1 my-6 ">
+            {customerRawData.length > 0 ? (
+              customerRawData.map((customerD, i) => (
+                // <span key={i}>{project?.projectName}</span>
+                <>
+                  <div className="h-[184px] m-auto bg-red-100 rounded-xl relative text-white shadow-2xl transition-transform transform hover:scale-110">
+                    <img
+                      className="relative object-cover w-full h-full rounded-xl"
+                      src="https://i.imgur.com/kGkSg1v.png"
+                    />
 
+                    <div className="w-full px-5 absolute top-[13px]">
+                      <div className="flex flex-row w-full justify-between">
+                        <div className="">
+
+
+                          <div className="flex flex-row justify-between">
+                        <span className="font-light">#{customerD?.id}</span>
+
+                        <div className="text-xs text-black-800 mt-2 font-bold uppercase">
+                          KYC {customerD?.kyc_status ? 'Done' : 'Pending'}
+                        </div>
+                      </div>
+
+                        </div>
+                      </div>
+                      <p className="font-medium tracking-widest">
+                            {customerD?.Name}
+                          </p>
+                      <div className="pt-">
+                        <p className="font-medium tracking-more-wider">
+                          984 9000 525
+                        </p>
+                      </div>
+                      <div className="pt-6 pr-6">
+                        <div className="flex justify-between">
+                          <div className="">
+                            <p className="font-light text-xs">Wallet</p>
+                            <p className="font-medium tracking-wider text-sm">
+                              ₹{customerD?.remaining_money}
+                            </p>
+                          </div>
+                          <div className="">
+                            <p className="font-light text-xs text-xs">Due</p>
+                            <p className="font-medium tracking-wider text-sm">
+                            ₹{customerD?.remaining_money}
+                            </p>
+                          </div>
+
+                          <div className="">
+                            <p className="font-light text-xs">KYC</p>
+                            <p className="font-medium tracking-wider text-sm">
+                            {customerD?.kyc_status ? 'Done' : 'Pending'}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              ))
+            ) : (
+              <></>
+            )}
+          </section>
           <section className="grid justify-center md:grid-cols-3 lg:grid-cols-4 gap-5 lg:gap-7 my-10 ">
             {customerRawData.length > 0 ? (
               customerRawData.map((customerD, i) => (
@@ -372,7 +436,6 @@ const CustomersSearchHome2 = ({ project }) => {
         projectDetails={projectDetails}
         unitsViewMode={false}
         widthClass="max-w-3xl"
-
         selCustomerPayload={selCustomerIs}
       />
     </div>
