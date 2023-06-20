@@ -8,7 +8,7 @@ import Select from 'react-select'
 const customStyles = {
   control: (base) => ({
     ...base,
-    height: 34,
+    height: 36,
     minHeight: 34,
     padding: 0,
   }),

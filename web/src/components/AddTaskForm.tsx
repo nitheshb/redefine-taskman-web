@@ -33,6 +33,7 @@ import {
 import { CalendarIcon } from '@heroicons/react/outline'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
 import { SlimSelectBox } from 'src/util/formFields/slimSelectBoxField'
+import { TextField2 } from 'src/util/formFields/TextField2'
 const people = [
   { name: 'Priority 1' },
   { name: 'Priority 2' },
@@ -284,11 +285,21 @@ const AddTaskForm = ({ title, dialogOpen }) => {
     setTakTitle(e.target.value)
   }
   return (
-    <div className="h-full flex flex-col py-6 bg-white shadow-xl overflow-y-scroll">
-      <div className="px-4 sm:px-6  z-10 flex items-center justify-between">
+    <div className="h-full flex flex-col pb-6 bg-white shadow-xl overflow-y-scroll">
+      {/* <div className="px-4 sm:px-6  z-10 flex items-center justify-between">
         <Dialog.Title className=" font-semibold text-xl mr-auto ml-3 text-[#053219]">
           {title}
         </Dialog.Title>
+      </div> */}
+      <div className="bg-gradient-to-r from-blue-200 to-cyan-200">
+        <section className="flex flex-row mx-4 py-4">
+          <span className="ml-2 mt-[1px] ">
+            <label className="font-semibold text-[#053219]  text-[18px]  mb-1  ">
+              {title}
+              <abbr title="required"></abbr>
+            </label>
+          </span>
+        </section>
       </div>
 
       <div className="grid  gap-8 grid-cols-1">
@@ -310,6 +321,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                 budget: '',
                 deptVal: '',
                 myRole: '',
+                taskdesc: '',
               }}
               validationSchema={validate}
               onSubmit={(values, { resetForm }) => {
@@ -333,56 +345,102 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                   </div>
                   <div className="flex flex-col pt-0 my-10 mx-4 mt-[10px] rounded">
                     <div className="  outline-none border  rounded p-4">
-                      <textarea
+                      {/* <textarea
                         // onChange={setTakTitle()}
                         value={takTitle}
                         onChange={(e) => setTitleFun(e)}
                         placeholder="Task Title"
                         className="w-full h-full pb-10 outline-none  focus:border-blue-600 hover:border-blue-600 rounded  "
-                      ></textarea>
-                      <div className="flex flex-row mt-1">
-                        <div>
-                          <div className="w-full flex flex-col mb-3 mt-[6px]  h-[36px] max-w-[250px] min-w-[250px]">
-                            <SlimSelectBox
-                              name="assignedTo"
-                              label="Assign To"
-                              className="input mt-"
-                              onChange={(value) => {
-                                formik.setFieldValue('assignedTo', value.value)
-                                formik.setFieldValue('assignedToObj', value)
-                              }}
-                              value={formik.values.assignedTo}
-                              options={usersList}
-                            />
-
-                            <p
-                              className="text-sm text-red-500 hidden mt-3"
-                              id="error"
-                            >
-                              Please fill out this field.
-                            </p>
+                      ></textarea> */}
+                      <section className="mt-1 px-4 rounded-lg bg-white border border-gray-100 shadow ">
+                        <section className="flex flex-row  pt-2 mb-2">
+                          <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
+                          <span className="ml-1 leading-[15px] ">
+                            <label className="font-semibold text-[#053219]  text-[13px] leading-[15px] mb-1  ">
+                              Task Title<abbr title="required"></abbr>
+                            </label>
+                          </span>
+                        </section>
+                        <div className="flex flex-row  mt-1 mb-5 ">
+                          <div>
+                            <div className="w-full flex flex-col mb-3 mt-[6px]  h-[50px] max-w-[250px] min-w-[250px] ">
+                              <TextField2
+                                label="Task Title"
+                                onChange={(e) => setTitleFun(e)}
+                                type="text"
+                                name="taskTitle"
+                              />
+                            </div>
+                          </div>
+                           <div>
+                            <div className="w-full flex flex-col h-[100px]  mb-3 mt-[6px]  max-w-[250px] min-w-[250px] ml-5">
+                              <textarea
+                                value={formik.values.taskdesc}
+                                onChange={formik.handleChange}
+                                placeholder="Task Description"
+                                name="taskdesc"
+                                className="w-[90%] h-full outline outline-gray-300  rounded p-1 "
+                              ></textarea>
+                            </div>
                           </div>
                         </div>
+                      </section>
 
-                        <div className="bg-green border  pl-4 ml-4 rounded flex flex-row mt-2 h-[36px] ">
-                          <CalendarIcon className="w-4  ml-1 inline text-[#058527]" />
-                          <span className="inline">
-                            <DatePicker
-                              className="mt-[7px] pl- px-2  inline text-sm min-w-[193px]"
-                              selected={startDate}
-                              onChange={(date) => setStartDate(date)}
-                              showTimeSelect
-                              timeFormat="HH:mm"
-                              injectTimes={[
-                                setHours(setMinutes(d, 1), 0),
-                                setHours(setMinutes(d, 5), 12),
-                                setHours(setMinutes(d, 59), 23),
-                              ]}
-                              dateFormat="MMMM d, yyyy h:mm aa"
-                            />
+                      <section className="mt-1 px-4 rounded-lg bg-white border border-gray-100 shadow">
+                        <section className="flex flex-row  pt-2 ">
+                          <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
+                          <span className="ml-1 leading-[15px] ">
+                            <label className="font-semibold text-[#053219]  text-[13px] leading-[15px] mb-1  ">
+                              <abbr title="required"></abbr>
+                            </label>
                           </span>
-                        </div>
-{/*
+                        </section>
+                        <div className="flex flex-row  mt-1">
+                          <div>
+                            <div className="w-full flex flex-col mb-3 mt-[6px]  max-w-[250px] min-w-[250px]">
+                              <SlimSelectBox
+                                name="assignedTo"
+                                placeholder="Assign To"
+                                className="input mt-"
+                                onChange={(value) => {
+                                  formik.setFieldValue(
+                                    'assignedTo',
+                                    value.value
+                                  )
+                                  formik.setFieldValue('assignedToObj', value)
+                                }}
+                                value={formik.values.assignedTo}
+                                options={usersList}
+                              />
+
+                              <p
+                                className="text-sm text-red-500 hidden mt-3"
+                                id="error"
+                              >
+                                Please fill out this field.
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="bg-green border  pl-4 ml-4 rounded flex flex-row mt-2.5 h-[36px] ">
+                            <CalendarIcon className="w-4  ml-1 inline text-[#058527]" />
+                            <span className="inline">
+                              <DatePicker
+                                className="mt-[7px] pl- px-2  inline text-sm min-w-[193px]"
+                                selected={startDate}
+                                onChange={(date) => setStartDate(date)}
+                                showTimeSelect
+                                timeFormat="HH:mm"
+                                injectTimes={[
+                                  setHours(setMinutes(d, 1), 0),
+                                  setHours(setMinutes(d, 5), 12),
+                                  setHours(setMinutes(d, 59), 23),
+                                ]}
+                                dateFormat="MMMM d, yyyy h:mm aa"
+                              />
+                            </span>
+                          </div>
+                          {/*
                         <div className="flex ml-4 mt-1 h-[36px]">
                           <Listbox value={selected} onChange={setSelected}>
                             <div className="relative mt-1">
@@ -444,31 +502,106 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                             </div>
                           </Listbox>
                         </div> */}
-                      </div>
-                      <div className="flex flex-row mt-1 mb-5">
-                        <div>
-                          <div className="w-full flex flex-col mb-3 mt-[6px]  h-[36px] max-w-[250px] min-w-[250px]">
-                            <SlimSelectBox
-                              name="followers"
-                              label="Add Participants"
-                              className="input mt-"
-                              onChange={(value) => {
-                                formik.setFieldValue('followers', [value.value])
-                                // formik.setFieldValue('assignedToObj', value)
-                              }}
-                              value={formik.values.followers[0] || []}
-                              options={usersList}
-                            />
+                        </div>
+                      </section>
+                      <section className="mt-1 px-4 rounded-lg bg-white border border-gray-100 shadow ">
+                        <section className="flex flex-row  pt-2 ">
+                          <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
+                          <span className="ml-1 leading-[15px] ">
+                            <label className="font-semibold text-[#053219]  text-[13px] leading-[15px] mb-1  ">
+                              <abbr title="required"></abbr>
+                            </label>
+                          </span>
+                        </section>
+                        <div className="flex flex-row  mt-1 mb-5">
+                          <div>
+                            <div className="w-full flex flex-col mb-3 mt-[3px]  h-[46px] max-w-[250px] min-w-[250px] ">
+                              <SlimSelectBox
+                                name="priorities"
+                                placeholder="Priorities"
+                                className="input mt-"
+                                onChange={(value) => {
+                                  // formik.setFieldValue('assignedTo', value.value)
+                                  // formik.setFieldValue('assignedToObj', value)
+                                }}
+                                // value={formik.values.assignedTo}
+                                // options={usersList}
+                              />
 
-                            <p
-                              className="text-sm text-red-500 hidden mt-3"
-                              id="error"
-                            >
-                              Please fill out this field.
-                            </p>
+                              <p
+                                className="text-sm text-red-500 hidden mt-3"
+                                id="error"
+                              >
+                                Please fill out this field.
+                              </p>
+                            </div>
+                          </div>
+                          <div>
+                            <div className="w-full flex flex-col mb-3 mt-[-12px]  h-[36px] ml-3 pl-1 pr-1 ">
+                              {/* <Select
+                            // isMulti
+                              name="followers"
+                              placeholder="Add Participants"
+                              // className="input mt-"
+                              // onChange={(value) => {
+                              //   formik.setFieldValue('followers', [value.value])
+                              //   // formik.setFieldValue('assignedToObj', value)
+                              // }}
+                              value={formik.values.followers[0] || []}
+                              className="basic-multi-select"
+                              classNamePrefix="select"
+                              options={usersList}
+                            /> */}
+
+                              <TextField
+                              type="file"
+                              name="file"
+                              label="Add file"
+                              className="mt-[-3px] border border-gray-300 w-full rounded h-[36px] pt-0.5 pl-1"
+                              />
+                            </div>
                           </div>
                         </div>
+                      </section>
+
+                      <section className="mt-1 px-4 rounded-lg bg-white border border-gray-100 shadow ">
+                        <section className="flex flex-row  pt-2 ">
+                          <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
+                          <span className="ml-1 leading-[15px] ">
+                            <label className="font-semibold text-[#053219]  text-[13px] leading-[15px] mb-1  ">
+                              <abbr title="required"></abbr>
+                            </label>
+                          </span>
+                        </section>
+                        <div className="flex flex-row  mt-1 mb-5">
+                          <div>
+                            <div className="w-[500px] flex flex-col mb-3 mt-[6px]  h-[50px] ">
+                              <Select
+                                // defaultValue={[usersList[2], usersList[3]]}
+                                isMulti
+                                placeholder="Add Participants"
+                                name="followers"
+                                onChange={(value) => {
+                                  formik.setFieldValue('followers', [value])
+                                  // formik.handleChange
+                                  //   // formik.setFieldValue('assignedToObj', value)
+                                }}
+                                options={usersList}
+                                value={formik.values.followers[0] || []}
+                                className="basic-multi-select w-[495px]"
+                                classNamePrefix="select"
+                              />
+
+                              <p
+                                className="text-sm text-red-500 hidden mt-3"
+                                id="error"
+                              >
+                                Please fill out this field.
+                              </p>
+                            </div>
+                          </div>
                         </div>
+                      </section>
                     </div>
                     {/* <span className="text-[#0091ae]">
                     Save
@@ -480,13 +613,13 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                       <section className="flex flex-row ">
                         <button
                           // onClick={() => fAddSchedule()}
-                          className={`flex mt-2 cursor-pointer rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium text-white  bg-green-700  hover:bg-green-500 `}
+                          className={`flex mt-2 cursor-pointer rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium  text-gray-700   bg-gradient-to-r from-indigo-400 to-cyan-400   hover:shadow-lg`}
                         >
                           <span className="ml-1 ">Add Task</span>
                         </button>
                         <button
                           // onClick={() => fAddSchedule()}
-                          className={`flex mt-2 ml-4 cursor-pointer rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium text-white   hover:bg-green-500  bg-green-700 `}
+                          className={`flex mt-2 ml-4 cursor-pointer rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium  text-gray-700  bg-gradient-to-r from-indigo-400 to-cyan-400   hover:shadow-lg  `}
                         >
                           <span className="ml-1 ">Add Task & close</span>
                         </button>
