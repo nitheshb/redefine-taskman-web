@@ -149,12 +149,12 @@ const TodoListView = ({
                       >
                         <section className="flex flex-row">
                           {' '}
-                          {/* <img
+                          <img
                             className="px-1 w-5 h-4"
                             src="/Award_3.png"
                             alt="/Award_3.png"
-                          /> */}
-                          🏆
+                          />
+                          {/* 🏆 */}
 
                           {' '}
                           {`${d.lab} `}
