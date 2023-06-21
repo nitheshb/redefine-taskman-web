@@ -361,9 +361,9 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                             </label>
                           </span>
                         </section>
-                        <div className="flex flex-row  mt-1 mb-5 ">
+                        <div className="flex flex-row  mt-1 mb-5 w-full">
                           <div>
-                            <div className="w-full flex flex-col mb-3 mt-[6px]  h-[50px] max-w-[250px] min-w-[250px] ">
+                            <div className="w-full flex flex-col mb-3 mt-[6px]  h-[50px]  max-w-[470px] min-w-[470px] m-1">
                               <TextField2
                                 label="Task Title"
                                 onChange={(e) => setTitleFun(e)}
@@ -372,8 +372,10 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                               />
                             </div>
                           </div>
+                       </div>
+                          <div className="flex flex-row  mt-1 mb-5 w-full">
                            <div>
-                            <div className="w-full flex flex-col h-[100px]  mb-3 mt-[6px]  max-w-[250px] min-w-[250px] ml-5">
+                            <div className="w-full flex flex-row h-[100px]  mb-3 mt-[6px]   max-w-[520px] min-w-[520px] mx-2">
                               <textarea
                                 value={formik.values.taskdesc}
                                 onChange={formik.handleChange}
