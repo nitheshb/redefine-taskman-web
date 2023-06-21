@@ -47,7 +47,7 @@ const UnitsSmallViewCard = ({ kind, feedData, bg,  setSelUnitDetails,
 
   return (
     <div
-      className={` min-w-[125px] z-10 flex flex-col  max-w-md p-2 mx-auto my-0 rounded-sm cursor-pointer border border-black`}
+      className={` min-w-[125px] z-10 flex flex-col  max-w-md p-2 mx-auto my-0 rounded-lg cursor-pointer border border-black-600 shadow-radius shadow-xl`}
       style={{ backgroundColor: bgColor }}
     >
       <div className="flex flex-row items-center justify-between">

@@ -41,7 +41,7 @@ const CrmBucketList = ({ leadsTyper }) => {
     { lab: 'Agreement', val: 'agreementing' },
     { lab: 'Demands', val: 'demands' },
     { lab: 'Payments', val: 'payments' },
-    { lab: 'Registerd', val: 'registering' },
+    { lab: 'Registered', val: 'registering' },
     { lab: 'Queries', val: 'queries' },
     { lab: 'Legal', val: 'legal' },
   ]

@@ -144,7 +144,6 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
 
   const [selSubMenu1, setSelSubMenu1] = useState('summary')
 
-
   const DocumentationHeadA = [
     { lab: 'All Transactions', val: 'all' },
     { lab: 'For onBoarding', val: 'latest' },
@@ -671,7 +670,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
 
                     { lab: 'SD/Registration Pipeline', val: 'sd_pipeline' },
 
-                    { lab: 'Registerd', val: 'registered' },
+                    { lab: 'Registered', val: 'registered' },
                     { lab: 'Unassigned', val: 'unAssigned_crm' },
 
                     { lab: 'Queries', val: 'queries' },
@@ -881,7 +880,8 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                             <div className="">
                               <div className="flex flex-row   ">
                                 <div
-                                  className="flex flex-col bg-gradient-to-r from-emerald-300 to-cyan-400 text-black p-1 rounded-sm w-[220px] h-[96px]"
+                                  className="flex flex-col bg-gradient-to-r from-[#d8daff] to-[#9ae8fd] text-black p-1 rounded-sm w-[220px] h-[96px]"
+                                  // className="flex flex-col bg-gradient-to-r from-[#d8daff] to-[#9ae8fd] text-black p-1 rounded-sm w-[220px] h-[96px]"
                                   onClick={() =>
                                     viewTransaction(
                                       finData,
@@ -1134,7 +1134,6 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                           }`}
                                           aria-hidden="true"
                                         />
-
                                       </div>
                                       <h6 className="font-bodyLato text-[#828d9e] text-xs mt-1">
                                         KYC
@@ -1276,7 +1275,9 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                             <div className="">
                               <div className="flex flex-row   ">
                                 <div
-                                  className="flex flex-col bg-gradient-to-r from-emerald-300 to-cyan-400 text-black p-1 rounded-sm w-[220px] h-[96px]"
+                                  // className="flex flex-col bg-gradient-to-r from-emerald-300 to-cyan-400 text-black p-1 rounded-sm w-[220px] h-[96px]"
+                                  className="flex flex-col bg-gradient-to-r from-[#d8daff] to-[#9ae8fd] text-black p-1 rounded-sm w-[220px] h-[96px]"
+
                                   onClick={() =>
                                     viewTransaction(
                                       finData,
@@ -1529,7 +1530,6 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                           }`}
                                           aria-hidden="true"
                                         />
-
                                       </div>
                                       <h6 className="font-bodyLato text-[#828d9e] text-xs mt-1">
                                         ATS Approval

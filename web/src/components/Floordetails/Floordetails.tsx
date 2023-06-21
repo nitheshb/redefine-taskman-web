@@ -938,7 +938,7 @@ const Floordetails = ({
                                             </h3>
                                             {source === 'projectManagement' && (
                                               <h3
-                                                className="m-0 mr-2 mt-3 mr-[21px] text-sm  leading-tight tracking-tight text-blue-800 border-0 border-blue-800 h-[16px]  hover:border-b hover:border-blue-800"
+                                                className="m-0 mr-2 mt-2 mr-[21px] text-sm  leading-tight tracking-tight text-blue-800 border-0 border-blue-800 h-[16px]  hover:border-b hover:border-blue-800"
                                                 onClick={() => {
                                                   setSliderInfo({
                                                     open: true,
@@ -962,10 +962,22 @@ const Floordetails = ({
                                       {data?.status === 'booked' && (
                                         <div className="flex flex-col items-right justify-between">
                                           <div className="flex flex-row justify-between items-right">
-                                            <h3 className="m-0 ml-2 mt-4 text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200">
-                                              Booking Details
+                                            <h3 className="m-0 ml-2 mt- text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200">
+                                              Details
+                                            </h3>
+                                            <h3 className="m-0 mr-2 ml-2 mt- text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200">
+                                              Payment
                                             </h3>
                                           </div>
+                                          <div className="flex flex-row justify-between items-right">
+                                            <h3 className="m-0 ml-2 mt-4 text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200">
+                                              Cancel
+                                            </h3>
+                                            <h3 className="m-0 ml-2 mr-2 mt-4 text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200">
+                                              Swap
+                                            </h3>
+                                          </div>
+
                                         </div>
                                       )}
 
