@@ -60,7 +60,7 @@ import StatusDropComp from './statusDropComp'
 import AssigedToDropComp from './assignedToDropComp'
 import Loader from './Loader/Loader'
 import ProjPhaseHome from './ProjPhaseHome/ProjPhaseHome'
-import AddBookingForm from './bookingForm'
+import AddApplicantDetails from './AddApplicantDetails'
 import { H4 } from './Typography'
 
 import { useSnackbar } from 'notistack'
@@ -546,7 +546,7 @@ export default function CrmUnitSideView({
           </div>
         </div>
       </div>
-      <div className=" m-4 mt-2 p-3 rounded-lg border border-gray-100 h-screen overflow-y-auto">
+      <div className=" m-4 mt-2 p-3 rounded-lg border border-gray-100 h-screen overflow-y-auto overflow-auto no-scrollbar">
         <div className="flex justify-center flex-col md:flex-row flex-col items-stretch w-full space-y-1 md:space-y-0 md:space-x-6 xl:space-x-8 mb-3">
           <div className="flex flex-col p-3 w-full bg-gray-50 dark:bg-gray-800 space-y-6">
             <h4 className="text-md dark:text-white font-semibold leading-5 text-gray-800">

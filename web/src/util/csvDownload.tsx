@@ -6,7 +6,11 @@ import { useCSVDownloader } from 'react-papaparse'
 
 import { prettyDateTime } from './dateConverter'
 
-export default function CSVDownloader({ downloadRows, fromLeadsBank = false }) {
+export default function CSVDownloader({
+  downloadRows,
+  fromLeadsBank = false,
+  sourceTab,
+}) {
   const { CSVDownloader, Type } = useCSVDownloader()
   console.log('i was clicked')
   let downloadData
@@ -15,6 +19,22 @@ export default function CSVDownloader({ downloadRows, fromLeadsBank = false }) {
       return {
         ...item,
         cT: prettyDateTime(item.cT),
+      }
+    })
+  }
+
+  if (sourceTab == 'visitsReport') {
+    downloadRows = downloadRows.map((item) => {
+      return {
+        Project: item.Project,
+        Name: item.Name,
+        Mobile: item.Mobile?.toString(),
+        Status: item.Status,
+        from: item.from,
+        to: item?.coverA?.includes('visitdone') ? 'visitdone' : item?.to,
+        Source: item?.Source,
+        Assigned_to: item?.assignedToObj?.name,
+        Date: item.Time,
       }
     })
   }

@@ -41,11 +41,12 @@ import { TextField } from 'src/util/formFields/TextField'
 import { TextField2 } from 'src/util/formFields/TextField2'
 import { TextFieldFlat } from 'src/util/formFields/TextFieldFlatType'
 
+import AddApplicantDetails from './AddApplicantDetails'
 import BlockingUnitForm from './BlockingUnitForm'
-import AddBookingForm from './bookingForm'
 import AddPaymentDetailsForm from './FinanceModule/BookingPaymentForm'
 import Loader from './Loader/Loader'
 import PaymentScheduleSheet from './paymentScheduleSheet'
+import SiderForm from './SiderForm/SiderForm'
 import UnitTransactionForm from './UnitBillTransactionForm'
 
 const CostBreakUpSheet = ({
@@ -58,6 +59,7 @@ const CostBreakUpSheet = ({
   unitDetails,
   dialogOpen,
   setShowCostSheetWindow,
+  actionMode,
 }) => {
   const { user } = useAuth()
   const { orgId } = user
@@ -71,21 +73,91 @@ const CostBreakUpSheet = ({
   const [newSqftPrice, setNewSqftPrice] = useState(0)
   const [onStep, setOnStep] = useState('costsheet')
   const [soldPrice, setSoldPrice] = useState(0)
-  const [csMode, setCsMode] = useState('both')
+  const [csMode, setCsMode] = useState('plot_cs')
+  const [showGstCol, setShowGstCol] = useState(true)
+
   const [newPlotCostSheetA, setNewPlotCostSheetA] = useState([])
   const [newPlotCsObj, setNewPlotCsObj] = useState([])
   const [newPlotPS, setNewPlotPS] = useState([])
   const [newConstructCsObj, setNewConstructCsObj] = useState([])
   const [newConstructCostSheetA, setNewConstructCostSheetA] = useState([])
   const [newConstructPS, setNewConstructPS] = useState([])
+  const [newAdditonalChargesObj, setNewAdditonalChargesObj] = useState([])
+  const [StatusListA, setStatusListA] = useState([])
 
   const pdfExportComponent = useRef(null)
   const pdfExportComponentConstruct = useRef(null)
+
   useEffect(() => {
     console.log('new cost sheet value is ', newPlotCsObj)
   }, [newPlotCsObj])
   useEffect(() => {
-    console.log('leadDetailsObj1 are', leadDetailsObj1)
+    if (actionMode === 'quoteMode') {
+      setStatusListA([
+        {
+          label: 'Quotation',
+          value: 'costsheet',
+          logo: 'RefreshIcon',
+          color: ' bg-violet-500',
+        },
+      ])
+      setOnStep('costsheet')
+    } else if (actionMode === 'unitBlockMode') {
+      setStatusListA([
+        {
+          label: 'Customer details',
+          value: 'customerDetails',
+          logo: 'FireIcon',
+          color: ' bg-violet-500',
+        },
+        {
+          label: 'Quotation',
+          value: 'costsheet',
+          logo: 'RefreshIcon',
+          color: ' bg-violet-500',
+        },
+        {
+          label: 'Block Unit',
+          value: 'blocksheet',
+          logo: 'DuplicateInactiveIcon',
+          color: ' bg-violet-500',
+        },
+      ])
+      setOnStep('blocksheet')
+    } else if (actionMode === 'unitBookingMode') {
+      setStatusListA([
+        {
+          label: 'Customer details',
+          value: 'customerDetails',
+          logo: 'FireIcon',
+          color: ' bg-violet-500',
+        },
+        {
+          label: 'Quotation',
+          value: 'costsheet',
+          logo: 'RefreshIcon',
+          color: ' bg-violet-500',
+        },
+        {
+          label: 'Booking Payment',
+          value: 'booksheet',
+          logo: 'FireIcon',
+          color: ' bg-violet-500',
+        },
+      ])
+      setOnStep('customerDetails')
+    }
+  }, [actionMode])
+
+  useEffect(() => {
+    console.log('macho is ', projectDetails)
+    const { projectType } = projectDetails
+    if (projectType.name === 'Plots') {
+      setCsMode('plot_cs')
+    } else {
+      setCsMode('both')
+    }
+    // projectDetails
   }, [])
 
   useEffect(() => {
@@ -179,6 +251,14 @@ const CostBreakUpSheet = ({
   const [formMessage, setFormMessage] = useState('')
   const [selected, setSelected] = useState({})
   const [devType, setdevType] = useState(devTypeA[0])
+  const [hover, setHover] = useState(false)
+  const [hoverId, setHoverID] = useState(1000)
+  const [hoverTasId, setHoverTasId] = useState(2000)
+  const [streamCoveredA, setStreamCoveredA] = useState([])
+  const [streamCurrentStatus, setStreamCurrentStatus] = useState('new')
+  const [streamfrom, setStreamFrom] = useState('')
+  const [isImportLeadsOpen, setisImportLeadsOpen] = useState(false)
+
   const phoneRegExp =
     /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/
 
@@ -213,6 +293,43 @@ const CostBreakUpSheet = ({
     )
     setSoldPrice(total)
     return total
+  }
+  const hoverEffectFun = (id) => {
+    setHoverID(id)
+  }
+  const hoverEffectTaskFun = (id) => {
+    setHoverTasId(id)
+  }
+  const styleO = {
+    normal: {
+      width: '100%',
+      height: '28px',
+      borderWidth: '3px 10px 3px 3px',
+      boxSizing: 'border-box',
+      borderStyle: 'solid',
+      verticalAlign: 'middle',
+      cursor: 'pointer',
+      textOverflow: 'ellipsis',
+      transition: 'all 250ms ease',
+      position: 'relative',
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+
+      borderImage:
+        'url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2216px%22%20height%3D%2232px%22%20viewBox%3D%220%200%2016%2032%22%20version%3D%221.1%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20xmlns%3Axlink%3D%22http%3A//www.w3.org/1999/xlink%22%3E%3Cdefs%3E%3Cpath%20d%3D%22M0%2C2.99610022%20C0%2C1.34139976%201.3355407%2C0%202.99805158%2C0%20L6.90478569%2C0%20C8.56056385%2C0%2010.3661199%2C1.25756457%2010.9371378%2C2.80757311%20L16%2C16.5505376%20L11.0069874%2C29.2022189%20C10.3971821%2C30.7473907%208.56729657%2C32%206.90478569%2C32%20L2.99805158%2C32%20C1.34227341%2C32%200%2C30.6657405%200%2C29.0038998%20L0%2C2.99610022%20Z%22%20id%3D%22Bg%22/%3E%3C/defs%3E%3Cg%20id%3D%22Bar%22%20stroke%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cmask%20fill%3D%22white%22%20id%3D%22mask%22%3E%3Cuse%20xlink%3Ahref%3D%22%23Bg%22/%3E%3C/mask%3E%3Cuse%20fill%3D%22%23d3d7dc%22%20xlink%3Ahref%3D%22%23Bg%22/%3E%3Cpolygon%20id%3D%22Ln%22%20fill%3D%22%2347E4C2%22%20mask%3D%22url%28%23mask%29%22%20points%3D%220%2030%2016%2030%2016%2032%200%2032%22/%3E%3C/g%3E%3C/svg%3E") 3 10 3 3 fill / 1 / 0 repeat',
+
+      color: 'rgb(51, 51, 51)',
+      dataBaseColor: '#2fc6f6',
+    },
+    completed: {
+      borderImage:
+        'url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2216px%22%20height%3D%2232px%22%20viewBox%3D%220%200%2016%2032%22%20version%3D%221.1%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20xmlns%3Axlink%3D%22http%3A//www.w3.org/1999/xlink%22%3E%3Cdefs%3E%3Cpath%20d%3D%22M0%2C2.99610022%20C0%2C1.34139976%201.3355407%2C0%202.99805158%2C0%20L6.90478569%2C0%20C8.56056385%2C0%2010.3661199%2C1.25756457%2010.9371378%2C2.80757311%20L16%2C16.5505376%20L11.0069874%2C29.2022189%20C10.3971821%2C30.7473907%208.56729657%2C32%206.90478569%2C32%20L2.99805158%2C32%20C1.34227341%2C32%200%2C30.6657405%200%2C29.0038998%20L0%2C2.99610022%20Z%22%20id%3D%22Bg%22/%3E%3C/defs%3E%3Cg%20id%3D%22Bar%22%20stroke%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cmask%20fill%3D%22white%22%20id%3D%22mask%22%3E%3Cuse%20xlink%3Ahref%3D%22%23Bg%22/%3E%3C/mask%3E%3Cuse%20fill%3D%22%237BD500%22%20xlink%3Ahref%3D%22%23Bg%22/%3E%3Cpolygon%20id%3D%22Ln%22%20fill%3D%22%237BD500%22%20mask%3D%22url%28%23mask%29%22%20points%3D%220%2030%2016%2030%2016%2032%200%2032%22/%3E%3C/g%3E%3C/svg%3E") 3 10 3 3 fill / 1 / 0 repeat',
+    },
+
+    hover: {
+      borderImage:
+        'url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2216px%22%20height%3D%2232px%22%20viewBox%3D%220%200%2016%2032%22%20version%3D%221.1%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20xmlns%3Axlink%3D%22http%3A//www.w3.org/1999/xlink%22%3E%3Cdefs%3E%3Cpath%20d%3D%22M0%2C2.99610022%20C0%2C1.34139976%201.3355407%2C0%202.99805158%2C0%20L6.90478569%2C0%20C8.56056385%2C0%2010.3661199%2C1.25756457%2010.9371378%2C2.80757311%20L16%2C16.5505376%20L11.0069874%2C29.2022189%20C10.3971821%2C30.7473907%208.56729657%2C32%206.90478569%2C32%20L2.99805158%2C32%20C1.34227341%2C32%200%2C30.6657405%200%2C29.0038998%20L0%2C2.99610022%20Z%22%20id%3D%22Bg%22/%3E%3C/defs%3E%3Cg%20id%3D%22Bar%22%20stroke%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cmask%20fill%3D%22white%22%20id%3D%22mask%22%3E%3Cuse%20xlink%3Ahref%3D%22%23Bg%22/%3E%3C/mask%3E%3Cuse%20fill%3D%22%2347E4C2%22%20xlink%3Ahref%3D%22%23Bg%22/%3E%3Cpolygon%20id%3D%22Ln%22%20fill%3D%22%2347E4C2%22%20mask%3D%22url%28%23mask%29%22%20points%3D%220%2030%2016%2030%2016%2032%200%2032%22/%3E%3C/g%3E%3C/svg%3E") 3 10 3 3 fill / 1 / 0 repeat',
+    },
   }
   const onSubmit = async (data, resetForm) => {
     console.log('customer sheet form', costSheetA, selUnitDetails, data)
@@ -261,6 +378,10 @@ const CostBreakUpSheet = ({
       resetForm
     )
   }
+
+  const setStatusFun = async (leadDocId, newStatus) => {
+    moveStep(newStatus)
+  }
   return (
     <>
       <section className="  bg-black">
@@ -268,8 +389,47 @@ const CostBreakUpSheet = ({
           <article className="overflow-hidden">
             <div className="bg-[white] rounded-b-md">
               <div className=" mt-">
-                <div className="mx-4 p-4">
-                  <div className="flex items-center">
+                <div className=" pb-1">
+                  <div
+                    className="flex flex-row justify-between   py-3 px-3  mt-[0.5px] mb-0 rounded-xs bg-[#F2F5F8]"
+                    style={{ flex: '4 0 100%' }}
+                  >
+                    {StatusListA.map((statusFlowObj, i) => (
+                      <span
+                        key={i}
+                        className="font-bodyLato text-sm font-normal px-[2px] py-[1px] mr-1 "
+                        onClick={() => setStatusFun(i, statusFlowObj.value)}
+                        style={{
+                          ...styleO.normal,
+                          ...(statusFlowObj.value === streamCurrentStatus
+                            ? styleO.hover
+                            : null),
+                          ...(streamCoveredA.includes(statusFlowObj.value)
+                            ? styleO.completed
+                            : null),
+
+                          ...(statusFlowObj.value === onStep
+                            ? styleO.hover
+                            : null),
+                          ...(statusFlowObj.value === streamfrom
+                            ? styleO.completed
+                            : null),
+                          ...(hover && hoverId === i ? styleO.hover : null),
+                        }}
+                        onMouseEnter={() => {
+                          hoverEffectFun(i)
+                          setHover(true)
+                        }}
+                        onMouseLeave={() => {
+                          hoverEffectFun(1000)
+                          setHover(false)
+                        }}
+                      >
+                        <div>{statusFlowObj.label} </div>\
+                      </span>
+                    ))}
+                  </div>
+                  {/* <div className="flex items-center">
                     <div
                       className={`flex items-center  relative ${
                         ['costsheet'].includes(onStep)
@@ -311,48 +471,8 @@ const CostBreakUpSheet = ({
                       </div>
                     </div>
                     <div className="flex-auto border-t-2 transition duration-500 ease-in-out border-[#5671fc] "></div>
-                    {/* <div
-                      className={`flex items-center  relative ${
-                        ['payment_sch'].includes(onStep)
-                          ? 'text-white'
-                          : 'text-[#5671fc] '
-                      }`}
-                      onClick={() => moveStep('payment_sch')}
-                    >
-                      <div
-                        className={`rounded-full transition duration-500 ease-in-out h-12 w-12 py-3 border-2 ${
-                          ['payment_sch'].includes(onStep)
-                            ? 'bg-[#5671fc] border-[#5671fc] '
-                            : 'border-[#5671fc] '
-                        } `}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="100%"
-                          height="100%"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="feather feather-mail "
-                        >
-                          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                          <polyline points="22,6 12,13 2,6"></polyline>
-                        </svg>
-                      </div>
-                      <div
-                        className={`absolute top-0 -ml-10 text-center mt-16 w-32 text-xs font-medium uppercase ${
-                          ['payment_sch'].includes(onStep)
-                            ? 'text-[#5671fc] '
-                            : 'text-gray-500'
-                        }`}
-                      >
-                        Payment Schedule
-                      </div>
-                    </div> */}
-                    {/* <div className="flex-auto border-t-2 transition duration-500 ease-in-out border-gray-300"></div> */}
+
+
                     <div
                       className={`flex items-center  relative ${
                         ['customerDetails'].includes(onStep)
@@ -412,21 +532,7 @@ const CostBreakUpSheet = ({
                             : 'border-[#5671fc] '
                         } `}
                       >
-                        {/* <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="100%"
-                          height="100%"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="feather feather-mail "
-                        >
-                          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                          <polyline points="22,6 12,13 2,6"></polyline>
-                        </svg> */}
+
 
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -502,12 +608,12 @@ const CostBreakUpSheet = ({
                         Block
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
 
               {['costsheet', 'allsheets'].includes(onStep) && (
-                <div className="mt-10">
+                <div className="">
                   <section className="bg-[#F6F7FE]">
                     {/* <p className="text-md font-extrabold tracking-tight uppercase font-body pb-4">
                       COST SHEET
@@ -581,13 +687,8 @@ const CostBreakUpSheet = ({
                             component={() => (
                               <Checkbox
                                 color="primary"
-                                // checked={formik.values.isGSTChecked}
-                                // onChange={() =>
-                                //   formik.setFieldValue(
-                                //     'isGSTChecked',
-                                //     !formik.values.isGSTChecked
-                                //   )
-                                // }
+                                checked={showGstCol}
+                                onClick={() => setShowGstCol(!showGstCol)}
                               />
                             )}
                           />
@@ -609,7 +710,7 @@ const CostBreakUpSheet = ({
                         {(formik) => (
                           <Form ref={ref}>
                             <section
-                              className="bg-[#fff] p-2 rounded-md "
+                              className="bg-[#fff] p-2 rounded-md border border-black "
                               style={{
                                 boxShadow: '0 1px 12px #f2f2f2',
                               }}
@@ -649,9 +750,11 @@ const CostBreakUpSheet = ({
                                   setNewPlotCsObj={setNewPlotCsObj}
                                   newPlotCsObj={newPlotCsObj}
                                   costSheetA={newPlotCostSheetA}
+                                  setAddiChargesObj={setNewAdditonalChargesObj}
                                   setCostSheetA={setNewPlotCostSheetA}
                                   setNewPS={setNewPlotPS}
                                   newPlotPS={newPlotPS}
+                                  showGstCol={showGstCol}
                                 />
                               )}
                               {csMode === 'construct_cs' && (
@@ -681,12 +784,15 @@ const CostBreakUpSheet = ({
                             <div className="flex flex-col mt-2 p-4 ">
                               <div className="mt-5 text-right md:space-x-3 md:block flex flex-col-reverse mb-6">
                                 <button
-                                  onClick={() => dialogOpen(false)}
+                                  onClick={() => {
+                                    setisImportLeadsOpen(true)
+                                    // dialogOpen(false)
+                                  }}
                                   type="button"
                                   className="mb-4 md:mb-0 bg-white px-5 py-2 text-sm shadow-sm font-medium tracking-wider border text-gray-600 rounded-sm hover:shadow-lg hover:bg-gray-100"
                                 >
                                   {' '}
-                                  Send to WhatsApp{' '}
+                                  Preview & send to customer{' '}
                                 </button>
                                 {/* <Pdf targetRef={ref} filename="post.pdf">
                               {({ toPdf }) => (
@@ -759,7 +865,7 @@ const CostBreakUpSheet = ({
                 />
               )} */}
               {['customerDetails', 'allsheets'].includes(onStep) && (
-                <AddBookingForm
+                <AddApplicantDetails
                   title="Booking Form"
                   selUnitDetails={selUnitDetails}
                   leadDetailsObj2={leadDetailsObj1}
@@ -776,6 +882,7 @@ const CostBreakUpSheet = ({
                   newPlotCostSheetA={newPlotCostSheetA}
                   newConstructCsObj={newConstructCsObj}
                   newConstructCostSheetA={newConstructCostSheetA}
+                  newAdditonalChargesObj={newAdditonalChargesObj}
                   newConstructPS={newConstructPS}
                   newPlotPS={newPlotPS}
                   projectDetails={projectDetails}
@@ -817,6 +924,27 @@ const CostBreakUpSheet = ({
           </article>
         </div>
       </section>
+      <SiderForm
+        open={isImportLeadsOpen}
+        setOpen={setisImportLeadsOpen}
+        title="costSheetPreview"
+        widthClass="max-w-4xl"
+        csMode={csMode}
+        projectDetails={projectDetails}
+        pdfExportComponent={pdfExportComponent}
+        selPhaseObj={selPhaseObj}
+        headerContent={{}}
+        leadDetailsObj={leadDetailsObj1}
+        selUnitDetails={selUnitDetails}
+        newPlotCsObj={newPlotCsObj}
+        costSheetA={costSheetA || newPlotCostSheetA || []}
+        newPlotCostSheetA={costSheetA || newPlotCostSheetA || []}
+        // setNewPlotCsObj={setNewPlotCsObj}
+        // setCostSheetA={setNewPlotCostSheetA}
+        // setNewPS={setNewPlotPS}
+        // newPlotPS={newPlotPS}
+        // showGstCol={showGstCol}
+      />
     </>
   )
 }

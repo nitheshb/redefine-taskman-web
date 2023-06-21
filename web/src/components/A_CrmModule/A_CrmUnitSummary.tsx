@@ -11,8 +11,8 @@ import CrmUnitDetailsView1 from './CrmUnitDetailsView1'
 import CrmUnitFinanceHistory from './CrmUnitFinanceHistory'
 import CrmUnitHeader from './CrmUnitHeader'
 
-const CrmCustomerSummary = ({
-  selCustomerPayload,
+const CrmUnitSummary = ({
+  selCustomerPayload: selUnitPayload,
   assets,
   totalIs,
   unitTransactionsA,
@@ -21,9 +21,14 @@ const CrmCustomerSummary = ({
   const pdfUnitSummaryComp = useRef(null)
   const { orgId } = user
 
+
+  useEffect(() => {
+    console.log('unit dta is ', selUnitPayload)
+  }, [])
+
   return (
     <PDFExport paperSize="A4" margin="1cm" ref={pdfUnitSummaryComp}>
-      <div className="py-3 px-3 m-4 mt-2 rounded-lg border border-gray-100 h-[100%] overflow-y-scroll">
+      <div className="py-3 px-3 m-4 mt-2 rounded-lg border border-gray-100 h-[100%] overflow-y-scroll overflow-auto no-scrollbar">
         {/* customer details */}
         {/* Unit details */}
         {/* payment schedule */}
@@ -59,23 +64,23 @@ const CrmCustomerSummary = ({
           </div>
         </div>
 
-        <CrmUnitHeader projectDetails={selCustomerPayload} />
+        <CrmUnitHeader projectDetails={selUnitPayload} />
 
         {/* 1 } customer details */}
         {/* Unit details */}
-        
+
         <CrmUnitCustomerDetailsView1
-          Name={selCustomerPayload?.customerName1}
-          Mobile={selCustomerPayload?.phoneNo1}
+          Name={selUnitPayload?.customerName1}
+          Mobile={selUnitPayload?.phoneNo1}
           netTotal={12345}
-          selCustomerPayload={selCustomerPayload}
+          selCustomerPayload={selUnitPayload}
           assets={assets}
         />
         {/* Payment Summay */}
 
         <div>
           <CrmPaymentSummary
-            selCustomerPayload={selCustomerPayload}
+            selCustomerPayload={selUnitPayload}
             assets={assets}
           />
         </div>
@@ -84,7 +89,7 @@ const CrmCustomerSummary = ({
 
         <div>
           <CrmUnitPaymentSchedule
-            selCustomerPayload={selCustomerPayload}
+            selCustomerPayload={selUnitPayload}
             assets={assets}
             totalIs={totalIs}
           />
@@ -92,7 +97,7 @@ const CrmCustomerSummary = ({
         {/* Finance History */}
         <div>
           <CrmUnitFinanceHistory
-            selCustomerPayload={selCustomerPayload}
+            selCustomerPayload={selUnitPayload}
             assets={assets}
             totalIs={totalIs}
             unitTransactionsA={unitTransactionsA}
@@ -127,4 +132,4 @@ const CrmCustomerSummary = ({
   )
 }
 
-export default CrmCustomerSummary
+export default CrmUnitSummary

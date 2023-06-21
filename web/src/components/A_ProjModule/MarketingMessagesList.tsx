@@ -9,6 +9,7 @@ import PencilIcon from '@heroicons/react/solid/PencilIcon'
 import SendTwoToneIcon from '@mui/icons-material/SendTwoTone'
 import { useSnackbar } from 'notistack'
 
+import { sourceListItems } from 'src/constants/projects'
 import {
   deleteBankAccount,
   steamBankDetailsList,
@@ -18,6 +19,8 @@ import { useAuth } from 'src/context/firebase-auth-context'
 import { sendWhatAppTextSms1 } from 'src/util/axiosWhatAppApi'
 
 import SiderForm from '../SiderForm/SiderForm'
+
+import SourceAddTemplate from './SourceAddTemplate'
 
 const MarkeingMessagesList = ({ title, pId, data }) => {
   const { user } = useAuth()
@@ -57,15 +60,15 @@ const MarkeingMessagesList = ({ title, pId, data }) => {
 
   return (
     <>
-
       <div className="flex overflow-x-auto ml-2 border-b pb-2">
-       <section className='mt-4'>Templates</section>
+        <section className="mt-4">Templates</section>
         {[
           { label: 'Enquiry Journey Status', value: 'enquiry_journey_status' },
           { label: 'CRM', value: 'CRM_status' },
           { label: 'Legal', value: 'Legal_status' },
           { label: 'Finance', value: 'Finance_status' },
           { label: 'HR', value: 'hr_status' },
+          { label: 'Sources', value: 'source' },
         ].map((data, i) => {
           return (
             <section
@@ -93,6 +96,90 @@ const MarkeingMessagesList = ({ title, pId, data }) => {
           )
         })}
       </div>
+      {selCat === 'source' && (
+        <div className="w-full   flex-row">
+          <section className="m-4 inline-block">
+            <div className="bg-[#FFEDEA] p-4 rounded-xl shadow-md shadow-neutral-200 ">
+              <h2 className="text-sm font-semibold pb-2 border-b border-grey">
+                {'Source List'}
+              </h2>
+              <SourceAddTemplate phase={{}} source={sourceListItems} />
+              <table className="w-full whitespace-nowrap">
+                <thead>
+                  <tr className="border-b">
+                    <th></th>
+                    <th className="text-left p-[10px] pr-[12px] pl-0 text-xs text-green-800 ">
+                      Source Name
+                    </th>
+                    <th className="text-center p-[10px] pl-[20px] text-xs text-green-800">
+                      {' '}
+                      Tags List
+                    </th>
+                    {/* <th className="text-center p-[10px] text-xs text-green-800">
+               Sales Executive
+             </th>
+             <th className="text-center p-[10px] text-xs text-green-800">
+               Sales Manager
+             </th> */}
+                  </tr>
+                </thead>
+                <tbody>
+                  {sourceListItems.map((data, i) => {
+                    return (
+                      <tr key={i} className="mt-4">
+                        <td className=" w-[34px]">
+                          <div className="ml-5">
+                            <div className="rounded-sm h-5 w-5 flex flex-shrink-0 justify-center items-center text-xs relative">
+                              {i + 1}
+                              {')'}
+                            </div>
+                          </div>
+                        </td>
+                        <td className="py-2 pr-2  font-medium text-xs leading-6  whitespace-nowrap">
+                          {data.label}
+                        </td>
+                        <td className="ml-2 pl-6">
+                          {data.rep.map((d, i) => (
+                            <span
+                              key={i}
+                              className=" items-center cursor-pointer h-6  text-xs  text-green-800"
+                            >
+                              {d}
+                              {','}
+                            </span>
+                          ))}
+                        </td>
+
+                        <td className="ml-2 pl-6">
+                          <span
+                            className=" ml-2 items-center cursor-pointer text-xs  text-green-800"
+                            onClick={() => {
+                              triggerWhatsAppFun(data)
+                            }}
+                          >
+                            <img
+                              className="w-[25px] h-[25px] inline mr-"
+                              alt=""
+                              src="/wa3.png"
+                            />
+                          </span>
+                          <span className=" items-center cursor-pointer h-6 px-3 text-xs  text-green-800">
+                            <img
+                              className="w-[20px] h-[20px] inline mr-2"
+                              alt=""
+                              src="/g1.png"
+                            />
+                          </span>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      )}
       {selCat === 'enquiry_journey_status' && (
         <div className="w-full   flex-row">
           <section className="m-4 inline-block">

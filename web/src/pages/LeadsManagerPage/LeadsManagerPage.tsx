@@ -19,6 +19,7 @@ import { useAuth } from 'src/context/firebase-auth-context'
 
 import HeadNavBar from '../../components/HeadNavBar/HeadNavBar'
 import ReportMain from '../../components/Reports/ReportMainCom'
+import UnitsInventoryHome from 'src/components/A_ProjModule/UnitsInvertoryHome'
 
 const LeadsManagerPage = (props) => {
   const { user } = useAuth()
@@ -73,8 +74,8 @@ const LeadsManagerPage = (props) => {
             <div
               className={`${
                 showDetailedSideBar
-                  ? 'flex flex-row overflow-auto w-[20vw]   text-gray-700 '
-                  : 'flex flex-row overflow-auto   text-gray-700 '
+                  ? 'flex flex-row overflow-auto w-[20vw]  overflow-auto no-scrollbar text-gray-700 '
+                  : 'flex flex-row overflow-auto overflow-auto no-scrollbar  text-gray-700 '
               }`}
             >
               <SlimSideMenuBar
@@ -86,7 +87,7 @@ const LeadsManagerPage = (props) => {
               />
             </div>
 
-            <div className="flex-grow  items-center overflow-y-auto  px-300  py-300">
+            <div className="flex-grow  items-center overflow-y-auto  overflow-auto no-scrollbar px-300  py-300">
               <HeadNavBar2 selModule={selModule} setSelModule={setSelModule} />
 
               {viewable === 'inProgress' && (
@@ -104,6 +105,14 @@ const LeadsManagerPage = (props) => {
               )}
               {viewable === 'leadslake' && (
                 <LeadsLakeHomePage taskType={viewable} />
+              )}
+              {viewable === 'units_inventory' && (
+                 <UnitsInventoryHome
+                 project={{
+                   projectName: 'Projects',
+                 }}
+                 isEdit={undefined}
+               />
               )}
               {viewable === 'Today1' && (
                 <TodayLeadsHomePage taskType={viewable} />

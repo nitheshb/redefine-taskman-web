@@ -1,6 +1,16 @@
 export const timeConv = function (str) {
+  const options = {
+    day: '2-digit',
+    month: 'short',
+    year: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+    timeZone: 'Asia/Kolkata', // Set the time zone to India
+  };
   const d = new Date(str)
-  return d
+
+  return d.toLocaleString('en-IN', options)
 }
 
 export function prettyDate(d) {

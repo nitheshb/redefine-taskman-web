@@ -1,32 +1,41 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import { Dialog } from '@headlessui/react'
 import { useState, useEffect } from 'react'
-import { RadioGroup } from '@headlessui/react'
-import { Label, InputField, TextAreaField, FieldError } from '@redwoodjs/forms'
-import Select from 'react-select'
-import { Form, Formik } from 'formik'
-import * as Yup from 'yup'
-import NumberFormat from 'react-number-format'
 
-import { TextField } from 'src/util/formFields/TextField'
-import { CustomSelect } from 'src/util/formFields/selectBoxField'
-import Loader from './Loader/Loader'
-import { PhoneNoField } from 'src/util/formFields/phNoField'
+import { Dialog } from '@headlessui/react'
+import { RadioGroup } from '@headlessui/react'
+import Divider from '@mui/material/Divider'
+import { Timestamp } from 'firebase/firestore'
+import { Form, Formik } from 'formik'
+import { useSnackbar } from 'notistack'
+import NumberFormat from 'react-number-format'
+import Select from 'react-select'
+import * as Yup from 'yup'
+
+import { Label, InputField, TextAreaField, FieldError } from '@redwoodjs/forms'
+import { useRouterStateSetter } from '@redwoodjs/router/dist/router-context'
+
 import {
   addUnit,
+  addPlotUnit,
   checkIfUnitAlreadyExists,
   getAllProjects,
   steamUsersListByRole,
+  editPlotUnit,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
-import { Timestamp } from 'firebase/firestore'
-import { useRouterStateSetter } from '@redwoodjs/router/dist/router-context'
 import {
   sendWhatAppMediaSms,
   sendWhatAppTextSms,
 } from 'src/util/axiosWhatAppApi'
+import { PhoneNoField } from 'src/util/formFields/phNoField'
+import { CustomSelect } from 'src/util/formFields/selectBoxField'
+import { TextField } from 'src/util/formFields/TextField'
+
+import Loader from './Loader/Loader'
+import { validate_AddUnit } from './Schemas'
+
 const AddUnit = ({
   title,
   dialogOpen,
@@ -35,14 +44,19 @@ const AddUnit = ({
   projectDetails,
   phaseDetails,
   blockDetails,
+  data,
 }) => {
   const { user } = useAuth()
   const { orgId } = user
+  const { enqueueSnackbar } = useSnackbar()
+
   const [fetchedUsersList, setfetchedUsersList] = useState([])
   const [usersList, setusersList] = useState([])
   const [projectList, setprojectList] = useState([])
   const [phaseList, setphaseList] = useState([])
   const [blockList, setblockList] = useState([])
+  const [unitDetails, setUnitDetails] = useState({})
+
   useEffect(() => {
     const unsubscribe = steamUsersListByRole(
       orgId,
@@ -64,6 +78,11 @@ const AddUnit = ({
 
     return unsubscribe
   }, [])
+
+  useEffect(() => {
+    setUnitDetails(data?.unitDetail || {})
+  }, [])
+
   useEffect(() => {
     const unsubscribe = getAllProjects(
       orgId,
@@ -179,35 +198,113 @@ const AddUnit = ({
   const devTypeSel = async (sel) => {
     await setdevType(sel)
   }
+
   const onSubmitFun = async (data, resetForm) => {
     console.log(data)
-
     setLoading(true)
 
+    // const {
+    //   area,
+    //   bathrooms,
+    //   bedRooms,
+    //   buildup_area,
+    //   carpet_area,
+    //   facing,
+    //   sqft_rate,
+    //   floor,
+    //   super_build_up_area,
+    //   unit_no,
+    // } = data
+
     const {
-      area,
-      bathrooms,
-      bedRooms,
-      buildup_area,
-      carpet_area,
-      facing,
-      sqft_rate,
-      floor,
-      super_build_up_area,
       unit_no,
+      survey_no,
+      Katha_no,
+      PID_no,
+      area,
+      sqft_rate,
+      plc_per_sqft,
+      size,
+      facing,
+      unit_d,
+      east_d,
+      west_d,
+      north_d,
+      south_d,
+      east_west_d,
+      north_south_d,
+
+      east_sch_by,
+      west_sch_by,
+      status,
+
+      release_status,
+      mortgage_type,
     } = data
     // updateUserRole(uid, deptVal, myRole, email, 'nitheshreddy.email@gmail.com')
 
     const foundLength = await checkIfUnitAlreadyExists(
-      'spark_units',
+      `${orgId}_units`,
       projectDetails?.uid,
-      phaseDetails?.uid,
-      blockDetails?.uid,
+      phaseDetails?.uid || 1,
+      blockDetails?.uid || 1,
       unit_no
 
       // myBlock?.uid,
       // dRow['unit_no']
     )
+    const plotData1 = {
+      pId: projectDetails?.uid,
+      phaseId: phaseDetails?.uid || 1,
+      blockId: blockDetails?.uid || 1,
+      Date: Timestamp.now().toMillis(),
+      unit_no: unit_no,
+      survey_no: survey_no,
+
+      Katha_no: Katha_no,
+      PID_no: PID_no,
+      area: area,
+      sqft_rate: sqft_rate,
+      plc_per_sqft: plc_per_sqft,
+      size: size,
+      facing: facing,
+      unit_d: unit_d,
+      east_d: east_d,
+      west_d: west_d,
+      north_d: north_d,
+      south_d: south_d,
+      east_west_d: east_west_d,
+      north_south_d: north_south_d,
+      east_sch_by: east_sch_by,
+      west_sch_by: west_sch_by,
+      status: status,
+      release_status: release_status,
+      mortgage_type: mortgage_type,
+      intype: 'Form',
+      unit_type: 'plot',
+      by: user?.email,
+    }
+    console.log('user is ', user)
+    if (foundLength?.length > 0) {
+      console.log('foundLENGTH IS ', foundLength)
+      setFormMessage('Unit Already Exists')
+      setLoading(false)
+    } else {
+      console.log('foundLENGTH IS empty ', foundLength)
+
+      // proceed to copy
+      await addPlotUnit(orgId, plotData1, user?.email, `Unit Created by form `)
+
+      // msg2
+      resetForm()
+      setFormMessage('Saved Successfully..!')
+      setLoading(false)
+    }
+    return
+    setLoading(true)
+
+    // updateUserRole(uid, deptVal, myRole, email, 'nitheshreddy.email@gmail.com')
+
     const leadData = {
       Date: Timestamp.now().toMillis(),
       bed_rooms: bedRooms,
@@ -248,6 +345,85 @@ const AddUnit = ({
       setLoading(false)
     }
   }
+  const onSubmitEditUnitFun = async (data, resetForm) => {
+    console.log(data)
+    setLoading(true)
+
+    const {
+      unit_no,
+      survey_no,
+      Katha_no,
+      PID_no,
+      area,
+      sqft_rate,
+      plc_per_sqft,
+      size,
+      facing,
+      unit_d,
+      east_d,
+      west_d,
+      north_d,
+      south_d,
+      east_west_d,
+      north_south_d,
+
+      east_sch_by,
+      west_sch_by,
+      status,
+
+      release_status,
+      mortgage_type,
+    } = data
+    // updateUserRole(uid, deptVal, myRole, email, 'nitheshreddy.email@gmail.com')
+
+    const plotData1 = {
+      pId: projectDetails?.uid,
+      phaseId: phaseDetails?.uid || 1,
+      blockId: blockDetails?.uid || 1,
+      Date: Timestamp.now().toMillis(),
+      unit_no: unit_no,
+      survey_no: survey_no,
+
+      Katha_no: Katha_no,
+      PID_no: PID_no,
+      area: area,
+      sqft_rate: sqft_rate,
+      plc_per_sqft: plc_per_sqft,
+      size: size,
+      facing: facing,
+      unit_d,
+      east_d: east_d,
+      west_d: west_d,
+      north_d: north_d,
+      south_d: south_d,
+      east_west_d: east_west_d,
+      north_south_d: north_south_d,
+      east_sch_by: east_sch_by,
+      west_sch_by: west_sch_by,
+      status: status,
+      release_status: release_status,
+      mortgage_type: mortgage_type,
+      intype: 'Form',
+      unit_type: 'plot',
+      by: user?.email,
+    }
+    console.log('user is ', user)
+    // proceed to copy
+    await editPlotUnit(
+      orgId,
+      unitDetails?.uid,
+      plotData1,
+      user?.email,
+      `Unit Created by form `,
+      enqueueSnackbar
+    )
+
+    // msg2
+    await resetForm()
+    await setFormMessage('Saved Successfully..!')
+    await setLoading(false)
+    return
+  }
 
   const unitTypeList = [
     { label: 'Select Count', value: '' },
@@ -266,7 +442,7 @@ const AddUnit = ({
     { label: '5', value: 5 },
   ]
   const facingTypeList = [
-    { label: 'Select the Source', value: '' },
+    { label: 'Select the Facing', value: '' },
     { label: 'East', value: 'East' },
     { label: 'West', value: 'West' },
     { label: 'North', value: 'North' },
@@ -276,298 +452,473 @@ const AddUnit = ({
     { label: 'North-East', value: 'North-East' },
     { label: 'North-West', value: 'North-West' },
   ]
-  const validate = Yup.object({
-    unit_no: Yup.string()
+  const statusList = [
+    { label: 'Select the Status', value: '' },
+    { label: 'Available', value: 'available' },
+    { label: 'Blocked by Customer', value: 'blocked_customer' },
+    { label: 'Blocked by Management', value: 'blocked_management' },
+    { label: 'Sold', value: 'sold' },
+  ]
+
+  const releaseStausList = [
+    { label: 'Release Status', value: '' },
+    { label: 'Yes', value: 'yes' },
+    { label: 'No', value: 'No' },
+  ]
+  const mortgageType = [
+    { label: 'Select Mortgage', value: '' },
+    { label: 'NA', value: 'NA' },
+    { label: 'Bank', value: 'bank' },
+    { label: '3rd Party Investor', value: '3rd_party_investor' },
+  ]
+  // const validate = Yup.object({
+
+
+    // unit_no: Yup.string()
       // .max(15, 'Must be 15 characters or less')
-      .required('Unit_no is Required'),
+      // .required('Unit_no is Required'),
     // lastName: Yup.string()
     //   .max(20, 'Must be 20 characters or less')
     //   .required('Required'),
-    sqft_rate: Yup.number().required('sqft rate is required'),
-    bedRooms:
-      projectDetails?.projectType?.name === 'Apartment'
-        ? Yup.string().required('bedRooms is required')
-        : Yup.string().notRequired(),
-    floor: Yup.number().required('floor is required'),
-    bathrooms:
-      projectDetails?.projectType?.name === 'Apartment'
-        ? Yup.string().required('bathrooms is required')
-        : Yup.string().notRequired(),
-    // bathrooms: Yup.string().required('bathrooms is required'),
-    area:
-      projectDetails?.projectType?.name === 'Plots'
-        ? Yup.number().required('area is required')
-        : Yup.number().notRequired(),
+    // sqft_rate: Yup.number().required('sqft rate is required'),
+    // bedRooms:
+    //   projectDetails?.projectType?.name === 'Apartment'
+    //     ? Yup.string().required('bedRooms is required')
+    //     : Yup.string().notRequired(),
+    // floor: Yup.number().required('floor is required'),
+    // bathrooms:
+    //   projectDetails?.projectType?.name === 'Apartment'
+    //     ? Yup.string().required('bathrooms is required')
+    //     : Yup.string().notRequired(),
+    // // bathrooms: Yup.string().required('bathrooms is required'),
+    // area:
+    //   projectDetails?.projectType?.name === 'Plots'
+    //     ? Yup.number().required('area is required')
+    //     : Yup.number().notRequired(),
 
-    facing: Yup.string().required('facing is required'),
-    carpet_area: Yup.number().required('Carpet Area is required'),
-    buildup_area: Yup.number().required('Buildup Area is required'),
-    super_build_up_area: Yup.number().required('Sqft Rate is required'),
-  })
+    // facing: Yup.string().required('facing is required'),
+    // carpet_area: Yup.number().required('Carpet Area is required'),
+    // buildup_area: Yup.number().required('Buildup Area is required'),
+    // super_build_up_area: Yup.number().required('Sqft Rate is required'),
+  // })
   const resetter = () => {
     setSelected({})
     setFormMessage('')
   }
   return (
-    <div className="h-full flex flex-col py-6 bg-white shadow-xl overflow-y-scroll">
-      <div className="px-4 sm:px-6  z-10 flex items-center justify-between">
-        <Dialog.Title className=" font-semibold text-xl mr-auto ml-3 text-[#053219]">
-          {title}
-        </Dialog.Title>
-      </div>
+    <div className="h-full flex flex-col pb-6 bg-white shadow-xl overflow-y-scroll">
+      {/* <div className="border-b py-3">
+        <div className="px-2 sm:px-6  z-10 flex items-center justify-between">
+          <Dialog.Title className=" font-semibold text-xl mr-auto  text-[#053219]">
+            {title}
+          </Dialog.Title>
+        </div>
+      </div> */}
 
       <div className="grid  gap-8 grid-cols-1">
-        <div className="flex flex-col  my-10 rounded-lg bg-white border border-gray-100 px-4 m-4 mt-4">
+        <div className="flex flex-col ">
           <div className="mt-0">
             {/* new one */}
 
             <Formik
+              enableReinitialize={true}
               initialValues={{
-                unit_no: '',
-                sqft_rate: 0,
-                bedRooms: '',
-                floor: 0,
-                bathrooms: '',
-                area: 0,
-                facing: '',
-                carpet_area: 0,
-                buildup_area: 0,
-                super_build_up_area: 0,
+                unit_no: unitDetails?.unit_no || '',
+                survey_no: unitDetails?.survey_no || '',
+                Katha_no: unitDetails?.Katha_no || '',
+                PID_no: unitDetails?.PID_no || '',
+                area: unitDetails?.area || 0,
+                sqft_rate: unitDetails?.sqft_rate || 0,
+                plc_per_sqft: unitDetails?.plc_per_sqft || 0,
+                size: unitDetails?.size || '',
+                facing: unitDetails?.facing || '',
+                unit_d: unitDetails?.unit_d || '',
+                east_d: unitDetails?.east_d || 0,
+                west_d: unitDetails?.west_d || 0,
+                north_d: unitDetails?.north_d || 0,
+                south_d: unitDetails?.south_d || 0,
+                east_west_d: unitDetails?.east_west_d || 0,
+                north_south_d: unitDetails?.north_south_d || 0,
+                east_sch_by: unitDetails?.east_sch_by || '',
+                west_sch_by: unitDetails?.west_sch_by || '',
+                status: unitDetails?.status || '',
+                release_status: unitDetails?.release_status || '',
+                mortgage_type: unitDetails?.mortgage_type || '',
+                // bathrooms: '',
+                // carpet_area: 0,
+                // buildup_area: 0,
+                // super_build_up_area: 0,
               }}
-              validationSchema={validate}
+              validationSchema={validate_AddUnit}
               onSubmit={(values, { resetForm }) => {
                 console.log('ami submitted', values)
-
-                onSubmitFun(values, resetForm)
+                if (title === 'Edit Plot') {
+                  onSubmitEditUnitFun(values, resetForm)
+                } else {
+                  onSubmitFun(values, resetForm)
+                }
               }}
             >
               {(formik) => (
-                <div className="mt-8">
-                  <div className="mb-4 ">
-                    <div className="flex flex-row justify-between">
-                      <div className="inline">
-                        <div className="">
-                          <label className="font-semibold text-[#053219]  text-sm  mb-1  ">
-                            Project Details<abbr title="required"></abbr>
-                          </label>
-                        </div>
+                <div className="">
+                  <section className=" rounded-lg bg-white  ">
+                    <Form>
+                      <div className="">
+                        <div className="inline ">
+                          <div className="bg-gradient-to-r from-blue-200 to-cyan-200">
+                            <section className="flex flex-row mx-4 py-4">
 
-                        <div className="border-t-4 rounded-xl w-16 mt-1 border-green-600"></div>
-                      </div>
-                      {/* 2 */}
-                      <div className="p-3 flex flex-col">
-                        <span
-                          className={`items-center h-6 px-3 py-1 mt-1 text-xs font-semibold text-green-500 bg-green-100 rounded-full
-                      `}
-                        >
-                          {projectDetails?.projectType?.name}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="py-3 grid grid-cols-3 mb-4">
-                    <section>
-                      <div className="font-md text-xs text-gray-500 mb-[2] tracking-wide">
-                        Project
-                      </div>
-                      <div className="font-semibold text-sm text-slate-900 tracking-wide overflow-ellipsis overflow-hidden">
-                        {projectDetails?.projectName}
-                      </div>
-                    </section>
-
-                    <section className="ml-8">
-                      <div className="font-md text-xs text-gray-500 mb-[2] tracking-wide">
-                        Phase
-                      </div>
-                      <div className="font-semibold text-sm text-slate-900">
-                        {phaseDetails?.phaseName}
-                      </div>
-                    </section>
-                    <section className="flex flex-col ml-[54px]">
-                      <div className="font-md text-xs  text-gray-500 mb-[2] flow-right tracking-wide">
-                        Block
-                      </div>
-                      <div className="font-lg text-sm text-slate-900 tracking-wide overflow-ellipsis overflow-hidden">
-                        <span className="overflow-ellipsis">
-                          {blockDetails?.blockName}
-                        </span>
-                      </div>
-                    </section>
-                  </div>
-                  <Form>
-                    <div className="mb-4 ">
-                      <div className="inline">
-                        <div className="">
-                          <label className="font-semibold text-[#053219]  text-sm  mb-1  ">
-                            Unit Details<abbr title="required"></abbr>
-                          </label>
-                        </div>
-
-                        <div className="border-t-4 rounded-xl w-16 mt-1 border-green-600"></div>
-                      </div>
-                    </div>
-
-                    {/* 2 */}
-                    <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-1">
-                      {projectDetails?.projectType?.name === 'Apartment' && (
-                        <div className="mb-3 space-y-2 w-full text-xs mt-4">
-                          <TextField
-                            label="Floor*"
-                            name="floor"
-                            type="number"
-                          />
-                        </div>
-                      )}
-                      <div className="mb-3 space-y-2 w-full text-xs mt-4">
-                        <TextField
-                          label="unit no*"
-                          name="unit_no"
-                          type="text"
-                        />
-                      </div>
-                      <div className="mb-3 space-y-2 w-full text-xs mt-4">
-                        <TextField
-                          label="Rate/Sqft *"
-                          name="sqft_rate"
-                          type="number"
-                        />
-                      </div>
-                    </div>
-                    {/* 3 */}
-                    <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-">
-                      {projectDetails?.projectType?.name === 'Apartment' && (
-                        <div className="w-full flex flex-row mb-3">
-                          <CustomSelect
-                            name="bedRooms"
-                            label="BedRooms*"
-                            className="input mt-"
-                            onChange={(value) => {
-                              formik.setFieldValue('bedRooms', value.value)
-                            }}
-                            value={formik.values.bedRooms}
-                            options={unitTypeList}
-                          />
-                          <CustomSelect
-                            name="bathrooms"
-                            label="Bathrooms"
-                            className="input ml-4"
-                            onChange={(value) => {
-                              formik.setFieldValue('bathrooms', value.value)
-                            }}
-                            value={formik.values.bathrooms}
-                            options={bathTypeList}
-                          />
-                        </div>
-                      )}
-
-                      {projectDetails?.projectType?.name != 'Apartment' && (
-                        <div className="mb-3 space-y-2 w-full text-xs mt-">
-                          <TextField label="Area*" name="area" type="number" />
-                        </div>
-                      )}
-
-                      <div className="w-full flex flex-col mb-3">
-                        <CustomSelect
-                          name="facing"
-                          label="Facing*"
-                          className="input mt-"
-                          onChange={(value) => {
-                            formik.setFieldValue('facing', value.value)
-                          }}
-                          value={formik.values.facing}
-                          // options={aquaticCreatures}
-                          options={facingTypeList}
-                        />
-                      </div>
-                    </div>
-                    {/* 4 */}
-                    {projectDetails?.projectType?.name === 'Apartment' && (
-                      <>
-                        <div className="mt-8">
-                          <label className="font-semibold text-[#053219]  text-sm  mb-1  ">
-                            More Details<abbr title="required">*</abbr>
-                          </label>
-                        </div>
-                        <div className="border-t-4 rounded-xl w-16 mt-1  border-green-600"></div>
-                        <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-6">
-                          <div className="mb-3 space-y-2 w-full text-xs mt-">
-                            <TextField
-                              label="Carpet Area*"
-                              name="carpet_area"
-                              type="number"
-                            />
+                              <span className="ml-2 mt-[1px] ">
+                                <label className="font-semibold text-[#053219]  text-[18px]  mb-1  ">
+                                  {title}
+                                  <abbr title="required"></abbr>
+                                </label>
+                              </span>
+                            </section>
                           </div>
 
-                          <div className="mb-3 space-y-2 w-full text-xs mt-">
-                            <TextField
-                              label="Build Up Area*"
-                              name="buildup_area"
-                              type="number"
-                            />
-                          </div>
 
-                          <div className="mb-3 space-y-2 w-full text-xs mt-">
-                            <TextField
-                              label="Super Build Up Area*"
-                              name="super_build_up_area"
-                              type="number"
-                            />
-                          </div>
                         </div>
-                      </>
-                    )}
+                      </div>
 
-                    {/* 6 */}
+                      <section className="my-10 mx-3  my-4 mt-4">
+                        <section className="mt-1 px-4 rounded-lg bg-white border border-gray-100 shadow">
+                          <section className="flex flex-row  pt-2 ">
+                          <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
+                            <span className="ml-1 leading-[15px] ">
+                              <label className="font-semibold text-[#053219]  text-[13px] leading-[15px] mb-1  ">
+                                Unit<abbr title="required"></abbr>
+                              </label>
+                            </span>
+                          </section>
+                          <div className="md:flex flex-row md:space-x-4 w-full text-xs  ">
+                            <div className=" space-y-2 w-full text-xs mt-2">
+                              <TextField
+                                label="Unit no*"
+                                name="unit_no"
+                                type="text"
+                              />
+                            </div>
+                            <div className="space-y-2 w-full text-xs mt-2">
+                              <TextField
+                                label="Area Sqft*"
+                                name="area"
+                                type="number"
+                              />
+                            </div>
 
-                    <div className="mb-8">
-                      <p className="text-xs text-red-400 text-right my-3">
-                        <abbr title="Required field">*</abbr> fields are
-                        mandatory
-                      </p>
-                      {formMessage === 'Saved Successfully..!' && (
-                        <p className=" flex text-md text-slate-800 text-right my-3">
-                          <img
-                            className="w-[40px] h-[40px] inline mr-2"
-                            alt=""
-                            src="/ok.gif"
-                          />
-                          <span className="mt-2">{formMessage}</span>
+                            <div className=" space-y-2 w-full text-xs mt-2">
+                              <TextField
+                                label="Rate per Sqft *"
+                                name="sqft_rate"
+                                type="number"
+                              />
+                            </div>
+                            <div className="space-y-2 w-full text-xs mt-2">
+                              <TextField
+                                label="PLC per sqft*"
+                                name="plc_per_sqft"
+                                type="number"
+                              />
+                            </div>
+                          </div>
+                        </section>
+
+                        <section className="mt-1 px-4 rounded-lg bg-white border border-gray-100 shadow">
+                          <section className="flex flex-row  pt-2 ">
+                          <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
+                            <span className="ml-1 leading-[15px] ">
+                              <label className="font-semibold text-[#053219]  text-[13px] leading-[15px] mb-1  ">
+                                Facing<abbr title="required"></abbr>
+                              </label>
+                            </span>
+                          </section>
+                          <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-2 ">
+                            <div className="mb-3 space-y-2 w-full text-xs mt-">
+                              <TextField
+                                label="Size*"
+                                name="size"
+                                type="text"
+                              />
+                            </div>
+                            <div className="mb-3 space-y-2 w-full text-xs mt-">
+                              <TextField
+                                label="Unit Dimension*"
+                                name="unit_d"
+                                type="text"
+                              />
+                            </div>
+                            <div className="w-full flex flex-col mb-3">
+                              <CustomSelect
+                                name="facing"
+                                label="Facing*"
+                                className="input mt-"
+                                onChange={(value) => {
+                                  formik.setFieldValue('facing', value.value)
+                                }}
+                                value={formik.values.facing}
+                                // options={aquaticCreatures}
+                                options={facingTypeList}
+                              />
+
+                            </div>
+                          </div>
+                        </section>
+
+                        <section className="mt-1 px-4 rounded-lg bg-white border border-gray-100 shadow">
+                          <section className="flex flex-row  pt-2 ">
+                          <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
+
+                            <span className="ml-1 leading-[15px] ">
+                              <label className="font-semibold text-[#053219]  text-[13px] leading-[15px] mb-1  ">
+                                Dimensions<abbr title="required"></abbr>
+                              </label>
+                            </span>
+                          </section>
+                          <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-2 ">
+                            <div className="mb-3 space-y-2 w-full text-xs mt-">
+                              <TextField
+                                label="East"
+                                name="east_d"
+                                type="text"
+                              />
+                            </div>
+                            <div className="mb-3 space-y-2 w-full text-xs">
+                              <TextField
+                                label="West"
+                                name="west_d"
+                                type="text"
+                              />
+                            </div>
+
+                            {projectDetails?.projectType?.name !=
+                              'Apartment' && (
+                              <div className="mb-3 space-y-2 w-full text-xs ">
+                                <TextField
+                                  label="North"
+                                  name="north_d"
+                                  type="number"
+                                />
+                              </div>
+                            )}
+                            <div className="mb-3 space-y-2 w-full text-xs ">
+                              <TextField
+                                label="South"
+                                name="south_d"
+                                type="number"
+                              />
+                            </div>
+                            <div className="mb-3 space-y-2 w-full text-xs mt-">
+                              <TextField
+                                label="East-West"
+                                name="east_west_d"
+                                type="number"
+                              />
+                            </div>
+                            <div className="mb-3 space-y-2 w-full text-xs">
+                              <TextField
+                                label="North-South"
+                                name="north_south_d"
+                                type="number"
+                              />
+                            </div>
+                          </div>
+                        </section>
+
+                        <section className="mt-1 px-4 rounded-lg bg-white border border-gray-100 shadow">
+                          <section className="flex flex-row  pt-2 ">
+                          <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
+
+                            <span className="ml-1 leading-[15px] ">
+                              <label className="font-semibold text-[#053219]  text-[13px] leading-[15px] mb-1  ">
+                                Schedule<abbr title="required"></abbr>
+                              </label>
+                            </span>
+                          </section>
+                          <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-2 ">
+                            <div className="mb-3 space-y-2 w-full text-xs mt-">
+                              <TextField
+                                label="East by"
+                                name="east_sch_by"
+                                type="text"
+                              />
+                            </div>
+                            <div className="mb-3 space-y-2 w-full text-xs">
+                              <TextField
+                                label="West by"
+                                name="west_sch_by"
+                                type="text"
+                              />
+                            </div>
+                            <div className="mb-3 space-y-2 w-full text-xs ">
+                              <TextField
+                                label="North by"
+                                name="north_sch_by"
+                                type="text"
+                              />
+                            </div>
+
+                            <div className="mb-3 space-y-2 w-full text-xs ">
+                              <TextField
+                                label="South by"
+                                name="south_sch_by"
+                                type="text"
+                              />
+                            </div>
+                          </div>
+                        </section>
+
+                        <section className="mt-1 px-4 rounded-lg bg-white border border-gray-100 shadow">
+                          <section className="flex flex-row  pt-2 ">
+                          <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
+
+                            <span className="ml-1 leading-[15px] ">
+                              <label className="font-semibold text-[#053219]  text-[13px] leading-[15px] mb-1  ">
+                                Status<abbr title="required"></abbr>
+                              </label>
+                            </span>
+                          </section>
+                          <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-2">
+                            <div className="w-full flex flex-col mb-3">
+                              <CustomSelect
+                                name="status"
+                                label="Status*"
+                                className="input mt-"
+                                onChange={(value) => {
+                                  formik.setFieldValue('status', value.value)
+                                }}
+                                value={formik.values.status}
+                                // options={aquaticCreatures}
+                                options={statusList}
+                              />
+                            </div>
+                            <div className="w-full flex flex-col mb-3">
+                              <CustomSelect
+                                name="release_status"
+                                label="Release Status*"
+                                className="input mt-"
+                                onChange={(value) => {
+
+                                  formik.setFieldValue(
+                                    'release_status',
+                                    value.value
+                                  )
+                                }}
+                                value={formik.values.release_status}
+                                // options={aquaticCreatures}
+                                options={releaseStausList}
+                              />
+                            </div>
+                          </div>
+                          <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-1">
+                            <div className="w-full flex flex-col mb-3 mt-1">
+                              <CustomSelect
+                                name="mortgage_type"
+                                label="Mortgage Type*"
+                                className="input mt-"
+                                onChange={(value) => {
+                                  formik.setFieldValue(
+                                    'mortgage_type',
+                                    value.value
+                                  )
+                                }}
+                                value={formik.values.mortgage_type}
+                                // options={aquaticCreatures}
+                                options={mortgageType}
+                              />
+                            </div>
+                          </div>
+                        </section>
+
+                        <section className="mt-1 px-4 rounded-lg bg-white border border-gray-100 shadow">
+                          <section className="flex flex-row  pt-2 ">
+                          <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
+
+                            <span className="ml-1 leading-[15px] ">
+                              <label className="font-semibold text-[#053219]  text-[13px] leading-[15px] mb-1  ">
+                                Additonal Details<abbr title="required"></abbr>
+                              </label>
+                            </span>
+                          </section>
+                          <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-2 ">
+                            <div className=" space-y-2 w-full text-xs ">
+                              <TextField
+                                label="Survey No"
+                                name="survey_no"
+                                type="text"
+                              />
+                            </div>
+                            <div className=" space-y-2 w-full text-xs ">
+                              <TextField
+                                label="Katha No"
+                                name="Katha_no"
+                                type="text"
+                              />
+                            </div>
+                            <div className=" space-y-2 w-full text-xs ">
+                              <TextField
+                                label="PID No"
+                                name="PID_no"
+                                type="text"
+                              />
+                            </div>
+                          </div>
+                        </section>
+                      </section>
+                      {/* 6 */}
+
+                      <div className="mb-8 mx-7">
+                        <p className="text-xs text-red-400 text-right my-3">
+                          <abbr title="Required field">*</abbr> fields are
+                          mandatory
                         </p>
-                      )}
-                      {formMessage === 'Unit Already Exists' && (
-                        <p className=" flex text-md text-pink-800 text-right my-3">
-                          <img
-                            className="w-[40px] h-[40px] inline mr-2"
-                            alt=""
-                            src="/error.gif"
-                          />
-                          <span className="mt-2">{formMessage}</span>
-                        </p>
-                      )}
-                      <div className="mt-5 mt-8 text-right md:space-x-3 md:block flex flex-col-reverse">
-                        <button
-                          className="mb-4 md:mb-0 bg-white px-5 py-2 text-sm shadow-sm font-medium tracking-wider border text-gray-600 rounded-sm hover:shadow-lg hover:bg-gray-100"
-                          type="reset"
-                          onClick={() => resetter()}
-                        >
-                          Reset
-                        </button>
-                        <button
-                          className="mb-2 md:mb-0 bg-green-700 px-5 py-2 text-sm shadow-sm font-medium tracking-wider text-white  rounded-sm hover:shadow-lg hover:bg-green-500"
-                          type="submit"
-                          disabled={loading}
-                        >
-                          {loading && <Loader />}
-                          Add Unit
-                        </button>
+                        {formMessage === 'Saved Successfully..!' && (
+                          <p className=" flex text-md text-slate-800 text-right my-3">
+                            <img
+                              className="w-[40px] h-[40px] inline mr-2"
+                              alt=""
+                              src="/ok.gif"
+                            />
+                            <span className="mt-2">{formMessage}</span>
+                          </p>
+                        )}
+                        {formMessage === 'Unit Already Exists' && (
+                          <p className=" flex text-md text-pink-800 text-right my-3">
+                            <img
+                              className="w-[40px] h-[40px] inline mr-2"
+                              alt=""
+                              src="/error.gif"
+                            />
+                            <span className="mt-2">{formMessage}</span>
+                          </p>
+                        )}
+                        <div className="mt-5 mt-8 text-right md:space-x-3 md:block flex flex-col-reverse">
+                          <button
+                            className="mb-4 md:mb-0 bg-white px-5 py-2 text-sm shadow-sm font-medium tracking-wider border text-gray-600 rounded-sm hover:shadow-lg hover:bg-gray-100"
+                            type="reset"
+                            onClick={() => resetter()}
+                          >
+                            Reset
+                          </button>
+                          <button
+                            className="mb-2 md:mb-0 bg-gradient-to-r from-indigo-400 to-cyan-400 px-5 py-2 text-sm shadow-sm font-medium tracking-wider text-white  rounded-sm hover:shadow-lg hover:bg-green-500"
+                            type="submit"
+                            disabled={loading}
+                          >
+                            {loading && <Loader />}
+                            {title === 'Edit Plot' ? 'Edit Unit' : 'Add Unit'}
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  </Form>
+                    </Form>
+                  </section>
                 </div>
               )}
             </Formik>
           </div>
         </div>
+
+        <div className="flex flex-col  my-10 rounded-lg bg-white border border-gray-100 px-4 m-4 mt-4"></div>
       </div>
     </div>
   )

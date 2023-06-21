@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 
 import { useAuth } from 'src/context/firebase-auth-context'
+import { prettyDate, timeConv, prettyDateTime } from 'src/util/dateConverter'
 
 const CrmUnitFinanceHistory = ({
   selCustomerPayload,
@@ -25,60 +26,77 @@ const CrmUnitFinanceHistory = ({
               <thead>
                 {' '}
                 <tr className=" h-6 border-b-[0.2px] border-gray-300">
-                  <th className="w-[8%] text-[10px] text-left text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
+                  <th className="w-[12%] text-[10px] text-left text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
                     Paid On
+                  </th>
+                  <th className="w-[8%] text-[10px] text-center text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
+                    Mode
+                  </th>
+                  <th className="w-[15%] text-[10px] text-center text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
+                    Bank Ref Id
                   </th>
                   <th className="w-[10%] text-[10px] text-right text-gray-400  text-[#8993a4] font-bodyLato tracking-wide uppercase">
                     Amount
                   </th>
-                  <th className="w-[10%] text-[10px] text-right text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
+                  <th className="w-[10%] text-[10px] text-center text-gray-400  text-[#8993a4] font-bodyLato tracking-wide uppercase">
+                    Event
+                  </th>
+                  <th className="w-[10%] text-[10px] text-center text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
                     Status
                   </th>
-                  <th className="w-[15%] text-[10px] text-right text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
-                    Ref Id
-                  </th>
+
                   <th className="w-[8%] text-[10px] text text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
                     From
                   </th>
                   <th className="w-[15%] text-[10px] text text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
                     To
                   </th>
-                  <th className="w-[15%] text-[10px] text-right text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
+                  <th className="w-[15%] text-[10px] text-center text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
                     Tx Id
                   </th>
-                  <th className="w-[15%] text-[10px] text-right text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
-                    Reviewed by
+                  <th className="w-[15%] text-[10px] text-center text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
+                    Reviewer
                   </th>
                 </tr>
               </thead>
 
               <tbody>
                 {unitTransactionsA?.map((d1, inx) => {
-                  totalIs =
-                    selCustomerPayload?.[`${assets[0]}_T_review`] - d1?.value
+                  totalIs = 0
+                    // selCustomerPayload?.[`${assets[0]}_T_review`] - d1?.value
                   return (
                     <tr key={inx} className="border-b-[0.05px] border-gray-300">
                       <th className=" text-[10px] text-left text-gray-700 ">
-                        {d1?.dated}
+                        {timeConv(d1?.txt_dated ||d1?.dated).toLocaleString() }
                       </th>
-                      <td className="text-[10px] text-right text-gray-700 ">
-                        {d1?.amount.toLocaleString('en-IN')}
-                      </td>
-
-                      <td className="text-[10px] text-right text-gray-800 ">
-                        {d1?.status}
-                      </td>
-                      <td className="text-[10px] text-right text-gray-800 ">
-                        {d1?.chequeno}
-                      </td>
                       <td className="text-[10px] text-center  text-gray-800 ">
                         {d1?.mode}
                       </td>
                       <td className="text-[10px] text-center text-gray-800 ">
-                        {d1?.builderName}
+                        {d1?.bank_ref || d1?.chequeno}
                       </td>
-                      <td className="text-[10px] text-right text-gray-800 ">
+                      <td className="text-[10px] text-right text-gray-700 ">
+                        {d1?.totalAmount?.toLocaleString('en-IN') || d1?.amount?.toLocaleString('en-IN')}
+                      </td>
+                      <td className="text-[10px] text-center text-gray-800 ">
+                        {d1?.payReason}
+                      </td>
+
+                      <td className="text-[10px] text-center text-gray-800 ">
+                        {d1?.status}
+                      </td>
+
+                      <td className="text-[10px] text-center text-gray-800 ">
+                        {d1?.customerName}
+                      </td>
+                      <td className="text-[10px] text-center text-gray-800 ">
+                        {d1?.towards ||d1?.builderName}
+                      </td>
+                      <td className="text-[10px] text-center text-gray-800 ">
                         {d1?.created}
+                      </td>
+                      <td className="text-[10px] text-center text-gray-800 ">
+                        {d1?.Reviewer || "NA"}
                       </td>
                     </tr>
                   )

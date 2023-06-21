@@ -758,7 +758,7 @@ const ExecutiveHomeViewerPage = ({ leadsTyper, isClicked, setIsClicked }) => {
                     <CalendarMonthTwoToneIcon className="mr-1 mt-[2px]" />
                     <span className="inline">
                       <DatePicker
-                        className="z-10 pl- py-1 rounded-[4px] min-h-[30px] inline text-xs text-[#0091ae] bg-white cursor-pointer min-w-[170px] border-l-[#cccccc]"
+                        className="z-[11] pl- py-1 rounded-[4px] min-h-[30px] inline text-xs text-[#0091ae] bg-white cursor-pointer min-w-[170px] border-l-[#cccccc]"
                         // selected={cutOffDate}
                         // onChange={(date) => setCutOffDate(date)}
                         // calendarContainer={MyContainer(setIsOpened)}
@@ -994,6 +994,7 @@ const ExecutiveHomeViewerPage = ({ leadsTyper, isClicked, setIsClicked }) => {
         unitsViewMode={unitsViewMode}
         setUnitsViewMode={setUnitsViewMode}
         setIsClicked={setIsClicked}
+
       />
     </>
   )

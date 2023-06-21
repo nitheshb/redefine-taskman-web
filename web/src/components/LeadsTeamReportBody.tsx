@@ -4053,7 +4053,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
             setCustomerDetails={setCustomerDetails}
             setisImportLeadsOpen={setisImportLeadsOpen}
             leadsLogsPayload={drillDownPayload}
-            widthClass="max-w-5xl" unitsViewMode={undefined} setIsClicked={undefined}          />
+            widthClass="max-w-7xl" unitsViewMode={undefined} setIsClicked={undefined}          />
 
           <SiderForm
             open={isImportLeadsOpen}

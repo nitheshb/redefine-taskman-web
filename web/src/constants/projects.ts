@@ -170,6 +170,11 @@ export const sourceListItems = [
     value: 'adventures',
     rep: ['adventures', 'Adventures'],
   },
+  {
+    label: 'Aurum Analytica',
+    value: 'aurumanalytica',
+    rep: ['aurumanalytica'],
+  },
   { label: 'CP Skagen', value: 'cpskagen', rep: ['cpskagen'] },
   { label: 'Direct Contact', value: 'directcontact', rep: ['directcontact'] },
   {
@@ -189,6 +194,11 @@ export const sourceListItems = [
     value: 'instagramad',
     rep: ['instagramad', 'Instagram', 'instagram', 'ig'],
   },
+  {
+    label: 'Landing Page',
+    value: 'landingpage',
+    rep: ['landingpage'],
+  },
   { label: 'Live Chat', value: 'Live Chat', rep: ['Live Chat', 'Livechat'] },
   {
     label: 'Magic Bricks',
@@ -202,6 +212,7 @@ export const sourceListItems = [
     ],
   },
   { label: 'MCube', value: 'mcube', rep: ['mcube', 'Mcube'] },
+  { label: 'MyGate', value: 'mygate', rep: ['MyGate', 'Mygate'] },
   {
     label: 'News Paper',
     value: 'newspaper',
@@ -257,8 +268,8 @@ export const paymentMode = [
     label: 'Rtgs',
   },
   {
-    value: 'acre',
-    label: 'Acre',
+    value: 'online',
+    label: 'Online',
   },
 ]
 export const areaConversions = [
@@ -338,6 +349,14 @@ export const costSheetAdditionalChargesA = [
   {
     value: 'carparking',
     label: 'Car Parking',
+  },
+  {
+    value: 'clubhouse_charges',
+    label: 'Club House Charges',
+  },
+  {
+    value: 'clubhouse_membership',
+    label: 'Club House Membership',
   },
 
   {

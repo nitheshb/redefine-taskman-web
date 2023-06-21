@@ -1,5 +1,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React from 'react'
+import { ErrorMessage } from 'formik'
+
 import createClass from 'create-react-class'
 import PropTypes from 'prop-types'
 import Select from 'react-select'
@@ -230,8 +232,13 @@ export const MultiSelectMultiLineField = ({
         components={{ Option: MyOption }}
         value={defaultValue(options, value)}
         valueComponent={GravatarValue}
-        className="text-sm  mt-1"
+        className="text-sm  mt-1 border-none"
       />
+        <ErrorMessage
+          component="div"
+          name={name}
+          className="error-message text-red-700 text-xs p-1 mx-auto"
+        />
     </div>
     // <div>
     //   <label className="label font-regular text-sm mb-2">{label}</label>

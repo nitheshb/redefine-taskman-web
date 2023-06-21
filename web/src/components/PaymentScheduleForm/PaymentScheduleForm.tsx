@@ -45,11 +45,13 @@ const PaymentScheduleForm = ({ title, data, source, blocksViewFeature }) => {
   }, [source, data, tableData])
   useEffect(() => {
     const { phase } = data
-    const { paymentScheduleObj, ConstructPayScheduleObj } = phase
+
+    const { paymentScheduleObj, ConstructPayScheduleObj } =
+      phase
     const x =
       blocksViewFeature === 'Construction_Payment_Schedule'
-        ? ConstructPayScheduleObj
-        : paymentScheduleObj
+        ? ConstructPayScheduleObj || data?.phase?.phase?.ConstructPayScheduleObj
+        : paymentScheduleObj || data?.phase?.phase?.paymentScheduleObj
 
     setTableData(x)
     console.log('payment', paymentScheduleObj)
@@ -286,6 +288,7 @@ const PaymentScheduleForm = ({ title, data, source, blocksViewFeature }) => {
     setErrorMessages([])
     const errorList = errors(newData, false)
     if (errorList.length < 1) {
+      console.log('data ai s', newData, data, data?.phase?.phase)
       const { projectId, uid } = data?.phase || {}
       const update = {
         ...newData,
@@ -294,7 +297,7 @@ const PaymentScheduleForm = ({ title, data, source, blocksViewFeature }) => {
       // await createPayment(update, enqueueSnackbar)
       await addPhasePaymentScheduleCharges(
         orgId,
-        uid,
+        uid || data?.phase?.phase?.uid,
         update,
         blocksViewFeature === 'Construction_Payment_Schedule'
           ? 'ConstructPayScheduleObj'

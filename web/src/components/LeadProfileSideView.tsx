@@ -21,6 +21,9 @@ import {
   EyeIcon,
   ViewBoardsIcon,
   ViewGridIcon,
+  ArrowDownIcon,
+  ArrowUpIcon,
+  AdjustmentsIcon,
   XIcon,
 } from '@heroicons/react/solid'
 import { SelectorIcon, DownloadIcon } from '@heroicons/react/solid'
@@ -92,7 +95,7 @@ import StatusDropComp from './statusDropComp'
 import AssigedToDropComp from './assignedToDropComp'
 import Loader from './Loader/Loader'
 import ProjPhaseHome from './ProjPhaseHome/ProjPhaseHome'
-import AddBookingForm from './bookingForm'
+import AddApplicantDetails from './AddApplicantDetails'
 
 import { useSnackbar } from 'notistack'
 import { async } from '@firebase/util'
@@ -234,7 +237,7 @@ const ddMy =
   'Y' +
   todaydate.getFullYear()
 
-export default function CustomerProfileSideView({
+export default function LeadProfileSideView({
   openUserProfile,
   customerDetails,
   unitViewerrr,
@@ -254,6 +257,8 @@ export default function CustomerProfileSideView({
   const [tempLeadStatus, setLeadStatus] = useState('')
   const [assignerName, setAssignerName] = useState('')
   const [assignedTo, setAssignedTo] = useState('')
+  const [timeHide, setTimeHide] = useState(false)
+
   const [optionvalues, setoptionvalues] = useState({
     budget: '',
     bstr: 0,
@@ -343,6 +348,7 @@ export default function CustomerProfileSideView({
     id,
     Name,
     Project,
+    projectType,
     ProjectId,
     Source,
     // Status,
@@ -386,6 +392,23 @@ export default function CustomerProfileSideView({
     //   get lead data by id
     streamLeadDataFun()
   }, [])
+
+  useEffect(() => {
+    //   get project Id
+    // add project details
+
+    // projectList
+    console.log('my stuff ', selProjectIs?.uid, ProjectId)
+
+    const z = projectList.filter((da) => {
+      return da.uid == (selProjectIs?.uid || ProjectId)
+    })
+    const z1 = {
+      ...z[0],
+    }
+    setSelProjectIs(z1)
+    console.log('my stuff ', z, selProjectIs, z1, ProjectId)
+  }, [projectList, customerDetails])
 
   useEffect(() => {
     const { schTime } = addTaskCommentObj
@@ -463,11 +486,12 @@ export default function CustomerProfileSideView({
   useEffect(() => {
     setAssignedTo(customerDetails?.assignedTo)
     setAssignerName(customerDetails?.assignedToObj?.label)
-    setSelProjectIs({ projectName: Project, uid: ProjectId })
+    // setSelProjectIs({ projectName: Project, uid: ProjectId })
     setStatusTimeLineA(
       [...statusTimeLineA, ...(customerDetails?.coveredA?.a || [])] || ['new']
     )
 
+    console.log('project o', projectType)
     // setLeadStatus(Status)
   }, [customerDetails])
   // adopt this
@@ -669,9 +693,13 @@ export default function CustomerProfileSideView({
 
   const setShowNotInterestedFun = (scheduleData, value) => {
     setSelSchGrpO(scheduleData)
+
     cancelResetStatusFun()
+
     setLeadStatus('notinterested')
+
     setShowVisitFeedBackStatus(false)
+
     setShowNotInterested(true)
 
     // setFeature('appointments')
@@ -1392,6 +1420,7 @@ export default function CustomerProfileSideView({
   }
   const initialState1 = {
     notesText: '',
+    source: '',
   }
   const validateSchema1 = Yup.object({
     notesText: Yup.string()
@@ -1403,6 +1432,7 @@ export default function CustomerProfileSideView({
   }
   const initialCommentState = {
     commentTitle: addCommentTitle || '',
+    source: '',
   }
   const validateCommentsSchema = Yup.object({
     commentTitle: Yup.string()
@@ -1528,146 +1558,126 @@ export default function CustomerProfileSideView({
     <div
       className={`bg-white   h-screen    ${openUserProfile ? 'hidden' : ''} `}
     >
-      <div className="">
+      {/* <div className="">
         <div className="p-3 flex justify-between">
           <span className="text-md mt-1 font-semibold font-Playfair text-xl mr-auto ml-2 text-[#053219] tracking-wide">
             Lead Details
           </span>
-          {/* <XIcon className="w-5 h-5 mt-[2px]" /> */}
+          <XIcon className="w-5 h-5 mt-[2px]" />
         </div>
-      </div>
+      </div> */}
       <div className="h-screen overflow-y-auto">
-        <div className=" pb-[2px] px-3 m-4 mt-0 rounded-xs  mb-1  bg-[#F2F5F8]">
-          <div className="-mx-3 flex  sm:-mx-4 px-3">
-            <div className="w-full px-3 sm:px-4 xl:w-4/12  ">
+        <div className=" pb-[2px] px-3  mt-0 rounded-xs  bg-[#F2F5F8]">
+          <div className="-mx-3 flex  sm:-mx-4 px-3 flex justify-between">
+            <div className="w-full pl-1 pt-[2px] xl:w-4/12  ">
               <div className="">
                 <div className="font-semibold text-[#053219]  text-sm  mt-3 mb-1  tracking-wide font-bodyLato">
-                  <span className="mb-[4px] text-xl uppercase">{Name}</span>
-
-                  <div className="mt-1">
-                    <div className="font-md text-sm text-gray-500 mb-[2] tracking-wide">
-                      <MailIcon className="w-4 h-4 inline text-[#058527] " />{' '}
-                      {Email}
-                    </div>
-                    <div className="font-md text-sm text-gray-500 mb-[2] tracking-wide ">
-                      <DeviceMobileIcon className="w-4 h-4 inline text-[#058527] " />{' '}
-                      {Mobile?.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3')}
+                  <div className="flex flex-row">
+                    {/* <div className="w-7 h-7 mt-[3px] rounded-full bg-gradient-to-r from-violet-200 to-pink-200 "></div> */}
+                    <div className="flex flex-col ml-[6px]">
+                      <div className=" flex flex-row">
+                        <span className="  text-[16px] uppercase">{Name}</span>
+                        <div className=" text-sm  ml-[4px]  px-[3px] pt-[px] rounded  text-[#FF8C02] ">
+                          {currentStatusDispFun(leadDetailsObj?.Status)}{' '}
+                        </div>
+                      </div>
+                      <div className="flex flex-row">
+                        <div className="font-md text-sm text-gray-500 mb-[2] tracking-wide ">
+                          <DeviceMobileIcon className="w-3 h-3 inline text-[#058527] " />{' '}
+                          <span className="mr-[2px] mt-[1px] text-[12px]">
+                            {Mobile?.replace(
+                              /(\d{3})(\d{3})(\d{4})/,
+                              '$1-$2-$3'
+                            )}
+                          </span>
+                        </div>
+                        <div className="font-md text-sm text-gray-500 mb-[2] ml-[6px] tracking-wide">
+                          <MailIcon className="w-3 h-3 inline text-[#058527] " />{' '}
+                          {Email}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="w-full px-1  xl:w-8/12 mt-1 mb-1 bg-white  pl-3 pt-2 ">
-              <div className="relative z-10 my-1 bg-white">
-                <div className="grid grid-cols-3 gap-5">
-                  <section className="">
-                    <div
-                      className="flex flex-row  cursor-pointer"
-                      onClick={() => setUnitsViewMode(!unitsViewMode)}
-                    >
-                      <div className="font-md text-xs text-gray-500 mb-[2px] tracking-wide mr-4">
-                        Project {}
-                      </div>
-                      {selProjectIs?.uid?.length > 4 &&
-                        (unitsViewMode ? (
-                          <XIcon
-                            className="h-4 w-4 mr-1 mb-[2px] inline text-blue-600"
-                            aria-hidden="true"
-                          />
-                        ) : (
-                          // <ViewGridIcon
-                          //   className="h-4 w-4 mr-1 mb-[2px] inline text-blue-600"
-                          //   aria-hidden="true"
-                          // />
-                          <span className="px-[3px] py-[1px]  text-[#FF8C02] hover:border-b-1 hover:border-[#FF8C02] text-[10px] text-[#] font-semibold">
-                            {' '}
-                            View Units
-                          </span>
-                        ))}
-                    </div>
-                    <div className="font-semibold text-sm text-slate-900 tracking-wide overflow-ellipsis">
-                      {/* {Project} */}
-                      {/* projectList */}
+            <div className=" px-1 mt-[10px] mb-1 bg-white rounded shadow pl-3 py-2 ">
+              <div className="flex flex-row ">
+                <section>
+                  <div className="font-md text-xs text-gray-500 mb-[px] tracking-wide mr-4">
+                    Assigned To {}
+                  </div>
+                  {!user?.role?.includes(USER_ROLES.CP_AGENT) && (
+                    <div>
                       <AssigedToDropComp
-                        assignerName={selProjectIs?.projectName || Project}
+                        assignerName={assignerName}
                         id={id}
-                        align="right"
-                        setAssigner={setNewProject}
-                        usersList={projectList}
+                        setAssigner={setAssigner}
+                        usersList={usersList}
+                        align={undefined}
                       />
                     </div>
-                  </section>
-
-                  <section>
-                    <div className="font-md text-xs text-gray-500 mb-[px] tracking-wide mr-4">
-                      Assigned To {}
+                  )}
+                  {user?.role?.includes(USER_ROLES.CP_AGENT) && (
+                    <span className="text-left text-sm"> {assignerName}</span>
+                  )}
+                </section>
+                <section className=" ml-2">
+                  <div className="flex flex-row ">
+                    <div className="font-md text-xs text-gray-500 mb-[2px] tracking-wide mr-4">
+                      Project {}
                     </div>
-                    {!user?.role?.includes(USER_ROLES.CP_AGENT) && (
-                      <div>
-                        <AssigedToDropComp
-                          assignerName={assignerName}
-                          id={id}
-                          setAssigner={setAssigner}
-                          usersList={usersList}
-                          align={undefined}
-                        />
+                  </div>
+                  <div className="font-semibold text-sm text-slate-900 tracking-wide overflow-ellipsis">
+                    {/* {Project} */}
+                    {/* projectList */}
+                    <AssigedToDropComp
+                      assignerName={selProjectIs?.projectName || Project}
+                      id={id}
+                      align="right"
+                      setAssigner={setNewProject}
+                      usersList={projectList}
+                    />
+                  </div>
+                </section>
+                <section>
+                  <div>
+                    <div className="text-center items-center mr-2 mt-[1px]">
+                      <div
+                        className="text-center p-[10px] bg-gradient-to-r from-violet-200 to-pink-200 text-black rounded-3xl items-center align-middle text-xs cursor-pointer hover:underline"
+                        onClickCapture={() => {
+                          setUnitsViewMode(!unitsViewMode)
+                        }}
+                      >
+                        {selProjectIs?.uid?.length > 4 &&
+                          (unitsViewMode ? (
+                            // <XIcon
+                            //   className="h-4 w-4  inline text-white"
+                            //   aria-hidden="true"
+                            // />
+                            <span className="px-[3px]   text-black  text-[10px] text-[#] font-semibold">
+                              {' '}
+                              Show Lead
+                            </span>
+                          ) : (
+                            // <ViewGridIcon
+                            //   className="h-4 w-4 mr-1 mb-[2px] inline text-blue-600"
+                            //   aria-hidden="true"
+                            // />
+                            <span className="px-[3px]   text-white-300  text-[10px] text-[#] font-semibold">
+                              {' '}
+                              Quotation
+                            </span>
+                          ))}
                       </div>
-                    )}
-                    {user?.role?.includes(USER_ROLES.CP_AGENT) && (
-                      <span className="text-left text-sm"> {assignerName}</span>
-                    )}
-                  </section>
-                  <section>
-                    <div className="font-md text-xs text-gray-500 mb-[0px] tracking-wide mr-4">
-                      Current Status {}
                     </div>
-                    <div className="font-semibold text-[#053219] text-sm  mt- px-[3px] pt-[2px] rounded ">
-                      {currentStatusDispFun(leadDetailsObj?.Status)}{' '}
-                      {/* {leadDetailsObj?.Status != tempLeadStatus
-                        ? `--> ${' '}${tempLeadStatus}`
-                        : ''} */}
-                    </div>
-                  </section>
-                </div>
-                <div className="w-full border-b border-[#ebebeb] mt-4"></div>
-                <div className=" w-full  pt-1 font-md text-xs text-gray-500 mb-[2px] tracking-wide mr-4 grid grid-cols-3 gap-5">
-                  {' '}
-                  <section>
-                    <span className="font-thin   font-bodyLato text-[9px]  py-[6px]">
-                      Created On
-                      <span className="text-[#867777] ck ml-2">
-                        {CT != undefined
-                          ? prettyDateTime(CT)
-                          : prettyDateTime(Date)}
-                      </span>
-                    </span>
-                  </section>
-                  <section>
-                    <span className="font-thin   font-bodyLato text-[9px]  py-[6px]">
-                      Updated On :
-                      <span className="text-[#867777] ck ml-2">
-                        {stsUpT === undefined
-                          ? 'NA'
-                          : prettyDateTime(stsUpT) || 'NA'}
-                      </span>
-                    </span>
-                  </section>
-                  <section>
-                    <span className="font-thin text-[#867777]   font-bodyLato text-[9px]  py-[6px]">
-                      Assigned On
-                      <span className="text-[#867777] ck ml-2">
-                        {assignT != undefined
-                          ? prettyDateTime(assignT)
-                          : prettyDateTime(Date)}
-                      </span>
-                    </span>
-                  </section>
-                </div>
+                  </div>
+                </section>
               </div>
             </div>
           </div>
           <div className="flex flex-row justify-between">
-            <div className="px-3 py-2 flex flex-row  text-xs  border-t border-[#ebebeb] font-thin   font-bodyLato text-[12px]  py-[6px] ">
+            <div className=" py-2 flex flex-row  text-xs  border-t border-[#ebebeb] font-thin   font-bodyLato text-[12px]  py-[6px] ">
               Recent Comments:{' '}
               <span className="text-[#867777] ml-1 ">
                 {' '}
@@ -1702,43 +1712,83 @@ export default function CustomerProfileSideView({
                   style={{ background: '#e2c062', marginRight: '12px' }}
                 ></div>
               </div>
-              <span className="font-bodyLato text-[#867777] text-xs mt-2">
-                {/* <HighlighterStyle
+              <div className=" flex flex-row ">
+                <span className="font-bodyLato text-[#867777] text-xs mt-2">
+                  {/* <HighlighterStyle
                             searchKey={searchKey}
                             source={row.Source.toString()}
                           /> */}
 
-                {Source?.toString() || 'NA'}
-              </span>
+                  {Source?.toString() || 'NA'}
+                </span>
+                <div
+                  className=" cursor-pointer hover:underline"
+                  onClickCapture={() => {
+                    setTimeHide(!timeHide)
+                  }}
+                >
+                  {selProjectIs?.uid?.length > 4 &&
+                    (timeHide ? (
+                      <XIcon
+                        className="h-4 w-4  inline text-green"
+                        aria-hidden="true"
+                      />
+                    ) : (
+                      <span className="px-[3px]  ml-1  text-[#318896]  text-[10px] text-[#] font-semibold">
+                        {' '}
+                        <AdjustmentsIcon
+                          className="h-4 w-4  inline text-[#318896] "
+                          aria-hidden="true"
+                        />
+                      </span>
+                    ))}
+                </div>
+              </div>
             </div>
           </div>
+
+          {timeHide && (
+            <>
+              <div className="w-full border-b border-[#ebebeb]"></div>
+              <div className=" w-full  pt-1 font-md text-xs text-gray-500 mb-[2px] tracking-wide mr-4 flex flex-row justify-between">
+                {' '}
+                <section>
+                  <span className="font-thin   font-bodyLato text-[9px]  py-[6px]">
+                    Created On
+                    <span className="text-[#867777] ck ml-2">
+                      {CT != undefined
+                        ? prettyDateTime(CT)
+                        : prettyDateTime(Date)}
+                    </span>
+                  </span>
+                </section>
+                <section>
+                  <span className="font-thin   font-bodyLato text-[9px]  py-[6px]">
+                    Updated On :
+                    <span className="text-[#867777] ck ml-2">
+                      {stsUpT === undefined
+                        ? 'NA'
+                        : prettyDateTime(stsUpT) || 'NA'}
+                    </span>
+                  </span>
+                </section>
+                <section>
+                  <span className="font-thin text-[#867777]   font-bodyLato text-[9px]  py-[6px]">
+                    Assigned On
+                    <span className="text-[#867777] ck ml-2">
+                      {assignT != undefined
+                        ? prettyDateTime(assignT)
+                        : prettyDateTime(Date)}
+                    </span>
+                  </span>
+                </section>
+              </div>
+            </>
+          )}
         </div>
-        {/* <div>
-          <span className="mx-[11px]">
-            <span className="font-bold text-xs">Remarks : </span>
-            <span>{Remarks}</span>
-          </span>
-        </div>
-        <div>
-          <span className="mx-[11px]">
-            <span className="font-bold text-xs">
-              Not Interested Reason : {notInterestedReason}
-            </span>
-            <span>{Remarks}</span>
-          </span>
-        </div>
-        <div>
-          <span className="mx-[11px]">
-            <span className="font-bold text-xs">
-              {' '}
-              Not Interested Notes : {notInterestedNotes}{' '}
-            </span>
-            <span>{Remarks}</span>
-          </span>
-        </div> */}
 
         <div
-          className="flex flex-row justify-between   py-3 px-3 m-4 mt-0 mb-0 rounded-xs bg-[#F2F5F8]"
+          className="flex flex-row justify-between   py-3 px-3  mt-[0.5px] mb-0 rounded-xs bg-[#F2F5F8]"
           style={{ flex: '4 0 100%' }}
         >
           {StatusListA.map((statusFlowObj, i) => (
@@ -1878,7 +1928,7 @@ export default function CustomerProfileSideView({
         )}
         {!unitsViewMode && (
           <>
-            <section className=" pb-8 py-3 px-3 m-4 mt-1 rounded-xs bg-[#F2F5F8]">
+            <section className=" pb-8 pt-1 px-2 mt-[0.5px] rounded-xs bg-[#F2F5F8]">
               <div className="">
                 <div className="">
                   {/* <div className="font-md font-medium text-xs  text-gray-800">
@@ -1894,8 +1944,8 @@ export default function CustomerProfileSideView({
                     >
                       {[
                         { lab: 'Tasks', val: 'appointments' },
-                        // { lab: 'Tasks', val: 'tasks' },
-                        { lab: 'Notes', val: 'notes' },
+                        { lab: 'Quotations', val: 'notes' },
+                        // { lab: 'Notes', val: 'notes' },
                         // { lab: 'Documents', val: 'documents' },
                         // { lab: 'Phone', val: 'phone' },
                         { lab: 'Email', val: 'email' },
@@ -2624,100 +2674,112 @@ export default function CustomerProfileSideView({
 
               {selFeature === 'appointments' && (
                 <>
-                  <div className=" h-screen ">
-                    {(showNotInterested ||
-                      showVisitFeedBackStatus ||
-                      showJunk) &&
-                      selSchGrpO?.ct === undefined && (
-                        <div className="flex flex-col pt-0 my-10 mt-[10px] rounded bg-[#FFF9F2] mx-4 p-4">
-                          {showNotInterested && (
-                            <div className="w-full flex flex-col mb-3 mt-2">
-                              <CustomSelect
-                                name="source"
-                                label={`Why  ${
-                                  customerDetails?.Name?.toLocaleUpperCase() ||
-                                  'Customer'
-                                } is  not Interested *`}
-                                className="input mt-3"
-                                onChange={(value) => {
-                                  // formik.setFieldValue('source', value.value)
-                                  setNotInterestType(value.value)
-                                }}
-                                value={notInterestType}
-                                options={notInterestOptions}
-                              />
-                            </div>
-                          )}
-                          {showJunk && (
-                            <div className="w-full flex flex-col mb-3 mt-2">
-                              <CustomSelect
-                                name="source"
-                                label={`Why customer details are Junk ?`}
-                                className="input mt-3"
-                                onChange={(value) => {
-                                  // formik.setFieldValue('source', value.value)
-                                  setJunkReason(value.value)
-                                }}
-                                value={junkReason}
-                                options={junktOptions}
-                              />
+                  <Formik
+                    initialValues={initialState1}
+                    //  validationSchema={validateSchema1}
+                    // onSubmit={(values, { resetForm }) => {
+                    //   console.log('values of form is ', values)
+                    // }}
+                  >
+                    {(formik2) => (
+                      <div className=" h-screen ">
+                        {(showNotInterested ||
+                          showVisitFeedBackStatus ||
+                          showJunk) &&
+                          selSchGrpO?.ct === undefined && (
+                            <div className="flex flex-col pt-0 my-10 mt-[10px] rounded bg-[#FFF9F2] mx-4 p-4">
+                              {showNotInterested && (
+                                <div className="w-full flex flex-col mb-3 mt-2">
+                                  <CustomSelect
+                                    name="source"
+                                    label={`Why  ${
+                                      customerDetails?.Name?.toLocaleUpperCase() ||
+                                      'Customer'
+                                    } is  not Interested *`}
+                                    className="input mt-3"
+                                    onChange={(value) => {
+                                      // formik.setFieldValue('source', value.value)
+                                      setNotInterestType(value.value)
+                                    }}
+                                    value={notInterestType}
+                                    options={notInterestOptions}
+                                  />
+                                </div>
+                              )}
+                              {showJunk && (
+                                <div className="w-full flex flex-col mb-3 mt-2">
+                                  <CustomSelect
+                                    name="source"
+                                    label={`Why customer details are Junk ?`}
+                                    className="input mt-3"
+                                    onChange={(value) => {
+                                      // formik.setFieldValue('source', value.value)
+                                      setJunkReason(value.value)
+                                    }}
+                                    value={junkReason}
+                                    options={junktOptions}
+                                  />
+                                </div>
+                              )}
+
+                              {showVisitFeedBackStatus && (
+                                <div className="w-full flex flex-col mb-3 mt-2">
+                                  <CustomSelect
+                                    name="source"
+                                    label="Sitess Visit Feedback*"
+                                    className="input mt-3"
+                                    onChange={(value) => {
+                                      // formik.setFieldValue('source', value.value)
+                                      setNotInterestType(value.value)
+                                    }}
+                                    value={notInterestType}
+                                    options={siteVisitFeedbackOptions}
+                                  />
+                                </div>
+                              )}
+
+                              {!showJunk && (
+                                <div className="  outline-none border  rounded p-4 mt-4">
+                                  <textarea
+                                    value={takNotes}
+                                    onChange={(e) =>
+                                      setNotesTitle(e.target.value)
+                                    }
+                                    placeholder="Type & make a notes"
+                                    className="w-full h-full pb-10 outline-none  focus:border-blue-600 hover:border-blue-600 rounded bg-[#FFF9F2] "
+                                  ></textarea>
+                                </div>
+                              )}
+                              <div className="flex flex-row mt-1">
+                                <button
+                                  onClick={() => notInterestedFun()}
+                                  className={`flex mt-2 rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium text-white bg-[#FF7A53]  hover:bg-gray-700  `}
+                                >
+                                  <span className="ml-1 ">Save</span>
+                                </button>
+                                <button
+                                  onClick={() => notInterestedFun()}
+                                  className={`flex mt-2 ml-4 rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium text-white bg-[#FF7A53]  hover:bg-gray-700  `}
+                                >
+                                  <span className="ml-1 ">
+                                    Save & Whats App
+                                  </span>
+                                </button>
+                                <button
+                                  // onClick={() => fSetLeadsType('Add Lead')}
+                                  onClick={() => cancelResetStatusFun()}
+                                  className={`flex mt-2 ml-4  rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium border  hover:bg-gray-700 hover:text-white  `}
+                                >
+                                  <span className="ml-1 ">Cancel</span>
+                                </button>
+                              </div>
                             </div>
                           )}
 
-                          {showVisitFeedBackStatus && (
-                            <div className="w-full flex flex-col mb-3 mt-2">
-                              <CustomSelect
-                                name="source"
-                                label="Sitess Visit Feedback*"
-                                className="input mt-3"
-                                onChange={(value) => {
-                                  // formik.setFieldValue('source', value.value)
-                                  setNotInterestType(value.value)
-                                }}
-                                value={notInterestType}
-                                options={siteVisitFeedbackOptions}
-                              />
-                            </div>
-                          )}
-
-                          {!showJunk && (
-                            <div className="  outline-none border  rounded p-4 mt-4">
-                              <textarea
-                                value={takNotes}
-                                onChange={(e) => setNotesTitle(e.target.value)}
-                                placeholder="Type & make a notes"
-                                className="w-full h-full pb-10 outline-none  focus:border-blue-600 hover:border-blue-600 rounded bg-[#FFF9F2] "
-                              ></textarea>
-                            </div>
-                          )}
-                          <div className="flex flex-row mt-1">
-                            <button
-                              onClick={() => notInterestedFun()}
-                              className={`flex mt-2 rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium text-white bg-[#FF7A53]  hover:bg-gray-700  `}
-                            >
-                              <span className="ml-1 ">Save</span>
-                            </button>
-                            <button
-                              onClick={() => notInterestedFun()}
-                              className={`flex mt-2 ml-4 rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium text-white bg-[#FF7A53]  hover:bg-gray-700  `}
-                            >
-                              <span className="ml-1 ">Save & Whats App</span>
-                            </button>
-                            <button
-                              // onClick={() => fSetLeadsType('Add Lead')}
-                              onClick={() => cancelResetStatusFun()}
-                              className={`flex mt-2 ml-4  rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium border  hover:bg-gray-700 hover:text-white  `}
-                            >
-                              <span className="ml-1 ">Cancel</span>
-                            </button>
-                          </div>
-                        </div>
-                      )}
-
-                    <div className="font-md font-medium text-xs  ml-2 text-gray-800 flex flex-row justify-between mr-4 py-2">
-                      {/* <section> Schedule</section> */}
-                      <section className="flex flex-row py-1">
-                        {/* <div
+                        <div className="font-md font-medium text-xs  ml-2 text-gray-800 flex flex-row justify-between mr-4 py-2">
+                          {/* <section> Schedule</section> */}
+                          <section className="flex flex-row py-1">
+                            {/* <div
                           className="text-blue-600  mr-4  cursor-pointer"
                           onClick={() => setAddSch(true)}
                         >
@@ -2738,77 +2800,85 @@ export default function CustomerProfileSideView({
                           <div className="inline boder-b ">Add Task</div>
                         </div> */}
 
-                        {/* <SortComp
+                            {/* <SortComp
                           selFilterVal={selFilterVal}
                           setSelFilterVal={setSelFilterVal}
                         /> */}
-                      </section>
-                      <div className="flex flex-row ">
-                        {/* <div className="font-md font-semibold inline text-wider text-[14px] font-bodyLato text-[#053219]">
+                          </section>
+                          <div className="flex flex-row ">
+                            {/* <div className="font-md font-semibold inline text-wider text-[14px] font-bodyLato text-[#053219]">
                           {selFilterVal.toUpperCase()} Tasks
                         </div> */}
 
-                        <div className="flex flex-row bg-white rounded-xl border ">
-                          <div
-                            className={` py-1 pr-4 pl-4 min-w-[62px] ${
-                              selFilterVal === 'all' ? 'bg-[#c6fff0]' : ''
-                            } rounded-xl rounded-r-none`}
-                            onClick={() => setSelFilterVal('all')}
-                          >
-                            <span className="mr-1 text-[10px] ">All</span>
+                            <div className="flex flex-row bg-white rounded-xl border ">
+                              <div
+                                className={` py-1 pr-4 pl-4 min-w-[62px] ${
+                                  selFilterVal === 'all' ? 'bg-[#c6fff0]' : ''
+                                } rounded-xl rounded-r-none`}
+                                onClick={() => setSelFilterVal('all')}
+                              >
+                                <span className="mr-1 text-[10px] ">All</span>
 
-                            {
-                              leadSchFetchedData.filter(
-                                (d) => d?.schTime != undefined
-                              ).length
-                            }
-                          </div>
-                          <div
-                            className={` py-1 pr-4 pl-4 min-w-[62px] border-x ${
-                              selFilterVal === 'pending' ? 'bg-[#c6fff0]' : ''
-                            } `}
-                            onClick={() => setSelFilterVal('pending')}
-                          >
-                            <CheckCircleIcon className="w-4 h-3  inline text-[#cdcdcd]" />
-                            <span className="mr-1 text-[10px] ">Pending</span>
-                            <span
-                              className=" text-[11
+                                {
+                                  leadSchFetchedData.filter(
+                                    (d) => d?.schTime != undefined
+                                  ).length
+                                }
+                              </div>
+                              <div
+                                className={` py-1 pr-4 pl-4 min-w-[62px] border-x ${
+                                  selFilterVal === 'pending'
+                                    ? 'bg-[#c6fff0]'
+                                    : ''
+                                } `}
+                                onClick={() => setSelFilterVal('pending')}
+                              >
+                                <CheckCircleIcon className="w-4 h-3  inline text-[#cdcdcd]" />
+                                <span className="mr-1 text-[10px] ">
+                                  Pending
+                                </span>
+                                <span
+                                  className=" text-[11
                               px] "
-                            >
-                              {' '}
-                              {
-                                leadSchFetchedData?.filter(
-                                  (d) => d?.sts === 'pending'
-                                ).length
-                              }
-                            </span>
-                          </div>
-                          <div
-                            className={` py-1 pr-4 pl-4 min-w-[62px] ${
-                              selFilterVal === 'completed' ? 'bg-[#c6fff0]' : ''
-                            }  rounded-xl rounded-l-none`}
-                            onClick={() => setSelFilterVal('completed')}
-                          >
-                            <CheckCircleIcon className="w-4 h-3 inline text-[#058527]" />
-                            <span className="mr-1 text-[10px] ">Completed</span>
+                                >
+                                  {' '}
+                                  {
+                                    leadSchFetchedData?.filter(
+                                      (d) => d?.sts === 'pending'
+                                    ).length
+                                  }
+                                </span>
+                              </div>
+                              <div
+                                className={` py-1 pr-4 pl-4 min-w-[62px] ${
+                                  selFilterVal === 'completed'
+                                    ? 'bg-[#c6fff0]'
+                                    : ''
+                                }  rounded-xl rounded-l-none`}
+                                onClick={() => setSelFilterVal('completed')}
+                              >
+                                <CheckCircleIcon className="w-4 h-3 inline text-[#058527]" />
+                                <span className="mr-1 text-[10px] ">
+                                  Completed
+                                </span>
 
-                            {
-                              leadSchFetchedData?.filter(
-                                (d) => d?.sts === 'completed'
-                              ).length
-                            }
+                                {
+                                  leadSchFetchedData?.filter(
+                                    (d) => d?.sts === 'completed'
+                                  ).length
+                                }
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                    {loader && (
-                      <div
-                        id="toast-success"
-                        className="flex items-center w-[95%] mx-4  p-2 text-white
+                        {loader && (
+                          <div
+                            id="toast-success"
+                            className="flex items-center w-[95%] mx-4  p-2 text-white
                      bg-[#516F90]"
-                        role="alert"
-                      >
-                        {/* {loader && (
+                            role="alert"
+                          >
+                            {/* {loader && (
                         <span className="pl-3 pr-3">
                           {' '}
 
@@ -2846,53 +2916,53 @@ export default function CustomerProfileSideView({
                         </span>
                       )} */}
 
-                        <div className=" text-sm font-normal font-bodyLato tight-wider">
-                          {/* <div className=" text-sm font-normal font-bodyLato tight-wider">
+                            <div className=" text-sm font-normal font-bodyLato tight-wider">
+                              {/* <div className=" text-sm font-normal font-bodyLato tight-wider">
                           Create Task
                         </div> */}
-                          Hey, Plan your{' '}
-                          <span className="text-xs  tight-wider ">
-                            {tempLeadStatus.toLocaleUpperCase()}{' '}
-                          </span>
-                          ..!
-                        </div>
-                        <button
-                          type="button"
-                          className="ml-auto -mx-0.5 -my-0.5  text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 "
-                          data-dismiss-target="#toast-success"
-                          aria-label="Close"
-                        >
-                          <span className="sr-only">Close</span>
-                          <svg
-                            className="w-5 h-5"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                              clipRule="evenodd"
-                            ></path>
-                          </svg>
-                        </button>
-                      </div>
-                    )}
-                    {addSch && (
-                      <div className="flex flex-col pt-0 my-10 mx-4 mt-[0px] ">
-                        <Formik
-                          enableReinitialize={true}
-                          initialValues={initialState}
-                          validationSchema={validateSchema}
-                          onSubmit={(values, { resetForm }) => {
-                            fAddSchedule()
-                          }}
-                        >
-                          {(formik) => (
-                            <Form>
-                              <div className=" form outline-none border  py-4">
-                                <section className=" px-4">
-                                  {/* {['visitfixed'].includes(tempLeadStatus) && (
+                              Hey, Plan your{' '}
+                              <span className="text-xs  tight-wider ">
+                                {tempLeadStatus.toLocaleUpperCase()}{' '}
+                              </span>
+                              ..!
+                            </div>
+                            <button
+                              type="button"
+                              className="ml-auto -mx-0.5 -my-0.5  text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 "
+                              data-dismiss-target="#toast-success"
+                              aria-label="Close"
+                            >
+                              <span className="sr-only">Close</span>
+                              <svg
+                                className="w-5 h-5"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                  clipRule="evenodd"
+                                ></path>
+                              </svg>
+                            </button>
+                          </div>
+                        )}
+                        {addSch && (
+                          <div className="flex flex-col pt-0 my-10 mx-4 mt-[0px] ">
+                            <Formik
+                              enableReinitialize={true}
+                              initialValues={initialState}
+                              validationSchema={validateSchema}
+                              onSubmit={(values, { resetForm }) => {
+                                fAddSchedule()
+                              }}
+                            >
+                              {(formik) => (
+                                <Form>
+                                  <div className=" form outline-none border  py-4">
+                                    <section className=" px-4">
+                                      {/* {['visitfixed'].includes(tempLeadStatus) && (
                             <div className="flex flex-row  border-b mb-4 ">
                               <div className=" mb-3 flex justify-between">
                                 <section>
@@ -2932,98 +3002,104 @@ export default function CustomerProfileSideView({
                               </div>
                             </div>
                           )} */}
-                                  <div className="text-xs font-bodyLato text-[#516f90]">
-                                    Task Title
-                                    <ErrorMessage
-                                      component="div"
-                                      name="taskTitle"
-                                      className="error-message text-red-700 text-xs p-1"
-                                    />
-                                  </div>
-                                  <input
-                                    // onChange={setTakTitle()}
-                                    autoFocus
-                                    name="taskTitle"
-                                    type="text"
-                                    value={takTitle}
-                                    onChange={(e) => {
-                                      formik.setFieldValue(
-                                        'taskTitle',
-                                        e.target.value
-                                      )
-                                      setTitleFun(e)
-                                    }}
-                                    placeholder="Enter a short title"
-                                    className="w-full h-full pb-1 outline-none text-sm font-bodyLato focus:border-blue-600 hover:border-blue-600  border-b border-[#cdcdcd] text-[33475b] bg-[#F2F5F8] "
-                                  ></input>
-                                  <div className="flex flex-row mt-3">
-                                    <section>
-                                      <span className="text-xs font-bodyLato text-[#516f90]">
-                                        <span className="">
-                                          {tempLeadStatus
-                                            .charAt(0)
-                                            .toUpperCase() +
-                                            tempLeadStatus.slice(1)}{' '}
-                                        </span>
-                                        Due Date
-                                      </span>
-                                      <div className="bg-green   pl-   flex flex-row ">
-                                        {/* <CalendarIcon className="w-4  ml-1 inline text-[#058527]" /> */}
-                                        <span className="inline">
-                                          <DatePicker
-                                            className=" mt-[2px] pl- px- min-w-[240px] inline text-xs text-[#0091ae] bg-[#F2F5F8]"
-                                            selected={startDate}
-                                            onChange={(date) =>
-                                              setStartDate(date)
-                                            }
-                                            showTimeSelect
-                                            timeFormat="HH:mm"
-                                            injectTimes={[
-                                              setHours(setMinutes(d, 1), 0),
-                                              setHours(setMinutes(d, 5), 12),
-                                              setHours(setMinutes(d, 59), 23),
-                                            ]}
-                                            dateFormat="MMMM d, yyyy h:mm aa"
-                                          />
-                                        </span>
+                                      <div className="text-xs font-bodyLato text-[#516f90]">
+                                        Task Title
+                                        <ErrorMessage
+                                          component="div"
+                                          name="taskTitle"
+                                          className="error-message text-red-700 text-xs p-1"
+                                        />
+                                      </div>
+                                      <input
+                                        // onChange={setTakTitle()}
+                                        autoFocus
+                                        name="taskTitle"
+                                        type="text"
+                                        value={takTitle}
+                                        onChange={(e) => {
+                                          formik.setFieldValue(
+                                            'taskTitle',
+                                            e.target.value
+                                          )
+                                          setTitleFun(e)
+                                        }}
+                                        placeholder="Enter a short title"
+                                        className="w-full h-full pb-1 outline-none text-sm font-bodyLato focus:border-blue-600 hover:border-blue-600  border-b border-[#cdcdcd] text-[33475b] bg-[#F2F5F8] "
+                                      ></input>
+                                      <div className="flex flex-row mt-3">
+                                        <section>
+                                          <span className="text-xs font-bodyLato text-[#516f90]">
+                                            <span className="">
+                                              {tempLeadStatus
+                                                .charAt(0)
+                                                .toUpperCase() +
+                                                tempLeadStatus.slice(1)}{' '}
+                                            </span>
+                                            Due Date
+                                          </span>
+                                          <div className="bg-green   pl-   flex flex-row ">
+                                            {/* <CalendarIcon className="w-4  ml-1 inline text-[#058527]" /> */}
+                                            <span className="inline">
+                                              <DatePicker
+                                                className=" mt-[2px] pl- px- min-w-[240px] inline text-xs text-[#0091ae] bg-[#F2F5F8]"
+                                                selected={startDate}
+                                                onChange={(date) =>
+                                                  setStartDate(date)
+                                                }
+                                                showTimeSelect
+                                                timeFormat="HH:mm"
+                                                injectTimes={[
+                                                  setHours(setMinutes(d, 1), 0),
+                                                  setHours(
+                                                    setMinutes(d, 5),
+                                                    12
+                                                  ),
+                                                  setHours(
+                                                    setMinutes(d, 59),
+                                                    23
+                                                  ),
+                                                ]}
+                                                dateFormat="MMMM d, yyyy h:mm aa"
+                                              />
+                                            </span>
+                                          </div>
+                                        </section>
                                       </div>
                                     </section>
+                                    <div className="flex flex-row mt-4 justify-between pr-4 border-t">
+                                      <section>
+                                        <span>{''}</span>
+                                      </section>
+                                      <section className="flex">
+                                        <button
+                                          type="submit"
+                                          // onClick={() => fAddSchedule()}
+                                          className={`flex mt-2 cursor-pointer rounded-xs text-bodyLato items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium text-white bg-[#FF7A53]  hover:bg-gray-700  `}
+                                        >
+                                          <span className="ml-1 ">
+                                            Create{' '}
+                                            {tempLeadStatus !=
+                                              streamCurrentStatus &&
+                                              tempLeadStatus}{' '}
+                                            Task
+                                          </span>
+                                        </button>
+                                        <button
+                                          // onClick={() => fSetLeadsType('Add Lead')}
+                                          onClick={() => cancelResetStatusFun()}
+                                          className={`flex mt-2 ml-4 rounded items-center text-bodyLato pl-2 h-[36px] pr-4 py-2 text-sm font-medium border  hover:bg-gray-700 hover:text-white `}
+                                        >
+                                          <span className="ml-1 ">Cancel</span>
+                                        </button>
+                                      </section>
+                                    </div>
                                   </div>
-                                </section>
-                                <div className="flex flex-row mt-4 justify-between pr-4 border-t">
-                                  <section>
-                                    <span>{''}</span>
-                                  </section>
-                                  <section className="flex">
-                                    <button
-                                      type="submit"
-                                      // onClick={() => fAddSchedule()}
-                                      className={`flex mt-2 cursor-pointer rounded-xs text-bodyLato items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium text-white bg-[#FF7A53]  hover:bg-gray-700  `}
-                                    >
-                                      <span className="ml-1 ">
-                                        Create{' '}
-                                        {tempLeadStatus !=
-                                          streamCurrentStatus &&
-                                          tempLeadStatus}{' '}
-                                        Task
-                                      </span>
-                                    </button>
-                                    <button
-                                      // onClick={() => fSetLeadsType('Add Lead')}
-                                      onClick={() => cancelResetStatusFun()}
-                                      className={`flex mt-2 ml-4 rounded items-center text-bodyLato pl-2 h-[36px] pr-4 py-2 text-sm font-medium border  hover:bg-gray-700 hover:text-white `}
-                                    >
-                                      <span className="ml-1 ">Cancel</span>
-                                    </button>
-                                  </section>
-                                </div>
-                              </div>
-                            </Form>
-                          )}
-                        </Formik>
-                      </div>
-                    )}
-                    {/* {addSch && (
+                                </Form>
+                              )}
+                            </Formik>
+                          </div>
+                        )}
+                        {/* {addSch && (
                     <div className="flex flex-col pt-0 my-10 mx-4 mt-[10px] rounded">
                       <div className="  outline-none border  rounded p-4">
                         <div className=" text-sm font-normal">
@@ -3182,264 +3258,277 @@ export default function CustomerProfileSideView({
                     </div>
                   )} */}
 
-                    {leadSchLoading &&
-                      [1, 2, 3].map((data, i) => <LogSkelton key={i} />)}
+                        {leadSchLoading &&
+                          [1, 2, 3].map((data, i) => <LogSkelton key={i} />)}
 
-                    {!leadSchLoading &&
-                      leadSchFetchedData.length == 0 &&
-                      !addSch && (
-                        <div className="py-8 px-8 flex flex-col items-center">
-                          <div className="font-md font-medium text-xs mb-4 text-gray-800 items-center">
-                            <img
-                              className="w-[200px] h-[200px] inline"
-                              alt=""
-                              src="/target.svg"
-                            />
-                          </div>
-                          <h3 className="mb-1 text-sm font-semibold text-gray-900 ">
-                            No Appointmentss
-                          </h3>
-                          <time className="block mb-2 text-sm font-normal leading-none text-gray-400 ">
-                            Appointments always bring more suprises{' '}
-                            <span
-                              className="text-blue-600"
-                              onClick={() => setAddSch(true)}
-                            >
-                              Add new
-                            </span>
-                          </time>
-                        </div>
-                      )}
-                    <div className="max-h-[60%]">
-                      <ol className="relative  border-gray-200 ">
-                        {leadSchFilteredData.map((data, i) => (
-                          <section
-                            key={i}
-                            className=" mx-2 bg-[#FFF] mb-[1px]  px-3 py-3"
-                            onMouseEnter={() => {
-                              hoverEffectTaskFun(data?.ct)
-                              // setHover(true)
-                            }}
-                            onMouseLeave={() => {
-                              hoverEffectTaskFun(2000)
-                              // setHover(false)
-                            }}
-                          >
-                            {editTaskObj?.ct === data?.ct ? (
-                              <EditLeadTask
-                                editTaskObj={editTaskObj}
-                                setStartDate={setStartDate}
-                                startDate={startDate}
-                                takTitle={takTitle}
-                                setTitleFun={setTitleFun}
-                                cancelResetStatusFun={cancelResetStatusFun}
-                                editTaskFun={editTaskFun}
-                                d={d}
-                              />
-                            ) : null}
-                            <>
-                              {' '}
-                              {/* header part */}
-                              <LeadTaskDisplayHead
-                                data={data}
-                                setAddTaskCommentObj={setAddTaskCommentObj}
-                                closeTaskFun={closeTaskFun}
-                                hoverTasId={hoverTasId}
-                                undoFun={undoFun}
-                                setShowVisitFeedBackStatusFun={
-                                  setShowVisitFeedBackStatusFun
-                                }
-                              />
-                              {/* add comment + close & Add New Task section */}
-                              {addTaskCommentObj?.ct === data?.ct && (
-                                // <input
-                                //   type="text"
-                                //   className="block"
-                                //   placeholder="pastehere"
-                                // />
-                                <AddLeadTaskComment
-                                  closeTask={closeTask}
-                                  data={data}
-                                  setShowVisitFeedBackStatusFun={
-                                    setShowVisitFeedBackStatusFun
-                                  }
-                                  setShowNotInterestedFun={
-                                    setShowNotInterestedFun
-                                  }
-                                  setAddCommentTitle={setAddCommentTitle}
-                                  addCommentTitle={addCommentTitle}
-                                  addCommentTime={addCommentTime}
-                                  setPostPoneToFuture={setPostPoneToFuture}
-                                  setClosePrevious={setClosePrevious}
-                                  setAddCommentPlusTask={setAddCommentPlusTask}
-                                  setAddCommentTime={setAddCommentTime}
-                                  cancelResetStatusFun={cancelResetStatusFun}
-                                  addTaskCommentFun={addTaskCommentFun}
-                                  addCommentPlusTask={addCommentPlusTask}
-                                  setSelType={setSelType}
-                                  selType={selType}
-                                  d={d}
+                        {!leadSchLoading &&
+                          leadSchFetchedData.length == 0 &&
+                          !addSch && (
+                            <div className="py-8 px-8 flex flex-col items-center">
+                              <div className="font-md font-medium text-xs mb-4 text-gray-800 items-center">
+                                <img
+                                  className="w-[200px] h-[200px] inline"
+                                  alt=""
+                                  src="/target.svg"
                                 />
-                              )}
-                              {/* comments display part */}
-                              {data?.comments?.map((commentObj, k) => {
-                                return (
-                                  <li
-                                    key={k}
-                                    className={`ml-6 text-[13px] text-[#7E92A2] tracking-wide ${
-                                      data?.comments?.length - 1 === k
-                                        ? 'mb-1'
-                                        : ''
-                                    }`}
-                                  >
-                                    <section className="flex flex-row justify-between">
-                                      <span>
-                                        {' '}
-                                        <svg
-                                          viewBox="0 0 12 12"
-                                          className="notes_icon inline w-2 h-2 mr-1"
-                                          aria-label="2 comments"
-                                        >
-                                          <g fill="none" fillRule="evenodd">
-                                            <path
-                                              fill="currentColor"
-                                              fillRule="nonzero"
-                                              d="M9.5 1A1.5 1.5 0 0 1 11 2.5v5A1.5 1.5 0 0 1 9.5 9H7.249L5.28 10.97A.75.75 0 0 1 4 10.44V9H2.5A1.5 1.5 0 0 1 1 7.5v-5A1.5 1.5 0 0 1 2.5 1h7zm0 1h-7a.5.5 0 0 0-.5.5v5a.5.5 0 0 0 .5.5H5v1.836L6.835 8H9.5a.5.5 0 0 0 .5-.5v-5a.5.5 0 0 0-.5-.5z"
-                                            ></path>
-                                          </g>
-                                        </svg>{' '}
-                                        {commentObj?.c}
-                                      </span>
-                                      <span>
-                                        {' '}
-                                        {prettyDateTime(commentObj?.t)}
-                                      </span>
-                                    </section>
-                                  </li>
-                                )
-                              })}
-                              {/* not interested and visit done stuff */}
-                              {(showNotInterested || showVisitFeedBackStatus) &&
-                                selSchGrpO?.ct === data?.ct && (
-                                  <div className="flex flex-col pt-0 my-10 mt-[10px] rounded bg-[#FFF9F2] mx-4 p-4">
-                                    {showNotInterested && (
-                                      <div className="w-full flex flex-col mb-3 mt-2">
-                                        <SelectDropDownComp
-                                          label={`Why  ${
-                                            customerDetails?.Name?.toLocaleUpperCase() ||
-                                            'Customer'
-                                          } is  not Interested*`}
-                                          options={notInterestOptions}
-                                          value={fbTitle}
-                                          onChange={(value) => {
-                                            // formik.setFieldValue('source', value.value)
-                                            setFbTitle(value.value)
-                                          }}
-                                        />
-                                      </div>
-                                    )}
-                                    {showVisitFeedBackStatus && (
-                                      <div className="w-full flex flex-col mb-3 mt-2">
-                                        <SelectDropDownComp
-                                          label="Sites Visit Feedback *"
-                                          options={siteVisitFeedbackOptions}
-                                          value={fbTitle}
-                                          onChange={(value) => {
-                                            // formik.setFieldValue('source', value.value)
+                              </div>
+                              <h3 className="mb-1 text-sm font-semibold text-gray-900 ">
+                                No Appointmentss
+                              </h3>
+                              <time className="block mb-2 text-sm font-normal leading-none text-gray-400 ">
+                                Appointments always bring more suprises{' '}
+                                <span
+                                  className="text-blue-600"
+                                  onClick={() => setAddSch(true)}
+                                >
+                                  Add new
+                                </span>
+                              </time>
+                            </div>
+                          )}
+                        <div className="max-h-[60%]">
+                          <ol className="relative  border-gray-200 ">
+                            {leadSchFilteredData.map((data, i) => (
+                              <section
+                                key={i}
+                                className=" mx-2 bg-[#FFF] mb-[1px]  px-3 py-3"
+                                onMouseEnter={() => {
+                                  hoverEffectTaskFun(data?.ct)
+                                  // setHover(true)
+                                }}
+                                onMouseLeave={() => {
+                                  hoverEffectTaskFun(2000)
+                                  // setHover(false)
+                                }}
+                              >
+                                {editTaskObj?.ct === data?.ct ? (
+                                  <EditLeadTask
+                                    editTaskObj={editTaskObj}
+                                    setStartDate={setStartDate}
+                                    startDate={startDate}
+                                    takTitle={takTitle}
+                                    setTitleFun={setTitleFun}
+                                    cancelResetStatusFun={cancelResetStatusFun}
+                                    editTaskFun={editTaskFun}
+                                    d={d}
+                                  />
+                                ) : null}
+                                <>
+                                  {' '}
+                                  {/* header part */}
+                                  <LeadTaskDisplayHead
+                                    data={data}
+                                    setAddTaskCommentObj={setAddTaskCommentObj}
+                                    closeTaskFun={closeTaskFun}
+                                    hoverTasId={hoverTasId}
+                                    undoFun={undoFun}
+                                    setShowVisitFeedBackStatusFun={
+                                      setShowVisitFeedBackStatusFun
+                                    }
+                                  />
+                                  {/* add comment + close & Add New Task section */}
+                                  {addTaskCommentObj?.ct === data?.ct && (
+                                    // <input
+                                    //   type="text"
+                                    //   className="block"
+                                    //   placeholder="pastehere"
+                                    // />
+                                    <AddLeadTaskComment
+                                      closeTask={closeTask}
+                                      data={data}
+                                      setShowVisitFeedBackStatusFun={
+                                        setShowVisitFeedBackStatusFun
+                                      }
+                                      setShowNotInterestedFun={
+                                        setShowNotInterestedFun
+                                      }
+                                      setAddCommentTitle={setAddCommentTitle}
+                                      addCommentTitle={addCommentTitle}
+                                      addCommentTime={addCommentTime}
+                                      setPostPoneToFuture={setPostPoneToFuture}
+                                      setClosePrevious={setClosePrevious}
+                                      setAddCommentPlusTask={
+                                        setAddCommentPlusTask
+                                      }
+                                      setAddCommentTime={setAddCommentTime}
+                                      cancelResetStatusFun={
+                                        cancelResetStatusFun
+                                      }
+                                      addTaskCommentFun={addTaskCommentFun}
+                                      addCommentPlusTask={addCommentPlusTask}
+                                      setSelType={setSelType}
+                                      selType={selType}
+                                      d={d}
+                                    />
+                                  )}
+                                  {/* comments display part */}
+                                  {data?.comments?.map((commentObj, k) => {
+                                    return (
+                                      <li
+                                        key={k}
+                                        className={`ml-6 text-[13px] text-[#7E92A2] tracking-wide ${
+                                          data?.comments?.length - 1 === k
+                                            ? 'mb-1'
+                                            : ''
+                                        }`}
+                                      >
+                                        <section className="flex flex-row justify-between">
+                                          <span>
+                                            {' '}
+                                            <svg
+                                              viewBox="0 0 12 12"
+                                              className="notes_icon inline w-2 h-2 mr-1"
+                                              aria-label="2 comments"
+                                            >
+                                              <g fill="none" fillRule="evenodd">
+                                                <path
+                                                  fill="currentColor"
+                                                  fillRule="nonzero"
+                                                  d="M9.5 1A1.5 1.5 0 0 1 11 2.5v5A1.5 1.5 0 0 1 9.5 9H7.249L5.28 10.97A.75.75 0 0 1 4 10.44V9H2.5A1.5 1.5 0 0 1 1 7.5v-5A1.5 1.5 0 0 1 2.5 1h7zm0 1h-7a.5.5 0 0 0-.5.5v5a.5.5 0 0 0 .5.5H5v1.836L6.835 8H9.5a.5.5 0 0 0 .5-.5v-5a.5.5 0 0 0-.5-.5z"
+                                                ></path>
+                                              </g>
+                                            </svg>{' '}
+                                            {commentObj?.c}
+                                          </span>
+                                          <span>
+                                            {' '}
+                                            {prettyDateTime(commentObj?.t)}
+                                          </span>
+                                        </section>
+                                      </li>
+                                    )
+                                  })}
+                                  {/* not interested and visit done stuff */}
+                                  {(showNotInterested ||
+                                    showVisitFeedBackStatus) &&
+                                    selSchGrpO?.ct === data?.ct && (
+                                      <div className="flex flex-col pt-0 my-10 mt-[10px] rounded bg-[#FFF9F2] mx-4 p-4">
+                                        {showNotInterested && (
+                                          <div className="w-full flex flex-col mb-3 mt-2">
+                                            <SelectDropDownComp
+                                              label={`Why  ${
+                                                customerDetails?.Name?.toLocaleUpperCase() ||
+                                                'Customer'
+                                              } is  not Interested*`}
+                                              options={notInterestOptions}
+                                              value={fbTitle}
+                                              onChange={(value) => {
+                                                // formik.setFieldValue('source', value.value)
+                                                setFbTitle(value.value)
+                                              }}
+                                            />
+                                          </div>
+                                        )}
+                                        {showVisitFeedBackStatus && (
+                                          <div className="w-full flex flex-col mb-3 mt-2">
+                                            <SelectDropDownComp
+                                              label="Sites Visit Feedback *"
+                                              options={siteVisitFeedbackOptions}
+                                              value={fbTitle}
+                                              onChange={(value) => {
+                                                // formik.setFieldValue('source', value.value)
 
-                                            setFbTitle(value.value)
-                                          }}
-                                        />
-                                      </div>
-                                    )}
+                                                setFbTitle(value.value)
+                                              }}
+                                            />
+                                          </div>
+                                        )}
 
-                                    <div className="  outline-none border  rounded p-4 mt-4">
-                                      <textarea
-                                        value={fbNotes}
-                                        onChange={(e) =>
-                                          setfbNotes(e.target.value)
-                                        }
-                                        placeholder="Type & make a notes *"
-                                        className="w-full h-full pb-10 outline-none  focus:border-blue-600 hover:border-blue-600 rounded bg-[#FFF9F2] "
-                                      ></textarea>
-                                    </div>
-                                    <div className="flex flex-row mt-1">
-                                      <button
-                                        onClick={() => {
-                                          if (fbNotes != '') {
-                                            setLeadStatus('visitdone')
-                                            if (showNotInterested) {
-                                              notInterestedFun()
-                                              return
+                                        <div className="  outline-none border  rounded p-4 mt-4">
+                                          <textarea
+                                            value={fbNotes}
+                                            onChange={(e) =>
+                                              setfbNotes(e.target.value)
                                             }
-                                            addFeedbackFun(data)
-                                          } else {
-                                            enqueueSnackbar(
-                                              'Please Enter Notes',
-                                              {
-                                                variant: 'warning',
+                                            placeholder="Type & make a notes *"
+                                            className="w-full h-full pb-10 outline-none  focus:border-blue-600 hover:border-blue-600 rounded bg-[#FFF9F2] "
+                                          ></textarea>
+                                        </div>
+                                        <div className="flex flex-row mt-1">
+                                          <button
+                                            onClick={() => {
+                                              if (fbNotes != '') {
+                                                setLeadStatus('visitdone')
+                                                if (showNotInterested) {
+                                                  notInterestedFun()
+                                                  return
+                                                }
+                                                addFeedbackFun(data)
+                                              } else {
+                                                enqueueSnackbar(
+                                                  'Please Enter Notes',
+                                                  {
+                                                    variant: 'warning',
+                                                  }
+                                                )
                                               }
-                                            )
-                                          }
-                                        }}
-                                        className={`flex mt-2 rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium text-white bg-[#FF7A53]  hover:bg-gray-700  `}
-                                      >
-                                        <span className="ml-1 ">Save</span>
-                                      </button>
-                                      <button
-                                        onClick={() => {
-                                          console.log('am i clicked')
+                                            }}
+                                            className={`flex mt-2 rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium text-white bg-[#FF7A53]  hover:bg-gray-700  `}
+                                          >
+                                            <span className="ml-1 ">Save</span>
+                                          </button>
+                                          <button
+                                            onClick={() => {
+                                              console.log('am i clicked')
 
-                                          setLeadStatus('visitdone')
-                                          if (showNotInterested) {
-                                            notInterestedFun()
-                                            return
-                                          }
-                                          addFeedbackFun(data)
+                                              setLeadStatus('visitdone')
+                                              if (showNotInterested) {
+                                                notInterestedFun()
+                                                return
+                                              }
+                                              addFeedbackFun(data)
 
-                                          getWhatsAppTemplates(
-                                            'on_sitevisit_done',
-                                            'wa',
-                                            'customer',
-                                            // 'ProjectId',
-                                            ProjectId,
-                                            receiverDetails,
-                                            msgPayload
-                                          )
-                                        }}
-                                        className={`flex mt-2 ml-4 rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium text-white bg-[#FF7A53]  hover:bg-gray-700  `}
-                                      >
-                                        <span className="ml-1 ">
-                                          Save & Whats App
-                                        </span>
-                                      </button>
-                                      <button
-                                        // onClick={() => fSetLeadsType('Add Lead')}
-                                        onClick={() => cancelResetStatusFun()}
-                                        className={`flex mt-2 ml-4  rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium border  hover:bg-gray-700 hover:text-white  `}
-                                      >
-                                        <span className="ml-1 ">Cancel</span>
-                                      </button>
-                                    </div>
-                                  </div>
-                                )}
-                              {/* footer part */}
-                              {addTaskCommentObj?.ct != data?.ct && (
-                                <LeadTaskFooter
-                                  data={data}
-                                  hoverTasId={hoverTasId}
-                                  EditTaskOpenWindowFun={EditTaskOpenWindowFun}
-                                  delFun={delFun}
-                                />
-                              )}
-                            </>
-                          </section>
-                        ))}{' '}
-                      </ol>
-                    </div>
+                                              getWhatsAppTemplates(
+                                                'on_sitevisit_done',
+                                                'wa',
+                                                'customer',
+                                                // 'ProjectId',
+                                                ProjectId,
+                                                receiverDetails,
+                                                msgPayload
+                                              )
+                                            }}
+                                            className={`flex mt-2 ml-4 rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium text-white bg-[#FF7A53]  hover:bg-gray-700  `}
+                                          >
+                                            <span className="ml-1 ">
+                                              Save & Whats App
+                                            </span>
+                                          </button>
+                                          <button
+                                            // onClick={() => fSetLeadsType('Add Lead')}
+                                            onClick={() =>
+                                              cancelResetStatusFun()
+                                            }
+                                            className={`flex mt-2 ml-4  rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium border  hover:bg-gray-700 hover:text-white  `}
+                                          >
+                                            <span className="ml-1 ">
+                                              Cancel
+                                            </span>
+                                          </button>
+                                        </div>
+                                      </div>
+                                    )}
+                                  {/* footer part */}
+                                  {addTaskCommentObj?.ct != data?.ct && (
+                                    <LeadTaskFooter
+                                      data={data}
+                                      hoverTasId={hoverTasId}
+                                      EditTaskOpenWindowFun={
+                                        EditTaskOpenWindowFun
+                                      }
+                                      delFun={delFun}
+                                    />
+                                  )}
+                                </>
+                              </section>
+                            ))}{' '}
+                          </ol>
+                        </div>
 
-                    {/* comments section */}
-                  </div>
+                        {/* comments section */}
+                      </div>
+                    )}
+                  </Formik>
                 </>
               )}
               {selFeature === 'timeline' && (

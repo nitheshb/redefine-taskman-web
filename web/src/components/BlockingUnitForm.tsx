@@ -234,7 +234,7 @@ const BlockingUnitForm = ({ title, dialogOpen }) => {
   }
   return (
     <>
-      <section className="bg-blueGray-50  mt-10">
+      <section className="bg-blueGray-50 ">
         <div className="w-full  mx-auto ">
           <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-[#F9FBFB] border-0 ">
             <div className="rounded-t bg-[#F1F5F9] mb-0 px-3 py-2">

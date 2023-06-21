@@ -1,11 +1,13 @@
-import { Dialog } from '@headlessui/react'
 import React, { useEffect, useState } from 'react'
+
+import { Dialog } from '@headlessui/react'
 import { Button, Card, CardContent, Grid } from '@material-ui/core'
-import { Form, Formik } from 'formik'
-import { array, object, string } from 'yup'
-import { MultipleFileUploadField } from './MultipleFileUploadField'
-import { parse } from 'papaparse'
 import csv from 'csvtojson'
+import { Form, Formik } from 'formik'
+import { parse } from 'papaparse'
+import { array, object, string } from 'yup'
+
+import { MultipleFileUploadField } from './MultipleFileUploadField'
 
 export default function LeadsDropHomes({
   title,
@@ -71,6 +73,8 @@ export default function LeadsDropHomes({
               })
 
               if (title === 'Plan Diagram') {
+              } else if (title === 'legal_doc_upload') {
+                console.log('am inside lega doc upload')
               } else {
                 try {
                   const jsonArray = await csv().fromFile(
@@ -142,7 +146,8 @@ export default function LeadsDropHomes({
                     title={title}
                     pId={pId}
                     myPhase={myPhase}
-                    myBlock={myBlock}                  />
+                    myBlock={myBlock}
+                  />
 
                   {/* <Grid item>
                     <Button

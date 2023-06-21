@@ -1,6 +1,13 @@
 import { useState, useContext } from 'react'
 
-import { DocumentTextIcon, TrashIcon } from '@heroicons/react/outline'
+import {
+  DocumentTextIcon,
+  TrashIcon,
+  DownloadIcon,
+  CloudUploadIcon,
+  UploadIcon,
+  EyeIcon,
+} from '@heroicons/react/outline'
 import { doc, deleteDoc } from 'firebase/firestore'
 
 const DowRow = ({ id, fileName, date }) => {
@@ -26,7 +33,7 @@ const DowRow = ({ id, fileName, date }) => {
         {/* <Icon name="article" size="3xl" color="blue" /> */}
         <DocumentTextIcon className="w-4 h-4 text-blue-500" />
         {/* <Link to={`/doc/${id}`} className="flex items-center w-full"> */}
-        <p className="flex-grow pl-5 pr-10">{fileName}</p>
+        <p className="flex-grow pl-2 pr-10">{fileName}</p>
         {/* <p className="pr-5 text-sm truncate">{`${date
             ?.toDate()
             ?.toDateString("en-US")} at ${date
@@ -35,8 +42,31 @@ const DowRow = ({ id, fileName, date }) => {
         <p className="pr-5 text-xs truncate">{date}</p>
         {/* </Link> */}
         <button
+          color="red"
+          className="border-0 block rounded "
+          onClick={() => setShoModel(true)}
+        >
+          <CloudUploadIcon name="delete"  className="w-4 h-4 text-red-400" />
+        </button>
+        <button
           color="gray"
-          className="border-0 block rounded"
+          className="border-0 block rounded ml-2"
+          onClick={() => setShoModel(true)}
+        >
+          <EyeIcon name="delete" className="w-4 h-4" />
+        </button>
+
+        <button
+          color="gray"
+          className="border-0 block rounded ml-2"
+          onClick={() => setShoModel(true)}
+        >
+          <DownloadIcon name="delete" className="w-4 h-4" />
+        </button>
+
+        <button
+          color="gray"
+          className="border-0 block rounded ml-2"
           onClick={() => setShoModel(true)}
         >
           <TrashIcon name="delete" className="w-4 h-4" />

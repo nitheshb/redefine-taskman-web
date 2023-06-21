@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react'
 
 import { Link } from '@redwoodjs/router'
 
+import FileCardAnim from 'src/components/A_LegalModule/fileCard'
 import DropCompUnitStatus from 'src/components/dropDownUnitStatus'
 import DummyBodyLayout from 'src/components/DummyBodyLayout/DummyBodyLayout'
 import SiderForm from 'src/components/SiderForm/SiderForm'
@@ -17,7 +18,6 @@ import 'flowbite'
 import DropDownSearchBar from 'src/components/dropDownSearchBar'
 
 import { PlusIcon } from '@heroicons/react/outline'
-import FileCardAnim from 'src/components/A_LegalModule/fileCard'
 const LegalDocsHome = ({ project }) => {
   const { projectName } = project
   const { user } = useAuth()
@@ -79,15 +79,17 @@ const LegalDocsHome = ({ project }) => {
               </Link>
             </div>
           </div> */}
-
-          <div className=" mt-6">
+ <span className="relative z-10 flex items-center w-auto text-lg font-bold leading-none pl-0 mt-[18px]">
+                  Documents
+                </span>
+          <div className=" mt-2">
             <form className="">
               <div className="flex">
                 <div className="relative w-full">
                   <input
                     type="search"
                     id="search-dropdown"
-                    className="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg rounded-l-lg border-l-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-l-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
+                    className="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg rounded-l-lg border-l-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                     placeholder={` Search Documents, Categories, Agreements...`}
                     required
                   />
@@ -128,8 +130,8 @@ const LegalDocsHome = ({ project }) => {
             </form>
           </div>
 
-          <section className=" justify-center flex flex-row my-10">
-            <div
+          <section className=" flex">
+            {/* <div
               className="cursor-pointer  z-10 flex flex-col  max-w-md p-2 my-0  mx-4 rounded-sm inline-block  min-h-[50px]  min-w-[100px] border border-dotted border-black rounded-md"
               onClick={() => {
                 setSliderInfo({
@@ -161,10 +163,12 @@ const LegalDocsHome = ({ project }) => {
                   <span className="text-sm font-"></span>
                 </span>
               </div>
-            </div>
+            </div> */}
 
-            {projects.length > 0 ? (
-              projects.map((project, i) => (
+            <ul className="">
+                <li className="py-2">
+                  <section className='mt-2 flex'>
+              {projects?.map((project, i) => (
                 // <span key={i}>{project?.projectName}</span>
                 <>
                   <div
@@ -172,7 +176,7 @@ const LegalDocsHome = ({ project }) => {
                     className=" cursor-pointer relative max-w-md mx-auto md:max-w-2xl  min-w-0 break-words bg-white w-full mb-6  rounded-xl  mr-8 transition duration-300 ease-in-out  "
                     onClick={() => dispDoc(project)}
                   >
-                     <FileCardAnim />
+                    <FileCardAnim projectDetails={project} />
                   </div>
                 </>
 
@@ -185,10 +189,10 @@ const LegalDocsHome = ({ project }) => {
                 //   }}
                 //   isEdit={false}
                 // />
-              ))
-            ) : (
-              <></>
-            )}
+              ))}
+              </section>
+              </li></ul>
+
           </section>
           {/* <div className="grid grid-cols-1 gap-7 mt-10">
             <span>
@@ -258,6 +262,8 @@ const LegalDocsHome = ({ project }) => {
             </span>
           </div> */}
         </div>
+
+
       </section>
       <SiderForm
         open={isOpenSideView}

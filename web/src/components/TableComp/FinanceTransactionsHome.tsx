@@ -5,15 +5,26 @@
 import { Fragment, useState, useEffect } from 'react'
 
 // import { XIcon } from '@heroicons/react/outline'
+import { DocumentIcon, AdjustmentsIcon } from '@heroicons/react/outline'
+import { startOfDay } from 'date-fns'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 
 import { MetaTags } from '@redwoodjs/web'
 
 import LLeadsTableView from 'src/components/LLeadsTableView/LLeadsTableView'
 import { USER_ROLES } from 'src/constants/userRoles'
-import { getFinanceTransactionsByStatus } from 'src/context/dbQueryFirebase'
+import {
+  getFinanceTransactionsByStatus,
+  streamGetAllTransactions,
+} from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
+import { supabase } from 'src/context/supabase'
+import CSVDownloader from 'src/util/csvDownload'
 import { CustomSelect } from 'src/util/formFields/selectBoxField'
+import {
+  SlimDateSelectBox,
+  SlimSelectBox,
+} from 'src/util/formFields/slimSelectBoxField'
 
 import CircleProgress from '../Charts_Graphs/CircleProgress'
 import SemiCircleProgress from '../Charts_Graphs/SemiCircleProgress'
@@ -23,30 +34,79 @@ import SiderForm from '../SiderForm/SiderForm'
 import FinanceTableView from './financeTableView'
 
 const FinanceTransactionsHome = ({ leadsTyper }) => {
+  const d = new window.Date()
   const { user } = useAuth()
   const { orgId } = user
   const [isImportLeadsOpen, setisImportLeadsOpen] = useState(false)
+  const [openTransactionDetails, setOpenTransactionDetails] = useState(false)
 
   // kanban board
   const [ready, setReady] = useState(false)
 
   const [addLeadsTypes, setAddLeadsTypes] = useState('')
   const [selUserProfile, setSelUserProfile] = useState({})
-  const [leadsFetchedData, setLeadsFetchedData] = useState([])
+  const [finFetchedData, setFinFetchedData] = useState([])
   const [serialLeadsData, setSerialLeadsData] = useState([])
-  const [projectList, setprojectList] = useState([])
+  const [showSettings, setShowSettings] = useState(true)
   const [transactionData, setTransactionData] = useState({})
+  const [sourceDateRange, setSourceDateRange] = React.useState(
+    startOfDay(d).getTime()
+  )
 
-  const [value, setValue] = useState('latest')
+  const [value, setValue] = useState('reviewing')
   const tabHeadFieldsA = [
     { lab: 'All Transactions', val: 'all' },
-    { lab: 'Latest', val: 'latest' },
     { lab: 'Reviewing', val: 'reviewing' },
     { lab: 'Cleared', val: 'cleared' },
     { lab: 'Rejected', val: 'rejected' },
   ]
   useEffect(() => {
     getLeadsDataFun()
+  }, [])
+
+  useEffect(() => {
+    // Subscribe to real-time changes in the `${orgId}_accounts` table
+    const subscription = supabase
+      .from(`${orgId}_accounts`)
+      .on('*', (payload) => {
+        // When a change occurs, update the 'leadLogs' state with the latest data
+        console.log('account records', payload)
+        // Check if the updated data has the id 12
+        const updatedData = payload.new
+        const { id } = payload.old
+        const updatedLeadLogs = [...finFetchedData]
+        setFinFetchedData((prevLogs) => {
+          const existingLog = prevLogs.find((log) => log.id === id)
+
+          if (existingLog) {
+            console.log('Existing record found!')
+            const updatedLogs = prevLogs.map((log) =>
+              log.id === id ? payload.new : log
+            )
+            return [...updatedLogs]
+          } else {
+            console.log('New record added!')
+            return [...prevLogs, payload.new]
+          }
+        })
+        // const index = updatedLeadLogs.findIndex((log) => log.id === id)
+        // if (index !== -1) {
+        //   console.log('check it ..........!')
+        //   updatedLeadLogs[index] = updatedData
+        // } else {
+        //   // Add new record to the 'leadLogs' state
+        //   updatedLeadLogs.push(updatedData)
+        // }
+
+        // // Update the 'leadLogs' state with the latest data
+        // setFinFetchedData(updatedLeadLogs)
+      })
+      .subscribe()
+
+    // Clean up the subscription when the component unmounts
+    return () => {
+      supabase.removeSubscription(subscription)
+    }
   }, [])
 
   const rowsCounter = (parent, searchKey) => {
@@ -64,6 +124,17 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
     console.log('login role detials', user)
     const { access, uid } = user
 
+    const steamLeadLogs = await streamGetAllTransactions(
+      orgId,
+      'snap',
+      {
+        uid,
+      },
+      (error) => []
+    )
+    await setFinFetchedData(steamLeadLogs)
+
+    return
     if (access?.includes('manage_leads')) {
       const unsubscribe = getFinanceTransactionsByStatus(
         orgId,
@@ -74,10 +145,10 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
             return x
           })
           // setBoardData
-          console.log('my Array data is ', usersListA, leadsFetchedData)
+          console.log('my Array data is ', usersListA, finFetchedData)
           // await serealizeData(usersListA)
-          await setLeadsFetchedData(usersListA)
-          await console.log('my Array data is set it', leadsFetchedData)
+          await setFinFetchedData(usersListA)
+          await console.log('my Array data is set it', finFetchedData)
         },
         {
           status: [
@@ -90,7 +161,7 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
             // 'booked',
           ],
         },
-        () => setLeadsFetchedData([])
+        () => setFinFetchedData([])
       )
       return unsubscribe
     } else {
@@ -105,7 +176,7 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
           // setBoardData
           console.log('my Array data is ', usersListA)
           await serealizeData(usersListA)
-          await setLeadsFetchedData(usersListA)
+          await setFinFetchedData(usersListA)
         },
         {
           uid: uid,
@@ -119,7 +190,7 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
             // 'booked',
           ],
         },
-        () => setLeadsFetchedData([])
+        () => setFinFetchedData([])
       )
       return unsubscribe
     }
@@ -152,7 +223,7 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
 
   const viewTransaction = (docData) => {
     setTransactionData(docData)
-    setisImportLeadsOpen(!isImportLeadsOpen)
+    setOpenTransactionDetails(!openTransactionDetails)
   }
   return (
     <>
@@ -162,165 +233,64 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
             className="
             "
           >
-            <div className="items-center justify-between rounded-md mx-1 my-1 py-2 px-2 bg-white ">
+            <div className="items-center justify-between  py-2 px-2 bg-[#3cdc94] pl-[13%] ">
               {/* <div>
                 <h2 className="text-lg font-semibold text-gray-900 leading-light py-2 ">
                   Accounts Transactions Space
                 </h2>
               </div> */}
-              <div className="flex flex-row">
-                <section className="min-w-[100px]">
-                <h5>Weekly Progress</h5>
-                  <CircleProgress />
+              <div className="flex flex-row items-center">
+                <section className="min-w-[150px]">
+                  <div className="flex flex-col ml-3">
+                    <span className="text-[56px] text-black font-bold">0</span>
+                    <span className="text-[18px] text-black">Todo Tasks</span>
+                  </div>
+                  {/* <CircleProgress /> */}
                 </section>
                 {/* <SemiCircleProgress /> */}
                 <div className="flex flex-col">
-                  <div className="flex flex-row">
+                  {/* <div className="flex flex-row">
                     <h2 className="headTxt1 font-semibold text-[11px] ">
                       TOTAL COLLECTION
                     </h2>
                     <span className="headTxt1 font-semibold text-[11px] ml-4 bg-[#d6e9ed] text-[#53a0a3] px-2 rounded-md ">
                       10
                     </span>
-                  </div>
+                  </div> */}
                   <section className="flex flex-row justify-between">
                     <section className="flex flex-row mt-2 mr-1  mb-1 leading-7 text-gray-900  rounded-lg  ">
-                      <div className=" m-1">
-                        <div className=" border-[#E5EAF2] rounded-xl border w-60">
-                          <section>
-                            <small className="px-2 css-17tn7gx">$</small>
-                            <div className="px-2 flex flex-row justify-between">
-                              <h3 className=" css-5mn5yy">36k</h3>
-                            </div>
-                            <div
-                              className="flex flex-row justify-between bg-[#F7F7F7]"
-                              style={{
-                                borderBottomLeftRadius: '12px',
-                                borderBottomRightRadius: '12px',
-                              }}
-                            >
-                              <div className=" flexCenter p-2">
-                                <span className="w-2 h-2 rounded-full bg-[#209653]"></span>
-                                {/* <svg
-                              className="svgIcon text-[#209653] text-[14px] "
-                              focusable="false"
-                              viewBox="0 0 24 24"
-                              aria-hidden="true"
-                              data-testid="ArrowUpwardIcon"
-                            >
-                              <path d="m4 12 1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"></path>
-                            </svg> */}
-
-                                <span className="css-1lpgd8m text-[#209653] text-[10px]">
-                                  CLEARED (2)
+                      {[
+                        { type: 'Cheques' },
+                        { type: 'Imps/Neft/Rtgs' },
+                        { type: 'Hand Cash' },
+                      ].map((dat, i) => {
+                        return (
+                          <div className=" m-1" key={i}>
+                            <div className=" border-[#E5EAF2] bg-white rounded-xl border w-60 p-2">
+                              <section>
+                                <span className="flex mt-[13px] ml-[12px] justify-center items-center w-6 h-6 bg-[#3cdc94] rounded-full ring-8 ring-white  ">
+                                  <DocumentIcon className=" w-3 h-3" />
                                 </span>
-                              </div>
+                                <div className="mt-2">
+                                  <span className="css-1lpgd8m text-[#209653] text-black text-[16px] pt-4 mt-4">
+                                    {dat?.type}
+                                  </span>
+                                </div>
+                                <div className="px-2 flex flex-row justify-between">
+                                  <h3 className=" css-5mn5yy">0</h3>
+                                </div>
+                                <div
+                                  className="flex flex-row justify-between bg-[#F7F7F7]"
+                                  style={{
+                                    borderBottomLeftRadius: '12px',
+                                    borderBottomRightRadius: '12px',
+                                  }}
+                                ></div>
+                              </section>
                             </div>
-                          </section>
-                        </div>
-                      </div>
-                      <div className=" m-1">
-                        <div className=" border-[#E5EAF2] rounded-xl border w-60">
-                          <section>
-                            <small className="px-2 css-17tn7gx">$</small>
-                            <div className="px-2 flex flex-row justify-between">
-                              <h3 className=" css-5mn5yy">36k</h3>
-                            </div>
-                            <div
-                              className="flex flex-row justify-between bg-[#F7F7F7]"
-                              style={{
-                                borderBottomLeftRadius: '12px',
-                                borderBottomRightRadius: '12px',
-                              }}
-                            >
-                              <div className=" flexCenter p-2">
-                                <span className="w-2 h-2 rounded-full bg-[#F59A4C]"></span>
-                                {/* <svg
-                              className="svgIcon text-[#209653] text-[14px] "
-                              focusable="false"
-                              viewBox="0 0 24 24"
-                              aria-hidden="true"
-                              data-testid="ArrowUpwardIcon"
-                            >
-                              <path d="m4 12 1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"></path>
-                            </svg> */}
-
-                                <span className="css-1lpgd8m text-[#F59A4C] text-[10px]">
-                                  PENDING (4)
-                                </span>
-                              </div>
-                            </div>
-                          </section>
-                        </div>
-                      </div>
-                      <div className=" m-1">
-                        <div className=" border-[#E5EAF2] rounded-xl border w-60">
-                          <section>
-                            <small className="px-2 css-17tn7gx">$</small>
-                            <div className="px-2 flex flex-row justify-between">
-                              <h3 className=" css-5mn5yy">36k</h3>
-                            </div>
-                            <div
-                              className="flex flex-row justify-between bg-[#F7F7F7]"
-                              style={{
-                                borderBottomLeftRadius: '12px',
-                                borderBottomRightRadius: '12px',
-                              }}
-                            >
-                              <div className=" flexCenter p-2">
-                                <span className="w-2 h-2 rounded-full bg-[#EB5657]"></span>
-                                {/* <svg
-                              className="svgIcon text-[#209653] text-[14px] "
-                              focusable="false"
-                              viewBox="0 0 24 24"
-                              aria-hidden="true"
-                              data-testid="ArrowUpwardIcon"
-                            >
-                              <path d="m4 12 1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"></path>
-                            </svg> */}
-
-                                <span className="css-1lpgd8m text-[#EB5657] text-[10px]">
-                                  CANCELLED (2)
-                                </span>
-                              </div>
-                            </div>
-                          </section>
-                        </div>
-                      </div>
-                      <div className=" m-1">
-                        <div className=" border-[#E5EAF2] rounded-xl border w-60">
-                          <section>
-                            <small className="px-2 css-17tn7gx">$</small>
-                            <div className="px-2 flex flex-row justify-between">
-                              <h3 className=" css-5mn5yy">36k</h3>
-                            </div>
-                            <div
-                              className="flex flex-row justify-between bg-[#F7F7F7]"
-                              style={{
-                                borderBottomLeftRadius: '12px',
-                                borderBottomRightRadius: '12px',
-                              }}
-                            >
-                              <div className=" flexCenter p-2">
-                                <span className="w-2 h-2 rounded-full bg-[#767676]"></span>
-                                {/* <svg
-                              className="svgIcon text-[#209653] text-[14px] "
-                              focusable="false"
-                              viewBox="0 0 24 24"
-                              aria-hidden="true"
-                              data-testid="ArrowUpwardIcon"
-                            >
-                              <path d="m4 12 1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"></path>
-                            </svg> */}
-
-                                <span className="css-1lpgd8m text-[#767676] text-[10px]">
-                                  TOTAL (10)
-                                </span>
-                              </div>
-                            </div>
-                          </section>
-                        </div>
-                      </div>
+                          </div>
+                        )
+                      })}
                     </section>
                   </section>
                 </div>
@@ -328,7 +298,7 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
 
               <div className="flex px-6">
                 {leadsTyper == 'inProgress' && (
-                  <span className="inline-flex p-1 border bg-gray-200 rounded-md">
+                  <span className="inline-flex p-1  bg-gray-200 ">
                     <button
                       className={`px-2 py-1  rounded ${
                         ready ? 'bg-white shadow' : ''
@@ -380,13 +350,13 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
             <MetaTags title="ExecutiveHome" description="ExecutiveHome page" />
 
             {!ready && (
-              <div className="overflow-hidden  px-1 pb-1 rounded-md">
-                <div className="flex flex-col app-bg-white-1  pb-10">
-                  <div className="flex flex-row pt-[1px]">
+              <div className="overflow-hidden  ">
+                <div className="flex flex-col app-bg-white-1   bg-[#3cdc94] pb-10">
+                  <div className="flex flex-row ">
                     <span className="text-lg font-bold app-color-black"></span>
                   </div>
-                  <div className=" bg-[#F7F7F7] rounded-t-md">
-                    <div className=" ">
+                  <div className="">
+                    <div className="flex flex-row justify-between ">
                       <ul
                         className="flex flex-wrap -mb-px "
                         id="myTab"
@@ -397,9 +367,9 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
                           return (
                             <li key={i} className="mr-2" role="presentation">
                               <button
-                                className={`inline-block pt-3 pb-2  mx-2 text-sm font-medium text-center text-[#4f5861] rounded-t-lg border-b-[3px]  hover:text-gray-600 hover:border-[#1A91EB] dark:text-gray-400 dark:hover:text-gray-300  ${
+                                className={`inline-block pt-3 pb-2  mx-2 text-sm font-medium text-center text-black rounded-t-lg border-b-[3px]  hover:text-gray-800    ${
                                   value === fieldHead?.val
-                                    ? 'border-[#1A91EB] text-gray-800'
+                                    ? 'border-black text-gray-800'
                                     : 'border-transparent'
                                 }`}
                                 type="button"
@@ -416,14 +386,12 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
                                   {' '}
                                   {`${fieldHead.lab} `}
                                 </span>
-                                <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded-full ml-[4px] text-[10px] ">
+                                <span className="border border-[#29b777] text-gray-800 px-1 py-1 rounded-full ml-[4px] text-[10px] ">
                                   {/* {rowsCounter(leadsFetchedData, d.val).length} */}
                                   {/* {statusSepA[0][d.val]?.length || 0} */}
                                   {
-                                    rowsCounter(
-                                      leadsFetchedData,
-                                      fieldHead?.val
-                                    ).length
+                                    rowsCounter(finFetchedData, fieldHead?.val)
+                                      .length
                                   }
                                 </span>
                                 {/*
@@ -437,7 +405,114 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
                           )
                         })}
                       </ul>
+                      <div className="flex flex-row mr-4">
+                        <span
+                          className="flex mt-[4px] mr-[0px] justify-center items-center w-6 h-6 bg-[#3cdc94] rounded-full ring-8 ring-[#3cdc94] cursor-pointer "
+                          onClick={() => {
+                            setShowSettings(!showSettings)
+                          }}
+                        >
+                          <AdjustmentsIcon className=" w-4 h-4" />
+                        </span>
+                        <button
+                          onClick={() => setisImportLeadsOpen(true)}
+                          className={`flex items-center ml-5 pl-2 mt-2 pr-4 py-1 max-h-[30px] mt-[2px]  text-sm font-medium text-white bg-gray-800 rounded-[4px] hover:bg-gray-700  `}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 22 22"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                            />
+                          </svg>
+
+                          <span className="ml-1">New</span>
+                        </button>
+                      </div>
                     </div>
+                  </div>
+
+                  <div
+                    className={`${
+                      showSettings ? 'hidden' : ''
+                    } flex flex-row py-2 `}
+                  >
+                    <span className="flex ml-5 mr-5 bg-gray-50 border border-gray-300 border-solid box-border w-1/3 rounded-md">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4  mt-[10px] mx-2"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                        ></path>
+                      </svg>
+                      <input
+                        type="text"
+                        id="globalSearch"
+                        placeholder="Search Unit No, Customer name, Phone no, Dues..."
+                        // onChange={searchKeyField}
+                        autoComplete="off"
+                        // value={searchKey}
+                        className="w-52 bg-transparent focus:border-transparent focus:ring-0 focus-visible:border-transparent focus-visible:ring-0 focus:outline-none text-sm leading-7 text-gray-900 w-4/5 relative"
+                      />
+                    </span>
+                    <div className="mt-1 mr-2">
+                      <SlimSelectBox
+                        name="project"
+                        label=""
+                        className="input "
+                        onChange={(value) => {
+                          // setSelProject(value)
+                          // formik.setFieldValue('project', value.value)
+                        }}
+                        value={'alltransactions'}
+                        // options={aquaticCreatures}
+                        options={[
+                          ...[
+                            {
+                              label: 'All Transactions',
+                              value: 'alltransactions',
+                            },
+                            { label: 'Cheque', value: 'cheque' },
+                            { label: 'Imps', value: 'imps' },
+                            { label: 'Neft', value: 'neft' },
+                            { label: 'Rtgs', value: 'rtgs' },
+                            { label: 'Cash', value: 'cash' },
+                          ],
+                        ]}
+                      />
+                    </div>
+                    <div>
+                      <SlimDateSelectBox
+                        onChange={async (value) => {
+                          setSourceDateRange(value)
+                          //getLeadsDataFun()
+                        }}
+                        label={sourceDateRange}
+                        placeholder={undefined}
+                      />
+                    </div>
+                    <span style={{ display: '' }}>
+                      <CSVDownloader
+                        className="mr-6 h-[20px] w-[20px] mt-2"
+                        downloadRows={finFetchedData}
+                        style={{ height: '20px', width: '20px' }}
+                      />
+                    </span>
+                    <span className="mt-1"> clear</span>
                   </div>
                   <div className="flex flex-row bg-white px-[4px] py-2 relative">
                     <div className="flex w-full  ">
@@ -449,13 +524,19 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
                               <span className="ml-4">FROM</span>
                             </th>
                             <th className="text-left text-xs app-color-black py-2">
-                              <span className="ml-4">To</span>
+                              <span className="ml-4">DATED AS</span>
                             </th>
                             <th className="text-left text-xs app-color-black py-2">
-                              TRANSACTION DETAILS
+                              MODE
+                            </th>
+                            <th className="text-left text-xs app-color-black py-2">
+                              DETAILS
                             </th>
                             <th className="text-right text-xs app-color-black py-2">
                               <span className="mr-10">AMOUNT</span>
+                            </th>
+                            <th className="text-right text-xs app-color-black py-2">
+                              <span className="mr-10">ASSIGNED TO</span>
                             </th>
                             <th className="text-right text-xs app-color-black py-2">
                               <span className="mr-10">STATUS</span>
@@ -469,7 +550,7 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
                           </tr>
                         </thead>
                         <tbody className="p-2">
-                          {leadsFetchedData.map((finData, i) => (
+                          {finFetchedData.map((finData, i) => (
                             <tr
                               className="app-border-1 border-y border-slate-200 "
                               key={i}
@@ -496,10 +577,12 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
                                   <div className="mr-2 w-[3px] rounded-2xl  bg-violet-300 "></div>
                                   <div className="flex flex-col">
                                     <span className="font-semibold text-sm app-color-black">
-                                      {finData?.fromObj?.name || 'Vikram Bose'}
+                                      {finData?.customerName ||
+                                        finData?.fromObj?.name ||
+                                        'NA'}
                                     </span>
                                     <span className="font-normal text-xs app-color-gray-1">
-                                      {'52346673647'}
+                                      {finData?.towards}
                                     </span>
                                     <span className="font-normal text-xs app-color-gray-1">
                                       {finData?.fromObj?.bankName}
@@ -512,22 +595,9 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
                               </td>
                               <td>
                                 <div className="flex flex-row ml-4 py-2">
-                                  <div className="mr-2 w-[3px] rounded-2xl bg-violet-300  "></div>
-                                  <div className="flex flex-col">
-                                    <span className="font-semibold text-sm app-color-black">
-                                      {finData?.toAccount?.name}
-                                    </span>
-                                    <span className="font-normal text-xs app-color-gray-1">
-                                      {/* {finData?.toAccount?.accountNo} */}
-                                      {finData?.towardsBankDocId}
-                                    </span>
-                                    <span className="font-normal text-xs app-color-gray-1">
-                                      {finData?.toAccount?.bankName}
-                                    </span>
-                                    <span className="font-normal text-xs app-color-gray-1">
-                                      {finData?.toAccount?.branch}
-                                    </span>
-                                  </div>
+                                  <span className="font-normal text-xs app-color-gray-1">
+                                    {finData?.txt_dated}
+                                  </span>
                                 </div>
                               </td>
                               <td>
@@ -538,7 +608,7 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
                                       {finData?.mode}
                                     </span>
                                     <span className="font-normal text-xs app-color-gray-1">
-                                      {finData?.transactionNo}
+                                      {finData?.txt_id}
                                     </span>
                                     <span className="font-normal text-xs app-color-gray-1">
                                       {finData?.dated}
@@ -546,9 +616,27 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
                                   </div>
                                 </div>
                               </td>
+                              <td>
+                                <div className="flex flex-row py-2">
+                                  {/* <div className="mr-2 w-[3px]  bg-gray-100 "></div> */}
+                                  <div className="flex flex-col">
+                                    <span className="font-normal text-xs app-color-gray-1">
+                                      {finData?.txt_id}
+                                    </span>
+                                    <span className="font-normal text-xs app-color-gray-1">
+                                      {finData?.txt_dated}
+                                    </span>
+                                  </div>
+                                </div>
+                              </td>
                               <td className="text-right">
                                 <span className="text-right font-semibold text-sm app-color-gray-1 mr-10">
-                                  Rs {finData?.amount}
+                                  Rs {finData?.totalAmount}
+                                </span>
+                              </td>
+                              <td className="text-center">
+                                <span className="text-center font-semibold text-sm app-color-gray-1 mr-10">
+                                  {finData?.assignedTo || 'NA'}
                                 </span>
                               </td>
 
@@ -584,11 +672,19 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
         </div>
       </div>
       <SiderForm
-        open={isImportLeadsOpen}
-        setOpen={setisImportLeadsOpen}
+        open={openTransactionDetails}
+        setOpen={setOpenTransactionDetails}
         title={'Transaction'}
         customerDetails={selUserProfile}
         widthClass="max-w-md"
+        transactionData={transactionData}
+      />
+      <SiderForm
+        open={isImportLeadsOpen}
+        setOpen={setisImportLeadsOpen}
+        title={'New Transaction'}
+        customerDetails={selUserProfile}
+        widthClass="max-w-2xl"
         transactionData={transactionData}
       />
     </>
