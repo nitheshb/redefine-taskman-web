@@ -47,7 +47,12 @@ const SlimSideMenuBar = (props) => {
             d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
           />
         </svg> */}
-          <svg
+          <img
+            src="/new-redefine-logo.svg"
+            alt=""
+            className="h-[40px] ml-[26px]"
+          />
+          {/* <svg
             xmlns="http://www.w3.org/2000/svg"
             width="78"
             height="24"
@@ -80,7 +85,7 @@ const SlimSideMenuBar = (props) => {
               d="M4.66391 13V9.4973L11.8592 5.17391V1L1.58105 7.03243V18.9676L11.8573 13V8.71892L4.66391 13Z"
               fill="#7A77FF"
             ></path>
-          </svg>
+          </svg> */}
         </a>
       )}
       <section className="mb-4"></section>
@@ -251,9 +256,7 @@ const SlimSideMenuBar = (props) => {
                       ></path>
                     </svg>
                   </span>
-                  <span className="text-[9px] font-bold  pl-1">
-                    Units
-                  </span>
+                  <span className="text-[9px] font-bold  pl-1">Units</span>
                 </span>
               </span>
             </li>
@@ -1078,9 +1081,7 @@ const SlimSideMenuBar = (props) => {
                       ></path>
                     </svg>
                   </span>
-                  <span className="text-[9px] font-bold  pl-1">
-                    Units
-                  </span>
+                  <span className="text-[9px] font-bold  pl-1">Units</span>
                 </span>
               </span>
             </li>

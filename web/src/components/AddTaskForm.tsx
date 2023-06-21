@@ -1,22 +1,23 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import { Dialog, Listbox, Transition } from '@headlessui/react'
 import { useState, useEffect, Fragment } from 'react'
+
+import { Dialog, Listbox, Transition } from '@headlessui/react'
 import { RadioGroup } from '@headlessui/react'
-import { Label, InputField, TextAreaField, FieldError } from '@redwoodjs/forms'
-import Select from 'react-select'
-import { Form, Formik } from 'formik'
-
-import * as Yup from 'yup'
-import NumberFormat from 'react-number-format'
-import DatePicker from 'react-datepicker'
+import { CalendarIcon } from '@heroicons/react/outline'
+import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
 import { setHours, setMinutes } from 'date-fns'
+import { Timestamp } from 'firebase/firestore'
+import { Form, Formik } from 'formik'
+import DatePicker from 'react-datepicker'
+import NumberFormat from 'react-number-format'
+import Select from 'react-select'
+import * as Yup from 'yup'
 
-import { TextField } from 'src/util/formFields/TextField'
-import { CustomSelect } from 'src/util/formFields/selectBoxField'
-import Loader from './Loader/Loader'
-import { PhoneNoField } from 'src/util/formFields/phNoField'
+import { Label, InputField, TextAreaField, FieldError } from '@redwoodjs/forms'
+import { useRouterStateSetter } from '@redwoodjs/router/dist/router-context'
+
 import {
   addLead,
   checkIfLeadAlreadyExists,
@@ -24,16 +25,47 @@ import {
   steamUsersListByRole,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
-import { Timestamp } from 'firebase/firestore'
-import { useRouterStateSetter } from '@redwoodjs/router/dist/router-context'
 import {
   sendWhatAppMediaSms,
   sendWhatAppTextSms,
 } from 'src/util/axiosWhatAppApi'
-import { CalendarIcon } from '@heroicons/react/outline'
-import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
+import { PhoneNoField } from 'src/util/formFields/phNoField'
+import { CustomSelect } from 'src/util/formFields/selectBoxField'
 import { SlimSelectBox } from 'src/util/formFields/slimSelectBoxField'
+import { TextField } from 'src/util/formFields/TextField'
 import { TextField2 } from 'src/util/formFields/TextField2'
+
+const customStyles = {
+  control: (base) => ({
+    ...base,
+    height: 30,
+    minHeight: 25,
+    padding: 0,
+  }),
+  valueContainer: (base) => ({
+    ...base,
+    alignItems: 'initial',
+    paddingTop: 0,
+    padding: 0,
+    paddingLeft: 5,
+  }),
+  dropdownIndicator: (base) => ({
+    ...base,
+    paddingTop: 5,
+  }),
+  indicatorSeparator: (base) => ({
+    ...base,
+    marginTop: 4,
+    marginBottom: 8,
+  }),
+  placeholder: (base) => ({
+    ...base,
+    fontSize: 14,
+    marginTop: 3,
+  }),
+  menu: (provided) => ({ ...provided, marginTop: 0, zIndex: 9999 }),
+}
+import Loader from './Loader/Loader'
 const people = [
   { name: 'Priority 1' },
   { name: 'Priority 2' },
@@ -295,7 +327,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
         <section className="flex flex-row mx-4 py-4">
           <span className="ml-2 mt-[1px] ">
             <label className="font-semibold text-[#053219]  text-[18px]  mb-1  ">
-              {title}
+              {title}  🍉
               <abbr title="required"></abbr>
             </label>
           </span>
@@ -303,7 +335,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
       </div>
 
       <div className="grid  gap-8 grid-cols-1">
-        <div className="flex flex-col  my-10 rounded-lg bg-white border border-gray-100 px-4 m-4 mt-4">
+        <div className="flex flex-col  rounded-lg bg-white ">
           <div className="mt-0">
             {/* new one */}
 
@@ -331,20 +363,9 @@ const AddTaskForm = ({ title, dialogOpen }) => {
               }}
             >
               {(formik) => (
-                <div className="mt-8">
-                  <div className="mb-4 ">
-                    <div className="inline">
-                      <div className="">
-                        <label className="font-semibold text-[#053219]  text-sm  mb-1  ">
-                          Task Details<abbr title="required"></abbr>
-                        </label>
-                      </div>
-
-                      <div className="border-t-4 rounded-xl w-16 mt-1 border-green-600"></div>
-                    </div>
-                  </div>
+                <div className="mt-">
                   <div className="flex flex-col pt-0 my-10 mx-4 mt-[10px] rounded">
-                    <div className="  outline-none border  rounded p-4">
+                    <div className="  outline-none">
                       {/* <textarea
                         // onChange={setTakTitle()}
                         value={takTitle}
@@ -357,78 +378,87 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                           <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
                           <span className="ml-1 leading-[15px] ">
                             <label className="font-semibold text-[#053219]  text-[13px] leading-[15px] mb-1  ">
-                              Task Title<abbr title="required"></abbr>
+                              Business Task<abbr title="required"></abbr>
                             </label>
                           </span>
                         </section>
-                        <div className="flex flex-row  mt-1 mb-5 w-full">
-                          <div>
-                            <div className="w-full flex flex-col mb-3 mt-[6px]  h-[50px]  max-w-[470px] min-w-[470px] m-1">
-                              <TextField2
-                                label="Task Title"
-                                onChange={(e) => setTitleFun(e)}
-                                type="text"
-                                name="taskTitle"
-                              />
-                            </div>
-                          </div>
-                       </div>
-                          <div className="flex flex-row  mt-1 mb-5 w-full">
-                           <div>
-                            <div className="w-full flex flex-row h-[100px]  mb-3 mt-[6px]   max-w-[520px] min-w-[520px] mx-2">
-                              <textarea
-                                value={formik.values.taskdesc}
-                                onChange={formik.handleChange}
-                                placeholder="Task Description"
-                                name="taskdesc"
-                                className="w-[90%] h-full outline outline-gray-300  rounded p-1 "
-                              ></textarea>
-                            </div>
-                          </div>
+
+                        <div className=" space-y-2 w-full text-xs mt-4">
+                          <TextField
+                            label="Task Title*"
+                            name="taskTitle"
+                            type="text"
+                          />
                         </div>
-                      </section>
+                        <div className=" space-y-2 w-full text-xs mt-3">
+                          <TextField
+                            label="Task Description"
+                            name="taskdesc"
+                            onChange={formik.handleChange}
+                            type="text"
+                          />
+                        </div>
+                        <div className="w-full flex flex-col mt-3">
+                          <CustomSelect
+                            name="assignedTo"
+                            label="Assigned To*"
+                            className="input mt-"
+                            onChange={(value) => {
+                              formik.setFieldValue('assignedTo', value.value)
+                              formik.setFieldValue('assignedToObj', value)
+                            }}
+                            value={formik.values.assignedTo}
+                            // options={aquaticCreatures}
+                            options={usersList}
+                          />
 
-                      <section className="mt-1 px-4 rounded-lg bg-white border border-gray-100 shadow">
-                        <section className="flex flex-row  pt-2 ">
-                          <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
-                          <span className="ml-1 leading-[15px] ">
-                            <label className="font-semibold text-[#053219]  text-[13px] leading-[15px] mb-1  ">
-                              <abbr title="required"></abbr>
-                            </label>
-                          </span>
-                        </section>
-                        <div className="flex flex-row  mt-1">
-                          <div>
-                            <div className="w-full flex flex-col mb-3 mt-[6px]  max-w-[250px] min-w-[250px]">
-                              <SlimSelectBox
-                                name="assignedTo"
-                                placeholder="Assign To"
-                                className="input mt-"
-                                onChange={(value) => {
-                                  formik.setFieldValue(
-                                    'assignedTo',
-                                    value.value
-                                  )
-                                  formik.setFieldValue('assignedToObj', value)
-                                }}
-                                value={formik.values.assignedTo}
-                                options={usersList}
-                              />
+                          <p
+                            className="text-sm text-red-500 hidden mt-3"
+                            id="error"
+                          >
+                            Please fill out this field.
+                          </p>
+                        </div>
+                        <div className="w-full flex flex-col mt-3">
+                          <span></span>
+                          <label className="label font-regular text-[12px] block mb-1 text-gray-700">
+                            Participants
+                          </label>
+                          <Select
+                            isMulti
+                            placeholder="Add Participants"
+                            name="followers"
+                            onChange={(value) => {
+                              formik.setFieldValue('followers', [value])
+                            }}
+                            options={usersList}
+                            value={formik.values.followers[0] || []}
+                            className="basic-multi-select w-full"
+                            classNamePrefix="myselect"
+                            styles={customStyles}
+                          />
 
-                              <p
-                                className="text-sm text-red-500 hidden mt-3"
-                                id="error"
-                              >
-                                Please fill out this field.
-                              </p>
-                            </div>
-                          </div>
+                          <p
+                            className="text-sm text-red-500 hidden mt-3"
+                            id="error"
+                          >
+                            Please fill out this field.
+                          </p>
+                        </div>
+                        <div className="md:flex flex-row md:space-x-4 mt-3 w-full text-xs mt-2 ">
+                          {/* <div className="mb-3 space-y-2 w-full text-xs mt-">
+                            <TextField label="Size*" name="size" type="text" />
+                          </div> */}
+<div className="flex flex-col">
+<label className="label font-regular text-[12px] block mb-1 text-gray-700">
+                            Participants
+                          </label>
+                          <div className="bg-green border  pl-2 rounded flex flex-row h-[32px] ">
 
-                          <div className="bg-green border  pl-4 ml-4 rounded flex flex-row mt-2.5 h-[36px] ">
-                            <CalendarIcon className="w-4  ml-1 inline text-[#058527]" />
+                            <CalendarIcon className="w-4  inline text-[#058527]" />
                             <span className="inline">
                               <DatePicker
-                                className="mt-[7px] pl- px-2  inline text-sm min-w-[193px]"
+                                className="mt-[5px] pl- px-2  inline text-sm "
                                 selected={startDate}
                                 onChange={(date) => setStartDate(date)}
                                 showTimeSelect
@@ -442,166 +472,34 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                               />
                             </span>
                           </div>
-                          {/*
-                        <div className="flex ml-4 mt-1 h-[36px]">
-                          <Listbox value={selected} onChange={setSelected}>
-                            <div className="relative mt-1">
-                              <Listbox.Button className="relative w-full w-[116px]  h-[36px] py-2 pl-3 pr-10 text-left border bg-white rounded  cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-white focus-visible:ring-offset-orange-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm">
-                                <span className="block truncate">
-                                  {selected1.name}
-                                </span>
-                                <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                                  <SelectorIcon
-                                    className="w-5 h-5 text-gray-400"
-                                    aria-hidden="true"
-                                  />
-                                </span>
-                              </Listbox.Button>
-                              <Transition
-                                as={Fragment}
-                                leave="transition ease-in duration-100"
-                                leaveFrom="opacity-100"
-                                leaveTo="opacity-0"
-                              >
-                                <Listbox.Options className="absolute w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                                  {people.map((person, personIdx) => (
-                                    <Listbox.Option
-                                      key={personIdx}
-                                      className={({ active }) =>
-                                        `cursor-default select-none relative py-2 pl-10 pr-4 ${
-                                          active
-                                            ? 'text-amber-900 bg-amber-100'
-                                            : 'text-gray-900'
-                                        }`
-                                      }
-                                      value={person}
-                                    >
-                                      {({ selected }) => (
-                                        <>
-                                          <span
-                                            className={`block truncate ${
-                                              selected
-                                                ? 'font-medium'
-                                                : 'font-normal'
-                                            }`}
-                                          >
-                                            {person.name}
-                                          </span>
-                                          {selected ? (
-                                            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
-                                              <CheckIcon
-                                                className="w-5 h-5"
-                                                aria-hidden="true"
-                                              />
-                                            </span>
-                                          ) : null}
-                                        </>
-                                      )}
-                                    </Listbox.Option>
-                                  ))}
-                                </Listbox.Options>
-                              </Transition>
-                            </div>
-                          </Listbox>
-                        </div> */}
-                        </div>
-                      </section>
-                      <section className="mt-1 px-4 rounded-lg bg-white border border-gray-100 shadow ">
-                        <section className="flex flex-row  pt-2 ">
-                          <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
-                          <span className="ml-1 leading-[15px] ">
-                            <label className="font-semibold text-[#053219]  text-[13px] leading-[15px] mb-1  ">
-                              <abbr title="required"></abbr>
-                            </label>
-                          </span>
-                        </section>
-                        <div className="flex flex-row  mt-1 mb-5">
-                          <div>
-                            <div className="w-full flex flex-col mb-3 mt-[3px]  h-[46px] max-w-[250px] min-w-[250px] ">
-                              <SlimSelectBox
-                                name="priorities"
-                                placeholder="Priorities"
-                                className="input mt-"
-                                onChange={(value) => {
-                                  // formik.setFieldValue('assignedTo', value.value)
-                                  // formik.setFieldValue('assignedToObj', value)
-                                }}
-                                // value={formik.values.assignedTo}
-                                // options={usersList}
-                              />
-
-                              <p
-                                className="text-sm text-red-500 hidden mt-3"
-                                id="error"
-                              >
-                                Please fill out this field.
-                              </p>
-                            </div>
                           </div>
-                          <div>
-                            <div className="w-full flex flex-col mb-3 mt-[-12px]  h-[36px] ml-3 pl-1 pr-1 ">
-                              {/* <Select
-                            // isMulti
-                              name="followers"
-                              placeholder="Add Participants"
-                              // className="input mt-"
-                              // onChange={(value) => {
-                              //   formik.setFieldValue('followers', [value.value])
-                              //   // formik.setFieldValue('assignedToObj', value)
-                              // }}
-                              value={formik.values.followers[0] || []}
-                              className="basic-multi-select"
-                              classNamePrefix="select"
-                              options={usersList}
-                            /> */}
+                          <div className="w-full flex flex-col ">
+                            <CustomSelect
+                              name="priorities"
+                              label="Priority"
+                              className="input mt-"
+                              onChange={(value) => {
 
-                              <TextField
-                              type="file"
-                              name="file"
-                              label="Add file"
-                              className="mt-[-3px] border border-gray-300 w-full rounded h-[36px] pt-0.5 pl-1"
-                              />
-                            </div>
+                              }}
+                              value={formik.values.priorities}
+                              // options={aquaticCreatures}
+                              options={[]}
+                            />
+                            <p
+                              className="text-sm text-red-500 hidden mt-3"
+                              id="error"
+                            >
+                              Please fill out this field.
+                            </p>
                           </div>
                         </div>
-                      </section>
-
-                      <section className="mt-1 px-4 rounded-lg bg-white border border-gray-100 shadow ">
-                        <section className="flex flex-row  pt-2 ">
-                          <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
-                          <span className="ml-1 leading-[15px] ">
-                            <label className="font-semibold text-[#053219]  text-[13px] leading-[15px] mb-1  ">
-                              <abbr title="required"></abbr>
-                            </label>
-                          </span>
-                        </section>
-                        <div className="flex flex-row  mt-1 mb-5">
-                          <div>
-                            <div className="w-[500px] flex flex-col mb-3 mt-[6px]  h-[50px] ">
-                              <Select
-                                // defaultValue={[usersList[2], usersList[3]]}
-                                isMulti
-                                placeholder="Add Participants"
-                                name="followers"
-                                onChange={(value) => {
-                                  formik.setFieldValue('followers', [value])
-                                  // formik.handleChange
-                                  //   // formik.setFieldValue('assignedToObj', value)
-                                }}
-                                options={usersList}
-                                value={formik.values.followers[0] || []}
-                                className="basic-multi-select w-[495px]"
-                                classNamePrefix="select"
+                        <div className="w-full flex flex-row my-3">
+                        <TextField
+                                type="file"
+                                name="file"
+                                label="Add file"
+                                className="mt-[-3px] border border-gray-300 w-full rounded h-[36px] pt-0.5 pl-1"
                               />
-
-                              <p
-                                className="text-sm text-red-500 hidden mt-3"
-                                id="error"
-                              >
-                                Please fill out this field.
-                              </p>
-                            </div>
-                          </div>
                         </div>
                       </section>
                     </div>
@@ -615,20 +513,20 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                       <section className="flex flex-row ">
                         <button
                           // onClick={() => fAddSchedule()}
-                          className={`flex mt-2 cursor-pointer rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium  text-gray-700   bg-gradient-to-r from-indigo-400 to-cyan-400   hover:shadow-lg`}
+                          className={`flex mt-2 cursor-pointer rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium    bg-gradient-to-r from-indigo-400 to-cyan-400   hover:shadow-lg blue-bg-gradient`}
                         >
                           <span className="ml-1 ">Add Task</span>
                         </button>
                         <button
                           // onClick={() => fAddSchedule()}
-                          className={`flex mt-2 ml-4 cursor-pointer rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium  text-gray-700  bg-gradient-to-r from-indigo-400 to-cyan-400   hover:shadow-lg  `}
+                          className={`flex mt-2 ml-4 cursor-pointer rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium  bg-gradient-to-r from-indigo-400 to-cyan-400   hover:shadow-lg blue-bg-gradient  `}
                         >
                           <span className="ml-1 ">Add Task & close</span>
                         </button>
                         <button
                           // onClick={() => fSetLeadsType('Add Lead')}
                           // onClick={() => cancelResetStatusFun()}
-                          className={`flex mt-2 ml-4 rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium border  hover:bg-gray-700  `}
+                          className={`flex mt-2 ml-4 rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium border  hover:bg-gray-700 hover:text-white `}
                         >
                           <span className="ml-1 ">Cancel</span>
                         </button>
