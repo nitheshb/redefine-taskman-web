@@ -3,7 +3,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import { useEffect, useState } from 'react'
 
-import { ArrowNarrowRightIcon } from '@heroicons/react/solid'
+import { ArrowNarrowRightIcon, PlusIcon } from '@heroicons/react/solid'
 import { TabList } from '@mui/lab'
 import { Box, Card, Grid, styled } from '@mui/material'
 import { useTranslation } from 'react-i18next' // styled components
@@ -46,7 +46,7 @@ const TodoListView = ({
   const [tableData, setTableData] = useState([])
   const [tabHeadFieldsA, settabHeadFieldsA] = useState([])
   const [isImportLeadsOpen1, setisImportLeadsOpen1] = useState(false)
-  const [isClicked, setisClicked] = useState('clicked_1')
+  const [isClicked, setisClicked] = useState('dept_tasks')
 
   // const [leadsFetchedData, setLeadsFetchedData] = useState([])
 
@@ -120,189 +120,128 @@ const TodoListView = ({
   ]
   return (
     <>
-      <Box pb={4}>
-        <div className=" w-full">
+      <Box pb={4} className="font-Rubik">
+        <div className=" w-full font-Rubik">
           <div className="bg-white py-4 md:py-7 px-4 md:px-4 xl:px-6 rounded">
-            <section className="flex flex-row w-full ">
-              <button onClick={() => setisClicked('clicked_1')}>
-                {' '}
-                <section
-                  className={` rounded  flex flex-col p-4 ml-1 mb-2 w-100 border border-[#eaeaea]   w-[212px]
-                ${
-                  isClicked.includes('clicked_1')
-                    ? 'bg-fuchsia-400 scale-105 ml-3 active:bg-fuchsia-500 transition-all scale-105 mr-2'
-                    : 'bg-white hover:bg-fuchsia-300 transform hover:scale-95'
-                }`}
-                >
-                  <section className="flex flex-row">
-                    <section className="bg-[#F1EEF6] p-[11px] rounded mr-1">
-                      <img
-                        className="px-1"
-                        src="/Award_3.png"
-                        alt="/Award_3.png"
-                      />
-                    </section>
-                    <section className="ml-3 flex flex-col">
-                      <h5 className="text-sm">Sale Tasks</h5>
-                      <h2 className="text-xl font-semibold text-black leading-light font-Playfair pb-1">
-                        {
-                          taskListA?.filter(
-                            (d) =>
-                              searchKey.includes(d['sts']) ||
-                              searchKey.includes('upcoming')
-                          ).length
-                        }
-                      </h2>
-                    </section>
-                  </section>
-                </section>{' '}
-              </button>
-              <button onClick={() => setisClicked('clicked_2')}>
-                {' '}
-                <section
-                  className={` rounded  flex flex-col p-4 ml-1 mb-2 w-100 border border-[#eaeaea]   w-[212px] "
-                ${
-                  isClicked.includes('clicked_2')
-                    ? 'bg-fuchsia-400 scale-105 ml-3 active:bg-fuchsia-500 transition-all scale-105 mr-2 ml-3'
-                    : 'bg-white hover:bg-fuchsia-300 transform hover:scale-95'
-                }`}
-                >
-                  <section className="flex flex-row ">
-                    <section className="bg-[#F1EEF6] p-[11px] rounded mr-1">
-                      <img
-                        className="px-1"
-                        src="/Award_3.png"
-                        alt="/Award_3.png"
-                      />
-                    </section>
-                    <section className="ml-3 flex flex-col ">
-                      <h5 className="text-sm">Personal Tasks</h5>
-                      <h2 className="text-xl font-semibold text-black leading-light font-Playfair pb-1">
-                        {
-                          taskListA?.filter(
-                            (d) =>
-                              searchKey.includes(d['sts']) ||
-                              searchKey.includes('upcoming')
-                          ).length
-                        }
-                      </h2>
-                    </section>
-                  </section>
-                </section>{' '}
-              </button>
+            <div className="flex flex-row justify-between border-gray-200 border-b">
+              <ul
+                className="flex w-full  rounded-t-lg  mx-"
+                id="myTab"
+                data-tabs-toggle="#myTabContent"
+                role="tablist"
+              >
+                {[
+                  { lab: 'Sales Tasks', val: 'dept_tasks' },
+                  { lab: 'Personal', val: 'personal_tasks' },
+                  { lab: 'Business Tasks', val: 'business_tasks' },
+                ].map((d, i) => {
+                  return (
+                    <li key={i} className="mr-4" role="presentation">
+                      <button
+                        className={`inline-block pb-1 mr-3 text-sm font-medium text-center text-black rounded-t-lg border-b-2  hover:text-black hover:border-gray-300   ${
+                          isClicked === d.val
+                            ? 'border-black'
+                            : 'border-transparent'
+                        }`}
+                        type="button"
+                        role="tab"
+                        onClick={() => setisClicked(d.val)}
+                      >
+                        <section className="flex flex-row">
+                          {' '}
+                          <img
+                            className="px-1 w-5 h-4"
+                            src="/Award_3.png"
+                            alt="/Award_3.png"
+                          />{' '}
+                          {`${d.lab} `}
+                        </section>
 
-              <button onClick={() => setisClicked('clicked_3')}>
-                {' '}
-                <section
-                  className={` rounded  flex flex-col p-4 ml-1 mb-2 w-100 border border-[#eaeaea]   w-[212px] "
-                ${
-                  isClicked.includes('clicked_3')
-                    ? 'bg-fuchsia-400 scale-105 ml-3 active:bg-fuchsia-500 transition-all scale-105 ml-3'
-                    : 'bg-white hover:bg-fuchsia-300 transform hover:scale-95'
-                }`}
-                >
-                  <section className="flex flex-row">
-                    <section className="bg-[#F1EEF6] p-[11px] rounded mr-1">
-                      <img
-                        className="px-1"
-                        src="/Award_3.png"
-                        alt="/Award_3.png"
-                      />
-                    </section>
-                    <section className="ml-3 flex flex-col">
-                      <h5 className="text-sm">Business Tasks</h5>
-                      <h2 className="text-xl font-semibold text-black leading-light font-Playfair pb-1">
-                        {
-                          taskListA?.filter(
-                            (d) =>
-                              searchKey.includes(d['sts']) ||
-                              searchKey.includes('upcoming')
-                          ).length
-                        }
-                      </h2>
-                    </section>
-                  </section>
-                </section>{' '}
-              </button>
-            </section>
-
-            <div className=" rounded px-2 mt-2 mb-3">
-              <div className="sm:flex items-center justify-between bg-white rounded px-2">
-                <div className="flex items-center">
-                  <a
-                    className="rounded-full focus:outline-none"
-                    href="javascript:void(0)"
-                    onClick={() => setSearchKey(['completed', 'pending'])}
-                  >
-                    <div
-                      className={`px-8 rounded-full py-0.5  ${
-                        searchKey.includes('completed') &&
-                        searchKey.includes('pending')
-                        ? 'bg-[#e5d9ff] text-[#025e5e] scale-105  font-normal'
-                        : 'hover:text-[#027576] hover:bg-[#E7DDFF] bg-gray-200 text-gray-500 hover:scale-95 font-light'
-                      }`}
-                    >
-                      All
-                    </div>
-                  </a>
-                  <a
-                    className="rounded-full focus:outline-none ml-4 sm:ml-8"
-                    href="javascript:void(0)"
-                    onClick={() => setSearchKey(['completed'])}
-                  >
-                    <div
-                      className={`px-8 rounded-full py-0.5 ${
-                        searchKey.includes('completed') &&
-                        searchKey.length === 1
-                        ? 'bg-[#e5d9ff] text-[#025e5e] scale-105  font-normal'
-                        : 'hover:text-[#027576] hover:bg-[#E7DDFF] bg-gray-200 text-gray-500 hover:scale-95 font-light'
-                      }`}
-                    >
-                      <p>Assigned to me</p>
-                    </div>
-                  </a>
-                  <a
-                    className="rounded-full focus:outline-none    ml-4 sm:ml-8"
-                    href="javascript:void(0)"
-                    onClick={() => setSearchKey(['pending'])}
-                  >
-                    <div
-                      className={` px-8 rounded-full py-0.5  ${
-                        searchKey.includes('pending') && searchKey.length === 1
-                        ? 'bg-[#e5d9ff] text-[#025e5e] scale-105  font-normal'
-                        : 'hover:text-[#027576] hover:bg-[#E7DDFF] bg-gray-200 text-gray-500 hover:scale-95 font-light'
-                      }`}
-                    >
-                      <p>Created by me</p>
-                    </div>
-                  </a>
-                  <a
-                    className="rounded-full focus:outline-none   ml-4 sm:ml-8"
-                    href="javascript:void(0)"
-                    onClick={() => setSearchKey(['upcoming'])}
-                  >
-                    <div
-                      className={`px-8 rounded-full py-0.5 ${
-                        searchKey.includes('upcoming') && searchKey.length === 1
-                          ? 'bg-[#e5d9ff] text-[#025e5e] scale-105  font-normal'
-                          : 'hover:text-[#027576] hover:bg-[#E7DDFF] bg-gray-200 text-gray-500 hover:scale-95 font-light'
-                      }`}
-                    >
-                      <p>Participants</p>
-                    </div>
-                  </a>
-                </div>
+                        {/* <span className="bg-gray-100 px-2 py-1 rounded-full">
+                          {/* {rowsCounter(leadsFetchedData, d.val).length} */}
+                      </button>
+                    </li>
+                  )
+                })}
+              </ul>
+              {['business_tasks', 'personal_tasks'].includes(isClicked) && (
                 <button
-                  className="focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 sm:mt-0 inline-flex items-start justify-start px-6 my-[3px] py-2 mr-2
-                 focus:outline-none rounded-full hover:text-[#027576] hover:bg-[#E7DDFF] bg-[#E7DDFF] text-[#027576] hover:text-[#025e5e] hover:scale-95 font-light "
+                  className="w-[104px] focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 sm:mt-0 inline-flex items-start justify-start px-2 mb-[4px] mr-2
+                 focus:outline-none rounded-full hover:text-[#027576] hover:bg-gradient-to-r from-violet-200 to-pink-200 bg-gradient-to-r from-violet-200 to-pink-200 text-[#027576] hover:text-[#025e5e] hover:scale-95 font-light "
                   onClick={() => openingTaskAddWindow()}
                 >
-                  <p className="text-sm font-medium leading-none">
-                    Add Task
+                  <PlusIcon className='w-[13px] h-[13px] mt-[5px] mr-[2px]' />
+                  <p className="text-sm font-medium leading-none mt-1">
+                    New Task
                   </p>
                 </button>
-              </div>
+              )}
+              {/* {selFeature != 'lead_strength' && (
+          <span
+            className="font-bodyLato text-xs text-blue-400 mr-2 mt-2 cursor-pointer"
+            onClick={() => setFeature('lead_strength')}
+          >
+            LEAD STRENGTH
+          </span>
+        )}
+        {selFeature == 'lead_strength' && (
+          <span
+            className="font-bodyLato text-xs text-red-400 mr-2 mt-2 cursor-pointer"
+            onClick={() => setFeature('appointments')}
+          >
+            CLOSE
+          </span>
+        )} */}
             </div>
+            {isClicked === 'business_tasks' && (
+              <div className=" rounded px-1 mt-4 mb-3">
+                <div className="sm:flex items-center justify-between bg-white rounded">
+                  <div className="flex items-center">
+                    {[
+                      {
+                        lab: 'All',
+                        val: 'dept_tasks',
+                        match: ['completed', 'pending'],
+                      },
+                      {
+                        lab: 'Assigned to me',
+                        val: 'personal_tasks',
+                        match: ['completed', 'pending'],
+                      },
+                      {
+                        lab: 'Created by me',
+                        val: 'business_tasks',
+                        match: ['pending'],
+                      },
+                      {
+                        lab: 'Participants',
+                        val: 'business_tasks',
+                        match: ['upcoming'],
+                      },
+                    ].map((d, i) => {
+                      return (
+                        <a
+                          key={i}
+                          className="rounded-full focus:outline-none mr-2"
+                          href="javascript:void(0)"
+                          onClick={() => setSearchKey(d.match)}
+                        >
+                          <div
+                            className={`px-3 rounded-full py-0.5 text-[11px]  ${
+                              searchKey.includes(d.match)
+                                ? 'bg-gradient-to-r from-violet-200 to-pink-200 scale-105  font-normal'
+                                : 'hover:text-[#027576] hover:bg-[#E7DDFF] bg-gray-200 text-gray-500 hover:scale-95 font-light'
+                            }`}
+                          >
+                            {d.lab}
+                          </div>
+                        </a>
+                      )
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
             {taskListA.length === 0 && (
               <div className="py-8 px-8 mt-10 flex flex-col items-center bg-red-100 rounded">
                 <div className="font-md font-medium text-xs mb-4 text-gray-800 items-center">
@@ -320,7 +259,7 @@ const TodoListView = ({
                 </time>
               </div>
             )}
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto mt-2">
               <table className="w-full whitespace-nowrap">
                 <tbody>
                   {

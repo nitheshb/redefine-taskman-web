@@ -205,7 +205,7 @@ const ProjectsTaskHome = ({
   return (
     <div className="flex  flex-row  text-gray-700">
     <div className="flex-1 overflow-auto">
-      <div className="p-3 ">
+      <div className="p-1 ">
     <TodayLeadsActivitySearchView
       data={filterTable}
       searchKey={searchKey}
