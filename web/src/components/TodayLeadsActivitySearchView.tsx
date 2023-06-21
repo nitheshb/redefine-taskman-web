@@ -872,7 +872,7 @@ export default function TodayLeadsActivitySearchView({
                   </div>
                   <div className="w-2/12 flex flex-col">
                     <section className="bg-white rounded  flex flex-col p-4 ml-1 mb-2 w-100 ">
-                      <h5 className="text-sm">{greet}...!</h5>
+                      <h5 className="text-sm">{greet}...!🖐</h5>
                       <h2 className="text-md font-semibold text-black leading-light font-Playfair pb-1">
                         {user?.displayName?.toLocaleUpperCase()}
                       </h2>
@@ -918,7 +918,7 @@ export default function TodayLeadsActivitySearchView({
           {leadByViewLayout && todaySch && (
             <div className=" w-full">
               <div className="bg-white py-4 md:py-7 px-4 md:px-4 xl:px-6 rounded">
-             
+
                 <div className="sm:flex items-center justify-between">
                   <div className="flex items-center">
                     <a
