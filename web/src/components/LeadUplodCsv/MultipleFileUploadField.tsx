@@ -172,13 +172,16 @@ export function MultipleFileUploadField({
   }, [files])
 
   function uploadFile(file: File) {
-    console.log('cloud it 1 ')
+    console.log('cloud it 1 ', file)
     setLoading(true)
     if (!file) return
     try {
       const uid = uuidv4()
-      const storageRef = ref(storage, `/${orgId}_files/_${uid}`)
+
+      const storageRef = ref(storage, `/${orgId}_files/_${uid}.docx`)
       const uploadTask = uploadBytesResumable(storageRef, file)
+
+      // const uploadTask = storageRef.put(file);
       return uploadTask.on(
         'state_changed',
         (snapshot) => {
@@ -192,15 +195,24 @@ export function MultipleFileUploadField({
           const { projectId, uid } = myPhase || {}
           const url = await getDownloadURL(uploadTask.snapshot.ref)
           let type
+          let format
           switch (title) {
             case 'Plan Diagram':
               type = 'plan_diagram'
+              format = 'pdf'
               break
             case 'Brouchers':
               type = 'broucher'
+              format = 'pdf'
+              break
+            case 'legal_doc_upload':
+              type = 'legal_doc_upload'
+              format = 'doc'
+
               break
             case 'Approvals':
               type = 'approval'
+              format = 'pdf'
               break
 
             default:
@@ -215,7 +227,7 @@ export function MultipleFileUploadField({
             pId,
             uid,
             type,
-            'pdf'
+            format
           )
           // setUploadedUrl(url)
           setLoading(false)
@@ -293,11 +305,11 @@ export function MultipleFileUploadField({
               const computPlotObj = {
                 mode: await makeMode(foundLength),
                 pId,
-                phaseId:dRow[""] || 1,
+                phaseId: dRow[""] || 1,
                 blockId: dRow[""] || 1,
                 Date: Timestamp.now().toMillis(),
                 unit_no: dRow["Plot No.*"],
-                survey_no: dRow["Survey No"],
+                survey_no: dRow["Survey No"] || "",
                 Katha_no: dRow["Katha No"],
                 PID_no: dRow["PID No"],
                 area: dRow["Plot area *(Sq.Ft)"],
@@ -306,8 +318,9 @@ export function MultipleFileUploadField({
                 plc_per_sqft: dRow["PLC Per Sqft"],
                 size: dRow["Plot Size*"],
                 facing: dRow["Plot Type*"],
+                unit_d: dRow['Unit Dimension*(m)'],
                 east_d: dRow["East Dimension*(m)"],
-                west_d: dRow["West Dimension*(m)"],
+                west_d: dRow["West Dimension*(m)"] || 0,
                 north_d: dRow["North Dimension*(m)"],
                 south_d: dRow["South Dimension*(m)"],
                 east_west_d: dRow[""] ||0,
@@ -444,9 +457,13 @@ export function MultipleFileUploadField({
         'Plan Diagram',
         'Brouchers',
         'Approvals',
-        'upload_legal_docs',
+        'legal_doc_upload',
       ].includes(title)
-        ? '.pdf'
+        ? [
+
+          'legal_doc_upload',
+        ].includes(title)
+          ? '.doc, .docx':'.pdf'
         : '.csv, text/csv, .xlsx',
       maxSize: 40000 * 1024, // 1200KB
     })
@@ -549,7 +566,7 @@ export function MultipleFileUploadField({
                 'Plan Diagram',
                 'Brouchers',
                 'Approvals',
-                'upload_legal_docs',
+                'legal_doc_upload',
               ].includes(title)
                 ? '*.pdf'
                 : '*.csv'}
@@ -602,7 +619,7 @@ export function MultipleFileUploadField({
                   onUpload={onUpload}
                   file={fileWrapper.file}
                 />
-                {['Plan Diagram', 'Brouchers', 'Approvals'].includes(title) && (
+                {['Plan Diagram', 'Brouchers', 'Approvals', 'legal_doc_upload'].includes(title) && (
                   <Formik
                     initialValues={{
                       file_name: '',

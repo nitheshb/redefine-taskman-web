@@ -26,12 +26,28 @@ const UnitsInventoryHome = ({ project }) => {
 
   const [projectDetails, setProjectDetails] = useState()
 
+
+  const [phaseDetails, setPhaseDetails] = useState({
+    projectName: '',
+    uid: '',
+    value:''
+  })
+
   const [availType, setAvailType] = useState({
     projectName: '',
     uid: '',
     value:''
   })
 
+
+  const phasesA = [
+    {
+      label: 'Phase-I',
+      projectName: 'Phase-I',
+      value: 'demands',
+    },
+
+  ]
 
 
   const paymentsA = [
@@ -59,6 +75,11 @@ const UnitsInventoryHome = ({ project }) => {
   const registerA = [
     {
       label: 'Booking',
+      projectName: 'Blocked',
+      value: 'booking',
+    },
+    {
+      label: 'Booking',
       projectName: 'Booking',
       value: 'booking',
     },
@@ -74,7 +95,7 @@ const UnitsInventoryHome = ({ project }) => {
     },
     {
       label: 'Rejected',
-      projectName: 'rejected',
+      projectName: 'Released',
       value: 'rejected',
     },
   ]
@@ -103,6 +124,10 @@ const UnitsInventoryHome = ({ project }) => {
   const selProjctFun = (project) => {
     setIsOpenSideView(!isOpenSideView)
     setProjectDetails(project)
+  }
+  const selPhaseFun = (project) => {
+
+    setPhaseDetails(project)
   }
   const selAvailFun = (project) => {
 
@@ -149,8 +174,17 @@ const UnitsInventoryHome = ({ project }) => {
                       selProjectIs={projectDetails}
                       dropDownItemsA={customerRawData}
                     />
+                     <DropDownSearchBar
+                      type={'All Phases'}
+                      id={'id'}
+                      setStatusFun={{}}
+                      viewUnitStatusA={[]}
+                      pickCustomViewer={selPhaseFun}
+                      selProjectIs={phaseDetails}
+                      dropDownItemsA={phasesA}
+                    />
                     <DropDownSearchBar
-                      type={'All Registration'}
+                      type={'All Status'}
                       id={'id'}
                       setStatusFun={{}}
                       viewUnitStatusA={[]}

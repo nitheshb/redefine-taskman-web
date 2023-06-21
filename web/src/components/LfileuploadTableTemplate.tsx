@@ -618,6 +618,12 @@ export default function LfileuploadTableTemplate({
           format: (value) => value.toFixed(2),
         },
         {
+          id: 'unit_d',
+          label: 'Unit Dimension*(m)',
+          minWidth: 10,
+          align: 'left'
+        },
+        {
           id: 'east_d',
           label: 'East Dimension*(m)',
           minWidth: 10,

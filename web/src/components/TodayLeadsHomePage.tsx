@@ -22,7 +22,7 @@ const TodayLeadsHomePage = ({ taskType }) => {
     <>
       <div className="flex  flex-row  text-gray-700">
         <div className="flex-1 overflow-auto">
-          <div className="p-3 ">
+          <div className="px-1">
             {/* <div className="flex items-center justify-between py-2 ">
               <div>
                 <h2 className="text-2xl font-semibold text-gray-900 leading-light">

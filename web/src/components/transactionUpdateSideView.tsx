@@ -72,7 +72,7 @@ import StatusDropComp from './statusDropComp'
 import AssigedToDropComp from './assignedToDropComp'
 import Loader from './Loader/Loader'
 import ProjPhaseHome from './ProjPhaseHome/ProjPhaseHome'
-import AddBookingForm from './bookingForm'
+import AddApplicantDetails from './AddApplicantDetails'
 
 import { useSnackbar } from 'notistack'
 
@@ -656,17 +656,17 @@ export default function TransactionUpdateSideView({
             Transaction
           </p>
           <section>
-          <div
-            className=" flex flex-col"
-            onClick={() => setViewDetails(!viewDetails)}
-          >
-            <span
-              className={`items-center h-6 px-3 py-1 mt-1 text-xs font-semibold text-green-500 bg-green-100 rounded-full
-                      `}
+            <div
+              className=" flex flex-col"
+              onClick={() => setViewDetails(!viewDetails)}
             >
-              {'In-Review'}
-            </span>
-          </div>
+              <span
+                className={`items-center h-6 px-3 py-1 mt-1 text-xs font-semibold text-green-500 bg-green-100 rounded-full
+                      `}
+              >
+                {'In-Review'}
+              </span>
+            </div>
           </section>
         </div>
       </div>
@@ -769,212 +769,214 @@ export default function TransactionUpdateSideView({
             Approve
           </button>
         </div>
-        {viewDetails &&
-        <>
-        <div className="my-2  grid grid-cols-2 ">
-          <section className="mr-2 flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md ">
-            <section className="flex flex-row justify-between mb-1">
-              <div className="font-md text-xs text-gray-500  tracking-wide">
-                Created
-              </div>
-              <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                {transactionData?.created}
-              </div>
-            </section>
-            <section className="flex flex-row justify-between mb-1">
-              <div className="font-md text-xs text-gray-500  tracking-wide">
-                Ref No
-              </div>
-              <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                {transactionData?.chequeno}
-              </div>
-            </section>
-            <section className="flex flex-row  justify-between mb-1">
-              <div className="font-md text-xs text-gray-500  tracking-wide">
-                By
-              </div>
-              <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                {transactionData?.paidTo}
-              </div>
-            </section>
-          </section>
-          <section className="flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md ">
-            <section className="flex flex-row justify-between mb-1">
-              <div className="font-md text-xs text-gray-500  tracking-wide">
-                Owner
-              </div>
-              <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                <AssigedToDropComp
-                  assignerName={assignerName}
-                  id={id}
-                  setAssigner={setAssigner}
-                  usersList={usersList}
-                />
-              </div>
-            </section>
-            <section className="flex flex-row  justify-between mb-1">
-              <div className="font-md text-xs text-gray-500  tracking-wide">
-                Status
-              </div>
-              <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                <StatusDropComp
-                  leadStatus={tempLeadStatus}
-                  id={id}
-                  setStatusFun={setStatusFun}
-                />
-              </div>
-            </section>
-          </section>
-        </div>
-
-
-        {unitsViewMode && (
+        {viewDetails && (
           <>
-            <ProjPhaseHome
-              projectDetails={selProjectIs}
-              leadDetailsObj={leadDetailsObj}
-            />
-          </>
-        )}
-        {!unitsViewMode && (
-          <>
-            <div className="">
-              <div className="">
-                {/* <div className="font-md font-medium text-xs  text-gray-800">
+            <div className="my-2  grid grid-cols-2 ">
+              <section className="mr-2 flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md ">
+                <section className="flex flex-row justify-between mb-1">
+                  <div className="font-md text-xs text-gray-500  tracking-wide">
+                    Created
+                  </div>
+                  <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
+                    {transactionData?.created}
+                  </div>
+                </section>
+                <section className="flex flex-row justify-between mb-1">
+                  <div className="font-md text-xs text-gray-500  tracking-wide">
+                    Ref No
+                  </div>
+                  <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
+                    {transactionData?.chequeno}
+                  </div>
+                </section>
+                <section className="flex flex-row  justify-between mb-1">
+                  <div className="font-md text-xs text-gray-500  tracking-wide">
+                    By
+                  </div>
+                  <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
+                    {transactionData?.paidTo}
+                  </div>
+                </section>
+              </section>
+              <section className="flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md ">
+                <section className="flex flex-row justify-between mb-1">
+                  <div className="font-md text-xs text-gray-500  tracking-wide">
+                    Owner
+                  </div>
+                  <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
+                    <AssigedToDropComp
+                      assignerName={assignerName}
+                      id={id}
+                      setAssigner={setAssigner}
+                      usersList={usersList}
+                    />
+                  </div>
+                </section>
+                <section className="flex flex-row  justify-between mb-1">
+                  <div className="font-md text-xs text-gray-500  tracking-wide">
+                    Status
+                  </div>
+                  <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
+                    <StatusDropComp
+                      leadStatus={tempLeadStatus}
+                      id={id}
+                      setStatusFun={setStatusFun}
+                    />
+                  </div>
+                </section>
+              </section>
+            </div>
+
+            {unitsViewMode && (
+              <>
+                <ProjPhaseHome
+                  projectDetails={selProjectIs}
+                  leadDetailsObj={leadDetailsObj}
+                />
+              </>
+            )}
+            {!unitsViewMode && (
+              <>
+                <div className="">
+                  <div className="">
+                    {/* <div className="font-md font-medium text-xs  text-gray-800">
                           Notes
                         </div> */}
 
-                <div className=" border-gray-900 bg-[#F6F7FF] rounded-t-lg ">
-                  <ul
-                    className="flex   rounded-t-lg"
-                    id="myTab"
-                    data-tabs-toggle="#myTabContent"
-                    role="tablist"
-                  >
-                    {[
-                      // { lab: 'Schedules', val: 'appointments' },
-                      // { lab: 'Tasks', val: 'tasks' },
-                      { lab: 'Notes', val: 'notes' },
-                      { lab: 'Attachments', val: 'attachments' },
-                      // { lab: 'Phone', val: 'phone' },
-                      { lab: 'Timeline', val: 'timeline' },
-                    ].map((d, i) => {
-                      return (
-                        <li
-                          key={i}
-                          className="mr-2 ml-2 text-sm font-bodyLato"
-                          role="presentation"
-                        >
-                          <button
-                            className={`inline-block py-3 mr-3 px-1 text-sm font-medium text-center text-black rounded-t-lg border-b-2  hover:text-black hover:border-gray-300   ${
-                              selFeature === d.val
-                                ? 'border-black text-black'
-                                : 'border-transparent'
-                            }`}
-                            type="button"
-                            role="tab"
-                            onClick={() => setFeature(d.val)}
-                          >
-                            {`${d.lab} `}
-                            {/* <span className="bg-gray-100 px-2 py-1 rounded-full">
+                    <div className=" border-gray-900 bg-[#F6F7FF] rounded-t-lg ">
+                      <ul
+                        className="flex   rounded-t-lg"
+                        id="myTab"
+                        data-tabs-toggle="#myTabContent"
+                        role="tablist"
+                      >
+                        {[
+                          // { lab: 'Schedules', val: 'appointments' },
+                          // { lab: 'Tasks', val: 'tasks' },
+                          { lab: 'Notes', val: 'notes' },
+                          { lab: 'Attachments', val: 'attachments' },
+                          // { lab: 'Phone', val: 'phone' },
+                          { lab: 'Timeline', val: 'timeline' },
+                        ].map((d, i) => {
+                          return (
+                            <li
+                              key={i}
+                              className="mr-2 ml-2 text-sm font-bodyLato"
+                              role="presentation"
+                            >
+                              <button
+                                className={`inline-block py-3 mr-3 px-1 text-sm font-medium text-center text-black rounded-t-lg border-b-2  hover:text-black hover:border-gray-300   ${
+                                  selFeature === d.val
+                                    ? 'border-black text-black'
+                                    : 'border-transparent'
+                                }`}
+                                type="button"
+                                role="tab"
+                                onClick={() => setFeature(d.val)}
+                              >
+                                {`${d.lab} `}
+                                {/* <span className="bg-gray-100 px-2 py-1 rounded-full">
                           {/* {rowsCounter(leadsFetchedData, d.val).length} */}
-                          </button>
-                        </li>
-                      )
-                    })}
-                  </ul>
-                </div>
+                              </button>
+                            </li>
+                          )
+                        })}
+                      </ul>
+                    </div>
 
-                {selFeature === 'notes' && (
-                  <div className="flex flex-col justify-between  pt-6 bg-[#F6F7FF]">
-                    {leadNotesFetchedData.length === 0 && !addNote && (
-                      <div className="py-8 px-8 flex flex-col items-center mt-5">
-                        <div className="font-md font-medium text-xs mb-4 text-gray-800 items-center">
-                          <img
-                            className="w-[90px] h-[90px] inline"
-                            alt=""
-                            src="/note-widget.svg"
-                          />
-                        </div>
-                        <h3 className="mb-1 text-xs font-semibold text-gray-900 ">
-                          No Helpful Notes {addNote}
-                        </h3>
-                        <button onClick={() => selFun()}>
-                          <time className="block mb-2 text-xs font-normal leading-none text-gray-400 ">
-                            Better always attach a string
-                            <span className="text-blue-600 text-xs">
-                              {' '}
-                              Add Notes
-                            </span>
-                          </time>
-                        </button>
-                      </div>
-                    )}
-                    {addNote && (
-                      <div className="flex flex-col pt-0 my-10 mt-[10px] rounded bg-[#FFF9F2] mx-4 p-4">
-                        <div className="w-full flex flex-col mb-3 mt-2">
-                          <CustomSelect
-                            name="source"
-                            label="Not Interest Reason*"
-                            className="input mt-3"
-                            onChange={(value) => {
-                              // formik.setFieldValue('source', value.value)
-                              setNotInterestType(value.value)
-                            }}
-                            value={notInterestType}
-                            options={notInterestOptions}
-                          />
-                        </div>
-
-                        <div className="  outline-none border  rounded p-4 mt-4">
-                          <textarea
-                            value={takNotes}
-                            onChange={(e) => setNotesTitle(e.target.value)}
-                            placeholder="Type & make a notes"
-                            className="w-full h-full pb-10 outline-none  focus:border-blue-600 hover:border-blue-600 rounded  "
-                          ></textarea>
-                        </div>
-                        <div className="flex flex-row mt-1">
-                          <button
-                            onClick={() => fAddNotes()}
-                            className={`flex mt-2 rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium text-white bg-[#FF7A53]  hover:bg-gray-700  `}
-                          >
-                            <span className="ml-1 ">Save</span>
-                          </button>
-                          <button
-                            onClick={() => fAddNotes()}
-                            className={`flex mt-2 ml-4 rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium text-white bg-[#FF7A53]  hover:bg-gray-700  `}
-                          >
-                            <span className="ml-1 ">Save & Whats App</span>
-                          </button>
-                          <button
-                            // onClick={() => fSetLeadsType('Add Lead')}
-                            onClick={() => cancelResetStatusFun()}
-                            className={`flex mt-2 ml-4  rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium border  hover:bg-gray-700  `}
-                          >
-                            <span className="ml-1 ">Cancel</span>
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                    {leadNotesFetchedData.length > 0 && (
-                      <div className="px-4">
-                        <div className="flex justify-between">
-                          <div className="font-md font-medium text-xl mb-4 text-[#053219]">
-                            Notes
+                    {selFeature === 'notes' && (
+                      <div className="flex flex-col justify-between  pt-6 bg-[#F6F7FF]">
+                        {leadNotesFetchedData.length === 0 && !addNote && (
+                          <div className="py-8 px-8 flex flex-col items-center mt-5">
+                            <div className="font-md font-medium text-xs mb-4 text-gray-800 items-center">
+                              <img
+                                className="w-[90px] h-[90px] inline"
+                                alt=""
+                                src="/note-widget.svg"
+                              />
+                            </div>
+                            <h3 className="mb-1 text-xs font-semibold text-gray-900 ">
+                              No Helpful Notes {addNote}
+                            </h3>
+                            <button onClick={() => selFun()}>
+                              <time className="block mb-2 text-xs font-normal leading-none text-gray-400 ">
+                                Better always attach a string
+                                <span className="text-blue-600 text-xs">
+                                  {' '}
+                                  Add Notes
+                                </span>
+                              </time>
+                            </button>
                           </div>
+                        )}
+                        {addNote && (
+                          <div className="flex flex-col pt-0 my-10 mt-[10px] rounded bg-[#FFF9F2] mx-4 p-4">
+                            <div className="w-full flex flex-col mb-3 mt-2">
+                              <CustomSelect
+                                name="source"
+                                label="Not Interest Reason*"
+                                className="input mt-3"
+                                onChange={(value) => {
+                                  // formik.setFieldValue('source', value.value)
+                                  setNotInterestType(value.value)
+                                }}
+                                value={notInterestType}
+                                options={notInterestOptions}
+                              />
+                            </div>
 
-                          <button onClick={() => selFun()}>
-                            <time className="block mb-2 text-sm font-normal leading-none text-gray-400 ">
-                              <span className="text-blue-600"> Add Notes</span>
-                            </time>
-                          </button>
-                        </div>
-                        <ol className="relative border-l ml-3 border-gray-200  ">
-                          {leadNotesFetchedData.map((data, i) => (
-                            <section key={i} className="">
-                              <span className="flex absolute -left-3 justify-center items-center w-6 h-6 bg-green-200 rounded-full ring-8 ring-white  ">
-                                {/* <svg
+                            <div className="  outline-none border  rounded p-4 mt-4">
+                              <textarea
+                                value={takNotes}
+                                onChange={(e) => setNotesTitle(e.target.value)}
+                                placeholder="Type & make a notes"
+                                className="w-full h-full pb-10 outline-none  focus:border-blue-600 hover:border-blue-600 rounded  "
+                              ></textarea>
+                            </div>
+                            <div className="flex flex-row mt-1">
+                              <button
+                                onClick={() => fAddNotes()}
+                                className={`flex mt-2 rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium text-white bg-[#FF7A53]  hover:bg-gray-700  `}
+                              >
+                                <span className="ml-1 ">Save</span>
+                              </button>
+                              <button
+                                onClick={() => fAddNotes()}
+                                className={`flex mt-2 ml-4 rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium text-white bg-[#FF7A53]  hover:bg-gray-700  `}
+                              >
+                                <span className="ml-1 ">Save & Whats App</span>
+                              </button>
+                              <button
+                                // onClick={() => fSetLeadsType('Add Lead')}
+                                onClick={() => cancelResetStatusFun()}
+                                className={`flex mt-2 ml-4  rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium border  hover:bg-gray-700  `}
+                              >
+                                <span className="ml-1 ">Cancel</span>
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                        {leadNotesFetchedData.length > 0 && (
+                          <div className="px-4">
+                            <div className="flex justify-between">
+                              <div className="font-md font-medium text-xl mb-4 text-[#053219]">
+                                Notes
+                              </div>
+
+                              <button onClick={() => selFun()}>
+                                <time className="block mb-2 text-sm font-normal leading-none text-gray-400 ">
+                                  <span className="text-blue-600">
+                                    {' '}
+                                    Add Notes
+                                  </span>
+                                </time>
+                              </button>
+                            </div>
+                            <ol className="relative border-l ml-3 border-gray-200  ">
+                              {leadNotesFetchedData.map((data, i) => (
+                                <section key={i} className="">
+                                  <span className="flex absolute -left-3 justify-center items-center w-6 h-6 bg-green-200 rounded-full ring-8 ring-white  ">
+                                    {/* <svg
                               xmlns="http://www.w3.org/2000/svg"
                               className="h-3 w-3 text-blue-600 "
                               viewBox="0 0 20 20"
@@ -982,90 +984,90 @@ export default function TransactionUpdateSideView({
                             >
                               <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
                             </svg> */}
-                                <DocumentIcon className=" w-3 h-3" />
-                              </span>
-                              <div className="text-gray-600  m-3 ml-6">
-                                <div className="text-base font-normal">
-                                  <span className="font-medium text-green-900 ">
-                                    {data?.notes}
-                                  </span>{' '}
-                                </div>
-                                <div className="text-sm font-normal">
-                                  {data?.txt}
-                                </div>
-                                <span className="inline-flex items-center text-xs font-normal text-gray-500 ">
-                                  <ClockIcon className=" w-3 h-3" />
+                                    <DocumentIcon className=" w-3 h-3" />
+                                  </span>
+                                  <div className="text-gray-600  m-3 ml-6">
+                                    <div className="text-base font-normal">
+                                      <span className="font-medium text-green-900 ">
+                                        {data?.notes}
+                                      </span>{' '}
+                                    </div>
+                                    <div className="text-sm font-normal">
+                                      {data?.txt}
+                                    </div>
+                                    <span className="inline-flex items-center text-xs font-normal text-gray-500 ">
+                                      <ClockIcon className=" w-3 h-3" />
 
-                                  <span className="ml-1">added on:</span>
-                                  <span className="text-red-900 ml-1 mr-4">
-                                    {prettyDateTime(data?.ct)}
-                                  </span>
-                                  <span className="ml-2">added by:</span>
-                                  <span className="text-red-900 ml-1 mr-4">
-                                    {data?.by}
-                                  </span>
-                                </span>
-                              </div>
-                            </section>
-                          ))}
-                        </ol>
+                                      <span className="ml-1">added on:</span>
+                                      <span className="text-red-900 ml-1 mr-4">
+                                        {prettyDateTime(data?.ct)}
+                                      </span>
+                                      <span className="ml-2">added by:</span>
+                                      <span className="text-red-900 ml-1 mr-4">
+                                        {data?.by}
+                                      </span>
+                                    </span>
+                                  </div>
+                                </section>
+                              ))}
+                            </ol>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
-                )}
-              </div>
-            </div>
-            {selFeature === 'attachments' && (
-              <div className="border px-4 bg-[#F6F7FF]">
-                {docsList.length === 0 && (
-                  <div className="py-8 px-8 flex flex-col items-center mt-6">
-                    <div className="font-md font-medium text-xs mb-4 text-gray-800 items-center">
-                      <img
-                        className="w-[80px] h-[80px] inline"
-                        alt=""
-                        src="/empty-dashboard.svg"
-                      />
-                    </div>
-                    <h3 className="mb-1 text-xs font-semibold text-gray-900 ">
-                      No Attachments
-                    </h3>
-                    <button onClick={() => showAddAttachF()}>
-                      <time className="block mb-2 text-xs font-normal leading-none text-gray-400 ">
-                        Better always attach a string
-                        <span className="text-blue-600 text-xs">
-                          {' '}
-                          Add Dcoument
-                        </span>
-                      </time>
-                    </button>
-                  </div>
-                )}
-
-                {attach && (
-                  <div className="flex justify-center mt-4">
-                    <div className="mb-3 w-96 px-10 bg-[#FFF9F2] rounded-md py-3 pb-6">
-                      <div className="w-full flex flex-col mb-3 mt-2">
-                        <CustomSelect
-                          name="source"
-                          label="Document Type *"
-                          className="input mt-3"
-                          onChange={(value) => {
-                            // formik.setFieldValue('source', value.value)
-                            setAttachType(value.value)
-                          }}
-                          value={attachType}
-                          options={attachTypes}
-                        />
+                </div>
+                {selFeature === 'attachments' && (
+                  <div className="border px-4 bg-[#F6F7FF]">
+                    {docsList.length === 0 && (
+                      <div className="py-8 px-8 flex flex-col items-center mt-6">
+                        <div className="font-md font-medium text-xs mb-4 text-gray-800 items-center">
+                          <img
+                            className="w-[80px] h-[80px] inline"
+                            alt=""
+                            src="/empty-dashboard.svg"
+                          />
+                        </div>
+                        <h3 className="mb-1 text-xs font-semibold text-gray-900 ">
+                          No Attachments
+                        </h3>
+                        <button onClick={() => showAddAttachF()}>
+                          <time className="block mb-2 text-xs font-normal leading-none text-gray-400 ">
+                            Better always attach a string
+                            <span className="text-blue-600 text-xs">
+                              {' '}
+                              Add Dcoument
+                            </span>
+                          </time>
+                        </button>
                       </div>
-                      <label
-                        htmlFor="formFile"
-                        className="form-label inline-block mb-2  font-regular text-sm "
-                      >
-                        Upload file
-                      </label>
-                      <form onSubmit={docUploadHandler}>
-                        <input
-                          className="form-control
+                    )}
+
+                    {attach && (
+                      <div className="flex justify-center mt-4">
+                        <div className="mb-3 w-96 px-10 bg-[#FFF9F2] rounded-md py-3 pb-6">
+                          <div className="w-full flex flex-col mb-3 mt-2">
+                            <CustomSelect
+                              name="source"
+                              label="Document Type *"
+                              className="input mt-3"
+                              onChange={(value) => {
+                                // formik.setFieldValue('source', value.value)
+                                setAttachType(value.value)
+                              }}
+                              value={attachType}
+                              options={attachTypes}
+                            />
+                          </div>
+                          <label
+                            htmlFor="formFile"
+                            className="form-label inline-block mb-2  font-regular text-sm "
+                          >
+                            Upload file
+                          </label>
+                          <form onSubmit={docUploadHandler}>
+                            <input
+                              className="form-control
     block
     w-full
     px-3
@@ -1080,90 +1082,93 @@ export default function TransactionUpdateSideView({
     ease-in-out
     m-0
     focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                          type="file"
-                          id="formFile"
-                        />
-                        <div className="flex flex-row mt-3">
-                          <button
-                            // onClick={() => fAddSchedule()}
-                            type="submit"
-                            className={`flex mt-2 rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium text-white bg-[#FF7A53]  hover:bg-gray-700  `}
-                          >
-                            <span className="ml-1 ">Upload</span>
-                          </button>
-                          <button
-                            // onClick={() => fSetLeadsType('Add Lead')}
-                            onClick={() => setAttach(false)}
-                            className={`flex mt-2 ml-4  rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium border  hover:bg-gray-700  `}
-                          >
-                            <span className="ml-1 ">Cancel</span>
+                              type="file"
+                              id="formFile"
+                            />
+                            <div className="flex flex-row mt-3">
+                              <button
+                                // onClick={() => fAddSchedule()}
+                                type="submit"
+                                className={`flex mt-2 rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium text-white bg-[#FF7A53]  hover:bg-gray-700  `}
+                              >
+                                <span className="ml-1 ">Upload</span>
+                              </button>
+                              <button
+                                // onClick={() => fSetLeadsType('Add Lead')}
+                                onClick={() => setAttach(false)}
+                                className={`flex mt-2 ml-4  rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium border  hover:bg-gray-700  `}
+                              >
+                                <span className="ml-1 ">Cancel</span>
+                              </button>
+                            </div>
+                          </form>
+
+                          {/* <h3> {progress}</h3> */}
+                        </div>
+                      </div>
+                    )}
+
+                    {docsList.length > 0 && (
+                      <div className="py-8">
+                        <div className="flex justify-between">
+                          <h2 className="text-xl font-semibold leading-tight">
+                            Customer attachments
+                          </h2>
+                          <button onClick={() => showAddAttachF()}>
+                            <time className="block mb-2 text-sm font-normal leading-none text-gray-400 ">
+                              <span className="text-blue-600">
+                                {' '}
+                                Add Dcoument
+                              </span>
+                            </time>
                           </button>
                         </div>
-                      </form>
+                        <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
+                          <div className="inline-block min-w-full shadow-md rounded-lg overflow-hidden">
+                            <table className="min-w-full leading-normal">
+                              <thead>
+                                <tr>
+                                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                    Name
+                                  </th>
 
-                      {/* <h3> {progress}</h3> */}
-                    </div>
-                  </div>
-                )}
+                                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                    Created On / By
+                                  </th>
+                                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                    Status
+                                  </th>
+                                  {/* <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100"></th> */}
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {docsList.map((dat, i) => {
+                                  return (
+                                    <tr key={i} className=" border-b">
+                                      <td className="px-5 py-5 bg-white text-sm ">
+                                        <div className="flex">
+                                          <div className="">
+                                            <p className="text-gray-900 whitespace-no-wrap overflow-ellipsis">
+                                              {dat.name}
+                                            </p>
+                                            <p className="text-blue-600 whitespace-no-wrap">
+                                              {dat.type}
+                                            </p>
+                                          </div>
+                                        </div>
+                                      </td>
 
-                {docsList.length > 0 && (
-                  <div className="py-8">
-                    <div className="flex justify-between">
-                      <h2 className="text-xl font-semibold leading-tight">
-                        Customer attachments
-                      </h2>
-                      <button onClick={() => showAddAttachF()}>
-                        <time className="block mb-2 text-sm font-normal leading-none text-gray-400 ">
-                          <span className="text-blue-600"> Add Dcoument</span>
-                        </time>
-                      </button>
-                    </div>
-                    <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
-                      <div className="inline-block min-w-full shadow-md rounded-lg overflow-hidden">
-                        <table className="min-w-full leading-normal">
-                          <thead>
-                            <tr>
-                              <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                                Name
-                              </th>
-
-                              <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                                Created On / By
-                              </th>
-                              <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                                Status
-                              </th>
-                              {/* <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100"></th> */}
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {docsList.map((dat, i) => {
-                              return (
-                                <tr key={i} className=" border-b">
-                                  <td className="px-5 py-5 bg-white text-sm ">
-                                    <div className="flex">
-                                      <div className="">
-                                        <p className="text-gray-900 whitespace-no-wrap overflow-ellipsis">
-                                          {dat.name}
+                                      <td className="px-5 py-5 bg-white text-sm ">
+                                        <p className="text-gray-900 whitespace-no-wrap">
+                                          {prettyDate(dat.cTime)}
                                         </p>
-                                        <p className="text-blue-600 whitespace-no-wrap">
-                                          {dat.type}
+                                        <p className="text-gray-600 whitespace-no-wrap overflow-ellipsis">
+                                          {dat.by}
                                         </p>
-                                      </div>
-                                    </div>
-                                  </td>
-
-                                  <td className="px-5 py-5 bg-white text-sm ">
-                                    <p className="text-gray-900 whitespace-no-wrap">
-                                      {prettyDate(dat.cTime)}
-                                    </p>
-                                    <p className="text-gray-600 whitespace-no-wrap overflow-ellipsis">
-                                      {dat.by}
-                                    </p>
-                                  </td>
-                                  <td className="px-5 py-5 bg-white text-sm">
-                                    <>
-                                      {/* <span className="relative inline px-3 py-1 font-semibold text-red-900 leading-tight">
+                                      </td>
+                                      <td className="px-5 py-5 bg-white text-sm">
+                                        <>
+                                          {/* <span className="relative inline px-3 py-1 font-semibold text-red-900 leading-tight">
                                     <span
                                       aria-hidden
                                       className="absolute inset-0 bg-red-200 opacity-50 rounded-full"
@@ -1171,149 +1176,151 @@ export default function TransactionUpdateSideView({
                                     <span className="relative">Approved</span>
                                   </span> */}
 
-                                      <DownloadIcon
-                                        onClick={() => downloadFile(dat.url)}
-                                        className="w-5 h-5 text-gray-400 ml-3 cursor-pointer"
-                                        aria-hidden="true"
-                                      />
-                                    </>
-                                  </td>
-                                </tr>
-                              )
-                            })}
-                          </tbody>
-                        </table>
+                                          <DownloadIcon
+                                            onClick={() =>
+                                              downloadFile(dat.url)
+                                            }
+                                            className="w-5 h-5 text-gray-400 ml-3 cursor-pointer"
+                                            aria-hidden="true"
+                                          />
+                                        </>
+                                      </td>
+                                    </tr>
+                                  )
+                                })}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 )}
-              </div>
-            )}
-            {selFeature === 'tasks' && (
-              <div className="py-8 px-8 flex flex-col items-center">
-                <div className="font-md font-medium text-xs mb-4 text-gray-800 items-center">
-                  <img
-                    className="w-[200px] h-[200px] inline"
-                    alt=""
-                    src="/all-complete.svg"
-                  />
-                </div>
-                <h3 className="mb-1 text-sm font-semibold text-gray-900 ">
-                  You are clean
-                </h3>
-                <time className="block mb-2 text-sm font-normal leading-none text-gray-400 ">
-                  Sitback & Relax{' '}
-                  <span className="text-blue-600">Add Task</span>
-                </time>
-              </div>
-            )}
-
-            {selFeature === 'timeline' && (
-              <div className="py-8 px-8  border bg-[#F6F7FF]">
-                {filterData.length == 0 && (
+                {selFeature === 'tasks' && (
                   <div className="py-8 px-8 flex flex-col items-center">
                     <div className="font-md font-medium text-xs mb-4 text-gray-800 items-center">
                       <img
-                        className="w-[80px] h-[80px] inline"
+                        className="w-[200px] h-[200px] inline"
                         alt=""
-                        src="/templates.svg"
+                        src="/all-complete.svg"
                       />
                     </div>
-                    <h3 className="mb-1 text-xs font-semibold text-gray-900 ">
-                      Timeline is Empty
+                    <h3 className="mb-1 text-sm font-semibold text-gray-900 ">
+                      You are clean
                     </h3>
-                    <time className="block mb-2 text-xs font-normal leading-none text-gray-400 ">
-                      This scenario is very rare to view
+                    <time className="block mb-2 text-sm font-normal leading-none text-gray-400 ">
+                      Sitback & Relax{' '}
+                      <span className="text-blue-600">Add Task</span>
                     </time>
                   </div>
                 )}
-                <div className="font-md font-medium text-xs mb-4 text-gray-800">
-                  Timelines
-                </div>
-                <ol className="relative border-l border-gray-200 ">
-                  {filterData.map((data, i) => (
-                    <section key={i} className="">
-                      <a
-                        href="#"
-                        className="block items-center p-3 sm:flex hover:bg-gray-100 "
-                      >
-                        {/* <PlusCircleIcon className="mr-3 mb-3 w-10 h-10 rounded-full sm:mb-0" /> */}
-                        {data?.type == 'status' && (
-                          <span className="flex absolute -left-3 justify-center items-center w-6 h-6 bg-blue-200 rounded-full ring-8 ring-white  ">
-                            <svg
-                              className="w-3 h-3 text-blue-600 \"
-                              fill="currentColor"
-                              viewBox="0 0 20 20"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                                clipRule="evenodd"
-                              ></path>
-                            </svg>
-                          </span>
-                        )}
-                        {data?.type == 'ph' && (
-                          <>
-                            <span className="flex absolute -left-3 justify-center items-center w-6 h-6 bg-green-200 rounded-full ring-8 ring-white ">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-3 w-3 text-blue-600 "
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                              >
-                                <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
-                              </svg>
-                            </span>
-                            <div className="text-gray-600  m-3">
-                              <div className="text-base font-normal">
-                                <span className="font-medium text-green-900 ">
-                                  {'Rajiv'}
-                                </span>{' '}
-                                called{' '}
-                                <span className="text-sm text-red-900 ">
-                                  {Name}
-                                </span>{' '}
-                              </div>
-                              <div className="text-sm font-normal">
-                                {data?.txt}
-                              </div>
-                              <span className="inline-flex items-center text-xs font-normal text-gray-500 ">
-                                <ClockIcon className="mr-1 w-3 h-3" />
-                                {data?.type == 'ph'
-                                  ? timeConv(
-                                      Number(data?.time)
-                                    ).toLocaleString()
-                                  : timeConv(data?.T).toLocaleString()}
-                                {'    '}
-                                <span className="text-red-900 ml-4 mr-4">
-                                  {Number(data?.duration)} sec
-                                </span>
-                                or
-                                <span className="text-red-900 ml-4">
-                                  {parseInt(data?.duration / 60)} min
-                                </span>
+
+                {selFeature === 'timeline' && (
+                  <div className="py-8 px-8  border bg-[#F6F7FF]">
+                    {filterData.length == 0 && (
+                      <div className="py-8 px-8 flex flex-col items-center">
+                        <div className="font-md font-medium text-xs mb-4 text-gray-800 items-center">
+                          <img
+                            className="w-[80px] h-[80px] inline"
+                            alt=""
+                            src="/templates.svg"
+                          />
+                        </div>
+                        <h3 className="mb-1 text-xs font-semibold text-gray-900 ">
+                          Timeline is Empty
+                        </h3>
+                        <time className="block mb-2 text-xs font-normal leading-none text-gray-400 ">
+                          This scenario is very rare to view
+                        </time>
+                      </div>
+                    )}
+                    <div className="font-md font-medium text-xs mb-4 text-gray-800">
+                      Timelines
+                    </div>
+                    <ol className="relative border-l border-gray-200 ">
+                      {filterData.map((data, i) => (
+                        <section key={i} className="">
+                          <a
+                            href="#"
+                            className="block items-center p-3 sm:flex hover:bg-gray-100 "
+                          >
+                            {/* <PlusCircleIcon className="mr-3 mb-3 w-10 h-10 rounded-full sm:mb-0" /> */}
+                            {data?.type == 'status' && (
+                              <span className="flex absolute -left-3 justify-center items-center w-6 h-6 bg-blue-200 rounded-full ring-8 ring-white  ">
+                                <svg
+                                  className="w-3 h-3 text-blue-600 \"
+                                  fill="currentColor"
+                                  viewBox="0 0 20 20"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    fillRule="evenodd"
+                                    d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                                    clipRule="evenodd"
+                                  ></path>
+                                </svg>
                               </span>
-                            </div>
-                          </>
-                        )}
-                        {data?.type != 'ph' && (
-                          <div className="text-gray-600  m-3">
-                            <div className="text-base font-normal">
-                              <span className="font-medium text-green-900 ">
-                                {data?.type?.toUpperCase()}
-                              </span>{' '}
-                              set by{' '}
-                              <span className="text-sm text-red-900 ">
-                                {data?.by}
-                              </span>{' '}
-                            </div>
-                            <div className="text-sm font-normal">
-                              {data?.txt}
-                            </div>
-                            <span className="inline-flex items-center text-xs font-normal text-gray-500 ">
-                              {/* <svg
+                            )}
+                            {data?.type == 'ph' && (
+                              <>
+                                <span className="flex absolute -left-3 justify-center items-center w-6 h-6 bg-green-200 rounded-full ring-8 ring-white ">
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-3 w-3 text-blue-600 "
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                                  >
+                                    <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                                  </svg>
+                                </span>
+                                <div className="text-gray-600  m-3">
+                                  <div className="text-base font-normal">
+                                    <span className="font-medium text-green-900 ">
+                                      {'Rajiv'}
+                                    </span>{' '}
+                                    called{' '}
+                                    <span className="text-sm text-red-900 ">
+                                      {Name}
+                                    </span>{' '}
+                                  </div>
+                                  <div className="text-sm font-normal">
+                                    {data?.txt}
+                                  </div>
+                                  <span className="inline-flex items-center text-xs font-normal text-gray-500 ">
+                                    <ClockIcon className="mr-1 w-3 h-3" />
+                                    {data?.type == 'ph'
+                                      ? timeConv(
+                                          Number(data?.time)
+                                        ).toLocaleString()
+                                      : timeConv(data?.T).toLocaleString()}
+                                    {'    '}
+                                    <span className="text-red-900 ml-4 mr-4">
+                                      {Number(data?.duration)} sec
+                                    </span>
+                                    or
+                                    <span className="text-red-900 ml-4">
+                                      {parseInt(data?.duration / 60)} min
+                                    </span>
+                                  </span>
+                                </div>
+                              </>
+                            )}
+                            {data?.type != 'ph' && (
+                              <div className="text-gray-600  m-3">
+                                <div className="text-base font-normal">
+                                  <span className="font-medium text-green-900 ">
+                                    {data?.type?.toUpperCase()}
+                                  </span>{' '}
+                                  set by{' '}
+                                  <span className="text-sm text-red-900 ">
+                                    {data?.by}
+                                  </span>{' '}
+                                </div>
+                                <div className="text-sm font-normal">
+                                  {data?.txt}
+                                </div>
+                                <span className="inline-flex items-center text-xs font-normal text-gray-500 ">
+                                  {/* <svg
                           className="mr-1 w-3 h-3"
                           fill="currentColor"
                           viewBox="0 0 20 20"
@@ -1326,22 +1333,25 @@ export default function TransactionUpdateSideView({
                           ></path>
                         </svg> */}
 
-                              <ClockIcon className="mr-1 w-3 h-3" />
-                              {data?.type == 'ph'
-                                ? timeConv(Number(data?.time)).toLocaleString()
-                                : timeConv(data?.T).toLocaleString()}
-                            </span>
-                          </div>
-                        )}
-                      </a>
-                    </section>
-                  ))}
-                </ol>
-              </div>
+                                  <ClockIcon className="mr-1 w-3 h-3" />
+                                  {data?.type == 'ph'
+                                    ? timeConv(
+                                        Number(data?.time)
+                                      ).toLocaleString()
+                                    : timeConv(data?.T).toLocaleString()}
+                                </span>
+                              </div>
+                            )}
+                          </a>
+                        </section>
+                      ))}
+                    </ol>
+                  </div>
+                )}
+              </>
             )}
           </>
         )}
-        </>}
       </div>
     </div>
   )

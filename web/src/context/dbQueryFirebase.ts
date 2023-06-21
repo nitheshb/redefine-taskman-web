@@ -423,10 +423,24 @@ export const getBookedUnitsByProject = (orgId, snapshot, data, error) => {
 
   const itemsQuery = query(
     collection(db, `${orgId}_units`),
-    where('status', '==', 'booked')
+    where('status', 'in', status)
   )
   console.log('hello ', status, itemsQuery)
   return onSnapshot(itemsQuery, snapshot, error)
+}
+export const getUnassignedCRMunits = (orgId, snapshot, data, error) => {
+  const { status } = data
+  console.log('hello ', status)
+  try {
+    const itemsQuery = query(
+      collection(db, `${orgId}_units`),
+      where('assignedTo', '>', null)
+    )
+    console.log('hello ', status, itemsQuery)
+    return onSnapshot(itemsQuery, snapshot, error)
+  } catch (error) {
+    console.log('error in hello', error)
+  }
 }
 // get finance transactions
 export const getFinanceTransactionsByStatus = (
@@ -1246,7 +1260,14 @@ export const addPlotUnit = async (orgId, data, by, msg) => {
 
   return
 }
-export const editPlotUnit = async (orgId, uid, data, by, msg, enqueueSnackbar) => {
+export const editPlotUnit = async (
+  orgId,
+  uid,
+  data,
+  by,
+  msg,
+  enqueueSnackbar
+) => {
   const {
     pId,
     phaseId,
@@ -1299,21 +1320,20 @@ export const editPlotUnit = async (orgId, uid, data, by, msg, enqueueSnackbar) =
   //     : increment(0),
   //   totalPlotArea: increment(area),
   // }
-try {
-  await updateDoc(doc(db, `${orgId}_units`, uid), {
-    ...data,
-  })
-  enqueueSnackbar('Plot updated successfully', {
-    variant: 'success',
-  })
-} catch (error) {
-  enqueueSnackbar('Plot details Updation Failed', {
-    variant: 'success',
-  })
-}
+  try {
+    await updateDoc(doc(db, `${orgId}_units`, uid), {
+      ...data,
+    })
+    enqueueSnackbar('Plot updated successfully', {
+      variant: 'success',
+    })
+  } catch (error) {
+    enqueueSnackbar('Plot details Updation Failed', {
+      variant: 'success',
+    })
+  }
 
   // const y = await updateProjectComputedData(orgId, pId, yo)
-
 
   return
   // await addLeadLog(x.id, {
@@ -1992,7 +2012,8 @@ export const createPhaseAssets = async (
     })
     return docRef
   } catch (error) {
-    console.log('error in db', error, pId)
+    console.log('uploaded file url i s', url)
+    console.log('error in db', error, url, pId)
   }
 }
 export const createUserToWorkReport = async (tableName, data) => {
@@ -2718,6 +2739,8 @@ export const capturePaymentS = async (
       mode,
       payto,
       towardsBankDocId,
+      category,
+      bank_ref_no,
     } = paylaod
 
     const { data, error } = await supabase.from(`${orgId}_accounts`).insert([
@@ -2729,12 +2752,57 @@ export const capturePaymentS = async (
         mode,
         custId: custNo,
         customerName: Name,
-        receive_by: payto,
-        txt_dated: Timestamp.now().toMillis(), // modify this to dated time entred by user
-        status: 'captured',
+        receive_by: paylaod?.bookedBy,
+        txt_dated: dated, // modify this to dated time entred by user
+        status: paylaod?.status || 'review',
+        payReason: paylaod?.payReason,
         totalAmount: amount,
+        bank_ref: bank_ref_no,
       },
     ])
+    const paymentCB = await addPaymentReceivedEntry(
+      orgId,
+      unitId,
+      { leadId: custNo },
+      {
+        projectId,
+        unit_id: [unitId],
+        towards: builderName,
+        towards_id: towardsBankDocId,
+        mode,
+        custId: custNo,
+        customerName: Name,
+        receive_by: paylaod?.bookedBy,
+        txt_dated: dated, // modify this to dated time entred by user
+        status: paylaod?.status || 'review',
+        payReason: paylaod?.payReason,
+        totalAmount: amount,
+        bank_ref: bank_ref_no,
+      },
+      'leadsPage',
+      'nitheshreddy.email@gmail.com',
+      enqueueSnackbar
+    )
+    // total amount in review increment , project , phase, unit
+    await updateDoc(doc(db, `${orgId}_projects`, projectId), {
+      t_collect: increment(amount),
+    })
+    await updateDoc(doc(db, `${orgId}_units`, unitId), {
+      T_review: increment(amount),
+      T_balance: increment(-amount),
+    })
+    const { data: data3, error: error3 } = await supabase
+      .from(`${orgId}_lead_logs`)
+      .insert([
+        {
+          type: 'pay_capture',
+          subtype: category,
+          T: Timestamp.now().toMillis(),
+          custUid: unitId,
+          by,
+          payload: {},
+        },
+      ])
     enqueueSnackbar(`Captured Payment`, {
       variant: 'success',
     })
@@ -2803,6 +2871,89 @@ export const updateLeadCustomerDetailsTo = async (
     console.log('data is', leadDocId, data)
 
     await updateDoc(doc(db, `${orgId}_leads`, leadDocId), {
+      ...data,
+    })
+    enqueueSnackbar('Customer Details added successfully', {
+      variant: 'success',
+    })
+  } catch (error) {
+    console.log('customer details updation failed', error, {
+      ...data,
+    })
+    enqueueSnackbar('Customer Details updation failed BBB', {
+      variant: 'error',
+    })
+  }
+
+  return
+}
+export const updateUnitCustomerDetailsTo = async (
+  orgId,
+  unitId,
+  data,
+  by,
+  enqueueSnackbar,
+  resetForm
+) => {
+  try {
+    console.log('data is', unitId, data)
+
+    await updateDoc(doc(db, `${orgId}_units`, unitId), {
+      ...data,
+    })
+    enqueueSnackbar('Customer Details added successfully', {
+      variant: 'success',
+    })
+  } catch (error) {
+    console.log('customer details updation failed', error, {
+      ...data,
+    })
+    enqueueSnackbar('Customer Details updation failed BBB', {
+      variant: 'error',
+    })
+  }
+
+  return
+}
+export const updateUnitStatus = async (
+  orgId,
+  unitId,
+  data,
+  by,
+  enqueueSnackbar
+) => {
+  try {
+    console.log('data is===>', unitId, data)
+    await updateDoc(doc(db, `${orgId}_units`, unitId), {
+      status: data?.status,
+      T_elgible: increment(data?.T_elgible_new),
+      T_balance: increment(data?.T_elgible_new),
+    })
+    enqueueSnackbar('Unit Status Updated', {
+      variant: 'success',
+    })
+  } catch (error) {
+    console.log('Unit Status  updation failed', error, {
+      ...data,
+    })
+    enqueueSnackbar('Unit Status updation failed BBB', {
+      variant: 'error',
+    })
+  }
+  return
+}
+export const updateUnitCrmOwner = async (
+  orgId,
+  unitId,
+  data,
+  by,
+  enqueueSnackbar,
+  resetForm
+) => {
+  try {
+    console.log('data is', unitId, data)
+
+    await updateDoc(doc(db, `${orgId}_units`, unitId), {
       ...data,
     })
     enqueueSnackbar('Customer Details added successfully', {

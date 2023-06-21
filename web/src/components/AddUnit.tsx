@@ -226,6 +226,7 @@ const AddUnit = ({
       plc_per_sqft,
       size,
       facing,
+      unit_d,
       east_d,
       west_d,
       north_d,
@@ -267,6 +268,7 @@ const AddUnit = ({
       plc_per_sqft: plc_per_sqft,
       size: size,
       facing: facing,
+      unit_d: unit_d,
       east_d: east_d,
       west_d: west_d,
       north_d: north_d,
@@ -357,6 +359,7 @@ const AddUnit = ({
       plc_per_sqft,
       size,
       facing,
+      unit_d,
       east_d,
       west_d,
       north_d,
@@ -388,6 +391,7 @@ const AddUnit = ({
       plc_per_sqft: plc_per_sqft,
       size: size,
       facing: facing,
+      unit_d,
       east_d: east_d,
       west_d: west_d,
       north_d: north_d,
@@ -528,6 +532,7 @@ const AddUnit = ({
                 plc_per_sqft: unitDetails?.plc_per_sqft || 0,
                 size: unitDetails?.size || '',
                 facing: unitDetails?.facing || '',
+                unit_d: unitDetails?.unit_d || '',
                 east_d: unitDetails?.east_d || 0,
                 west_d: unitDetails?.west_d || 0,
                 north_d: unitDetails?.north_d || 0,
@@ -636,6 +641,13 @@ const AddUnit = ({
                                 type="text"
                               />
                             </div>
+                            <div className="mb-3 space-y-2 w-full text-xs mt-">
+                              <TextField
+                                label="Unit Dimension*"
+                                name="unit_d"
+                                type="text"
+                              />
+                            </div>
                             <div className="w-full flex flex-col mb-3">
                               <CustomSelect
                                 name="facing"
@@ -705,7 +717,7 @@ const AddUnit = ({
                             </div>
                             <div className="mb-3 space-y-2 w-full text-xs">
                               <TextField
-                                label="North-Sou"
+                                label="North-South"
                                 name="north_south_d"
                                 type="number"
                               />
@@ -726,21 +738,21 @@ const AddUnit = ({
                           <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-2 ">
                             <div className="mb-3 space-y-2 w-full text-xs mt-">
                               <TextField
-                                label="East Schedule By"
+                                label="East by"
                                 name="east_sch_by"
                                 type="text"
                               />
                             </div>
                             <div className="mb-3 space-y-2 w-full text-xs">
                               <TextField
-                                label="West By"
+                                label="West by"
                                 name="west_sch_by"
                                 type="text"
                               />
                             </div>
                             <div className="mb-3 space-y-2 w-full text-xs ">
                               <TextField
-                                label="North By"
+                                label="North by"
                                 name="north_sch_by"
                                 type="text"
                               />
@@ -748,7 +760,7 @@ const AddUnit = ({
 
                             <div className="mb-3 space-y-2 w-full text-xs ">
                               <TextField
-                                label="South By"
+                                label="South by"
                                 name="south_sch_by"
                                 type="text"
                               />

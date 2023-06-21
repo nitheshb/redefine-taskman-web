@@ -6,7 +6,7 @@ import { Fragment, useEffect, useState } from 'react'
 
 import { Menu } from '@headlessui/react'
 import { Listbox, Transition } from '@headlessui/react'
-import { ArrowRightIcon } from '@heroicons/react/outline'
+import { AdjustmentsIcon, ArrowRightIcon } from '@heroicons/react/outline'
 import CalendarIcon from '@heroicons/react/outline/CalendarIcon'
 import {
   BadgeCheckIcon,
@@ -25,7 +25,7 @@ import { VerticalAlignBottom } from '@mui/icons-material'
 import { DateTimePicker } from '@mui/lab'
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker'
 import TimePicker from '@mui/lab/TimePicker'
-import { TextField } from '@mui/material'
+import { LinearProgress, TextField } from '@mui/material'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
@@ -53,6 +53,8 @@ import {
   getAllProjects,
   updateLeadProject,
   getFinanceForUnit,
+  capturePaymentS,
+  updateUnitStatus,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import { storage } from 'src/context/firebaseConfig'
@@ -86,7 +88,6 @@ import AssigedToDropComp from '../assignedToDropComp'
 import { USER_ROLES } from 'src/constants/userRoles'
 
 import CrmPaymentSummary from './CrmPaymentSummary'
-
 import UnitFullSummary from './CrmUnitFullSummary'
 
 // interface iToastInfo {
@@ -100,17 +101,32 @@ const people = [
   { name: 'Priority 3' },
   { name: 'Priority 4' },
 ]
-const statuslist = [
-  { label: 'Select the Status', value: '' },
-  { label: 'New', value: 'new' },
-  // { label: 'Follow Up', value: 'followup' },
-  { label: 'Visit Fixed', value: 'visitfixed' },
-  { label: 'Visit Done', value: 'visitdone' },
-  { label: 'Negotiation', value: 'Negotiation' },
-  // { label: 'RNR', value: 'rnr' },
-  { label: 'Booked', value: 'booked' },
-  { label: 'Not Interested', value: 'notinterested' },
-  // { label: 'Dead', value: 'Dead' },
+
+const StatusListA = [
+  {
+    label: 'Booking Review',
+    value: 'booked',
+    logo: 'FireIcon',
+    color: 'bg-violet-500',
+  },
+  {
+    label: 'Agreement Pipeline',
+    value: 'agreement_pipeline',
+    logo: 'RefreshIcon',
+    color: 'bg-violet-500',
+  },
+  {
+    label: 'SD/Registration Pipleline',
+    value: 'sd_pipeline',
+    logo: 'FireIcon',
+    color: 'bg-violet-500',
+  },
+  {
+    label: 'Registered',
+    value: 'registered',
+    logo: 'DuplicateInactiveIcon',
+    color: 'bg-violet-500',
+  },
 ]
 
 const attachTypes = [
@@ -121,14 +137,10 @@ const attachTypes = [
   { label: 'Co-Applicant Aadhar', value: 'co-applicant_Aadhar' },
   { label: 'Cancellation Form', value: 'cancellation_form' },
   { label: 'Cost Sheet', value: 'cost_sheet' },
-  // { label: 'Follow Up', value: 'followup' },
   { label: 'Estimation Sheet', value: 'estimation_sheet' },
   { label: 'Payment Screenshot (IMPS/RTGS/NEFT)', value: 'payment_screenshot' },
   { label: 'Payment Receipt', value: 'payment_receipt' },
   { label: 'Others', value: 'others' },
-
-  // { label: 'RNR', value: 'rnr' },
-  // { label: 'Dead', value: 'Dead' },
 ]
 
 const notInterestOptions = [
@@ -165,6 +177,13 @@ export default function UnitSideViewCRM({
   const [selFeature, setFeature] = useState('summary')
   const [tempLeadStatus, setLeadStatus] = useState('')
   const [assignerName, setAssignerName] = useState('')
+  const [unitStatus, setUnitStatus] = useState({
+    label: 'Booking Review',
+    value: 'booking_review',
+    logo: 'FireIcon',
+    color: ' bg-violet-500',
+  })
+
   const [assignedTo, setAssignedTo] = useState('')
   const [leadsActivityFetchedData, setLeadsFetchedActivityData] = useState([])
 
@@ -200,6 +219,9 @@ export default function UnitSideViewCRM({
   const [loader, setLoader] = useState(false)
   const [projectList, setprojectList] = useState([])
   const [financeMode, setFinanceMode] = useState('schedule')
+  const [timeHide, setTimeHide] = useState(false)
+  const [statusValidError, setStatusValidError] = useState(false)
+  const [newStatusErrorList, setNewStatusErrorList] = useState('')
 
   const [selProjectIs, setSelProjectIs] = useState({
     projectName: '',
@@ -450,6 +472,7 @@ export default function UnitSideViewCRM({
 
     // updateLeadAssigTo(orgId, leadDocId, value, '', by)
   }
+
   const setNewProject = (leadDocId, value) => {
     console.log('sel pROJECT DETAILS ', value)
 
@@ -468,8 +491,71 @@ export default function UnitSideViewCRM({
 
   const setStatusFun = async (leadDocId, newStatus) => {
     setLoader(true)
-    setLeadStatus(newStatus)
 
+    // if newStatus  make check list
+    const dataObj = { status: newStatus?.value }
+    console.log('payment stuff is ', selCustomerPayload)
+    const { fullPs } = selCustomerPayload
+
+    if (
+      newStatus?.value === 'agreement_pipeline' &&
+      selCustomerPayload?.kyc_status &&
+      selCustomerPayload?.man_cs_approval
+    ) {
+      setUnitStatus(newStatus)
+      const sum = fullPs.reduce((accumulator, currentValue) => {
+        if (currentValue.order === 2) {
+          return accumulator + currentValue.value
+        }
+        return accumulator
+      }, 0)
+      dataObj.T_elgible_new = sum
+      updateUnitStatus(
+        orgId,
+        selCustomerPayload?.id,
+        dataObj,
+        user.email,
+        enqueueSnackbar
+      )
+    } else if (
+      newStatus?.value === 'ats_pipeline' &&
+      selCustomerPayload?.T_balance <= 0 &&
+      selCustomerPayload?.ats_creation &&
+      selCustomerPayload?.both_ats_approval
+    ) {
+      setUnitStatus(newStatus)
+      updateUnitStatus(
+        orgId,
+        selCustomerPayload?.id,
+        dataObj,
+        user.email,
+        enqueueSnackbar
+      )
+    } else {
+      setStatusValidError(true)
+      console.log('is this in statusvalidat or ')
+      let errorList = ''
+      if (newStatus?.value === 'agreement_pipeline' && !selCustomerPayload?.kyc_status) {
+        errorList = errorList + 'KYC,'
+      }
+      if (newStatus?.value === 'agreement_pipeline' && !selCustomerPayload?.man_cs_approval) {
+        errorList = errorList + 'Manger Costsheet Approval,'
+      }
+      if ( newStatus?.value === 'ats_pipeline' && selCustomerPayload?.T_balance<=0) {
+        errorList = errorList + 'Due Payment,'
+      }
+      if ( newStatus?.value === 'ats_pipeline' && !selCustomerPayload?.ats_creation) {
+        errorList = errorList + 'ATS Creation,'
+      }
+      if ( newStatus?.value === 'ats_pipeline' && !selCustomerPayload?.both_ats_approval) {
+        errorList = errorList + 'Manger or Customer Costsheet Approval,'
+      }
+
+      errorList = errorList + 'is mandatory to proceed'
+      setNewStatusErrorList(errorList)
+    }
+
+    return
     const arr = ['notinterested', 'visitdone', 'visitcancel']
     arr.includes(newStatus) ? setFeature('notes') : setFeature('appointments')
     arr.includes(newStatus) ? setAddNote(true) : setAddSch(true)
@@ -721,6 +807,27 @@ export default function UnitSideViewCRM({
       console.log('upload error is ', error)
     }
   }
+
+  const paymentCaptureFun = async (data, resetForm) => {
+    const {
+      pId: projectId,
+      id: unitId,
+      phaseId,
+      customerDetailsObj,
+    } = selCustomerPayload
+    const customLeadObj = { Name: customerDetailsObj?.customerName1 }
+    data.category = 'Payment'
+    const x = await capturePaymentS(
+      orgId,
+      projectId,
+      unitId,
+      8,
+      customLeadObj,
+      data,
+      user?.email,
+      enqueueSnackbar
+    )
+  }
   return (
     <div
       className={`bg-white   h-screen    ${openUserProfile ? 'hidden' : ''} `}
@@ -744,9 +851,11 @@ export default function UnitSideViewCRM({
                   </div>
                 </div>
               </div> */}
+
             <div className="flex flex-col justify-between">
               <p className="text-md font-bold tracking-tight uppercase font-body  ml-2">
                 {selCustomerPayload?.unit_no}
+
                 <span className="ml-1 font-normal text-blue-800 text-xs">
                   {selCustomerPayload?.status}
                 </span>
@@ -796,43 +905,45 @@ export default function UnitSideViewCRM({
                     </div>
                   </section>
                   <section className="flex flow-row justify-between mb-1">
-                    <div className="font-md text-xs text-gray-500  tracking-wide">
-                      Last Activity
+                    <div className="font-md text-xs text-gray-700 tracking-wide">
+                      Status
                     </div>
                     <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                      <span className="text-[#867777] ck ml-2">
-                        {stsUpT === undefined
-                          ? 'NA'
-                          : prettyDateTime(stsUpT) || 'NA'}
-                      </span>
-                    </div>
-                  </section>
-                  <section className="flex flow-row justify-between mb-1">
-                    <div className="font-md text-xs text-gray-500  tracking-wide">
-                      Booked On
-                    </div>
-                    <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-                      <span className="text-[#867777] ck ml-2">
-                        {CT != undefined ? prettyDateTime(CT) : 'NA'}
-                      </span>
+                      {!user?.role?.includes(USER_ROLES.CP_AGENT) && (
+                        <div>
+                          <AssigedToDropComp
+                            assignerName={unitStatus.label}
+                            id={id}
+                            setAssigner={setStatusFun}
+                            usersList={StatusListA}
+                            align={undefined}
+                          />
+                        </div>
+                      )}
+                      {user?.role?.includes(USER_ROLES.CP_AGENT) && (
+                        <span className="text-left text-sm">
+                          {' '}
+                          {assignerName}
+                        </span>
+                      )}
                     </div>
                   </section>
                 </section>
 
                 <section>
                   <div>
-                    <div className="text-center items-center mr-2 mt-3">
+                    <div className="text-center items-center mr-2 mt-1">
                       <div
-                        className="text-center p-[10px] bg-[#318896] text-white rounded-3xl items-center align-middle text-xs cursor-pointer hover:underline"
+                        className="text-center p-[10px] bg-gradient-to-r from-violet-200 to-pink-200 text-black rounded-3xl items-center align-middle text-xs cursor-pointer hover:underline"
                         onClickCapture={() => {
                           openPaymentFun()
                         }}
                       >
                         CAPTURE PAYMENT
                       </div>
-                      <div className="text-center items-center mr-2 mt-3">
+                      <div className="text-center items-center mr-2 mt-3 w-full">
                         <div
-                          className="text-center items-center align-middle p-[10px] bg-[#318896] text-white rounded-3xl text-xs cursor-pointer hover:underline"
+                          className="text-center p-[10px] bg-gradient-to-r from-violet-200 to-pink-200 text-black rounded-3xl items-center align-middle text-xs cursor-pointer hover:underline"
                           onClickCapture={() => {
                             openPaymentFun()
                           }}
@@ -847,8 +958,25 @@ export default function UnitSideViewCRM({
             </div>
           </div>
         </div>
+        {statusValidError && (
+          <div className=" border-b border-[#ffe6bc]  bg-[#ffe6bc]">
+            <div className="w-full border-b border-[#ffe6bc]  bg-[#f69c10] "></div>
+            <div className=" w-full flex flex-row justify-between pt-1 font-md text-xs text-gray-500 mb-[2px] tracking-wide mr-4 ml-1 flex flex-row">
+              {' '}
+              <section>
+                <span className="font-Rubik  text-[#844b00] font-[500]   text-[11px]  py-[6px]">
+                  {newStatusErrorList}
+                </span>
+              </section>
+              <XIcon
+                className="h-4 w-4 mr-2 inline text-green"
+                aria-hidden="true"
+              />
+            </div>
+          </div>
+        )}
         <div className="flex flex-row justify-between">
-          <div className="px-3 py-2 flex flex-row  text-xs  border-t border-[#ebebeb] font-thin   font-bodyLato text-[12px]  py-[6px] ">
+          <div className="px-1 py-2 flex flex-row  text-xs  border-t border-[#ebebeb] font-thin   font-bodyLato text-[12px]  py-[6px] ">
             Recent Comments:{' '}
             <span className="text-[#867777] ml-1 ">
               {' '}
@@ -883,16 +1011,78 @@ export default function UnitSideViewCRM({
                 style={{ background: '#e2c062', marginRight: '12px' }}
               ></div>
             </div>
-            <span className="font-bodyLato text-[#867777] text-xs mt-2">
-              {/* <HighlighterStyle
+            <div className=" flex flex-row ">
+              <span className="font-bodyLato text-[#867777] text-xs mt-2">
+                {/* <HighlighterStyle
                             searchKey={searchKey}
                             source={row.Source.toString()}
                           /> */}
 
-              {Source?.toString() || 'NA'}
-            </span>
+                {Source?.toString() || 'NA'}
+              </span>
+              <div
+                className=" cursor-pointer hover:underline"
+                onClickCapture={() => {
+                  setTimeHide(!timeHide)
+                }}
+              >
+                {selProjectIs?.uid?.length > 4 &&
+                  (timeHide ? (
+                    <XIcon
+                      className="h-4 w-4  inline text-green"
+                      aria-hidden="true"
+                    />
+                  ) : (
+                    <span className="px-[3px]  ml-1  text-[#318896]  text-[10px] text-[#] font-semibold">
+                      {' '}
+                      <AdjustmentsIcon
+                        className="h-4 w-4  inline text-[#318896] "
+                        aria-hidden="true"
+                      />
+                    </span>
+                  ))}
+              </div>
+            </div>
           </div>
         </div>
+        {timeHide && (
+          <>
+            <div className="w-full border-b border-[#ebebeb]"></div>
+            <div className=" w-full  pt-1 font-md text-xs text-gray-500 mb-[2px] tracking-wide mr-4 ml-1 flex flex-row justify-between">
+              {' '}
+              <section>
+                <span className="font-thin   font-bodyLato text-[9px]  py-[6px]">
+                  Created On
+                  <span className="text-[#867777] ck ml-2">
+                    {CT != undefined
+                      ? prettyDateTime(CT)
+                      : prettyDateTime(Date)}
+                  </span>
+                </span>
+              </section>
+              <section>
+                <span className="font-thin   font-bodyLato text-[9px]  py-[6px]">
+                  Updated On :
+                  <span className="text-[#867777] ck ml-2">
+                    {stsUpT === undefined
+                      ? 'NA'
+                      : prettyDateTime(stsUpT) || 'NA'}
+                  </span>
+                </span>
+              </section>
+              <section>
+                <span className="font-thin text-[#867777]   font-bodyLato text-[9px]  py-[6px]">
+                  Assigned On
+                  <span className="text-[#867777] ck ml-2">
+                    {assignT != undefined
+                      ? prettyDateTime(assignT)
+                      : prettyDateTime(Date)}
+                  </span>
+                </span>
+              </section>
+            </div>
+          </>
+        )}
       </div>
 
       <UnitFullSummary
@@ -900,16 +1090,15 @@ export default function UnitSideViewCRM({
         selCustomerPayload={selCustomerPayload}
       />
 
-
-
       {selFeature === 'legal_info' && <></>}
       <SiderForm
         open={openCapturePayment}
         setOpen={setOpenCapturePayment}
         title={'capturePayment'}
         unitsViewMode={false}
-        widthClass="max-w-md"
+        widthClass="max-w-xl"
         selUnitDetails={selCustomerPayload}
+        paymentCaptureFun={paymentCaptureFun}
       />
     </div>
   )

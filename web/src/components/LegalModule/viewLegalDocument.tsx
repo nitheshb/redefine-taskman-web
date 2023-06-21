@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useEffect, useState } from 'react'
 
 import { Dialog } from '@headlessui/react'
@@ -11,6 +13,7 @@ import { CustomSelect } from 'src/util/formFields/selectBoxField'
 import { TextField2 } from 'src/util/formFields/TextField2'
 
 import { MultipleFileUploadField } from '../LeadUplodCsv/MultipleFileUploadField'
+import SiderForm from '../SiderForm/SiderForm'
 
 import DocRow from './Docu_row'
 
@@ -23,7 +26,22 @@ export default function LegalDocsViewHome({
   viewLegalDocData,
 }) {
   const [existingCols, setexistingCols] = useState([])
-  const [selFeature, setFeature] = useState('summary')
+  const [selFeature, setFeature] = useState('documents')
+  const [sliderInfo, setSliderInfo] = useState({
+    open: false,
+    title: 'legal_doc',
+    sliderData: {},
+    widthClass: 'max-w-xl',
+  })
+  const handleSliderClose = () => {
+    setSliderInfo({
+      open: false,
+      title: '',
+      sliderData: {},
+      widthClass: 'max-w-xl',
+    })
+  }
+
   const initialState = {
     amount: '',
     towardsBankDocId: '',
@@ -44,7 +62,7 @@ export default function LegalDocsViewHome({
   })
 
   return (
-    <div className="h-full flex flex-col pb-6 bg-white  overflow-y-scroll">
+    <div className="h-full flex flex-col pb-6 bg-white  overflow-y-scroll overflow-auto no-scrollbar">
       <div className="grid gap-8 grid-cols-1">
         <div className="flex flex-col rounded-lg bg-white mt-">
           <div className="mt-0">
@@ -86,18 +104,19 @@ export default function LegalDocsViewHome({
                               <div className="">
                                 <div className=" border-gray-900  bg-[#F1F5F9] rounded-t-lg ">
                                   <ul
-                                    className="flex   rounded-t-lg overflow-x-scroll"
+                                    className="flex   rounded-t-lg overflow-x-scroll overflow-auto no-scrollbar"
                                     id="myTab"
                                     data-tabs-toggle="#myTabContent"
                                     role="tablist"
                                   >
                                     {[
-                                      { lab: 'Summary', val: 'summary' },
-                                      { lab: 'Tasks', val: 'tasks' },
                                       {
                                         lab: 'Documents',
                                         val: 'documents',
                                       },
+                                      { lab: 'Details', val: 'summary' },
+                                      { lab: 'Tasks', val: 'tasks' },
+
                                       {
                                         lab: 'Access',
                                         val: 'access',
@@ -337,7 +356,17 @@ export default function LegalDocsViewHome({
                                     <h2 className="font-medium flex-grow">
                                       Unit Document
                                     </h2>
-                                    <span className=" ml-2 text-blue-500 hover:underline">
+                                    <span
+                                      className=" ml-2 text-blue-500 hover:underline"
+                                      onClick={() => {
+                                        setSliderInfo({
+                                          open: true,
+                                          title: 'legal_doc_upload',
+                                          sliderData: {},
+                                          widthClass: 'max-w-xl',
+                                        })
+                                      }}
+                                    >
                                       Add Doc
                                     </span>
                                   </div>
@@ -376,13 +405,26 @@ export default function LegalDocsViewHome({
                                   name: 'Register Doc',
                                   time: '2-Dec-2022',
                                 },
-                              ]?.map((doc) => (
-                                <DocRow
-                                  id={doc?.id}
-                                  key={doc?.id}
-                                  fileName={doc?.name}
-                                  date={doc?.time}
-                                />
+                              ]?.map((doc, i) => (
+                                <section
+                                  key={i}
+                                  onClick={() => {
+                                    // show sidebar and display the worddoc
+                                    setSliderInfo(  {
+                                      open: true,
+                                      title: 'viewDocx',
+                                      sliderData: {},
+                                      widthClass: 'max-w-xl',
+                                    })
+                                  }}
+                                >
+                                  <DocRow
+                                    id={doc?.id}
+                                    key={doc?.id}
+                                    fileName={doc?.name}
+                                    date={doc?.time}
+                                  />
+                                </section>
                               ))}
                             </section>
                           )}
@@ -396,6 +438,15 @@ export default function LegalDocsViewHome({
           </div>
         </div>
       </div>
+      <SiderForm
+        open={sliderInfo.open}
+        setOpen={handleSliderClose}
+        title={sliderInfo.title}
+        data={sliderInfo.sliderData}
+        widthClass={sliderInfo.widthClass}
+        pId={pId}
+        phaseDetails={myPhase}
+      />
     </div>
   )
 }

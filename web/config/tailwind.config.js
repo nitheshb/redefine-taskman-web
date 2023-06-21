@@ -6,6 +6,7 @@ module.exports = {
         Playfair: ['Playfair Display', 'serif'],
         bodyLato: ['Lato', 'sans-serif'],
         montF: ['Montserrat', 'sans-serif'],
+        rubikF: ['Rubik', 'sans-serif'],
       },
     },
   },

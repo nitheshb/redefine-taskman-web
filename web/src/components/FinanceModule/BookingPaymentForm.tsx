@@ -41,6 +41,7 @@ const AddPaymentDetailsForm = ({
   newPlotCostSheetA,
   newPlotPS,
   newConstructCsObj,
+  newAdditonalChargesObj,
   newConstructCostSheetA,
   newConstructPS,
   phase,
@@ -124,8 +125,9 @@ const AddPaymentDetailsForm = ({
     )
   }
   const updateCS = async (data, resetForm) => {}
-  const capturePayment = async (custNo,data, resetForm) => {
+  const capturePayment = async (custNo, data, resetForm) => {
     // enter payment log
+    data.category = 'BookingAdvance'
     const x = await capturePaymentS(
       orgId,
       projectDetails?.uid,
@@ -171,6 +173,9 @@ const AddPaymentDetailsForm = ({
       leadDetailsObj2,
       phase?.paymentScheduleObj
     )
+
+    console.log('mysetup is', leadDetailsObj2, data)
+
     const fullPs = [...newPlotPS, ...newConstructPS]
     const { amount } = data
     const { projectName } = projectDetails
@@ -196,15 +201,15 @@ const AddPaymentDetailsForm = ({
     let custNo
     if ((await customerfbA.length) > 0) {
       custNo = customerfbA[0].id
-    }else {
+    } else {
       return
     }
-    const y = await capturePayment(custNo,data, resetForm, )
+    const y = await capturePayment(custNo, data, resetForm)
     // get paymentTxn id
     let txId
     if ((await y.length) > 0) {
       txId = y[0].id
-    }else{
+    } else {
       return
     }
     await capturePayment_log(data, txId, resetForm)
@@ -235,16 +240,6 @@ const AddPaymentDetailsForm = ({
       customerDetailsObj,
       secondaryCustomerDetailsObj
     )
-    const paymentCB = await addPaymentReceivedEntry(
-      orgId,
-      uid,
-      { leadId: id },
-      data,
-      'leadsPage',
-      'nitheshreddy.email@gmail.com',
-      enqueueSnackbar
-    )
-
     const x1 = []
 
     x1.push('pending')
@@ -341,6 +336,7 @@ const AddPaymentDetailsForm = ({
         // [`${uid}_ps`]: phase?.paymentScheduleObj || {},
         [`${uid}_unitDetails`]: selUnitDetails || {},
         [`${uid}_plotCS`]: newPlotCostSheetA,
+        [`${uid}_AddChargesCS`]: newAdditonalChargesObj,
         [`${uid}_constructCS`]: newConstructCostSheetA,
         [`${uid}_fullPs`]: fullPs,
         [`${uid}_T_elgible`]: T_elgible,
@@ -368,6 +364,7 @@ const AddPaymentDetailsForm = ({
     }
     // unitUpdate[`cs`] = leadDetailsObj2[`${uid}_cs`]
     unitUpdate[`plotCS`] = newPlotCostSheetA
+    unitUpdate[`addChargesCS`] = newAdditonalChargesObj
     unitUpdate[`constructCS`] = newConstructCostSheetA
     unitUpdate[`fullPs`] = fullPs
     unitUpdate[`T_elgible`] = T_elgible

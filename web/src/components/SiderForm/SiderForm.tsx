@@ -10,10 +10,12 @@ import {
   searchValue as searchedVal,
   searchData as searchResponse,
 } from 'src/state/actions/search'
+import CostBreakUpPdfPreview from 'src/util/costBreakUpPdfPreview'
 
 import CrmCustomerSummary from '../A_CrmModule/A_CrmCustomerSummary'
 import CustomerSideViewCRM from '../A_CrmModule/CrmCustomerSideView'
 import UnitSideViewCRM from '../A_CrmModule/CrmUnitSideView'
+import ViewDocxFile from '../A_LegalModule/viewDocxFile'
 import NotificationsSetupForm from '../A_ProjModule/NotificatoinsSetupFromHome'
 import AddBankDetailsForm from '../addBankDetailsForm'
 import AddBlockForm from '../AddBlockForm/AddBlockForm'
@@ -24,7 +26,7 @@ import AddTaskForm from '../AddTaskForm'
 import AddUnit from '../AddUnit'
 import ConstructUnitsDetails from '../ConstructModule/ConstructUnitsDetails'
 import CrmUnitSideView from '../crmUnitSideView'
-import CustomerProfileSideView from '../customerProfileSideView'
+import LeadProfileSideView from '../LeadProfileSideView'
 import DialogFormBody from '../DialogFormBody/DialogFormBody'
 import InventoryViewSideForm from '../DialogFormBody/InventoryViewSideView'
 import AddPaymentDetailsForm from '../FinanceModule/BookingPaymentForm'
@@ -39,35 +41,44 @@ import TransactionUpdateSideView from '../transactionUpdateSideView'
 import ViewUnitDetails from '../ViewUnitDetails'
 
 const SiderForm = ({
-  open,
-  setOpen,
-  title,
-  customerDetails = {},
-  data = {},
-  onCloseDisabled = false,
-  pId,
-  phaseFeed,
   BlockFeed,
+  blockDetails,
+  customerDetails = {},
+  csMode,
+  costSheetA,
+  data = {},
+  headerContent,
   myBlock,
+  newPlotCostSheetA,
+  newPlotCostSheetB,
+  newPlotPS,
+  open,
+  onCloseDisabled = false,
+  paymentCaptureFun,
+  pId,
+  pdfExportComponent,
+  phaseFeed,
   projectDetails,
   phaseDetails,
-  blockDetails,
-  widthClass,
-  unitViewerrr,
-  unitsViewMode,
-  setUnitsViewMode,
-  leadDetailsObj,
   projectsList,
-  viewLegalDocData,
-  viewUnitConstData,
-  transactionData,
+  leadDetailsObj,
+  setUnitsViewMode,
   selCustomerPayload,
   selUnitDetails,
+  selPhaseObj,
   selSubMenu,
   selSubMenu2,
   setIsClicked,
-  wbPayload,
+  setOpen,
+  title,
+  transactionData,
+  unitViewerrr,
+  unitsViewMode,
   unitViewActionType,
+  viewLegalDocData,
+  viewUnitConstData,
+  wbPayload,
+  widthClass,
 }) => {
   // dont write too many here
   //  this is for customerProfileSideView
@@ -285,7 +296,7 @@ const SiderForm = ({
                   />
                 )}
                 {title === 'User Profile' && (
-                  <CustomerProfileSideView
+                  <LeadProfileSideView
                     openUserProfile={false}
                     customerDetails={customerDetails}
                     unitViewerrr={unitViewerrr}
@@ -353,6 +364,16 @@ const SiderForm = ({
                     myBlock={myBlock}
                   />
                 )}
+                {title === 'legal_doc_upload' && (
+                  <LeadsDropHomes
+                    title={title}
+                    dialogOpen={setOpen}
+                    pId={pId}
+                    source={'legal_doc_upload'}
+                    myPhase={phaseDetails}
+                    myBlock={myBlock}
+                  />
+                )}
                 {title === 'Approvals' && (
                   <LeadsDropHomes
                     title={title}
@@ -410,8 +431,27 @@ const SiderForm = ({
                   />
                 )}
                 {title === 'capturePayment' && (
-                  <CaptureUnitPayment selUnitDetails={selUnitDetails} />
+                  <CaptureUnitPayment
+                    selUnitDetails={selUnitDetails}
+                    onSubmitFun={paymentCaptureFun}
+                  />
                 )}
+
+                {title === 'costSheetPreview' && (
+                  <CostBreakUpPdfPreview
+                    csMode={csMode}
+                    costSheetA={newPlotCostSheetA || []}
+                    headerContent={headerContent}
+                    leadDetailsObj1={leadDetailsObj}
+                    newPlotPS={newPlotPS}
+                    projectDetails={projectDetails}
+                    pdfExportComponent={pdfExportComponent}
+                    selPhaseObj={selPhaseObj}
+                    selUnitDetails={selUnitDetails}
+                  />
+                )}
+
+                {title === 'viewDocx' && <ViewDocxFile />}
               </div>
             </Transition.Child>
           </div>

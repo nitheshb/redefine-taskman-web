@@ -12,7 +12,7 @@ import CrmUnitFinanceHistory from './CrmUnitFinanceHistory'
 import CrmUnitHeader from './CrmUnitHeader'
 
 const CrmUnitSummary = ({
-  selCustomerPayload,
+  selCustomerPayload: selUnitPayload,
   assets,
   totalIs,
   unitTransactionsA,
@@ -20,6 +20,11 @@ const CrmUnitSummary = ({
   const { user } = useAuth()
   const pdfUnitSummaryComp = useRef(null)
   const { orgId } = user
+
+
+  useEffect(() => {
+    console.log('unit dta is ', selUnitPayload)
+  }, [])
 
   return (
     <PDFExport paperSize="A4" margin="1cm" ref={pdfUnitSummaryComp}>
@@ -59,23 +64,23 @@ const CrmUnitSummary = ({
           </div>
         </div>
 
-        <CrmUnitHeader projectDetails={selCustomerPayload} />
+        <CrmUnitHeader projectDetails={selUnitPayload} />
 
         {/* 1 } customer details */}
         {/* Unit details */}
 
         <CrmUnitCustomerDetailsView1
-          Name={selCustomerPayload?.customerName1}
-          Mobile={selCustomerPayload?.phoneNo1}
+          Name={selUnitPayload?.customerName1}
+          Mobile={selUnitPayload?.phoneNo1}
           netTotal={12345}
-          selCustomerPayload={selCustomerPayload}
+          selCustomerPayload={selUnitPayload}
           assets={assets}
         />
         {/* Payment Summay */}
 
         <div>
           <CrmPaymentSummary
-            selCustomerPayload={selCustomerPayload}
+            selCustomerPayload={selUnitPayload}
             assets={assets}
           />
         </div>
@@ -84,7 +89,7 @@ const CrmUnitSummary = ({
 
         <div>
           <CrmUnitPaymentSchedule
-            selCustomerPayload={selCustomerPayload}
+            selCustomerPayload={selUnitPayload}
             assets={assets}
             totalIs={totalIs}
           />
@@ -92,7 +97,7 @@ const CrmUnitSummary = ({
         {/* Finance History */}
         <div>
           <CrmUnitFinanceHistory
-            selCustomerPayload={selCustomerPayload}
+            selCustomerPayload={selUnitPayload}
             assets={assets}
             totalIs={totalIs}
             unitTransactionsA={unitTransactionsA}

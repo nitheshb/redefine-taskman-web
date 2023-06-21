@@ -42,7 +42,7 @@ export const CustomSelect = ({
 }) => {
   const defaultValue = (options, value) => {
     return (
-      (options ? options.find((option) => option.value === value) : '') || ''
+      (options ? options?.find((option) => option?.value === value) : '') || ''
     )
   }
 
