@@ -242,20 +242,20 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
             <section className=" flex flex-col  py-3 py-0  ">
               <section className="flex flex-col justify-between mb-1">
                 <div className="font-md text-xs text-gray-500  tracking-wide">
-                  Assigned By
+                  Assigned To
                 </div>
                 <div className="font-md text-xs mt-1 tracking-wide font-semibold text-[#462c52]  bg-[#f4e1fc] p-2 rounded-sm">
-                  {taskManObj?.by_name}
+                  {taskManObj?.to_name}
                 </div>
               </section>
             </section>
             <section className=" flex flex-col  ml-2 py-3 py-0  ">
               <section className="flex flex-col justify-between mb-1">
                 <div className="font-md text-xs text-gray-500  tracking-wide">
-                  Followed By
+                  Assigned By
                 </div>
                 <div className="font-md text-xs mt-1 tracking-wide font-semibold text-[#462c52]  bg-[#f4e1fc] p-2 rounded-sm">
-                  {taskManObj?.participantsA?.length || 0}
+                  {taskManObj?.by_name || 0}
                 </div>
               </section>
             </section>
