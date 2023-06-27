@@ -1570,8 +1570,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                         </section>
                       )
                     })}
-
-                  {selCategory === 'sd_pipeline' &&
+                    {selCategory === 'sd_pipeline' &&
                     tableData.map((finData, i) => {
                       const {
                         uid,
@@ -1579,17 +1578,26 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                         customerDetailsObj,
                         customerName1,
                         phoneNo1,
+                        unit_no,
+                        T_balance,
+                        T_elgible,
+                        T_review,
+                        T_captured,
+                        pId,
+                        projName,
                       } = finData
                       return (
                         <section
                           key={i}
-                          className="border mb-1 bg-[#f2f3f8] shadow rounded-md  shadow"
+                          className="border mb-1  shadow rounded-md  shadow"
                         >
                           <section className="flex flex-row">
                             <div className="">
-                              <div className="flex flex-row  mt- mr-[1px] py-1">
+                              <div className="flex flex-row   ">
                                 <div
-                                  className="flex flex-col bg-gradient-to-r from-[#A798FF] to-[#c8c2f1] text-black p-2 rounded-sm py-2 w-[170px] h-[82px] ml-1"
+                                  // className="flex flex-col bg-gradient-to-r from-emerald-300 to-cyan-400 text-black p-1 rounded-sm w-[220px] h-[96px]"
+                                  className="flex flex-col bg-gradient-to-r from-[#d8daff] to-[#9ae8fd] text-black p-1 rounded-sm w-[220px] h-[96px]"
+
                                   onClick={() =>
                                     viewTransaction(
                                       finData,
@@ -1598,57 +1606,67 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                     )
                                   }
                                 >
-                                  <section className="flex flex-row">
-                                    <img
+                                  <section className="font-rubikF flex flex-row">
+                                    {/* <img
                                       className="w-10 h-10 mr-2"
                                       alt=""
                                       src="/apart.svg"
-                                    ></img>
-                                    <section className="flex flex-col ml-2 max-w-[100px] ">
-                                      <span className="font-semibold text-sm app-color-black">
-                                        {finData?.assetName}
+                                    ></img> */}
+                                    <section className="flex flex-col ml-2 mt-[7px]">
+                                      <span className=" text-[12px] text-[#036046] font-[400]">
+                                        {projName}
                                       </span>
-                                      <span className="text-xs">
-                                        {finData?.ownerName}
+                                      <span className=" text-[14px] text-black font-[500] ">
+                                        {/* {finData?.[`${assets[0]}_unitDetails`]
+                                          ?.unit_no || ''} */}
+                                        Unit-{unit_no}
                                       </span>
 
-                                      <span className="text-xs">
-                                        {' '}
-                                        {finData?.ph}
+                                      <span className=" text-[12px] text-black-900 font-[400]">
+                                        {customerDetailsObj?.customerName1 ||
+                                          'NA'}
                                       </span>
-                                      <span className="font-normal text-xs app-color-gray-1">
-                                        Eco Stone
+                                      <span className=" text-[12px] text-black-500 font-[400]">
+                                        {customerDetailsObj?.phoneNo1 || 'NA'}
                                       </span>
                                     </section>
                                   </section>
-
                                   {/* <span className="font-normal text-xs app-color-gray-1">
                                   {finData?.ph}
                                 </span> */}
                                 </div>
                               </div>
                             </div>
-                            <div className="w-3/4  h-[78px] bg-[#f2f3f8] px-1 ">
+                            <div className="w-2/4 bg-[#f2f3f8] px-1">
                               {' '}
                               <Box>
                                 <>
-                                  <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2">
+                                  <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2 min-w-[180px]">
                                     <div className="flex flex-row justify-between mx-1">
                                       <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
-                                        {'1,11,10,340'}
+                                        ₹{T_review?.toLocaleString('en-IN')}
                                       </h6>
                                       <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
-                                        {'7,10,340'}
+                                        ₹{T_balance?.toLocaleString('en-IN')}
                                       </h6>
                                     </div>
                                     <div className="flex flex-row mx-1">
-                                      {[{ item: 'Total', value: 6 }].map(
+                                      {[{ item: 'Paid', value: 6 }].map(
                                         (data, i) => (
                                           <div
-                                            className=" w-3/4  "
                                             style={{
                                               display: 'inline-block',
                                               alignSelf: 'flex-end',
+                                              width: `${
+                                                Number(
+                                                  (T_review / T_elgible) * 100
+                                                ) <= 100
+                                                  ? Math.round(
+                                                      (T_review / T_elgible) *
+                                                        100
+                                                    )
+                                                  : 100
+                                              }%`,
                                             }}
                                             key={i}
                                           >
@@ -1657,7 +1675,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                                 sx={{
                                                   backgroundColor: 'white',
                                                   '& .MuiLinearProgress-bar': {
-                                                    backgroundColor: '#A798FF',
+                                                    backgroundColor: '#00a979',
                                                   },
                                                 }}
                                                 variant="determinate"
@@ -1673,9 +1691,18 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                                 }}
                                               />
                                             </div>
-                                            <div className="flex  justify-left mr-1  mb-1 mt-[4px]">
+                                            <div className="flex  justify-left mr-1  mb-1 mt-[4px] min-w-[100px]">
                                               <h6 className="font-bodyLato font-semibold text-xs mt-1">
-                                                {data.item}
+                                                {data.item} (
+                                                {Number(
+                                                  (T_review / T_elgible) * 100
+                                                ) <= 100
+                                                  ? Math.round(
+                                                      (T_review / T_elgible) *
+                                                        100
+                                                    )
+                                                  : 100}
+                                                %)
                                               </h6>
                                             </div>
                                           </div>
@@ -1684,10 +1711,19 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       {[{ item: 'Due', value: 6 }].map(
                                         (data, i) => (
                                           <div
-                                            className=" w-2/4  "
                                             style={{
                                               display: 'inline-block',
                                               alignSelf: 'flex-end',
+                                              width: `${
+                                                Number(
+                                                  (T_balance / T_elgible) * 100
+                                                ) > 0
+                                                  ? Math.round(
+                                                      (T_balance / T_elgible) *
+                                                        100
+                                                    )
+                                                  : 0
+                                              }%`,
                                             }}
                                             key={i}
                                           >
@@ -1696,7 +1732,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                                 sx={{
                                                   backgroundColor: 'white',
                                                   '& .MuiLinearProgress-bar': {
-                                                    backgroundColor: '#E87F7F',
+                                                    backgroundColor: '#d29a80',
                                                   },
                                                 }}
                                                 variant="determinate"
@@ -1713,6 +1749,14 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                             </div>
                                             <div className="flex  justify-end mr-1  mb-1 mt-[4px]">
                                               <h6 className="font-bodyLato font-semibold text-xs mt-1">
+                                                {Number(
+                                                  (T_balance / T_elgible) * 100
+                                                ) > 0
+                                                  ? `(${Math.round(
+                                                      (T_balance / T_elgible) *
+                                                        100
+                                                    )})%`
+                                                  : ''}{' '}
                                                 {data.item}
                                               </h6>
                                             </div>
@@ -1724,27 +1768,36 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                 </>
                               </Box>
                             </div>
-                            <div className="w-3/4  bg-[#f2f3f8] px-1 ">
+                            <div className="w-1/4 bg-[#f2f3f8] px-1">
                               {' '}
                               <Box>
                                 <>
-                                  <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2  h-[78px]">
-                                    <div className="flex flex-row justify-between mx-1">
+                                  <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2 min-w-[180px]">
+                                    <div className="flex flex-row justify-between ">
                                       <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
-                                        {'Construction'}
+                                        Progress
                                       </h6>
                                       <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
-                                        {'20%'}
+                                        0%
                                       </h6>
                                     </div>
                                     <div className="flex flex-row mx-1">
-                                      {[{ item: '', value: 6 }].map(
+                                      {[{ item: 'Paid', value: 6 }].map(
                                         (data, i) => (
                                           <div
-                                            className=" w-3/4  "
                                             style={{
                                               display: 'inline-block',
                                               alignSelf: 'flex-end',
+                                              width: `${
+                                                Number(
+                                                  (T_review / T_elgible) * 100
+                                                ) <= 100
+                                                  ? Math.round(
+                                                      (T_review / T_elgible) *
+                                                        100
+                                                    )
+                                                  : 100
+                                              }%`,
                                             }}
                                             key={i}
                                           >
@@ -1753,7 +1806,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                                 sx={{
                                                   backgroundColor: 'white',
                                                   '& .MuiLinearProgress-bar': {
-                                                    backgroundColor: '#A798FF',
+                                                    backgroundColor: '#00a979',
                                                   },
                                                 }}
                                                 variant="determinate"
@@ -1769,21 +1822,30 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                                 }}
                                               />
                                             </div>
-                                            <div className="flex  justify-left mr-1  mb-1 mt-[4px]">
+                                            <div className="flex  justify-left mr-1  mb-1 mt-[4px] min-w-[100px]">
                                               <h6 className="font-bodyLato font-semibold text-xs mt-1">
-                                                {data.item}
+                                             Construction
                                               </h6>
                                             </div>
                                           </div>
                                         )
                                       )}
-                                      {[{ item: '', value: 6 }].map(
+                                      {[{ item: 'Due', value: 6 }].map(
                                         (data, i) => (
                                           <div
-                                            className=" w-2/4  "
                                             style={{
                                               display: 'inline-block',
                                               alignSelf: 'flex-end',
+                                              width: `${
+                                                Number(
+                                                  (T_balance / T_elgible) * 100
+                                                ) > 0
+                                                  ? Math.round(
+                                                      (T_balance / T_elgible) *
+                                                        100
+                                                    )
+                                                  : 0
+                                              }%`,
                                             }}
                                             key={i}
                                           >
@@ -1792,7 +1854,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                                 sx={{
                                                   backgroundColor: 'white',
                                                   '& .MuiLinearProgress-bar': {
-                                                    backgroundColor: '#E87F7F',
+                                                    backgroundColor: '#d29a80',
                                                   },
                                                 }}
                                                 variant="determinate"
@@ -1808,9 +1870,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                               />
                                             </div>
                                             <div className="flex  justify-end mr-1  mb-1 mt-[4px]">
-                                              <h6 className="font-bodyLato font-semibold text-xs mt-1">
-                                                {data.item}
-                                              </h6>
+
                                             </div>
                                           </div>
                                         )
@@ -1820,129 +1880,130 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                 </>
                               </Box>
                             </div>
-                            <div className=" bg-[#f2f3f8] px-1">
-                              <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2">
+                            <div className="w-3/4 bg-[#f2f3f8] px-1">
+                              <div className="flex flex-col bg-white shadow rounded-md my-1   py-1">
                                 <div className="flex flex-row justify-between px-1">
-                                  {[
-                                    {
-                                      item: 'Amount Due',
-                                      value: 78,
-                                      icon: ChartPieIcon,
-                                    },
-                                    {
-                                      item: 'SD Creation',
-                                      value: 78,
-                                      icon: ChartPieIcon,
-                                    },
-                                    {
-                                      item: 'Stamp Duty',
-                                      value: 58,
-                                      icon: NewspaperIcon,
-                                    },
-                                    {
-                                      item: 'K2 Challan',
-                                      value: 58,
-                                      icon: NewspaperIcon,
-                                    },
-                                  ].map((data, i) => (
-                                    <div
-                                      className=" w-[100px] bg-[#F1F5F9] p-3 rounded-md mx-1"
-                                      style={{
-                                        display: 'inline-block',
-                                        alignSelf: 'flex-end',
-                                      }}
-                                      key={i}
-                                    >
-                                      <div className="flex flex-col items-center justify-center mr-1  mb-1 mt[2px]">
-                                        <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-                                          <data.icon
-                                            className="h-4 w-4 text-gray-600 group-hover:text-indigo-600"
-                                            aria-hidden="true"
-                                          />
-                                        </div>
-                                        <h6 className="font-bodyLato text-[#828d9e] text-xs mt-1">
-                                          {data.item}
-                                        </h6>
+                                  <div
+                                    className={`w-full  h-[80px] ${
+                                      T_balance <= 0
+                                        ? 'bg-green-100'
+                                        : 'bg-[#F1F5F9] '
+                                    }  p-3 rounded-md mx-1`}
+                                    style={{
+                                      display: 'inline-block',
+                                      alignSelf: 'flex-end',
+                                    }}
+                                  >
+                                    <div className="flex flex-col items-center justify-center mr-1  mb-1 mt-[5px]">
+                                      <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                        <NewspaperIcon
+                                          className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
+                                            T_balance <= 0
+                                              ? 'text-green-900'
+                                              : 'text-gray-600 '
+                                          }`}
+                                          aria-hidden="true"
+                                        />
                                       </div>
+                                      <h6 className="font-bodyLato text-[#828d9e] text-xs mt-1">
+                                        SD Due
+                                      </h6>
                                     </div>
-                                  ))}
+                                  </div>
+                                  {/* section 2 */}
+                                  <div
+                                    className={`w-full  h-[80px] ${
+                                      finData?.man_cs_approval
+                                        ? 'bg-green-100'
+                                        : 'bg-[#F1F5F9] '
+                                    }  p-3 rounded-md mx-1`}
+                                    style={{
+                                      display: 'inline-block',
+                                      alignSelf: 'flex-end',
+                                    }}
+                                    key={i}
+                                  >
+                                    <div className="flex flex-col items-center justify-center mr-1  mb-1 mt-[5px]">
+                                      <div className="flex flex-none items-center justify-center rounded-lg bg-green-50 group-hover:bg-white">
+                                        <ChartPieIcon
+                                          className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
+                                            finData?.ats_creation
+                                              ? 'text-green-900'
+                                              : 'text-gray-600 '
+                                          }`}
+                                          aria-hidden="true"
+                                        />
+                                      </div>
+                                      <h6 className="font-bodyLato text-[#828d9e] text-xs mt-1">
+                                        SD Creation
+                                      </h6>
+                                    </div>
+                                  </div>
+                                  {/* section 3*/}
+                                  <div
+                                    className={`w-full  h-[80px] ${
+                                      finData?.both_ats_approval
+                                        ? 'bg-green-100'
+                                        : 'bg-[#F1F5F9] '
+                                    }  p-3 rounded-md mx-1`}
+                                    style={{
+                                      display: 'inline-block',
+                                      alignSelf: 'flex-end',
+                                    }}
+                                    key={i}
+                                  >
+                                    <div className="flex flex-col items-center justify-center mr-1  mb-1 mt-[5px]">
+                                      <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                        <NewspaperIcon
+                                          className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
+                                            finData?.both_ats_approval
+                                              ? 'text-green-900'
+                                              : 'text-gray-600 '
+                                          }`}
+                                          aria-hidden="true"
+                                        />
+                                      </div>
+                                      <h6 className="font-bodyLato text-[#828d9e] text-xs mt-1">
+                                        SD Approval
+                                      </h6>
+                                    </div>
+                                  </div>
+                                  {/* section 4*/}
+                                  <div
+                                    className={`w-full  h-[80px] ${
+                                      false ? 'bg-green-100' : 'bg-[#F1F5F9] '
+                                    }  p-3 rounded-md mx-1`}
+                                    style={{
+                                      display: 'inline-block',
+                                      alignSelf: 'flex-end',
+                                    }}
+                                    key={i}
+                                  >
+                                    <div className="flex flex-col items-center justify-center mr-1  mb-1 mt-[5px]">
+                                      <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                        <NewspaperIcon
+                                          className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
+                                            1 != 1
+                                              ? 'text-green-900'
+                                              : 'text-gray-600 '
+                                          }`}
+                                          aria-hidden="true"
+                                        />
+                                      </div>
+                                      <h6 className="font-bodyLato text-[#828d9e] text-xs mt-1">
+                                        Loan
+                                      </h6>
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
                             </div>
-
-                            <div className="w-1/4  bg-[#f2f3f8] px-1">
-                              <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2">
-                                <div className="flex flex-row justify-between px-1">
-                                  {[
-                                    {
-                                      item: 'Loan',
-                                      value: 38,
-                                      icon: NewspaperIcon,
-                                    },
-                                  ].map((data, i) => (
-                                    <div
-                                      className=" w-[100px] bg-[#F1F5F9] p-3 rounded-md mx-1"
-                                      style={{
-                                        display: 'inline-block',
-                                        alignSelf: 'flex-end',
-                                      }}
-                                      key={i}
-                                    >
-                                      <div className="flex flex-col items-center justify-center mr-1  mb-1 mt[2px]">
-                                        <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-                                          <data.icon
-                                            className="h-4 w-4 text-gray-600 group-hover:text-indigo-600"
-                                            aria-hidden="true"
-                                          />
-                                        </div>
-                                        <h6 className="font-bodyLato text-[#828d9e] text-xs mt-1">
-                                          {data.item}
-                                        </h6>
-                                      </div>
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            </div>
-                            {/* <div className="w-1/4 bg-[#f2f3f8] px-1">
-                              <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2">
-                                <div className="flex flex-row justify-between px-1">
-                                  {[
-                                    {
-                                      item: 'Modify',
-                                      value: 78,
-                                      icon: ChartPieIcon,
-                                    },
-                                  ].map((data, i) => (
-                                    <div
-                                      className=" w-[100px] bg-[#F1F5F9] p-3 rounded-md mx-1"
-                                      style={{
-                                        display: 'inline-block',
-                                        alignSelf: 'flex-end',
-                                      }}
-                                      key={i}
-                                    >
-                                      <div className="flex flex-col items-center justify-center mr-1  mb-1 mt[2px]">
-                                        <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-                                          <data.icon
-                                            className="h-4 w-4 text-gray-600 group-hover:text-indigo-600"
-                                            aria-hidden="true"
-                                          />
-                                        </div>
-                                        <h6 className="font-bodyLato text-[#828d9e] text-xs mt-1">
-                                          {data.item}
-                                        </h6>
-                                      </div>
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            </div> */}
                           </section>
                         </section>
                       )
                     })}
-                  {selCategory === 'registered' &&
+
+{selCategory === 'registered' &&
                     tableData.map((finData, i) => {
                       const {
                         uid,
@@ -1950,17 +2011,26 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                         customerDetailsObj,
                         customerName1,
                         phoneNo1,
+                        unit_no,
+                        T_balance,
+                        T_elgible,
+                        T_review,
+                        T_captured,
+                        pId,
+                        projName,
                       } = finData
                       return (
                         <section
                           key={i}
-                          className="border mb-1 bg-[#f2f3f8] shadow rounded-md  shadow"
+                          className="border mb-1  shadow rounded-md  shadow"
                         >
                           <section className="flex flex-row">
                             <div className="">
-                              <div className="flex flex-row  mt- mr-[1px] py-1">
+                              <div className="flex flex-row   ">
                                 <div
-                                  className="flex flex-col bg-gradient-to-r from-[#A798FF] to-[#c8c2f1] text-black p-2 rounded-sm py-2 w-[170px] h-[82px] ml-1"
+                                  // className="flex flex-col bg-gradient-to-r from-emerald-300 to-cyan-400 text-black p-1 rounded-sm w-[220px] h-[96px]"
+                                  className="flex flex-col bg-gradient-to-r from-[#d8daff] to-[#9ae8fd] text-black p-1 rounded-sm w-[220px] h-[96px]"
+
                                   onClick={() =>
                                     viewTransaction(
                                       finData,
@@ -1969,57 +2039,67 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                     )
                                   }
                                 >
-                                  <section className="flex flex-row">
-                                    <img
+                                  <section className="font-rubikF flex flex-row">
+                                    {/* <img
                                       className="w-10 h-10 mr-2"
                                       alt=""
                                       src="/apart.svg"
-                                    ></img>
-                                    <section className="flex flex-col ml-2 max-w-[100px] ">
-                                      <span className="font-semibold text-sm app-color-black">
-                                        {finData?.assetName}
+                                    ></img> */}
+                                    <section className="flex flex-col ml-2 mt-[7px]">
+                                      <span className=" text-[12px] text-[#036046] font-[400]">
+                                        {projName}
                                       </span>
-                                      <span className="text-xs">
-                                        {finData?.ownerName}
+                                      <span className=" text-[14px] text-black font-[500] ">
+                                        {/* {finData?.[`${assets[0]}_unitDetails`]
+                                          ?.unit_no || ''} */}
+                                        Unit-{unit_no}
                                       </span>
 
-                                      <span className="text-xs">
-                                        {' '}
-                                        {finData?.ph}
+                                      <span className=" text-[12px] text-black-900 font-[400]">
+                                        {customerDetailsObj?.customerName1 ||
+                                          'NA'}
                                       </span>
-                                      <span className="font-normal text-xs app-color-gray-1">
-                                        Eco Stone
+                                      <span className=" text-[12px] text-black-500 font-[400]">
+                                        {customerDetailsObj?.phoneNo1 || 'NA'}
                                       </span>
                                     </section>
                                   </section>
-
                                   {/* <span className="font-normal text-xs app-color-gray-1">
                                   {finData?.ph}
                                 </span> */}
                                 </div>
                               </div>
                             </div>
-                            <div className="w-3/4  h-[78px] bg-[#f2f3f8] px-1 ">
+                            <div className="w-2/4 bg-[#f2f3f8] px-1">
                               {' '}
                               <Box>
                                 <>
-                                  <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2">
+                                  <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2 min-w-[180px]">
                                     <div className="flex flex-row justify-between mx-1">
                                       <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
-                                        {'1,11,10,340'}
+                                        ₹{T_review?.toLocaleString('en-IN')}
                                       </h6>
                                       <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
-                                        {'7,10,340'}
+                                        ₹{T_balance?.toLocaleString('en-IN')}
                                       </h6>
                                     </div>
                                     <div className="flex flex-row mx-1">
-                                      {[{ item: 'Total', value: 6 }].map(
+                                      {[{ item: 'Paid', value: 6 }].map(
                                         (data, i) => (
                                           <div
-                                            className=" w-3/4  "
                                             style={{
                                               display: 'inline-block',
                                               alignSelf: 'flex-end',
+                                              width: `${
+                                                Number(
+                                                  (T_review / T_elgible) * 100
+                                                ) <= 100
+                                                  ? Math.round(
+                                                      (T_review / T_elgible) *
+                                                        100
+                                                    )
+                                                  : 100
+                                              }%`,
                                             }}
                                             key={i}
                                           >
@@ -2028,7 +2108,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                                 sx={{
                                                   backgroundColor: 'white',
                                                   '& .MuiLinearProgress-bar': {
-                                                    backgroundColor: '#A798FF',
+                                                    backgroundColor: '#00a979',
                                                   },
                                                 }}
                                                 variant="determinate"
@@ -2044,21 +2124,39 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                                 }}
                                               />
                                             </div>
-                                            <div className="flex  justify-left mr-1  mb-1 mt-[4px]">
+                                            <div className="flex  justify-left mr-1  mb-1 mt-[4px] min-w-[100px]">
                                               <h6 className="font-bodyLato font-semibold text-xs mt-1">
-                                                {data.item}
+                                                {data.item} (
+                                                {Number(
+                                                  (T_review / T_elgible) * 100
+                                                ) <= 100
+                                                  ? Math.round(
+                                                      (T_review / T_elgible) *
+                                                        100
+                                                    )
+                                                  : 100}
+                                                %)
                                               </h6>
                                             </div>
                                           </div>
                                         )
                                       )}
-                                      {[{ item: 'Balance', value: 6 }].map(
+                                      {[{ item: 'Due', value: 6 }].map(
                                         (data, i) => (
                                           <div
-                                            className=" w-2/4  "
                                             style={{
                                               display: 'inline-block',
                                               alignSelf: 'flex-end',
+                                              width: `${
+                                                Number(
+                                                  (T_balance / T_elgible) * 100
+                                                ) > 0
+                                                  ? Math.round(
+                                                      (T_balance / T_elgible) *
+                                                        100
+                                                    )
+                                                  : 0
+                                              }%`,
                                             }}
                                             key={i}
                                           >
@@ -2067,7 +2165,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                                 sx={{
                                                   backgroundColor: 'white',
                                                   '& .MuiLinearProgress-bar': {
-                                                    backgroundColor: '#E87F7F',
+                                                    backgroundColor: '#d29a80',
                                                   },
                                                 }}
                                                 variant="determinate"
@@ -2084,6 +2182,14 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                             </div>
                                             <div className="flex  justify-end mr-1  mb-1 mt-[4px]">
                                               <h6 className="font-bodyLato font-semibold text-xs mt-1">
+                                                {Number(
+                                                  (T_balance / T_elgible) * 100
+                                                ) > 0
+                                                  ? `(${Math.round(
+                                                      (T_balance / T_elgible) *
+                                                        100
+                                                    )})%`
+                                                  : ''}{' '}
                                                 {data.item}
                                               </h6>
                                             </div>
@@ -2095,27 +2201,36 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                 </>
                               </Box>
                             </div>
-                            <div className="w-3/4  bg-[#f2f3f8] px-1 ">
+                            <div className="w-1/4 bg-[#f2f3f8] px-1">
                               {' '}
                               <Box>
                                 <>
-                                  <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2  h-[78px]">
-                                    <div className="flex flex-row justify-between mx-1">
+                                  <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2 min-w-[180px]">
+                                    <div className="flex flex-row justify-between ">
                                       <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
-                                        {'Construction'}
+                                        Progress
                                       </h6>
                                       <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
-                                        {'20%'}
+                                        0%
                                       </h6>
                                     </div>
                                     <div className="flex flex-row mx-1">
-                                      {[{ item: '', value: 6 }].map(
+                                      {[{ item: 'Paid', value: 6 }].map(
                                         (data, i) => (
                                           <div
-                                            className=" w-3/4  "
                                             style={{
                                               display: 'inline-block',
                                               alignSelf: 'flex-end',
+                                              width: `${
+                                                Number(
+                                                  (T_review / T_elgible) * 100
+                                                ) <= 100
+                                                  ? Math.round(
+                                                      (T_review / T_elgible) *
+                                                        100
+                                                    )
+                                                  : 100
+                                              }%`,
                                             }}
                                             key={i}
                                           >
@@ -2124,7 +2239,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                                 sx={{
                                                   backgroundColor: 'white',
                                                   '& .MuiLinearProgress-bar': {
-                                                    backgroundColor: '#A798FF',
+                                                    backgroundColor: '#00a979',
                                                   },
                                                 }}
                                                 variant="determinate"
@@ -2140,21 +2255,30 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                                 }}
                                               />
                                             </div>
-                                            <div className="flex  justify-left mr-1  mb-1 mt-[4px]">
+                                            <div className="flex  justify-left mr-1  mb-1 mt-[4px] min-w-[100px]">
                                               <h6 className="font-bodyLato font-semibold text-xs mt-1">
-                                                {data.item}
+                                             Construction
                                               </h6>
                                             </div>
                                           </div>
                                         )
                                       )}
-                                      {[{ item: '', value: 6 }].map(
+                                      {[{ item: 'Due', value: 6 }].map(
                                         (data, i) => (
                                           <div
-                                            className=" w-2/4  "
                                             style={{
                                               display: 'inline-block',
                                               alignSelf: 'flex-end',
+                                              width: `${
+                                                Number(
+                                                  (T_balance / T_elgible) * 100
+                                                ) > 0
+                                                  ? Math.round(
+                                                      (T_balance / T_elgible) *
+                                                        100
+                                                    )
+                                                  : 0
+                                              }%`,
                                             }}
                                             key={i}
                                           >
@@ -2163,7 +2287,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                                 sx={{
                                                   backgroundColor: 'white',
                                                   '& .MuiLinearProgress-bar': {
-                                                    backgroundColor: '#E87F7F',
+                                                    backgroundColor: '#d29a80',
                                                   },
                                                 }}
                                                 variant="determinate"
@@ -2179,145 +2303,168 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                               />
                                             </div>
                                             <div className="flex  justify-end mr-1  mb-1 mt-[4px]">
-                                              <h6 className="font-bodyLato font-semibold text-xs mt-1">
-                                                {data.item}
-                                              </h6>
-                                            </div>
-                                          </div>
-                                        )
-                                      )}
-                                    </div>
-                                  </div>
-                                </>
-                              </Box>
-                            </div>
-                            <div className=" bg-[#f2f3f8] px-1">
-                              <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2">
-                                <div className="flex flex-row justify-between px-1">
-                                  {[
-                                    {
-                                      item: 'ATS Amount',
-                                      value: 78,
-                                      icon: ChartPieIcon,
-                                    },
-                                    {
-                                      item: 'ATB  Creation',
-                                      value: 78,
-                                      icon: ChartPieIcon,
-                                    },
-                                    {
-                                      item: 'ATB  Approval',
-                                      value: 78,
-                                      icon: ChartPieIcon,
-                                    },
-                                    {
-                                      item: 'Posession',
-                                      value: 58,
-                                      icon: NewspaperIcon,
-                                    },
-                                    // {
-                                    //   item: 'Registration',
-                                    //   value: 58,
-                                    //   icon: NewspaperIcon,
-                                    // },
-                                  ].map((data, i) => (
-                                    <div
-                                      className=" w-[120px] bg-[#F1F5F9] p-3 rounded-md mx-1"
-                                      style={{
-                                        display: 'inline-block',
-                                        alignSelf: 'flex-end',
-                                      }}
-                                      key={i}
-                                    >
-                                      <div className="flex flex-col items-center justify-center mr-1  mb-1 mt[2px]">
-                                        <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-                                          <data.icon
-                                            className="h-4 w-4 text-gray-600 group-hover:text-indigo-600"
-                                            aria-hidden="true"
-                                          />
-                                        </div>
-                                        <h6 className="font-bodyLato text-[#828d9e] text-xs mt-1">
-                                          {data.item}
-                                        </h6>
-                                      </div>
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            </div>
 
-                            <div className="w-1/4  bg-[#f2f3f8] px-1">
-                              <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2">
-                                <div className="flex flex-row justify-between px-1">
-                                  {[
-                                    {
-                                      item: 'Loan',
-                                      value: 38,
-                                      icon: NewspaperIcon,
-                                    },
-                                  ].map((data, i) => (
-                                    <div
-                                      className=" w-[100px] bg-[#F1F5F9] p-3 rounded-md mx-1"
-                                      style={{
-                                        display: 'inline-block',
-                                        alignSelf: 'flex-end',
-                                      }}
-                                      key={i}
-                                    >
-                                      <div className="flex flex-col items-center justify-center mr-1  mb-1 mt[2px]">
-                                        <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-                                          <data.icon
-                                            className="h-4 w-4 text-gray-600 group-hover:text-indigo-600"
-                                            aria-hidden="true"
-                                          />
-                                        </div>
-                                        <h6 className="font-bodyLato text-[#828d9e] text-xs mt-1">
-                                          {data.item}
-                                        </h6>
-                                      </div>
+                                            </div>
+                                          </div>
+                                        )
+                                      )}
                                     </div>
-                                  ))}
+                                  </div>
+                                </>
+                              </Box>
+                            </div>
+                            <div className="w-3/4 bg-[#f2f3f8] px-1">
+                              <div className="flex flex-col bg-white shadow rounded-md my-1   py-1">
+                                <div className="flex flex-row justify-between px-1">
+                                  <div
+                                    className={`w-full  h-[80px] ${
+                                      T_balance <= 0
+                                        ? 'bg-green-100'
+                                        : 'bg-[#F1F5F9] '
+                                    }  p-3 rounded-md mx-1`}
+                                    style={{
+                                      display: 'inline-block',
+                                      alignSelf: 'flex-end',
+                                    }}
+                                  >
+                                    <div className="flex flex-col items-center justify-center mr-1  mb-1 mt-[5px]">
+                                      <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                        <NewspaperIcon
+                                          className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
+                                            T_balance <= 0
+                                              ? 'text-green-900'
+                                              : 'text-gray-600 '
+                                          }`}
+                                          aria-hidden="true"
+                                        />
+                                      </div>
+                                      <h6 className="font-bodyLato text-[#828d9e] text-xs mt-1">
+                                        ATS Amount
+                                      </h6>
+                                    </div>
+                                  </div>
+                                  {/* section 2 */}
+                                  <div
+                                    className={`w-full  h-[80px] ${
+                                      finData?.man_cs_approval
+                                        ? 'bg-green-100'
+                                        : 'bg-[#F1F5F9] '
+                                    }  p-3 rounded-md mx-1`}
+                                    style={{
+                                      display: 'inline-block',
+                                      alignSelf: 'flex-end',
+                                    }}
+                                    key={i}
+                                  >
+                                    <div className="flex flex-col items-center justify-center mr-1  mb-1 mt-[5px]">
+                                      <div className="flex flex-none items-center justify-center rounded-lg bg-green-50 group-hover:bg-white">
+                                        <ChartPieIcon
+                                          className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
+                                            finData?.ats_creation
+                                              ? 'text-green-900'
+                                              : 'text-gray-600 '
+                                          }`}
+                                          aria-hidden="true"
+                                        />
+                                      </div>
+                                      <h6 className="font-bodyLato text-[#828d9e] text-xs mt-1">
+                                        ATS Creation
+                                      </h6>
+                                    </div>
+                                  </div>
+                                  {/* section 3*/}
+                                  <div
+                                    className={`w-full  h-[80px] ${
+                                      finData?.both_ats_approval
+                                        ? 'bg-green-100'
+                                        : 'bg-[#F1F5F9] '
+                                    }  p-3 rounded-md mx-1`}
+                                    style={{
+                                      display: 'inline-block',
+                                      alignSelf: 'flex-end',
+                                    }}
+                                    key={i}
+                                  >
+                                    <div className="flex flex-col items-center justify-center mr-1  mb-1 mt-[5px]">
+                                      <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                        <NewspaperIcon
+                                          className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
+                                            finData?.both_ats_approval
+                                              ? 'text-green-900'
+                                              : 'text-gray-600 '
+                                          }`}
+                                          aria-hidden="true"
+                                        />
+                                      </div>
+                                      <h6 className="font-bodyLato text-[#828d9e] text-xs mt-1">
+                                        ATS Approve
+                                      </h6>
+                                    </div>
+                                  </div>
+                                   {/* section 4 */}
+                                   <div
+                                    className={`w-[120px]  h-[80px] ${
+                                      finData?.man_cs_approval
+                                        ? 'bg-green-100'
+                                        : 'bg-[#F1F5F9] '
+                                    }  p-3 rounded-md mx-1`}
+                                    style={{
+                                      display: 'inline-block',
+                                      alignSelf: 'flex-end',
+                                    }}
+                                    key={i}
+                                  >
+                                    <div className="flex flex-col items-center justify-center mr-1  mb-1 mt-[5px]">
+                                      <div className="flex flex-none items-center justify-center rounded-lg bg-green-50 group-hover:bg-white">
+                                        <ChartPieIcon
+                                          className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
+                                            finData?.ats_creation
+                                              ? 'text-green-900'
+                                              : 'text-gray-600 '
+                                          }`}
+                                          aria-hidden="true"
+                                        />
+                                      </div>
+                                      <h6 className="font-bodyLato text-[#828d9e] text-xs mt-1">
+                                        Posession
+                                      </h6>
+                                    </div>
+                                  </div>
+                                  {/* section 5*/}
+                                  <div
+                                    className={`w-full  h-[80px] ${
+                                      false ? 'bg-green-100' : 'bg-[#F1F5F9] '
+                                    }  p-3 rounded-md mx-1`}
+                                    style={{
+                                      display: 'inline-block',
+                                      alignSelf: 'flex-end',
+                                    }}
+                                    key={i}
+                                  >
+                                    <div className="flex flex-col items-center justify-center mr-1  mb-1 mt-[5px]">
+                                      <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                        <NewspaperIcon
+                                          className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
+                                            1 != 1
+                                              ? 'text-green-900'
+                                              : 'text-gray-600 '
+                                          }`}
+                                          aria-hidden="true"
+                                        />
+                                      </div>
+                                      <h6 className="font-bodyLato text-[#828d9e] text-xs mt-1">
+                                        Loan
+                                      </h6>
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
                             </div>
-                            {/* <div className="w-1/4 bg-[#f2f3f8] px-1">
-                              <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2">
-                                <div className="flex flex-row justify-between px-1">
-                                  {[
-                                    {
-                                      item: 'Modify',
-                                      value: 78,
-                                      icon: ChartPieIcon,
-                                    },
-                                  ].map((data, i) => (
-                                    <div
-                                      className=" w-[100px] bg-[#F1F5F9] p-3 rounded-md mx-1"
-                                      style={{
-                                        display: 'inline-block',
-                                        alignSelf: 'flex-end',
-                                      }}
-                                      key={i}
-                                    >
-                                      <div className="flex flex-col items-center justify-center mr-1  mb-1 mt[2px]">
-                                        <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-                                          <data.icon
-                                            className="h-4 w-4 text-gray-600 group-hover:text-indigo-600"
-                                            aria-hidden="true"
-                                          />
-                                        </div>
-                                        <h6 className="font-bodyLato text-[#828d9e] text-xs mt-1">
-                                          {data.item}
-                                        </h6>
-                                      </div>
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            </div> */}
                           </section>
                         </section>
                       )
                     })}
+     
 
                   {selCategory === 'unAssigned_crm' &&
                     crmCustomersDBData.map((finData, i) => {

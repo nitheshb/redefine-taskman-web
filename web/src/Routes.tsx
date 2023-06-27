@@ -6,6 +6,7 @@ import { Router, Route, Redirect } from '@redwoodjs/router'
 
 import { USER_ROLES } from 'src/constants/userRoles'
 import { useAuth } from 'src/context/firebase-auth-context'
+import { messaging, getToken  } from 'src/context/firebaseConfig'
 
 import FinanceHomePagePage from './pages/FinanceHomePagePage/FinanceHomePagePage'
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage/PrivacyPolicyPage'
@@ -40,6 +41,23 @@ const Routes = () => {
   const { user } = useAuth()
   console.log('user yo yo is ', user)
 
+  // Request permission and get the token
+
+
+    Notification.requestPermission()
+  .then((permission) => {
+    if (permission === 'granted') {
+      return getToken(messaging);
+    } else {
+      throw new Error('Notification permission denied');
+    }
+  })
+  .then((token) => {
+    console.log('FCM Token:', token);
+  })
+  .catch((error) => {
+    console.log('Error:', error);
+  });
   let UpdatedRoutes = defaultRoutes()
   if (user?.role == null) {
     console.log('user yo yo is it is ', user)

@@ -1,8 +1,10 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from 'firebase/app'
 import { getAnalytics } from 'firebase/analytics'
+import { initializeApp } from 'firebase/app'
+import firebase from 'firebase/app'
 import { getAuth } from 'firebase/auth'
 import { getFirestore, initializeFirestore } from 'firebase/firestore'
+import { getMessaging, getToken, } from 'firebase/messaging'
 import { getStorage } from 'firebase/storage'
 // import { initializeApp } from 'firebase-admin/app'
 // TODO: Add SDKs for Firebase products that you want to use
@@ -34,9 +36,12 @@ const db = initializeFirestore(app, {
   experimentalForceLongPolling: true,
 })
 const storage = getStorage()
+// const messagingF = messaging()
+const messaging = getMessaging(app)
+
 
 // export const auth = app.auth()
 const auth = getAuth()
 const analytics = getAnalytics(app)
 
-export { auth, db, storage }
+export { auth, db, storage, messaging, getToken, }
