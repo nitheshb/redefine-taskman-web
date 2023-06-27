@@ -1,3 +1,4 @@
+import { getDirectiveName } from '@redwoodjs/testing/api';
 import { WhereToVote } from '@mui/icons-material'
 import {
   setDoc,
@@ -184,6 +185,31 @@ export const streamGetAllTransactions = async (
   // return onSnapshot(itemsQuery, snapshot, error)
 }
 
+// get all TaskManTasks from supabase
+export const streamGetAllTaskManTasks = async (
+  orgId,
+  snapshot,
+  data,
+  error
+) => {
+  // const itemsQuery = query(doc(db, `${orgId}_leads_log', 'W6sFKhgyihlsKmmqDG0r'))
+  const { uid, cutoffDate } = data
+  // return onSnapshot(doc(db, `${orgId}_leads_log`, uid), snapshot, error)
+  const { data: lead_logs, error: countError } = await supabase
+    .from(`maahomes_TM_Tasks`)
+    .select('*')
+  // .eq('type', 'sts_change')
+  // .is('projectId', null)
+  // .isNull('projectId')
+  // .eq('from', 'visitfixed')
+
+  if (countError) {
+    console.error(countError)
+    return
+  }
+  return lead_logs
+  // return onSnapshot(itemsQuery, snapshot, error)
+}
 // get all Get Customers from supabase
 export const streamGetCustomersS = async (orgId, snapshot, data, error) => {
   // const itemsQuery = query(doc(db, `${orgId}_leads_log', 'W6sFKhgyihlsKmmqDG0r'))
@@ -980,6 +1006,41 @@ export const addNotificationSupabase = async (payload, enqueueSnackbar) => {
   enqueueSnackbar('Notification updated Successful', {
     variant: 'success',
   })
+}
+export const addTaskBusiness = async (orgId, dta, user) => {
+  const { taskTitle, taskdesc, dept,due_date, assignedTo,assignedToObj, followers, priorities, file } = dta
+  let followA = []
+  if(followers){
+    followA = await followers[0]?.map((d)=> {
+      let y = {}
+      y.name = d?.name;
+      y.uid = d?.uid;
+      return y
+    })
+  }
+console.log('value is ', followA)
+
+  const { data, error } = await supabase.from(`maahomes_TM_Tasks`).insert([
+    {
+      created_on: Timestamp.now().toMillis(),
+      followersC: followA.length,
+      by_email: user.email,
+      by_name: user.displayName,
+      by_uid: user.uid,
+      dept: assignedToObj?.department[0] || '',
+      due_date: due_date,
+      priority: priorities,
+      status: 'InProgress',
+      desc: taskdesc,
+      title: taskTitle,
+      to_email: assignedToObj?.email,
+      to_name: assignedToObj?.name,
+      to_uid: assignedToObj?.uid,
+      participantsA: followA ,
+      participantsC:followA.length,
+    },
+  ])
+  await console.log('data is ', data, error)
 }
 export const addLead = async (orgId, data, by, msg) => {
   try {

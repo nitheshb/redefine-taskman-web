@@ -715,7 +715,7 @@ export default function TodayLeadsActivitySearchView({
     <>
       <div>
         {/* <Header /> */}
-        <div className="flex justify-center items-center text-gray-900 h-1"></div>
+        <div className="flex justify-center items-center text-gray-900"></div>
         <div className=" justify-center items-center text-gray-900">
           {/* <h1 className="font-Playfair box-border px-0 pt-0 pb-2  md:pb-4 m-0 text-3xl font-bold tracking-wide  text-gray-900 align-baseline border-0 xl:text-3xl xl:tracking-normal md:text-3xl md:tracking-tight">
             {greet}, {user?.displayName?.toLocaleUpperCase()}
@@ -871,7 +871,7 @@ export default function TodayLeadsActivitySearchView({
                     />
                   </div>
                   <div className="w-2/12 flex flex-col">
-                    <section className="bg-white rounded  flex flex-col p-4 ml-1 mb-2 w-100 ">
+                    <section className="bg-white rounded  flex flex-col p-4 ml-1 mb-1 w-100 ">
                       <h5 className="text-sm">{greet}...!🖐</h5>
                       <h2 className="text-md font-semibold text-black leading-light font-Playfair pb-1">
                         {user?.displayName?.toLocaleUpperCase()}
@@ -895,14 +895,14 @@ export default function TodayLeadsActivitySearchView({
                     </section>
                     <section className="ml-1">
                       <TaskProgress userTodayPerfA={userTodayPerfA} />
-                      <div className="mt-2">
+                      <div className="mt-1">
                         <RecentActivity
                           title={'My Activity'}
                           userTodayPerfA={userTodayPerfA}
                         />
                       </div>
 
-                      <div className="mt-2">
+                      <div className="mt-1">
                         <RecentActivity
                           title={'Team Activity'}
                           userTodayPerfA={userTodayPerfA}
