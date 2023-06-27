@@ -732,14 +732,14 @@ export default function TransactionUpdateSideView({
                 Date
               </div>
               <div className="font-md text-xs mt-1 tracking-wide font-semibold text-[#68582e] p-2  bg-[#feeacc]">
-                {transactionData?.txt_dated}
+                {timeConv(transactionData?.txt_dated)}
               </div>
             </section>
           </section>
         </div>
         <div className="my-2  grid grid-cols-2 mt-4 border-t border-[#e5e7f8]">
           <button
-            className="mb-2 md:mb-0 mr-2 hover:scale-110 focus:outline-none              hover:bg-[#5671fc]
+            className="mb-2 md:mb-0 mr-2 hover:scale-110 focus:outline-none              hover:bg-green-100
 
 
                                   h-8
@@ -754,7 +754,7 @@ export default function TransactionUpdateSideView({
             Reject
           </button>
           <button
-            className="mb-2 md:mb-0  hover:scale-110 focus:outline-none              hover:bg-[#5671fc]
+            className="mb-2 md:mb-0  hover:scale-110 focus:outline-none              hover:bg-green-700
                                   bg-green-700
                                   text-teal-100
                                   h-8

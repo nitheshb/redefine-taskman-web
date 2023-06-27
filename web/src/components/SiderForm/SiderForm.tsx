@@ -17,20 +17,20 @@ import CustomerSideViewCRM from '../A_CrmModule/CrmCustomerSideView'
 import UnitSideViewCRM from '../A_CrmModule/CrmUnitSideView'
 import ViewDocxFile from '../A_LegalModule/viewDocxFile'
 import NotificationsSetupForm from '../A_ProjModule/NotificatoinsSetupFromHome'
+import AddTaskForm from '../A_TaskMan/AddTaskForm'
 import AddBankDetailsForm from '../addBankDetailsForm'
 import AddBlockForm from '../AddBlockForm/AddBlockForm'
 import AdditionalChargesForm from '../AdditionalChargesForm/AdditionalChargesForm'
 import AddLeadForm from '../AddLeadForm'
 import AddPhaseForm from '../AddPhaseForm/AddPhaseForm'
-import AddTaskForm from '../AddTaskForm'
 import AddUnit from '../AddUnit'
 import ConstructUnitsDetails from '../ConstructModule/ConstructUnitsDetails'
 import CrmUnitSideView from '../crmUnitSideView'
-import LeadProfileSideView from '../LeadProfileSideView'
 import DialogFormBody from '../DialogFormBody/DialogFormBody'
 import InventoryViewSideForm from '../DialogFormBody/InventoryViewSideView'
 import AddPaymentDetailsForm from '../FinanceModule/BookingPaymentForm'
 import CaptureUnitPayment from '../FinanceModule/CapturePayment'
+import LeadProfileSideView from '../LeadProfileSideView'
 import LegalDocsUplaodHome from '../LeadUplodCsv/Legal_Docs_upload'
 import LeadsDropHomes from '../LeadUplodCsv/uploadHome'
 import LegalDocsViewHome from '../LegalModule/viewLegalDocument'
@@ -39,6 +39,7 @@ import PaymentScheduleForm from '../PaymentScheduleForm/PaymentScheduleForm'
 import ProjPhaseHome from '../ProjPhaseHome/ProjPhaseHome'
 import TransactionUpdateSideView from '../transactionUpdateSideView'
 import ViewUnitDetails from '../ViewUnitDetails'
+import ViewEditTaskManForm from '../A_TaskMan/ViewEditTaskManForm'
 
 const SiderForm = ({
   BlockFeed,
@@ -70,6 +71,7 @@ const SiderForm = ({
   selSubMenu2,
   setIsClicked,
   setOpen,
+  taskManObj,
   title,
   transactionData,
   unitViewerrr,
@@ -151,6 +153,9 @@ const SiderForm = ({
                 </Transition.Child>
                 {title === 'Add Task' && (
                   <AddTaskForm title={title} dialogOpen={setOpen} />
+                )}
+                {title === 'view_task_man' && (
+                  <ViewEditTaskManForm title={title} dialogOpen={setOpen} taskManObj={taskManObj}/>
                 )}
                 {(title === 'Create Project' || title === 'Edit Project') && (
                   <DialogFormBody

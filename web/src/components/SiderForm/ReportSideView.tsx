@@ -11,7 +11,7 @@ import {
 } from 'src/state/actions/search'
 
 import SideVisitLeadsBody from '../A_SalesModule/Reports/SideVisitsLeadsBody'
-import AddTaskForm from '../AddTaskForm'
+import AddTaskForm from '../A_TaskMan/AddTaskForm'
 
 const ReportSideWindow = ({
   open,

@@ -66,7 +66,7 @@ const customStyles = {
   }),
   menu: (provided) => ({ ...provided, marginTop: 0, zIndex: 9999 }),
 }
-import Loader from './Loader/Loader'
+import Loader from '../Loader/Loader'
 const people = [
   { name: 'Priority 1' },
   { name: 'Priority 2' },
@@ -374,7 +374,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                         placeholder="Task Title"
                         className="w-full h-full pb-10 outline-none  focus:border-blue-600 hover:border-blue-600 rounded  "
                       ></textarea> */}
-                        <section className="mt-1 px-4 rounded-lg bg-white border border-gray-100 shadow ">
+                        <section className="mt-1 px-4 rounded-lg bg-white border border-gray-100 ">
                           <section className="flex flex-row  pt-2 mb-2">
                             <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
                             <span className="ml-1 leading-[15px] ">
@@ -523,16 +523,17 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                         <section className="flex flex-row ">
                           <button
                             // onClick={() => fAddSchedule()}
-                            className={`flex mt-2 cursor-pointer rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium    bg-gradient-to-r from-indigo-400 to-cyan-400   hover:shadow-lg blue-bg-gradient`}
-                          >
-                            <span className="ml-1 ">Add Task</span>
-                          </button>
-                          <button
-                            // onClick={() => fAddSchedule()}
-                            className={`flex mt-2 ml-4 cursor-pointer rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium  bg-gradient-to-r from-indigo-400 to-cyan-400   hover:shadow-lg blue-bg-gradient  `}
+                            className={`flex mt-2  cursor-pointer rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium  bg-gradient-to-r from-indigo-400 to-cyan-400   hover:shadow-lg blue-bg-gradient  `}
                           >
                             <span className="ml-1 ">Add Task & close</span>
                           </button>
+                          <button
+                            // onClick={() => fAddSchedule()}
+                            className={`flex mt-2 ml-4 cursor-pointer rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium    bg-gradient-to-r from-indigo-400 to-cyan-400   hover:shadow-lg blue-bg-gradient`}
+                          >
+                            <span className="ml-1 ">Add Task</span>
+                          </button>
+
                           <button
                             // onClick={() => fSetLeadsType('Add Lead')}
                             // onClick={() => cancelResetStatusFun()}

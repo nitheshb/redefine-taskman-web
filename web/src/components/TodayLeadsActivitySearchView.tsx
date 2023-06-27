@@ -331,8 +331,10 @@ export default function TodayLeadsActivitySearchView({
   const [isImportLeadsOpen, setisImportLeadsOpen] = React.useState(false)
 
   const [isImportLeadsOpen1, setisImportLeadsOpen1] = React.useState(false)
+  const [isViewTaskMan, setisViewTaskMan] = React.useState(false)
   const [addLeadsTypes, setAddLeadsTypes] = React.useState('')
   const [selUserProfile, setSelUserProfile] = React.useState({})
+  const [selTaskMan, setSelTaskMan] = React.useState({})
   const [schFetData, setSchFetData] = React.useState([])
   const [schFetCleanData, setSchFetCleanData] = React.useState([])
   const [leadByViewLayout, setLeadByViewLayout] = React.useState(false)
@@ -678,6 +680,11 @@ export default function TodayLeadsActivitySearchView({
     setisImportLeadsOpen(true)
     setSelUserProfile(data)
   }
+  const selTaskManObjF =(data)=>{
+    setisViewTaskMan(true)
+    setSelTaskMan(data)
+
+  }
   const handleSortDrop = (e) => {
     setSortType(e.target.value)
   }
@@ -862,6 +869,7 @@ export default function TodayLeadsActivitySearchView({
                       taskListA={schFetCleanData}
                       setisImportLeadsOpen={setisImportLeadsOpen}
                       selUserProfileF={selUserProfileF}
+                      selTaskManObjF={selTaskManObjF}
                       leadsFetchedData={undefined}
                       leadsTyper={undefined}
                       leadByViewLayout={leadByViewLayout}
@@ -1215,6 +1223,13 @@ export default function TodayLeadsActivitySearchView({
         title={'Add Task'}
         customerDetails={selUserProfile}
         widthClass="max-w-2xl"
+      />
+      <SiderForm
+        open={isViewTaskMan}
+        setOpen={setisViewTaskMan}
+        title={'view_task_man'}
+        taskManObj={selTaskMan}
+        widthClass="max-w-sm"
       />
     </>
   )
