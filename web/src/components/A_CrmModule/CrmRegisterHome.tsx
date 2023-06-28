@@ -1277,7 +1277,6 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                 <div
                                   // className="flex flex-col bg-gradient-to-r from-emerald-300 to-cyan-400 text-black p-1 rounded-sm w-[220px] h-[96px]"
                                   className="flex flex-col bg-gradient-to-r from-[#d8daff] to-[#9ae8fd] text-black p-1 rounded-sm w-[220px] h-[96px]"
-
                                   onClick={() =>
                                     viewTransaction(
                                       finData,
@@ -1317,11 +1316,11 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                 </div>
                               </div>
                             </div>
-                            <div className="w-3/4 bg-[#f2f3f8] px-1">
+                            <div className="w-[300px] bg-[#f2f3f8] px-1">
                               {' '}
                               <Box>
                                 <>
-                                  <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2 min-w-[180px]">
+                                  <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2 py-[13px] min-w-[180px]">
                                     <div className="flex flex-row justify-between mx-1">
                                       <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
                                         ₹{T_review?.toLocaleString('en-IN')}
@@ -1448,258 +1447,246 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                 </>
                               </Box>
                             </div>
-                            <div className="w-[900px] bg-[#f2f3f8] px-1">
-                              <div className="flex flex-col bg-white shadow rounded-md my-1   py-1">
-                                <div className="flex flex-row justify-between px-1">
-                                  <div
-                                    className={`w-full  h-[80px] ${
-                                      T_balance <= 0
-                                        ? 'bg-green-100'
-                                        : 'bg-[#F1F5F9] '
-                                    }  p-1 rounded-md mx-1`}
-                                    style={{
-                                      display: 'inline-block',
-                                      alignSelf: 'flex-end',
-                                    }}
-                                  >
-                                    <section className='flex flex-row justify-between'>
-                                    <div className="flex flex-col  mr-1  mb-1 ">
-                                      <div className="flex flex-none items-center   rounded-lg  group-hover:bg-white mt-1">
+                            <div className="w-[184px] bg-[#f2f3f8] px-1">
+                              {' '}
+                              <Box>
+                                <>
+                                  <div className="flex flex-col bg-white shadow rounded-md my-1  min-w-[180px]">
+                                    <div className="flex flex-row justify-between mx-1  px-1  py-1">
+                                      <h6 className="font-bodyLato  text-xs mb-2">
+                                        customer-review
+                                      </h6>
+                                      <h6 className="font-bodyLato  text-[10px]  mb-2">
+                                        2 days
+                                      </h6>
+                                    </div>
+                                    <div>
+                                    <div className="flex flex-row items-center justify-center rounded py-1 bg-gradient-to-r from-[#d8daff] to-[#9ae8fd] ">
+                                      <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white mt-1">
                                         <NewspaperIcon
                                           className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
-                                            T_balance <= 0
-                                              ? 'text-green-900'
-                                              : 'text-gray-600 '
-                                          }`}
-                                          aria-hidden="true"
-                                        /> <h6 className="font-bodyLato text-gray-900 text-xs ml-[4px]">
-                                        Amount Due
-                                      </h6>
-                                      </div>
-                                      <section className="mt-2 ">
-                                      <LinearProgress
-                                                sx={{
-                                                  backgroundColor: 'white',
-                                                  '& .MuiLinearProgress-bar': {
-                                                    backgroundColor: '#d29a80',
-                                                  },
-                                                }}
-                                                variant="determinate"
-                                                value={100}
-                                                style={{
-                                                  backgroundColor: '#E87F7F',
-                                                  borderRadius: '3px',
-                                                  borderTopLeftRadius: '3px',
-                                                  borderBottomLeftRadius: '3px',
-                                                  height: `6px`,
-                                                  width: `100%`,
-                                                }}
-                                              />
-                                              </section>
-
-                                    </div>
-                                    <div className="flex flex-col  mr-1  mb-1 ">
-                                      <div className="flex flex-none items-center   rounded-lg  group-hover:bg-white mt-1">
-                                        <NewspaperIcon
-                                          className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
-                                            T_balance <= 0
-                                              ? 'text-green-900'
-                                              : 'text-gray-600 '
-                                          }`}
-                                          aria-hidden="true"
-                                        /> <h6 className="font-bodyLato text-gray-900 text-xs ml-[4px]">
-                                        Legal Verify
-                                      </h6>
-                                      </div>
-                                      <section className="mt-2 ">
-                                      <LinearProgress
-                                                sx={{
-                                                  backgroundColor: 'white',
-                                                  '& .MuiLinearProgress-bar': {
-                                                    backgroundColor: '#d29a80',
-                                                  },
-                                                }}
-                                                variant="determinate"
-                                                value={100}
-                                                style={{
-                                                  backgroundColor: '#E87F7F',
-                                                  borderRadius: '3px',
-                                                  borderTopLeftRadius: '3px',
-                                                  borderBottomLeftRadius: '3px',
-                                                  height: `6px`,
-                                                  width: `100%`,
-                                                }}
-                                              />
-                                              </section>
-
-                                    </div>
-                                    <div className="flex flex-col  mr-1  mb-1 ">
-                                      <div className="flex flex-none items-center   rounded-lg  group-hover:bg-white mt-1">
-                                        <NewspaperIcon
-                                          className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
-                                            T_balance <= 0
-                                              ? 'text-green-900'
-                                              : 'text-gray-600 '
-                                          }`}
-                                          aria-hidden="true"
-                                        /> <h6 className="font-bodyLato text-gray-900 text-xs ml-[4px]">
-                                        Amount Approval
-                                      </h6>
-                                      </div>
-                                      <section className="mt-2 ">
-                                      <LinearProgress
-                                                sx={{
-                                                  backgroundColor: 'white',
-                                                  '& .MuiLinearProgress-bar': {
-                                                    backgroundColor: '#d29a80',
-                                                  },
-                                                }}
-                                                variant="determinate"
-                                                value={100}
-                                                style={{
-                                                  backgroundColor: '#E87F7F',
-                                                  borderRadius: '3px',
-                                                  borderTopLeftRadius: '3px',
-                                                  borderBottomLeftRadius: '3px',
-                                                  height: `6px`,
-                                                  width: `100%`,
-                                                }}
-                                              />
-                                              </section>
-
-                                    </div>
-                                    <div className="flex flex-col  mr-1  mb-1 ">
-                                      <div className="flex flex-none items-center   rounded-lg  group-hover:bg-white mt-1">
-                                        <NewspaperIcon
-                                          className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
-                                            T_balance <= 0
-                                              ? 'text-green-900'
-                                              : 'text-gray-600 '
-                                          }`}
-                                          aria-hidden="true"
-                                        /> <h6 className="font-bodyLato text-gray-900 text-xs ml-[4px]">
-                                        Loan Progress
-                                      </h6>
-                                      </div>
-                                      <section className="mt-2 ">
-                                      <LinearProgress
-                                                sx={{
-                                                  backgroundColor: 'white',
-                                                  '& .MuiLinearProgress-bar': {
-                                                    backgroundColor: '#d29a80',
-                                                  },
-                                                }}
-                                                variant="determinate"
-                                                value={100}
-                                                style={{
-                                                  backgroundColor: '#E87F7F',
-                                                  borderRadius: '3px',
-                                                  borderTopLeftRadius: '3px',
-                                                  borderBottomLeftRadius: '3px',
-                                                  height: `6px`,
-                                                  width: `100%`,
-                                                }}
-                                              />
-                                              </section>
-
-                                    </div>
-                                    </section>
-
-                                  </div>
-
-                                  {/* section 2 */}
-                                  {/* <div
-                                    className={`w-full  h-[80px] ${
-                                      finData?.man_cs_approval
-                                        ? 'bg-green-100'
-                                        : 'bg-[#F1F5F9] '
-                                    }  p-3 rounded-md mx-1`}
-                                    style={{
-                                      display: 'inline-block',
-                                      alignSelf: 'flex-end',
-                                    }}
-                                    key={i}
-                                  >
-                                    <div className="flex flex-col items-center justify-center mr-1  mb-1 mt-[5px]">
-                                      <div className="flex flex-none items-center justify-center rounded-lg bg-green-50 group-hover:bg-white">
-                                        <ChartPieIcon
-                                          className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
-                                            finData?.ats_creation
+                                            finData?.kyc_status
                                               ? 'text-green-900'
                                               : 'text-gray-600 '
                                           }`}
                                           aria-hidden="true"
                                         />
                                       </div>
-                                      <h6 className="font-bodyLato text-[#828d9e] text-xs mt-1">
+                                      <h6 className=" font-semibold text-xs mt-[4px] ml-1 ">
+                                        Legal
+                                      </h6>
+                                    </div>
+                                    </div>
+                                    <div className="flex flex-row mx-1">
+
+
+                                    </div>
+                                  </div>
+                                </>
+                              </Box>
+                            </div>
+                            <div className="w-[184px] bg-[#f2f3f8] px-1">
+                              {' '}
+                              <Box>
+                                <>
+                                  <div className="flex flex-col bg-white shadow rounded-md my-1  min-w-[180px]">
+                                    <div className="flex flex-row justify-between mx-1  px-1  py-1">
+                                      <h6 className="font-bodyLato  text-xs mb-2">
+                                        Demand raised
+                                      </h6>
+                                      <h6 className="font-bodyLato  text-[10px]  mb-2">
+                                        2 Days ago
+                                      </h6>
+                                    </div>
+                                    <div>
+                                    <div className="flex flex-row items-center justify-center rounded py-1 bg-gradient-to-r from-[#d8daff] to-[#9ae8fd] ">
+                                      <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white mt-1">
+                                        <NewspaperIcon
+                                          className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
+                                            finData?.kyc_status
+                                              ? 'text-green-900'
+                                              : 'text-gray-600 '
+                                          }`}
+                                          aria-hidden="true"
+                                        />
+                                      </div>
+                                      <h6 className=" font-semibold text-xs mt-[4px] ml-1 ">
+                                        ATS Due
+                                      </h6>
+                                    </div>
+                                    </div>
+                                    <div className="flex flex-row mx-1">
+
+
+                                    </div>
+                                  </div>
+                                </>
+                              </Box>
+                            </div>
+                            <div className="w-[184px] bg-[#f2f3f8] px-1">
+                              {' '}
+                              <Box>
+                                <>
+                                  <div className="flex flex-col bg-white shadow rounded-md my-1  min-w-[180px]">
+                                    <div className="flex flex-row justify-between mx-1  px-1  py-1">
+                                      <h6 className="font-bodyLato  text-xs mb-2">
+                                        Shared to client
+                                      </h6>
+                                      <h6 className="font-bodyLato  text-[10px]  mb-2">
+                                        2 Days ago
+                                      </h6>
+                                    </div>
+                                    <div>
+                                    <div className="flex flex-row items-center justify-center rounded py-1 bg-gradient-to-r from-[#d8daff] to-[#9ae8fd] ">
+                                      <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white mt-1">
+                                        <NewspaperIcon
+                                          className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
+                                            finData?.kyc_status
+                                              ? 'text-green-900'
+                                              : 'text-gray-600 '
+                                          }`}
+                                          aria-hidden="true"
+                                        />
+                                      </div>
+                                      <h6 className=" font-semibold text-xs mt-[4px] ml-1 ">
                                         ATS Creation
                                       </h6>
                                     </div>
-                                  </div> */}
-                                  {/* section 3*/}
-                                  {/* <div
-                                    className={`w-full  h-[80px] ${
-                                      finData?.both_ats_approval
-                                        ? 'bg-green-100'
-                                        : 'bg-[#F1F5F9] '
-                                    }  p-3 rounded-md mx-1`}
-                                    style={{
-                                      display: 'inline-block',
-                                      alignSelf: 'flex-end',
-                                    }}
-                                    key={i}
-                                  >
-                                    <div className="flex flex-col items-center justify-center mr-1  mb-1 mt-[5px]">
-                                      <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-                                        <NewspaperIcon
-                                          className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
-                                            finData?.both_ats_approval
-                                              ? 'text-green-900'
-                                              : 'text-gray-600 '
-                                          }`}
-                                          aria-hidden="true"
-                                        />
-                                      </div>
-                                      <h6 className="font-bodyLato text-[#828d9e] text-xs mt-1">
-                                        ATS Approval
-                                      </h6>
+
                                     </div>
-                                  </div> */}
-                                  {/* section 4*/}
-                                  {/* <div
-                                    className={`w-full  h-[80px] ${
-                                      false ? 'bg-green-100' : 'bg-[#F1F5F9] '
-                                    }  p-3 rounded-md mx-1`}
-                                    style={{
-                                      display: 'inline-block',
-                                      alignSelf: 'flex-end',
-                                    }}
-                                    key={i}
-                                  >
-                                    <div className="flex flex-col items-center justify-center mr-1  mb-1 mt-[5px]">
-                                      <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-                                        <NewspaperIcon
-                                          className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
-                                            1 != 1
-                                              ? 'text-green-900'
-                                              : 'text-gray-600 '
-                                          }`}
-                                          aria-hidden="true"
-                                        />
-                                      </div>
-                                      <h6 className="font-bodyLato text-[#828d9e] text-xs mt-1">
-                                        Loan
-                                      </h6>
+                                    <div className="flex flex-row mx-1">
+
+
                                     </div>
-                                  </div> */}
-                                </div>
-                              </div>
+                                  </div>
+                                </>
+                              </Box>
                             </div>
+                            <div className="w-[184px] bg-[#f2f3f8] px-1">
+                              {' '}
+                              <Box>
+                                <>
+                                  <div className="flex flex-col bg-white shadow rounded-md my-1  min-w-[180px]">
+                                    <div className="flex flex-row justify-between mx-1  px-1  py-1">
+                                      <h6 className="font-bodyLato  text-xs mb-2">
+                                        Shared to client
+                                      </h6>
+                                      <h6 className="font-bodyLato  text-[10px]  mb-2">
+                                        2 Days ago
+                                      </h6>
+                                    </div>
+                                    <div>
+                                    <div className="flex flex-row items-center justify-center rounded py-1 bg-gradient-to-r from-[#d8daff] to-[#9ae8fd] ">
+                                      <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white mt-1">
+                                        <NewspaperIcon
+                                          className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
+                                            finData?.kyc_status
+                                              ? 'text-green-900'
+                                              : 'text-gray-600 '
+                                          }`}
+                                          aria-hidden="true"
+                                        />
+                                      </div>
+                                      <h6 className=" font-semibold text-xs mt-[4px] ml-1 ">
+                                        ATS Manager Approval
+                                      </h6>
+                                    </div>
+
+                                    </div>
+                                    <div className="flex flex-row mx-1">
+
+
+                                    </div>
+                                  </div>
+                                </>
+                              </Box>
+                            </div>
+                            <div className="w-[184px] bg-[#f2f3f8] px-1">
+                              {' '}
+                              <Box>
+                                <>
+                                  <div className="flex flex-col bg-white shadow rounded-md my-1  min-w-[180px]">
+                                    <div className="flex flex-row justify-between mx-1  px-1  py-1">
+                                      <h6 className="font-bodyLato  text-xs mb-2">
+                                        Shared to client
+                                      </h6>
+                                      <h6 className="font-bodyLato  text-[10px]  mb-2">
+                                        2 Days ago
+                                      </h6>
+                                    </div>
+                                    <div>
+                                    <div className="flex flex-row items-center justify-center rounded py-1 bg-gradient-to-r from-[#d8daff] to-[#9ae8fd] ">
+                                      <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white mt-1">
+                                        <NewspaperIcon
+                                          className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
+                                            finData?.kyc_status
+                                              ? 'text-green-900'
+                                              : 'text-gray-600 '
+                                          }`}
+                                          aria-hidden="true"
+                                        />
+                                      </div>
+                                      <h6 className=" font-semibold text-xs mt-[4px] ml-1 ">
+                                        ATS Customer Approval
+                                      </h6>
+                                    </div>
+
+                                    </div>
+                                    <div className="flex flex-row mx-1">
+
+
+                                    </div>
+                                  </div>
+                                </>
+                              </Box>
+                            </div>
+                            <div className="w-[184px] bg-[#f2f3f8] px-1">
+                              {' '}
+                              <Box>
+                                <>
+                                  <div className="flex flex-col bg-white shadow rounded-md my-1  min-w-[180px]">
+                                    <div className="flex flex-row justify-between mx-1  px-1  py-1">
+                                      <h6 className="font-bodyLato  text-xs mb-2">
+                                        Shared to client
+                                      </h6>
+                                      <h6 className="font-bodyLato  text-[10px]  mb-2">
+                                        2 Days ago
+                                      </h6>
+                                    </div>
+                                    <div>
+                                    <div className="flex flex-row items-center justify-center rounded py-1 bg-gradient-to-r from-[#d8daff] to-[#9ae8fd] ">
+                                      <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white mt-1">
+                                        <NewspaperIcon
+                                          className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
+                                            finData?.kyc_status
+                                              ? 'text-green-900'
+                                              : 'text-gray-600 '
+                                          }`}
+                                          aria-hidden="true"
+                                        />
+                                      </div>
+                                      <h6 className=" font-semibold text-xs mt-[4px] ml-1 ">
+                                        Fund Type
+                                      </h6>
+                                    </div>
+
+                                    </div>
+                                    <div className="flex flex-row mx-1">
+
+
+                                    </div>
+                                  </div>
+                                </>
+                              </Box>
+                            </div>
+
+
                           </section>
                         </section>
                       )
                     })}
-                    {selCategory === 'sd_pipeline' &&
+              
+                  {selCategory === 'sd_pipeline' &&
                     tableData.map((finData, i) => {
                       const {
                         uid,
@@ -1726,7 +1713,6 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                 <div
                                   // className="flex flex-col bg-gradient-to-r from-emerald-300 to-cyan-400 text-black p-1 rounded-sm w-[220px] h-[96px]"
                                   className="flex flex-col bg-gradient-to-r from-[#d8daff] to-[#9ae8fd] text-black p-1 rounded-sm w-[220px] h-[96px]"
-
                                   onClick={() =>
                                     viewTransaction(
                                       finData,
@@ -1953,7 +1939,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                             </div>
                                             <div className="flex  justify-left mr-1  mb-1 mt-[4px] min-w-[100px]">
                                               <h6 className="font-bodyLato font-semibold text-xs mt-1">
-                                             Construction
+                                                Construction
                                               </h6>
                                             </div>
                                           </div>
@@ -1998,9 +1984,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                                 }}
                                               />
                                             </div>
-                                            <div className="flex  justify-end mr-1  mb-1 mt-[4px]">
-
-                                            </div>
+                                            <div className="flex  justify-end mr-1  mb-1 mt-[4px]"></div>
                                           </div>
                                         )
                                       )}
@@ -2132,7 +2116,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                       )
                     })}
 
-{selCategory === 'registered' &&
+                  {selCategory === 'registered' &&
                     tableData.map((finData, i) => {
                       const {
                         uid,
@@ -2159,7 +2143,6 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                 <div
                                   // className="flex flex-col bg-gradient-to-r from-emerald-300 to-cyan-400 text-black p-1 rounded-sm w-[220px] h-[96px]"
                                   className="flex flex-col bg-gradient-to-r from-[#d8daff] to-[#9ae8fd] text-black p-1 rounded-sm w-[220px] h-[96px]"
-
                                   onClick={() =>
                                     viewTransaction(
                                       finData,
@@ -2386,7 +2369,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                             </div>
                                             <div className="flex  justify-left mr-1  mb-1 mt-[4px] min-w-[100px]">
                                               <h6 className="font-bodyLato font-semibold text-xs mt-1">
-                                             Construction
+                                                Construction
                                               </h6>
                                             </div>
                                           </div>
@@ -2431,9 +2414,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                                 }}
                                               />
                                             </div>
-                                            <div className="flex  justify-end mr-1  mb-1 mt-[4px]">
-
-                                            </div>
+                                            <div className="flex  justify-end mr-1  mb-1 mt-[4px]"></div>
                                           </div>
                                         )
                                       )}
@@ -2530,8 +2511,8 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       </h6>
                                     </div>
                                   </div>
-                                   {/* section 4 */}
-                                   <div
+                                  {/* section 4 */}
+                                  <div
                                     className={`w-[120px]  h-[80px] ${
                                       finData?.man_cs_approval
                                         ? 'bg-green-100'
@@ -2593,7 +2574,6 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                         </section>
                       )
                     })}
-
 
                   {selCategory === 'unAssigned_crm' &&
                     crmCustomersDBData.map((finData, i) => {
