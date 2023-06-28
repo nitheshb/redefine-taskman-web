@@ -44,20 +44,20 @@ const Routes = () => {
   // Request permission and get the token
 
 
-    Notification.requestPermission()
-  .then((permission) => {
-    if (permission === 'granted') {
-      return getToken(messaging);
-    } else {
-      throw new Error('Notification permission denied');
-    }
-  })
-  .then((token) => {
-    console.log('FCM Token:', token);
-  })
-  .catch((error) => {
-    console.log('Error:', error);
-  });
+  //   Notification.requestPermission()
+  // .then((permission) => {
+  //   if (permission === 'granted') {
+  //     return getToken(messaging);
+  //   } else {
+  //     throw new Error('Notification permission denied');
+  //   }
+  // })
+  // .then((token) => {
+  //   console.log('FCM Token:', token);
+  // })
+  // .catch((error) => {
+  //   console.log('Error:', error);
+  // });
   let UpdatedRoutes = defaultRoutes()
   if (user?.role == null) {
     console.log('user yo yo is it is ', user)

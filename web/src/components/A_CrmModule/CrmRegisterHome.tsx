@@ -1448,7 +1448,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                 </>
                               </Box>
                             </div>
-                            <div className="w-3/4 bg-[#f2f3f8] px-1">
+                            <div className="w-[900px] bg-[#f2f3f8] px-1">
                               <div className="flex flex-col bg-white shadow rounded-md my-1   py-1">
                                 <div className="flex flex-row justify-between px-1">
                                   <div
@@ -1456,14 +1456,15 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       T_balance <= 0
                                         ? 'bg-green-100'
                                         : 'bg-[#F1F5F9] '
-                                    }  p-3 rounded-md mx-1`}
+                                    }  p-1 rounded-md mx-1`}
                                     style={{
                                       display: 'inline-block',
                                       alignSelf: 'flex-end',
                                     }}
                                   >
-                                    <div className="flex flex-col items-center justify-center mr-1  mb-1 mt-[5px]">
-                                      <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                    <section className='flex flex-row justify-between'>
+                                    <div className="flex flex-col  mr-1  mb-1 ">
+                                      <div className="flex flex-none items-center   rounded-lg  group-hover:bg-white mt-1">
                                         <NewspaperIcon
                                           className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
                                             T_balance <= 0
@@ -1471,15 +1472,143 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                               : 'text-gray-600 '
                                           }`}
                                           aria-hidden="true"
-                                        />
-                                      </div>
-                                      <h6 className="font-bodyLato text-[#828d9e] text-xs mt-1">
+                                        /> <h6 className="font-bodyLato text-gray-900 text-xs ml-[4px]">
                                         Amount Due
                                       </h6>
+                                      </div>
+                                      <section className="mt-2 ">
+                                      <LinearProgress
+                                                sx={{
+                                                  backgroundColor: 'white',
+                                                  '& .MuiLinearProgress-bar': {
+                                                    backgroundColor: '#d29a80',
+                                                  },
+                                                }}
+                                                variant="determinate"
+                                                value={100}
+                                                style={{
+                                                  backgroundColor: '#E87F7F',
+                                                  borderRadius: '3px',
+                                                  borderTopLeftRadius: '3px',
+                                                  borderBottomLeftRadius: '3px',
+                                                  height: `6px`,
+                                                  width: `100%`,
+                                                }}
+                                              />
+                                              </section>
+
                                     </div>
+                                    <div className="flex flex-col  mr-1  mb-1 ">
+                                      <div className="flex flex-none items-center   rounded-lg  group-hover:bg-white mt-1">
+                                        <NewspaperIcon
+                                          className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
+                                            T_balance <= 0
+                                              ? 'text-green-900'
+                                              : 'text-gray-600 '
+                                          }`}
+                                          aria-hidden="true"
+                                        /> <h6 className="font-bodyLato text-gray-900 text-xs ml-[4px]">
+                                        Legal Verify
+                                      </h6>
+                                      </div>
+                                      <section className="mt-2 ">
+                                      <LinearProgress
+                                                sx={{
+                                                  backgroundColor: 'white',
+                                                  '& .MuiLinearProgress-bar': {
+                                                    backgroundColor: '#d29a80',
+                                                  },
+                                                }}
+                                                variant="determinate"
+                                                value={100}
+                                                style={{
+                                                  backgroundColor: '#E87F7F',
+                                                  borderRadius: '3px',
+                                                  borderTopLeftRadius: '3px',
+                                                  borderBottomLeftRadius: '3px',
+                                                  height: `6px`,
+                                                  width: `100%`,
+                                                }}
+                                              />
+                                              </section>
+
+                                    </div>
+                                    <div className="flex flex-col  mr-1  mb-1 ">
+                                      <div className="flex flex-none items-center   rounded-lg  group-hover:bg-white mt-1">
+                                        <NewspaperIcon
+                                          className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
+                                            T_balance <= 0
+                                              ? 'text-green-900'
+                                              : 'text-gray-600 '
+                                          }`}
+                                          aria-hidden="true"
+                                        /> <h6 className="font-bodyLato text-gray-900 text-xs ml-[4px]">
+                                        Amount Approval
+                                      </h6>
+                                      </div>
+                                      <section className="mt-2 ">
+                                      <LinearProgress
+                                                sx={{
+                                                  backgroundColor: 'white',
+                                                  '& .MuiLinearProgress-bar': {
+                                                    backgroundColor: '#d29a80',
+                                                  },
+                                                }}
+                                                variant="determinate"
+                                                value={100}
+                                                style={{
+                                                  backgroundColor: '#E87F7F',
+                                                  borderRadius: '3px',
+                                                  borderTopLeftRadius: '3px',
+                                                  borderBottomLeftRadius: '3px',
+                                                  height: `6px`,
+                                                  width: `100%`,
+                                                }}
+                                              />
+                                              </section>
+
+                                    </div>
+                                    <div className="flex flex-col  mr-1  mb-1 ">
+                                      <div className="flex flex-none items-center   rounded-lg  group-hover:bg-white mt-1">
+                                        <NewspaperIcon
+                                          className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
+                                            T_balance <= 0
+                                              ? 'text-green-900'
+                                              : 'text-gray-600 '
+                                          }`}
+                                          aria-hidden="true"
+                                        /> <h6 className="font-bodyLato text-gray-900 text-xs ml-[4px]">
+                                        Loan Progress
+                                      </h6>
+                                      </div>
+                                      <section className="mt-2 ">
+                                      <LinearProgress
+                                                sx={{
+                                                  backgroundColor: 'white',
+                                                  '& .MuiLinearProgress-bar': {
+                                                    backgroundColor: '#d29a80',
+                                                  },
+                                                }}
+                                                variant="determinate"
+                                                value={100}
+                                                style={{
+                                                  backgroundColor: '#E87F7F',
+                                                  borderRadius: '3px',
+                                                  borderTopLeftRadius: '3px',
+                                                  borderBottomLeftRadius: '3px',
+                                                  height: `6px`,
+                                                  width: `100%`,
+                                                }}
+                                              />
+                                              </section>
+
+                                    </div>
+                                    </section>
+
                                   </div>
+
                                   {/* section 2 */}
-                                  <div
+                                  {/* <div
                                     className={`w-full  h-[80px] ${
                                       finData?.man_cs_approval
                                         ? 'bg-green-100'
@@ -1506,9 +1635,9 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                         ATS Creation
                                       </h6>
                                     </div>
-                                  </div>
+                                  </div> */}
                                   {/* section 3*/}
-                                  <div
+                                  {/* <div
                                     className={`w-full  h-[80px] ${
                                       finData?.both_ats_approval
                                         ? 'bg-green-100'
@@ -1535,9 +1664,9 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                         ATS Approval
                                       </h6>
                                     </div>
-                                  </div>
+                                  </div> */}
                                   {/* section 4*/}
-                                  <div
+                                  {/* <div
                                     className={`w-full  h-[80px] ${
                                       false ? 'bg-green-100' : 'bg-[#F1F5F9] '
                                     }  p-3 rounded-md mx-1`}
@@ -1562,7 +1691,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                         Loan
                                       </h6>
                                     </div>
-                                  </div>
+                                  </div> */}
                                 </div>
                               </div>
                             </div>
@@ -2464,7 +2593,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                         </section>
                       )
                     })}
-     
+
 
                   {selCategory === 'unAssigned_crm' &&
                     crmCustomersDBData.map((finData, i) => {
