@@ -151,6 +151,7 @@ const attachTypes = [
 const notInterestOptions = [
   // { label: 'Select Reason', value: '' },
   { label: 'Budget Issue', value: 'budget_issue' },
+
   {
     label: 'Looking for Different Area & Property',
     value: 'differeent_area_options',
@@ -160,6 +161,10 @@ const notInterestOptions = [
   { label: 'Not happy with the development & quality', value: 'nh_dev_qual' },
 
   { label: 'Need more time', value: 'Need_more_time' },
+  {
+    label: 'Not Looking for any property',
+    value: 'not_looking_for_any_property',
+  },
   { label: 'just doing property research', value: 'property_research' },
   { label: 'Others', value: 'others' },
 
