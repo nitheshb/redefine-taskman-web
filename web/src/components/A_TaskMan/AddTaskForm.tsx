@@ -208,7 +208,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
     await addTaskBusiness(orgId, data, user)
 
     await resetForm()
-    await setFormMessage('Saved Successfully..!')
+    await setFormMessage('Task Created..!')
     await setLoading(false)
     return
     const {
@@ -280,7 +280,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
       // msg3
       sendWhatAppTextSms(mobileNo, smg)
       resetForm()
-      setFormMessage('Saved Successfully..!')
+      setFormMessage('Task Created..!')
       setLoading(false)
     }
   }
@@ -375,13 +375,27 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                         className="w-full h-full pb-10 outline-none  focus:border-blue-600 hover:border-blue-600 rounded  "
                       ></textarea> */}
                         <section className="mt-1 px-4 rounded-lg bg-white border border-gray-100 ">
-                          <section className="flex flex-row  pt-2 mb-2">
-                            <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
-                            <span className="ml-1 leading-[15px] ">
-                              <label className="font-semibold text-[#053219]  text-[13px] leading-[15px] mb-1  ">
-                                Business Task<abbr title="required"></abbr>
-                              </label>
-                            </span>
+                          <section className="flex flex-row justify-between  pt-2 mb-2 h-[34px]">
+                            <div className="flex flex-row">
+                              <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
+                              <span className="ml-1 leading-[15px] ">
+                                <label className="font-semibold text-[#053219]  text-[13px] leading-[15px] mb-1  ">
+                                  Task Details<abbr title="required"></abbr>
+                                </label>
+                              </span>
+                            </div>
+                            {formMessage === 'Task Created..!' && (
+                              <p className=" flex text-md text-slate-800 ">
+                                <img
+                                  className="w-[18px] h-[18px] inline mr-2"
+                                  alt=""
+                                  src="/ok.gif"
+                                />
+                                <span className="mt-[.2px] text-[12px]">
+                                  {formMessage}
+                                </span>
+                              </p>
+                            )}
                           </section>
 
                           <div className=" space-y-2 w-full text-xs mt-4">
@@ -503,7 +517,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                               </p>
                             </div>
                           </div>
-                          <div className="w-full flex flex-row my-3">
+                          <div className="w-full flex flex-row my-3 mt-4">
                             {/* <TextField
                               type="file"
                               name="file"
@@ -511,16 +525,17 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                               className="mt-[-3px] border border-gray-300 w-full rounded h-[36px] pt-0.5 pl-1"
                             /> */}
 
-                            <label
+                            {/* <label
                               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                               htmlFor="file_input"
                             >
                               Upload file
-                            </label>
+                            </label> */}
                             <input
-                              className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                              className="block w-full text-sm text-gray-900 border border-blue-300 rounded-sm cursor-pointer bg-blue-50  focus:outline-none "
                               id="file_input"
                               type="file"
+                              name="file"
                             />
                           </div>
                         </section>

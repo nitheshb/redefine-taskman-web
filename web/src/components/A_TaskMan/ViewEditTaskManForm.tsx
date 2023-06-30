@@ -22,6 +22,7 @@ import {
   addLead,
   addTaskBusiness,
   checkIfLeadAlreadyExists,
+  editTaskManData,
   getAllProjects,
   steamUsersListByRole,
 } from 'src/context/dbQueryFirebase'
@@ -137,6 +138,11 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
     /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/
 
   const onSubmitFun = async (data, resetForm) => {
+    console.log('edit task and button', taskManObj)
+    data.id = taskManObj.id
+    await editTaskManData(orgId, data, user)
+    await setFormMessage('Task Created..!')
+
     return
     data.due_date = startDate.getTime()
     setLoading(true)
@@ -323,13 +329,12 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
           <div className="flex flex-col  rounded-lg bg-white  ">
             <div className="mt-0">
               {/* new one */}
-
               <Formik
                 enableReinitialize={true}
                 initialValues={{
                   taskTitle: taskManObj?.title || '',
                   taskdesc: taskManObj?.desc || '',
-                  assignedTo: taskManObj?.to_name || '',
+                  assignedTo: taskManObj?.to_uid || '',
                   assignedToObj:
                     {
                       uid: taskManObj?.to_uid,
@@ -360,13 +365,27 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                         className="w-full h-full pb-10 outline-none  focus:border-blue-600 hover:border-blue-600 rounded  "
                       ></textarea> */}
                           <section className="mt-1 px-4 rounded-lg bg-white border border-gray-100  ">
-                            <section className="flex flex-row  pt-2 mb-2">
-                              <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
-                              <span className="ml-1 leading-[15px] ">
-                                <label className="font-semibold text-[#053219]  text-[13px] leading-[15px] mb-1  ">
-                                  Business Task<abbr title="required"></abbr>
-                                </label>
-                              </span>
+                            <section className="flex flex-row justify-between  pt-2 mb-2 h-[34px]">
+                              <div className="flex flex-row">
+                                <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
+                                <span className="ml-1 leading-[15px] ">
+                                  <label className="font-semibold text-[#053219]  text-[13px] leading-[15px] mb-1  ">
+                                    Task Details<abbr title="required"></abbr>
+                                  </label>
+                                </span>
+                              </div>
+                              {formMessage === 'Task Created..!' && (
+                                <p className=" flex text-md text-slate-800 ">
+                                  <img
+                                    className="w-[18px] h-[18px] inline mr-2"
+                                    alt=""
+                                    src="/ok.gif"
+                                  />
+                                  <span className="mt-[.2px] text-[12px]">
+                                    {formMessage}
+                                  </span>
+                                </p>
+                              )}
                             </section>
 
                             <div className=" space-y-2 w-full text-xs mt-4">
@@ -393,6 +412,11 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                                   formik.setFieldValue(
                                     'assignedTo',
                                     value.value
+                                  )
+                                  console.log(
+                                    'sele value si ',
+                                    value.value,
+                                    taskManObj?.to_name
                                   )
                                   formik.setFieldValue('assignedToObj', value)
                                 }}
@@ -513,13 +537,13 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                               // onClick={() => fAddSchedule()}
                               className={`flex mt-2  cursor-pointer rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium  bg-gradient-to-r from-indigo-400 to-cyan-400   hover:shadow-lg blue-bg-gradient  `}
                             >
-                              <span className="ml-1 ">Add Task & close</span>
+                              <span className="ml-1 ">Edit Task & close</span>
                             </button>
                             <button
                               // onClick={() => fAddSchedule()}
                               className={`flex mt-2 ml-4 cursor-pointer rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium    bg-gradient-to-r from-indigo-400 to-cyan-400   hover:shadow-lg blue-bg-gradient`}
                             >
-                              <span className="ml-1 ">Add Task</span>
+                              <span className="ml-1 ">Edit Task</span>
                             </button>
 
                             <button

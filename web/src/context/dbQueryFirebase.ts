@@ -266,6 +266,45 @@ export const updateLeadsLogWithProject = async (
   return lead_logs
   // return onSnapshot(itemsQuery, snapshot, error)
 }
+export const editTaskManData = async (
+  orgId, dta, user
+) => {
+  const { id, taskTitle, taskdesc, dept,due_date, assignedTo,assignedToObj, followers, priorities, file } = dta
+  let followA = []
+  if(followers){
+    followA = await followers[0]?.map((d)=> {
+      let y = {}
+      y.name = d?.name;
+      y.uid = d?.uid;
+      return y
+    })
+  }
+  const { data: lead_logs, error } = await supabase
+    .from(`maahomes_TM_Tasks`)
+    .update(    {
+      created_on: Timestamp.now().toMillis(),
+      followersC: followA.length,
+      by_email: user.email,
+      by_name: user.displayName,
+      by_uid: user.uid,
+      dept: assignedToObj?.department[0] || '',
+      due_date: due_date,
+      priority: priorities,
+      status: 'InProgress',
+      desc: taskdesc,
+      title: taskTitle,
+      to_email: assignedToObj?.email,
+      to_name: assignedToObj?.name,
+      to_uid: assignedToObj?.uid,
+      participantsA: followA ,
+      participantsC:followA.length,
+    },)
+    .eq('id', id)
+
+  console.log('updating error', lead_logs, error)
+  return lead_logs
+  // return onSnapshot(itemsQuery, snapshot, error)
+}
 
 //  get lead activity list
 export const steamLeadActivityLog = async (orgId, snapshot, data, error) => {

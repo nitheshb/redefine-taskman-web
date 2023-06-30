@@ -3,15 +3,18 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import { useEffect, useState } from 'react'
 
+import { SearchIcon } from '@heroicons/react/outline'
 import { ArrowNarrowRightIcon, PlusIcon } from '@heroicons/react/solid'
 import { PaperClipIcon, UsersIcon } from '@heroicons/react/solid'
 import { TabList } from '@mui/lab'
 import { Box, Card, Grid, styled } from '@mui/material'
+import { startOfDay } from 'date-fns'
 import { useTranslation } from 'react-i18next' // styled components
 
 import { streamGetAllTaskManTasks } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import { supabase } from 'src/context/supabase'
+import CSVDownloader from 'src/util/csvDownload'
 import {
   formatToPhone,
   getDifferenceInDays,
@@ -19,6 +22,10 @@ import {
   getDifferenceInMinutes,
   prettyDateTime,
 } from 'src/util/dateConverter'
+import {
+  SlimDateSelectBox,
+  SlimSelectBox,
+} from 'src/util/formFields/slimSelectBoxField'
 import uniqueId from 'src/util/generatedId'
 
 import LLeadsTableBody from '../LLeadsTableBody/LLeadsTableBody'
@@ -43,6 +50,8 @@ const TodoListView = ({
 }) => {
   // change navbar title
   // useTitle('Data Table V1')
+  const d = new window.Date()
+
   const { t } = useTranslation()
   const [value, setValue] = useState('new')
   const { user } = useAuth()
@@ -50,6 +59,10 @@ const TodoListView = ({
   const [tableData, setTableData] = useState([])
   const [businessData_F, setBusinessData_F] = useState([])
   const [businessSection_D, setBusinessSection_D] = useState([])
+  const [showSettings, setShowSettings] = useState(true)
+  const [sourceDateRange, setSourceDateRange] = useState(
+    startOfDay(d).getTime()
+  )
 
   const [personalData_F, setPersonalData_F] = useState([])
   const [tabHeadFieldsA, settabHeadFieldsA] = useState([])
@@ -291,18 +304,30 @@ const TodoListView = ({
                   )
                 })}
               </ul>
-              {['business_tasks', 'personal_tasks'].includes(isClicked) && (
-                <button
-                  className="w-[104px] focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 sm:mt-0 inline-flex items-start justify-start px-2 mb-[4px] mr-2
+              <div className="flex flex-row">
+                {['business_tasks', 'personal_tasks'].includes(isClicked) && (
+                  <button
+                    className="w-[104px] focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 sm:mt-0 inline-flex items-start justify-start px-2 mb-[4px] mr-2
                  focus:outline-none rounded-full hover:text-[#027576] hover:bg-gradient-to-r from-violet-200 to-pink-200 bg-gradient-to-r from-violet-200 to-pink-200 text-black-900 hover:text-[#025e5e] hover:scale-95 font-light "
-                  onClick={() => openingTaskAddWindow()}
-                >
-                  <PlusIcon className="w-[13px] h-[13px] mt-[9px] mr-[2px]" />
-                  <p className="text-sm text-black-900 font-medium leading-none mt-2">
-                    New Task
-                  </p>
-                </button>
-              )}
+                    onClick={() => openingTaskAddWindow()}
+                  >
+                    <PlusIcon className="w-[13px] h-[13px] mt-[9px] mr-[2px]" />
+                    <p className="text-sm text-black-900 font-medium leading-none mt-2">
+                      New Task
+                    </p>
+                  </button>
+                )}
+                <div className="flex flex-row mr-2 mt-">
+                  <span
+                    className="flex mt-[4px] mr-[0px] justify-center items-center w-6 h-6 bg-gradient-to-r from-violet-200 to-pink-200 rounded-full  cursor-pointer "
+                    onClick={() => {
+                      setShowSettings(!showSettings)
+                    }}
+                  >
+                    <SearchIcon className=" w-3 h-3" />
+                  </span>
+                </div>
+              </div>
               {/* {selFeature != 'lead_strength' && (
           <span
             className="font-bodyLato text-xs text-blue-400 mr-2 mt-2 cursor-pointer"
@@ -319,6 +344,80 @@ const TodoListView = ({
             CLOSE
           </span>
         )} */}
+            </div>
+            <div
+              className={`${
+                showSettings ? 'hidden' : ''
+              } flex flex-row py-2 justify-between `}
+            >
+              <div className="flex flex-row w-full">
+                <span className="flex ml-2 mr-2 h-[34px] bg-gray-50 border border-gray-300 border-solid box-border w-1/3 rounded-md">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4  mt-[9px] mx-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    ></path>
+                  </svg>
+                  <input
+                    type="text"
+                    id="globalSearch"
+                    placeholder="Search Task title,status... "
+                    // onChange={searchKeyField}
+                    autoComplete="off"
+                    // value={searchKey}
+                    className="w-52 bg-transparent focus:border-transparent focus:ring-0 focus-visible:border-transparent focus-visible:ring-0 focus:outline-none text-sm leading-7 text-gray-900 w-4/5 relative"
+                  />
+                </span>
+                <div className=" mr-2">
+                  <SlimSelectBox
+                    name="Priority"
+                    placeholder="Priority"
+                    label=""
+                    className="input "
+                    onChange={(value) => {
+                      // setSelProject(value)
+                      // formik.setFieldValue('project', value.value)
+                    }}
+                    value={'alltransactions'}
+                    // options={aquaticCreatures}
+                    options={[
+                      { label: 'Low', value: 'low' },
+                      { label: 'Medium', value: 'medium' },
+                      { label: 'High', value: 'high' },
+                    ]}
+                  />
+                </div>
+                <div className=" mt-[-4px]">
+                  <SlimDateSelectBox
+                    onChange={async (value) => {
+                      setSourceDateRange(value)
+                      //getLeadsDataFun()
+                    }}
+                    label={sourceDateRange}
+                    placeholder={undefined}
+                  />
+                </div>
+
+                <span className="mt-2 ml-2 text-red-400 cursor-pointer text-xs">
+                  {' '}
+                  Clear
+                </span>
+              </div>
+              <span style={{ display: '' }}>
+                <CSVDownloader
+                  className="mr-6 h-[20px] w-[20px] mt-2"
+                  downloadRows={businessData_F}
+                  style={{ height: '20px', width: '20px' }}
+                />
+              </span>
             </div>
             {isClicked === 'dept_tasks' && (
               <div className=" rounded px-1 mt-4 mb-3">
@@ -844,16 +943,13 @@ const TodoListView = ({
                                 </p>
                               </div>
                             </div>
-
                           </div>
                         </td>
-                        <td className="pl-24">
-
-                        </td>
+                        <td className="pl-24"></td>
                         <td className="pl-5">
                           <div className="flex flex-col">
                             <p className="text-[12px] leading-none text-blue-600 ml-2">
-                            {dat?.status}
+                              {dat?.status}
                             </p>
                             <p className="text-[11px] leading-none text-gray-600 ml-2 mt-2">
                               {dat?.by_name}
@@ -866,8 +962,6 @@ const TodoListView = ({
                         </td>
                         <td className="pl-5">
                           <div className="flex flex-row">
-
-
                             <button className="py-3 px-3 text-[13px] focus:outline-none leading-none text-red-700 rounded">
                               {Math.abs(
                                 getDifferenceInMinutes(dat['due_date'], '')
@@ -940,9 +1034,7 @@ const TodoListView = ({
                         className="focus:outline-none h-16 border border-gray-100 rounded"
                         key={i}
                         onClick={() => {
-                     
                           selTaskManObjF(dat)
-
                         }}
                       >
                         <td>
@@ -978,18 +1070,16 @@ const TodoListView = ({
                             </div>
                           </div>
                         </td>
-                        <td className="pl-24">
-                        </td>
+                        <td className="pl-24"></td>
                         <td className="pl-5">
                           <div className="flex flex-col">
                             <p className="text-[12px] leading-none text-blue-600 ml-2">
-                            {dat?.status}
+                              {dat?.status}
                             </p>
                             <p className="text-[11px] leading-none text-gray-600 ml-2 mt-2">
                               {dat?.by_name}
                             </p>
-                            <p className="text-sm leading-none text-gray-600 ml-2">
-                            </p>
+                            <p className="text-sm leading-none text-gray-600 ml-2"></p>
                           </div>
                         </td>
                         <td className="pl-5">
