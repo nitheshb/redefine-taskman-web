@@ -5,8 +5,18 @@ import { useState, useEffect, Fragment } from 'react'
 
 import { Dialog, Listbox, Transition } from '@headlessui/react'
 import { RadioGroup } from '@headlessui/react'
-import { CalendarIcon, ClockIcon } from '@heroicons/react/outline'
+import {
+  CalendarIcon,
+  CheckCircleIcon,
+  ClockIcon,
+} from '@heroicons/react/outline'
+import { XIcon } from '@heroicons/react/solid'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
+import CalendarMonthTwoToneIcon from '@mui/icons-material/CalendarMonthTwoTone'
+import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone'
+import CloseTwoToneIcon from '@mui/icons-material/CloseTwoTone'
+import ScheduleSendTwoToneIcon from '@mui/icons-material/ScheduleSendTwoTone'
+import SendTwoToneIcon from '@mui/icons-material/SendTwoTone'
 import { setHours, setMinutes } from 'date-fns'
 import { Timestamp } from 'firebase/firestore'
 import { Form, Formik } from 'formik'
@@ -19,6 +29,7 @@ import { Label, InputField, TextAreaField, FieldError } from '@redwoodjs/forms'
 import { useRouterStateSetter } from '@redwoodjs/router/dist/router-context'
 
 import {
+  AddCommentTaskManData,
   CompleteTaskManData,
   addLead,
   addTaskBusiness,
@@ -71,6 +82,10 @@ const customStyles = {
 import Loader from '../Loader/Loader'
 
 import { prettyDateTime } from 'src/util/dateConverter'
+
+import { formatFileSize } from 'react-papaparse'
+
+import { domainToASCII } from 'url'
 const people = [
   { name: 'Priority 1' },
   { name: 'Priority 2' },
@@ -84,9 +99,15 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
   const [fetchedUsersList, setfetchedUsersList] = useState([])
   const [usersList, setusersList] = useState([])
   const [projectList, setprojectList] = useState([])
+  const [myTaskObj, setMyTaskObj] = useState([])
   const [startDate, setStartDate] = useState(setHours(setMinutes(d, 30), 16))
   const [selected1, setSelected1] = useState(people[0])
   const [showEditTask, selShowEditTask] = useState(false)
+  const [addCommentTitle, setAddCommentTitle] = useState('')
+  const [addCommentPlusTask, setAddCommentPlusTask] = useState(false)
+  const [closeTask, setCloseTask] = useState(false)
+  const [error, setError] = useState(false)
+
   useEffect(() => {
     const unsubscribe = steamUsersListByRole(
       orgId,
@@ -108,6 +129,10 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
 
     return unsubscribe
   }, [])
+  useEffect(() => {
+    setMyTaskObj(taskManObj?.comments || [])
+  }, [taskManObj])
+
   useEffect(() => {
     const unsubscribe = getAllProjects(
       orgId,
@@ -213,82 +238,346 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
           </span>
         </section>
       </div>
+
       {!showEditTask && (
         <div className="py-3 px-3 m-4 mt-2 rounded-lg border border-gray-100 ">
-          <div className="mt-2 ">
-            <section className=" flex flex-col  pb-3  ">
-              <section className="flex flex-col justify-between mb-1">
-                <section className="flex flex-row justify-between">
-                  <div className="font-md text-xs text-gray-500  tracking-wide">
-                    Title
-                  </div>
-                  <div className="font-md text-xs text-blue-500 text-right tracking-wide ">
-                    {taskManObj?.status}
-                  </div>
-                </section>
+          <section className="flex flex-col justify-between">
 
-                <div className="font-md text-xs mt-1 tracking-wide font-semibold text-slate-900  bg-[#f4e1fc] p-2 rounded-sm">
-                  {taskManObj?.title}
+            <div
+              className={`${
+                taskManObj?.status === 'Done'
+                  ? 'cursor-not-allowed '
+                  : 'cursor-pointer'
+              }  mt-1 block w-full`}
+              onClick={() => {}}
+            >
+              <label className="inline-flex items-center">
+                {taskManObj?.status != 'Done' && (
+                  <span
+                    className="px-[2px] py-[2px]  rounded-full border border-2 cursor-pointer text-[#cdcdcd] hover:text-green-800 hover:border-green-700 hover:bg-green-100"
+                    // onClick={() => doneFun(data)}
+                    // onClick={() => closeTaskFun(data)}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-2 w-2"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </span>
+                )}
+                {taskManObj?.status === 'Done' && (
+                  <CheckCircleIcon className="w-4 h-4 inline text-[#058527]" />
+                )}
+                <div
+                  className={`${
+                    taskManObj?.status === 'Done'
+                      ? 'line-through'
+                      : 'cursor-pointer'
+                  }  ml-2 text-[14px] inline font-bodyLato font-brand tracking-wider text-[#0091ae]`}
+                  onClick={() => {
+                    // if (taskManObj?.status === 'InProgress') {
+                    //   setAddTaskCommentObj(data)
+                    // }
+                  }}
+                >
+                  <span className="block pb-[3px]">{taskManObj?.title}</span>
                 </div>
-              </section>
+              </label>
+            </div>
+            <section className="flex flex-row justify-between pb-3 border-b border-gray-200 ml-1 mb-1">
+              <span className="text-[#7e92a2] ml-1 text-[13px]">
+                {' '}
+                {/* <svg
+                viewBox="0 0 12 12"
+                className="notes_icon inline w-2 h-2 mr-1"
+                aria-label="2 comments"
+              >
+                <g fill="none" fillRule="evenodd">
+                  <path
+                    fill="currentColor"
+                    fillRule="nonzero"
+                    d="M9.5 1A1.5 1.5 0 0 1 11 2.5v5A1.5 1.5 0 0 1 9.5 9H7.249L5.28 10.97A.75.75 0 0 1 4 10.44V9H2.5A1.5 1.5 0 0 1 1 7.5v-5A1.5 1.5 0 0 1 2.5 1h7zm0 1h-7a.5.5 0 0 0-.5.5v5a.5.5 0 0 0 .5.5H5v1.836L6.835 8H9.5a.5.5 0 0 0 .5-.5v-5a.5.5 0 0 0-.5-.5z"
+                  ></path>
+                </g>
+              </svg>{' '} */}
+                <span className="ml-4">{taskManObj?.desc}</span>
+              </span>
+              <span> {/* {prettyDateTime(commentObj?.t)} */}</span>
             </section>
-          </div>
-          <div className="">
-            <section className=" flex flex-col  py-1   ">
-              <section className="flex flex-col justify-between mb-1">
-                <div className="font-md text-xs text-gray-500  tracking-wide">
-                  Description
+            <section className="flex flex-row ml-1 mt-3 justify-between">
+            <div className="relative flex flex-col  group">
+                <div
+                  className="absolute bottom-0 right-0 flex-col items-center hidden mb-6 group-hover:flex"
+                  // style="z-index: 9999;"
+                >
+
+                  <div
+                    className="w-3 h-3  -mt-2 rotate-45 bg-black"
+                    // style="background: rgb(226, 192, 98); margin-right: 12px;"
+                  ></div>
                 </div>
-                <div className="font-md text-xs mt-1 tracking-wide font-semibold text-[#462c52]  bg-[#f4e1fc] py-2 px-2 rounded-sm">
-                  {taskManObj?.desc || 'NA'}
+                <span className="font-thin text-violet-800   font-bodyLato text-[12px] ">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="12"
+                    height="12"
+                    viewBox="0 0 12 12"
+                    className="inline mr-1"
+                  >
+                    <path
+                      d="M9.357 1C10.264 1 11 1.736 11 2.643V6.07c0 .436-.173.854-.481 1.162L7.232 10.52a1.643 1.643 0 01-2.323 0L1.48 7.09c-.64-.64-.64-1.68.001-2.322L4.768 1.48C5.076 1.173 5.494 1 5.93 1h3.427zm-.07.91H5.93a.805.805 0 00-.569.235L2.145 5.362a.805.805 0 000 1.138L5.5 9.855a.805.805 0 001.138 0l3.217-3.217a.805.805 0 00.236-.569V2.713a.804.804 0 00-.804-.804zM7.364 3.726a.91.91 0 110 1.818.91.91 0 010-1.818z"
+                      fill="currentColor"
+                      fillRule="evenodd"
+                    ></path>
+                  </svg>
+
+                  <span className="text mr-1 text-violet-800">To:</span>
+                  {taskManObj?.to_email}
+                </span>
+              </div>
+              <span className="text-xs font-bodyLato  font-normal text-[#b03d32] text-gray-500  ">
+                <div className="flex flex-row">
+                  <div className="relative flex flex-col  group">
+
+                    <span className="font-bodyLato flex flex-row text-violet-900">
+                      <svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 12 12"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="calendar_icon inline mr-1 mt-[2px]"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          clipRule="evenodd"
+                          d="M9.5 1h-7A1.5 1.5 0 001 2.5v7A1.5 1.5 0 002.5 11h7A1.5 1.5 0 0011 9.5v-7A1.5 1.5 0 009.5 1zM2 2.5a.5.5 0 01.5-.5h7a.5.5 0 01.5.5v7a.5.5 0 01-.5.5h-7a.5.5 0 01-.5-.5v-7zM8.75 8a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM3.5 4a.5.5 0 000 1h5a.5.5 0 000-1h-5z"
+                          fill="currentColor"
+                        ></path>
+                      </svg>
+
+                      <span className="italic">{taskManObj?.priority} </span>
+                    </span>
+                  </div>
                 </div>
-              </section>
+              </span>
+
             </section>
-          </div>
-          <div className="mt-3 grid grid-cols-2 ">
-            <section className=" flex flex-col  py-3 py-0  ">
-              <section className="flex flex-col justify-between mb-1">
-                <div className="font-md text-xs text-gray-500  tracking-wide">
-                  Assigned To
+            <section className="flex flex-row ml-1 mt-2 justify-between pb-4 border-b border-gray-200">
+            <div className="relative flex flex-col  group">
+                <div
+                  className="absolute bottom-0 right-0 flex-col items-center hidden mb-6 group-hover:flex"
+                  // style="z-index: 9999;"
+                >
+
+                  <div
+                    className="w-3 h-3  -mt-2 rotate-45 bg-black"
+                    // style="background: rgb(226, 192, 98); margin-right: 12px;"
+                  ></div>
                 </div>
-                <div className="font-md text-xs mt-1 tracking-wide font-semibold text-[#462c52]  bg-[#f4e1fc] p-2 rounded-sm">
-                  {taskManObj?.to_name}
+                <span className="font-thin text-[#867777]   font-bodyLato text-[12px]">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="12"
+                    height="12"
+                    viewBox="0 0 12 12"
+                    className="inline mr-1"
+                  >
+                    <path
+                      d="M9.357 1C10.264 1 11 1.736 11 2.643V6.07c0 .436-.173.854-.481 1.162L7.232 10.52a1.643 1.643 0 01-2.323 0L1.48 7.09c-.64-.64-.64-1.68.001-2.322L4.768 1.48C5.076 1.173 5.494 1 5.93 1h3.427zm-.07.91H5.93a.805.805 0 00-.569.235L2.145 5.362a.805.805 0 000 1.138L5.5 9.855a.805.805 0 001.138 0l3.217-3.217a.805.805 0 00.236-.569V2.713a.804.804 0 00-.804-.804zM7.364 3.726a.91.91 0 110 1.818.91.91 0 010-1.818z"
+                      fill="currentColor"
+                      fillRule="evenodd"
+                    ></path>
+                  </svg>
+                  <span className="text mr-1 text-gray-700">By:</span>
+                  {taskManObj?.by_email}
+                </span>
+              </div>
+              <span className="text-xs font-bodyLato  font-normal text-[#b03d32] text-gray-500  ">
+                <div className="flex flex-row">
+                  <div className="relative flex flex-col  group">
+
+                    <span className="font-bodyLato flex flex-row text-violet-900">
+                      <svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 12 12"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="calendar_icon inline mr-1 mt-[2px]"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          clipRule="evenodd"
+                          d="M9.5 1h-7A1.5 1.5 0 001 2.5v7A1.5 1.5 0 002.5 11h7A1.5 1.5 0 0011 9.5v-7A1.5 1.5 0 009.5 1zM2 2.5a.5.5 0 01.5-.5h7a.5.5 0 01.5.5v7a.5.5 0 01-.5.5h-7a.5.5 0 01-.5-.5v-7zM8.75 8a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM3.5 4a.5.5 0 000 1h5a.5.5 0 000-1h-5z"
+                          fill="currentColor"
+                        ></path>
+                      </svg>
+
+                      <span className="italic">{prettyDateTime(taskManObj?.due_date)} </span>
+                    </span>
+                  </div>
                 </div>
-              </section>
+              </span>
+
             </section>
-            <section className=" flex flex-col  ml-2 py-3 py-0  ">
-              <section className="flex flex-col justify-between mb-1">
-                <div className="font-md text-xs text-gray-500  tracking-wide">
-                  Assigned By
-                </div>
-                <div className="font-md text-xs mt-1 tracking-wide font-semibold text-[#462c52]  bg-[#f4e1fc] p-2 rounded-sm">
-                  {taskManObj?.by_name || 0}
-                </div>
-              </section>
+            <section className="mt-4 ml-2 w-full flex flex-row min-h-[36px]">
+              <input
+                // onChange={setTakTitle()}
+                // autoFocus
+                name="commentTitle"
+                type="text"
+                value={addCommentTitle}
+                onChange={(e) => {
+                  console.log('any error ', e, e.target.value)
+
+                  // if (e.target.value === '') {
+                  //   setClicked(false)
+                  //   setHover(true)
+                  // }
+                  setAddCommentTitle(e.target.value)
+                }}
+                placeholder="Type Comment"
+                className={`w-full  pb-1 pt-1 outline-none text-sm font-bodyLato focus:border-blue-600 hover:border-blue-600  border-b border-[#cdcdcd]${
+                  true ? ' text-[33475b] ' : ' text-[33475b]'
+                } bg-white`}
+              ></input>
+
+              {!addCommentPlusTask && (
+                <button
+                  type="submit"
+                  onClick={() => {
+                    if (
+                      addCommentTitle === 'undefined' ||
+                      addCommentTitle === ''
+                    ) {
+                      // cancelResetStatusFun()
+                      setError(true)
+                    }
+                    if (
+                      !error &&
+                      !(
+                        addCommentTitle === 'undefined' ||
+                        addCommentTitle === ''
+                      )
+                    ) {
+                      // addTaskCommentFun(data)
+                      // addCommentTitle
+                      const x = [
+                        {
+                          typ: 'text',
+                          msg: addCommentTitle,
+                          by: user?.displayName,
+                          T: Timestamp.now().toMillis(),
+                        },
+                      ]
+                      const newCommentA = [...x, ...(myTaskObj || [])]
+                      const dta = taskManObj
+                      setMyTaskObj(newCommentA)
+                      dta.comments = newCommentA
+                      AddCommentTaskManData(orgId, dta, user)
+                      setAddCommentTitle('')
+                    }
+                  }}
+                  className={`flex mt-2 ml-4 cursor-pointer rounded-xs text-bodyLato items-center  pl-1 h-[28px] pr-1 rounded py-1 text-xs font-medium  ${
+                    addCommentTitle === 'undefined' || addCommentTitle === ''
+                      ? ''
+                      : 'bg-[#21C55D]'
+                  }  `}
+                >
+                  <span className="text-md">
+                    {/* {(addCommentTitle === 'undefined' ||
+                      addCommentTitle === '') && <CloseTwoToneIcon />} */}
+                    {!closeTask &&
+                      !addCommentPlusTask &&
+                      !(
+                        addCommentTitle === 'undefined' ||
+                        addCommentTitle === ''
+                      ) && <SendTwoToneIcon />}{' '}
+                    {closeTask &&
+                      !(
+                        addCommentTitle === 'undefined' ||
+                        addCommentTitle === ''
+                      ) && <CheckTwoToneIcon />}
+                    {/* {closeTask && (
+                <span className="text-[#4b4a4a]">Close This Task </span>
+              )}{' '}
+              {addCommentPlusTask && (
+                <>
+                  & <span className="text-[#4b4a4a]">Create New Task</span>
+                </>
+              )} */}
+                  </span>
+                </button>
+              )}
             </section>
-          </div>
-          <div className="grid grid-cols-2 mt-3 pb-4 mb-4 border-b border-[#e5e7f8] rounded-sm">
-            <section className=" flex flex-col   py-1   ">
-              <section className="flex flex-col justify-between  ">
-                <div className="font-md text-xs text-gray-500  tracking-wide">
-                  Due Date
-                </div>
-                <div className="font-md text-xs mt-1 tracking-wide font-semibold text-[#68582e] p-2  bg-[#feeacc] rounded-sm">
-                  {prettyDateTime(taskManObj?.due_date)}
-                </div>
-              </section>
-            </section>
-            <section className=" flex flex-col  ml-2 py-1  ">
-              <section className="flex flex-col justify-between  ">
-                <div className="font-md text-xs text-gray-500  tracking-wide">
-                  Priority
-                </div>
-                <div className="font-md text-xs mt-1 tracking-wide font-semibold text-[#68582e] p-2  bg-[#feeacc]">
-                  {taskManObj?.priority}
-                </div>
-              </section>
-            </section>
-          </div>
+
+            <ol className="relative border-gray-200 ">
+              {myTaskObj?.map((commentObj, k) => {
+                return (
+                  <li
+                    key={k}
+                    className={`ml-2 mt-4 text-[13px] text-[#7E92A2] tracking-wide ${
+                      myTaskObj?.length - 1 === k ? 'mb-1' : ''
+                    }`}
+                  >
+                    <section className="flex flex-row justify-between">
+                      <span className="text-[12px] font-semibold text-violet-900">
+                        {' '}
+                        <svg
+                          viewBox="0 0 12 12"
+                          className="notes_icon inline w-3 h-3 mr-1 "
+                          aria-label="2 comments"
+                        >
+                          <g fill="none" fillRule="evenodd">
+                            <path
+                              fill="currentColor"
+                              fillRule="nonzero"
+                              d="M9.5 1A1.5 1.5 0 0 1 11 2.5v5A1.5 1.5 0 0 1 9.5 9H7.249L5.28 10.97A.75.75 0 0 1 4 10.44V9H2.5A1.5 1.5 0 0 1 1 7.5v-5A1.5 1.5 0 0 1 2.5 1h7zm0 1h-7a.5.5 0 0 0-.5.5v5a.5.5 0 0 0 .5.5H5v1.836L6.835 8H9.5a.5.5 0 0 0 .5-.5v-5a.5.5 0 0 0-.5-.5z"
+                            ></path>
+                          </g>
+                        </svg>{' '}
+                        {commentObj?.msg}
+                      </span>
+                    </section>
+                    <section className="flex flex-row justify-between border-b border-gray-100 ml-5">
+                      <span className="font-thin text-[#867777]   font-bodyLato text-[12px]  ">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="8"
+                          height="8"
+                          viewBox="0 0 12 12"
+                          className="inline mr-1"
+                        >
+                          <path
+                            d="M9.357 1C10.264 1 11 1.736 11 2.643V6.07c0 .436-.173.854-.481 1.162L7.232 10.52a1.643 1.643 0 01-2.323 0L1.48 7.09c-.64-.64-.64-1.68.001-2.322L4.768 1.48C5.076 1.173 5.494 1 5.93 1h3.427zm-.07.91H5.93a.805.805 0 00-.569.235L2.145 5.362a.805.805 0 000 1.138L5.5 9.855a.805.805 0 001.138 0l3.217-3.217a.805.805 0 00.236-.569V2.713a.804.804 0 00-.804-.804zM7.364 3.726a.91.91 0 110 1.818.91.91 0 010-1.818z"
+                            fill="currentColor"
+                            fillRule="evenodd"
+                          ></path>
+                        </svg>
+                        {commentObj?.by}
+                      </span>
+                      <span className="text-[8px] text-orange-700">
+                        {' '}
+                        {prettyDateTime(commentObj?.T)}
+                      </span>
+                    </section>
+                  </li>
+                )
+              })}
+            </ol>
+          </section>
+
+
 
           <div className="my-2  grid grid-cols-2 mt-4 border-t border-[#e5e7f8]">
             <button
@@ -316,7 +605,7 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                                    px-5  text-sm shadow-sm font-medium tracking-wider text-white rounded-sm hover:shadow-lg hover:bg-green-500"
               onClick={() => {
                 // setActionMode('unitBookingMode')
-                CompleteTaskManData(orgId,taskManObj, user )
+                CompleteTaskManData(orgId, taskManObj, user)
               }}
               // disabled={loading}
             >

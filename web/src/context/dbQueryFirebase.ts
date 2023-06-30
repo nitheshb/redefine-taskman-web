@@ -352,7 +352,22 @@ export const CompleteTaskManData = async (orgId, dta, user) => {
   return lead_logs
   // return onSnapshot(itemsQuery, snapshot, error)
 }
+export const AddCommentTaskManData = async (orgId, dta, user) => {
+  const {
+    id,
+    comments
+  } = dta
+  const { data: lead_logs, error } = await supabase
+    .from(`maahomes_TM_Tasks`)
+    .update({
+      comments: comments
+    })
+    .eq('id', id)
 
+  console.log('updating error', lead_logs, error)
+  return lead_logs
+  // return onSnapshot(itemsQuery, snapshot, error)
+}
 //  get lead activity list
 export const steamLeadActivityLog = async (orgId, snapshot, data, error) => {
   // const itemsQuery = query(doc(db, `${orgId}_leads_log', 'W6sFKhgyihlsKmmqDG0r'))
