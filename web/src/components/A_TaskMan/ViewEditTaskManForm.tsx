@@ -19,6 +19,7 @@ import { Label, InputField, TextAreaField, FieldError } from '@redwoodjs/forms'
 import { useRouterStateSetter } from '@redwoodjs/router/dist/router-context'
 
 import {
+  CompleteTaskManData,
   addLead,
   addTaskBusiness,
   checkIfLeadAlreadyExists,
@@ -315,6 +316,7 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                                    px-5  text-sm shadow-sm font-medium tracking-wider text-white rounded-sm hover:shadow-lg hover:bg-green-500"
               onClick={() => {
                 // setActionMode('unitBookingMode')
+                CompleteTaskManData(orgId,taskManObj, user )
               }}
               // disabled={loading}
             >

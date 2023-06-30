@@ -1,4 +1,3 @@
-import { getDirectiveName } from '@redwoodjs/testing/api';
 import { WhereToVote } from '@mui/icons-material'
 import {
   setDoc,
@@ -22,10 +21,13 @@ import {
 } from 'firebase/firestore'
 import { v4 as uuidv4 } from 'uuid'
 
+import { getDirectiveName } from '@redwoodjs/testing/api'
+
 import { sendWhatAppTextSms1 } from 'src/util/axiosWhatAppApi'
 
 import { db } from './firebaseConfig'
 import { supabase } from './supabase'
+import { prettyDateTime } from 'src/util/dateConverter'
 
 // import { userAccessRoles } from 'src/constants/userAccess'
 
@@ -198,10 +200,12 @@ export const streamGetAllTaskManTasks = async (
   const { data: lead_logs, error: countError } = await supabase
     .from(`maahomes_TM_Tasks`)
     .select('*')
-  // .eq('type', 'sts_change')
+
+    .eq('status', 'InProgress')
   // .is('projectId', null)
   // .isNull('projectId')
   // .eq('from', 'visitfixed')
+  //.order('due_date', { ascending: false })
 
   if (countError) {
     console.error(countError)
@@ -266,22 +270,31 @@ export const updateLeadsLogWithProject = async (
   return lead_logs
   // return onSnapshot(itemsQuery, snapshot, error)
 }
-export const editTaskManData = async (
-  orgId, dta, user
-) => {
-  const { id, taskTitle, taskdesc, dept,due_date, assignedTo,assignedToObj, followers, priorities, file } = dta
+export const editTaskManData = async (orgId, dta, user) => {
+  const {
+    id,
+    taskTitle,
+    taskdesc,
+    dept,
+    due_date,
+    assignedTo,
+    assignedToObj,
+    followers,
+    priorities,
+    file,
+  } = dta
   let followA = []
-  if(followers){
-    followA = await followers[0]?.map((d)=> {
-      let y = {}
-      y.name = d?.name;
-      y.uid = d?.uid;
+  if (followers) {
+    followA = await followers[0]?.map((d) => {
+      const y = {}
+      y.name = d?.name
+      y.uid = d?.uid
       return y
     })
   }
   const { data: lead_logs, error } = await supabase
     .from(`maahomes_TM_Tasks`)
-    .update(    {
+    .update({
       created_on: Timestamp.now().toMillis(),
       followersC: followA.length,
       by_email: user.email,
@@ -296,9 +309,43 @@ export const editTaskManData = async (
       to_email: assignedToObj?.email,
       to_name: assignedToObj?.name,
       to_uid: assignedToObj?.uid,
-      participantsA: followA ,
-      participantsC:followA.length,
-    },)
+      participantsA: followA,
+      participantsC: followA.length,
+    })
+    .eq('id', id)
+
+  console.log('updating error', lead_logs, error)
+  return lead_logs
+  // return onSnapshot(itemsQuery, snapshot, error)
+}
+export const CompleteTaskManData = async (orgId, dta, user) => {
+  const {
+    id,
+    taskTitle,
+    taskdesc,
+    dept,
+    due_date,
+    assignedTo,
+    assignedToObj,
+    followers,
+    priorities,
+    file,
+  } = dta
+  let followA = []
+  if (followers) {
+    followA = await followers[0]?.map((d) => {
+      const y = {}
+      y.name = d?.name
+      y.uid = d?.uid
+      return y
+    })
+  }
+  const { data: lead_logs, error } = await supabase
+    .from(`maahomes_TM_Tasks`)
+    .update({
+      closedBy: user.uid,
+      status: 'Done',
+    })
     .eq('id', id)
 
   console.log('updating error', lead_logs, error)
@@ -1047,17 +1094,27 @@ export const addNotificationSupabase = async (payload, enqueueSnackbar) => {
   })
 }
 export const addTaskBusiness = async (orgId, dta, user) => {
-  const { taskTitle, taskdesc, dept,due_date, assignedTo,assignedToObj, followers, priorities, file } = dta
+  const {
+    taskTitle,
+    taskdesc,
+    dept,
+    due_date,
+    assignedTo,
+    assignedToObj,
+    followers,
+    priorities,
+    file,
+  } = dta
   let followA = []
-  if(followers){
-    followA = await followers[0]?.map((d)=> {
-      let y = {}
-      y.name = d?.name;
-      y.uid = d?.uid;
+  if (followers) {
+    followA = await followers[0]?.map((d) => {
+      const y = {}
+      y.name = d?.name
+      y.uid = d?.uid
       return y
     })
   }
-console.log('value is ', followA)
+  console.log('value is ', followA)
 
   const { data, error } = await supabase.from(`maahomes_TM_Tasks`).insert([
     {
@@ -1075,10 +1132,16 @@ console.log('value is ', followA)
       to_email: assignedToObj?.email,
       to_name: assignedToObj?.name,
       to_uid: assignedToObj?.uid,
-      participantsA: followA ,
-      participantsC:followA.length,
+      participantsA: followA,
+      participantsC: followA.length,
     },
   ])
+  sendWhatAppTextSms1(
+    assignedToObj?.offPh,
+    `!${priorities} New Task-${taskTitle} is assigned by ${
+      user.displayName
+    } with due-  ${prettyDateTime(due_date)} !${priorities} `
+  )
   await console.log('data is ', data, error)
 }
 export const addLead = async (orgId, data, by, msg) => {

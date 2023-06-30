@@ -59,16 +59,22 @@ const TodoListView = ({
   const [tableData, setTableData] = useState([])
   const [businessData_F, setBusinessData_F] = useState([])
   const [businessSection_D, setBusinessSection_D] = useState([])
+  const [businessData_Filtered, setBusinessData_Filtered] = useState([])
   const [showSettings, setShowSettings] = useState(true)
+  const [searchText, setSearchText] = useState('')
+  const [selPriority, setSelPriority] = useState('')
+
   const [sourceDateRange, setSourceDateRange] = useState(
     startOfDay(d).getTime()
   )
 
   const [personalData_F, setPersonalData_F] = useState([])
+  const [personalData_D, setPersonalData_D] = useState([])
   const [tabHeadFieldsA, settabHeadFieldsA] = useState([])
   const [isImportLeadsOpen1, setisImportLeadsOpen1] = useState(false)
   const [isClicked, setisClicked] = useState('dept_tasks')
   const [subSection, setSubSection] = useState('all_business')
+  const [sortType, setSortType] = useState('Latest')
 
   // const [leadsFetchedData, setLeadsFetchedData] = useState([])
   useEffect(() => {
@@ -122,24 +128,73 @@ const TodoListView = ({
     // return () => {
     //   second
     // }
+
+    console.log('is my value changed, sortType', sortType, searchText)
+
     if (subSection == 'all_business') {
-      setBusinessSection_D(businessData_F)
+      setBusinessSection_D(
+        businessData_F.filter((d) =>
+        d.priority.toLowerCase().includes(selPriority.toLowerCase()) &&
+          d.title?.toLowerCase().includes(searchText.toLowerCase())
+        )
+      )
     } else if (subSection == 'assigned_to_me') {
       setBusinessSection_D(
         businessData_F.filter(
-          (d) => d.by_uid != user?.uid && d.to_uid === user?.uid
+          (d) =>
+            d.by_uid != user?.uid &&
+            d.to_uid === user?.uid &&
+            d.priority.toLowerCase().includes(selPriority.toLowerCase()) &&
+            d.title?.toLowerCase().includes(searchText.toLowerCase())
         )
       )
     } else if (subSection == 'created_by_me') {
       setBusinessSection_D(
         businessData_F.filter(
-          (d) => d.by_uid === user?.uid && d.to_uid != user?.uid
+          (d) =>
+            d.by_uid === user?.uid &&
+            d.to_uid != user?.uid &&
+            d.priority.toLowerCase().includes(selPriority.toLowerCase()) &&
+            d.title?.toLowerCase().includes(searchText.toLowerCase())
         )
       )
     } else if (subSection == 'participants') {
-      setBusinessSection_D(businessData_F)
+      setBusinessSection_D(
+        businessData_F.filter((d) =>
+        d.priority.toLowerCase().includes(selPriority.toLowerCase()) &&
+          d.title?.toLowerCase().includes(searchText.toLowerCase())
+        )
+      )
     }
-  }, [businessData_F, subSection])
+  }, [businessData_F, subSection, sortType, searchText, selPriority])
+
+  const sortDataFun = () => {
+    if (sortType === 'Oldest') {
+      console.log('ami here', sortType)
+      const x = businessData_F.sort((a, b) => {
+        return a.due_date - b.due_date
+      })
+      setBusinessSection_D(x)
+    } else {
+      console.log('ami here', sortType)
+      const x = businessData_F.sort((a, b) => {
+        return b.due_date - a.due_date
+      })
+      setBusinessSection_D(x)
+    }
+  }
+
+  useEffect(() => {
+    bootBusinessFun()
+  }, [businessData_F, sortType, subSection])
+
+  const bootBusinessFun = async () => {
+    sortDataFun()
+  }
+
+  const handleSortDrop = (e) => {
+    setSortType(e.target.value)
+  }
 
   const getTasksDataFun = async () => {
     console.log('login role detials', user)
@@ -156,7 +211,10 @@ const TodoListView = ({
 
     await setPersonalData_F(
       steamLeadLogs.filter(
-        (d) => d.by_uid === user?.uid && d.to_uid === user?.uid
+        (d) =>
+          d.by_uid === user?.uid &&
+          d.to_uid === user?.uid &&
+          d.title?.toLowerCase().includes(searchText.toLowerCase())
       )
     )
     await setBusinessData_F(
@@ -166,13 +224,27 @@ const TodoListView = ({
           (d.by_uid === user?.uid && d.to_uid != user?.uid)
       )
     )
+    await sortDataFun()
     return
   }
-  const handleDelete = async (ids) => {
-    const { data } = await axios.post('/api/tableData1/delete', {
-      ids,
-    })
-    setTableData(data)
+
+  useEffect(() => {
+    if (isClicked === 'personal_tasks') {
+      setPersonalData_D(
+        personalData_F.filter(
+          (d) =>
+            d.by_uid === user?.uid &&
+            d.to_uid === user?.uid &&
+            d.priority.toLowerCase().includes(selPriority.toLowerCase()) &&
+            d.title?.toLowerCase().includes(searchText.toLowerCase())
+        )
+      )
+    }
+  }, [isClicked, searchText, selPriority])
+
+  const handleFilterClearFun = async () => {
+    setSelPriority('')
+    setSearchText('')
   }
 
   const filterTable = tableData.filter((item) =>
@@ -370,32 +442,35 @@ const TodoListView = ({
                     type="text"
                     id="globalSearch"
                     placeholder="Search Task title,status... "
-                    // onChange={searchKeyField}
+                    onChange={(e) => setSearchText(e.target.value)}
                     autoComplete="off"
-                    // value={searchKey}
+                    value={searchText}
                     className="w-52 bg-transparent focus:border-transparent focus:ring-0 focus-visible:border-transparent focus-visible:ring-0 focus:outline-none text-sm leading-7 text-gray-900 w-4/5 relative"
                   />
                 </span>
-                <div className=" mr-2">
+                <div className=" mr-2 w-[130px]">
                   <SlimSelectBox
                     name="Priority"
                     placeholder="Priority"
                     label=""
                     className="input "
                     onChange={(value) => {
+                      console.log('sel valu s', value)
+                      setSelPriority(value.value)
                       // setSelProject(value)
                       // formik.setFieldValue('project', value.value)
                     }}
-                    value={'alltransactions'}
+                    value={selPriority}
                     // options={aquaticCreatures}
                     options={[
+                      { label: 'All Priority', value: '' },
                       { label: 'Low', value: 'low' },
                       { label: 'Medium', value: 'medium' },
                       { label: 'High', value: 'high' },
                     ]}
                   />
                 </div>
-                <div className=" mt-[-4px]">
+                {/* <div className=" mt-[-4px]">
                   <SlimDateSelectBox
                     onChange={async (value) => {
                       setSourceDateRange(value)
@@ -404,9 +479,24 @@ const TodoListView = ({
                     label={sourceDateRange}
                     placeholder={undefined}
                   />
+                </div> */}
+                <div className="ml-2 py-3 px-4 flex items-center text-sm font-medium leading-none text-gray-600 bg-gray-200 hover:bg-gray-300 cursor-pointer rounded max-h-[35px]">
+                  <p>Sort By:</p>
+                  <select
+                    aria-label="select"
+                    className="focus:text-indigo-600 focus:outline-none bg-transparent ml-1"
+                    onChange={(e) => handleSortDrop(e)}
+                    value={sortType}
+                  >
+                    <option className="text-sm text-indigo-800">Oldest</option>
+                    <option className="text-sm text-indigo-800">Latest</option>
+                  </select>
                 </div>
 
-                <span className="mt-2 ml-2 text-red-400 cursor-pointer text-xs">
+                <span className="mt-2 ml-2 text-red-400 cursor-pointer text-xs"
+                onClick={()=>{
+                  handleFilterClearFun()
+                }}>
                   {' '}
                   Clear
                 </span>
@@ -903,7 +993,7 @@ const TodoListView = ({
               <div className="overflow-x-auto mt-2">
                 <table className="w-full whitespace-nowrap">
                   <tbody>
-                    {personalData_F?.map((dat, i) => (
+                    {personalData_D?.map((dat, i) => (
                       <tr
                         tabIndex={0}
                         className="focus:outline-none h-16 border border-gray-100 rounded"
