@@ -633,6 +633,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
   }
 
   const viewTransaction = (docData, sideViewCategory, sideViewCategory1) => {
+    console.log('check it ', docData, sideViewCategory, sideViewCategory1)
     setSelSubMenu(sideViewCategory)
     setSelSubMenu1(sideViewCategory1)
     setTransactionData(docData)
@@ -880,7 +881,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                             <div className="">
                               <div className="flex flex-row   ">
                                 <div
-                                  className="flex flex-col bg-gradient-to-r from-[#d8daff] to-[#9ae8fd] text-black p-1 rounded-sm w-[220px] h-[96px]"
+                                  className="flex flex-col bg-gradient-to-r from-[#d8daff] to-[#9ae8fd] text-black  py-1 rounded-sm w-[220px] h-[96px]"
                                   // className="flex flex-col bg-gradient-to-r from-[#d8daff] to-[#9ae8fd] text-black p-1 rounded-sm w-[220px] h-[96px]"
                                   onClick={() =>
                                     viewTransaction(
@@ -896,23 +897,52 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       alt=""
                                       src="/apart.svg"
                                     ></img> */}
-                                    <section className="flex flex-col ml-2 mt-[7px]">
-                                      <span className=" text-[12px] text-[#036046] font-[400]">
-                                        {projName}
-                                      </span>
-                                      <span className=" text-[14px] text-black font-[500] ">
-                                        {/* {finData?.[`${assets[0]}_unitDetails`]
+                                    <section className="flex flex-col ml-2 mt-[3px]">
+                                      <section className="flex flex-col">
+                                        <section className="flex flex-row justify-between">
+                                          <span className=" text-[14px] text-black font-[500] ml-[2px]">
+                                            {/* {finData?.[`${assets[0]}_unitDetails`]
                                           ?.unit_no || ''} */}
-                                        Unit-{unit_no}
-                                      </span>
+                                            Unit-{unit_no}
+                                          </span>
+                                          <span className=" text-[10px] text-black font-bodyLato font-[600] mt-[2px] ">
+                                            {/* {finData?.[`${assets[0]}_unitDetails`]
+                                          ?.unit_no || ''} */}
 
-                                      <span className=" text-[12px] text-black-900 font-[400]">
-                                        {customerDetailsObj?.customerName1 ||
-                                          'NA'}
-                                      </span>
-                                      <span className=" text-[12px] text-black-500 font-[400]">
-                                        {customerDetailsObj?.phoneNo1 || 'NA'}
-                                      </span>
+₹ {finData?.plotCS?.reduce(function (
+                                          _this,
+                                          val
+                                        ) {
+                                          return (
+                                            _this + val.TotalNetSaleValueGsT
+                                          )
+                                        },
+                                        0)?.toLocaleString('en-IN')}
+                                          </span>
+                                        </section>
+                                        <span className=" text-[12px] text-[#036046] font-[400] ml-[2px]">
+                                          {projName}
+                                        </span>
+                                      </section>
+                                      <section className="flex flex-col mt-1 bg-[#f0f8ff] w-[204px] rounded-lg p-[2px] px-2">
+                                        <div className=" text-[12px] text-black-900 font-[400] w-full">
+                                          {customerDetailsObj?.customerName1 ||
+                                            'NA'}
+                                        </div>
+                                        <section className="flex flex-row justify-between">
+                                        <span className=" text-[12px] text-black-500 font-[400]">
+                                          {customerDetailsObj?.phoneNo1 || 'NA'}
+                                        </span>
+                                        <span className=" text-[10px] text-black font-[400] mt-[2px] ">
+                                            {/* {finData?.[`${assets[0]}_unitDetails`]
+                                          ?.unit_no || ''} */}
+                                            12-June-2023
+
+                                          </span>
+
+                                        </section>
+
+                                      </section>
                                     </section>
                                   </section>
                                   {/* <span className="font-normal text-xs app-color-gray-1">
@@ -1461,26 +1491,23 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       </h6>
                                     </div>
                                     <div>
-                                    <div className="flex flex-row items-center justify-center rounded py-1 bg-gradient-to-r from-[#d8daff] to-[#9ae8fd] ">
-                                      <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white mt-1">
-                                        <NewspaperIcon
-                                          className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
-                                            finData?.kyc_status
-                                              ? 'text-green-900'
-                                              : 'text-gray-600 '
-                                          }`}
-                                          aria-hidden="true"
-                                        />
+                                      <div className="flex flex-row items-center justify-center rounded py-1 bg-gradient-to-r from-[#d8daff] to-[#9ae8fd] ">
+                                        <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white mt-1">
+                                          <NewspaperIcon
+                                            className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
+                                              finData?.kyc_status
+                                                ? 'text-green-900'
+                                                : 'text-gray-600 '
+                                            }`}
+                                            aria-hidden="true"
+                                          />
+                                        </div>
+                                        <h6 className=" font-semibold text-xs mt-[4px] ml-1 ">
+                                          Legal
+                                        </h6>
                                       </div>
-                                      <h6 className=" font-semibold text-xs mt-[4px] ml-1 ">
-                                        Legal
-                                      </h6>
                                     </div>
-                                    </div>
-                                    <div className="flex flex-row mx-1">
-
-
-                                    </div>
+                                    <div className="flex flex-row mx-1"></div>
                                   </div>
                                 </>
                               </Box>
@@ -1499,26 +1526,23 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       </h6>
                                     </div>
                                     <div>
-                                    <div className="flex flex-row items-center justify-center rounded py-1 bg-gradient-to-r from-[#d8daff] to-[#9ae8fd] ">
-                                      <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white mt-1">
-                                        <NewspaperIcon
-                                          className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
-                                            finData?.kyc_status
-                                              ? 'text-green-900'
-                                              : 'text-gray-600 '
-                                          }`}
-                                          aria-hidden="true"
-                                        />
+                                      <div className="flex flex-row items-center justify-center rounded py-1 bg-gradient-to-r from-[#d8daff] to-[#9ae8fd] ">
+                                        <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white mt-1">
+                                          <NewspaperIcon
+                                            className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
+                                              finData?.kyc_status
+                                                ? 'text-green-900'
+                                                : 'text-gray-600 '
+                                            }`}
+                                            aria-hidden="true"
+                                          />
+                                        </div>
+                                        <h6 className=" font-semibold text-xs mt-[4px] ml-1 ">
+                                          ATS Due
+                                        </h6>
                                       </div>
-                                      <h6 className=" font-semibold text-xs mt-[4px] ml-1 ">
-                                        ATS Due
-                                      </h6>
                                     </div>
-                                    </div>
-                                    <div className="flex flex-row mx-1">
-
-
-                                    </div>
+                                    <div className="flex flex-row mx-1"></div>
                                   </div>
                                 </>
                               </Box>
@@ -1537,27 +1561,23 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       </h6>
                                     </div>
                                     <div>
-                                    <div className="flex flex-row items-center justify-center rounded py-1 bg-gradient-to-r from-[#d8daff] to-[#9ae8fd] ">
-                                      <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white mt-1">
-                                        <NewspaperIcon
-                                          className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
-                                            finData?.kyc_status
-                                              ? 'text-green-900'
-                                              : 'text-gray-600 '
-                                          }`}
-                                          aria-hidden="true"
-                                        />
+                                      <div className="flex flex-row items-center justify-center rounded py-1 bg-gradient-to-r from-[#d8daff] to-[#9ae8fd] ">
+                                        <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white mt-1">
+                                          <NewspaperIcon
+                                            className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
+                                              finData?.kyc_status
+                                                ? 'text-green-900'
+                                                : 'text-gray-600 '
+                                            }`}
+                                            aria-hidden="true"
+                                          />
+                                        </div>
+                                        <h6 className=" font-semibold text-xs mt-[4px] ml-1 ">
+                                          ATS Creation
+                                        </h6>
                                       </div>
-                                      <h6 className=" font-semibold text-xs mt-[4px] ml-1 ">
-                                        ATS Creation
-                                      </h6>
                                     </div>
-
-                                    </div>
-                                    <div className="flex flex-row mx-1">
-
-
-                                    </div>
+                                    <div className="flex flex-row mx-1"></div>
                                   </div>
                                 </>
                               </Box>
@@ -1576,27 +1596,23 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       </h6>
                                     </div>
                                     <div>
-                                    <div className="flex flex-row items-center justify-center rounded py-1 bg-gradient-to-r from-[#d8daff] to-[#9ae8fd] ">
-                                      <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white mt-1">
-                                        <NewspaperIcon
-                                          className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
-                                            finData?.kyc_status
-                                              ? 'text-green-900'
-                                              : 'text-gray-600 '
-                                          }`}
-                                          aria-hidden="true"
-                                        />
+                                      <div className="flex flex-row items-center justify-center rounded py-1 bg-gradient-to-r from-[#d8daff] to-[#9ae8fd] ">
+                                        <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white mt-1">
+                                          <NewspaperIcon
+                                            className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
+                                              finData?.kyc_status
+                                                ? 'text-green-900'
+                                                : 'text-gray-600 '
+                                            }`}
+                                            aria-hidden="true"
+                                          />
+                                        </div>
+                                        <h6 className=" font-semibold text-xs mt-[4px] ml-1 ">
+                                          ATS Manager Approval
+                                        </h6>
                                       </div>
-                                      <h6 className=" font-semibold text-xs mt-[4px] ml-1 ">
-                                        ATS Manager Approval
-                                      </h6>
                                     </div>
-
-                                    </div>
-                                    <div className="flex flex-row mx-1">
-
-
-                                    </div>
+                                    <div className="flex flex-row mx-1"></div>
                                   </div>
                                 </>
                               </Box>
@@ -1615,27 +1631,23 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       </h6>
                                     </div>
                                     <div>
-                                    <div className="flex flex-row items-center justify-center rounded py-1 bg-gradient-to-r from-[#d8daff] to-[#9ae8fd] ">
-                                      <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white mt-1">
-                                        <NewspaperIcon
-                                          className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
-                                            finData?.kyc_status
-                                              ? 'text-green-900'
-                                              : 'text-gray-600 '
-                                          }`}
-                                          aria-hidden="true"
-                                        />
+                                      <div className="flex flex-row items-center justify-center rounded py-1 bg-gradient-to-r from-[#d8daff] to-[#9ae8fd] ">
+                                        <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white mt-1">
+                                          <NewspaperIcon
+                                            className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
+                                              finData?.kyc_status
+                                                ? 'text-green-900'
+                                                : 'text-gray-600 '
+                                            }`}
+                                            aria-hidden="true"
+                                          />
+                                        </div>
+                                        <h6 className=" font-semibold text-xs mt-[4px] ml-1 ">
+                                          ATS Customer Approval
+                                        </h6>
                                       </div>
-                                      <h6 className=" font-semibold text-xs mt-[4px] ml-1 ">
-                                        ATS Customer Approval
-                                      </h6>
                                     </div>
-
-                                    </div>
-                                    <div className="flex flex-row mx-1">
-
-
-                                    </div>
+                                    <div className="flex flex-row mx-1"></div>
                                   </div>
                                 </>
                               </Box>
@@ -1654,38 +1666,32 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       </h6>
                                     </div>
                                     <div>
-                                    <div className="flex flex-row items-center justify-center rounded py-1 bg-gradient-to-r from-[#d8daff] to-[#9ae8fd] ">
-                                      <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white mt-1">
-                                        <NewspaperIcon
-                                          className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
-                                            finData?.kyc_status
-                                              ? 'text-green-900'
-                                              : 'text-gray-600 '
-                                          }`}
-                                          aria-hidden="true"
-                                        />
+                                      <div className="flex flex-row items-center justify-center rounded py-1 bg-gradient-to-r from-[#d8daff] to-[#9ae8fd] ">
+                                        <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white mt-1">
+                                          <NewspaperIcon
+                                            className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
+                                              finData?.kyc_status
+                                                ? 'text-green-900'
+                                                : 'text-gray-600 '
+                                            }`}
+                                            aria-hidden="true"
+                                          />
+                                        </div>
+                                        <h6 className=" font-semibold text-xs mt-[4px] ml-1 ">
+                                          Fund Type
+                                        </h6>
                                       </div>
-                                      <h6 className=" font-semibold text-xs mt-[4px] ml-1 ">
-                                        Fund Type
-                                      </h6>
                                     </div>
-
-                                    </div>
-                                    <div className="flex flex-row mx-1">
-
-
-                                    </div>
+                                    <div className="flex flex-row mx-1"></div>
                                   </div>
                                 </>
                               </Box>
                             </div>
-
-
                           </section>
                         </section>
                       )
                     })}
-              
+
                   {selCategory === 'sd_pipeline' &&
                     tableData.map((finData, i) => {
                       const {
