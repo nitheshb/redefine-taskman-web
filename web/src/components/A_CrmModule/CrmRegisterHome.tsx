@@ -121,7 +121,11 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
   const d = new window.Date()
   const { user } = useAuth()
   const { orgId } = user
-  const [isImportLeadsOpen, setisImportLeadsOpen] = useState(false)
+  const [isUnitDetailsOpen, setisUnitDetailsOpen] = useState(false)
+  const [isSubTopicOpen, setIsSubTopicOpen] = useState(false)
+  const [isSubTopic, setIsSubTopic] = useState('')
+
+
 
   // kanban board
   const [ready, setReady] = useState(false)
@@ -628,7 +632,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
 
   const selUserProfileF = (title, data) => {
     setAddLeadsTypes(title)
-    setisImportLeadsOpen(true)
+    setisUnitDetailsOpen(true)
     setSelUserProfile(data)
   }
 
@@ -637,7 +641,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
     setSelSubMenu(sideViewCategory)
     setSelSubMenu1(sideViewCategory1)
     setTransactionData(docData)
-    setisImportLeadsOpen(!isImportLeadsOpen)
+    setisUnitDetailsOpen(!isUnitDetailsOpen)
     setSelUserProfile(docData)
   }
   return (
@@ -937,9 +941,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                             {/* {finData?.[`${assets[0]}_unitDetails`]
                                           ?.unit_no || ''} */}
                                             12-June-2023
-
                                           </span>
-
                                         </section>
 
                                       </section>
@@ -1124,6 +1126,9 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       alignSelf: 'flex-end',
                                     }}
                                     key={i}
+                                    onClick={()=> {
+                                      setIsSubTopic(' ')
+                                    }}
                                   >
                                     <div className="flex flex-col items-center justify-center mr-1  mb-1 mt-[5px]">
                                       <div className="flex flex-none items-center justify-center rounded-lg bg-green-50 group-hover:bg-white">
@@ -2930,9 +2935,21 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
         </div>
       </div>
       <SiderForm
-        open={isImportLeadsOpen}
-        setOpen={setisImportLeadsOpen}
+        open={isUnitDetailsOpen}
+        setOpen={setisUnitDetailsOpen}
         title={'unitDetails_crm_view'}
+        customerDetails={selUserProfile}
+        widthClass="max-w-7xl"
+        transactionData={transactionData}
+        unitsViewMode={false}
+        selCustomerPayload={selUserProfile}
+        selSubMenu={selSubMenu}
+        selSubMenu2={selSubMenu1}
+      />
+      <SiderForm
+        open={isSubTopicOpen}
+        setOpen={setIsSubTopicOpen}
+        title={isSubTopic}
         customerDetails={selUserProfile}
         widthClass="max-w-7xl"
         transactionData={transactionData}

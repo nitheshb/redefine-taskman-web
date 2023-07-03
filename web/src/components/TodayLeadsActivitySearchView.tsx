@@ -1229,7 +1229,7 @@ export default function TodayLeadsActivitySearchView({
         setOpen={setisViewTaskMan}
         title={'view_task_man'}
         taskManObj={selTaskMan}
-        widthClass="max-w-sm"
+        widthClass="max-w-xl"
       />
     </>
   )

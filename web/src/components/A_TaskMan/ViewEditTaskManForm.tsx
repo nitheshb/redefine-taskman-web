@@ -241,8 +241,43 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
 
       {!showEditTask && (
         <div className="py-3 px-3 m-4 mt-2 rounded-lg border border-gray-100 ">
-          <section className="flex flex-col justify-between">
+          <div className="my-2 flex flex-row justify-between align-right items-right mt-4 border- border-[#e5e7f8]">
+            <section></section>
+            <section>
+              <button
+                className="mb-2 md:mb-0 mr-2 hover:scale-110 focus:outline-none              hover:bg-green-100
 
+
+                                  h-8
+                                  border duration-200 ease-in-out
+                                  border-green-700 transition
+                                   px-5  text-sm shadow-sm font-medium tracking-wider text-black rounded-sm hover:shadow-lg hover:bg-green-500"
+                onClick={() => {
+                  selShowEditTask(!showEditTask)
+                }}
+                // disabled={loading}
+              >
+                Edit
+              </button>
+              <button
+                className="mb-2 md:mb-0  hover:scale-110 focus:outline-none              hover:bg-green-700
+                                  bg-green-700
+                                  text-teal-100
+                                  h-8
+                                  border duration-200 ease-in-out
+                                  border-green-700 transition
+                                   px-5  text-sm shadow-sm font-medium tracking-wider text-white rounded-sm hover:shadow-lg hover:bg-green-500"
+                onClick={() => {
+                  // setActionMode('unitBookingMode')
+                  CompleteTaskManData(orgId, taskManObj, user)
+                }}
+                // disabled={loading}
+              >
+                Done Task
+              </button>
+            </section>
+          </div>
+          <section className="flex flex-col justify-between">
             <div
               className={`${
                 taskManObj?.status === 'Done'
@@ -282,7 +317,7 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                     taskManObj?.status === 'Done'
                       ? 'line-through'
                       : 'cursor-pointer'
-                  }  ml-2 text-[14px] inline font-bodyLato font-brand tracking-wider text-[#0091ae]`}
+                  }  ml-2 text-[18px] inline font-bodyLato font-brand tracking-wider text-[#0091ae]`}
                   onClick={() => {
                     // if (taskManObj?.status === 'InProgress') {
                     //   setAddTaskCommentObj(data)
@@ -293,7 +328,7 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                 </div>
               </label>
             </div>
-            <section className="flex flex-row justify-between pb-3 border-b border-gray-200 ml-1 mb-1">
+            <section className="flex flex-row justify-between  ml-1 mb-1">
               <span className="text-[#7e92a2] ml-1 text-[13px]">
                 {' '}
                 {/* <svg
@@ -313,13 +348,62 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
               </span>
               <span> {/* {prettyDateTime(commentObj?.t)} */}</span>
             </section>
+            <section className="pb-2 border-b border-gray-200 ml-6 text-[13px] flex">
+              <div className="relative flex flex-col  group">
+                <span className="font-bodyLato flex flex-row text-violet-900">
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 12 12"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="calendar_icon inline mr-1 mt-[4px]"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M9.5 1h-7A1.5 1.5 0 001 2.5v7A1.5 1.5 0 002.5 11h7A1.5 1.5 0 0011 9.5v-7A1.5 1.5 0 009.5 1zM2 2.5a.5.5 0 01.5-.5h7a.5.5 0 01.5.5v7a.5.5 0 01-.5.5h-7a.5.5 0 01-.5-.5v-7zM8.75 8a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM3.5 4a.5.5 0 000 1h5a.5.5 0 000-1h-5z"
+                      fill="currentColor"
+                    ></path>
+                  </svg>
+
+                  <span className="italic">{taskManObj?.priority} </span>
+                </span>
+              </div>
+              <span className="text-xs font-bodyLato  font-normal text-[#b03d32] text-gray-500 ml-4 mt-[2px]">
+                <div className="flex flex-row">
+                  <div className="relative flex flex-col  group">
+                    <span className="font-bodyLato flex flex-row text-violet-900">
+                      <svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 12 12"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="calendar_icon inline mr-1 mt-[2px]"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          clipRule="evenodd"
+                          d="M9.5 1h-7A1.5 1.5 0 001 2.5v7A1.5 1.5 0 002.5 11h7A1.5 1.5 0 0011 9.5v-7A1.5 1.5 0 009.5 1zM2 2.5a.5.5 0 01.5-.5h7a.5.5 0 01.5.5v7a.5.5 0 01-.5.5h-7a.5.5 0 01-.5-.5v-7zM8.75 8a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM3.5 4a.5.5 0 000 1h5a.5.5 0 000-1h-5z"
+                          fill="currentColor"
+                        ></path>
+                      </svg>
+                      <span className="italic">
+                        {prettyDateTime(taskManObj?.due_date)}{' '}
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </span>
+            </section>
+
             <section className="flex flex-row ml-1 mt-3 justify-between">
-            <div className="relative flex flex-col  group">
+              <div className="relative flex flex-col  group">
                 <div
                   className="absolute bottom-0 right-0 flex-col items-center hidden mb-6 group-hover:flex"
                   // style="z-index: 9999;"
                 >
-
                   <div
                     className="w-3 h-3  -mt-2 rotate-45 bg-black"
                     // style="background: rgb(226, 192, 98); margin-right: 12px;"
@@ -344,41 +428,11 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                   {taskManObj?.to_email}
                 </span>
               </div>
-              <span className="text-xs font-bodyLato  font-normal text-[#b03d32] text-gray-500  ">
-                <div className="flex flex-row">
-                  <div className="relative flex flex-col  group">
-
-                    <span className="font-bodyLato flex flex-row text-violet-900">
-                      <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 12 12"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="calendar_icon inline mr-1 mt-[2px]"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                          d="M9.5 1h-7A1.5 1.5 0 001 2.5v7A1.5 1.5 0 002.5 11h7A1.5 1.5 0 0011 9.5v-7A1.5 1.5 0 009.5 1zM2 2.5a.5.5 0 01.5-.5h7a.5.5 0 01.5.5v7a.5.5 0 01-.5.5h-7a.5.5 0 01-.5-.5v-7zM8.75 8a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM3.5 4a.5.5 0 000 1h5a.5.5 0 000-1h-5z"
-                          fill="currentColor"
-                        ></path>
-                      </svg>
-
-                      <span className="italic">{taskManObj?.priority} </span>
-                    </span>
-                  </div>
-                </div>
-              </span>
-
-            </section>
-            <section className="flex flex-row ml-1 mt-2 justify-between pb-4 border-b border-gray-200">
-            <div className="relative flex flex-col  group">
+              <div className="relative flex flex-col  group">
                 <div
                   className="absolute bottom-0 right-0 flex-col items-center hidden mb-6 group-hover:flex"
                   // style="z-index: 9999;"
                 >
-
                   <div
                     className="w-3 h-3  -mt-2 rotate-45 bg-black"
                     // style="background: rgb(226, 192, 98); margin-right: 12px;"
@@ -402,34 +456,8 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                   {taskManObj?.by_email}
                 </span>
               </div>
-              <span className="text-xs font-bodyLato  font-normal text-[#b03d32] text-gray-500  ">
-                <div className="flex flex-row">
-                  <div className="relative flex flex-col  group">
-
-                    <span className="font-bodyLato flex flex-row text-violet-900">
-                      <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 12 12"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="calendar_icon inline mr-1 mt-[2px]"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                          d="M9.5 1h-7A1.5 1.5 0 001 2.5v7A1.5 1.5 0 002.5 11h7A1.5 1.5 0 0011 9.5v-7A1.5 1.5 0 009.5 1zM2 2.5a.5.5 0 01.5-.5h7a.5.5 0 01.5.5v7a.5.5 0 01-.5.5h-7a.5.5 0 01-.5-.5v-7zM8.75 8a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM3.5 4a.5.5 0 000 1h5a.5.5 0 000-1h-5z"
-                          fill="currentColor"
-                        ></path>
-                      </svg>
-
-                      <span className="italic">{prettyDateTime(taskManObj?.due_date)} </span>
-                    </span>
-                  </div>
-                </div>
-              </span>
-
             </section>
+
             <section className="mt-4 ml-2 w-full flex flex-row min-h-[36px]">
               <input
                 // onChange={setTakTitle()}
@@ -576,42 +604,6 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
               })}
             </ol>
           </section>
-
-
-
-          <div className="my-2  grid grid-cols-2 mt-4 border-t border-[#e5e7f8]">
-            <button
-              className="mb-2 md:mb-0 mr-2 hover:scale-110 focus:outline-none              hover:bg-green-100
-
-
-                                  h-8
-                                  border duration-200 ease-in-out
-                                  border-green-700 transition
-                                   px-5  text-sm shadow-sm font-medium tracking-wider text-black rounded-sm hover:shadow-lg hover:bg-green-500"
-              onClick={() => {
-                selShowEditTask(!showEditTask)
-              }}
-              // disabled={loading}
-            >
-              Edit
-            </button>
-            <button
-              className="mb-2 md:mb-0  hover:scale-110 focus:outline-none              hover:bg-green-700
-                                  bg-green-700
-                                  text-teal-100
-                                  h-8
-                                  border duration-200 ease-in-out
-                                  border-green-700 transition
-                                   px-5  text-sm shadow-sm font-medium tracking-wider text-white rounded-sm hover:shadow-lg hover:bg-green-500"
-              onClick={() => {
-                // setActionMode('unitBookingMode')
-                CompleteTaskManData(orgId, taskManObj, user)
-              }}
-              // disabled={loading}
-            >
-              Done Task
-            </button>
-          </div>
         </div>
       )}
 
@@ -839,7 +831,7 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
 
                             <button
                               // onClick={() => fSetLeadsType('Add Lead')}
-                              // onClick={() => cancelResetStatusFun()}
+                              onClick={() => selShowEditTask(!showEditTask)}
                               className={`flex mt-2 ml-4 rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium border  hover:bg-gray-700 hover:text-white `}
                             >
                               <span className="ml-1 ">Cancel</span>
