@@ -34,6 +34,8 @@ import {
   getAllProjects,
   updateLeadProject,
   getFinanceForUnit,
+  streamGetAllTransactions,
+  streamGetAllUnitTransactions,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import { storage } from 'src/context/firebaseConfig'
@@ -71,6 +73,8 @@ import CrmPaymentSummary from './CrmPaymentSummary'
 import AddApplicantDetails from '../AddApplicantDetails'
 import BankSelectionSwitchDrop from '../A_LoanModule/BankSelectionDroopDown'
 import LoanApplyFlowHome from '../A_LoanModule/LoanApplyFlowHome'
+
+import { supabase } from 'src/context/supabase'
 
 // interface iToastInfo {
 //   open: boolean
@@ -142,7 +146,6 @@ export default function UnitFullSummary({
 
   const { orgId } = user
   const [fetchedUsersList, setfetchedUsersList] = useState([])
-
 
   const [usersList, setusersList] = useState([])
 
@@ -376,10 +379,69 @@ export default function UnitFullSummary({
     return unsubscribe
   }
   useEffect(() => {
+    // Subscribe to real-time changes in the `${orgId}_accounts` table
+    const subscription = supabase
+      .from(`${orgId}_accounts`)
+      .on('*', (payload) => {
+        // When a change occurs, update the 'leadLogs' state with the latest data
+        console.log('account records', payload)
+        // Check if the updated data has the id 12
+        const updatedData = payload.new
+        const { id } = payload.old
+        const updatedLeadLogs = [...unitTransactionsA]
+        setUnitTransactionsA((prevLogs) => {
+          const existingLog = prevLogs.find(
+            (log) => log.id === id && log.unit_id === selCustomerPayload?.id
+          )
+
+          if (existingLog) {
+            console.log('Existing record found!')
+            const updatedLogs = prevLogs.map((log) =>
+              log.id === id ? payload.new : log
+            )
+            return [...updatedLogs]
+          } else {
+            console.log('New record added!')
+            return [...prevLogs]
+          }
+        })
+        // const index = updatedLeadLogs.findIndex((log) => log.id === id)
+        // if (index !== -1) {
+        //   console.log('check it ..........!')
+        //   updatedLeadLogs[index] = updatedData
+        // } else {
+        //   // Add new record to the 'leadLogs' state
+        //   updatedLeadLogs.push(updatedData)
+        // }
+
+        // // Update the 'leadLogs' state with the latest data
+        // setFinFetchedData(updatedLeadLogs)
+      })
+      .subscribe()
+
+    // Clean up the subscription when the component unmounts
+    return () => {
+      supabase.removeSubscription(subscription)
+    }
+  }, [])
+  useEffect(() => {
     getAllTransactionsUnit()
   }, [])
 
-  const getAllTransactionsUnit = () => {
+  const getAllTransactionsUnit = async () => {
+    const { access, uid } = user
+
+    const steamLeadLogs = await streamGetAllUnitTransactions(
+      orgId,
+      'snap',
+      {
+        unit_id: selCustomerPayload?.id,
+      },
+      (error) => []
+    )
+    await setUnitTransactionsA(steamLeadLogs)
+    return
+
     console.log('transactions id is ', selCustomerPayload?.uid)
     const unsubscribe = getFinanceForUnit(
       orgId,
@@ -1333,9 +1395,7 @@ export default function UnitFullSummary({
         </>
       )}
 
-      {selFeature === 'loan_info' && (
-<LoanApplyFlowHome />
-      )}
+      {selFeature === 'loan_info' && <LoanApplyFlowHome />}
       {selFeature === 'agreement_info' && (
         <section className="bg-white w-full md:px-10 md:mb-20">
           <div className="max-w-3xl mx-auto py-4 text-sm text-gray-700">

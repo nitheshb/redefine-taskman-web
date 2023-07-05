@@ -3,16 +3,16 @@ import { useState, useContext, useEffect } from 'react'
 import {
   DocumentTextIcon,
   TrashIcon,
+  ChatIcon,
   DownloadIcon,
   CloudUploadIcon,
   UploadIcon,
   EyeIcon,
 } from '@heroicons/react/outline'
 import { doc, deleteDoc } from 'firebase/firestore'
-
 import { prettyDate, prettyDateTime } from 'src/util/dateConverter'
 
-const DowRow = ({ id, fileName, date, amount, status, key }) => {
+const PaymentDocUtility = ({ id, fileName, date }) => {
   const [showModel, setShoModel] = useState(false)
   const [dateIs, setDate] = useState('NA')
   const toggle = () => setShoModel(!showModel)
@@ -31,9 +31,10 @@ const DowRow = ({ id, fileName, date, amount, status, key }) => {
     // }
   }
   useEffect(() => {
-    if (date) {
+    if(date){
       setDate(prettyDate(date))
-    } else {
+    }
+    else{
       setDate('NA')
     }
   }, [date])
@@ -41,18 +42,24 @@ const DowRow = ({ id, fileName, date, amount, status, key }) => {
   return (
     <>
       <div className="flex max-w-3xl mx-auto items-center p-4 rounded-lg hover:bg-gray-300 cursor-pointer text-gray-700 text-sm">
+        {/* <Icon name="article" size="3xl" color="blue" /> */}
         <DocumentTextIcon className="w-4 h-4 text-blue-500" />
+        {/* <Link to={`/doc/${id}`} className="flex items-center w-full"> */}
         <p className="flex-grow pl-2 pr-10">{fileName}</p>
-        <p className="pr-3 text-xs truncate text-green-800">₹ {amount?.toLocaleString('en-IN')}</p>
-        <p className="mr-3 px-2 py-1 rounded-2xl text-xs truncate bg-green-200 text-green-900">{status}</p>
+        {/* <p className="pr-5 text-sm truncate">{`${date
+            ?.toDate()
+            ?.toDateString("en-US")} at ${date
+            ?.toDate()
+            ?.toLocaleTimeString("en-US")}`}</p> */}
+        <p className="pr-5 text-xs truncate">{dateIs}</p>
+        {/* </Link> */}
 
-        <p className="pr-3 text-xs truncate">{dateIs}</p>
         <button
-          color="red"
-          className="border-0 block rounded "
+          color="gray"
+          className="border-0 block rounded ml-2"
           onClick={() => setShoModel(true)}
         >
-          <CloudUploadIcon name="delete" className="w-4 h-4 text-red-400" />
+          <ChatIcon name="delete" className="w-4 h-4" />
         </button>
         <button
           color="gray"
@@ -103,4 +110,4 @@ const DowRow = ({ id, fileName, date, amount, status, key }) => {
   )
 }
 
-export default DowRow
+export default PaymentDocUtility

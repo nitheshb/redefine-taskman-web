@@ -186,7 +186,31 @@ export const streamGetAllTransactions = async (
   return lead_logs
   // return onSnapshot(itemsQuery, snapshot, error)
 }
+export const streamGetAllUnitTransactions = async (
+  orgId,
+  snapshot,
+  data,
+  error
+) => {
+  // const itemsQuery = query(doc(db, `${orgId}_leads_log', 'W6sFKhgyihlsKmmqDG0r'))
+  const { uid, cutoffDate , unit_id} = data
+  console.log('unit_id is ', uid)
+  // return onSnapshot(doc(db, `${orgId}_leads_log`, uid), snapshot, error)
+  const { data: lead_logs, error: countError } = await supabase
+    .from(`${orgId}_accounts`)
+    .select('*')
+  .eq('unit_id', unit_id)
+  // .is('projectId', null)
+  // .isNull('projectId')
+  // .eq('from', 'visitfixed')
 
+  if (countError) {
+    console.error(countError)
+    return
+  }
+  return lead_logs
+  // return onSnapshot(itemsQuery, snapshot, error)
+}
 // get all TaskManTasks from supabase
 export const streamGetAllTaskManTasks = async (
   orgId,
@@ -2924,7 +2948,7 @@ export const capturePaymentS = async (
     const { data, error } = await supabase.from(`${orgId}_accounts`).insert([
       {
         projectId,
-        unit_id: [unitId],
+        unit_id: unitId,
         towards: builderName,
         towards_id: towardsBankDocId,
         mode,
