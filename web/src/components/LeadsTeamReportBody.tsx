@@ -1111,23 +1111,24 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
       <section className="pb-8 pt-1 mb-8 leading-7 text-gray-900 bg-white ">
         <div className="box-border px-4 mx-auto border-solid sm:px-6 md:px-6 lg:px-8 max-w-full ">
           <div className="flex flex-col  leading-7  text-gray-900 border-0 border-gray-200 ">
-            <div className="flex items-center flex-shrink-0  px-0  pl-0 border-b border-grey  mb-2">
+
+            <div className="flex overflow-x-auto ml-2 border-b pb-2">
+            <div className="flex items-center flex-shrink-0   border-grey maahome">
               {/* <Link
                 className="flex items-center"
                // to={routes.projectEdit({ uid })}
               > */}
-              <img className="w-12 h-12" alt="" src="/apart.svg"></img>
+
               <span className="relative  flex items-center w-auto text-xl font-bold leading-none pl-0 mt-[18px]">
-                {orgId?.toLocaleUpperCase()} Report
+                Sales Reports
               </span>
               {/* </Link> */}
             </div>
-            <div className="flex overflow-x-auto ml-2 border-b pb-2">
-              <section className="mt-4">Reports</section>
               {[
                 { label: 'Leads Performance', value: 'lead_perf' },
+                { label: 'Source Performance', value: 'source_perf' },
                 { label: 'Site Visits', value: 'site_visits' },
-                { label: 'Employee Tasks', value: 'emp_tasks' },
+                { label: 'Employee Performance', value: 'emp_tasks' },
 
                 // { label: 'Source Report', value: 'source_report' },
                 // { label: 'Employee Report', value: 'emp_status_report' },
@@ -1145,14 +1146,14 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                   >
                     <button>
                       <span
-                        className={`flex ml-2 items-center h-6 px-3 text-xs  ${
+                        className={`flex ml-2 items-center py-3 px-3 text-xs flex flex-col  min-w-[120px] ${
                           selCat === data.value
                             ? 'font-normal text-green-800 bg-[#FFEDEA]'
                             : 'font-normal text-black-100 bg-[#f0f8ff]'
-                        }  rounded-full`}
+                        }  rounded`}
                       >
                         {/* <PencilIcon className="h-3 w-3 mr-1" aria-hidden="true" /> */}
-                        <img alt="" src="/temp2.png" className="h-3 w-3 mr-1" />
+                        <img alt="" src="/temp2.png" className="h-5 w-5 mr-1 mb-1" />
                         {data?.label}
                       </span>
                     </button>
@@ -1322,11 +1323,11 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
           </div>
           {selCat === 'lead_perf' && (
             <div
-              className="flex flex-col  mt-14 drop-shadow-md rounded-lg  px-4"
-              style={{ backgroundColor: '#ebfafa' }}
+              className="flex flex-col  mt-2 drop-shadow-md rounded-lg  px-4"
+
             >
               <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
+                <div className="py-2 inline-block  sm:px-6 lg:px-8"   style={{ backgroundColor: '#ebfafa' }}>
                   <div className="overflow-hidden">
                     <div
                       style={{
@@ -1336,7 +1337,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                       }}
                       className=" text-md font-bold leading-none pl-0 mt-4 border-b pb-4 mb-4 "
                     >
-                      <div>Lead Performance</div>
+                      <div>Performance by Lead Created Date</div>
                       <div className="flex flex-row">
                         <div>
                           <SlimDateSelectBox
@@ -1375,7 +1376,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                       sourceRawFilData={sourceRawFilData}
                       showDrillDownFun={showDrillDownFun}
                       projectFilList= {projectListTuned}
-                      leadsFetchedRawData={leadsFetchedRawData}    />             />
+                      leadsFetchedRawData={leadsFetchedRawData}    />
 
                   </div>
                 </div>
@@ -1384,15 +1385,15 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
           )}
           {selCat === 'emp_tasks' && (
             <div
-              className="flex flex-col  mt-14 drop-shadow-md rounded-lg  px-4"
-              style={{ backgroundColor: '#ebfafa' }}
+              className="flex flex-col  mt-4 drop-shadow-md rounded-lg  px-4"
+
             >
               <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
+                <div className="py-2 inline-block  sm:px-6 lg:px-8"  style={{ backgroundColor: '#ebfafa' }}>
                   <div className="overflow-hidden">
                     <div className="flex flex-row justify-between pl-0 mt-4 border-b pb-4 mb-4 ">
                     <div className=" text-md font-bold leading-none mt-2">
-                      {`Employee Tasks Overview`}
+                      {`Today Employee Tasks Performance`}
                       {/* <div>DateSourceComponent()</div> */}
                     </div>
                     <section className="flex flex-row justify-between">
@@ -1641,11 +1642,11 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
             <>
               {/* old comp */}
               <div
-                className="flex flex-col  mt-14 drop-shadow-md rounded-lg  px-4"
-                style={{ backgroundColor: '#ebfafa' }}
+                className="flex flex-col  mt-4 drop-shadow-md rounded-lg  px-4"
+
               >
                 <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
-                  <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
+                  <div className="py-2 inline-block  sm:px-6 lg:px-8"   style={{ backgroundColor: '#ebfafa' }}>
                     <div className="overflow-hidden">
                       <div className=" text-md font-bold leading-none pl-0 mt-4 border-b pb-4 mb-4 ">
                         {`Site Visit's Overview`}
@@ -2359,13 +2360,13 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
               </div>
             </>
           )}
-          {selCat === 'lead_perf' && (
+          {selCat === 'source_perf' && (
             <div
               className="flex flex-col  mt-4 drop-shadow-md rounded-lg  px-4"
-              style={{ backgroundColor: '#ebfafa' }}
+
             >
               <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
+                <div className="py-2 inline-block  sm:px-6 lg:px-8"    style={{ backgroundColor: '#ebfafa' }}>
                   <div className="overflow-hidden">
                     <div className="flex flex-row justify-between border-b mt-4 pb-2">
                     <div className=" text-md font-bold leading-none pl-0 mt-2  mb-4 ">
@@ -2877,10 +2878,10 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
           {selCat === 'emp_status_report' && (
             <div
               className="flex flex-col  mt-14 drop-shadow-md rounded-lg  px-4"
-              style={{ backgroundColor: '#ebfafa' }}
+
             >
               <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
+                <div className="py-2 inline-block sm:px-6 lg:px-8" style={{ backgroundColor: '#ebfafa' }}>
                   <div className="overflow-hidden">
                     <div className=" text-md font-bold leading-none pl-0 mt-4 border-b pb-4 mb-4 ">
                       {`Employee vs Status `}
@@ -3382,10 +3383,10 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
           {selCat === 'proj_leads_report' && (
             <div
               className="flex flex-col  mt-14 drop-shadow-md rounded-lg  px-4"
-              style={{ backgroundColor: '#ebfafa' }}
+
             >
               <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
+                <div className="py-2 inline-block  sm:px-6 lg:px-8"   style={{ backgroundColor: '#ebfafa' }}>
                   <div className="overflow-hidden">
                     <div className=" text-md font-bold leading-none pl-0 mt-4 border-b pb-4 mb-4 ">
                       {`Project vs Status `}
