@@ -22,6 +22,8 @@ import ConstructHomeList from '../A_ProjModule/ConstructHomeList'
 import CRMHomeList from '../A_ProjModule/CRMHomeList'
 import FinanceHomeList from '../A_ProjModule/FinanceHomeList'
 import LegalHomeList from '../A_ProjModule/LegalHomeList'
+import MarketingHomeList from '../A_ProjModule/MarketingHomeList'
+import ProjectAccessHomeList from '../A_ProjModule/ProjectAccessHomeListAc'
 import SalesHomeList from '../A_ProjModule/SalesHomeList'
 import TemplatesHomeList from '../A_ProjModule/TemplatesHomeList'
 import AddApplicantDetails from '../AddApplicantDetails'
@@ -285,6 +287,11 @@ const ProjPhaseHome = ({
                               {[
                                 { lab: 'Units', val: 'Blocks' },
                                 {
+                                  lab: 'CRM',
+                                  val: 'CRM',
+                                  subval: 'costSheet',
+                                },
+                                {
                                   lab: 'Finance',
                                   val: 'Finance',
                                   subval: 'bankdetails',
@@ -295,19 +302,25 @@ const ProjPhaseHome = ({
                                   subval: 'projectApprovals',
                                 },
                                 {
-                                  lab: 'Sales',
-                                  val: 'Sales',
-                                  subval: 'saleTemplates',
+                                  lab: 'Marketing',
+                                  val: 'marketing',
+                                  subval: 'campaign',
                                 },
                                 {
-                                  lab: 'CRM',
-                                  val: 'CRM',
-                                  subval: 'bankDetails',
+                                  lab: 'Sales',
+                                  val: 'Sales',
+                                  subval: 'brouchers',
                                 },
+
                                 {
                                   lab: 'Construction',
                                   val: 'Construction',
                                   subval: 'bankdetails',
+                                },
+                                {
+                                  lab: 'Access',
+                                  val: 'projectAccess',
+                                  subval: 'accessDetails',
                                 },
                                 // { lab: 'Report', val: 'Report' },
 
@@ -703,6 +716,23 @@ const ProjPhaseHome = ({
                           source={source}
                         />
                       )}
+                      {phaseViewFeature === 'marketing' && (
+                        <MarketingHomeList
+                          title={'Marketing'}
+                          dialogOpen={'false'}
+                          data={{ phase: phase }}
+                          source={source}
+                        />
+                      )}
+                      {phaseViewFeature === 'projectAccess' && (
+                        <ProjectAccessHomeList
+                          title={'Project Access'}
+                          dialogOpen={'false'}
+                          data={{ phase: phase }}
+                          source={source}
+                        />
+                      )}
+
                       {phaseViewFeature === 'Templates' && (
                         <TemplatesHomeList
                           title={'Templates'}

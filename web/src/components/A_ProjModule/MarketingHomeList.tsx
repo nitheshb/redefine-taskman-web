@@ -9,7 +9,7 @@ import Loader from 'src/components/Loader/Loader'
 import { updateMoreDetails } from 'src/context/dbQueryFirebase'
 import { TextAreaField } from 'src/util/formFields/TextAreaField'
 
-const ConstructHomeList = ({ title, dialogOpen, data }) => {
+const MarketingHomeList = ({ title, dialogOpen, data }) => {
   const [loading, setLoading] = useState(false)
   const { enqueueSnackbar } = useSnackbar()
 
@@ -64,7 +64,7 @@ const ConstructHomeList = ({ title, dialogOpen, data }) => {
                     </svg>
                   </span>
 
-                  <span className="pt-[5px]"> Modifications</span>
+                  <span className="pt-[5px]">Campaign</span>
                 </button>
               </div>
             </div>
@@ -133,4 +133,4 @@ const ConstructHomeList = ({ title, dialogOpen, data }) => {
   )
 }
 
-export default ConstructHomeList
+export default MarketingHomeList

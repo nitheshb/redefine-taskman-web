@@ -58,12 +58,35 @@ const SalesHomeList = ({
           <div className="mr-4 templateList">
             <div className=" flex">
               <div className="flex flex-col">
-                <button
+              <button
                   className={`templateItem ${
-                    subView === 'saleTemplates' ? 'hightlightItem' : ''
+                    subView === 'brouchers' ? 'hightlightItem' : ''
                   }`}
                   type="button"
-                  onClick={() => setSubView('saleTemplates')}
+                  onClick={() => setSubView('brouchers')}
+                >
+                  <span className="pr-1">
+                    <svg
+                      className="tempalteIcon"
+                      focusable="false"
+                      viewBox="0 0 18 16"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M0.0873592 4.7591C0.0883085 4.76037 0.0891522 4.7618 0.0901366 4.76302C0.0902773 4.76318 0.0903827 4.76339 0.0905234 4.76359L8.73922 15.8656C8.80366 15.9484 8.90133 16 8.99998 16C9.09831 16 9.1958 15.9489 9.26074 15.8656L17.9094 4.76359C17.9096 4.76343 17.9097 4.76322 17.9098 4.76302C17.9108 4.76175 17.9116 4.76037 17.9126 4.7591C18.0253 4.61029 18.0282 4.39171 17.926 4.23943C17.925 4.23796 17.9242 4.23629 17.9232 4.23482L15.1106 0.153184C15.0439 0.0563673 14.9429 0 14.8361 0C13.4028 0 4.33007 0 3.16387 0C3.05706 0 2.95605 0.0563673 2.88933 0.153184L0.0767417 4.23482C0.0757222 4.23629 0.075019 4.23792 0.0739994 4.23943C-0.0293278 4.39331 -0.0240542 4.61196 0.0873592 4.7591ZM7.08957 0.816326H10.9104L12.5979 4.08163H5.40202L7.08957 0.816326ZM5.32045 4.89796H12.6794L8.99994 14.5807L5.32045 4.89796ZM13.448 4.89796H16.8567L10.2017 13.4407L13.448 4.89796ZM4.55191 4.89796L7.79823 13.4407L1.14324 4.89796H4.55191ZM16.9172 4.08163H13.4179L11.7303 0.816326H14.6671L16.9172 4.08163ZM3.3328 0.816326H6.26956L4.58201 4.08163H1.08273L3.3328 0.816326Z"
+                        fill="currentColor"
+                      ></path>
+                    </svg>
+                  </span>
+
+                  <span className="pt-[5px]">Brouchers</span>
+                </button>
+                <button
+                  className={`templateItem ${
+                    subView === 'otherDocs' ? 'hightlightItem' : ''
+                  }`}
+                  type="button"
+                  onClick={() => setSubView('otherDocs')}
                 >
                   <span className="pr-1">
                     <svg
@@ -79,7 +102,7 @@ const SalesHomeList = ({
                     </svg>
                   </span>
 
-                  <span className="pt-[5px]">Email/Msg Templates</span>
+                  <span className="pt-[5px]">OtherDocs</span>
                 </button>
                 <button
                   className={`templateItem ${
@@ -113,37 +136,15 @@ const SalesHomeList = ({
                     </svg>
                   </span>
 
-                  <span className="pt-[5px]">Lead Access</span>
+                  <span className="pt-[5px]">Highlights</span>
                 </button>
-                <button
-                  className={`templateItem ${
-                    subView === 'brouchers' ? 'hightlightItem' : ''
-                  }`}
-                  type="button"
-                  onClick={() => setSubView('brouchers')}
-                >
-                  <span className="pr-1">
-                    <svg
-                      className="tempalteIcon"
-                      focusable="false"
-                      viewBox="0 0 18 16"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M0.0873592 4.7591C0.0883085 4.76037 0.0891522 4.7618 0.0901366 4.76302C0.0902773 4.76318 0.0903827 4.76339 0.0905234 4.76359L8.73922 15.8656C8.80366 15.9484 8.90133 16 8.99998 16C9.09831 16 9.1958 15.9489 9.26074 15.8656L17.9094 4.76359C17.9096 4.76343 17.9097 4.76322 17.9098 4.76302C17.9108 4.76175 17.9116 4.76037 17.9126 4.7591C18.0253 4.61029 18.0282 4.39171 17.926 4.23943C17.925 4.23796 17.9242 4.23629 17.9232 4.23482L15.1106 0.153184C15.0439 0.0563673 14.9429 0 14.8361 0C13.4028 0 4.33007 0 3.16387 0C3.05706 0 2.95605 0.0563673 2.88933 0.153184L0.0767417 4.23482C0.0757222 4.23629 0.075019 4.23792 0.0739994 4.23943C-0.0293278 4.39331 -0.0240542 4.61196 0.0873592 4.7591ZM7.08957 0.816326H10.9104L12.5979 4.08163H5.40202L7.08957 0.816326ZM5.32045 4.89796H12.6794L8.99994 14.5807L5.32045 4.89796ZM13.448 4.89796H16.8567L10.2017 13.4407L13.448 4.89796ZM4.55191 4.89796L7.79823 13.4407L1.14324 4.89796H4.55191ZM16.9172 4.08163H13.4179L11.7303 0.816326H14.6671L16.9172 4.08163ZM3.3328 0.816326H6.26956L4.58201 4.08163H1.08273L3.3328 0.816326Z"
-                        fill="currentColor"
-                      ></path>
-                    </svg>
-                  </span>
 
-                  <span className="pt-[5px]">Brouchers</span>
-                </button>
                 <button
                   className={`templateItem ${
-                    subView === 'campaign' ? 'hightlightItem' : ''
+                    subView === 'amenities' ? 'hightlightItem' : ''
                   }`}
                   type="button"
-                  onClick={() => setSubView('campaign')}
+                  onClick={() => setSubView('amenities')}
                 >
                   <span className="pr-1">
                     <svg
@@ -157,14 +158,14 @@ const SalesHomeList = ({
                     </svg>
                   </span>
 
-                  <span className="pt-[5px]">Campaign</span>
+                  <span className="pt-[5px]">Amenities</span>
                 </button>
                 <button
                   className={`templateItem ${
-                    subView === 'salereports' ? 'hightlightItem' : ''
+                    subView === 'remarks' ? 'hightlightItem' : ''
                   }`}
                   type="button"
-                  onClick={() => setSubView('salereports')}
+                  onClick={() => setSubView('remarks')}
                 >
                   <span className="pr-1">
                     <svg
@@ -178,7 +179,7 @@ const SalesHomeList = ({
                     </svg>
                   </span>
 
-                  <span className="pt-[5px]">Reports</span>
+                  <span className="pt-[5px]">Remarks</span>
                 </button>
               </div>
             </div>

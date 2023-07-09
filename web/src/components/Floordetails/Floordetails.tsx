@@ -714,7 +714,7 @@ const Floordetails = ({
                     </section>
                   </section>
                   <section
-                    className={`flex flex-row ${
+                    className={`flex flex-row mr-2 ${
                       selStatus === 'blocked' ? 'bg-[#c6fff0]' : ''
                     }`}
                     onClick={() => {

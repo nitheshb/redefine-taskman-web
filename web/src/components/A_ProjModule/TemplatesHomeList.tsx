@@ -46,27 +46,7 @@ const TemplatesHomeList = ({ title, dialogOpen, data }) => {
           <div className="mr-4 templateList">
             <div className=" flex">
               <div className="flex flex-col">
-                <button
-                  className="templateItem hightlightItem"
-                  tabIndex="0"
-                  type="button"
-                >
-                  <span className="pr-1">
-                    <svg
-                      className="tempalteIcon tempalteIcon"
-                      focusable="false"
-                      viewBox="0 0 17 21"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M11.4766 9.90449C12.7564 8.97117 13.5897 7.4607 13.5897 5.75906C13.5897 2.93137 11.2892 0.630859 8.46152 0.630859C5.63383 0.630859 3.33332 2.93137 3.33332 5.75906C3.33332 7.4607 4.16664 8.97117 5.44641 9.90449C2.26516 11.1219 0 14.2063 0 17.8104C0 19.3656 1.26527 20.6309 2.82051 20.6309H14.1025C15.6578 20.6309 16.923 19.3656 16.923 17.8104C16.923 14.2063 14.6579 11.1219 11.4766 9.90449ZM4.8718 5.75906C4.8718 3.77969 6.48215 2.16934 8.46152 2.16934C10.4409 2.16934 12.0512 3.77969 12.0512 5.75906C12.0512 7.73844 10.4409 9.34883 8.46152 9.34883C6.48215 9.34883 4.8718 7.73844 4.8718 5.75906ZM14.1025 19.0924H2.82051C2.11359 19.0924 1.53848 18.5173 1.53848 17.8103C1.53848 13.9929 4.6441 10.8872 8.46156 10.8872C12.279 10.8872 15.3846 13.9929 15.3846 17.8103C15.3846 18.5173 14.8095 19.0924 14.1025 19.0924Z"
-                        fill="currentColor"
-                      ></path>
-                    </svg>
-                  </span>
 
-                  <span className="pt-[5px]"> Project Logo</span>
-                </button>
                 <button
                   className="templateItem flex"
                   tabIndex="0"
@@ -116,20 +96,26 @@ const TemplatesHomeList = ({ title, dialogOpen, data }) => {
 
                   <span className="pt-[5px]">Booking Message</span>
                 </button>
-                <button className="templateItem" tabIndex="0" type="button">
+                <button
+                  className="templateItem hightlightItem"
+                  tabIndex="0"
+                  type="button"
+                >
                   <span className="pr-1">
                     <svg
-                      className="tempalteIcon"
+                      className="tempalteIcon tempalteIcon"
                       focusable="false"
-                      viewBox="0 0 24 24"
+                      viewBox="0 0 17 21"
                       aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
                     >
-                      <path d="M18,10V8A6,6,0,0,0,6,8v2a2,2,0,0,0-2,2v8a2,2,0,0,0,2,2H18a2,2,0,0,0,2-2V12A2,2,0,0,0,18,10ZM8,8a4,4,0,0,1,8,0v2H8Zm7,7.5a.5.5,0,0,1,.5-.5h1a.5.5,0,0,1,.5.5v1a.5.5,0,0,1-.5.5h-1a.5.5,0,0,1-.5-.5Zm-4,0a.5.5,0,0,1,.5-.5h1a.5.5,0,0,1,.5.5v1a.5.5,0,0,1-.5.5h-1a.5.5,0,0,1-.5-.5Zm-4,1v-1a.5.5,0,0,1,.5-.5h1a.5.5,0,0,1,.5.5v1a.5.5,0,0,1-.5.5h-1A.5.5,0,0,1,7,16.5Z"></path>
+                      <path
+                        d="M11.4766 9.90449C12.7564 8.97117 13.5897 7.4607 13.5897 5.75906C13.5897 2.93137 11.2892 0.630859 8.46152 0.630859C5.63383 0.630859 3.33332 2.93137 3.33332 5.75906C3.33332 7.4607 4.16664 8.97117 5.44641 9.90449C2.26516 11.1219 0 14.2063 0 17.8104C0 19.3656 1.26527 20.6309 2.82051 20.6309H14.1025C15.6578 20.6309 16.923 19.3656 16.923 17.8104C16.923 14.2063 14.6579 11.1219 11.4766 9.90449ZM4.8718 5.75906C4.8718 3.77969 6.48215 2.16934 8.46152 2.16934C10.4409 2.16934 12.0512 3.77969 12.0512 5.75906C12.0512 7.73844 10.4409 9.34883 8.46152 9.34883C6.48215 9.34883 4.8718 7.73844 4.8718 5.75906ZM14.1025 19.0924H2.82051C2.11359 19.0924 1.53848 18.5173 1.53848 17.8103C1.53848 13.9929 4.6441 10.8872 8.46156 10.8872C12.279 10.8872 15.3846 13.9929 15.3846 17.8103C15.3846 18.5173 14.8095 19.0924 14.1025 19.0924Z"
+                        fill="currentColor"
+                      ></path>
                     </svg>
                   </span>
 
-                  <span className="pt-[5px]">Sales Executive Assign</span>
+                  <span className="pt-[5px]"> Project Logo</span>
                 </button>
                 <button className="templateItem" tabIndex="0" type="button">
                   <span className="pr-1">
