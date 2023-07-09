@@ -7,6 +7,7 @@ module.exports = {
         bodyLato: ['Lato', 'sans-serif'],
         montF: ['Montserrat', 'sans-serif'],
         rubikF: ['Rubik', 'sans-serif'],
+        nunF: ['Nunito Sans', 'sans-serif'],
       },
     },
   },

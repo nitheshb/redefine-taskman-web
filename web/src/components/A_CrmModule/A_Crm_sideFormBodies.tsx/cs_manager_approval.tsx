@@ -29,10 +29,12 @@ import BankSelectionSwitchDrop from 'src/components/A_LoanModule/BankSelectionDr
 import DocRow from 'src/components/LegalModule/Docu_row'
 import { USER_ROLES } from 'src/constants/userRoles'
 import { useAuth } from 'src/context/firebase-auth-context'
+import CostBreakUpSheet from 'src/components/costBreakUpSheet'
+import CSManagerApprovalBody from './cs_manager_approval_body'
 
 // import BankSelectionSwitchDrop from './BankSelectionDroopDown'
 
-export default function CsMangerApprovalFlow({ type, setStatusFun }) {
+export default function CsMangerApprovalFlow({ type, setStatusFun , selUnitPayload}) {
   const [selLoanBank, setLoanBank] = useState({})
   const [preSanctionReview, SetPreSanctionReview] = useState('In-Review')
   const [postSanctionReview, SetPostSanctionReview] = useState('In-Review')
@@ -85,9 +87,10 @@ export default function CsMangerApprovalFlow({ type, setStatusFun }) {
                   <span className="text-[14px] mb-[2px]">1</span>
                 </div>
                 <p className="mt- pb-2 font-semibold text-gray-600  mt-[4px] mb-2 border-b w-full">
-                  Raise Demand
+                  Manager Approval
                 </p>
               </section>
+
               {!S1 && (
                 <p className="mt- pb-2 font-semibold text-blue-600  mt-[4px] mb-2 mr-2 border-b w-[300px] text-right">
                   {selLoanBank?.bName || 'NA'}
@@ -109,10 +112,17 @@ export default function CsMangerApprovalFlow({ type, setStatusFun }) {
           </section>
           {S1 && (
             <section className="mt-1 ml-9 container">
-              <BankSelectionSwitchDrop
-                type={selLoanBank}
-                setStatusFun={setLoanBank}
-              />
+              <CSManagerApprovalBody selUnitPayload={selUnitPayload} />
+                     {/* <CostBreakUpSheet
+                  selMode={'Detail View'}
+                  title="Cost Break Up Sheetx"
+                  leadDetailsObj1={{}}
+                  selPhaseObj={{}}
+                  unitDetails={selUnitPayload}
+                  projectDetails={{}}
+                  setShowCostSheetWindow={()=>{}}
+                  selUnitDetails={selUnitPayload}
+                /> */}
             </section>
           )}
         </section>
@@ -208,7 +218,6 @@ export default function CsMangerApprovalFlow({ type, setStatusFun }) {
                 >
                   <DocRow
                     id={doc?.id}
-                    key={doc?.id}
                     fileName={doc?.name}
                     date={doc?.time}
                   />
@@ -404,7 +413,6 @@ export default function CsMangerApprovalFlow({ type, setStatusFun }) {
                     >
                       <DocRow
                         id={doc?.id}
-                        key={doc?.id}
                         fileName={doc?.name}
                         date={doc?.time}
                       />
@@ -512,7 +520,6 @@ export default function CsMangerApprovalFlow({ type, setStatusFun }) {
                   >
                     <DocRow
                       id={doc?.id}
-                      key={doc?.id}
                       fileName={doc?.name}
                       date={doc?.time}
                     />
@@ -717,7 +724,6 @@ export default function CsMangerApprovalFlow({ type, setStatusFun }) {
                         >
                           <DocRow
                             id={doc?.id}
-                            key={doc?.id}
                             fileName={doc?.name}
                             date={doc?.time}
                           />

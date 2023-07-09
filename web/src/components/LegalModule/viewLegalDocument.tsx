@@ -420,7 +420,6 @@ export default function LegalDocsViewHome({
                                 >
                                   <DocRow
                                     id={doc?.id}
-                                    key={doc?.id}
                                     fileName={doc?.name}
                                     date={doc?.time}
                                   />

@@ -678,10 +678,10 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                     { lab: 'Unassigned', val: 'unAssigned_crm' },
 
                     { lab: 'Queries', val: 'queries' },
-                  ].map((d, i) => {
+                  ].map((d, b) => {
                     return (
                       <li
-                        key={i}
+                        key={b}
                         className="mr-2 ml-2 text-sm font-bodyLato"
                         role="presentation"
                       >
@@ -860,7 +860,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                   </div>
 
                   {selCategory === 'booked' &&
-                    bookingReviewA.map((finData, i) => {
+                    bookingReviewA.map((finData, c) => {
                       const {
                         uid,
                         assets,
@@ -877,7 +877,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                       } = finData
                       return (
                         <section
-                          key={i}
+                          key={c}
                           className="border mb-1  shadow rounded-md  shadow"
                         >
                           <section className="flex flex-row">
@@ -966,7 +966,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                     </div>
                                     <div className="flex flex-row mx-1">
                                       {[{ item: 'Paid', value: 6 }].map(
-                                        (data, i) => (
+                                        (data, e) => (
                                           <div
                                             style={{
                                               display: 'inline-block',
@@ -982,7 +982,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                                   : 100
                                               }%`,
                                             }}
-                                            key={i}
+                                            key={e}
                                           >
                                             <div className="">
                                               <LinearProgress
@@ -1023,7 +1023,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                         )
                                       )}
                                       {[{ item: 'Due', value: 6 }].map(
-                                        (data, i) => (
+                                        (data, f) => (
                                           <div
                                             style={{
                                               display: 'inline-block',
@@ -1039,7 +1039,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                                   : 0
                                               }%`,
                                             }}
-                                            key={i}
+                                            key={f}
                                           >
                                             <div className="">
                                               <LinearProgress
@@ -1128,7 +1128,6 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       display: 'inline-block',
                                       alignSelf: 'flex-end',
                                     }}
-                                    key={i}
                                     onClick={() => {
                                       setSelUnitDetails(finData)
                                       setIsSubTopicOpen(true)
@@ -1162,7 +1161,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       display: 'inline-block',
                                       alignSelf: 'flex-end',
                                     }}
-                                    key={i}
+
                                     onClick={() => {
                                       setSelUnitDetails(finData)
                                       setIsSubTopicOpen(true)
@@ -1194,7 +1193,6 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       display: 'inline-block',
                                       alignSelf: 'flex-end',
                                     }}
-                                    key={i}
                                     onClick={() => {
                                       setSelUnitDetails(finData)
                                       setIsSubTopicOpen(true)
@@ -1301,7 +1299,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                       )
                     })}
                   {selCategory === 'agreement_pipeline' &&
-                    agreePipeA.map((finData, i) => {
+                    agreePipeA.map((finData, g) => {
                       const {
                         uid,
                         assets,
@@ -1318,7 +1316,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                       } = finData
                       return (
                         <section
-                          key={i}
+                          key={g}
                           className="border mb-1  shadow rounded-md  shadow"
                         >
                           <section className="flex flex-row">
@@ -1407,7 +1405,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                     </div>
                                     <div className="flex flex-row mx-1">
                                       {[{ item: 'Paid', value: 6 }].map(
-                                        (data, i) => (
+                                        (data, h) => (
                                           <div
                                             style={{
                                               display: 'inline-block',
@@ -1423,7 +1421,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                                   : 100
                                               }%`,
                                             }}
-                                            key={i}
+                                            key={h}
                                           >
                                             <div className="">
                                               <LinearProgress
@@ -1650,7 +1648,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                     })}
 
                   {selCategory === 'sd_pipeline' &&
-                    tableData.map((finData, i) => {
+                    tableData.map((finData, j) => {
                       const {
                         uid,
                         assets,
@@ -1667,7 +1665,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                       } = finData
                       return (
                         <section
-                          key={i}
+                          key={j}
                           className="border mb-1  shadow rounded-md  shadow"
                         >
                           <section className="flex flex-row">
@@ -1730,7 +1728,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                     </div>
                                     <div className="flex flex-row mx-1">
                                       {[{ item: 'Paid', value: 6 }].map(
-                                        (data, i) => (
+                                        (data, k) => (
                                           <div
                                             style={{
                                               display: 'inline-block',
@@ -1746,7 +1744,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                                   : 100
                                               }%`,
                                             }}
-                                            key={i}
+                                            key={k}
                                           >
                                             <div className="">
                                               <LinearProgress
@@ -1787,7 +1785,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                         )
                                       )}
                                       {[{ item: 'Due', value: 6 }].map(
-                                        (data, i) => (
+                                        (data, l) => (
                                           <div
                                             style={{
                                               display: 'inline-block',
@@ -1803,7 +1801,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                                   : 0
                                               }%`,
                                             }}
-                                            key={i}
+                                            key={l}
                                           >
                                             <div className="">
                                               <LinearProgress
@@ -1861,7 +1859,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                     </div>
                                     <div className="flex flex-row mx-1">
                                       {[{ item: 'Paid', value: 6 }].map(
-                                        (data, i) => (
+                                        (data, m) => (
                                           <div
                                             style={{
                                               display: 'inline-block',
@@ -1877,7 +1875,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                                   : 100
                                               }%`,
                                             }}
-                                            key={i}
+                                            key={m}
                                           >
                                             <div className="">
                                               <LinearProgress
@@ -1909,7 +1907,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                         )
                                       )}
                                       {[{ item: 'Due', value: 6 }].map(
-                                        (data, i) => (
+                                        (data, n) => (
                                           <div
                                             style={{
                                               display: 'inline-block',
@@ -1925,7 +1923,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                                   : 0
                                               }%`,
                                             }}
-                                            key={i}
+                                            key={n}
                                           >
                                             <div className="">
                                               <LinearProgress
@@ -2080,7 +2078,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                     })}
 
                   {selCategory === 'registered' &&
-                    tableData.map((finData, i) => {
+                    tableData.map((finData, o) => {
                       const {
                         uid,
                         assets,
@@ -2097,7 +2095,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                       } = finData
                       return (
                         <section
-                          key={i}
+                          key={o}
                           className="border mb-1  shadow rounded-md  shadow"
                         >
                           <section className="flex flex-row">
@@ -2160,7 +2158,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                     </div>
                                     <div className="flex flex-row mx-1">
                                       {[{ item: 'Paid', value: 6 }].map(
-                                        (data, i) => (
+                                        (data, p) => (
                                           <div
                                             style={{
                                               display: 'inline-block',
@@ -2176,7 +2174,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                                   : 100
                                               }%`,
                                             }}
-                                            key={i}
+                                            key={p}
                                           >
                                             <div className="">
                                               <LinearProgress
@@ -2217,7 +2215,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                         )
                                       )}
                                       {[{ item: 'Due', value: 6 }].map(
-                                        (data, i) => (
+                                        (data, q) => (
                                           <div
                                             style={{
                                               display: 'inline-block',
@@ -2233,7 +2231,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                                   : 0
                                               }%`,
                                             }}
-                                            key={i}
+                                            key={q}
                                           >
                                             <div className="">
                                               <LinearProgress
@@ -2291,7 +2289,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                     </div>
                                     <div className="flex flex-row mx-1">
                                       {[{ item: 'Paid', value: 6 }].map(
-                                        (data, i) => (
+                                        (data, r) => (
                                           <div
                                             style={{
                                               display: 'inline-block',
@@ -2307,7 +2305,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                                   : 100
                                               }%`,
                                             }}
-                                            key={i}
+                                            key={r}
                                           >
                                             <div className="">
                                               <LinearProgress
@@ -2339,7 +2337,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                         )
                                       )}
                                       {[{ item: 'Due', value: 6 }].map(
-                                        (data, i) => (
+                                        (data, s) => (
                                           <div
                                             style={{
                                               display: 'inline-block',
@@ -2355,7 +2353,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                                   : 0
                                               }%`,
                                             }}
-                                            key={i}
+                                            key={s}
                                           >
                                             <div className="">
                                               <LinearProgress
@@ -2539,7 +2537,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                     })}
 
                   {selCategory === 'unAssigned_crm' &&
-                    crmCustomersDBData.map((finData, i) => {
+                    crmCustomersDBData.map((finData, t) => {
                       const {
                         uid,
                         assets,
@@ -2554,7 +2552,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                       } = finData
                       return (
                         <section
-                          key={i}
+                          key={t}
                           className="border mb-1 bg-[#f2f3f8] shadow rounded-md  shadow"
                         >
                           <section className="flex flex-row">
@@ -2612,14 +2610,14 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                     </div>
                                     <div className="flex flex-row mx-1">
                                       {[{ item: 'Total', value: 6 }].map(
-                                        (data, i) => (
+                                        (data, u) => (
                                           <div
                                             className=" w-3/4  "
                                             style={{
                                               display: 'inline-block',
                                               alignSelf: 'flex-end',
                                             }}
-                                            key={i}
+                                            key={u}
                                           >
                                             <div className="">
                                               <LinearProgress
@@ -2651,14 +2649,14 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                         )
                                       )}
                                       {[{ item: 'Due', value: 6 }].map(
-                                        (data, i) => (
+                                        (data, v) => (
                                           <div
                                             className=" w-2/4  "
                                             style={{
                                               display: 'inline-block',
                                               alignSelf: 'flex-end',
                                             }}
-                                            key={i}
+                                            key={v}
                                           >
                                             <div className="">
                                               <LinearProgress
@@ -2736,14 +2734,14 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                     //   value: 58,
                                     //   icon: ChartPieIcon,
                                     // },
-                                  ].map((data, i) => (
+                                  ].map((data, w) => (
                                     <div
                                       className=" w-[100px] bg-[#F1F5F9] p-3 rounded-md mx-1"
                                       style={{
                                         display: 'inline-block',
                                         alignSelf: 'flex-end',
                                       }}
-                                      key={i}
+                                      key={w}
                                     >
                                       <div className="flex flex-col items-center justify-center mr-1  mb-1 mt[2px]">
                                         <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
@@ -2776,14 +2774,14 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       value: 38,
                                       icon: NewspaperIcon,
                                     },
-                                  ].map((data, i) => (
+                                  ].map((data, a) => (
                                     <div
                                       className=" w-[180px] bg-[#F1F5F9] p-3 rounded-md mx-1"
                                       style={{
                                         display: 'inline-block',
                                         alignSelf: 'flex-end',
                                       }}
-                                      key={i}
+                                      key={a}
                                     >
                                       <div className="flex flex-col items-center justify-center mr-1  mb-1 mt[2px]">
                                         <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
@@ -2903,7 +2901,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
         setOpen={setIsSubTopicOpen}
         title={isSubTopic}
         customerDetails={selUnitDetails}
-        widthClass="max-w-2xl"
+        widthClass="max-w-3xl"
         transactionData={transactionData}
         unitsViewMode={false}
         selUnitPayload={selUnitDetails}

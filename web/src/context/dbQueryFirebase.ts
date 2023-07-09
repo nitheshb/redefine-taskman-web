@@ -320,11 +320,10 @@ export const editTaskManData = async (orgId, dta, user) => {
     .from(`maahomes_TM_Tasks`)
     .update({
       created_on: Timestamp.now().toMillis(),
-      followersC: followA.length,
       by_email: user.email,
       by_name: user.displayName,
       by_uid: user.uid,
-      dept: assignedToObj?.department[0] || '',
+      // dept: assignedToObj?.department[0] || '',
       due_date: due_date,
       priority: priorities,
       status: 'InProgress',
@@ -333,8 +332,10 @@ export const editTaskManData = async (orgId, dta, user) => {
       to_email: assignedToObj?.email,
       to_name: assignedToObj?.name,
       to_uid: assignedToObj?.uid,
-      participantsA: followA,
-      participantsC: followA.length,
+      // participantsA: followA,
+      // participantsC: followA.length,
+      // followersC: followA.length,
+      
     })
     .eq('id', id)
 

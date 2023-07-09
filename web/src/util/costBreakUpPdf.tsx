@@ -53,7 +53,6 @@ const CostBreakUpPdf = ({
   const [psPayload, setPSPayload] = useState([])
   const [pdfPreview, setpdfPreview] = useState(false)
 
-  const { unit_no, katha_no, plc_per_sqft, sqft_rate, area } = selUnitDetails
 
   useEffect(() => {
     console.log('gen costSheetA', costSheetA)
@@ -73,13 +72,13 @@ const CostBreakUpPdf = ({
       paymentScheduleObj,
     } = selPhaseObj
     const { uid } = selUnitDetails
-    const y = leadDetailsObj1[`${uid}_cs`]?.newSqftPrice || sqft_rate
-    const z = leadDetailsObj1[`${uid}_cs`]?.newPLC || plc_per_sqft
+    const y = leadDetailsObj1[`${uid}_cs`]?.newSqftPrice || selUnitDetails?.sqft_rate
+    const z = leadDetailsObj1[`${uid}_cs`]?.newPLC || selUnitDetails?.plc_per_sqft
 
     const plotTotalSaleValue = Number.isFinite(y)
-      ? Number(selUnitDetails?.area * y)
+      ? Number(selUnitDetails?.selUnitDetails?.area * y)
       : Number(
-          selUnitDetails?.area * (selUnitDetails?.rate_per_sqft || sqft_rate)
+          selUnitDetails?.selUnitDetails?.area * (selUnitDetails?.rate_per_sqft || selUnitDetails?.sqft_rate)
         )
 
     const plot_gstValue = Math.round(plotTotalSaleValue) * 0.05
@@ -87,7 +86,7 @@ const CostBreakUpPdf = ({
       'gen costSheetA values are ',
       Number.isFinite(y),
       y,
-      selUnitDetails?.area,
+      selUnitDetails?.selUnitDetails?.area,
       selUnitDetails?.rate_per_sqft
     )
     let x = []
@@ -106,16 +105,16 @@ const CostBreakUpPdf = ({
             value: 'unit_cost_charges',
             label: 'Unit Cost',
           },
-          others: selUnitDetails?.rate_per_sqft || sqft_rate,
-          charges: sqft_rate,
+          others: selUnitDetails?.rate_per_sqft || selUnitDetails?.sqft_rate,
+          charges: selUnitDetails?.sqft_rate,
           TotalSaleValue: plotTotalSaleValue,
           gst: {
             label: '0.05',
             value: plot_gstValue,
           },
           TotalNetSaleValueGsT: plotTotalSaleValue + plot_gstValue,
-          // others: selUnitDetails?.rate_per_sqft || sqft_rate,
-          // charges: Number.isFinite(y) ? y : selUnitDetails?.rate_per_sqft || sqft_rate,
+          // others: selUnitDetails?.rate_per_sqft || selUnitDetails?.sqft_rate,
+          // charges: Number.isFinite(y) ? y : selUnitDetails?.rate_per_sqft || selUnitDetails?.sqft_rate,
           // TotalSaleValue: Number.isFinite(y)
           //   ? Number(selUnitDetails?.plot_Sqf * y)
           //   : Number(selUnitDetails?.plot_Sqf * selUnitDetails?.rate_per_sqft),
@@ -151,10 +150,10 @@ const CostBreakUpPdf = ({
             label: 'PLC ',
           },
           others: selUnitDetails?.plc || 200,
-          charges: Number.isFinite(z) ? z : selUnitDetails?.plc || plc_per_sqft,
+          charges: Number.isFinite(z) ? z : selUnitDetails?.plc || selUnitDetails?.plc_per_sqft,
           TotalSaleValue: Math.round(
             selUnitDetails?.super_built_up_area ||
-              area * (selUnitDetails?.plc || plc_per_sqft)
+              selUnitDetails?.area * (selUnitDetails?.plc || selUnitDetails?.plc_per_sqft)
           ),
           // charges: y,
           gst: {
@@ -162,19 +161,19 @@ const CostBreakUpPdf = ({
             value: Math.round(
               Number(
                 selUnitDetails?.super_built_up_area ||
-                  area * (selUnitDetails?.plc || 200)
+                  selUnitDetails?.area * (selUnitDetails?.plc || 200)
               ) * 0.05
             ),
           },
           TotalNetSaleValueGsT:
             Math.round(
               selUnitDetails?.super_built_up_area ||
-                area * (selUnitDetails?.plc || 200)
+                selUnitDetails?.area * (selUnitDetails?.plc || 200)
             ) +
             Math.round(
               Number(
                 selUnitDetails?.super_built_up_area ||
-                  area * (selUnitDetails?.plc || 200)
+                  selUnitDetails?.area * (selUnitDetails?.plc || 200)
               ) * 0.05
             ),
         },
@@ -415,7 +414,7 @@ const CostBreakUpPdf = ({
     let gstTotal = 0
 
     if (csMode === 'plot_cs') {
-      total = Math.round(selUnitDetails?.area * newValue)
+      total = Math.round(selUnitDetails?.selUnitDetails?.area * newValue)
       gstTotal = Math.round(total * 0.05)
     } else {
       total = Math.round(selUnitDetails?.super_built_up_area * newValue)
@@ -449,7 +448,7 @@ const CostBreakUpPdf = ({
               <PDFExport
                 paperSize="A4"
                 margin="0.5cm"
-                fileName={`${unit_no}_${leadDetailsObj1?.Name}_Nirvana`}
+                fileName={`${selUnitDetails?.unit_no}_${leadDetailsObj1?.Name}_Nirvana`}
                 ref={pdfExportComponent}
               >
                 <div className="px-4">

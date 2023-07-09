@@ -42,6 +42,7 @@ import ViewUnitDetails from '../ViewUnitDetails'
 import ViewEditTaskManForm from '../A_TaskMan/ViewEditTaskManForm'
 import BookingPaymentFlow from '../A_CrmModule/A_Crm_sideFormBodies.tsx/booking_payment'
 import CsMangerApprovalFlow from '../A_CrmModule/A_Crm_sideFormBodies.tsx/cs_manager_approval'
+import Cs_customerKyc from '../A_CrmModule/A_Crm_sideFormBodies.tsx/cs_customerKyc'
 
 const CrmSiderForm = ({
   BlockFeed,
@@ -159,14 +160,14 @@ const CrmSiderForm = ({
                   <BookingPaymentFlow title={title} dialogOpen={setOpen} selUnitPayload={selUnitPayload} />
                 )}
                   {title === 'crm_cs_approval' && (
-                  <CsMangerApprovalFlow title={title} dialogOpen={setOpen} />
+                  <CsMangerApprovalFlow title={title} dialogOpen={setOpen} selUnitPayload={selUnitPayload} />
                 )}
                   {title === 'crm_show_cs' && (
-                  <CsMangerApprovalFlow title={title} dialogOpen={setOpen} />
+                  <CsMangerApprovalFlow title={title} dialogOpen={setOpen} selUnitPayload={selUnitPayload} />
                 )}
 
                 {title === 'crm_KYC' && (
-                  <CsMangerApprovalFlow title={title} dialogOpen={setOpen} />
+                  <Cs_customerKyc title={title} dialogOpen={setOpen} selUnitPayload={selUnitPayload} />
                 )}
 
 

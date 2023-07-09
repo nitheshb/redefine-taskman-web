@@ -50,6 +50,10 @@ const AddApplicantDetails = ({
   const [usersList, setusersList] = useState([])
   const [projectList, setprojectList] = useState([])
   useEffect(() => {
+   console.log('yo yo ', selUnitDetails)
+  }, [])
+
+  useEffect(() => {
     const unsubscribe = steamUsersListByRole(
       orgId,
       (querySnapshot) => {
@@ -248,7 +252,8 @@ const AddApplicantDetails = ({
     }
   }
 
-  const { uid } = selUnitDetails
+  // const { uid } = selUnitDetails
+  const uid = selUnitDetails?.uid || selUnitDetails?.id
   const initialState = {
     customerName1:
       leadDetailsObj2?.customerDetailsObj?.customerName1 ||

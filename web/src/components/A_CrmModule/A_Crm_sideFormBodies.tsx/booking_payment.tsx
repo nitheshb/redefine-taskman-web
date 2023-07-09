@@ -571,7 +571,6 @@ export default function BookingPaymentFlow({
                 >
                   <DocRow
                     id={doc?.id}
-                    key={doc?.totalAmount}
                     amount={doc?.totalAmount}
                     fileName={doc?.payReason}
                     status={doc?.status}
@@ -598,7 +597,6 @@ export default function BookingPaymentFlow({
                 >
                   <DocRow
                     id={doc?.id}
-                    key={doc?.totalAmount}
                     amount={doc?.totalAmount}
                     fileName={doc?.payReason}
                     status={doc?.status}
