@@ -533,6 +533,7 @@ const AddUnit = ({
                 size: unitDetails?.size || '',
                 facing: unitDetails?.facing || '',
                 unit_d: unitDetails?.unit_d || '',
+                min_rate_per_sqft: unitDetails?.min_rate_per_sqft || unitDetails?.sqft_rate || 0,
                 east_d: unitDetails?.east_d || 0,
                 west_d: unitDetails?.west_d || 0,
                 north_d: unitDetails?.north_d || 0,
@@ -599,6 +600,28 @@ const AddUnit = ({
                                 type="text"
                               />
                             </div>
+                            <div className="mb-3 space-y-2 w-full text-xs mt-2">
+                              <TextField
+                                label="Type*"
+                                name="size"
+                                type="text"
+                              />
+                            </div>
+                            <div className="w-full flex flex-col mt-2">
+                              <CustomSelect
+                                name="facing"
+                                label="Facing*"
+                                className="input mt-"
+                                onChange={(value) => {
+                                  formik.setFieldValue('facing', value.value)
+                                }}
+                                value={formik.values.facing}
+                                // options={aquaticCreatures}
+                                options={facingTypeList}
+                              />
+
+                            </div>
+
                             <div className="space-y-2 w-full text-xs mt-2">
                               <TextField
                                 label="Area Sqft*"
@@ -607,20 +630,7 @@ const AddUnit = ({
                               />
                             </div>
 
-                            <div className=" space-y-2 w-full text-xs mt-2">
-                              <TextField
-                                label="Rate per Sqft *"
-                                name="sqft_rate"
-                                type="number"
-                              />
-                            </div>
-                            <div className="space-y-2 w-full text-xs mt-2">
-                              <TextField
-                                label="PLC per sqft*"
-                                name="plc_per_sqft"
-                                type="number"
-                              />
-                            </div>
+
                           </div>
                         </section>
 
@@ -634,33 +644,27 @@ const AddUnit = ({
                             </span>
                           </section>
                           <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-2 ">
-                            <div className="mb-3 space-y-2 w-full text-xs mt-">
+                          <div className=" space-y-2 w-full text-xs mt-">
                               <TextField
-                                label="Size*"
-                                name="size"
-                                type="text"
+                                label="Rate per Sqft *"
+                                name="sqft_rate"
+                                type="number"
                               />
                             </div>
-                            <div className="mb-3 space-y-2 w-full text-xs mt-">
+                            <div className="space-y-2 w-full text-xs mt-">
                               <TextField
-                                label="Unit Dimension*"
-                                name="unit_d"
-                                type="text"
+                                label="PLC per sqft*"
+                                name="plc_per_sqft"
+                                type="number"
                               />
                             </div>
-                            <div className="w-full flex flex-col mb-3">
-                              <CustomSelect
-                                name="facing"
-                                label="Facing*"
-                                className="input mt-"
-                                onChange={(value) => {
-                                  formik.setFieldValue('facing', value.value)
-                                }}
-                                value={formik.values.facing}
-                                // options={aquaticCreatures}
-                                options={facingTypeList}
-                              />
 
+                            <div className="mb-3 space-y-2 w-full text-xs mt-">
+                              <TextField
+                                label="Min Rate per Sqft"
+                                name="min_rate_per_sqft"
+                                type="text"
+                              />
                             </div>
                           </div>
                         </section>

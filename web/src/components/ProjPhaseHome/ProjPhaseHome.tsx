@@ -287,38 +287,18 @@ const ProjPhaseHome = ({
                               {[
                                 { lab: 'Units', val: 'Blocks' },
                                 {
-                                  lab: 'CRM',
-                                  val: 'CRM',
+                                  lab: 'Cost Details',
+                                  val: 'CostDetails',
                                   subval: 'costSheet',
-                                },
-                                {
-                                  lab: 'Finance',
-                                  val: 'Finance',
-                                  subval: 'bankdetails',
-                                },
-                                {
-                                  lab: 'Legal',
-                                  val: 'Legal',
-                                  subval: 'projectApprovals',
-                                },
-                                {
-                                  lab: 'Marketing',
-                                  val: 'marketing',
-                                  subval: 'campaign',
-                                },
-                                {
-                                  lab: 'Sales',
-                                  val: 'Sales',
-                                  subval: 'brouchers',
                                 },
 
                                 {
-                                  lab: 'Construction',
-                                  val: 'Construction',
-                                  subval: 'bankdetails',
+                                  lab: 'Documents',
+                                  val: 'projectDocuments',
+                                  subval: 'projectApprovals',
                                 },
                                 {
-                                  lab: 'Access',
+                                  lab: 'Access Permissions',
                                   val: 'projectAccess',
                                   subval: 'accessDetails',
                                 },
@@ -661,18 +641,8 @@ const ProjPhaseHome = ({
                           source={source}
                         />
                       )}
-                      {phaseViewFeature === 'Finance' && (
-                        <FinanceHomeList
-                          title={'Finance'}
-                          dialogOpen={'false'}
-                          data={phase}
-                          source={source}
-                          setSubView={setSubView}
-                          subView={subView}
-                          projectDetails={projectDetails}
-                        />
-                      )}
-                      {phaseViewFeature === 'Legal' && (
+
+                      {phaseViewFeature === 'projectDocuments' && (
                         <LegalHomeList
                           title={'Finance'}
                           dialogOpen={'false'}
@@ -684,19 +654,8 @@ const ProjPhaseHome = ({
                           pId={uid || myProjectDetails?.uid}
                         />
                       )}
-                      {phaseViewFeature === 'Sales' && (
-                        <SalesHomeList
-                          title={'Finance'}
-                          dialogOpen={'false'}
-                          data={{ phase: phase }}
-                          source={source}
-                          setSubView={setSubView}
-                          subView={subView}
-                          projectDetails={projectDetails}
-                          pId={uid || myProjectDetails?.uid}
-                        />
-                      )}
-                      {phaseViewFeature === 'CRM' && (
+
+                      {phaseViewFeature === 'CostDetails' && (
                         <CRMHomeList
                           title={'Finance'}
                           dialogOpen={'false'}

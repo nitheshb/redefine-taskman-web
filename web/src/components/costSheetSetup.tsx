@@ -15,6 +15,24 @@ const CostSheetSetup = ({ phase, source }) => {
   const [blocksViewFeature, setBlocksViewFeature] =
     useState('Plot_Other_Charges')
 
+  const [otherChargesA, setOtherChargesA] = useState([
+    { lab: 'Plot Other Charges', val: 'Plot_Other_Charges' },
+    {
+      lab: 'Construction Other Charges',
+      val: 'Construction_Other_Charges',
+    },
+  ])
+
+  useEffect(() => {
+    console.log('values of it ', phase, source, phase?.projectType?.name )
+    // projectType.name != 'Plots'
+    if (phase?.phase?.projectType?.name === 'Plots') {
+      setOtherChargesA([
+        { lab: 'Plot Other Charges', val: 'Plot_Other_Charges' },
+      ])
+    }
+  }, [])
+
   return (
     <div className="lg:col-span-10 border w-full ">
       <div className=" border-gray-800 bg-[#203129]  text-white">
@@ -24,13 +42,7 @@ const CostSheetSetup = ({ phase, source }) => {
           data-tabs-toggle="#myTabContent"
           role="tablist"
         >
-          {[
-            { lab: 'Plot Other Charges', val: 'Plot_Other_Charges' },
-            {
-              lab: 'Construction Other Charges',
-              val: 'Construction_Other_Charges',
-            },
-          ].map((d, i) => {
+          {otherChargesA.map((d, i) => {
             return (
               <li key={i} className="mr-2" role="presentation">
                 <button

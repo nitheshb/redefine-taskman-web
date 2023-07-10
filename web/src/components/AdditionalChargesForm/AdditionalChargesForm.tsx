@@ -324,18 +324,18 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
   }
 
   return (
-    <div className="h-full shadow-xl flex flex-col pt-6 mb-6 mt-10 bg-[#F1F5F9] rounded-t overflow-y-scroll">
+    <div className="h-full shadow-xl flex flex-col  mb-6 bg-[#F1F5F9] rounded-t overflow-y-scroll">
       <div className="z-10">
         {/* <Dialog.Title className="font-semibold text-xl mr-auto ml-3 text-[#053219]">
           {title}
         </Dialog.Title> */}
-        <span className="mr-auto ml-3  text-md font-extrabold tracking-tight uppercase font-body ">
+        {/* <span className="mr-auto ml-3  text-md font-extrabold tracking-tight uppercase font-body ">
           {blocksViewFeature === 'Construction_Other_Charges'
             ? 'Construction Other Charges (section B)'
             : 'Plot Other Charges (section B)'}
-        </span>
+        </span> */}
 
-        <div className="mt-5 min">
+        <div className=" min">
           <MaterialCRUDTable
             title=""
             columns={columns}
@@ -351,7 +351,7 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
               doubleHorizontalScroll: true,
             }}
             style={{
-              padding: '30px',
+              padding: '0px 30px',
               borderRadius: '0px',
               boxShadow: 'none',
             }}

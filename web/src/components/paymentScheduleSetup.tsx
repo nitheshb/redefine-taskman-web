@@ -17,6 +17,23 @@ const PaymentScheduleSetup = ({ phase, source }) => {
     'Plot_Payment_Schedule'
   )
 
+  const [otherChargesA, setOtherChargesA] = useState([
+    { lab: 'Plot Payment Schedule', val: 'Plot_Payment_Schedule' },
+    {
+      lab: 'Construction Payment Schedule',
+      val: 'Construction_Payment_Schedule',
+    },
+  ])
+  useEffect(() => {
+    console.log('values of it ', phase, source, phase?.projectType?.name)
+    // projectType.name != 'Plots'
+    if (phase?.phase?.projectType?.name === 'Plots') {
+      setOtherChargesA([
+        { lab: 'Plot Payment Schedule', val: 'Plot_Payment_Schedule' },
+      ])
+    }
+  }, [])
+
   return (
     <div className="lg:col-span-10 border w-full  ">
       <div className=" border-gray-800 bg-[#F1F5F9]  text-black">
@@ -26,13 +43,7 @@ const PaymentScheduleSetup = ({ phase, source }) => {
           data-tabs-toggle="#myTabContent"
           role="tablist"
         >
-          {[
-            { lab: 'Plot Payment Schedule', val: 'Plot_Payment_Schedule' },
-            {
-              lab: 'Construction Payment Schedule',
-              val: 'Construction_Payment_Schedule',
-            },
-          ].map((d, i) => {
+          {otherChargesA?.map((d, i) => {
             return (
               <li key={i} className="mr-2" role="presentation">
                 <button
