@@ -5,8 +5,9 @@ import { useState, useEffect, Fragment } from 'react'
 
 import { Dialog, Listbox, Transition } from '@headlessui/react'
 import { RadioGroup } from '@headlessui/react'
-import { CalendarIcon } from '@heroicons/react/outline'
-import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
+import { CalendarIcon,  } from '@heroicons/react/outline'
+import { CheckIcon, SelectorIcon, FireIcon } from '@heroicons/react/solid'
+import Checkbox from '@mui/material/Checkbox'
 import { setHours, setMinutes } from 'date-fns'
 import { Timestamp } from 'firebase/firestore'
 import { Form, Formik } from 'formik'
@@ -82,6 +83,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
   const [projectList, setprojectList] = useState([])
   const [startDate, setStartDate] = useState(setHours(setMinutes(d, 30), 16))
   const [selected1, setSelected1] = useState(people[0])
+  const [prior, setPrior] = useState(false)
   useEffect(() => {
     const unsubscribe = steamUsersListByRole(
       orgId,
@@ -323,25 +325,37 @@ const AddTaskForm = ({ title, dialogOpen }) => {
     setTakTitle(e.target.value)
   }
   return (
-    <div className="h-full flex flex-col pb-6 bg-white shadow-xl overflow-y-scroll">
+    <div className="h-full flex flex-col pb-6 bg-white shadow-xl overflow-y-scroll no-scrollbar bg-gradient-to-r from-blue-200 to-cyan-200">
       {/* <div className="px-4 sm:px-6  z-10 flex items-center justify-between">
         <Dialog.Title className=" font-semibold text-xl mr-auto ml-3 text-[#053219]">
           {title}
         </Dialog.Title>
       </div> */}
-      <div className="bg-gradient-to-r from-blue-200 to-cyan-200">
-        <section className="flex flex-row mx-4 py-4">
-          <span className="ml-2 mt-[1px] ">
+      <div className="">
+        <section className="flex flex-row justify-between mx-4 pt-2 pb-2">
+          <span className="ml-1 mt-[1px] ">
             <label className="font-semibold text-[#053219]  text-[18px]  mb-1  ">
-              {title} 🍉
+              {'New Task'} 🍉
               <abbr title="required"></abbr>
             </label>
           </span>
+          <section className="flex flex-row justify-between  pt-2 mb-2 ">
+            {formMessage === 'Task Created..!' && (
+              <p className=" flex text-md text-slate-800 ">
+                <img
+                  className="w-[18px] h-[18px] inline mr-2"
+                  alt=""
+                  src="/ok.gif"
+                />
+                <span className="mt-[.2px] text-[12px]">{formMessage}</span>
+              </p>
+            )}
+          </section>
         </section>
       </div>
 
-      <div className="grid  gap-8 grid-cols-1">
-        <div className="flex flex-col  rounded-lg bg-white ">
+      <div className="grid  gap-8 grid-cols-1 ">
+        <div className="flex flex-col  ">
           <div className="mt-0">
             {/* new one */}
 
@@ -359,110 +373,149 @@ const AddTaskForm = ({ title, dialogOpen }) => {
               onSubmit={(values, { resetForm }) => {
                 console.log('ami submitted', values)
                 console.log('ami submitted 1', values.assignedTo === '')
+
                 onSubmitFun(values, resetForm)
               }}
             >
               {(formik) => (
                 <Form>
-                  <div className="mt-">
+                  <div className="mt-  rounded-lg bg-white mx-4 py-1">
                     <div className="flex flex-col pt-0 my-10 mx-4 mt-[10px] rounded">
                       <div className="  outline-none">
-                        {/* <textarea
-                        // onChange={setTakTitle()}
-                        value={takTitle}
-                        onChange={(e) => setTitleFun(e)}
-                        placeholder="Task Title"
-                        className="w-full h-full pb-10 outline-none  focus:border-blue-600 hover:border-blue-600 rounded  "
-                      ></textarea> */}
-                        <section className="mt-1 px-4 rounded-lg bg-white border border-gray-100 ">
-                          <section className="flex flex-row justify-between  pt-2 mb-2 h-[34px]">
-                            <div className="flex flex-row">
-                              <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
-                              <span className="ml-1 leading-[15px] ">
-                                <label className="font-semibold text-[#053219]  text-[13px] leading-[15px] mb-1  ">
-                                  Task Details<abbr title="required"></abbr>
-                                </label>
-                              </span>
+                        <div className="flex flex-row border-b border-gray border-b pb-1 border-[#edeef0]">
+                          <input
+                            name="taskTitle"
+                            type="text"
+                            value={formik.values.taskTitle}
+                            onChange={(value) => {
+                              console.log('vaue is ', value.target.value)
+                              formik.setFieldValue(
+                                'taskTitle',
+                                value.target.value
+                              )
+                            }}
+                            // value={taskTitle}
+                            // onChange={(e) => {
+                            //   console.log('any error ', e, e.target.value)
+
+                            //   // if (e.target.value === '') {
+                            //   //   setClicked(false)
+                            //   //   setHover(true)
+                            //   // }
+                            //   setAddCommentTitle(e.target.value)
+                            // }}
+                            placeholder="Things to do"
+                            className={`w-full  pb-2 pt-1 outline-none text-[18px] font-bodyLato focus:border-blue-600 hover:border-blue-600  ${
+                              true ? ' text-[33475b] ' : ' text-[33475b]'
+                            } bg-white`}
+                          ></input>
+                          <div className="flex flex-row">
+                            <input
+                              data-bx-id="task-edit-priority-cb"
+                              type="checkbox"
+                              name="priorities"
+                              value={prior}
+                              onChange={(value) => {
+                                setPrior(!prior)
+
+                                formik.setFieldValue(
+                                  'priorities',
+                                  prior ? 'high' : 'medium'
+                                )
+                              }}
+                            />
+
+                            <div className="w-[85px] ml-1 mt-[8px] text-sm text-[#00000080]">
+                              High Priority
                             </div>
-                            {formMessage === 'Task Created..!' && (
-                              <p className=" flex text-md text-slate-800 ">
-                                <img
-                                  className="w-[18px] h-[18px] inline mr-2"
-                                  alt=""
-                                  src="/ok.gif"
-                                />
-                                <span className="mt-[.2px] text-[12px]">
-                                  {formMessage}
-                                </span>
+                            <FireIcon
+                              className={`w-4 h-4 mt-[11px] ${
+                                prior ? 'text-[#f36b00]' : 'text-[#00000080] '
+                              } `}
+                            />
+                          </div>
+                        </div>
+                        <div className="flex flex-row border-b border-gray border-b pb-1 border-[#edeef0]">
+                          <textarea
+                            name="taskdesc"
+                            type="text"
+                            value={formik.values.taskdesc}
+                            onChange={(value) => {
+                              console.log('vaue is ', value.target.value)
+                              formik.setFieldValue(
+                                'taskdesc',
+                                value.target.value
+                              )
+                            }}
+                            placeholder="Description"
+                            className={`w-full h-[170px] pb-2 pt-2 outline-none text-[14px] font-bodyLato focus:border-blue-600 hover:border-blue-600  ${
+                              true ? ' text-[33475b] ' : ' text-[33475b]'
+                            } bg-white`}
+                          ></textarea>
+                        </div>
+                        <section className="mt-1 px-4 rounded-lg bg-[#f8f9fa] border border-gray-100 ">
+                          <section className="flex flex-row mt-3">
+                            <label className="label mt-3 w-[92px] font-regular text-[12px] block mb-1 text-gray-700">
+                              {'Responsible person*'}
+                            </label>
+
+                            <div className="w-full flex flex-col mt-1 ">
+                              <CustomSelect
+                                name="assignedTo"
+                                label=""
+                                className="input mt-"
+                                onChange={(value) => {
+                                  formik.setFieldValue(
+                                    'assignedTo',
+                                    value.value
+                                  )
+                                  formik.setFieldValue('assignedToObj', value)
+                                }}
+                                value={formik.values.assignedTo}
+                                // options={aquaticCreatures}
+                                options={usersList}
+                              />
+
+                              <p
+                                className="text-sm text-red-500 hidden mt-3"
+                                id="error"
+                              >
+                                Please fill out this field.
                               </p>
-                            )}
+                            </div>
+                          </section>
+                          <section className="flex flex-row mt-3">
+                            <label className="label mt-3 w-[92px] font-regular text-[12px] block mb-1 text-gray-700">
+                              {'Participants'}
+                            </label>
+
+                            <div className="w-full flex flex-col mt-1 ">
+                              <Select
+                                isMulti
+                                placeholder="Add Participants"
+                                name="followers"
+                                onChange={(value) => {
+                                  // const {uid, name} = value
+                                  console.log('followers are', value)
+
+                                  formik.setFieldValue('followers', [value])
+                                }}
+                                options={usersList}
+                                value={formik.values.followers[0] || []}
+                                className="basic-multi-select w-full"
+                                classNamePrefix="myselect"
+                                styles={customStyles}
+                              />
+
+                              <p
+                                className="text-sm text-red-500 hidden mt-3"
+                                id="error"
+                              >
+                                Please fill out this field.
+                              </p>
+                            </div>
                           </section>
 
-                          <div className=" space-y-2 w-full text-xs mt-4">
-                            <TextField
-                              label="Task Title*"
-                              name="taskTitle"
-                              type="text"
-                            />
-                          </div>
-                          <div className=" space-y-2 w-full text-xs mt-3">
-                            <TextField
-                              label="Task Description"
-                              name="taskdesc"
-                              onChange={formik.handleChange}
-                              type="text"
-                            />
-                          </div>
-                          <div className="w-full flex flex-col mt-3">
-                            <CustomSelect
-                              name="assignedTo"
-                              label="Assigned To*"
-                              className="input mt-"
-                              onChange={(value) => {
-                                formik.setFieldValue('assignedTo', value.value)
-                                formik.setFieldValue('assignedToObj', value)
-                              }}
-                              value={formik.values.assignedTo}
-                              // options={aquaticCreatures}
-                              options={usersList}
-                            />
-
-                            <p
-                              className="text-sm text-red-500 hidden mt-3"
-                              id="error"
-                            >
-                              Please fill out this field.
-                            </p>
-                          </div>
-                          <div className="w-full flex flex-col mt-3">
-                            <span></span>
-                            <label className="label font-regular text-[12px] block mb-1 text-gray-700">
-                              Participants
-                            </label>
-                            <Select
-                              isMulti
-                              placeholder="Add Participants"
-                              name="followers"
-                              onChange={(value) => {
-                                // const {uid, name} = value
-                                console.log('followers are', value)
-
-                                formik.setFieldValue('followers', [value])
-                              }}
-                              options={usersList}
-                              value={formik.values.followers[0] || []}
-                              className="basic-multi-select w-full"
-                              classNamePrefix="myselect"
-                              styles={customStyles}
-                            />
-
-                            <p
-                              className="text-sm text-red-500 hidden mt-3"
-                              id="error"
-                            >
-                              Please fill out this field.
-                            </p>
-                          </div>
                           <div className="md:flex flex-row md:space-x-4 mt-3 w-full text-xs mt-3 ">
                             {/* <div className="mb-3 space-y-2 w-full text-xs mt-">
                             <TextField label="Size*" name="size" type="text" />
@@ -490,87 +543,85 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                                 </span>
                               </div>
                             </div>
-                            <div className="w-full flex flex-col ">
-                              <CustomSelect
-                                name="priorities"
-                                label="Priority"
-                                className="input mt-"
-                                onChange={(value) => {
-                                  formik.setFieldValue(
-                                    'priorities',
-                                    value.value
-                                  )
-                                }}
-                                value={formik.values.priorities}
-                                // options={aquaticCreatures}
-                                options={[
-                                  { label: 'Low', value: 'low' },
-                                  { label: 'Medium', value: 'medium' },
-                                  { label: 'High', value: 'high' },
-                                ]}
-                              />
-                              <p
-                                className="text-sm text-red-500 hidden mt-3"
-                                id="error"
-                              >
-                                Please fill out this field.
-                              </p>
-                            </div>
-                          </div>
-                          <div className="w-full flex flex-row my-3 mt-4">
-                            {/* <TextField
+                            <div className="w-full flex flex-row my-3 mt-6">
+                              {/* <TextField
                               type="file"
                               name="file"
                               label="Add file"
                               className="mt-[-3px] border border-gray-300 w-full rounded h-[36px] pt-0.5 pl-1"
                             /> */}
 
-                            {/* <label
+                              {/* <label
                               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                               htmlFor="file_input"
                             >
                               Upload file
                             </label> */}
-                            <input
-                              className="block w-full text-sm text-gray-900 border border-blue-300 rounded-sm cursor-pointer bg-blue-50  focus:outline-none "
-                              id="file_input"
-                              type="file"
-                              name="file"
-                            />
+                              <input
+                                className="block w-full text-sm text-gray-900 border border-blue-300 rounded-sm cursor-pointer bg-blue-50  focus:outline-none "
+                                id="file_input"
+                                type="file"
+                                name="file"
+                              />
+                            </div>
                           </div>
                         </section>
+                        <div className="w-full flex flex-col  ">
+                          <CustomSelect
+                            name="priorities"
+                            label="Priority"
+                            className="input mt-"
+                            onChange={(value) => {
+                              formik.setFieldValue('priorities', value.value)
+                            }}
+                            value={formik.values.priorities}
+                            // options={aquaticCreatures}
+                            options={[
+                              { label: 'Low', value: 'low' },
+                              { label: 'Medium', value: 'medium' },
+                              { label: 'High', value: 'high' },
+                            ]}
+                          />
+                          <p
+                            className="text-sm text-red-500 hidden mt-3"
+                            id="error"
+                          >
+                            Please fill out this field.
+                          </p>
+                        </div>
                       </div>
                       {/* <span className="text-[#0091ae]">
                     Save
                     <ArrowRightIcon className="w-5 ml-5" />
                   </span> */}
-
-                      <div className="flex flex-row justify-between mt-4">
-                        <section></section>
-                        <section className="flex flex-row ">
-                          <button
-                            // onClick={() => fAddSchedule()}
-                            className={`flex mt-2  cursor-pointer rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium  bg-gradient-to-r from-indigo-400 to-cyan-400   hover:shadow-lg blue-bg-gradient  `}
-                          >
-                            <span className="ml-1 ">Add Task & close</span>
-                          </button>
-                          <button
-                            // onClick={() => fAddSchedule()}
-                            className={`flex mt-2 ml-4 cursor-pointer rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium    bg-gradient-to-r from-indigo-400 to-cyan-400   hover:shadow-lg blue-bg-gradient`}
-                          >
-                            <span className="ml-1 ">Add Task</span>
-                          </button>
-
-                          <button
-                            // onClick={() => fSetLeadsType('Add Lead')}
-                            // onClick={() => cancelResetStatusFun()}
-                            className={`flex mt-2 ml-4 rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium border  hover:bg-gray-700 hover:text-white `}
-                          >
-                            <span className="ml-1 ">Cancel</span>
-                          </button>
-                        </section>
-                      </div>
                     </div>
+                  </div>
+                  <div className="flex flex-row justify-between mt-4 pb-2 pr-6 bg-white shadow-lg absolute bottom-0  w-full">
+                    <section></section>
+                    <section className="flex flex-row ">
+                      <button
+                        // onClick={() => fAddSchedule()}
+                        className={`flex mt-2 ml-4 cursor-pointer rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium  text-[#535c69]  bg-[#bbed21]   hover:shadow-lg `}
+                      >
+                        <span className="ml-1 ">Add Task</span>
+                      </button>
+                      <button
+                        // onClick={() => fAddSchedule()}
+                        className={`flex mt-2 ml-4 cursor-pointer rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium  border border-[#c6cdd3] text-[#535b69] hover:shadow-lg   `}
+                      >
+                        <span className="ml-1 ">
+                          Add Task & Create Another one
+                        </span>
+                      </button>
+
+                      <button
+                        // onClick={() => fSetLeadsType('Add Lead')}
+                        // onClick={() => cancelResetStatusFun()}
+                        className={`flex mt-2 ml- rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium   hover:bg-gray-700 hover:text-white `}
+                      >
+                        <span className="ml-1 ">Cancel</span>
+                      </button>
+                    </section>
                   </div>
                 </Form>
               )}

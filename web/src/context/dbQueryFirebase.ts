@@ -335,7 +335,7 @@ export const editTaskManData = async (orgId, dta, user) => {
       // participantsA: followA,
       // participantsC: followA.length,
       // followersC: followA.length,
-      
+
     })
     .eq('id', id)
 
@@ -343,7 +343,7 @@ export const editTaskManData = async (orgId, dta, user) => {
   return lead_logs
   // return onSnapshot(itemsQuery, snapshot, error)
 }
-export const CompleteTaskManData = async (orgId, dta, user) => {
+export const CompleteTaskManData = async (orgId, dta, user, status) => {
   const {
     id,
     taskTitle,
@@ -356,20 +356,12 @@ export const CompleteTaskManData = async (orgId, dta, user) => {
     priorities,
     file,
   } = dta
-  let followA = []
-  if (followers) {
-    followA = await followers[0]?.map((d) => {
-      const y = {}
-      y.name = d?.name
-      y.uid = d?.uid
-      return y
-    })
-  }
+
   const { data: lead_logs, error } = await supabase
     .from(`maahomes_TM_Tasks`)
     .update({
       closedBy: user.uid,
-      status: 'Done',
+      status: status,
     })
     .eq('id', id)
 

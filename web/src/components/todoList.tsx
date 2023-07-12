@@ -103,17 +103,22 @@ const TodoListView = ({
             return [...prevLogs, payload.new]
           }
         })
-        // const index = updatedLeadLogs.findIndex((log) => log.id === id)
-        // if (index !== -1) {
-        //   console.log('check it ..........!')
-        //   updatedLeadLogs[index] = updatedData
-        // } else {
-        //   // Add new record to the 'leadLogs' state
-        //   updatedLeadLogs.push(updatedData)
-        // }
 
-        // // Update the 'leadLogs' state with the latest data
-        // setFinFetchedData(updatedLeadLogs)
+        setPersonalData_F((prevLogs) => {
+          const existingLog = prevLogs.find((log) => log.id === id)
+
+          if (existingLog) {
+            console.log('Existing record found!')
+            const updatedLogs = prevLogs.map((log) =>
+              log.id === id ? payload.new : log
+            )
+            return [...updatedLogs]
+          } else {
+            console.log('New record added!')
+            return [...prevLogs, payload.new]
+          }
+        })
+
       })
       .subscribe()
 
@@ -240,7 +245,7 @@ const TodoListView = ({
         )
       )
     }
-  }, [isClicked, searchText, selPriority])
+  }, [isClicked, searchText, selPriority, personalData_F])
 
   const handleFilterClearFun = async () => {
     setSelPriority('')
@@ -1279,7 +1284,7 @@ const TodoListView = ({
         setOpen={setisImportLeadsOpen1}
         title={'Add Task'}
         // customerDetails={selUserProfile}
-        widthClass="max-w-md"
+        widthClass="max-w-4xl"
       />
     </>
   )

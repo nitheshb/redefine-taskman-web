@@ -1222,14 +1222,14 @@ export default function TodayLeadsActivitySearchView({
         setOpen={setisImportLeadsOpen1}
         title={'Add Task'}
         customerDetails={selUserProfile}
-        widthClass="max-w-2xl"
+        widthClass="max-w-4xl"
       />
       <SiderForm
         open={isViewTaskMan}
         setOpen={setisViewTaskMan}
         title={'view_task_man'}
         taskManObj={selTaskMan}
-        widthClass="max-w-xl"
+        widthClass="max-w-4xl"
       />
     </>
   )
