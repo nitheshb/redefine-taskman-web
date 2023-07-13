@@ -5,10 +5,10 @@ import axios from 'axios'
 
 const FileList = ({ files, removeFile }) => {
   const deleteFileHandler = (_name) => {
-    axios
-      .delete(`http://localhost:8080/upload?name=${_name}`)
-      .then((res) => removeFile(_name))
-      .catch((err) => console.error(err))
+    // axios
+    //   .delete(`http://localhost:8080/upload?name=${_name}`)
+    //   .then((res) => removeFile(_name))
+    //   .catch((err) => console.error(err))
   }
   return (
     <ul className="file-list">
@@ -17,6 +17,8 @@ const FileList = ({ files, removeFile }) => {
           <li className="upload-li file-item" key={file.name}>
             <DocumentTextIcon className="w-4 h-4" />
             <p>{file.name}</p>
+            
+
             <div className="actions">
               <div className="loading"></div>
               {file.isUploading && (

@@ -1135,15 +1135,25 @@ export const addTaskBusiness = async (orgId, dta, user) => {
     assignedToObj,
     followers,
     priorities,
-    file,
+    attachments,
   } = dta
   console.log('adding item is ', priorities)
   let followA = []
+  let attachA = []
   if (followers) {
     followA = await followers[0]?.map((d) => {
       const y = {}
       y.label = d?.name
       y.value = d?.uid
+      return y
+    })
+  }
+  if(attachments){
+    attachA = await attachments?.map((d) => {
+      const y = {}
+      y.name = d?.name
+      y.url = d?.url
+      y.type = d?.type
       return y
     })
   }
@@ -1167,6 +1177,8 @@ export const addTaskBusiness = async (orgId, dta, user) => {
       to_uid: assignedToObj?.uid,
       participantsA: followA,
       participantsC: followA?.length || 0,
+      attachmentsCount: attachA?.length || 0,
+      attachmentsA: attachA
     },
   ])
   sendWhatAppTextSms1(

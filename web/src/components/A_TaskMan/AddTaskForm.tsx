@@ -207,6 +207,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
   const [devType, setdevType] = useState(devTypeA[0])
   const [files, setFiles] = useState([])
 
+
   const removeFile = (filename) => {
     setFiles(files.filter((file) => file.name !== filename))
   }
@@ -225,6 +226,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
   const onSubmitFun = async (data, resetForm) => {
     data.due_date = startDate.getTime()
     data.priorities = prior ? 'high' : 'medium'
+    data.attachments = files;
     setLoading(true)
     await addTaskBusiness(orgId, data, user)
 

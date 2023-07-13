@@ -619,6 +619,18 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                   )
                 })}
               </div>
+              <div className="w-[100%]  px-2 py-3 rounded-t-lg flex flex-row text-xs text-semibold border-b p-4 pb-1 border-[#eef2f4]">
+                <div className="w-[110px]">Attachments</div>
+              </div>
+              <div className="text-[#0b66c3] ml-2 text-sm mt-1">
+              {taskManObj?.attachmentsA?.map((data, i) => {
+                  return (
+                    <div key={i} className="text-[#0b66c3]  text-xs mt-1">
+                      {data?.name}{' '}
+                    </div>
+                  )
+                })}
+              </div>
             </div>
           </section>
         </div>
