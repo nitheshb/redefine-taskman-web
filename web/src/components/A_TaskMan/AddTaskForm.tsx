@@ -69,7 +69,12 @@ const customStyles = {
   menu: (provided) => ({ ...provided, marginTop: 0, zIndex: 9999 }),
 }
 import Loader from '../Loader/Loader'
+
 import { CustomSelectNew } from 'src/util/formFields/selectBoxFieldNew'
+
+import FileList from './FilesList'
+import FileUpload from './FileUpload'
+
 const people = [
   { name: 'Priority 1' },
   { name: 'Priority 2' },
@@ -88,7 +93,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
   const [prior, setPrior] = useState(false)
   const [userIs, setUser] = useState(user)
   useEffect(() => {
-    let usrObj = user;
+    const usrObj = user
     usrObj.label = user.displayName || user.name
     usrObj.value = user.uid
     setUser(usrObj)
@@ -200,6 +205,12 @@ const AddTaskForm = ({ title, dialogOpen }) => {
   const [formMessage, setFormMessage] = useState('')
   const [selected, setSelected] = useState({})
   const [devType, setdevType] = useState(devTypeA[0])
+  const [files, setFiles] = useState([])
+
+  const removeFile = (filename) => {
+    setFiles(files.filter((file) => file.name !== filename))
+  }
+
   const phoneRegExp =
     /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/
 
@@ -298,8 +309,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
   const validate = Yup.object({
     taskTitle: Yup.string().required('Task Title is Required'),
 
-    assignedTo: Yup.string()
-      .required('Required'),
+    assignedTo: Yup.string().required('Required'),
     // to_email: Yup.string().email('Email is invalid').required('Email is required'),
 
     // password: Yup.string()
@@ -374,7 +384,6 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                 followers: [],
                 priorities: '',
                 file: '',
-
               }}
               validationSchema={validate}
               onSubmit={(values, { resetForm }) => {
@@ -384,7 +393,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                 onSubmitFun(values, resetForm)
               }}
             >
-              {( formik) => (
+              {(formik) => (
                 <Form>
                   <div className="mt-  rounded-lg bg-white mx-4 py-1">
                     <div className="flex flex-col pt-0 my-10 mx-4 mt-[10px] rounded">
@@ -537,11 +546,11 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                             {/* <div className="mb-3 space-y-2 w-full text-xs mt-">
                             <TextField label="Size*" name="size" type="text" />
                           </div> */}
-                            <div className="flex flex-col">
+                            <div className="flex flex-row">
                               <label className="label font-regular text-[12px] block mb-1 text-gray-700">
                                 Deadline
                               </label>
-                              <div className="bg-green border  pl-2 rounded flex flex-row h-[32px] ">
+                              <div className="bg-green border  pl-2 rounded flex flex-row h-[32px] ml-9 ">
                                 <CalendarIcon className="w-4  inline text-[#058527]" />
                                 <span className="inline">
                                   <DatePicker
@@ -560,28 +569,18 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                                 </span>
                               </div>
                             </div>
-                            <div className="w-full flex flex-row my-3 mt-6">
-                              {/* <TextField
-                              type="file"
-                              name="file"
-                              label="Add file"
-                              className="mt-[-3px] border border-gray-300 w-full rounded h-[36px] pt-0.5 pl-1"
-                            /> */}
 
-                              {/* <label
-                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                              htmlFor="file_input"
-                            >
-                              Upload file
-                            </label> */}
-                              <input
-                                className="block w-full text-sm text-gray-900 border border-blue-300 rounded-sm cursor-pointer bg-blue-50  focus:outline-none "
-                                id="file_input"
-                                type="file"
-                                name="file"
-                              />
-                            </div>
+
                           </div>
+                          <div className=" mt-3">
+
+                              <FileUpload
+                                files={files}
+                                setFiles={setFiles}
+                                removeFile={removeFile}
+                              />
+                              <FileList files={files} removeFile={removeFile} />
+                            </div>
                         </section>
                         {/* <div className="w-full flex flex-col  ">
                           <CustomSelect
@@ -634,7 +633,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                       <button
                         // onClick={() => fSetLeadsType('Add Lead')}
                         // onClick={() => cancelResetStatusFun()}
-                        onClick={()=> dialogOpen(false)}
+                        onClick={() => dialogOpen(false)}
                         className={`flex mt-2 ml- rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium `}
                       >
                         <span className="ml-1 ">Cancel</span>

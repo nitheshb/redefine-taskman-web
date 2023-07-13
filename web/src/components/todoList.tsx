@@ -302,7 +302,7 @@ const TodoListView = ({
 
                 ].map((d, i) => {
                   return (
-                    <li key={i} className="mr-4" role="presentation">
+                    <li key={i} className=" mr-4" role="presentation">
                       <button
                         className={`inline-block pb-[6px] mr-3 text-sm font-medium text-center text-black rounded-t-lg border-b-2  hover:text-black hover:border-gray-300   ${
                           isClicked === d.val
