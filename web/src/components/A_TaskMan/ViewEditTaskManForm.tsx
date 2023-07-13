@@ -20,7 +20,7 @@ import ScheduleSendTwoToneIcon from '@mui/icons-material/ScheduleSendTwoTone'
 import SendTwoToneIcon from '@mui/icons-material/SendTwoTone'
 import { setHours, setMinutes } from 'date-fns'
 import { Timestamp } from 'firebase/firestore'
-import { Form, Formik } from 'formik'
+import { Form, Formik, Field, ErrorMessage } from 'formik'
 import DatePicker from 'react-datepicker'
 import NumberFormat from 'react-number-format'
 import Select from 'react-select'
@@ -89,6 +89,8 @@ import { formatFileSize } from 'react-papaparse'
 import { domainToASCII } from 'url'
 
 import Confetti from '../shared/confetti'
+
+import { CustomSelectNew } from 'src/util/formFields/selectBoxFieldNew'
 const people = [
   { name: 'Priority 1' },
   { name: 'Priority 2' },
@@ -141,6 +143,8 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
   useEffect(() => {
     setMyTaskObj(taskManObj?.comments || [])
     setMyTaskStatus(taskManObj?.status)
+    setPrior(taskManObj?.priority === 'high')
+    console.log('priority is o', taskManObj)
   }, [taskManObj])
 
   useEffect(() => {
@@ -177,8 +181,10 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
   const onSubmitFun = async (data, resetForm) => {
     console.log('edit task and button taskManObj', taskManObj, data)
     data.id = taskManObj.id
+    data.priorities = prior ? 'high' : 'medium'
+
     await editTaskManData(orgId, data, user)
-    await setFormMessage('Task Created..!')
+    await setFormMessage('Task Edited..!')
 
     return
     data.due_date = startDate.getTime()
@@ -196,33 +202,8 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
   }, [])
 
   const validate = Yup.object({
-    name: Yup.string()
-      .max(15, 'Must be 15 characters or less')
-      .required('Name is Required'),
-    // lastName: Yup.string()
-    //   .max(20, 'Must be 20 characters or less')
-    //   .required('Required'),
-    email: Yup.string().email('Email is invalid').required('Email is required'),
-
-    // password: Yup.string()
-    //   .min(6, 'Password must be at least 6 charaters')
-    //   .required('Password is required'),
-    // confirmPassword: Yup.string()
-    //   .oneOf([Yup.ref('password'), null], 'Password must match')
-    //   .required('Confirm password is required'),
-    // mobileNo
-    mobileNo: Yup.string()
-      .required('Phone number is required')
-      .matches(phoneRegExp, 'Phone number is not valid')
-      .min(10, 'to short')
-      .max(10, 'to long'),
-
-    // deptVal: Yup.string()
-    //   // .oneOf(['Admin', 'CRM'], 'Required Dept')
-    //   .required('Req Dept'),
-    // myRole: Yup.string()
-    //   //  .oneOf(['Admin', 'CRM'], 'DEPT IS REQ')
-    //   .required('Required Role'),
+    taskTitle: Yup.string().required('Task Title is Required'),
+    assignedTo: Yup.string().required('Required'),
   })
   const resetter = () => {
     setSelected({})
@@ -239,7 +220,7 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
           {title}
         </Dialog.Title>
       </div> */}
-      <div className="bg-gradient-to-r from-blue-200 to-cyan-200">
+      <div className="bg-gradient-to-r flex flex-row justify-between from-blue-200 to-cyan-200">
         <section className="flex flex-row mx-4 py-4">
           <span className="ml-2 mt-[1px] ">
             <label className="font-semibold text-[#053219]  text-[18px]  mb-1  ">
@@ -248,6 +229,18 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
             </label>
           </span>
         </section>
+        <section className="flex flex-row justify-between  pt-2 mb-2 ">
+            {formMessage === 'Task Edited..!' && (
+              <p className=" flex text-md text-slate-800 ">
+                <img
+                  className="w-[18px] h-[18px] inline mr-2"
+                  alt=""
+                  src="/ok.gif"
+                />
+                <span className="mt-[.2px] text-[12px]">{formMessage}</span>
+              </p>
+            )}
+          </section>
       </div>
 
       {!showEditTask && (
@@ -415,7 +408,7 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                   )}
                   {taskManObj?.by_email === user?.email && (
                     <button
-                      className={`flex mt-2 ml- rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium   hover:bg-gray-700 hover:text-white `}
+                      className={`flex mt-2 ml- rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium   `}
                       onClick={() => {
                         selShowEditTask(!showEditTask)
                       }}
@@ -618,7 +611,13 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                 <div className="w-[110px]">Participants</div>
               </div>
               <div className="text-[#0b66c3] ml-2 text-sm mt-1 mb-2">
-                {taskManObj?.followers?.length || 0}
+                {taskManObj?.participantsA?.map((data, i) => {
+                  return (
+                    <div key={i} className="text-[#0b66c3]  text-sm mt-1">
+                      {data?.label}{' '}
+                    </div>
+                  )
+                })}
               </div>
             </div>
           </section>
@@ -642,11 +641,11 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                       email: taskManObj?.to_email,
                       name: taskManObj?.to_name,
                     } || {},
-                  followers: [],
-                  priorities: taskManObj?.priority || '',
+                  followers: taskManObj?.participantsA || [],
+                  priorities: taskManObj?.priority === 'high',
                   file: '',
                 }}
-                // validationSchema={validate}
+                validationSchema={validate}
                 onSubmit={(values, { resetForm }) => {
                   console.log('ami submitted', values)
                   console.log('ami submitted 1', values.assignedTo === '')
@@ -655,240 +654,51 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
               >
                 {(formik) => (
                   <Form>
-                    {/* <div className="mt-">
-                      <div className="flex flex-col pt-0 my-10 mx-4 mt-[10px] rounded ">
-                        <div className="  outline-none">
-
-                          <section className="mt-1 px-4 rounded-lg bg-white border border-gray-100  ">
-                            <section className="flex flex-row justify-between  pt-2 mb-2 h-[34px]">
-                              <div className="flex flex-row">
-                                <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
-                                <span className="ml-1 leading-[15px] ">
-                                  <label className="font-semibold text-[#053219]  text-[13px] leading-[15px] mb-1  ">
-                                    Task Details<abbr title="required"></abbr>
-                                  </label>
-                                </span>
-                              </div>
-                              {formMessage === 'Task Created..!' && (
-                                <p className=" flex text-md text-slate-800 ">
-                                  <img
-                                    className="w-[18px] h-[18px] inline mr-2"
-                                    alt=""
-                                    src="/ok.gif"
-                                  />
-                                  <span className="mt-[.2px] text-[12px]">
-                                    {formMessage}
-                                  </span>
-                                </p>
-                              )}
-                            </section>
-
-                            <div className=" space-y-2 w-full text-xs mt-4">
-                              <TextField
-                                label="Task Title*"
-                                name="taskTitle"
-                                type="text"
-                              />
-                            </div>
-                            <div className=" space-y-2 w-full text-xs mt-3">
-                              <TextField
-                                label="Task Description"
-                                name="taskdesc"
-                                onChange={formik.handleChange}
-                                type="text"
-                              />
-                            </div>
-                            <div className="w-full flex flex-col mt-3">
-                              <CustomSelect
-                                name="assignedTo"
-                                label="Assigned To*"
-                                className="input mt-"
-                                onChange={(value) => {
-                                  formik.setFieldValue(
-                                    'assignedTo',
-                                    value.value
-                                  )
-                                  console.log(
-                                    'sele value si ',
-                                    value.value,
-                                    taskManObj?.to_name
-                                  )
-                                  formik.setFieldValue('assignedToObj', value)
-                                }}
-                                value={formik.values.assignedTo}
-
-                                options={usersList}
-                              />
-
-                              <p
-                                className="text-sm text-red-500 hidden mt-3"
-                                id="error"
-                              >
-                                Please fill out this field.
-                              </p>
-                            </div>
-                            <div className="w-full flex flex-col mt-3">
-                              <span></span>
-                              <label className="label font-regular text-[12px] block mb-1 text-gray-700">
-                                Participants
-                              </label>
-                              <Select
-                                isMulti
-                                placeholder="Add Participants"
-                                name="followers"
-                                onChange={(value) => {
-
-                                  console.log('followers are', value)
-
-                                  formik.setFieldValue('followers', [value])
-                                }}
-                                options={usersList}
-                                value={formik.values.followers[0] || []}
-                                className="basic-multi-select w-full"
-                                classNamePrefix="myselect"
-                                styles={customStyles}
-                              />
-
-                              <p
-                                className="text-sm text-red-500 hidden mt-3"
-                                id="error"
-                              >
-                                Please fill out this field.
-                              </p>
-                            </div>
-                            <div className="md:flex flex-row md:space-x-4 mt-3 w-full text-xs mt-3 ">
-
-                              <div className="flex flex-col">
-                                <label className="label font-regular text-[12px] block mb-1 text-gray-700">
-                                  Due Date
-                                </label>
-                                <div className="bg-green border  pl-2 rounded flex flex-row h-[32px] ">
-                                  <CalendarIcon className="w-4  inline text-[#058527]" />
-                                  <span className="inline">
-                                    <DatePicker
-                                      className="mt-[5px] pl- px-2  inline text-sm "
-                                      selected={startDate}
-                                      onChange={(date) => setStartDate(date)}
-                                      showTimeSelect
-                                      timeFormat="HH:mm"
-                                      injectTimes={[
-                                        setHours(setMinutes(d, 1), 0),
-                                        setHours(setMinutes(d, 5), 12),
-                                        setHours(setMinutes(d, 59), 23),
-                                      ]}
-                                      dateFormat="MMMM d, yyyy h:mm aa"
-                                    />
-                                  </span>
-                                </div>
-                              </div>
-                              <div className="w-full flex flex-col ">
-                                <CustomSelect
-                                  name="priorities"
-                                  label="Priority"
-                                  className="input mt-"
-                                  onChange={(value) => {
-                                    formik.setFieldValue(
-                                      'priorities',
-                                      value.value
-                                    )
-                                  }}
-                                  value={formik.values.priorities}
-
-                                  options={[
-                                    { label: 'Low', value: 'low' },
-                                    { label: 'Medium', value: 'medium' },
-                                    { label: 'High', value: 'high' },
-                                  ]}
-                                />
-                                <p
-                                  className="text-sm text-red-500 hidden mt-3"
-                                  id="error"
-                                >
-                                  Please fill out this field.
-                                </p>
-                              </div>
-                            </div>
-                            <div className="w-full flex flex-row my-3">
-                              <TextField
-                                type="file"
-                                name="file"
-                                label="Add file"
-                                className="mt-[-3px] border border-gray-300 w-full rounded h-[36px] pt-0.5 pl-1"
-                              />
-                            </div>
-                          </section>
-                        </div>
-
-                        <div className="flex flex-row justify-between mt-4">
-                          <section></section>
-                          <section className="flex flex-row ">
-                            <button
-
-                              className={`flex mt-2  cursor-pointer rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium  bg-gradient-to-r from-indigo-400 to-cyan-400   hover:shadow-lg blue-bg-gradient  `}
-                            >
-                              <span className="ml-1 ">Edit Task & close</span>
-                            </button>
-                            <button
-
-                              className={`flex mt-2 ml-4 cursor-pointer rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium    bg-gradient-to-r from-indigo-400 to-cyan-400   hover:shadow-lg blue-bg-gradient`}
-                            >
-                              <span className="ml-1 ">Edit Task</span>
-                            </button>
-
-                            <button
-
-                              onClick={() => selShowEditTask(!showEditTask)}
-                              className={`flex mt-2 ml-4 rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium border  hover:bg-gray-700 hover:text-white `}
-                            >
-                              <span className="ml-1 ">Cancel</span>
-                            </button>
-                          </section>
-                        </div>
-                      </div>
-                    </div> */}
                     <div className="mt-  rounded-lg bg-white mx-4 py-1">
                       <div className="flex flex-col pt-0 my-10 mx-4 mt-[10px] rounded">
                         <div className="  outline-none">
                           <div className="flex flex-row border-b border-gray border-b pb-1 border-[#edeef0]">
-                            <input
-                              name="taskTitle"
-                              type="text"
-                              value={formik.values.taskTitle}
-                              onChange={(value) => {
-                                console.log('vaue is ', value.target.value)
-                                formik.setFieldValue(
-                                  'taskTitle',
-                                  value.target.value
-                                )
-                              }}
-                              // value={taskTitle}
-                              // onChange={(e) => {
-                              //   console.log('any error ', e, e.target.value)
+                            <div className="w-full flex flex-col mt-1 ">
+                              <Field
+                                name="taskTitle"
+                                type="text"
+                                value={formik?.values?.taskTitle}
+                                onChange={(value) => {
+                                  console.log('vaue is ', value.target.value)
+                                  formik.setFieldValue(
+                                    'taskTitle',
+                                    value.target.value
+                                  )
+                                }}
+                                // value={taskTitle}
+                                // onChange={(e) => {
+                                //   console.log('any error ', e, e.target.value)
 
-                              //   // if (e.target.value === '') {
-                              //   //   setClicked(false)
-                              //   //   setHover(true)
-                              //   // }
-                              //   setAddCommentTitle(e.target.value)
-                              // }}
-                              placeholder="Things to do"
-                              className={`w-full  pb-2 pt-1 outline-none text-[18px] font-bodyLato focus:border-blue-600 hover:border-blue-600  ${
-                                true ? ' text-[33475b] ' : ' text-[33475b]'
-                              } bg-white`}
-                            ></input>
+                                //   // if (e.target.value === '') {
+                                //   //   setClicked(false)
+                                //   //   setHover(true)
+                                //   // }
+                                //   setAddCommentTitle(e.target.value)
+                                // }}
+                                placeholder="Things to do"
+                                className={`w-full  pb-2 pt-1 outline-none text-[18px] font-bodyLato focus:border-blue-600 hover:border-blue-600  ${
+                                  true ? ' text-[33475b] ' : ' text-[33475b]'
+                                } bg-white`}
+                              ></Field>
+                            </div>
+
                             <div className="flex flex-row">
                               <input
                                 data-bx-id="task-edit-priority-cb"
                                 type="checkbox"
                                 name="priorities"
-                                value={prior}
+                                checked={prior}
+                                className="mb-[5px]"
                                 onChange={(value) => {
                                   setPrior(!prior)
-
-                                  formik.setFieldValue(
-                                    'priorities',
-                                    prior ? 'high' : 'medium'
-                                  )
+                                  const priorTxt = prior ? 'high' : 'medium'
+                                  formik.setFieldValue('priorities', priorTxt)
+                                  console.log('is this checked ', priorTxt)
                                 }}
                               />
 
@@ -902,11 +712,17 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                               />
                             </div>
                           </div>
+
+                          <ErrorMessage
+                            component="div"
+                            name={'taskTitle'}
+                            className="error-message text-red-700 text-xs mt-[1px]  "
+                          />
                           <div className="flex flex-row border-b border-gray border-b pb-1 border-[#edeef0]">
                             <textarea
                               name="taskdesc"
                               type="text"
-                              value={formik.values.taskdesc}
+                              value={formik?.values?.taskdesc}
                               onChange={(value) => {
                                 console.log('vaue is ', value.target.value)
                                 formik.setFieldValue(
@@ -927,10 +743,12 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                               </label>
 
                               <div className="w-full flex flex-col mt-1 ">
-                                <CustomSelect
+                                <CustomSelectNew
                                   name="assignedTo"
-                                  label=""
-                                  className="input mt-"
+                                  label="Assigned To"
+                                  showLabel={false}
+                                  placeholder="Name"
+                                  className="input mt-[3px]"
                                   onChange={(value) => {
                                     formik.setFieldValue(
                                       'assignedTo',
@@ -965,10 +783,10 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                                     // const {uid, name} = value
                                     console.log('followers are', value)
 
-                                    formik.setFieldValue('followers', [value])
+                                    formik.setFieldValue('followers', value)
                                   }}
                                   options={usersList}
-                                  value={formik.values.followers[0] || []}
+                                  value={formik?.values?.followers || []}
                                   className="basic-multi-select w-full"
                                   classNamePrefix="myselect"
                                   styles={customStyles}
@@ -989,7 +807,7 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                           </div> */}
                               <div className="flex flex-col">
                                 <label className="label font-regular text-[12px] block mb-1 text-gray-700">
-                                  Due Date
+                                  Deadline
                                 </label>
                                 <div className="bg-green border  pl-2 rounded flex flex-row h-[32px] ">
                                   <CalendarIcon className="w-4  inline text-[#058527]" />
@@ -1033,29 +851,29 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                               </div>
                             </div>
                           </section>
-                          <div className="w-full flex flex-col  ">
-                            <CustomSelect
-                              name="priorities"
-                              label="Priority"
-                              className="input mt-"
-                              onChange={(value) => {
-                                formik.setFieldValue('priorities', value.value)
-                              }}
-                              value={formik.values.priorities}
-                              // options={aquaticCreatures}
-                              options={[
-                                { label: 'Low', value: 'low' },
-                                { label: 'Medium', value: 'medium' },
-                                { label: 'High', value: 'high' },
-                              ]}
-                            />
-                            <p
-                              className="text-sm text-red-500 hidden mt-3"
-                              id="error"
-                            >
-                              Please fill out this field.
-                            </p>
-                          </div>
+                          {/* <div className="w-full flex flex-col  ">
+                          <CustomSelect
+                            name="priorities"
+                            label="Priority"
+                            className="input mt-"
+                            onChange={(value) => {
+                              formik.setFieldValue('priorities', value.value)
+                            }}
+                            value={formik.values.priorities}
+                            // options={aquaticCreatures}
+                            options={[
+                              { label: 'Low', value: 'low' },
+                              { label: 'Medium', value: 'medium' },
+                              { label: 'High', value: 'high' },
+                            ]}
+                          />
+                          <p
+                            className="text-sm text-red-500 hidden mt-3"
+                            id="error"
+                          >
+                            Please fill out this field.
+                          </p>
+                        </div> */}
                         </div>
                         {/* <span className="text-[#0091ae]">
                     Save
@@ -1072,19 +890,20 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                         >
                           <span className="ml-1 ">Edit Task</span>
                         </button>
-                        <button
-                          // onClick={() => fAddSchedule()}
-                          className={`flex mt-2 ml-4 cursor-pointer rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium  border border-[#c6cdd3] text-[#535b69] hover:shadow-lg   `}
-                        >
-                          <span className="ml-1 ">
-                            Edit Task & Close
-                          </span>
-                        </button>
+                        {/* <button
+                        // onClick={() => fAddSchedule()}
+                        className={`flex mt-2 ml-4 cursor-pointer rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium  border border-[#c6cdd3] text-[#535b69] hover:shadow-lg   `}
+                      >
+                        <span className="ml-1 ">
+                          Add Task & Close
+                        </span>
+                      </button> */}
 
                         <button
                           // onClick={() => fSetLeadsType('Add Lead')}
                           // onClick={() => cancelResetStatusFun()}
-                          className={`flex mt-2 ml- rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium   hover:bg-gray-700 hover:text-white `}
+                          onClick={() => dialogOpen(false)}
+                          className={`flex mt-2 ml- rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium `}
                         >
                           <span className="ml-1 ">Cancel</span>
                         </button>

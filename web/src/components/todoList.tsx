@@ -94,10 +94,15 @@ const TodoListView = ({
 
           if (existingLog) {
             console.log('Existing record found!')
-            const updatedLogs = prevLogs.map((log) =>
-              log.id === id ? payload.new : log
-            )
-            return [...updatedLogs]
+            if (payload.new.status === 'Done') {
+              const updatedLogs = prevLogs.filter((log) => log.id != id)
+              return [...updatedLogs]
+            } else {
+              const updatedLogs = prevLogs.map((log) =>
+                log.id === id ? payload.new : log
+              )
+              return [...updatedLogs]
+            }
           } else {
             console.log('New record added!')
             return [...prevLogs, payload.new]
@@ -109,16 +114,20 @@ const TodoListView = ({
 
           if (existingLog) {
             console.log('Existing record found!')
-            const updatedLogs = prevLogs.map((log) =>
-              log.id === id ? payload.new : log
-            )
-            return [...updatedLogs]
+            if (payload.new.status === 'Done') {
+              const updatedLogs = prevLogs.filter((log) => log.id != id)
+              return [...updatedLogs]
+            } else {
+              const updatedLogs = prevLogs.map((log) =>
+                log.id === id ? payload.new : log
+              )
+              return [...updatedLogs]
+            }
           } else {
             console.log('New record added!')
             return [...prevLogs, payload.new]
           }
         })
-
       })
       .subscribe()
 
@@ -138,9 +147,10 @@ const TodoListView = ({
 
     if (subSection == 'all_business') {
       setBusinessSection_D(
-        businessData_F.filter((d) =>
-        d.priority.toLowerCase().includes(selPriority.toLowerCase()) &&
-          d.title?.toLowerCase().includes(searchText.toLowerCase())
+        businessData_F.filter(
+          (d) =>
+            d.priority.toLowerCase().includes(selPriority.toLowerCase()) &&
+            d.title?.toLowerCase().includes(searchText.toLowerCase())
         )
       )
     } else if (subSection == 'assigned_to_me') {
@@ -165,9 +175,10 @@ const TodoListView = ({
       )
     } else if (subSection == 'participants') {
       setBusinessSection_D(
-        businessData_F.filter((d) =>
-        d.priority.toLowerCase().includes(selPriority.toLowerCase()) &&
-          d.title?.toLowerCase().includes(searchText.toLowerCase())
+        businessData_F.filter(
+          (d) =>
+            d.priority.toLowerCase().includes(selPriority.toLowerCase()) &&
+            d.title?.toLowerCase().includes(searchText.toLowerCase())
         )
       )
     }
@@ -498,10 +509,12 @@ const TodoListView = ({
                   </select>
                 </div>
 
-                <span className="mt-2 ml-2 text-red-400 cursor-pointer text-xs"
-                onClick={()=>{
-                  handleFilterClearFun()
-                }}>
+                <span
+                  className="mt-2 ml-2 text-red-400 cursor-pointer text-xs"
+                  onClick={() => {
+                    handleFilterClearFun()
+                  }}
+                >
                   {' '}
                   Clear
                 </span>

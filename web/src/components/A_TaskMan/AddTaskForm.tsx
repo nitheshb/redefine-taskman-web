@@ -5,12 +5,12 @@ import { useState, useEffect, Fragment } from 'react'
 
 import { Dialog, Listbox, Transition } from '@headlessui/react'
 import { RadioGroup } from '@headlessui/react'
-import { CalendarIcon,  } from '@heroicons/react/outline'
+import { CalendarIcon } from '@heroicons/react/outline'
 import { CheckIcon, SelectorIcon, FireIcon } from '@heroicons/react/solid'
 import Checkbox from '@mui/material/Checkbox'
 import { setHours, setMinutes } from 'date-fns'
 import { Timestamp } from 'firebase/firestore'
-import { Form, Formik } from 'formik'
+import { Form, Formik, Field, ErrorMessage } from 'formik'
 import DatePicker from 'react-datepicker'
 import NumberFormat from 'react-number-format'
 import Select from 'react-select'
@@ -24,6 +24,7 @@ import {
   addTaskBusiness,
   checkIfLeadAlreadyExists,
   getAllProjects,
+  steamUsersList,
   steamUsersListByRole,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
@@ -68,6 +69,7 @@ const customStyles = {
   menu: (provided) => ({ ...provided, marginTop: 0, zIndex: 9999 }),
 }
 import Loader from '../Loader/Loader'
+import { CustomSelectNew } from 'src/util/formFields/selectBoxFieldNew'
 const people = [
   { name: 'Priority 1' },
   { name: 'Priority 2' },
@@ -84,8 +86,13 @@ const AddTaskForm = ({ title, dialogOpen }) => {
   const [startDate, setStartDate] = useState(setHours(setMinutes(d, 30), 16))
   const [selected1, setSelected1] = useState(people[0])
   const [prior, setPrior] = useState(false)
+  const [userIs, setUser] = useState(user)
   useEffect(() => {
-    const unsubscribe = steamUsersListByRole(
+    let usrObj = user;
+    usrObj.label = user.displayName || user.name
+    usrObj.value = user.uid
+    setUser(usrObj)
+    const unsubscribe = steamUsersList(
       orgId,
       (querySnapshot) => {
         const usersListA = querySnapshot.docs.map((docSnapshot) =>
@@ -206,6 +213,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
   }
   const onSubmitFun = async (data, resetForm) => {
     data.due_date = startDate.getTime()
+    data.priorities = prior ? 'high' : 'medium'
     setLoading(true)
     await addTaskBusiness(orgId, data, user)
 
@@ -288,13 +296,11 @@ const AddTaskForm = ({ title, dialogOpen }) => {
   }
 
   const validate = Yup.object({
-    name: Yup.string()
-      .max(15, 'Must be 15 characters or less')
-      .required('Name is Required'),
-    // lastName: Yup.string()
-    //   .max(20, 'Must be 20 characters or less')
-    //   .required('Required'),
-    email: Yup.string().email('Email is invalid').required('Email is required'),
+    taskTitle: Yup.string().required('Task Title is Required'),
+
+    assignedTo: Yup.string()
+      .required('Required'),
+    // to_email: Yup.string().email('Email is invalid').required('Email is required'),
 
     // password: Yup.string()
     //   .min(6, 'Password must be at least 6 charaters')
@@ -303,11 +309,11 @@ const AddTaskForm = ({ title, dialogOpen }) => {
     //   .oneOf([Yup.ref('password'), null], 'Password must match')
     //   .required('Confirm password is required'),
     // mobileNo
-    mobileNo: Yup.string()
-      .required('Phone number is required')
-      .matches(phoneRegExp, 'Phone number is not valid')
-      .min(10, 'to short')
-      .max(10, 'to long'),
+    // mobileNo: Yup.string()
+    //   .required('Phone number is required')
+    //   .matches(phoneRegExp, 'Phone number is not valid')
+    //   .min(10, 'to short')
+    //   .max(10, 'to long'),
 
     // deptVal: Yup.string()
     //   // .oneOf(['Admin', 'CRM'], 'Required Dept')
@@ -363,13 +369,14 @@ const AddTaskForm = ({ title, dialogOpen }) => {
               initialValues={{
                 taskTitle: '',
                 taskdesc: '',
-                assignedTo: '',
-                assignedToObj: {},
+                assignedTo: userIs.value,
+                assignedToObj: userIs,
                 followers: [],
                 priorities: '',
                 file: '',
+
               }}
-              // validationSchema={validate}
+              validationSchema={validate}
               onSubmit={(values, { resetForm }) => {
                 console.log('ami submitted', values)
                 console.log('ami submitted 1', values.assignedTo === '')
@@ -377,51 +384,53 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                 onSubmitFun(values, resetForm)
               }}
             >
-              {(formik) => (
+              {( formik) => (
                 <Form>
                   <div className="mt-  rounded-lg bg-white mx-4 py-1">
                     <div className="flex flex-col pt-0 my-10 mx-4 mt-[10px] rounded">
                       <div className="  outline-none">
                         <div className="flex flex-row border-b border-gray border-b pb-1 border-[#edeef0]">
-                          <input
-                            name="taskTitle"
-                            type="text"
-                            value={formik.values.taskTitle}
-                            onChange={(value) => {
-                              console.log('vaue is ', value.target.value)
-                              formik.setFieldValue(
-                                'taskTitle',
-                                value.target.value
-                              )
-                            }}
-                            // value={taskTitle}
-                            // onChange={(e) => {
-                            //   console.log('any error ', e, e.target.value)
+                          <div className="w-full flex flex-col mt-1 ">
+                            <Field
+                              name="taskTitle"
+                              type="text"
+                              value={formik?.values?.taskTitle}
+                              onChange={(value) => {
+                                console.log('vaue is ', value.target.value)
+                                formik.setFieldValue(
+                                  'taskTitle',
+                                  value.target.value
+                                )
+                              }}
+                              // value={taskTitle}
+                              // onChange={(e) => {
+                              //   console.log('any error ', e, e.target.value)
 
-                            //   // if (e.target.value === '') {
-                            //   //   setClicked(false)
-                            //   //   setHover(true)
-                            //   // }
-                            //   setAddCommentTitle(e.target.value)
-                            // }}
-                            placeholder="Things to do"
-                            className={`w-full  pb-2 pt-1 outline-none text-[18px] font-bodyLato focus:border-blue-600 hover:border-blue-600  ${
-                              true ? ' text-[33475b] ' : ' text-[33475b]'
-                            } bg-white`}
-                          ></input>
+                              //   // if (e.target.value === '') {
+                              //   //   setClicked(false)
+                              //   //   setHover(true)
+                              //   // }
+                              //   setAddCommentTitle(e.target.value)
+                              // }}
+                              placeholder="Things to do"
+                              className={`w-full  pb-2 pt-1 outline-none text-[18px] font-bodyLato focus:border-blue-600 hover:border-blue-600  ${
+                                true ? ' text-[33475b] ' : ' text-[33475b]'
+                              } bg-white`}
+                            ></Field>
+                          </div>
+
                           <div className="flex flex-row">
                             <input
                               data-bx-id="task-edit-priority-cb"
                               type="checkbox"
                               name="priorities"
                               value={prior}
+                              className="mb-[5px]"
                               onChange={(value) => {
                                 setPrior(!prior)
-
-                                formik.setFieldValue(
-                                  'priorities',
-                                  prior ? 'high' : 'medium'
-                                )
+                                const priorTxt = prior ? 'high' : 'medium'
+                                formik.setFieldValue('priorities', priorTxt)
+                                console.log('is this checked ', priorTxt)
                               }}
                             />
 
@@ -435,11 +444,17 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                             />
                           </div>
                         </div>
+
+                        <ErrorMessage
+                          component="div"
+                          name={'taskTitle'}
+                          className="error-message text-red-700 text-xs mt-[1px]  "
+                        />
                         <div className="flex flex-row border-b border-gray border-b pb-1 border-[#edeef0]">
                           <textarea
                             name="taskdesc"
                             type="text"
-                            value={formik.values.taskdesc}
+                            value={formik?.values?.taskdesc}
                             onChange={(value) => {
                               console.log('vaue is ', value.target.value)
                               formik.setFieldValue(
@@ -460,10 +475,12 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                             </label>
 
                             <div className="w-full flex flex-col mt-1 ">
-                              <CustomSelect
+                              <CustomSelectNew
                                 name="assignedTo"
-                                label=""
-                                className="input mt-"
+                                label="Assigned To"
+                                showLabel={false}
+                                placeholder="Name"
+                                className="input mt-[3px]"
                                 onChange={(value) => {
                                   formik.setFieldValue(
                                     'assignedTo',
@@ -501,7 +518,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                                   formik.setFieldValue('followers', [value])
                                 }}
                                 options={usersList}
-                                value={formik.values.followers[0] || []}
+                                value={formik?.values?.followers[0] || []}
                                 className="basic-multi-select w-full"
                                 classNamePrefix="myselect"
                                 styles={customStyles}
@@ -522,7 +539,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                           </div> */}
                             <div className="flex flex-col">
                               <label className="label font-regular text-[12px] block mb-1 text-gray-700">
-                                Due Date
+                                Deadline
                               </label>
                               <div className="bg-green border  pl-2 rounded flex flex-row h-[32px] ">
                                 <CalendarIcon className="w-4  inline text-[#058527]" />
@@ -566,7 +583,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                             </div>
                           </div>
                         </section>
-                        <div className="w-full flex flex-col  ">
+                        {/* <div className="w-full flex flex-col  ">
                           <CustomSelect
                             name="priorities"
                             label="Priority"
@@ -588,7 +605,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                           >
                             Please fill out this field.
                           </p>
-                        </div>
+                        </div> */}
                       </div>
                       {/* <span className="text-[#0091ae]">
                     Save
@@ -605,19 +622,20 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                       >
                         <span className="ml-1 ">Add Task</span>
                       </button>
-                      <button
+                      {/* <button
                         // onClick={() => fAddSchedule()}
                         className={`flex mt-2 ml-4 cursor-pointer rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium  border border-[#c6cdd3] text-[#535b69] hover:shadow-lg   `}
                       >
                         <span className="ml-1 ">
-                          Add Task & Create Another one
+                          Add Task & Close
                         </span>
-                      </button>
+                      </button> */}
 
                       <button
                         // onClick={() => fSetLeadsType('Add Lead')}
                         // onClick={() => cancelResetStatusFun()}
-                        className={`flex mt-2 ml- rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium   hover:bg-gray-700 hover:text-white `}
+                        onClick={()=> dialogOpen(false)}
+                        className={`flex mt-2 ml- rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium `}
                       >
                         <span className="ml-1 ">Cancel</span>
                       </button>

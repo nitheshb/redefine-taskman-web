@@ -309,10 +309,10 @@ export const editTaskManData = async (orgId, dta, user) => {
   } = dta
   let followA = []
   if (followers) {
-    followA = await followers[0]?.map((d) => {
+    followA = await followers?.map((d) => {
       const y = {}
-      y.name = d?.name
-      y.uid = d?.uid
+      y.label = d?.name
+      y.value = d?.uid || d?.value
       return y
     })
   }
@@ -332,9 +332,9 @@ export const editTaskManData = async (orgId, dta, user) => {
       to_email: assignedToObj?.email,
       to_name: assignedToObj?.name,
       to_uid: assignedToObj?.uid,
-      // participantsA: followA,
-      // participantsC: followA.length,
-      // followersC: followA.length,
+      participantsA: followA || [],
+      participantsC: followA.length ||  0,
+      followersC: followA.length || 0,
 
     })
     .eq('id', id)
@@ -1137,12 +1137,13 @@ export const addTaskBusiness = async (orgId, dta, user) => {
     priorities,
     file,
   } = dta
+  console.log('adding item is ', priorities)
   let followA = []
   if (followers) {
     followA = await followers[0]?.map((d) => {
       const y = {}
-      y.name = d?.name
-      y.uid = d?.uid
+      y.label = d?.name
+      y.value = d?.uid
       return y
     })
   }
@@ -1151,7 +1152,7 @@ export const addTaskBusiness = async (orgId, dta, user) => {
   const { data, error } = await supabase.from(`maahomes_TM_Tasks`).insert([
     {
       created_on: Timestamp.now().toMillis(),
-      followersC: followA.length,
+      followersC: followA?.length || 0,
       by_email: user.email,
       by_name: user.displayName,
       by_uid: user.uid,
@@ -1165,7 +1166,7 @@ export const addTaskBusiness = async (orgId, dta, user) => {
       to_name: assignedToObj?.name,
       to_uid: assignedToObj?.uid,
       participantsA: followA,
-      participantsC: followA.length,
+      participantsC: followA?.length || 0,
     },
   ])
   sendWhatAppTextSms1(
