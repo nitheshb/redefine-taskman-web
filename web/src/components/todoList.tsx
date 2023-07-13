@@ -285,8 +285,8 @@ const TodoListView = ({
   ]
   return (
     <>
-      <Box pb={4} className="font-Rubik">
-        <div className=" w-full font-Rubik">
+      <Box pb={4} className="font-sanF">
+        <div className=" w-full font-sanF">
           <div className="bg-white py-4 md:py-7 px-4 md:px-4 xl:px-6 rounded">
             <div className="flex flex-row justify-between border-gray-200 border-b">
               <ul
@@ -297,8 +297,9 @@ const TodoListView = ({
               >
                 {[
                   { lab: 'Sales Tasks', val: 'dept_tasks' },
-                  { lab: 'Personal', val: 'personal_tasks' },
                   { lab: 'Business Tasks', val: 'business_tasks' },
+                  { lab: 'Personal', val: 'personal_tasks' },
+
                 ].map((d, i) => {
                   return (
                     <li key={i} className="mr-4" role="presentation">
@@ -418,7 +419,7 @@ const TodoListView = ({
               </div>
               {/* {selFeature != 'lead_strength' && (
           <span
-            className="font-bodyLato text-xs text-blue-400 mr-2 mt-2 cursor-pointer"
+            className="font-sanF text-xs text-blue-400 mr-2 mt-2 cursor-pointer"
             onClick={() => setFeature('lead_strength')}
           >
             LEAD STRENGTH
@@ -426,7 +427,7 @@ const TodoListView = ({
         )}
         {selFeature == 'lead_strength' && (
           <span
-            className="font-bodyLato text-xs text-red-400 mr-2 mt-2 cursor-pointer"
+            className="font-sanF text-xs text-red-400 mr-2 mt-2 cursor-pointer"
             onClick={() => setFeature('appointments')}
           >
             CLOSE
@@ -753,10 +754,10 @@ const TodoListView = ({
                                     {/* <p className="text-[11px]  leading-none text-red-800  mt-1  py-[4px]  rounded-full  text-2xl  mb-1 mr-2  ">
                                   {dat?.pri}
                                 </p> */}
-                                    <p className="text-[9px]  leading-none text-red-800  mt-[6px] font-bodyLato  py-[4px]  rounded-full   mb-1 mr-4  ">
+                                    <p className="text-[9px]  leading-none text-red-800  mt-[6px] font-sanF  py-[4px]  rounded-full   mb-1 mr-4  ">
                                       {dat?.leadUser?.Status?.toUpperCase()}
                                     </p>
-                                    <p className="text-[9px]  leading-none text-gray-600  mt-[6px] font-bodyLato  py-[4px]  rounded-full    mb-1 mr-2  ">
+                                    <p className="text-[9px]  leading-none text-gray-600  mt-[6px] font-sanF  py-[4px]  rounded-full    mb-1 mr-2  ">
                                       {dat?.sts?.toUpperCase()}
                                     </p>
                                     <p
@@ -764,7 +765,7 @@ const TodoListView = ({
                                         user?.uid == dat?.leadUser?.assignedTo
                                           ? 'text-green-800'
                                           : 'text-red-800 '
-                                      }   mt-[6px] font-bodyLato  py-[4px]  rounded-full    mb-1 mr-2  `}
+                                      }   mt-[6px] font-sanF  py-[4px]  rounded-full    mb-1 mr-2  `}
                                     >
                                       {dat?.leadUser?.assignedToObj?.name?.toUpperCase()}
                                     </p>
@@ -1008,8 +1009,17 @@ const TodoListView = ({
               </div>
             )}
             {['personal_tasks'].includes(isClicked) && (
-              <div className="overflow-x-auto mt-2">
+              <div className="overflow-x-auto mt-2 rounded-xl">
                 <table className="w-full whitespace-nowrap">
+                  <thead className="">
+                    <tr className="tabHeader">
+                    <th className="text-left pl-[1rem]"> <span className="headTxt" tabindex="0" role="button">S.no </span></th>
+             <th className="text-left"> <span className="max-w-[300px] headTxt" tabindex="0" role="button">Task </span></th>
+             <th> <span className="text-left headTxt" tabindex="0" role="button">Created By</span></th>
+             <th className="pl-6 text-left headTxt"> <span  tabindex="0" role="button">Status </span></th>
+             <th className=" text-left pl-[3rem] headTxt"> <span className="" tabindex="0" role="button">Deadline </span></th>
+                    </tr>
+                  </thead>
                   <tbody>
                     {personalData_D?.map((dat, i) => (
                       <tr
@@ -1040,27 +1050,29 @@ const TodoListView = ({
                                 <section>
                                   <PaperClipIcon className="w-3 h-3 mr-[2px] inline-block text-gray-400 " />
                                 </section>
-                                <p className="text-[9px]  leading-none text-red-800  mt-[6px] font-bodyLato  py-[4px]  rounded-full   mb-1 mr-4  ">
+                                <p className="text-[9px]  leading-none text-red-800  mt-[6px] font-sanF  py-[4px]  rounded-full   mb-1 mr-4  ">
                                   {dat?.attachmentsCount || 0}
                                 </p>
                                 <section>
                                   <UsersIcon className="w-3 h-3 mr-[2px]  inline-block text-gray-400  " />{' '}
                                 </section>
-                                <p className="text-[9px]  leading-none text-red-800  mt-[6px] font-bodyLato  py-[4px]  rounded-full   mb-1 mr-4  ">
+                                <p className="text-[9px]  leading-none text-red-800  mt-[6px] font-sanF  py-[4px]  rounded-full   mb-1 mr-4  ">
                                   {dat?.participantsA?.length || 0}
                                 </p>
                               </div>
                             </div>
                           </div>
                         </td>
-                        <td className="pl-24"></td>
+                        <td className="text"><p className="text-[13px] leading-none text-[#212b36] ">
+                              {dat?.by_name}
+                            </p></td>
                         <td className="pl-5">
                           <div className="flex flex-col">
                             <p className="text-[12px] leading-none text-blue-600 ml-2">
                               {dat?.status}
                             </p>
                             <p className="text-[11px] leading-none text-gray-600 ml-2 mt-2">
-                              {dat?.by_name}
+                              {dat?.to_name}
                             </p>
 
                             <p className="text-sm leading-none text-gray-600 ml-2">
@@ -1133,8 +1145,17 @@ const TodoListView = ({
               </div>
             )}
             {['business_tasks'].includes(isClicked) && (
-              <div className="overflow-x-auto mt-2">
+              <div className="overflow-x-auto mt-2 rounded-xl">
                 <table className="w-full whitespace-nowrap">
+                  <thead className="">
+                      <tr className="tabHeader">
+                        <th className="text-left pl-[1rem]"> <span className="headTxt" tabindex="0" role="button">S.no </span></th>
+                        <th className="text-left"> <span className="max-w-[300px] headTxt" tabindex="0" role="button">Task </span></th>
+                        <th> <span className="text-left headTxt" tabindex="0" role="button">Created By</span></th>
+                        <th className="pl-6 text-left headTxt"> <span  tabindex="0" role="button">Status </span></th>
+                        <th className=" text-left pl-[3rem] headTxt"> <span className="" tabindex="0" role="button">Deadline </span></th>
+                      </tr>
+                  </thead>
                   <tbody>
                     {businessSection_D?.map((dat, i) => (
                       <tr
@@ -1165,27 +1186,29 @@ const TodoListView = ({
                                 <section>
                                   <PaperClipIcon className="w-3 h-3 mr-[2px] inline-block text-gray-400 " />
                                 </section>
-                                <p className="text-[9px]  leading-none text-red-800  mt-[6px] font-bodyLato  py-[4px]  rounded-full   mb-1 mr-4  ">
+                                <p className="text-[9px]  leading-none text-red-800  mt-[6px] font-sanF  py-[4px]  rounded-full   mb-1 mr-4  ">
                                   {dat?.attachmentsCount || 0}
                                 </p>
                                 <section>
                                   <UsersIcon className="w-3 h-3 mr-[2px]  inline-block text-gray-400  " />{' '}
                                 </section>
-                                <p className="text-[9px]  leading-none text-red-800  mt-[6px] font-bodyLato  py-[4px]  rounded-full   mb-1 mr-4  ">
+                                <p className="text-[9px]  leading-none text-red-800  mt-[6px] font-sanF  py-[4px]  rounded-full   mb-1 mr-4  ">
                                   {dat?.participantsA?.length || 0}
                                 </p>
                               </div>
                             </div>
                           </div>
                         </td>
-                        <td className="pl-24"></td>
+                        <td className="text"><p className="text-[13px] leading-none text-[#212b36]">
+                              {dat?.by_name}
+                            </p></td>
                         <td className="pl-5">
                           <div className="flex flex-col">
                             <p className="text-[12px] leading-none text-blue-600 ml-2">
                               {dat?.status}
                             </p>
                             <p className="text-[11px] leading-none text-gray-600 ml-2 mt-2">
-                              {dat?.by_name}
+                              {dat?.to_name}
                             </p>
                             <p className="text-sm leading-none text-gray-600 ml-2"></p>
                           </div>

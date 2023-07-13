@@ -714,3 +714,23 @@ img
   right: 13%;
 }
 
+/* minimalistic styles */
+.tabHeader {
+    line-height: 2.2rem;
+    font-family: "Public Sans", sans-serif;
+    vertical-align: inherit;
+    border-bottom: 1px dashed rgb(241, 243, 244);
+    text-align: left;
+    padding: 16px;
+    font-size: 14px;
+    color: #637381;
+    font-weight: 600;
+    background-color: rgb(244, 246, 248);
+}
+.headTxt{
+  font-size: 12px;
+  color: #637381;
+  line-height: 1.5rem;
+
+}
+
