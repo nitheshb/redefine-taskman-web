@@ -38,6 +38,7 @@ import {
   editTaskManData,
   getAllProjects,
   steamUsersListByRole,
+  steamUsersList,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import {
@@ -49,6 +50,9 @@ import { CustomSelect } from 'src/util/formFields/selectBoxField'
 import { SlimSelectBox } from 'src/util/formFields/slimSelectBoxField'
 import { TextField } from 'src/util/formFields/TextField'
 import { TextField2 } from 'src/util/formFields/TextField2'
+
+import FileList from './FilesList'
+import FileUpload from './FileUpload'
 
 const customStyles = {
   control: (base) => ({
@@ -114,13 +118,19 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
   const [closeTask, setCloseTask] = useState(false)
   const [error, setError] = useState(false)
   const [prior, setPrior] = useState(false)
+  const [files, setFiles] = useState([])
+
+  const removeFile = (filename) => {
+    setFiles(files.filter((file) => file.name !== filename))
+  }
 
   useEffect(() => {
     console.log('taskManObj', taskManObj)
+    setFiles(taskManObj?.attachmentsA || [])
   }, [])
 
   useEffect(() => {
-    const unsubscribe = steamUsersListByRole(
+    const unsubscribe = steamUsersList(
       orgId,
       (querySnapshot) => {
         const usersListA = querySnapshot.docs.map((docSnapshot) =>
@@ -182,7 +192,8 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
     console.log('edit task and button taskManObj', taskManObj, data)
     data.id = taskManObj.id
     data.priorities = prior ? 'high' : 'medium'
-
+    data.attachments = files;
+    
     await editTaskManData(orgId, data, user)
     await setFormMessage('Task Edited..!')
 
@@ -862,6 +873,16 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                                 />
                               </div>
                             </div>
+                            <div className=" mt-3">
+                          <FileList files={files} removeFile={removeFile} />
+
+                              <FileUpload
+                                files={files}
+                                setFiles={setFiles}
+                                removeFile={removeFile}
+                              />
+                            </div>
+
                           </section>
                           {/* <div className="w-full flex flex-col  ">
                           <CustomSelect

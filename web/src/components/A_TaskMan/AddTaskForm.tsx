@@ -575,13 +575,13 @@ const AddTaskForm = ({ title, dialogOpen }) => {
 
                           </div>
                           <div className=" mt-3">
+                          <FileList files={files} removeFile={removeFile} />
 
                               <FileUpload
                                 files={files}
                                 setFiles={setFiles}
                                 removeFile={removeFile}
                               />
-                              <FileList files={files} removeFile={removeFile} />
                             </div>
                         </section>
                         {/* <div className="w-full flex flex-col  ">
@@ -614,7 +614,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                   </span> */}
                     </div>
                   </div>
-                  <div className="flex flex-row justify-between mt-4 pb-2 pr-6 bg-white shadow-lg absolute bottom-0  w-full">
+                  <div className="z-10 flex flex-row justify-between mt-4 pb-2 pr-6 bg-white shadow-lg absolute bottom-0  w-full">
                     <section></section>
                     <section className="flex flex-row ">
                       <button

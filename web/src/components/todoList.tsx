@@ -299,7 +299,6 @@ const TodoListView = ({
                   { lab: 'Sales Tasks', val: 'dept_tasks' },
                   { lab: 'Business Tasks', val: 'business_tasks' },
                   { lab: 'Personal', val: 'personal_tasks' },
-
                 ].map((d, i) => {
                   return (
                     <li key={i} className=" mr-4" role="presentation">
@@ -1013,11 +1012,44 @@ const TodoListView = ({
                 <table className="w-full whitespace-nowrap">
                   <thead className="">
                     <tr className="tabHeader">
-                    <th className="text-left pl-[1rem]"> <span className="headTxt" tabindex="0" role="button">S.no </span></th>
-             <th className="text-left"> <span className="max-w-[300px] headTxt" tabindex="0" role="button">Task </span></th>
-             <th> <span className="text-left headTxt" tabindex="0" role="button">Created By</span></th>
-             <th className="pl-6 text-left headTxt"> <span  tabindex="0" role="button">Status </span></th>
-             <th className=" text-left pl-[3rem] headTxt"> <span className="" tabindex="0" role="button">Deadline </span></th>
+                      <th className="text-left pl-[1rem]">
+                        {' '}
+                        <span className="headTxt" tabIndex="0" role="button">
+                          S.no{' '}
+                        </span>
+                      </th>
+                      <th className="text-left">
+                        {' '}
+                        <span
+                          className="max-w-[300px] headTxt"
+                          tabIndex="0"
+                          role="button"
+                        >
+                          Task{' '}
+                        </span>
+                      </th>
+                      <th>
+                        {' '}
+                        <span
+                          className="text-left headTxt"
+                          tabIndex="0"
+                          role="button"
+                        >
+                          Created By
+                        </span>
+                      </th>
+                      <th className="pl-6 text-left headTxt">
+                        {' '}
+                        <span tabIndex="0" role="button">
+                          Status{' '}
+                        </span>
+                      </th>
+                      <th className=" text-left pl-[3rem] headTxt">
+                        {' '}
+                        <span className="" tabIndex="0" role="button">
+                          Deadline{' '}
+                        </span>
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1040,9 +1072,14 @@ const TodoListView = ({
                         <td className=" max-w-[300px]">
                           <div className="flex items-center ">
                             <div className="flex flex-col">
-                              <p className="text-base max-w-[350px] overflow-ellipsis overflow-hidden font-semibold leading-none text-blue-800 mr-2 mt-2">
+                            <p className="text-base max-w-[350px] text-[13px] overflow-ellipsis overflow-hidden font-semibold leading-none text-blue-800 mr-2 mt-2">
                                 {dat?.title}
                               </p>
+                              {dat?.comments?.length > 0 && (
+                                <p className="text-[11px]   leading-none  pr-2 text-green-800  mt-[6px]    rounded-full   mb-1 mr-2  ">
+                                  {dat?.comments[dat?.comments?.length-1]?.msg}
+                                </p>
+                              )}
                               <div className="flex flex-row">
                                 <p className="text-[9px]   leading-none  pr-2 text-green-800  mt-[6px]  py-[4px]  rounded-full   mb-1 mr-2  ">
                                   {dat?.priority?.toUpperCase()}
@@ -1063,9 +1100,11 @@ const TodoListView = ({
                             </div>
                           </div>
                         </td>
-                        <td className="text"><p className="text-[13px] leading-none text-[#212b36] ">
-                              {dat?.by_name}
-                            </p></td>
+                        <td className="text">
+                          <p className="text-[13px] leading-none text-[#212b36] ">
+                            {dat?.by_name}
+                          </p>
+                        </td>
                         <td className="pl-5">
                           <div className="flex flex-col">
                             <p className="text-[12px] leading-none text-blue-600 ml-2">
@@ -1148,13 +1187,46 @@ const TodoListView = ({
               <div className="overflow-x-auto mt-2 rounded-xl">
                 <table className="w-full whitespace-nowrap">
                   <thead className="">
-                      <tr className="tabHeader">
-                        <th className="text-left pl-[1rem]"> <span className="headTxt" tabindex="0" role="button">S.no </span></th>
-                        <th className="text-left"> <span className="max-w-[300px] headTxt" tabindex="0" role="button">Task </span></th>
-                        <th> <span className="text-left headTxt" tabindex="0" role="button">Created By</span></th>
-                        <th className="pl-6 text-left headTxt"> <span  tabindex="0" role="button">Status </span></th>
-                        <th className=" text-left pl-[3rem] headTxt"> <span className="" tabindex="0" role="button">Deadline </span></th>
-                      </tr>
+                    <tr className="tabHeader">
+                      <th className="text-left pl-[1rem]">
+                        {' '}
+                        <span className="headTxt" tabIndex="0" role="button">
+                          S.no{' '}
+                        </span>
+                      </th>
+                      <th className="text-left">
+                        {' '}
+                        <span
+                          className="max-w-[300px] headTxt"
+                          tabIndex="0"
+                          role="button"
+                        >
+                          Task{' '}
+                        </span>
+                      </th>
+                      <th>
+                        {' '}
+                        <span
+                          className="text-left headTxt"
+                          tabIndex="0"
+                          role="button"
+                        >
+                          Created By
+                        </span>
+                      </th>
+                      <th className="pl-6 text-left headTxt">
+                        {' '}
+                        <span tabIndex="0" role="button">
+                          Status{' '}
+                        </span>
+                      </th>
+                      <th className=" text-left pl-[3rem] headTxt">
+                        {' '}
+                        <span className="" tabIndex="0" role="button">
+                          Deadline{' '}
+                        </span>
+                      </th>
+                    </tr>
                   </thead>
                   <tbody>
                     {businessSection_D?.map((dat, i) => (
@@ -1176,32 +1248,39 @@ const TodoListView = ({
                         <td className=" max-w-[300px]">
                           <div className="flex items-center ">
                             <div className="flex flex-col">
-                              <p className="text-base max-w-[350px] overflow-ellipsis overflow-hidden font-semibold leading-none text-blue-800 mr-2 mt-2">
+                              <p className="text-base max-w-[350px] text-[13px] overflow-ellipsis overflow-hidden font-semibold leading-none text-blue-800 mr-2 mt-2">
                                 {dat?.title}
                               </p>
+                              {dat?.comments?.length > 0 && (
+                                <p className="text-[11px]   leading-none  pr-2 text-green-800  mt-[6px]    rounded-full   mb-1 mr-2  ">
+                                  {dat?.comments[dat?.comments?.length-1]?.msg}
+                                </p>
+                              )}
                               <div className="flex flex-row">
-                                <p className="text-[9px]   leading-none  pr-2 text-green-800  mt-[6px]  py-[4px]  rounded-full   mb-1 mr-2  ">
+                                <p className="text-[9px]   leading-none  pr-2 text-green-800 ]  py-[4px]  rounded-full   mb-1 mr-2  ">
                                   {dat?.priority?.toUpperCase()}
                                 </p>
                                 <section>
-                                  <PaperClipIcon className="w-3 h-3 mr-[2px] inline-block text-gray-400 " />
+                                  <PaperClipIcon className="w-3 h-3 mr-[2px] inline-block text-gray-400 mb-[10px]" />
                                 </section>
-                                <p className="text-[9px]  leading-none text-red-800  mt-[6px] font-sanF  py-[4px]  rounded-full   mb-1 mr-4  ">
+                                <p className="text-[9px]  leading-none text-red-800   font-sanF  py-[4px]  rounded-full   mb-1 mr-4  ">
                                   {dat?.attachmentsCount || 0}
                                 </p>
                                 <section>
-                                  <UsersIcon className="w-3 h-3 mr-[2px]  inline-block text-gray-400  " />{' '}
+                                  <UsersIcon className="w-3 h-3 mr-[2px]  inline-block text-gray-400 mb-[10px]  " />{' '}
                                 </section>
-                                <p className="text-[9px]  leading-none text-red-800  mt-[6px] font-sanF  py-[4px]  rounded-full   mb-1 mr-4  ">
+                                <p className="text-[9px]  leading-none text-red-800   font-sanF  py-[4px]  rounded-full   mb-1 mr-4  ">
                                   {dat?.participantsA?.length || 0}
                                 </p>
                               </div>
                             </div>
                           </div>
                         </td>
-                        <td className="text"><p className="text-[13px] leading-none text-[#212b36]">
-                              {dat?.by_name}
-                            </p></td>
+                        <td className="text">
+                          <p className="text-[13px] leading-none text-[#212b36]">
+                            {dat?.by_name}
+                          </p>
+                        </td>
                         <td className="pl-5">
                           <div className="flex flex-col">
                             <p className="text-[12px] leading-none text-blue-600 ml-2">

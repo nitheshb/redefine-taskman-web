@@ -1,10 +1,12 @@
 import React from 'react'
 
 import { PlusIcon, TrashIcon, SparklesIcon, DocumentIcon, DocumentTextIcon } from '@heroicons/react/outline'
-import axios from 'axios'
 
 const FileList = ({ files, removeFile }) => {
   const deleteFileHandler = (_name) => {
+    removeFile(_name)
+    // delete from storage
+    // delete from files state
     // axios
     //   .delete(`http://localhost:8080/upload?name=${_name}`)
     //   .then((res) => removeFile(_name))
@@ -17,7 +19,7 @@ const FileList = ({ files, removeFile }) => {
           <li className="upload-li file-item" key={file.name}>
             <DocumentTextIcon className="w-4 h-4" />
             <p>{file.name}</p>
-            
+
 
             <div className="actions">
               <div className="loading"></div>

@@ -305,14 +305,25 @@ export const editTaskManData = async (orgId, dta, user) => {
     assignedToObj,
     followers,
     priorities,
+    attachments,
     file,
   } = dta
   let followA = []
+  let attachA = []
   if (followers) {
     followA = await followers?.map((d) => {
       const y = {}
-      y.label = d?.name
+      y.label = d?.name || d?.label
       y.value = d?.uid || d?.value
+      return y
+    })
+  }
+  if(attachments){
+    attachA = await attachments?.map((d) => {
+      const y = {}
+      y.name = d?.name
+      y.url = d?.url
+      y.type = d?.type
       return y
     })
   }
@@ -332,9 +343,11 @@ export const editTaskManData = async (orgId, dta, user) => {
       to_email: assignedToObj?.email,
       to_name: assignedToObj?.name,
       to_uid: assignedToObj?.uid,
-      participantsA: followA || [],
+      participantsA: followA,
       participantsC: followA.length ||  0,
       followersC: followA.length || 0,
+      attachmentsCount: attachA?.length || 0,
+      attachmentsA: attachA
 
     })
     .eq('id', id)
