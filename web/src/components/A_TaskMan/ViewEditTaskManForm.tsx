@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { useState, useEffect, useRef, Fragment } from 'react'
-
+import axios from 'axios'
 import { Dialog, Listbox, Transition } from '@headlessui/react'
 import { RadioGroup } from '@headlessui/react'
 import {
@@ -13,6 +13,11 @@ import {
 } from '@heroicons/react/outline'
 import { XIcon, FireIcon } from '@heroicons/react/solid'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
+import {
+  PaperClipIcon,
+  UsersIcon,
+  ArrowCircleDownIcon,
+} from '@heroicons/react/solid'
 import CalendarMonthTwoToneIcon from '@mui/icons-material/CalendarMonthTwoTone'
 import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone'
 import CloseTwoToneIcon from '@mui/icons-material/CloseTwoTone'
@@ -20,6 +25,7 @@ import ScheduleSendTwoToneIcon from '@mui/icons-material/ScheduleSendTwoTone'
 import SendTwoToneIcon from '@mui/icons-material/SendTwoTone'
 import { setHours, setMinutes } from 'date-fns'
 import { Timestamp } from 'firebase/firestore'
+import { getStorage, ref, getDownloadURL } from 'firebase/storage'
 import { Form, Formik, Field, ErrorMessage } from 'formik'
 import DatePicker from 'react-datepicker'
 import NumberFormat from 'react-number-format'
@@ -41,6 +47,7 @@ import {
   steamUsersList,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
+import { storage } from 'src/context/firebaseConfig'
 import {
   sendWhatAppMediaSms,
   sendWhatAppTextSms,
@@ -188,12 +195,61 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
   const phoneRegExp =
     /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/
 
+  const downloadFile = (url) => {
+    window.location.href = url
+  }
+  const [imageUrl, setImageUrl] = useState(null)
+
+
+  const downloadImage = (imageUrl, filename) => {
+    console.error('Error downloading image:', imageUrl)
+    fetch(imageUrl)
+      .then((response) => response.blob())
+      .then((blob) => {
+        // Create a temporary anchor element
+        const url = window.URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+
+        // Extract the filename from the URL
+        // const filename = imageUrl.substring(imageUrl.lastIndexOf('/') + 1)
+
+        // Set the download attribute and filename
+        link.setAttribute('download', filename)
+        document.body.appendChild(link)
+        console.log('fetcher url ', filename)
+        // Simulate a click on the anchor element to start the download
+        link.click()
+
+        // Clean up the temporary anchor element
+        link.parentNode.removeChild(link)
+
+        // Set the downloaded image URL to display on the page
+        setImageUrl(url)
+      })
+      .catch((error) => {
+        console.error('Error downloading image:', error)
+      })
+  }
+
+
+  const uploadHandler = (event) => {
+    const file = event.target.files[0]
+    if (!file) return
+    file.isUploading = true
+    // setFiles([...files, file])
+
+    // upload file
+    const formData = new FormData()
+    formData.append('newFile', file, file.name)
+    // uploadStuff(file)
+  }
   const onSubmitFun = async (data, resetForm) => {
     console.log('edit task and button taskManObj', taskManObj, data)
     data.id = taskManObj.id
     data.priorities = prior ? 'high' : 'medium'
-    data.attachments = files;
-    
+    data.attachments = files
+
     await editTaskManData(orgId, data, user)
     await setFormMessage('Task Edited..!')
 
@@ -240,18 +296,6 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
             </label>
           </span>
         </section>
-        <section className="flex flex-row justify-between  pt-2 mb-2 ">
-            {formMessage === 'Task Edited..!' && (
-              <p className=" flex text-md text-slate-800 ">
-                <img
-                  className="w-[18px] h-[18px] inline mr-2"
-                  alt=""
-                  src="/ok.gif"
-                />
-                <span className="mt-[.2px] text-[12px]">{formMessage}</span>
-              </p>
-            )}
-          </section>
       </div>
 
       {!showEditTask && (
@@ -455,6 +499,15 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                       } bg-white`}
                     ></input>
 
+                    {/* <div className="sm-file-card">
+                    <div className="sm-file-inputs">
+          <input type="file" onChange={uploadHandler} />
+          <button>
+
+              <PaperClipIcon className="w-4 h-4 cursor-pointer mt-[10px] mr-[2px] inline-block text-gray-400 " />
+          </button>
+        </div>
+        </div> */}
                     {!addCommentPlusTask && (
                       <button
                         type="submit"
@@ -634,10 +687,24 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                 <div className="w-[110px]">Attachments</div>
               </div>
               <div className="text-[#0b66c3] ml-2 text-sm mt-1">
-              {taskManObj?.attachmentsA?.map((data, i) => {
+                {taskManObj?.attachmentsA?.map((data, i) => {
+                  console.log('attachments', data)
                   return (
-                    <div key={i} className="text-[#0b66c3]  text-xs mt-1">
-                      {data?.name}{' '}
+                    <div className="flex flex-row justify-between" key={i}>
+                      <div key={i} className="text-[#0b66c3]  text-xs mt-1">
+                        {data?.name}
+                        {'X '}
+                      </div>
+                      {/* <a
+                        href={data?.url}
+                        download="MyExampleDoc"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer mt-[8px] mr-2 inline-block text-gray-400 " />
+                      </a> */}
+                       <button onClick={()=> downloadImage(data?.url, data?.name)}>                        <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer mt-[8px] mr-2 inline-block text-gray-400 " />
+</button>
                     </div>
                   )
                 })}
@@ -828,11 +895,11 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                               {/* <div className="mb-3 space-y-2 w-full text-xs mt-">
                             <TextField label="Size*" name="size" type="text" />
                           </div> */}
-                              <div className="flex flex-col">
+                              <div className="flex flex-row">
                                 <label className="label font-regular text-[12px] block mb-1 text-gray-700">
                                   Deadline
                                 </label>
-                                <div className="bg-green border  pl-2 rounded flex flex-row h-[32px] ">
+                                <div className="bg-green border ml-[32px] pl-2 rounded flex flex-row h-[32px] ">
                                   <CalendarIcon className="w-4  inline text-[#058527]" />
                                   <span className="inline">
                                     <DatePicker
@@ -865,16 +932,16 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                             >
                               Upload file
                             </label> */}
-                                <input
+                                {/* <input
                                   className="block w-full text-sm text-gray-900 border border-blue-300 rounded-sm cursor-pointer bg-blue-50  focus:outline-none "
                                   id="file_input"
                                   type="file"
                                   name="file"
-                                />
+                                /> */}
                               </div>
                             </div>
                             <div className=" mt-3">
-                          <FileList files={files} removeFile={removeFile} />
+                              <FileList files={files} removeFile={removeFile} />
 
                               <FileUpload
                                 files={files}
@@ -882,7 +949,6 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                                 removeFile={removeFile}
                               />
                             </div>
-
                           </section>
                           {/* <div className="w-full flex flex-col  ">
                           <CustomSelect
@@ -914,9 +980,21 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                   </span> */}
                       </div>
                     </div>
-                    <div className="flex flex-row justify-between mt-4 pb-2 pr-6 bg-white shadow-lg absolute bottom-0  w-full">
+                    <div className="flex flex-row z-10 justify-between mt-4 pb-2 pr-6 bg-white shadow-lg absolute bottom-0  w-full">
                       <section></section>
                       <section className="flex flex-row ">
+                        {formMessage === 'Task Edited..!' && (
+                          <p className=" flex text-md text-slate-800 mt-4">
+                            <img
+                              className="w-[18px] h-[18px] inline mr-2"
+                              alt=""
+                              src="/ok.gif"
+                            />
+                            <span className="mt- text-[12px]">
+                              {formMessage}
+                            </span>
+                          </p>
+                        )}
                         <button
                           // onClick={() => fAddSchedule()}
                           className={`flex mt-2 ml-4 cursor-pointer rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium  text-[#535c69]  bg-[#bbed21]   hover:shadow-lg `}

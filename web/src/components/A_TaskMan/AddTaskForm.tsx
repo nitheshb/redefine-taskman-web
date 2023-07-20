@@ -207,7 +207,6 @@ const AddTaskForm = ({ title, dialogOpen }) => {
   const [devType, setdevType] = useState(devTypeA[0])
   const [files, setFiles] = useState([])
 
-
   const removeFile = (filename) => {
     setFiles(files.filter((file) => file.name !== filename))
   }
@@ -226,7 +225,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
   const onSubmitFun = async (data, resetForm) => {
     data.due_date = startDate.getTime()
     data.priorities = prior ? 'high' : 'medium'
-    data.attachments = files;
+    data.attachments = files
     setLoading(true)
     await addTaskBusiness(orgId, data, user)
 
@@ -357,18 +356,6 @@ const AddTaskForm = ({ title, dialogOpen }) => {
               <abbr title="required"></abbr>
             </label>
           </span>
-          <section className="flex flex-row justify-between  pt-2 mb-2 ">
-            {formMessage === 'Task Created..!' && (
-              <p className=" flex text-md text-slate-800 ">
-                <img
-                  className="w-[18px] h-[18px] inline mr-2"
-                  alt=""
-                  src="/ok.gif"
-                />
-                <span className="mt-[.2px] text-[12px]">{formMessage}</span>
-              </p>
-            )}
-          </section>
         </section>
       </div>
 
@@ -571,18 +558,16 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                                 </span>
                               </div>
                             </div>
-
-
                           </div>
                           <div className=" mt-3">
-                          <FileList files={files} removeFile={removeFile} />
+                            <FileList files={files} removeFile={removeFile} />
 
-                              <FileUpload
-                                files={files}
-                                setFiles={setFiles}
-                                removeFile={removeFile}
-                              />
-                            </div>
+                            <FileUpload
+                              files={files}
+                              setFiles={setFiles}
+                              removeFile={removeFile}
+                            />
+                          </div>
                         </section>
                         {/* <div className="w-full flex flex-col  ">
                           <CustomSelect
@@ -617,6 +602,18 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                   <div className="z-10 flex flex-row justify-between mt-4 pb-2 pr-6 bg-white shadow-lg absolute bottom-0  w-full">
                     <section></section>
                     <section className="flex flex-row ">
+                      {formMessage === 'Task Created..!' && (
+                        <p className=" flex text-md text-slate-800 mt-4">
+                          <img
+                            className="w-[18px] h-[18px] inline mr-2"
+                            alt=""
+                            src="/ok.gif"
+                          />
+                          <span className="mt-[.2px] text-[12px]">
+                            {formMessage}
+                          </span>
+                        </p>
+                      )}
                       <button
                         // onClick={() => fAddSchedule()}
                         className={`flex mt-2 ml-4 cursor-pointer rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium  text-[#535c69]  bg-[#bbed21]   hover:shadow-lg `}

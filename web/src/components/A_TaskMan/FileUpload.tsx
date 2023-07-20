@@ -58,17 +58,6 @@ export default function FileUpload  ({ files, setFiles, removeFile }) {
     const formData = new FormData()
     formData.append('newFile', file, file.name)
     uploadStuff(file)
-    // axios
-    //   .post('http://localhost:8080/upload', formData)
-    //   .then((res) => {
-    //     file.isUploading = false
-    //     setFiles([...files, file])
-    //   })
-    //   .catch((err) => {
-    //     // inform the user
-    //     console.error(err)
-    //     removeFile(file.name)
-    //   })
   }
 
   return (

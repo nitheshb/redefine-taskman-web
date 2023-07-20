@@ -1995,7 +1995,33 @@ export default function LeadProfileSideView({
                   </div>
                   {selFeature == 'lead_strength' && (
                     <>
-                      <div className="flex flex-col pt-0 my-10 mt-[30px] rounded bg-gradient-to-b from-purple-300 to-purple-200 mx-4 p-4">
+                     <Formik
+              enableReinitialize={true}
+              // initialValues={{
+              //   name: customerDetailsTuned?.name || '',
+              //   cDate: customerDetailsTuned?.Date || '',
+              //   mobileNo: customerDetailsTuned?.phone || '',
+              //   email: customerDetailsTuned?.email || '',
+              //   source: customerDetailsTuned?.source || '',
+              //   project: customerDetailsTuned?.projectName || '',
+              //   projectId: customerDetailsTuned?.projectId || '',
+              //   assignedTo: customerDetailsTuned?.name || '',
+              //   budget: '20-30L',
+              //   deptVal: '',
+              //   myRole: '',
+              // }}
+              initialValues={{
+                assetPossesed: {}
+              }}
+              // validationSchema={validate}
+              onSubmit={(values, { resetForm }) => {
+                // console.log('ami submitted', values)
+                // console.log('ami submitted 1', values.assignedTo === '')
+                // onSubmitFun(values, resetForm)
+              }}
+            >
+                     {(formik) => (
+                      <div className="flex flex-col pt-0 my-10 mt-[30px] rounded bg-[#d1d8e7] mx-4 p-4">
                         <div className="border border-red-100 mt-2 mt-4 bg-white rounded-md p-4 font-bold">
                           <div className="flex justify-between w-full ">
                             <div>Total Lead Strength</div>
@@ -2010,7 +2036,7 @@ export default function LeadProfileSideView({
                           />
                         </div>
                         <div className="grid grid-cols-2 gap-8 pt-3 mx-3  mt-2">
-                          <div className="mt-2">
+                          {/* <div className="mt-2">
                             <div className="flex justify-between w-11.7/12 m-auto">
                               <div> Looking at Budget Range*</div>
                               <div> {`${optionvalues.bstr}%`}</div>
@@ -2030,7 +2056,7 @@ export default function LeadProfileSideView({
                               value={optionvalues.budget}
                               options={lookingAtBudgetRange}
                             />
-                          </div>
+                          </div> */}
                           <div className="mt-2">
                             <div className="flex justify-between w-11.7/12 m-auto">
                               <div>Any Existing Banglore Assets ?*</div>
@@ -2038,6 +2064,7 @@ export default function LeadProfileSideView({
                             </div>
                             <CustomSelect
                               name="assetPossesed"
+                              label="Existing Asset"
                               className="input"
                               onChange={(value) => {
                                 // formik.setFieldValue('source', value.value)
@@ -2058,6 +2085,7 @@ export default function LeadProfileSideView({
                             </div>
                             <CustomSelect
                               name="reasonPurchase"
+                              label="Purchase Reason"
                               className="input"
                               onChange={(value) => {
                                 // formik.setFieldValue('source', value.value)
@@ -2113,7 +2141,8 @@ export default function LeadProfileSideView({
                             </button>
                           </section>
                         </div>
-                      </div>
+                      </div>)}
+                      </Formik>
                     </>
                   )}
                   {selFeature == 'email' && (

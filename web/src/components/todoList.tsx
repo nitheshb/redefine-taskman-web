@@ -146,66 +146,83 @@ const TodoListView = ({
     console.log('is my value changed, sortType', sortType, searchText)
 
     if (subSection == 'all_business') {
-      setBusinessSection_D(
-        businessData_F.filter(
-          (d) =>
-            d.priority.toLowerCase().includes(selPriority.toLowerCase()) &&
-            d.title?.toLowerCase().includes(searchText.toLowerCase())
-        )
+      const x = businessData_F.filter(
+        (d) =>
+          d.priority.toLowerCase().includes(selPriority.toLowerCase()) &&
+          d.title?.toLowerCase().includes(searchText.toLowerCase())
       )
+      setBusinessSection_D(x)
+      bootBusinessFun(x)
     } else if (subSection == 'assigned_to_me') {
-      setBusinessSection_D(
-        businessData_F.filter(
-          (d) =>
-            d.by_uid != user?.uid &&
-            d.to_uid === user?.uid &&
-            d.priority.toLowerCase().includes(selPriority.toLowerCase()) &&
-            d.title?.toLowerCase().includes(searchText.toLowerCase())
-        )
+      const x = businessData_F.filter(
+        (d) =>
+          d.by_uid != user?.uid &&
+          d.to_uid === user?.uid &&
+          d.priority.toLowerCase().includes(selPriority.toLowerCase()) &&
+          d.title?.toLowerCase().includes(searchText.toLowerCase())
       )
+      setBusinessSection_D(x)
+      bootBusinessFun(x)
     } else if (subSection == 'created_by_me') {
-      setBusinessSection_D(
-        businessData_F.filter(
-          (d) =>
-            d.by_uid === user?.uid &&
-            d.to_uid != user?.uid &&
-            d.priority.toLowerCase().includes(selPriority.toLowerCase()) &&
-            d.title?.toLowerCase().includes(searchText.toLowerCase())
-        )
+      const x = businessData_F.filter(
+        (d) =>
+          d.by_uid === user?.uid &&
+          d.to_uid != user?.uid &&
+          d.priority.toLowerCase().includes(selPriority.toLowerCase()) &&
+          d.title?.toLowerCase().includes(searchText.toLowerCase())
       )
+      setBusinessSection_D(x)
+      bootBusinessFun(x)
     } else if (subSection == 'participants') {
-      setBusinessSection_D(
-        businessData_F.filter(
-          (d) =>
-            d.priority.toLowerCase().includes(selPriority.toLowerCase()) &&
-            d.title?.toLowerCase().includes(searchText.toLowerCase())
-        )
+      const x = businessData_F.filter(
+        (d) =>
+          d.priority.toLowerCase().includes(selPriority.toLowerCase()) &&
+          d.title?.toLowerCase().includes(searchText.toLowerCase())
       )
+      setBusinessSection_D(x)
+      bootBusinessFun(x)
     }
   }, [businessData_F, subSection, sortType, searchText, selPriority])
 
-  const sortDataFun = () => {
+  const sortDataFun = (data) => {
     if (sortType === 'Oldest') {
       console.log('ami here', sortType)
-      const x = businessData_F.sort((a, b) => {
+      const x = data.sort((a, b) => {
         return a.due_date - b.due_date
       })
       setBusinessSection_D(x)
     } else {
       console.log('ami here', sortType)
-      const x = businessData_F.sort((a, b) => {
+      const x = data.sort((a, b) => {
         return b.due_date - a.due_date
       })
       setBusinessSection_D(x)
     }
   }
 
-  useEffect(() => {
-    bootBusinessFun()
-  }, [businessData_F, sortType, subSection])
+  const sortPersonalDataFun = (data) => {
+    console.log('personal data is ', sortType)
+    if (sortType === 'Oldest') {
+      console.log('ami here', sortType)
+      const x = data.sort((a, b) => {
+        return a.due_date - b.due_date
+      })
+      setPersonalData_D(x)
+    } else {
+      console.log('ami here', sortType)
+      const x = data.sort((a, b) => {
+        return b.due_date - a.due_date
+      })
+      setPersonalData_D(x)
+    }
+  }
 
-  const bootBusinessFun = async () => {
-    sortDataFun()
+  useEffect(() => {
+    // bootBusinessFun()
+  }, [businessSection_D, sortType, subSection])
+
+  const bootBusinessFun = async (x) => {
+    sortDataFun(x)
   }
 
   const handleSortDrop = (e) => {
@@ -225,38 +242,39 @@ const TodoListView = ({
       (error) => []
     )
 
-    await setPersonalData_F(
-      steamLeadLogs.filter(
-        (d) =>
-          d.by_uid === user?.uid &&
-          d.to_uid === user?.uid &&
-          d.title?.toLowerCase().includes(searchText.toLowerCase())
-      )
+    const x = await steamLeadLogs.filter(
+      (d) =>
+        d.by_uid === user?.uid &&
+        d.to_uid === user?.uid &&
+        d.title?.toLowerCase().includes(searchText.toLowerCase())
     )
-    await setBusinessData_F(
-      steamLeadLogs.filter(
-        (d) =>
-          (d.by_uid != user?.uid && d.to_uid === user?.uid) ||
-          (d.by_uid === user?.uid && d.to_uid != user?.uid)
-      )
+    await setPersonalData_F(x)
+    const y = await steamLeadLogs.filter(
+      (d) =>
+        (d.by_uid != user?.uid && d.to_uid === user?.uid) ||
+        (d.by_uid === user?.uid && d.to_uid != user?.uid)
     )
-    await sortDataFun()
+    await setBusinessData_F(y)
+    await sortDataFun(y)
+    await sortPersonalDataFun(x)
     return
   }
 
   useEffect(() => {
     if (isClicked === 'personal_tasks') {
-      setPersonalData_D(
-        personalData_F.filter(
-          (d) =>
-            d.by_uid === user?.uid &&
-            d.to_uid === user?.uid &&
-            d.priority.toLowerCase().includes(selPriority.toLowerCase()) &&
-            d.title?.toLowerCase().includes(searchText.toLowerCase())
-        )
+      const x = personalData_F.filter(
+        (d) =>
+          d.by_uid === user?.uid &&
+          d.to_uid === user?.uid &&
+          d.priority.toLowerCase().includes(selPriority.toLowerCase()) &&
+          d.title?.toLowerCase().includes(searchText.toLowerCase())
       )
+      setPersonalData_D(x)
+      sortPersonalDataFun(x)
+    } else if (isClicked === 'dept_tasks') {
+      setShowSettings(true)
     }
-  }, [isClicked, searchText, selPriority, personalData_F])
+  }, [isClicked, searchText, sortType, selPriority, personalData_F])
 
   const handleFilterClearFun = async () => {
     setSelPriority('')
@@ -393,7 +411,9 @@ const TodoListView = ({
                 })}
               </ul>
               <div className="flex flex-row">
-                {['business_tasks', 'personal_tasks'].includes(isClicked) && (
+                {['dept_tasks', 'business_tasks', 'personal_tasks'].includes(
+                  isClicked
+                ) && (
                   <button
                     className="w-[104px] focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 sm:mt-0 inline-flex items-start justify-start px-2 mb-[4px] mr-2
                  focus:outline-none rounded-full hover:text-[#027576] hover:bg-gradient-to-r from-violet-200 to-pink-200 bg-gradient-to-r from-violet-200 to-pink-200 text-black-900 hover:text-[#025e5e] hover:scale-95 font-light "
@@ -1072,12 +1092,15 @@ const TodoListView = ({
                         <td className=" max-w-[300px]">
                           <div className="flex items-center ">
                             <div className="flex flex-col">
-                            <p className="text-base max-w-[350px] text-[13px] overflow-ellipsis overflow-hidden font-semibold leading-none text-blue-800 mr-2 mt-2">
+                              <p className="text-base max-w-[350px] text-[13px] overflow-ellipsis overflow-hidden font-semibold leading-none text-blue-800 mr-2 mt-2">
                                 {dat?.title}
                               </p>
                               {dat?.comments?.length > 0 && (
                                 <p className="text-[11px]   leading-none  pr-2 text-green-800  mt-[6px]    rounded-full   mb-1 mr-2  ">
-                                  {dat?.comments[dat?.comments?.length-1]?.msg}
+                                  {
+                                    dat?.comments[dat?.comments?.length - 1]
+                                      ?.msg
+                                  }
                                 </p>
                               )}
                               <div className="flex flex-row">
@@ -1253,7 +1276,10 @@ const TodoListView = ({
                               </p>
                               {dat?.comments?.length > 0 && (
                                 <p className="text-[11px]   leading-none  pr-2 text-green-800  mt-[6px]    rounded-full   mb-1 mr-2  ">
-                                  {dat?.comments[dat?.comments?.length-1]?.msg}
+                                  {
+                                    dat?.comments[dat?.comments?.length - 1]
+                                      ?.msg
+                                  }
                                 </p>
                               )}
                               <div className="flex flex-row">
