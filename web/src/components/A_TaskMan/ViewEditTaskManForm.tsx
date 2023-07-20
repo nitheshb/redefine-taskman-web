@@ -693,7 +693,7 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                     <div className="flex flex-row justify-between" key={i}>
                       <div key={i} className="text-[#0b66c3]  text-xs mt-1">
                         {data?.name}
-                        {'X '}
+                
                       </div>
                       {/* <a
                         href={data?.url}
