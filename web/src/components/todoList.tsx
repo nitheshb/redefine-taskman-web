@@ -89,45 +89,51 @@ const TodoListView = ({
         const updatedData = payload.new
         const { id } = payload.old
         const updatedLeadLogs = [...businessData_F]
-        setBusinessData_F((prevLogs) => {
-          const existingLog = prevLogs.find((log) => log.id === id)
 
-          if (existingLog) {
-            console.log('Existing record found!')
-            if (payload.new.status === 'Done') {
-              const updatedLogs = prevLogs.filter((log) => log.id != id)
-              return [...updatedLogs]
+        if (
+          updatedData.by_uid === user?.uid &&
+          updatedData.to_uid === user?.uid
+        ) {
+          setPersonalData_F((prevLogs) => {
+            const existingLog = prevLogs.find((log) => log.id === id)
+
+            if (existingLog) {
+              console.log('Existing record found!')
+              if (payload.new.status === 'Done') {
+                const updatedLogs = prevLogs.filter((log) => log.id != id)
+                return [...updatedLogs]
+              } else {
+                const updatedLogs = prevLogs.map((log) =>
+                  log.id === id ? payload.new : log
+                )
+                return [...updatedLogs]
+              }
             } else {
-              const updatedLogs = prevLogs.map((log) =>
-                log.id === id ? payload.new : log
-              )
-              return [...updatedLogs]
+              console.log('New record added!')
+              return [...prevLogs, payload.new]
             }
-          } else {
-            console.log('New record added!')
-            return [...prevLogs, payload.new]
-          }
-        })
+          })
+        } else {
+          setBusinessData_F((prevLogs) => {
+            const existingLog = prevLogs.find((log) => log.id === id)
 
-        setPersonalData_F((prevLogs) => {
-          const existingLog = prevLogs.find((log) => log.id === id)
-
-          if (existingLog) {
-            console.log('Existing record found!')
-            if (payload.new.status === 'Done') {
-              const updatedLogs = prevLogs.filter((log) => log.id != id)
-              return [...updatedLogs]
+            if (existingLog) {
+              console.log('Existing record found!')
+              if (payload.new.status === 'Done') {
+                const updatedLogs = prevLogs.filter((log) => log.id != id)
+                return [...updatedLogs]
+              } else {
+                const updatedLogs = prevLogs.map((log) =>
+                  log.id === id ? payload.new : log
+                )
+                return [...updatedLogs]
+              }
             } else {
-              const updatedLogs = prevLogs.map((log) =>
-                log.id === id ? payload.new : log
-              )
-              return [...updatedLogs]
+              console.log('New record added!')
+              return [...prevLogs, payload.new]
             }
-          } else {
-            console.log('New record added!')
-            return [...prevLogs, payload.new]
-          }
-        })
+          })
+        }
       })
       .subscribe()
 

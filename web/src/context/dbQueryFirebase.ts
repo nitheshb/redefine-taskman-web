@@ -331,9 +331,6 @@ export const editTaskManData = async (orgId, dta, user) => {
     .from(`maahomes_TM_Tasks`)
     .update({
       created_on: Timestamp.now().toMillis(),
-      by_email: user.email,
-      by_name: user.displayName,
-      by_uid: user.uid,
       // dept: assignedToObj?.department[0] || '',
       due_date: due_date,
       priority: priorities,
@@ -346,6 +343,35 @@ export const editTaskManData = async (orgId, dta, user) => {
       participantsA: followA,
       participantsC: followA.length ||  0,
       followersC: followA.length || 0,
+      attachmentsCount: attachA?.length || 0,
+      attachmentsA: attachA
+
+    })
+    .eq('id', id)
+
+  console.log('updating error', lead_logs, error)
+  return lead_logs
+  // return onSnapshot(itemsQuery, snapshot, error)
+}
+export const editTaskManAttachmentsData = async (orgId, dta, user) => {
+  const {
+    id,
+    attachments,
+  } = dta
+  let attachA = []
+
+  if(attachments){
+    attachA = await attachments?.map((d) => {
+      const y = {}
+      y.name = d?.name
+      y.url = d?.url
+      y.type = d?.type
+      return y
+    })
+  }
+  const { data: lead_logs, error } = await supabase
+    .from(`maahomes_TM_Tasks`)
+    .update({
       attachmentsCount: attachA?.length || 0,
       attachmentsA: attachA
 

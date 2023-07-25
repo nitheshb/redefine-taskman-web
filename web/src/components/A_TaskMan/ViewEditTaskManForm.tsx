@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { useState, useEffect, useRef, Fragment } from 'react'
-import axios from 'axios'
+
 import { Dialog, Listbox, Transition } from '@headlessui/react'
 import { RadioGroup } from '@headlessui/react'
 import {
@@ -23,6 +23,7 @@ import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone'
 import CloseTwoToneIcon from '@mui/icons-material/CloseTwoTone'
 import ScheduleSendTwoToneIcon from '@mui/icons-material/ScheduleSendTwoTone'
 import SendTwoToneIcon from '@mui/icons-material/SendTwoTone'
+import axios from 'axios'
 import { setHours, setMinutes } from 'date-fns'
 import { Timestamp } from 'firebase/firestore'
 import { getStorage, ref, getDownloadURL } from 'firebase/storage'
@@ -45,6 +46,7 @@ import {
   getAllProjects,
   steamUsersListByRole,
   steamUsersList,
+  editTaskManAttachmentsData,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import { storage } from 'src/context/firebaseConfig'
@@ -93,7 +95,12 @@ const customStyles = {
 }
 import Loader from '../Loader/Loader'
 
-import { prettyDateTime } from 'src/util/dateConverter'
+import {
+  getDifferenceInDays,
+  getDifferenceInHours,
+  getDifferenceInMinutes,
+  prettyDateTime,
+} from 'src/util/dateConverter'
 
 import { formatFileSize } from 'react-papaparse'
 
@@ -128,7 +135,12 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
   const [files, setFiles] = useState([])
 
   const removeFile = (filename) => {
+    console.log('removing files ', files.filter((file) => file.name !== filename))
     setFiles(files.filter((file) => file.name !== filename))
+    const data = {}
+    data.id = taskManObj.id
+     data.attachments = files.filter((file) => file.name !== filename)
+    editTaskManAttachmentsData(orgId, data, user)
   }
 
   useEffect(() => {
@@ -200,7 +212,6 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
   }
   const [imageUrl, setImageUrl] = useState(null)
 
-
   const downloadImage = (imageUrl, filename) => {
     console.error('Error downloading image:', imageUrl)
     fetch(imageUrl)
@@ -231,7 +242,6 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
         console.error('Error downloading image:', error)
       })
   }
-
 
   const uploadHandler = (event) => {
     const file = event.target.files[0]
@@ -291,7 +301,7 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
         <section className="flex flex-row mx-4 py-4">
           <span className="ml-2 mt-[1px] ">
             <label className="font-semibold text-[#053219]  text-[18px]  mb-1  ">
-              {'View Task'} 🍉
+              {showEditTask ? 'Edit Task' : 'View Task' }{} 🍉
               <abbr title="required"></abbr>
             </label>
           </span>
@@ -647,8 +657,26 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
           </div>
           <section className="w-[350px] h-full bg-white rounded-lg border border-gray-100 mr-2 mt-2">
             <div className="flex flex-col w-full">
-              <div className="w-full bg-[#56d1e0] px-2 py-3 rounded-t-lg text-white text-xs text-semibold">
-                Pending Since {prettyDateTime(taskManObj?.due_date)}{' '}
+              <div className="w-full bg-[#56d1e0] px-2 py-3 flex flex-row justify-between rounded-t-lg text-white text-xs text-semibold">
+                <section>Pending Since</section>
+                <section className="font-semibold">
+
+                  {Math.abs(getDifferenceInMinutes(taskManObj?.due_date, '')) >
+                  60
+                    ? Math.abs(
+                        getDifferenceInMinutes(taskManObj?.due_date, '')
+                      ) > 1440
+                      ? `${getDifferenceInDays(taskManObj?.due_date, '')} Days `
+                      : `${getDifferenceInHours(
+                          taskManObj?.due_date,
+                          ''
+                        )} Hours `
+                    : `${getDifferenceInMinutes(taskManObj?.due_date, '')} Min`}
+                  {getDifferenceInMinutes(taskManObj?.due_date, '') < 0
+                    ? 'Due'
+                    : 'Left'}
+                </section>
+
               </div>
               <div className="w-[100%]  px-2 py-3 rounded-t-lg flex flex-row text-xs text-semibold p-4  border-b border-[#eef2f4]">
                 <div className="w-[110px]">Deadline:</div>
@@ -693,7 +721,6 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                     <div className="flex flex-row justify-between" key={i}>
                       <div key={i} className="text-[#0b66c3]  text-xs mt-1">
                         {data?.name}
-                
                       </div>
                       {/* <a
                         href={data?.url}
@@ -703,8 +730,12 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                       >
                         <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer mt-[8px] mr-2 inline-block text-gray-400 " />
                       </a> */}
-                       <button onClick={()=> downloadImage(data?.url, data?.name)}>                        <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer mt-[8px] mr-2 inline-block text-gray-400 " />
-</button>
+                      <button
+                        onClick={() => downloadImage(data?.url, data?.name)}
+                      >
+                        {' '}
+                        <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer mt-[8px] mr-2 inline-block text-gray-400 " />
+                      </button>
                     </div>
                   )
                 })}

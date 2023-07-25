@@ -1,10 +1,40 @@
 import React from 'react'
 
-import { PlusIcon, TrashIcon, SparklesIcon, DocumentIcon, DocumentTextIcon } from '@heroicons/react/outline'
+import {
+  PlusIcon,
+  TrashIcon,
+  SparklesIcon,
+  DocumentIcon,
+  DocumentTextIcon,
+} from '@heroicons/react/outline'
+import { getStorage, ref, deleteObject } from 'firebase/storage'
+
+import { editTaskManAttachmentsData } from 'src/context/dbQueryFirebase'
+import { useAuth } from 'src/context/firebase-auth-context'
+import { storage } from 'src/context/firebaseConfig'
 
 const FileList = ({ files, removeFile }) => {
-  const deleteFileHandler = (_name) => {
-    removeFile(_name)
+  const { user } = useAuth()
+  const { orgId } = user
+  const deleteFileHandler = (file) => {
+    console.log('file details are00', file)
+    const { name } = file
+    removeFile(name)
+
+    return
+
+    removeFile(name)
+    const desertRef = ref(storage, 'images/desert.jpg')
+
+    // Delete the file
+    deleteObject(desertRef)
+      .then(() => {
+        // File deleted successfully
+        removeFile(name)
+      })
+      .catch((e) => {
+        // Uh-oh, an error occurred!
+      })
     // delete from storage
     // delete from files state
     // axios
@@ -20,19 +50,18 @@ const FileList = ({ files, removeFile }) => {
             <DocumentTextIcon className="w-4 h-4" />
             <p>{file.name}</p>
 
-
             <div className="actions">
               <div className="loading"></div>
               {file.isUploading && (
                 <SparklesIcon
                   className="w-4 h-4"
-                  onClick={() => deleteFileHandler(file.name)}
+                  onClick={() => deleteFileHandler(file)}
                 />
               )}
               {!file.isUploading && (
                 <TrashIcon
                   className="w-4 h-4"
-                  onClick={() => deleteFileHandler(file.name)}
+                  onClick={() => deleteFileHandler(file)}
                 />
               )}
             </div>
