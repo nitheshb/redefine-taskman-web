@@ -6,7 +6,7 @@
 // import PhaseDetailsCard from '../PhaseDetailsCard/PhaseDetailsCard'
 import { useState, useEffect } from 'react'
 
-import { useTheme } from '@mui/material'
+import { Card, CardHeader, Container, Grid, Stack, Typography, useTheme } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 
 import { Link } from '@redwoodjs/router'
@@ -18,7 +18,12 @@ import { useAuth } from 'src/context/firebase-auth-context'
 import 'flowbite'
 
 import '../../styles/myStyles.css'
-import Chart from 'react-apexcharts'
+// import Chart from 'react-apexcharts'
+import ApexChart from '../Apex_chart/ApexChart'
+import PieChart from '../Apex_chart/PieChart'
+import Conversion_rates from '../Apex_chart/Conversion_rates'
+import RadarChart from '../Apex_chart/RadarChart'
+
 const CrmDashboardHome = ({ project }) => {
   const theme = useTheme()
   const { t } = useTranslation()
@@ -323,7 +328,7 @@ const CrmDashboardHome = ({ project }) => {
           </section>
         </div>
       </section>
-      <section className="flex flex-row  mr-1  mb-8 leading-7 text-gray-900  rounded-lg  ">
+      {/* <section className="flex flex-row  mr-1  mb-8 leading-7 text-gray-900  rounded-lg  ">
         <div className=" w-60">
           <div className="MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-1fwf2za-MuiPaper-root-MuiCard-root">
             <div className=" css-19otv5r">
@@ -477,9 +482,9 @@ const CrmDashboardHome = ({ project }) => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
-      <section>
+      {/* <section>
         <Chart
           type="bar"
           height={220}
@@ -505,7 +510,152 @@ const CrmDashboardHome = ({ project }) => {
         widthClass="max-w-md"
         projectsList={projects}
         viewLegalDocData={viewDocData}
-      />
+
+      /> */}
+      <section className="  mr-1  mb-2 leading-7 text-gray-900 bg-white  rounded-lg  ">
+        <Container
+          maxWidth={'xl'}
+          sx={{ backgroundColor: 'common.white', borderRadius: 3 }}
+          className="px-2"
+        >
+          <Grid container spacing={3}>
+            <Grid xs={12} sm={6} md={3}>
+              <Stack
+                alignItems="center"
+                sx={{
+                  py: 5,
+                  height: 210,
+                  borderRadius: 5,
+                  textAlign: 'center',
+                  // backgroundColor: 'common.white',
+                  color: '#4a4a4a',
+                  m: 2,
+                  mt: 3,
+                  background:
+                    'linear-gradient(to right bottom, #b4edcb, #82ffa1)',
+                }}
+                className=" w-100"
+              >
+                <Typography variant="subtitle2" sx={{ opacity: 0.64 }}>
+                  {<img alt="icon" src="/assets/ic_glass_bag.png" />}
+                </Typography>
+                <Typography variant="h4">714K</Typography>
+                <Typography variant="subtitle2" sx={{ opacity: 0.64 }}>
+                  Weekly Sales
+                </Typography>
+              </Stack>
+            </Grid>
+
+            <Grid xs={12} sm={6} md={3}>
+              <Stack
+                alignItems="center"
+                sx={{
+                  py: 5,
+                  height: 210,
+                  borderRadius: 5,
+                  textAlign: 'center',
+                  // backgroundColor: 'common.white',
+                  color: '#4a4a4a',
+                  m: 2,
+                  mt: 3,
+                  background:
+                    'linear-gradient(to right bottom, #9bdfe8, #c5f4fa)',
+                }}
+                className=" w-100"
+              >
+                <Typography variant="subtitle2" sx={{ opacity: 0.64 }}>
+                  {<img alt="icon" src="/assets/ic_glass_users.png" />}
+                </Typography>
+                <Typography variant="h4">1.35m</Typography>
+                <Typography variant="subtitle2" sx={{ opacity: 0.64 }}>
+                  New Users
+                </Typography>
+              </Stack>
+            </Grid>
+
+            <Grid xs={12} sm={6} md={3}>
+              <Stack
+                alignItems="center"
+                sx={{
+                  py: 5,
+                  height: 210,
+                  borderRadius: 5,
+                  textAlign: 'center',
+                  // backgroundColor: 'common.white',
+                  color: '#4a4a4a',
+                  m: 2,
+                  mt: 3,
+                  background:
+                    'linear-gradient(to right bottom, #ebdac5, #edcda6)',
+                }}
+                className=" w-100"
+              >
+                <Typography variant="subtitle2" sx={{ opacity: 0.64 }}>
+                  {<img alt="icon" src="/assets/ic_glass_buy.png" />}
+                </Typography>
+                <Typography variant="h4">1.72m</Typography>
+                <Typography variant="subtitle2" sx={{ opacity: 0.64 }}>
+                  item Orders{' '}
+                </Typography>
+              </Stack>
+            </Grid>
+
+            <Grid xs={12} sm={6} md={3}>
+              <Stack
+                alignItems="center"
+                sx={{
+                  py: 5,
+                  height: 210,
+                  borderRadius: 5,
+                  textAlign: 'center',
+                  // backgroundColor: 'common.white',
+                  color: '#4a4a4a',
+                  m: 2,
+                  mt: 3,
+                  background:
+                    'linear-gradient(to right bottom, #f5a287, #ffc2ad)',
+                }}
+                className=" w-100"
+              >
+                <Typography variant="subtitle2" sx={{ opacity: 0.64 }}>
+                  {<img alt="icon" src="/assets/ic_glass_message.png" />}
+                </Typography>
+                <Typography variant="h4">234</Typography>
+                <Typography variant="subtitle2" sx={{ opacity: 0.64 }}>
+                  Bug Reports
+                </Typography>
+              </Stack>
+            </Grid>
+
+            <Grid xs={12} md={6} lg={7} sx={{ m: 3, borderRadius: 5 }}>
+              <ApexChart />
+            </Grid>
+
+            <Grid xs={12} md={6} lg={4} sx={{ m: 3, borderRadius: 5 }}>
+              <PieChart />
+            </Grid>
+            <Grid xs={12} md={6} lg={7}  sx={{ m: 3, borderRadius: 5 }}>
+              <Conversion_rates/>
+            </Grid>
+
+            <Grid xs={12} md={6} lg={4} sx={{ m: 3, borderRadius: 5 }}>
+              <RadarChart/>
+            </Grid>
+
+            <Grid xs={12} md={6} lg={7}  sx={{ m: 3, borderRadius: 5 }}>
+            <Card >
+            <CardHeader title="News" />
+            </Card>
+            </Grid>
+
+            <Grid xs={12} md={6} lg={4} sx={{ m: 3, borderRadius: 5 }}>
+            <Card >
+            <CardHeader title="Order Timeline" />
+            </Card>
+            </Grid>
+          </Grid>
+        </Container>
+      </section>
     </div>
   )
 }
