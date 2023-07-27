@@ -78,7 +78,7 @@ const CostBreakUpPdf = ({
     const plotTotalSaleValue = Number.isFinite(y)
       ? Number(selUnitDetails?.selUnitDetails?.area * y)
       : Number(
-          selUnitDetails?.selUnitDetails?.area * (selUnitDetails?.rate_per_sqft || selUnitDetails?.sqft_rate)
+          selUnitDetails?.area * (selUnitDetails?.rate_per_sqft || selUnitDetails?.sqft_rate)
         )
 
     const plot_gstValue = Math.round(plotTotalSaleValue) * 0.05
@@ -87,7 +87,8 @@ const CostBreakUpPdf = ({
       Number.isFinite(y),
       y,
       selUnitDetails?.selUnitDetails?.area,
-      selUnitDetails?.rate_per_sqft
+      selUnitDetails?.rate_per_sqft,
+      selUnitDetails
     )
     let x = []
     if (csMode === 'plot_cs') {
@@ -147,7 +148,7 @@ const CostBreakUpPdf = ({
           },
           component: {
             value: 'plc_cost_sqft',
-            label: 'PLC ',
+            label: 'PLC',
           },
           others: selUnitDetails?.plc || 200,
           charges: Number.isFinite(z) ? z : selUnitDetails?.plc || selUnitDetails?.plc_per_sqft,
@@ -414,7 +415,7 @@ const CostBreakUpPdf = ({
     let gstTotal = 0
 
     if (csMode === 'plot_cs') {
-      total = Math.round(selUnitDetails?.selUnitDetails?.area * newValue)
+      total = Math.round(selUnitDetails?.area * newValue)
       gstTotal = Math.round(total * 0.05)
     } else {
       total = Math.round(selUnitDetails?.super_built_up_area * newValue)
