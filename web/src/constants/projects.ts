@@ -368,7 +368,14 @@ export const costSheetAdditionalChargesA = [
     value: 'frankingcharges',
     label: 'Franking Charges',
   },
-
+  {
+    value: 'infrastructurecharges',
+    label: 'Infrastructure charges',
+  },
+  {
+    value: 'legalcharges',
+    label: 'Legal charges',
+  },
   {
     value: 'maintenancecharges',
     label: 'Maintenance Charges',
@@ -389,6 +396,10 @@ export const costSheetAdditionalChargesA = [
   {
     value: 'legalCharges_onsale',
     label: 'Legal Charges on sale Deed',
+  },
+  {
+    value: 'gst',
+    label: 'GST',
   },
 ]
 export const csConstruAdditionalChargesA = [
