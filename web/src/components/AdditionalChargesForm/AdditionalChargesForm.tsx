@@ -347,13 +347,15 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
               },
               actionsColumnIndex: -1,
               paging: false,
-              minBodyHeight: '100px',
+              minBodyHeight: '900px',
               doubleHorizontalScroll: true,
+              position: 'absolute'
             }}
             style={{
               padding: '0px 30px',
               borderRadius: '0px',
               boxShadow: 'none',
+
             }}
             actionsCellStyle={{
               width: 'auto',
