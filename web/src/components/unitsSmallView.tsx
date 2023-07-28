@@ -15,6 +15,7 @@ const UnitsSmallViewCard = ({ kind, feedData, bg,  setSelUnitDetails,
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [selOptionIs, setSelOptionIs] = useState("")
   const [bgColor, setBgColor] = useState("")
+  const [fontColor, setFontColor] = useState("#000")
 
   const open = Boolean(anchorEl)
   const [sliderInfo, setSliderInfo] = useState({
@@ -25,11 +26,16 @@ const UnitsSmallViewCard = ({ kind, feedData, bg,  setSelUnitDetails,
 
   useEffect(()=>{
     if(kind.status==="available"){
-      setBgColor("#E1F0EF")
+      setBgColor("#fff")
     }else if(kind.status==="booked"){
       setBgColor("#CCFBF1")
+      // setBgColor("#22c55e29")
+      // setFontColor("#118d57")
     }else if(kind.status==="blocked"){
       setBgColor("#e9e9e9")
+    }else {
+      setBgColor("#F7EAD0")
+      setFontColor("#B76E00")
     }
   }, [kind])
   const handleSliderClose = () => {
@@ -48,10 +54,10 @@ const UnitsSmallViewCard = ({ kind, feedData, bg,  setSelUnitDetails,
   return (
     <div
       className={` min-w-[125px] z-10 flex flex-col  max-w-md p-2 mx-auto my-0 rounded-lg cursor-pointer border border-black-600 shadow-radius shadow-xl`}
-      style={{ backgroundColor: bgColor }}
+      style={{ backgroundColor: bgColor, color: fontColor}}
     >
       <div className="flex flex-row items-center justify-between">
-        <h3 className="m-0 ml-2 text-sm font-semibold  leading-tight tracking-tight text-black border-0 border-gray-200 sm:text-1xl md:text-1xl ">
+        <h3 className="m-0 ml-2 text-sm font-semibold  leading-tight tracking-tight  border-0 border-gray-200 sm:text-1xl md:text-1xl ">
           {kind?.unit_no}
         </h3>
         {/* <DropCompUnitStatus
