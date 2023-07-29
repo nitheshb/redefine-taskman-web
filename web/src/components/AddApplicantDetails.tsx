@@ -5,6 +5,8 @@ import { useState, useEffect } from 'react'
 
 import { Dialog } from '@headlessui/react'
 import { RadioGroup } from '@headlessui/react'
+import { DatePicker } from '@mui/x-date-pickers'
+import { setHours, setMinutes } from 'date-fns'
 import { Timestamp } from 'firebase/firestore'
 import { Form, Formik, Field } from 'formik'
 import { useSnackbar } from 'notistack'
@@ -29,6 +31,7 @@ import {
   sendWhatAppTextSms,
 } from 'src/util/axiosWhatAppApi'
 import { PhoneNoField } from 'src/util/formFields/phNoField'
+import { PhoneNoField2 } from 'src/util/formFields/phNoField2'
 import { CustomSelect } from 'src/util/formFields/selectBoxField'
 import { TextField } from 'src/util/formFields/TextField'
 import { TextField2 } from 'src/util/formFields/TextField2'
@@ -43,6 +46,7 @@ const AddApplicantDetails = ({
   selUnitDetails,
   dialogOpen,
 }) => {
+  const d = new window.Date()
   const { user } = useAuth()
   const { orgId } = user
   const [uploadedFileLink, handleFileUpload] = useFileUpload()
@@ -50,7 +54,7 @@ const AddApplicantDetails = ({
   const [usersList, setusersList] = useState([])
   const [projectList, setprojectList] = useState([])
   useEffect(() => {
-   console.log('yo yo ', selUnitDetails)
+    console.log('yo yo ', selUnitDetails)
   }, [])
 
   useEffect(() => {
@@ -164,6 +168,8 @@ const AddApplicantDetails = ({
   const [formMessage, setFormMessage] = useState('')
   const [selected, setSelected] = useState({})
   const [devType, setdevType] = useState(devTypeA[0])
+  const [startDate, setStartDate] = useState(d)
+
   const phoneRegExp =
     /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/
 
@@ -319,16 +325,43 @@ const AddApplicantDetails = ({
       leadDetailsObj2?.bookedBy || leadDetailsObj2?.assignedToObj?.label || '',
     purchasePurpose: leadDetailsObj2?.purchasePurpose || '',
   }
+  // Custom PAN card validation function
+  const isValidPAN = (value) => {
+    const regex = /[A-Z]{5}[0-9]{4}[A-Z]{1}/
+    console.log('match value is ', value, value === '', value == undefined)
+    if (value === '' || value == undefined) {
+      return true
+    }
+    return regex.test(value)
+  }
 
+  const isValidAadhar = (value) => {
+    // Aadhar card format: 12 digits
+    const regex = /^\d{12}$/
+    if (value === '' || value == undefined) {
+      return true
+    }
+    return regex.test(value)
+  }
   const validateSchema = Yup.object({
     // customerName1: Yup.string().required('Required'),
     // co_Name1: Yup.string().required('Required'),
-    // panNo1: Yup.string().required('Required'),
+    panNo1: Yup.string().test('pan', 'Invalid PAN card number', isValidPAN),
+    panNo2: Yup.string().test('pan', 'Invalid PAN card number', isValidPAN),
     // panDocUrl1: Yup.string().required('Required'),
-    // aadharNo1: Yup.string().required('Required'),
+    aadharNo1: Yup.string().test(
+      'aadhar',
+      'Invalid Aadhar card number',
+      isValidAadhar
+    ),
+    aadharNo2: Yup.string().test(
+      'aadhar',
+      'Invalid Aadhar card number',
+      isValidAadhar
+    ),
     // aadharUrl1: Yup.string().required('Required'),
     // occupation1: Yup.string().required('Required'),
-    // phoneNo1: Yup.string().required('Required'),
+    phoneNo1: Yup.string().required('Required'),
     // email1: Yup.string().required('Required'),
     // aggrementAddress: Yup.string().required('Required'),
   })
@@ -534,10 +567,15 @@ const AddApplicantDetails = ({
                                         </div>
                                         <div className="w-full lg:w-4/12 px-">
                                           <div className="relative w-full mb-3 mt-2">
-                                            <TextField2
+                                            <PhoneNoField2
                                               label="Phone No"
                                               name="phoneNo1"
                                               type="text"
+                                              onChange={(value) => {
+                                                // formik.setFieldValue('mobileNo', value.value)
+                                              }}
+                                              // value={formik.values.mobileNo}
+                                              options={{}}
                                             />
                                           </div>
                                         </div>
@@ -550,33 +588,6 @@ const AddApplicantDetails = ({
                                             />
                                           </div>
                                         </div>
-                                        <div className="w-full lg:w-4/12 ">
-                                          <div className="relative w-full mb-3 mt-2">
-                                            <TextField2
-                                              label="Date Of Birth"
-                                              name="dob1"
-                                              type="text"
-                                            />
-                                          </div>
-                                        </div>
-
-                                        <div className="w-full lg:w-8/12 pl-4">
-                                          <div className="relative w-full mb-3 mt-2">
-                                            <TextField2
-                                              label="Marital Status"
-                                              name="marital1"
-                                              type="text"
-                                            />
-                                          </div>
-                                        </div>
-
-                                        {/* <section
-                                        className="w-full  rounded-md  mt-6 bg-[#fff]"
-                                        style={{
-                                          boxShadow: '0 1px 12px #f2f2f2',
-                                        }}
-                                      > */}
-
                                         {/* </section> */}
                                       </div>
                                     </div>
@@ -591,18 +602,48 @@ const AddApplicantDetails = ({
                                           First Applicant Proofs
                                         </h6>
                                       </div>
-                                      <div className="w-full flex flex-row">
-                                        <div className="w-full lg:w-4/12 px-">
+                                      <div className="flex flex-wrap">
+                                        <div className="w-full lg:w-4/12 ">
                                           <div className="relative w-full mb-3 mt-2">
                                             <TextField2
-                                              label="PAN No"
-                                              name="panNo1"
+                                              label="Date Of Birth"
+                                              name="dob1"
+                                              type="text"
+                                            />
+                                            {/* <DatePicker
+                                              className=" pl- px- h-10 rounded-md   min-w-[151px] inline  text-[#0091ae]   w-full min-w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] px-4"
+                                              selected={startDate}
+                                              onChange={(date) => {
+                                                formik.setFieldValue(
+                                                  'dob1',
+                                                  date?.getTime()
+                                                )
+                                                setStartDate(date)
+                                              }}
+                                              timeFormat="HH:mm"
+                                              injectTimes={[
+                                                setHours(setMinutes(d, 1), 0),
+                                                setHours(setMinutes(d, 5), 12),
+                                                setHours(setMinutes(d, 59), 23),
+                                              ]}
+                                              dateFormat="MMMM d, yyyy"
+                                            /> */}
+                                          </div>
+                                        </div>
+
+                                        <div className="w-full lg:w-8/12 pl-4 ">
+                                          <div className="relative w-full mb-3 mt-2">
+                                            <TextField2
+                                              label="Marital Status"
+                                              name="marital1"
                                               type="text"
                                             />
                                           </div>
                                         </div>
-                                        <div className="w-full lg:w-8/12 pl-4">
-                                          <div className="relative w-full mb-3 mt-2">
+                                      </div>
+                                      <div className="w-full flex flex-row">
+                                        <div className=" ">
+                                          <div className="relative w-full  mt-5">
                                             <div>
                                               {uploadedFileLink ? (
                                                 <a href={uploadedFileLink}>
@@ -611,7 +652,7 @@ const AddApplicantDetails = ({
                                               ) : null}
                                               <label
                                                 htmlFor="formFile"
-                                                className="form-label cursor-pointer inline-block mb-2  font-regular text-sm "
+                                                className="form-label cursor-pointer inline-block mb-2  font-regular text-xs bg-[#efef] rounded-2xl px-2 py-1 min-w-[130px] "
                                               >
                                                 Upload Pan Card
                                               </label>
@@ -628,17 +669,17 @@ const AddApplicantDetails = ({
                                             </div>
                                           </div>
                                         </div>
-                                      </div>
-                                      <div className="w-full flex flex-row">
-                                        <div className="w-full lg:w-4/12 px-">
+                                        <div className="w-full  px- ml-3">
                                           <div className="relative w-full mb-3 mt-2">
                                             <TextField2
-                                              label="Aadhar No"
-                                              name="aadharNo1"
+                                              label="PAN No"
+                                              name="panNo1"
                                               type="text"
                                             />
                                           </div>
                                         </div>
+                                      </div>
+                                      <div className="w-full flex flex-row">
                                         {/* <div className="w-full lg:w-8/12 pl-4">
                                           <div className="relative w-full mb-3 mt-2">
                                             <TextField2
@@ -648,8 +689,8 @@ const AddApplicantDetails = ({
                                             />
                                           </div>
                                         </div> */}
-                                        <div className="w-full lg:w-8/12 pl-4">
-                                          <div className="relative w-full mb-3 mt-2">
+                                        <div className=" ">
+                                          <div className="relative w-full mt-5">
                                             <div>
                                               {uploadedFileLink ? (
                                                 <a href={uploadedFileLink}>
@@ -658,7 +699,7 @@ const AddApplicantDetails = ({
                                               ) : null}
                                               <label
                                                 htmlFor="formFile"
-                                                className="form-label cursor-pointer inline-block mb-2  font-regular text-sm "
+                                                className="form-label cursor-pointer inline-block mb-2  font-regular text-xs bg-[#efef] rounded-2xl px-2 py-1 min-w-[130px]"
                                               >
                                                 Upload Aadhar Card
                                               </label>
@@ -673,6 +714,15 @@ const AddApplicantDetails = ({
                                                 }
                                               />
                                             </div>
+                                          </div>
+                                        </div>
+                                        <div className=" w-full  pl-2-">
+                                          <div className="relative w-full mb-3 mt-2 ml-3">
+                                            <TextField2
+                                              label="Aadhar No"
+                                              name="aadharNo1"
+                                              type="text"
+                                            />
                                           </div>
                                         </div>
                                       </div>
@@ -713,10 +763,15 @@ const AddApplicantDetails = ({
                                         </div>
                                         <div className="w-full lg:w-4/12 px-">
                                           <div className="relative w-full mb-3 mt-2">
-                                            <TextField2
+                                            <PhoneNoField2
                                               label="Phone No"
                                               name="phoneNo2"
                                               type="text"
+                                              onChange={(value) => {
+                                                // formik.setFieldValue('mobileNo', value.value)
+                                              }}
+                                              // value={formik.values.mobileNo}
+                                              options={{}}
                                             />
                                           </div>
                                         </div>
@@ -729,6 +784,18 @@ const AddApplicantDetails = ({
                                             />
                                           </div>
                                         </div>
+                                      </div>
+                                    </div>
+                                    <div className="w-full lg:w-6/12 px-4 ">
+                                      <div className="w-full flex flex-row ">
+                                        <div className="w-3 h-3 mt-[16px] rounded-md bg-[#FB6094]  "></div>
+                                        <div className="w-2 h-2 ml-[1px] rounded-md mt-[18px] bg-[#FB6094]  "></div>
+                                        <div className="w-1 h-1 ml-[1px] rounded-md mr-1 mt-[20px] bg-[#FB6094]  "></div>
+                                        <h6 className="w-full lg:w-12/12 text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
+                                          Second Applicant Proofs
+                                        </h6>
+                                      </div>
+                                      <div className="flex flex-wrap">
                                         <div className="w-full lg:w-4/12 ">
                                           <div className="relative w-full mb-3 mt-2">
                                             <TextField2
@@ -749,18 +816,36 @@ const AddApplicantDetails = ({
                                           </div>
                                         </div>
                                       </div>
-                                    </div>
-                                    <div className="w-full lg:w-6/12 px-4 ">
-                                      <div className="w-full flex flex-row ">
-                                        <div className="w-3 h-3 mt-[16px] rounded-md bg-[#FB6094]  "></div>
-                                        <div className="w-2 h-2 ml-[1px] rounded-md mt-[18px] bg-[#FB6094]  "></div>
-                                        <div className="w-1 h-1 ml-[1px] rounded-md mr-1 mt-[20px] bg-[#FB6094]  "></div>
-                                        <h6 className="w-full lg:w-12/12 text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
-                                          Second Applicant Proofs
-                                        </h6>
-                                      </div>
+
                                       <div className="w-full flex flex-row">
-                                        <div className="w-full lg:w-4/12 px-">
+                                        <div className=" ">
+                                          <div className="relative w-full  mt-5">
+                                            <div>
+                                              {uploadedFileLink ? (
+                                                <a href={uploadedFileLink}>
+                                                  View uploaded file
+                                                </a>
+                                              ) : null}
+                                              <label
+                                                htmlFor="formFile"
+                                                className="form-label cursor-pointer inline-block mb-2  font-regular text-xs bg-[#efef] rounded-2xl px-2 py-1 min-w-[130px] "
+                                              >
+                                                Upload Pan Card
+                                              </label>
+                                              <input
+                                                type="file"
+                                                className="hidden"
+                                                id="formFile"
+                                                onChange={(e) =>
+                                                  handleFileUpload(
+                                                    e.target.files[0]
+                                                  )
+                                                }
+                                              />
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div className="w-full px- ml-3">
                                           <div className="relative w-full mb-3 mt-2">
                                             <TextField2
                                               label="PAN No"
@@ -769,31 +854,49 @@ const AddApplicantDetails = ({
                                             />
                                           </div>
                                         </div>
-                                        <div className="w-full lg:w-8/12 pl-4">
-                                          <div className="relative w-full mb-3 mt-2">
-                                            <TextField2
-                                              label="PAN upload"
-                                              name="panDocUrl2"
-                                              type="text"
-                                            />
-                                          </div>
-                                        </div>
                                       </div>
                                       <div className="w-full flex flex-row">
-                                        <div className="w-full lg:w-4/12 px-">
-                                          <div className="relative w-full mb-3 mt-2">
+                                        {/* <div className="w-full lg:w-8/12 pl-4">
+  <div className="relative w-full mb-3 mt-2">
+    <TextField2
+      label="Aadhar Upload"
+      name="aadharUrl1"
+      type="text"
+    />
+  </div>
+</div> */}
+                                        <div className=" ">
+                                          <div className="relative w-full mt-5">
+                                            <div>
+                                              {uploadedFileLink ? (
+                                                <a href={uploadedFileLink}>
+                                                  View uploaded file
+                                                </a>
+                                              ) : null}
+                                              <label
+                                                htmlFor="formFile"
+                                                className="form-label cursor-pointer inline-block mb-2  font-regular text-xs bg-[#efef] rounded-2xl px-2 py-1 min-w-[130px]"
+                                              >
+                                                Upload Aadhar Card
+                                              </label>
+                                              <input
+                                                type="file"
+                                                className="hidden"
+                                                id="formFile"
+                                                onChange={(e) =>
+                                                  handleFileUpload(
+                                                    e.target.files[0]
+                                                  )
+                                                }
+                                              />
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div className=" w-full  pr-2">
+                                          <div className="relative w-full mb-3 mt-2 ml-3">
                                             <TextField2
                                               label="Aadhar No"
                                               name="aadharNo2"
-                                              type="text"
-                                            />
-                                          </div>
-                                        </div>
-                                        <div className="w-full lg:w-8/12 pl-4">
-                                          <div className="relative w-full mb-3 mt-2">
-                                            <TextField2
-                                              label="Aadhar Upload"
-                                              name="aadharUrl2"
                                               type="text"
                                             />
                                           </div>
@@ -935,20 +1038,20 @@ const AddApplicantDetails = ({
                                 </div> */}
 
                                 <hr className="mt-6 border-b-1 border-blueGray-300" />
-                                <div className="mt-5 text-right md:space-x-3 md:block flex flex-col-reverse mb-6 mr-6">
-                                  <button
-                                    className="bg-green-400 text-white active:bg-pink-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
-                                    type="submit"
-                                    disabled={loading}
-                                  >
-                                    {'Save'}
-                                  </button>
-                                </div>
                               </section>
                             </div>
                           </div>
                         </div>
                       </section>
+                    </div>
+                    <div className="mt-5 text-right md:space-x-3 md:block flex flex-col-reverse py-3 mr-6 flex flex-col mt-2 z-10 flex flex-row justify-between mt-2 pr-6 bg-white shadow-lg absolute bottom-0  w-full">
+                      <button
+                        className="bg-green-400 text-white active:bg-pink-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+                        type="submit"
+                        disabled={loading}
+                      >
+                        {'Save'}
+                      </button>
                     </div>
                   </Form>
                 )}

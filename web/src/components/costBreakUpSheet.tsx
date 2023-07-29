@@ -614,10 +614,8 @@ const CostBreakUpSheet = ({
 
               {['costsheet', 'allsheets'].includes(onStep) && (
                 <div className="">
-                  <section className="bg-[#F6F7FE]">
-                    {/* <p className="text-md font-extrabold tracking-tight uppercase font-body pb-4">
-                      COST SHEET
-                    </p> */}
+                  {/* <section className="bg-[#F6F7FE]">
+
                     <div className=" border-gray-800 flex flex-row justify-between bg-[#F6F7FE]">
                       <div>
                         <ul
@@ -656,13 +654,7 @@ const CostBreakUpSheet = ({
                                           color="primary"
                                           checked={csMode === d.val}
                                           onClick={() => setCsMode(d.val)}
-                                          // checked={formik.values.isGSTChecked}
-                                          // onChange={() =>
-                                          //   formik.setFieldValue(
-                                          //     'isGSTChecked',
-                                          //     !formik.values.isGSTChecked
-                                          //   )
-                                          // }
+
                                         />
                                       )}
                                     />
@@ -695,9 +687,9 @@ const CostBreakUpSheet = ({
                         </div>
                       </section>
                     </div>
-                  </section>
+                  </section> */}
                   <div className="flex flex-col mx-0 bg-[#F8FAFC] ">
-                    <div className="p-2">
+                    <div className="">
                       <Formik
                         enableReinitialize={true}
                         initialValues={initialState}
@@ -708,9 +700,9 @@ const CostBreakUpSheet = ({
                         }}
                       >
                         {(formik) => (
-                          <Form ref={ref}>
+                          <Form ref={ref} className=''>
                             <section
-                              className="bg-[#fff] p-2 rounded-md border border-black "
+                              className="bg-[#fff] rounded-md border m-2"
                               style={{
                                 boxShadow: '0 1px 12px #f2f2f2',
                               }}
@@ -781,15 +773,15 @@ const CostBreakUpSheet = ({
                                 />
                               )}
                             </section>
-                            <div className="flex flex-col mt-2 p-4 ">
-                              <div className="mt-5 text-right md:space-x-3 md:block flex flex-col-reverse mb-6">
+                            <div className="flex flex-col mt-2 z-10 flex flex-row justify-between mt-2 pr-6 bg-white shadow-lg absolute bottom-0  w-full">
+                              <div className="mt-2 text-right md:space-x-3 md:block flex flex-col-reverse mb-3">
                                 <button
                                   onClick={() => {
                                     setisImportLeadsOpen(true)
                                     // dialogOpen(false)
                                   }}
                                   type="button"
-                                  className="mb-4 md:mb-0 bg-white px-5 py-2 text-sm shadow-sm font-medium tracking-wider border text-gray-600 rounded-sm hover:shadow-lg hover:bg-gray-100"
+                                  className="mb-2 md:mb-0 bg-white px-5 py-2 text-sm shadow-sm font-medium tracking-wider border text-gray-600 rounded-sm hover:shadow-lg hover:bg-gray-100"
                                 >
                                   {' '}
                                   Preview & send to customer{' '}

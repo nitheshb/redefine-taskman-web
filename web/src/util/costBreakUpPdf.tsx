@@ -3,7 +3,7 @@ import { useState, useEffect, createRef, useRef } from 'react'
 import { InformationCircleIcon } from '@heroicons/react/outline'
 import { PDFExport } from '@progress/kendo-react-pdf'
 import { Timestamp } from 'firebase/firestore'
-import { Form, Formik } from 'formik'
+import { Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 
 import CrmUnitHeader from 'src/components/A_CrmModule/CrmUnitHeader'
@@ -14,9 +14,9 @@ import CostBreakUpPdfPreview from './costBreakUpPdfPreview'
 import { TextFieldFlat } from './formFields/TextFieldFlatType'
 
 import '../styles/myStyles.css'
+import { Checkbox } from '@mui/material'
 
 const CostBreakUpPdf = ({
-
   projectDetails,
   csMode,
   pdfExportComponent,
@@ -30,7 +30,6 @@ const CostBreakUpPdf = ({
   setAddiChargesObj,
   setNewPS,
   newPlotPS,
-  showGstCol,
   newPlotCostSheetA,
   setNewPlotCostSheetA,
   setNewPlotPS,
@@ -52,6 +51,7 @@ const CostBreakUpPdf = ({
   const [partBPayload, setPartBPayload] = useState([])
   const [psPayload, setPSPayload] = useState([])
   const [pdfPreview, setpdfPreview] = useState(false)
+  const [showGstCol, setShowGstCol] = useState(true)
 
 
   useEffect(() => {
@@ -72,13 +72,16 @@ const CostBreakUpPdf = ({
       paymentScheduleObj,
     } = selPhaseObj
     const { uid } = selUnitDetails
-    const y = leadDetailsObj1[`${uid}_cs`]?.newSqftPrice || selUnitDetails?.sqft_rate
-    const z = leadDetailsObj1[`${uid}_cs`]?.newPLC || selUnitDetails?.plc_per_sqft
+    const y =
+      leadDetailsObj1[`${uid}_cs`]?.newSqftPrice || selUnitDetails?.sqft_rate
+    const z =
+      leadDetailsObj1[`${uid}_cs`]?.newPLC || selUnitDetails?.plc_per_sqft
 
     const plotTotalSaleValue = Number.isFinite(y)
       ? Number(selUnitDetails?.selUnitDetails?.area * y)
       : Number(
-          selUnitDetails?.area * (selUnitDetails?.rate_per_sqft || selUnitDetails?.sqft_rate)
+          selUnitDetails?.area *
+            (selUnitDetails?.rate_per_sqft || selUnitDetails?.sqft_rate)
         )
 
     const plot_gstValue = Math.round(plotTotalSaleValue) * 0.05
@@ -151,10 +154,13 @@ const CostBreakUpPdf = ({
             label: 'PLC',
           },
           others: selUnitDetails?.plc || 200,
-          charges: Number.isFinite(z) ? z : selUnitDetails?.plc || selUnitDetails?.plc_per_sqft,
+          charges: Number.isFinite(z)
+            ? z
+            : selUnitDetails?.plc || selUnitDetails?.plc_per_sqft,
           TotalSaleValue: Math.round(
             selUnitDetails?.super_built_up_area ||
-              selUnitDetails?.area * (selUnitDetails?.plc || selUnitDetails?.plc_per_sqft)
+              selUnitDetails?.area *
+                (selUnitDetails?.plc || selUnitDetails?.plc_per_sqft)
           ),
           // charges: y,
           gst: {
@@ -348,7 +354,12 @@ const CostBreakUpPdf = ({
     const partBTotal = selPhaseObj?.additonalChargesObj.reduce(
       (partialSum, obj) =>
         partialSum +
-        Number(computeTotal(obj, selUnitDetails?.super_built_up_area)),
+        Number(
+          computeTotal(
+            obj,
+            selUnitDetails?.super_built_up_area || selUnitDetails?.area
+          )
+        ),
       0
     )
 
@@ -452,17 +463,40 @@ const CostBreakUpPdf = ({
                 fileName={`${selUnitDetails?.unit_no}_${leadDetailsObj1?.Name}_Nirvana`}
                 ref={pdfExportComponent}
               >
-                <div className="px-4">
+                <div className="">
                   <div>
                     <div>
                       <div className="">
-                        <h1 className="text-bodyLato text-center text-gray-800 font-semibold text-[12px] border-b ">
+                        <section className='flex flex-row justify-between bg-[#f3fff2] p-2 py-1 border-b rounded-t-lg'>
+                        <h1 className="text-bold font-bold text-center text-gray-800  text-[14px] mt-[10px] ">
                           COST SHEET
                         </h1>
-                        <div className="border rounded-md">
+                        <section className="">
+                        <div className="w-full flex items-center ">
+                          <label
+                            htmlFor="area"
+                            className="label font-regular text-sm font-bodyLato"
+                          >
+                            Show Gst
+                          </label>
+                          <Field
+                            name="isGSTChecked"
+                            type="checkbox"
+                            component={() => (
+                              <Checkbox
+                                color="primary"
+                                checked={showGstCol}
+                                onClick={() => setShowGstCol(!showGstCol)}
+                              />
+                            )}
+                          />
+                        </div>
+                      </section>
+                        </section>
+                        <div className=" rounded-md">
                           <table className="w-[100%]">
                             <thead>
-                              <tr className="h-8 mb-1 border-none w-[100%] bg-[#318b96] text-white ">
+                              <tr className="h-8 mb-1 border-none w-[100%] bg-[#f3fff2] ">
                                 <th className="min-w-[35%] px-2  text-[10px] text-left  tracking-wide uppercase ">
                                   Particulars
                                 </th>
@@ -491,14 +525,17 @@ const CostBreakUpPdf = ({
                             <tbody>
                               {' '}
                               {costSheetA?.map((d1, inx) => (
-                                <tr key={inx} className="py-1 my-2 h-[24px]">
+                                <tr
+                                  key={inx}
+                                  className="py-1 my-2 h-[40px] border-b border-dashed py-[24px]"
+                                >
                                   <th className="w-[40%] px-2 text-[11px] text-left text-gray-700  ">
                                     {d1?.component?.label}
                                   </th>
                                   <td className="w-[15%]  px-2 text-[12px] text-right text-gray-700 ">
                                     <TextFieldFlat
                                       label=""
-                                      className="w-[100%] text-[12px] text-right text-gray-800 border  border-black"
+                                      className="w-[100%] text-[12px] text-right font-bold border  border-[#919eab33] rounded pr-1 py-[4px] text-[#B76E00]"
                                       name="ratePerSqft"
                                       onChange={(e) => {
                                         // setNewSqftPrice(e.target.value)
@@ -552,32 +589,32 @@ const CostBreakUpPdf = ({
                                   <td
                                     className={`${
                                       !showGstCol ? 'hidden' : ''
-                                    } w-[15%] px-2 text-[12px] text-right text-gray-700 `}
+                                    } w-[15%] px-2 text-[12px] text-right text-slate-500 text-sm `}
                                   >
-                                    {d1?.TotalSaleValue?.toLocaleString(
+                                     ₹{d1?.TotalSaleValue?.toLocaleString(
                                       'en-IN'
                                     )}
                                   </td>
                                   <td
                                     className={`${
                                       !showGstCol ? 'hidden' : ''
-                                    } w-[15%] px-2 text-[12px] text-right text-gray-700 `}
+                                    } w-[15%] px-2 text-[12px] text-right text-slate-500 text-sm  `}
                                   >
-                                    {d1?.gst?.value?.toLocaleString('en-IN')}
+                                     ₹{d1?.gst?.value?.toLocaleString('en-IN')}
                                   </td>
-                                  <td className="w-[15%] px-2 text-[12px] text-right text-gray-800 ">
-                                    {d1?.TotalNetSaleValueGsT?.toLocaleString(
+                                  <td className="w-[15%] px-2 text-[12px] text-right text-slate-900 ">
+                                  ₹{d1?.TotalNetSaleValueGsT?.toLocaleString(
                                       'en-IN'
                                     )}
                                   </td>
                                 </tr>
                               ))}
-                              <tr className=" border-[#fab56c]  bg-[#e3fcff]">
-                                <th className="w-[40%] text-[12px] text-left text-gray-600 pl-2 ">
+                              <tr className=" border-[#fab56c]   h-[32px]">
+                                <th className="w-[40%] text-[12px] text-left text-[#118D57] pl-2 ">
                                   Total (A)
                                 </th>
-                                <td className="w-[15%] px-2 font-bold text-[12px] text-right text-gray-800 ">
-                                  {costSheetA
+                                <td className="w-[15%] px-2 font-bold text-[12px] text-right text-gray-600 pr-3">
+                                ₹{costSheetA
                                     .reduce(
                                       (partialSum, obj) =>
                                         partialSum + Number(obj?.charges),
@@ -590,7 +627,7 @@ const CostBreakUpPdf = ({
                                     !showGstCol ? 'hidden' : ''
                                   } w-[15%] px-2 font-bold  text-[12px] text-right text-gray-800 `}
                                 >
-                                  {costSheetA
+                                   ₹{costSheetA
                                     .reduce(
                                       (partialSum, obj) =>
                                         partialSum +
@@ -604,7 +641,7 @@ const CostBreakUpPdf = ({
                                     !showGstCol ? 'hidden' : ''
                                   } w-[15%] px-2 font-bold  text-[12px] text-right text-gray-800 `}
                                 >
-                                  {costSheetA
+                                  ₹{costSheetA
                                     .reduce(
                                       (partialSum, obj) =>
                                         partialSum + Number(obj?.gst?.value),
@@ -612,8 +649,8 @@ const CostBreakUpPdf = ({
                                     )
                                     ?.toLocaleString('en-IN')}
                                 </td>
-                                <td className="w-[15%] px-2 font-bold  text-[12px] text-right text-gray-800 ">
-                                  {partATotal?.toLocaleString('en-IN')}
+                                <td className="w-[15%] px-2 font-bold  text-[12px] text-right  text-[#118D57] ">
+                                ₹{partATotal?.toLocaleString('en-IN')}
                                 </td>
                               </tr>
                             </tbody>
@@ -635,10 +672,13 @@ const CostBreakUpPdf = ({
                           </thead> */}
                             <tbody>
                               {partBPayload?.map((d1, inx) => (
-                                <tr key={inx} className="h-[22px]">
+                                <tr
+                                  key={inx}
+                                  className="h-[32px] border-b border-dashed"
+                                >
                                   <th className=" text-[12px] px-2 text-left text-gray-700 ">
-                                    {d1?.component?.label} (0.05% Plor Sale
-                                    value)
+                                    {d1?.component?.label}
+                                    {/* {d1?.units?.value === 'costpersqft' && `(${d1?.charges}% on Sale value)`} */}
                                   </th>
                                   <td className="text-[12px] px-2 text-left text-gray-700 ">
                                     {d1?.description}
@@ -646,50 +686,64 @@ const CostBreakUpPdf = ({
                                   <td className="text-[12px] px-2 text-right text-gray-700 ">
                                     {/* {Number(d1?.charges)?.toLocaleString('en-IN')} */}
                                     {Number(
-                                      computeTotal(
-                                        d1,
-                                        selUnitDetails?.super_built_up_area
-                                      )
+                                      computeTotal(d1, selUnitDetails?.area)
                                     )?.toLocaleString('en-IN')}
                                   </td>
                                 </tr>
                               ))}
-                              <tr className=" h-[22px]">
-                                <th className="text-[12px] px-2 text-left text-gray-700 ">
+                              <tr className=" h-[32px] ">
+                                <th className="text-[12px] px-2 text-left  text-[#118D57] ">
                                   Total (B)
                                 </th>
                                 <td className="text-[12px] px-2 text-right text-gray-400 "></td>
-                                <td className="text-[12px] px-2 text-right text-gray-800 font-bold ">
-                                  {partBTotal?.toLocaleString('en-IN')}
+                                <td className="text-[12px] px-2 text-right text-[#118D57] font-bold ">
+                                ₹{partBTotal?.toLocaleString('en-IN')}
                                 </td>
                               </tr>
                             </tbody>
                           </table>
 
-                          <section className="flex flex-row justify-between  bg-[#318b96]  ">
-                            <h1 className="px-2  text-[12px] text-left text-white text-[12px] pt-[3px] font-bold ">
+                          <section className="flex flex-row justify-between  bg-[#dff6dd]  h-[34px] py-[7px] ">
+                            <h1 className="px-2 text-[12px] text-left  text-[12px] font-bold ">
                               Total Plot Sale Value(A+B)
                             </h1>
-                            <section className=" px-2 d-md  text-white ">
-                              {netTotal?.toLocaleString('en-IN')}
+                            <section className='flex flex-row'>
+                            <section className="px-2 d-md font-bold text-[12px] text-[#0000008c] ">
+                              ₹{partATotal?.toLocaleString('en-IN')}
+                            </section>
+                            <section className=" d-md font-bold text-[12px] text-[#0000008c] ">
+                            +
+                            </section>
+
+                            <section className="px-2 d-md font-bold text-[12px] text-[#0000008c] ">
+                              ₹{partBTotal?.toLocaleString('en-IN')}
+                            </section>
+                            <section className=" d-md font-bold text-[12px] text-[#0000008c] ">
+                            =
+                            </section>
+                            <section className="px-2 d-md font-bold text-[16px] text-[#000000e6] leading-none">
+                              ₹{netTotal?.toLocaleString('en-IN')}
+                            </section>
                             </section>
                           </section>
                         </div>
                         <div className=" mt-4 ">
-                          <h1 className="text-bodyLato text-center text-gray-800 font-semibold text-[12px] border-b border-gray">
+                          <section className='flex p-2'>
+                          <h1 className="text-bodyLato text-center text-gray-800 font-bold text-[14px] border-b ">
                             PAYMENT SCHEDULE
                           </h1>
-                          <table className="w-full border-x border-black">
+                          </section>
+                          <table className="w-full border-b border-dashed">
                             <thead className="">
                               {' '}
-                              <tr className=" h-8  border-none bg-[#318b96] text-white ">
-                                <th className="w-[50%] px-2   text-left  tracking-wide uppercase d-xsm text-white ">
+                              <tr className=" h-8  border-none bg-[#f3fff2]  ">
+                                <th className="w-[50%] px-2   text-left  tracking-wide uppercase d-xsm  ">
                                   Particulars
                                 </th>
-                                <th className="w-[30%] px-2   text-left  tracking-wide uppercase d-xsm text-white">
+                                <th className="w-[30%] px-2   text-left  tracking-wide uppercase d-xsm ">
                                   Payment Timeline
                                 </th>
-                                <th className="w-[20%] px-2   text-right  tracking-wide uppercase d-xsm text-white">
+                                <th className="w-[20%] px-2   text-right  tracking-wide uppercase d-xsm ">
                                   Total inc GST
                                 </th>
                               </tr>
@@ -708,18 +762,18 @@ const CostBreakUpPdf = ({
                                     {d1?.description}
                                   </td>
                                   <td className="text-[12px] px-2  text-right text-gray-800 ">
-                                    {d1?.value?.toLocaleString('en-IN')}
+                                  ₹{d1?.value?.toLocaleString('en-IN')}
                                   </td>
                                 </tr>
                               ))}
 
-                              <tr className="border-b-[0.05px] border-black">
+                              <tr className="h-[32px]">
                                 <th className="text-[12px] px-2  text-left text-gray-800 ">
                                   Plot Value Total Rs.:
                                 </th>
                                 <td className="text-[12px] px-2  text-right text-gray-400 "></td>
                                 <th className="text-[12px] px-2  text-right text-gray-800 ">
-                                  {netTotal?.toLocaleString('en-IN')}
+                                ₹{netTotal?.toLocaleString('en-IN')}
                                 </th>
                               </tr>
                             </tbody>

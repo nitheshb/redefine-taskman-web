@@ -6,6 +6,7 @@ const CrmUnitPaymentSchedule = ({ selCustomerPayload, assets, totalIs }) => {
   const { user } = useAuth()
   const { orgId } = user
 
+  console.log('payload is ', selCustomerPayload)
   return (
     <>
       <div className="mt-2">
