@@ -789,7 +789,7 @@ const Floordetails = ({
                       'flex cursor-pointer items-center h-6 px-3 text-xs font-semibold  rounded-md hover:bg-pink-200 hover:text-pink-800 text-green-800 '
                     }
                   >
-                    {unitShrink && (
+                    {/* {unitShrink && (
                       <>
                         <ArrowsExpandIcon
                           className="h-3 w-3 mr-1"
@@ -797,7 +797,7 @@ const Floordetails = ({
                         />
                         Expand
                       </>
-                    )}
+                    )} */}
 
                     {!unitShrink && (
                       <>
