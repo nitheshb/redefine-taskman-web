@@ -127,7 +127,12 @@ const Floordetails = ({
   const [filBedRooms, setFilBedRooms] = useState([1, 2, 3, 4])
   const [filBathrooms, setFilBathrooms] = useState([1, 2, 3, 4])
   const [selStatus, setFilSelStatus] = useState('all')
+  const [isUnitDetailsOpen, setisUnitDetailsOpen] = useState(false)
+  const [selUnitDetails, setSelUnitDetails1] = useState({})
+  const [transactionData, setTransactionData] = useState({})
+  const [selSubMenu, setSelSubMenu] = useState('summary')
 
+  const [selSubMenu1, setSelSubMenu1] = useState('summary')
   const [filSuperBuildUpArea, setFilSuperBuiltUpArea] = useState([35397, 59895])
 
   const [filRatePerSqft, setFilRatePerSqft] = useState(12000000000000)
@@ -422,6 +427,7 @@ const Floordetails = ({
         const projects = querySnapshot.docs.map(async (docSnapshot) => {
           const x = docSnapshot.data()
           x.uid = docSnapshot.id
+          x.id = docSnapshot.id
           const { staDA } = x
           y.push(x)
         })
@@ -887,16 +893,21 @@ const Floordetails = ({
                                     widthClass: 'max-w-4xl',
                                   })
                                 } else {
-                                  setSliderInfo({
-                                    open: true,
-                                    title: 'View Unit',
-                                    sliderData: {
-                                      unitDetail: data,
-                                      phaseDetail: phaseFeed,
-                                      leadDetailsObj: leadDetailsObj,
-                                    },
-                                    widthClass: 'max-w-4xl',
-                                  })
+                                  console.log('customer Detailsare', data)
+                                  setSelUnitDetails1(data)
+                                  setisUnitDetailsOpen(true)
+
+                                  return
+                                  // setSliderInfo({
+                                  //   open: true,
+                                  //   title: 'unit_view',
+                                  //   sliderData: {
+                                  //     unitDetail: data,
+                                  //     phaseDetail: phaseFeed,
+                                  //     leadDetailsObj: leadDetailsObj,
+                                  //   },
+                                  //   widthClass: 'max-w-7xl',
+                                  // })
                                 }
                               }}
                             >
@@ -904,7 +915,7 @@ const Floordetails = ({
                                 <div className="maincontainer">
                                   <div className="back">
                                     <div
-                                      className={` min-w-[125px] min-h-[64px] max-h-[68px] z-10 flex flex-col  max-w-md p-1 mx-auto my-0 rounded-sm cursor-pointer border border-black`}
+                                      className={` min-w-[125px] min-h-[64px] max-h-[68px] z-10 flex flex-col  max-w-md p-1 mx-auto my-0 rounded-sm cursor-pointer border  rounded-2xl`}
                                     >
                                       {data?.status === 'available' && (
                                         <div className="flex flex-col items-right justify-between">
@@ -1234,7 +1245,18 @@ const Floordetails = ({
           )
         })}
       </div> */}
-
+  <SiderForm
+        open={isUnitDetailsOpen}
+        setOpen={setisUnitDetailsOpen}
+        title={'unitDetails_crm_view'}
+        customerDetails={selUnitDetails}
+        widthClass="max-w-7xl"
+        transactionData={selUnitDetails}
+        unitsViewMode={false}
+        selCustomerPayload={selUnitDetails}
+        selSubMenu={selSubMenu}
+        selSubMenu2={selSubMenu1}
+      />
       <SiderForm
         open={sliderInfo.open}
         setOpen={handleSliderClose}

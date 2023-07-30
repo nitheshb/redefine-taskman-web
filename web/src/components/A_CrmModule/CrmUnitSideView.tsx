@@ -234,7 +234,7 @@ export default function UnitSideViewCRM({
 
   const [leadDetailsObj, setLeadDetailsObj] = useState({})
   useEffect(() => {
-   console.log('customer Detailsare', customerDetails)
+   console.log('hello', customerDetails)
   }, [])
 
   const {

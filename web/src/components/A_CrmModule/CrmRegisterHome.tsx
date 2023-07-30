@@ -637,7 +637,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
 
   const viewTransaction = (docData, sideViewCategory, sideViewCategory1) => {
     console.log('check it ', docData, sideViewCategory, sideViewCategory1)
-    setSelSubMenu(sideViewCategory)
+     setSelSubMenu(sideViewCategory)
     setSelSubMenu1(sideViewCategory1)
     setTransactionData(docData)
     setisUnitDetailsOpen(!isUnitDetailsOpen)
