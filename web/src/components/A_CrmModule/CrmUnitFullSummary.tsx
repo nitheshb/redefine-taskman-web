@@ -222,7 +222,7 @@ export default function UnitFullSummary({
     CT,
   } = customerDetails
 
-  const { assets } = selCustomerPayload
+
   const totalIs = 0
   useEffect(() => {
     const count = projectList.filter(
@@ -516,6 +516,8 @@ export default function UnitFullSummary({
     window.location.href = url
   }
   const getLeadsDataFun = async () => {
+
+    if(id == undefined) return
     console.log('ami triggered')
     const unsubscribe = steamLeadActivityLog(
       orgId,
@@ -552,7 +554,7 @@ export default function UnitFullSummary({
         console.log('my total fetched list is 1', doc.data())
         const usersList = doc.data()
         const usersListA = []
-
+if(usersList == undefined) return
         const sMapStsA = []
         console.log('this is what we found', usersList?.staA)
         setschStsA(usersList?.staA || [])
@@ -1289,7 +1291,7 @@ export default function UnitFullSummary({
         <div className="  mt-2 pb-[250px] overflow-auto no-scrollbar  h-[100%] overflow-y-scroll">
           <CrmUnitSummary
             selCustomerPayload={selCustomerPayload}
-            assets={assets}
+            assets={selCustomerPayload?.assets}
             totalIs={totalIs}
             unitTransactionsA={unitTransactionsA}
           />
@@ -1302,7 +1304,7 @@ export default function UnitFullSummary({
               financeMode={financeMode}
               setFinanceMode={setFinanceMode}
               selCustomerPayload={selCustomerPayload}
-              assets={assets}
+              assets={selCustomerPayload?.assets}
               totalIs={totalIs}
               unitTransactionsA={unitTransactionsA}
             />

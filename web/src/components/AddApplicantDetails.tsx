@@ -5,13 +5,16 @@ import { useState, useEffect } from 'react'
 
 import { Dialog } from '@headlessui/react'
 import { RadioGroup } from '@headlessui/react'
-import { DatePicker } from '@mui/x-date-pickers'
+import { ArrowCircleDownIcon } from '@heroicons/react/solid'
 import { setHours, setMinutes } from 'date-fns'
 import { Timestamp } from 'firebase/firestore'
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 import { Form, Formik, Field } from 'formik'
 import { useSnackbar } from 'notistack'
+import DatePicker from 'react-datepicker'
 import NumberFormat from 'react-number-format'
 import Select from 'react-select'
+import { v4 as uuidv4 } from 'uuid'
 import * as Yup from 'yup'
 
 import { Label, InputField, TextAreaField, FieldError } from '@redwoodjs/forms'
@@ -26,6 +29,7 @@ import {
   updateUnitCustomerDetailsTo,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
+import { storage } from 'src/context/firebaseConfig'
 import {
   sendWhatAppMediaSms,
   sendWhatAppTextSms,
@@ -36,6 +40,7 @@ import { CustomSelect } from 'src/util/formFields/selectBoxField'
 import { TextField } from 'src/util/formFields/TextField'
 import { TextField2 } from 'src/util/formFields/TextField2'
 
+import NoBorderDropDown from './comps/noBorderDropDown'
 import Loader from './Loader/Loader'
 import { useFileUpload } from './useFileUpload'
 
@@ -53,8 +58,18 @@ const AddApplicantDetails = ({
   const [fetchedUsersList, setfetchedUsersList] = useState([])
   const [usersList, setusersList] = useState([])
   const [projectList, setprojectList] = useState([])
+  const [progress, setProgress] = useState(0)
+  const [panCard1, setPanCard1] = useState('')
+  const [panCard2, setPanCard2] = useState('')
+  const [aadhrUrl1, setAadharUrl1] = useState('')
+  const [aadhrUrl2, setAadharUrl2] = useState('')
+
   useEffect(() => {
-    console.log('yo yo ', selUnitDetails)
+    console.log('yo yo ', selUnitDetails, leadDetailsObj2)
+    setPanCard1(leadDetailsObj2?.customerDetailsObj?.panDocUrl1)
+    setPanCard2(leadDetailsObj2?.secondaryCustomerDetailsObj?.panDocUrl2)
+    setAadharUrl1(leadDetailsObj2?.customerDetailsObj?.aadharUrl1)
+    setAadharUrl2(leadDetailsObj2?.secondaryCustomerDetailsObj?.aadharUrl2)
   }, [])
 
   useEffect(() => {
@@ -103,12 +118,36 @@ const AddApplicantDetails = ({
     return unsubscribe
   }, [])
 
-  const aquaticCreatures = [
-    { label: 'Select the Project', value: '' },
-    { label: 'Subha Ecostone', value: 'subhaecostone' },
-    { label: 'Esperanza', value: 'esperanza' },
-    { label: 'Nakshatra Township', value: 'nakshatratownship' },
-  ]
+  const downloadImage = (imageUrl, filename) => {
+    console.error('Error downloading image:', imageUrl)
+    fetch(imageUrl)
+      .then((response) => response.blob())
+      .then((blob) => {
+        // Create a temporary anchor element
+        const url = window.URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+
+        // Extract the filename from the URL
+        // const filename = imageUrl.substring(imageUrl.lastIndexOf('/') + 1)
+
+        // Set the download attribute and filename
+        link.setAttribute('download', filename)
+        document.body.appendChild(link)
+        console.log('fetcher url ', filename)
+        // Simulate a click on the anchor element to start the download
+        link.click()
+
+        // Clean up the temporary anchor element
+        link.parentNode.removeChild(link)
+
+        // Set the downloaded image URL to display on the page
+        setImageUrl(url)
+      })
+      .catch((error) => {
+        console.error('Error downloading image:', error)
+      })
+  }
   // const usersList = [
   //   { label: 'User1', value: 'User1' },
   //   { label: 'User2', value: 'User2' },
@@ -168,7 +207,9 @@ const AddApplicantDetails = ({
   const [formMessage, setFormMessage] = useState('')
   const [selected, setSelected] = useState({})
   const [devType, setdevType] = useState(devTypeA[0])
-  const [startDate, setStartDate] = useState(d)
+  const [startDate, setStartDate] = useState(new Date())
+  const [selRef1, setRefDataFun1] = useState({ label: 'S/O', value: 'S/O' })
+  const [selRef2, setRefDataFun2] = useState({ label: 'S/O', value: 'S/O' })
 
   const phoneRegExp =
     /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/
@@ -260,6 +301,7 @@ const AddApplicantDetails = ({
 
   // const { uid } = selUnitDetails
   const uid = selUnitDetails?.uid || selUnitDetails?.id
+  const datee = new Date().getTime()
   const initialState = {
     customerName1:
       leadDetailsObj2?.customerDetailsObj?.customerName1 ||
@@ -279,10 +321,16 @@ const AddApplicantDetails = ({
       leadDetailsObj2?.Email ||
       '',
     email2: leadDetailsObj2?.secondaryCustomerDetailsObj?.email2 || '',
-    dob1: leadDetailsObj2?.customerDetailsObj?.dob1 || '',
-    dob2: leadDetailsObj2?.secondaryCustomerDetailsObj?.dob2 || '',
-    marital1: leadDetailsObj2?.customerDetailsObj?.marital1 || '',
-    marital2: leadDetailsObj2?.secondaryCustomerDetailsObj?.marital2 || '',
+    dob1: leadDetailsObj2?.customerDetailsObj?.dob1 || datee,
+    dob2: leadDetailsObj2?.secondaryCustomerDetailsObj?.dob2 || datee,
+    marital1: leadDetailsObj2?.customerDetailsObj?.marital1 || {
+      label: 'Married',
+      value: 'Married',
+    },
+    marital2: leadDetailsObj2?.secondaryCustomerDetailsObj?.marital2 || {
+      label: 'Married',
+      value: 'Married',
+    },
     panNo1: leadDetailsObj2?.customerDetailsObj?.panNo1 || '',
     panNo2: leadDetailsObj2?.secondaryCustomerDetailsObj?.panNo2 || '',
     panDocUrl1: leadDetailsObj2?.customerDetailsObj?.panDocUrl1 || '',
@@ -362,7 +410,8 @@ const AddApplicantDetails = ({
     // aadharUrl1: Yup.string().required('Required'),
     // occupation1: Yup.string().required('Required'),
     phoneNo1: Yup.string().required('Required'),
-    // email1: Yup.string().required('Required'),
+    email1: Yup.string().email('Email is invalid'),
+    email2: Yup.string().email('Email is invalid'),
     // aggrementAddress: Yup.string().required('Required'),
   })
 
@@ -418,9 +467,9 @@ const AddApplicantDetails = ({
       dob1: dob1,
       marital1: marital1,
       panNo1: panNo1,
-      panDocUrl1: panDocUrl1,
+      panDocUrl1: panCard1,
       aadharNo1: aadharNo1,
-      aadharUrl1,
+      aadharUrl1: aadhrUrl1,
       occupation1,
       companyName1,
     }
@@ -432,9 +481,9 @@ const AddApplicantDetails = ({
       dob2,
       marital2,
       panNo2,
-      panDocUrl2,
+      panDocUrl2: panCard2,
       aadharNo2,
-      aadharUrl2,
+      aadharUrl2: aadhrUrl2,
       occupation2,
       companyName2,
     }
@@ -492,6 +541,47 @@ const AddApplicantDetails = ({
     // )
     // setLoading(false)
   }
+  const handleFileUploadFun = async (file, type) => {
+    if (!file) return
+    try {
+      const uid = uuidv4()
+      const storageRef = ref(storage, `/spark_files/${'taskFiles'}_${uid}`)
+      const uploadTask = uploadBytesResumable(storageRef, file)
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          const prog =
+            Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 100
+
+          setProgress(prog)
+          file.isUploading = false
+        },
+        (err) => console.log(err),
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+            // createAttach(orgId, url, by, file.name, id, attachType)
+            file.url = url
+            // setFiles([...files, file])
+            if (type === 'panCard1') {
+              setPanCard1(url)
+            } else if (type === 'panCard2') {
+              setPanCard2(url)
+            } else if (type === 'aadharNo1Url') {
+              setAadharUrl1(url)
+            } else if (type === 'aadharNo2Url') {
+              setAadharUrl2(url)
+            }
+            console.log('file url i s', url,'dd',type,type === 'aadharNo1Url', aadhrUrl1)
+            return url
+            //  save this doc as a new file in spark_leads_doc
+          })
+        }
+      )
+    } catch (error) {
+      console.log('upload error is ', error)
+    }
+  }
+
   return (
     <>
       <div className="">
@@ -556,7 +646,18 @@ const AddApplicantDetails = ({
                                           </div>
                                         </div>
 
-                                        <div className="w-full lg:w-12/12">
+                                        <div className="w-full flex flex-row lg:w-12/12">
+                                          <section className="mt-4">
+                                            <NoBorderDropDown
+                                              options={[
+                                                { label: 'D/O', value: 'D/O' },
+                                                { label: 'S/O', value: 'S/O' },
+                                                { label: 'W/O', value: 'W/O' },
+                                              ]}
+                                              setRefDropFun={setRefDataFun1}
+                                              selRefDrop={selRef1}
+                                            />
+                                          </section>
                                           <div className="relative w-full mb-3 mt-2">
                                             <TextField2
                                               label="Son/Daughter/Wife of"
@@ -603,79 +704,132 @@ const AddApplicantDetails = ({
                                         </h6>
                                       </div>
                                       <div className="flex flex-wrap">
-                                        <div className="w-full lg:w-4/12 ">
+                                        <div className="w-full lg:w-4/12 mt-[-6px] ">
                                           <div className="relative w-full mb-3 mt-2">
-                                            <TextField2
-                                              label="Date Of Birth"
-                                              name="dob1"
-                                              type="text"
-                                            />
-                                            {/* <DatePicker
-                                              className=" pl- px- h-10 rounded-md   min-w-[151px] inline  text-[#0091ae]   w-full min-w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] px-4"
-                                              selected={startDate}
-                                              onChange={(date) => {
-                                                formik.setFieldValue(
-                                                  'dob1',
-                                                  date?.getTime()
-                                                )
-                                                setStartDate(date)
-                                              }}
-                                              timeFormat="HH:mm"
-                                              injectTimes={[
-                                                setHours(setMinutes(d, 1), 0),
-                                                setHours(setMinutes(d, 5), 12),
-                                                setHours(setMinutes(d, 59), 23),
-                                              ]}
-                                              dateFormat="MMMM d, yyyy"
-                                            /> */}
+                                            <label
+                                              htmlFor={'dob1'}
+                                              className="text-gray-500 text-[10px]"
+                                            >
+                                              Date Of Birth
+                                            </label>
+                                            <span className="inline">
+                                              <DatePicker
+                                                className="h-8 outline-none border-t-0 border-l-0 border-r-0 border-gray-500 text-sm border-solid mt-[-4px] pb-1  min-w-[125px]  inline  text-[#0091ae]   lg:w-4/12 w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] "
+                                                label="Dated"
+                                                name="dob1"
+                                                selected={formik.values.dob1}
+                                                onChange={(date) => {
+                                                  formik.setFieldValue(
+                                                    'dob1',
+                                                    date.getTime()
+                                                  )
+                                                  setStartDate(date)
+                                                  // console.log(startDate)
+                                                }}
+                                                timeFormat="HH:mm"
+                                                injectTimes={[
+                                                  setHours(setMinutes(d, 1), 0),
+                                                  setHours(
+                                                    setMinutes(d, 5),
+                                                    12
+                                                  ),
+                                                  setHours(
+                                                    setMinutes(d, 59),
+                                                    23
+                                                  ),
+                                                ]}
+                                                dateFormat="MMMM d, yyyy"
+                                              />
+                                            </span>
                                           </div>
                                         </div>
 
                                         <div className="w-full lg:w-8/12 pl-4 ">
-                                          <div className="relative w-full mb-3 mt-2">
+                                          {/* <div className="relative w-full mb-3 mt-2">
                                             <TextField2
                                               label="Marital Status"
                                               name="marital1"
                                               type="text"
                                             />
-                                          </div>
+                                          </div> */}
+                                          <section className="mt-4">
+                                            <NoBorderDropDown
+                                              options={[
+                                                {
+                                                  label: 'Divorced',
+                                                  value: 'Divorced',
+                                                },
+                                                {
+                                                  label: 'Married',
+                                                  value: 'Married',
+                                                },
+                                                {
+                                                  label: 'Single',
+                                                  value: 'Single',
+                                                },
+                                              ]}
+                                              setRefDropFun={(val) => {
+                                                console.log('value is ', val)
+                                                formik.setFieldValue(
+                                                  'marital1',
+                                                  val
+                                                )
+                                              }}
+                                              selRefDrop={
+                                                formik.values.marital1
+                                              }
+                                            />
+                                          </section>
                                         </div>
                                       </div>
                                       <div className="w-full flex flex-row">
-                                        <div className=" ">
-                                          <div className="relative w-full  mt-5">
-                                            <div>
-                                              {uploadedFileLink ? (
-                                                <a href={uploadedFileLink}>
-                                                  View uploaded file
-                                                </a>
-                                              ) : null}
-                                              <label
-                                                htmlFor="formFile"
-                                                className="form-label cursor-pointer inline-block mb-2  font-regular text-xs bg-[#efef] rounded-2xl px-2 py-1 min-w-[130px] "
-                                              >
-                                                Upload Pan Card
-                                              </label>
-                                              <input
-                                                type="file"
-                                                className="hidden"
-                                                id="formFile"
-                                                onChange={(e) =>
-                                                  handleFileUpload(
-                                                    e.target.files[0]
-                                                  )
-                                                }
-                                              />
-                                            </div>
-                                          </div>
-                                        </div>
-                                        <div className="w-full  px- ml-3">
-                                          <div className="relative w-full mb-3 mt-2">
+                                        <div className="  px-">
+                                          <div className="relative w-[130px] mb-3 mt-2">
                                             <TextField2
                                               label="PAN No"
                                               name="panNo1"
                                               type="text"
                                             />
+                                          </div>
+                                        </div>
+                                        <div className=" ml-3 ">
+                                          <div className="relative  mt-5">
+                                            <div>
+                                              <label
+                                                htmlFor="formFile1"
+                                                className="form-label cursor-pointer inline-block mb-2  font-regular text-xs bg-[#efef] rounded-2xl px-2 py-1 min-w-[130px] "
+                                              >
+                                                {`${
+                                                  panCard1 === ''
+                                                    ? 'Upload'
+                                                    : 'Download'
+                                                } Pan Card`}
+                                              </label>
+                                              {panCard1 != '' && (
+                                                <button
+                                                  onClick={() =>
+                                                    downloadImage(
+                                                      panCard1,
+                                                      'pancard1.PNG'
+                                                    )
+                                                  }
+                                                >
+                                                  {' '}
+                                                  <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[9px] mr-2 inline-block text-gray-400 " />
+                                                </button>
+                                              )}
+                                              <input
+                                                type="file"
+                                                className="hidden"
+                                                id="formFile1"
+                                                onChange={ (e) =>
+                                                   handleFileUploadFun(
+                                                    e.target.files[0],
+                                                    'panCard1'
+                                                  )
+                                                }
+                                              />
+                                            </div>
                                           </div>
                                         </div>
                                       </div>
@@ -690,39 +844,52 @@ const AddApplicantDetails = ({
                                           </div>
                                         </div> */}
                                         <div className=" ">
-                                          <div className="relative w-full mt-5">
-                                            <div>
-                                              {uploadedFileLink ? (
-                                                <a href={uploadedFileLink}>
-                                                  View uploaded file
-                                                </a>
-                                              ) : null}
-                                              <label
-                                                htmlFor="formFile"
-                                                className="form-label cursor-pointer inline-block mb-2  font-regular text-xs bg-[#efef] rounded-2xl px-2 py-1 min-w-[130px]"
-                                              >
-                                                Upload Aadhar Card
-                                              </label>
-                                              <input
-                                                type="file"
-                                                className="hidden"
-                                                id="formFile"
-                                                onChange={(e) =>
-                                                  handleFileUpload(
-                                                    e.target.files[0]
-                                                  )
-                                                }
-                                              />
-                                            </div>
-                                          </div>
-                                        </div>
-                                        <div className=" w-full  pl-2-">
-                                          <div className="relative w-full mb-3 mt-2 ml-3">
+                                          <div className="relative w-[130px] mb-3 mt-2">
                                             <TextField2
                                               label="Aadhar No"
                                               name="aadharNo1"
                                               type="text"
                                             />
+                                          </div>
+                                        </div>
+                                        <div>
+                                          <div className="relative w-full mt-5 ml-3">
+                                            <div className=" flex flex-row">
+                                              <label
+                                                htmlFor="formFile2"
+                                                className="form-label cursor-pointer inline-block mb-2  font-regular text-xs bg-[#efef] rounded-2xl px-2 py-1 min-w-[130px]"
+                                              >
+                                                {`${
+                                                  aadhrUrl1 === ''
+                                                    ? 'Upload'
+                                                    : 'Download'
+                                                } Aadhar Card`}
+                                              </label>
+                                              {aadhrUrl1 != '' && (
+                                                <button
+                                                  onClick={() =>
+                                                    downloadImage(
+                                                      aadhrUrl1,
+                                                    'Aadhar1.PNG'
+                                                    )
+                                                  }
+                                                >
+                                                  {' '}
+                                                  <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[9px] mr-2 inline-block text-gray-400 " />
+                                                </button>
+                                              )}
+                                              <input
+                                                type="file"
+                                                className="hidden"
+                                                id="formFile2"
+                                                onChange={(e) =>
+                                                  handleFileUploadFun(
+                                                    e.target.files[0],
+                                                    'aadharNo1Url'
+                                                  )
+                                                }
+                                              />
+                                            </div>
                                           </div>
                                         </div>
                                       </div>
@@ -752,7 +919,18 @@ const AddApplicantDetails = ({
                                           </div>
                                         </div>
 
-                                        <div className="w-full lg:w-12/12">
+                                        <div className="w-full  flex flex-row lg:w-12/12">
+                                          <section className="mt-4">
+                                            <NoBorderDropDown
+                                              options={[
+                                                { label: 'D/O', value: 'D/O' },
+                                                { label: 'S/O', value: 'S/O' },
+                                                { label: 'W/O', value: 'W/O' },
+                                              ]}
+                                              setRefDropFun={setRefDataFun2}
+                                              selRefDrop={selRef2}
+                                            />
+                                          </section>
                                           <div className="relative w-full mb-3 mt-2">
                                             <TextField2
                                               label="Son/Daughter/Wife of"
@@ -796,57 +974,80 @@ const AddApplicantDetails = ({
                                         </h6>
                                       </div>
                                       <div className="flex flex-wrap">
-                                        <div className="w-full lg:w-4/12 ">
+                                        <div className="w-full lg:w-4/12 mt-[-6px] ">
                                           <div className="relative w-full mb-3 mt-2">
-                                            <TextField2
-                                              label="Date Of Birth"
-                                              name="dob2"
-                                              type="text"
-                                            />
+                                            <label
+                                              htmlFor={'dob1'}
+                                              className="text-gray-500 text-[10px]"
+                                            >
+                                              Date Of Birth
+                                            </label>
+                                            <span className="inline">
+                                              <DatePicker
+                                                className="h-8 outline-none border-t-0 border-l-0 border-r-0 border-gray-500 text-sm border-solid mt-[-4px] pb-1  min-w-[125px]  inline  text-[#0091ae]   lg:w-4/12 w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] "
+                                                label="Dated"
+                                                name="dob2"
+                                                selected={formik.values.dob2}
+                                                onChange={(date) => {
+                                                  formik.setFieldValue(
+                                                    'dob2',
+                                                    date.getTime()
+                                                  )
+                                                  setStartDate(date)
+                                                  // console.log(startDate)
+                                                }}
+                                                timeFormat="HH:mm"
+                                                injectTimes={[
+                                                  setHours(setMinutes(d, 1), 0),
+                                                  setHours(
+                                                    setMinutes(d, 5),
+                                                    12
+                                                  ),
+                                                  setHours(
+                                                    setMinutes(d, 59),
+                                                    23
+                                                  ),
+                                                ]}
+                                                dateFormat="MMMM d, yyyy"
+                                              />
+                                            </span>
                                           </div>
                                         </div>
 
                                         <div className="w-full lg:w-8/12 pl-4 ">
-                                          <div className="relative w-full mb-3 mt-2">
-                                            <TextField2
-                                              label="Marital Status"
-                                              name="marital2"
-                                              type="text"
+                                          <section className="mt-4">
+                                            <NoBorderDropDown
+                                              options={[
+                                                {
+                                                  label: 'Divorced',
+                                                  value: 'Divorced',
+                                                },
+                                                {
+                                                  label: 'Married',
+                                                  value: 'Married',
+                                                },
+                                                {
+                                                  label: 'Single',
+                                                  value: 'Single',
+                                                },
+                                              ]}
+                                              setRefDropFun={(val) => {
+                                                console.log('value is ', val)
+                                                formik.setFieldValue(
+                                                  'marital2',
+                                                  val
+                                                )
+                                              }}
+                                              selRefDrop={
+                                                formik.values.marital2
+                                              }
                                             />
-                                          </div>
+                                          </section>
                                         </div>
                                       </div>
-
                                       <div className="w-full flex flex-row">
-                                        <div className=" ">
-                                          <div className="relative w-full  mt-5">
-                                            <div>
-                                              {uploadedFileLink ? (
-                                                <a href={uploadedFileLink}>
-                                                  View uploaded file
-                                                </a>
-                                              ) : null}
-                                              <label
-                                                htmlFor="formFile"
-                                                className="form-label cursor-pointer inline-block mb-2  font-regular text-xs bg-[#efef] rounded-2xl px-2 py-1 min-w-[130px] "
-                                              >
-                                                Upload Pan Card
-                                              </label>
-                                              <input
-                                                type="file"
-                                                className="hidden"
-                                                id="formFile"
-                                                onChange={(e) =>
-                                                  handleFileUpload(
-                                                    e.target.files[0]
-                                                  )
-                                                }
-                                              />
-                                            </div>
-                                          </div>
-                                        </div>
-                                        <div className="w-full px- ml-3">
-                                          <div className="relative w-full mb-3 mt-2">
+                                        <div className="  px-">
+                                          <div className="relative w-[130px] mb-3 mt-2">
                                             <TextField2
                                               label="PAN No"
                                               name="panNo2"
@@ -854,46 +1055,59 @@ const AddApplicantDetails = ({
                                             />
                                           </div>
                                         </div>
-                                      </div>
-                                      <div className="w-full flex flex-row">
-                                        {/* <div className="w-full lg:w-8/12 pl-4">
-  <div className="relative w-full mb-3 mt-2">
-    <TextField2
-      label="Aadhar Upload"
-      name="aadharUrl1"
-      type="text"
-    />
-  </div>
-</div> */}
-                                        <div className=" ">
-                                          <div className="relative w-full mt-5">
+                                        <div className=" ml-3 ">
+                                          <div className="relative  mt-5">
                                             <div>
-                                              {uploadedFileLink ? (
-                                                <a href={uploadedFileLink}>
-                                                  View uploaded file
-                                                </a>
-                                              ) : null}
                                               <label
-                                                htmlFor="formFile"
-                                                className="form-label cursor-pointer inline-block mb-2  font-regular text-xs bg-[#efef] rounded-2xl px-2 py-1 min-w-[130px]"
+                                                htmlFor="formFile3"
+                                                className="form-label cursor-pointer inline-block mb-2  font-regular text-xs bg-[#efef] rounded-2xl px-2 py-1 min-w-[130px] "
                                               >
-                                                Upload Aadhar Card
+                                                {`${
+                                                  panCard2 === ''
+                                                    ? 'Upload'
+                                                    : 'Download'
+                                                } Pan Card`}
                                               </label>
+                                              {panCard2 != '' && (
+                                                <button
+                                                  onClick={() =>
+                                                    downloadImage(
+                                                      panCard2,
+                                                      'pancard2.PNG'
+                                                    )
+                                                  }
+                                                >
+                                                  {' '}
+                                                  <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[9px] mr-2 inline-block text-gray-400 " />
+                                                </button>
+                                              )}
                                               <input
                                                 type="file"
                                                 className="hidden"
-                                                id="formFile"
-                                                onChange={(e) =>
-                                                  handleFileUpload(
-                                                    e.target.files[0]
+                                                id="formFile3"
+                                                onChange={async (e) => {
+                                                  await handleFileUploadFun(
+                                                    e.target.files[0],
+                                                    'panCard2'
                                                   )
-                                                }
+                                                }}
                                               />
                                             </div>
                                           </div>
                                         </div>
-                                        <div className=" w-full  pr-2">
-                                          <div className="relative w-full mb-3 mt-2 ml-3">
+                                      </div>
+                                      <div className="w-full flex flex-row">
+                                        {/* <div className="w-full lg:w-8/12 pl-4">
+                                          <div className="relative w-full mb-3 mt-2">
+                                            <TextField2
+                                              label="Aadhar Upload"
+                                              name="aadharUrl1"
+                                              type="text"
+                                            />
+                                          </div>
+                                        </div> */}
+                                        <div className=" ">
+                                          <div className="relative w-[130px] mb-3 mt-2">
                                             <TextField2
                                               label="Aadhar No"
                                               name="aadharNo2"
@@ -901,7 +1115,51 @@ const AddApplicantDetails = ({
                                             />
                                           </div>
                                         </div>
+                                        <div>
+                                          <div className="relative w-full mt-5 ml-3">
+                                            <div className=" flex flex-row">
+                                              <label
+                                                htmlFor="formFile4"
+                                                className="form-label cursor-pointer inline-block mb-2  font-regular text-xs bg-[#efef] rounded-2xl px-2 py-1 min-w-[130px]"
+                                              >
+                                                {`${
+                                                  aadhrUrl2 === ''
+                                                    ? 'Upload'
+                                                    : 'Download'
+                                                } Aadhar Card`}
+                                              </label>
+                                              {aadhrUrl2 != '' && (
+                                                <button
+                                                  onClick={() =>
+                                                    downloadImage(
+                                                      aadhrUrl2,
+                                                      'Aadhar2.PNG'
+                                                    )
+                                                  }
+                                                >
+                                                  {' '}
+                                                  <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[9px] mr-2 inline-block text-gray-400 " />
+                                                </button>
+                                              )}
+                                              <input
+                                                type="file"
+                                                className="hidden"
+                                                id="formFile4"
+                                                onChange={(e) => {
+                                                  console.log('iwas clicked aadharno 2')
+                                                  handleFileUploadFun(
+                                                    e.target.files[0],
+                                                    'aadharNo2Url'
+                                                  )
+                                                }
+                                                }
+                                              />
+                                            </div>
+                                          </div>
+                                        </div>
                                       </div>
+
+
                                     </div>
                                   </section>
                                 </div>

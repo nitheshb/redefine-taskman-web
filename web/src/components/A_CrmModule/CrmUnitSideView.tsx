@@ -55,6 +55,8 @@ import {
   getFinanceForUnit,
   capturePaymentS,
   updateUnitStatus,
+  steamUsersListByDept,
+  updateUnitCrmOwner,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import { storage } from 'src/context/firebaseConfig'
@@ -89,6 +91,8 @@ import { USER_ROLES } from 'src/constants/userRoles'
 
 import CrmPaymentSummary from './CrmPaymentSummary'
 import UnitFullSummary from './CrmUnitFullSummary'
+
+import { getWhatsAppTemplates } from 'src/util/TuneWhatsappMsg'
 
 // interface iToastInfo {
 //   open: boolean
@@ -229,6 +233,10 @@ export default function UnitSideViewCRM({
   })
 
   const [leadDetailsObj, setLeadDetailsObj] = useState({})
+  useEffect(() => {
+   console.log('customer Detailsare', customerDetails)
+  }, [])
+
   const {
     id,
     Name,
@@ -256,7 +264,7 @@ export default function UnitSideViewCRM({
     CT,
   } = customerDetails
 
-  const { assets } = selCustomerPayload
+
   const totalIs = 0
   useEffect(() => {
     const count = projectList.filter(
@@ -280,8 +288,9 @@ export default function UnitSideViewCRM({
   }, [projectList])
 
   useEffect(() => {
-    const unsubscribe = steamUsersListByRole(
+    const unsubscribe = steamUsersListByDept(
       orgId,
+      ['crm'],
       (querySnapshot) => {
         const usersListA = querySnapshot.docs.map((docSnapshot) =>
           docSnapshot.data()
@@ -471,6 +480,41 @@ export default function UnitSideViewCRM({
     // save assigner Details in db
 
     // updateLeadAssigTo(orgId, leadDocId, value, '', by)
+    // const todayTasksIncre = leadSchFetchedData?.filter(
+    //   (d) => d?.sts === 'pending' && d?.schTime < torrowDate
+    // ).length
+    const txt = `A New Customer is assigned to ${value.name}`
+    updateUnitCrmOwner(
+      orgId,
+      selCustomerPayload?.id,
+      value,
+      user.email,
+      enqueueSnackbar
+    )
+    const msgPayload = {
+      projectName: Project,
+      broucherLink: '',
+      locLink: '',
+      projContactNo: '',
+      scheduleTime: d.getTime() + 60000,
+    }
+    const receiverDetails = {
+      customerName: Name,
+      executiveName: value.name,
+      receiverPhNo: Mobile,
+      executivePh: value?.offPh,
+      executiveEmail: value?.email,
+    }
+    getWhatsAppTemplates(
+      'on_lead_assign',
+      'wa',
+      'customer',
+      // 'ProjectId',
+      ProjectId,
+      receiverDetails,
+      msgPayload
+    )
+
   }
 
   const setNewProject = (leadDocId, value) => {
@@ -535,19 +579,34 @@ export default function UnitSideViewCRM({
       setStatusValidError(true)
       console.log('is this in statusvalidat or ')
       let errorList = ''
-      if (newStatus?.value === 'agreement_pipeline' && !selCustomerPayload?.kyc_status) {
+      if (
+        newStatus?.value === 'agreement_pipeline' &&
+        !selCustomerPayload?.kyc_status
+      ) {
         errorList = errorList + 'KYC,'
       }
-      if (newStatus?.value === 'agreement_pipeline' && !selCustomerPayload?.man_cs_approval) {
+      if (
+        newStatus?.value === 'agreement_pipeline' &&
+        !selCustomerPayload?.man_cs_approval
+      ) {
         errorList = errorList + 'Manger Costsheet Approval,'
       }
-      if ( newStatus?.value === 'ats_pipeline' && selCustomerPayload?.T_balance<=0) {
+      if (
+        newStatus?.value === 'ats_pipeline' &&
+        selCustomerPayload?.T_balance <= 0
+      ) {
         errorList = errorList + 'Due Payment,'
       }
-      if ( newStatus?.value === 'ats_pipeline' && !selCustomerPayload?.ats_creation) {
+      if (
+        newStatus?.value === 'ats_pipeline' &&
+        !selCustomerPayload?.ats_creation
+      ) {
         errorList = errorList + 'ATS Creation,'
       }
-      if ( newStatus?.value === 'ats_pipeline' && !selCustomerPayload?.both_ats_approval) {
+      if (
+        newStatus?.value === 'ats_pipeline' &&
+        !selCustomerPayload?.both_ats_approval
+      ) {
         errorList = errorList + 'Manger or Customer Costsheet Approval,'
       }
 
@@ -613,15 +672,14 @@ export default function UnitSideViewCRM({
         console.log('my total fetched list is 1', doc.data())
         const usersList = doc.data()
         const usersListA = []
-
+        if (usersList == undefined) return
         const sMapStsA = []
-        const { staA, staDA } = usersList
-        console.log('this is what we found', staA)
-        setschStsA(staA)
-        setschStsMA(staDA)
+
+        setschStsA(usersList?.staA)
+        setschStsMA(usersList?.staDA)
         // delete usersList['staA']
         // delete usersList['staDA']
-        Object.entries(usersList).forEach((entry) => {
+        Object?.entries(usersList)?.forEach((entry) => {
           const [key, value] = entry
           if (['staA', 'staDA'].includes(key)) {
             if (key === 'staA') {

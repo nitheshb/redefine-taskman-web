@@ -50,6 +50,15 @@ export const steamUsersListByRole = (orgId, snapshot, error) => {
   )
   return onSnapshot(itemsQuery, snapshot, error)
 }
+// get users list by Dept
+export const steamUsersListByDept = (orgId,dept, snapshot, error) => {
+  const itemsQuery = query(
+    collection(db, 'users'),
+    where('orgId', '==', orgId),
+    where('department', 'array-contains-any', dept)
+  )
+  return onSnapshot(itemsQuery, snapshot, error)
+}
 // get all bank detials list
 export const steamBankDetailsList = (orgId, snapshot, error) => {
   const itemsQuery = query(collection(db, `${orgId}_BankDetails`))
@@ -473,7 +482,9 @@ export const steamUserTodayProgress = (orgId, snapshot, data, error) => {
 }
 export const steamLeadScheduleLog = (orgId, snapshot, data, error) => {
   // const itemsQuery = query(doc(db, `${orgId}_leads_log', 'W6sFKhgyihlsKmmqDG0r'))
+
   const { uid } = data
+  if (uid == undefined) return
   return onSnapshot(doc(db, `${orgId}_leads_sch`, uid), snapshot, error)
   // return onSnapshot(itemsQuery, snapshot, error)
 }
@@ -3192,25 +3203,27 @@ export const updateUnitStatus = async (
 export const updateUnitCrmOwner = async (
   orgId,
   unitId,
-  data,
+  assignedTo,
   by,
   enqueueSnackbar,
-  resetForm
 ) => {
   try {
-    console.log('data is', unitId, data)
-
+    console.log('data is', unitId, assignedTo)
+    const { value, offPh } = assignedTo
     await updateDoc(doc(db, `${orgId}_units`, unitId), {
-      ...data,
+      assignedTo: value,
+      assignedToObj: assignedTo,
+      AssignedBy: by,
+      assignT: Timestamp.now().toMillis(),
     })
-    enqueueSnackbar('Customer Details added successfully', {
+    enqueueSnackbar('Unit Crm Owner Updated successfully', {
       variant: 'success',
     })
   } catch (error) {
-    console.log('customer details updation failed', error, {
-      ...data,
+    console.log('Unit Crm Owner Updated failed', error, {
+      ...assignedTo,
     })
-    enqueueSnackbar('Customer Details updation failed BBB', {
+    enqueueSnackbar('Unit Crm Owner Updated failed BBB', {
       variant: 'error',
     })
   }
