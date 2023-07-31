@@ -16,6 +16,8 @@ export const USER_ROLES = {
   HELPER_EXECUTIVE: 'helper-executive',
   PROJECT_MANAGER: 'project-manager',
   PROJECT_EXECUTIVE: 'project-executive',
+  MARKETING_MANAGER: 'marketing-manager',
+  MARKETING_EXECUTIVE: 'marketing-executive',
   ADMIN: 'admin',
 }
 
@@ -28,6 +30,7 @@ export const DEPARTMENT_LIST = [
   { label: 'HR', value: 'hr' },
   { label: 'Legal', value: 'legal' },
   { label: 'Project', value: 'project' },
+  { label: 'Marketing', value: 'marketing' },
   { label: 'Support', value: 'support' },
   { label: 'Sales', value: 'sales' },
 ]
@@ -39,6 +42,16 @@ export const ROLES_LIST = [
     label: 'Sales executive',
     value: USER_ROLES.SALES_EXECUTIVE,
     dept: 'sales',
+  },
+  {
+    label: 'Marketing manager',
+    value: USER_ROLES.MARKETING_MANAGER,
+    dept: 'marketing',
+  },
+  {
+    label: 'Marketing executive',
+    value: USER_ROLES.MARKETING_EXECUTIVE,
+    dept: 'marketing',
   },
   {
     label: 'CP Agent',
