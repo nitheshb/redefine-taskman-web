@@ -23,6 +23,7 @@ const SlimSideMenuBar = (props) => {
         'financeModule',
         'crmModule',
         'projectModule',
+        'marketingModule',
         'salesModule',
         'constructModule',
         'legalModule',
@@ -47,7 +48,7 @@ const SlimSideMenuBar = (props) => {
             d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
           />
         </svg> */}
-       
+
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="78"
@@ -869,7 +870,111 @@ const SlimSideMenuBar = (props) => {
           </ul>
         </>
       )}
+ {['marketingModule'].includes(sourceLink) && (
+        <>
+          <ul className="w-full">
+            <li className="relative justify-center ">
+              <span
+                className={
+                  'flex items-center justify-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
+                  (viewable === 'Today1'
+                    ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
+                    : '')
+                }
+                onClick={() => setViewable('Today1')}
+                style={{
+                  display: 'block',
+                  marginLeft: 'auto',
+                  marginRight: 'auto',
+                }}
+              >
+                <span className="flex items-center flex-col pt-[8px]">
+                  <span style={{ color: '#058527' }}>
+                    <svg width="24" height="24" viewBox="0 0 24 24">
+                      <g fill="currentColor" fillRule="evenodd">
+                        <path
+                          fillRule="nonzero"
+                          d="M6 4.5h12A1.5 1.5 0 0 1 19.5 6v2.5h-15V6A1.5 1.5 0 0 1 6 4.5z"
+                          opacity=".1"
+                        ></path>
+                        <path
+                          fillRule="nonzero"
+                          d="M6 4h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H6zm1 3h10a.5.5 0 1 1 0 1H7a.5.5 0 0 1 0-1z"
+                        ></path>
+                        <text
+                          fontFamily="-apple-system, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'"
+                          fontSize="9"
+                          transform="translate(4 2)"
+                          fontWeight="500"
+                        >
+                          <tspan x="8" y="15" textAnchor="middle">
+                            28
+                          </tspan>
+                        </text>
+                      </g>
+                    </svg>
+                  </span>
+                  <span className="text-xs pl-1">Tasks</span>
+                </span>
+                <span className="flex ml-auto items-bottom">
+                  <span className="flex ml-auto items-bottom text-xs mt-2"></span>
+                </span>
+              </span>
+            </li>
 
+            {(user?.role?.includes(USER_ROLES.SALES_MANAGER) ||
+              user?.role?.includes(USER_ROLES.ADMIN)) && (
+              <li className="relative mt-1">
+                <span
+                  className={
+                    'flex items-center text-sm py-1  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded  rounded-tl-[30px] rounded-bl-[30px]  hover:text-blue-600 hover:bg-[#ecdbd1] transition duration-300 ease-in-out cursor-pointer ' +
+                    (viewable === 'Team Lead Report'
+                      ? 'bg-[#ecdbd1] w-100 rounded-tl-[30px] rounded-bl-[30px] '
+                      : '')
+                  }
+                  onClick={() => setViewable('Team Lead Report')}
+                  style={{
+                    display: 'block',
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                  }}
+                >
+                  <span className="flex items-center flex-col pt-[8px]">
+                    <span style={{ color: '#692fc2' }}>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                      >
+                        <g fill="none" fillRule="evenodd">
+                          <g fill="currentColor" fillRule="nonzero">
+                            <g>
+                              <g>
+                                <path
+                                  d="M12 3c4.97 0 9 4.03 9 9s-4.03 9-9 9-9-4.03-9-9 4.03-9 9-9zm0 1c-4.418 0-8 3.582-8 8 0 .702.09 1.383.26 2.031l2.886-2.885c.196-.195.512-.195.708 0l2.646 2.647 4.793-4.794L13 9c-.276 0-.5-.224-.5-.5s.224-.5.5-.5h3.52l.052.005L16.5 8c.036 0 .071.004.105.011l.046.012.04.015c.014.005.027.012.04.019.013.006.025.013.036.02l.035.025c.014.01.027.02.04.033l.012.011.011.013c.012.012.023.025.033.039l-.044-.052c.026.027.05.056.069.087l.02.034.02.042.014.04c.005.015.009.03.012.046l.006.033.005.051V12c0 .276-.224.5-.5.5s-.5-.224-.5-.5V9.706l-5.146 5.148c-.196.195-.512.195-.708 0L7.5 12.207 4.618 15.09C5.827 17.974 8.677 20 12 20c4.418 0 8-3.582 8-8s-3.582-8-8-8z"
+                                  transform="translate(-564 -480) translate(528 444) translate(36 36)"
+                                ></path>
+                              </g>
+                            </g>
+                          </g>
+                        </g>
+                      </svg>
+                    </span>
+
+                    <span className="text-[9px] font-bold  pl-1">
+                      Analytics
+                    </span>
+                  </span>
+                  <span className="flex ml-auto items-bottom">
+                    <span className="flex ml-auto items-bottom text-xs mt-2"></span>
+                  </span>
+                </span>
+              </li>
+            )}
+          </ul>
+        </>
+      )}
       {['salesModule'].includes(sourceLink) && (
         <>
           <ul className="w-full">
