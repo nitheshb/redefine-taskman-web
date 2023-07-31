@@ -1,3 +1,4 @@
+import { MarketingModulePageType } from 'C:/Users/nithe/Documents/MyCodes/Redefine/RedefineV2/web/src/pages/MarketingModulePage/MarketingModulePage';
 import { navigate, routes } from '@redwoodjs/router'
 import { getUser } from 'src/context/dbQueryFirebase'
 import { USER_ROLES } from 'src/constants/userRoles'
@@ -18,14 +19,23 @@ export const navigateBasedOnUser = async (userData) => {
   ) {
     console.log('where am i 2')
     await navigate(routes.home(), { replace: true })
-  } else if (
+  }
+  else if (
+    userData.role.includes(USER_ROLES.MARKETING_EXECUTIVE) ||
+    userData.role.includes(USER_ROLES.MARKETING_MANAGER)
+  ) {
+    console.log('where am i 3')
+    await navigate(routes.marketingModule(), { replace: true })
+  }
+  else if (
     userData.role.includes(USER_ROLES.SALES_MANAGER) ||
     userData.role.includes(USER_ROLES.SALES_EXECUTIVE) ||
     userData.role.includes(USER_ROLES.CP_AGENT)
   ) {
     console.log('where am i 3')
     await navigate(routes.leadsManager(), { replace: true })
-  } else if (
+  }
+  else if (
     userData.role.includes(USER_ROLES.HR_MANAGER) ||
     userData.role.includes(USER_ROLES.HR_EXECUTIVE)
   ) {

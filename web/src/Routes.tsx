@@ -73,6 +73,7 @@ const Routes = () => {
         <Route path="/admin/home" page={HomePage} name="home" />
         <Route path="/admin/users-admin" page={UsersAdminPage} name="usersAdmin" />
         <Route path="/admin/leads-manager" page={LeadsManagerPage} name="leadsManager" />
+        <Route path="/marketing-module" page={MarketingModulePage} name="marketingModule" />
         <Route path="/admin/leads-caller-board" page={LeadsCallerBoardPage} name="leadsCallerBoard" />
         <Route path="/admin/project-edit/{uid}" page={ProjectEditPage} name="projectEdit" />
         <Route path="/admin/project-module" page={ProjectModulePage} name="projectModule" />
@@ -89,14 +90,29 @@ const Routes = () => {
         <Route path="/users-admin" page={UsersAdminPage} name="usersAdmin" />
       </>
     )
-  } else if (user?.role?.includes(USER_ROLES.SALES_MANAGER) || user?.role?.includes(USER_ROLES.SALES_EXECUTIVE) || user?.role?.includes(USER_ROLES.CP_AGENT)) {
+  }
+  else if (user?.role?.includes(USER_ROLES.SALES_MANAGER) || user?.role?.includes(USER_ROLES.SALES_EXECUTIVE) || user?.role?.includes(USER_ROLES.CP_AGENT)) {
     UpdatedRoutes = (
       <>
         <Route path="/leads-manager" page={LeadsManagerPage} name="leadsManager" />
         <Route path="/leads-caller-board" page={LeadsCallerBoardPage} name="leadsCallerBoard" />
       </>
     )
-  } else if (user?.role?.includes(USER_ROLES.CRM_MANAGER) || user?.role?.includes(USER_ROLES.CRM_EXECUTIVE)) {
+  }
+  else if (user?.role?.includes(USER_ROLES.MARKETING_MANAGER) || user?.role?.includes(USER_ROLES.MARKETING_EXECUTIVE) || user?.role?.includes(USER_ROLES.CP_AGENT)) {
+
+  console.log(' user yo yo is it is')
+    UpdatedRoutes = (
+      <>
+        <Route path="/marketing-module" page={MarketingModulePage} name="marketingModule" />
+{/*
+        <Route path="/leads-manager" page={LeadsManagerPage} name="leadsManager" />
+        <Route path="/leads-caller-board" page={LeadsCallerBoardPage} name="leadsCallerBoard" /> */}
+      </>
+    )
+  }
+
+  else if (user?.role?.includes(USER_ROLES.CRM_MANAGER) || user?.role?.includes(USER_ROLES.CRM_EXECUTIVE)) {
     UpdatedRoutes = (
       <>
         <Route path="/crm-module" page={CrmHomePage} name="crmModule" />

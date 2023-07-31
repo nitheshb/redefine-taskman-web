@@ -922,7 +922,7 @@ const SlimSideMenuBar = (props) => {
               </span>
             </li>
 
-            {(user?.role?.includes(USER_ROLES.SALES_MANAGER) ||
+            {(user?.role?.includes(USER_ROLES.MARKETING_MANAGER) || user?.role?.includes(USER_ROLES.MARKETING_EXECUTIVE) ||
               user?.role?.includes(USER_ROLES.ADMIN)) && (
               <li className="relative mt-1">
                 <span
