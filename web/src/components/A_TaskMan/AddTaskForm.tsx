@@ -81,6 +81,26 @@ const people = [
   { name: 'Priority 3' },
   { name: 'Priority 4' },
 ]
+
+const formatOptionLabel = ({ value, label, dept }) => (
+  <div style={{ display: 'flex' }}>
+    <div>{label}</div>
+    <div
+      style={{
+        marginLeft: '10px',
+        color: '#118d57',
+        background: '#22c55e29',
+        padding: '0px 8px',
+        paddingBottom: '2px',
+        borderRadius: '10px',
+        fontSize: '10px',
+        height: '21px'
+      }}
+    >
+      {dept}
+    </div>
+  </div>
+)
 const AddTaskForm = ({ title, dialogOpen }) => {
   const { user } = useAuth()
   const { orgId } = user
@@ -107,6 +127,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
         usersListA.map((user) => {
           user.label = user.displayName || user.name
           user.value = user.uid
+          user.dept = user?.roles[0]
         })
         console.log('fetched users list is', usersListA)
 
@@ -516,6 +537,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                                   formik.setFieldValue('followers', [value])
                                 }}
                                 options={usersList}
+                                formatOptionLabel={formatOptionLabel}
                                 value={formik?.values?.followers[0] || []}
                                 className="basic-multi-select w-full"
                                 classNamePrefix="myselect"

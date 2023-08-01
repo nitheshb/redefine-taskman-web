@@ -1,6 +1,7 @@
 import React from 'react'
-import Select from 'react-select'
+
 import { ErrorMessage } from 'formik'
+import Select from 'react-select'
 const customStyles = {
   control: (provided, state) => ({
     ...provided,
@@ -14,24 +15,43 @@ const customStyles = {
   valueContainer: (provided, state) => ({
     ...provided,
     height: '30px',
-    padding: '0 6px'
+    padding: '0 6px',
   }),
 
   input: (provided, state) => ({
     ...provided,
     margin: '0px',
   }),
-  indicatorSeparator: state => ({
+  indicatorSeparator: (state) => ({
     display: 'none',
   }),
   indicatorsContainer: (provided, state) => ({
     ...provided,
     height: '30px',
+
   }),
   menu: (provided) => ({ ...provided, zIndex: 9999 }),
 }
 
-
+const formatOptionLabel = ({ value, label, dept }) => (
+  <div style={{ display: 'flex' }}>
+    <div>{label}</div>
+    <div
+      style={{
+        marginLeft: '10px',
+        color: '#118d57',
+        background: '#22c55e29',
+        padding: '0px 8px',
+        paddingBottom: '2px',
+        borderRadius: '10px',
+        fontSize: '10px',
+        height: '21px'
+      }}
+    >
+      {dept}
+    </div>
+  </div>
+)
 export const CustomSelectNew = ({
   onChange,
   options,
@@ -49,34 +69,20 @@ export const CustomSelectNew = ({
   }
 
   return (
-    <label>
-      <div className={className}>
-        {showLabel && (
-          <label className="label font-regular text-[12px] block mb-1 text-gray-700">{label}</label>
-        )}
-        <label>
-          <Select
-            maxMenuHeight={150}
-            name={name}
-            value={defaultValue(options, value)}
-            placeholder={placeholder}
-            onChange={(value) => {
-              onChange(value)
-            }}
-            options={options}
-            className={`text-sm  ${
-              label != '' ? 'mt-' : ''
-            } border-transparent`}
-            styles={customStyles}
-          />
-        </label>
-        <ErrorMessage
-        component="div"
-        name={name}
-        className="error-message text-red-700 text-xs px-2 "
-      />
-
-      </div>
-    </label>
+    <Select
+      maxMenuHeight={150}
+      name={name}
+      value={defaultValue(options, value)}
+      placeholder={placeholder}
+      onChange={(value) => {
+        onChange(value)
+      }}
+      options={options}
+      // components={{ Option: CustomOption }}
+      // getOptionLabel={(option) => `${option.label} - ${option.dept}`}
+      formatOptionLabel={formatOptionLabel}
+      className={`text-sm  ${label != '' ? 'mt-' : ''} border-transparent`}
+      styles={customStyles}
+    />
   )
 }

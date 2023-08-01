@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/label-has-associated-control */
@@ -11,13 +12,10 @@ import {
   PencilIcon,
   ClockIcon,
 } from '@heroicons/react/outline'
-import { XIcon, FireIcon } from '@heroicons/react/solid'
+import { XIcon, FireIcon, PaperClipIcon } from '@heroicons/react/solid'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
-import {
-  PaperClipIcon,
-  UsersIcon,
-  ArrowCircleDownIcon,
-} from '@heroicons/react/solid'
+import { UsersIcon, ArrowCircleDownIcon } from '@heroicons/react/solid'
+import { AttachFile } from '@mui/icons-material'
 import CalendarMonthTwoToneIcon from '@mui/icons-material/CalendarMonthTwoTone'
 import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone'
 import CloseTwoToneIcon from '@mui/icons-material/CloseTwoTone'
@@ -26,11 +24,17 @@ import SendTwoToneIcon from '@mui/icons-material/SendTwoTone'
 import axios from 'axios'
 import { setHours, setMinutes } from 'date-fns'
 import { Timestamp } from 'firebase/firestore'
-import { getStorage, ref, getDownloadURL } from 'firebase/storage'
+import {
+  getStorage,
+  ref,
+  getDownloadURL,
+  uploadBytesResumable,
+} from 'firebase/storage'
 import { Form, Formik, Field, ErrorMessage } from 'formik'
 import DatePicker from 'react-datepicker'
 import NumberFormat from 'react-number-format'
 import Select from 'react-select'
+import { v4 as uuidv4 } from 'uuid'
 import * as Yup from 'yup'
 
 import { Label, InputField, TextAreaField, FieldError } from '@redwoodjs/forms'
@@ -47,6 +51,7 @@ import {
   steamUsersListByRole,
   steamUsersList,
   editTaskManAttachmentsData,
+  deleteTaskManData,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import { storage } from 'src/context/firebaseConfig'
@@ -115,6 +120,26 @@ const people = [
   { name: 'Priority 3' },
   { name: 'Priority 4' },
 ]
+
+const formatOptionLabel = ({ value, label, dept }) => (
+  <div style={{ display: 'flex' }}>
+    <div>{label}</div>
+    <div
+      style={{
+        marginLeft: '10px',
+        color: '#118d57',
+        background: '#22c55e29',
+        padding: '0px 8px',
+        paddingBottom: '2px',
+        borderRadius: '10px',
+        fontSize: '10px',
+        height: '16px'
+      }}
+    >
+      {dept}
+    </div>
+  </div>
+)
 const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
   const { user } = useAuth()
   const { orgId } = user
@@ -133,13 +158,19 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
   const [error, setError] = useState(false)
   const [prior, setPrior] = useState(false)
   const [files, setFiles] = useState([])
+  const [commentAttachUrl, setCommentAttachUrl] = useState('')
+  const [cmntFileType, setCmntFileType] = useState('')
+  const [progress, setProgress] = useState(0)
 
   const removeFile = (filename) => {
-    console.log('removing files ', files.filter((file) => file.name !== filename))
+    console.log(
+      'removing files ',
+      files.filter((file) => file.name !== filename)
+    )
     setFiles(files.filter((file) => file.name !== filename))
     const data = {}
     data.id = taskManObj.id
-     data.attachments = files.filter((file) => file.name !== filename)
+    data.attachments = files.filter((file) => file.name !== filename)
     editTaskManAttachmentsData(orgId, data, user)
   }
 
@@ -159,6 +190,7 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
         usersListA.map((user) => {
           user.label = user.displayName || user.name
           user.value = user.uid
+          user.dept = user?.roles[0]
         })
         console.log('fetched users list is', usersListA)
 
@@ -211,6 +243,41 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
     window.location.href = url
   }
   const [imageUrl, setImageUrl] = useState(null)
+  const handleFileUploadFun = async (file, type) => {
+    console.log('am i inside handle FileUpload')
+    if (!file) return
+    try {
+      const uid = uuidv4()
+      const storageRef = ref(storage, `/spark_files/${'taskFiles'}_${uid}`)
+      const uploadTask = uploadBytesResumable(storageRef, file)
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          const prog =
+            Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 100
+
+          setProgress(prog)
+          file.isUploading = false
+        },
+        (err) => console.log(err),
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+            // createAttach(orgId, url, by, file.name, id, attachType)
+            file.url = url
+            setCmntFileType(file.name.split('.').pop())
+            // setFiles([...files, file])
+
+            setCommentAttachUrl(url)
+
+            return url
+            //  save this doc as a new file in spark_leads_doc
+          })
+        }
+      )
+    } catch (error) {
+      console.log('upload error is ', error)
+    }
+  }
 
   const downloadImage = (imageUrl, filename) => {
     console.error('Error downloading image:', imageUrl)
@@ -301,7 +368,8 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
         <section className="flex flex-row mx-4 py-4">
           <span className="ml-2 mt-[1px] ">
             <label className="font-semibold text-[#053219]  text-[18px]  mb-1  ">
-              {showEditTask ? 'Edit Task' : 'View Task' }{} 🍉
+              {showEditTask ? 'Edit Task' : 'View Task'}
+              {} 🍉
               <abbr title="required"></abbr>
             </label>
           </span>
@@ -481,12 +549,37 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                       <span className="ml-1 ">Edit</span>
                     </button>
                   )}
+                     {taskManObj?.by_email === user?.email && (
+                    <button
+                      className={`flex mt-2 ml- rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium   `}
+                      onClick={() => {
+                        // selShowEditTask(!showEditTask)
+                        deleteTaskManData(orgId, taskManObj, user)
+                        dialogOpen(false)
+                      }}
+                    >
+                      <span className="ml-1 ">Delete</span>
+                    </button>
+                  )}
                 </section>
 
                 <span className="mt-1 text-sm text-semibold ml-[2px]">
                   Comments
                 </span>
                 <section className="  mr-4 mt-1 p-2 mb-3  border rounded  w-full flex flex-col">
+                  {commentAttachUrl != '' && (
+                    <img
+                      src={
+                        ['PNG', 'JPEG', 'png', 'jpeg', 'jpg'].includes(
+                          cmntFileType
+                        )
+                          ? commentAttachUrl
+                          : 'https://minimals.cc/assets/icons/files/ic_word.svg'
+                      }
+                      alt=""
+                      className="h-[140px]"
+                    />
+                  )}
                   <section className="  mt-1 p-2  w-full flex flex-row min-h-[36px]">
                     <input
                       // onChange={setTakTitle()}
@@ -517,7 +610,38 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
               <PaperClipIcon className="w-4 h-4 cursor-pointer mt-[10px] mr-[2px] inline-block text-gray-400 " />
           </button>
         </div>
+
         </div> */}
+
+                    <div>
+                      <label
+                        htmlFor="formFile1"
+                        className="form-label cursor-pointer inline-block mt-2  font-regular text-xs bg-[#efef] rounded-2xl  py-1 "
+                      >
+                        <AttachFile
+                          className="w-4 h-4 text-[18px]"
+                          style={{ fontSize: '18px' }}
+                        />
+                      </label>
+                      {/* {panCard1 != '' && (
+                        <button
+                          onClick={() =>
+                            downloadImage(panCard1, 'pancard1.PNG')
+                          }
+                        >
+                          {' '}
+                          <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[9px] mr-2 inline-block text-gray-400 " />
+                        </button>
+                      )} */}
+                      <input
+                        type="file"
+                        className="hidden"
+                        id="formFile1"
+                        onChange={(e) => {
+                          handleFileUploadFun(e.target.files[0], 'panCard1')
+                        }}
+                      />
+                    </div>
                     {!addCommentPlusTask && (
                       <button
                         type="submit"
@@ -538,20 +662,33 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                           ) {
                             // addTaskCommentFun(data)
                             // addCommentTitle
-                            const x = [
-                              {
+                            const x = []
+
+                            if (commentAttachUrl === '') {
+                              x.push({
                                 typ: 'text',
                                 msg: addCommentTitle,
                                 by: user?.displayName,
                                 T: Timestamp.now().toMillis(),
-                              },
-                            ]
+                              })
+                            } else {
+                              x.push({
+                                typ: cmntFileType,
+                                url: commentAttachUrl,
+                                msg: addCommentTitle,
+                                by: user?.displayName,
+                                T: Timestamp.now().toMillis(),
+                              })
+                            }
+
                             const newCommentA = [...x, ...(myTaskObj || [])]
                             const dta = taskManObj
                             setMyTaskObj(newCommentA)
                             dta.comments = newCommentA
                             AddCommentTaskManData(orgId, dta, user)
                             setAddCommentTitle('')
+                            setCommentAttachUrl('')
+                            setCmntFileType('')
                           }
                         }}
                         className={`flex mt-2 ml-4 cursor-pointer rounded-xs text-bodyLato items-center  pl-1 h-[28px] pr-1 rounded py-1 text-xs font-medium  ${
@@ -610,10 +747,36 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                                   <span
                                     className={`px-4 py-2 rounded-lg inline-block rounded-bl-none ${
                                       user.displayName == commentObj?.by
-                                        ? ' bg-blue-600 text-white'
+                                        ? ' bg-[#c8fad6] text-[#212b36]'
                                         : 'bg-gray-300 text-gray-600'
                                     } `}
                                   >
+                                    {commentObj?.typ != 'text' && (
+                                      <>
+                                        <img
+                                          src={commentObj?.url}
+                                          alt=""
+                                          className="cursor-pointer mb-1"
+                                          onClick={() =>
+                                            downloadImage(
+                                              commentObj?.url,
+                                              `comment.${commentObj?.typ}`
+                                            )
+                                          }
+                                        />
+                                        <button
+                                          onClick={() =>
+                                            downloadImage(
+                                              commentObj?.url,
+                                              `comment.${commentObj?.typ}`
+                                            )
+                                          }
+                                        >
+                                          {' '}
+                                          <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer mr-2 inline-block text-gray-400 " />
+                                        </button>
+                                      </>
+                                    )}
                                     {commentObj?.msg}
                                   </span>
                                 </div>
@@ -660,7 +823,6 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
               <div className="w-full bg-[#56d1e0] px-2 py-3 flex flex-row justify-between rounded-t-lg text-white text-xs text-semibold">
                 <section>Pending Since</section>
                 <section className="font-semibold">
-
                   {Math.abs(getDifferenceInMinutes(taskManObj?.due_date, '')) >
                   60
                     ? Math.abs(
@@ -676,7 +838,6 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                     ? 'Due'
                     : 'Left'}
                 </section>
-
               </div>
               <div className="w-[100%]  px-2 py-3 rounded-t-lg flex flex-row text-xs text-semibold p-4  border-b border-[#eef2f4]">
                 <div className="w-[110px]">Deadline:</div>
@@ -907,6 +1068,7 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                                     formik.setFieldValue('followers', value)
                                   }}
                                   options={usersList}
+                                formatOptionLabel={formatOptionLabel}
                                   value={formik?.values?.followers || []}
                                   className="basic-multi-select w-full"
                                   classNamePrefix="myselect"

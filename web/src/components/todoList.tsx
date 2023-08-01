@@ -70,6 +70,7 @@ const TodoListView = ({
 
   const [personalData_F, setPersonalData_F] = useState([])
   const [personalData_D, setPersonalData_D] = useState([])
+  const [ParticipantsData_D, setParticipantsData_D] = useState([])
   const [tabHeadFieldsA, settabHeadFieldsA] = useState([])
   const [isImportLeadsOpen1, setisImportLeadsOpen1] = useState(false)
   const [isClicked, setisClicked] = useState('dept_tasks')
@@ -154,7 +155,7 @@ const TodoListView = ({
     if (subSection == 'all_business') {
       const x = businessData_F.filter(
         (d) =>
-          d.priority.toLowerCase().includes(selPriority.toLowerCase()) &&
+          d.priority?.toLowerCase().includes(selPriority.toLowerCase()) &&
           d.title?.toLowerCase().includes(searchText.toLowerCase())
       )
       setBusinessSection_D(x)
@@ -164,7 +165,7 @@ const TodoListView = ({
         (d) =>
           d.by_uid != user?.uid &&
           d.to_uid === user?.uid &&
-          d.priority.toLowerCase().includes(selPriority.toLowerCase()) &&
+          d.priority?.toLowerCase().includes(selPriority.toLowerCase()) &&
           d.title?.toLowerCase().includes(searchText.toLowerCase())
       )
       setBusinessSection_D(x)
@@ -174,19 +175,19 @@ const TodoListView = ({
         (d) =>
           d.by_uid === user?.uid &&
           d.to_uid != user?.uid &&
-          d.priority.toLowerCase().includes(selPriority.toLowerCase()) &&
+          d.priority?.toLowerCase().includes(selPriority.toLowerCase()) &&
           d.title?.toLowerCase().includes(searchText.toLowerCase())
       )
       setBusinessSection_D(x)
       bootBusinessFun(x)
     } else if (subSection == 'participants') {
-      const x = businessData_F.filter(
-        (d) =>
-          d.priority.toLowerCase().includes(selPriority.toLowerCase()) &&
-          d.title?.toLowerCase().includes(searchText.toLowerCase())
-      )
-      setBusinessSection_D(x)
-      bootBusinessFun(x)
+      // const x = businessData_F.filter(
+      //   (d) =>
+      //     d.priority.toLowerCase().includes(selPriority.toLowerCase()) &&
+      //     d.title?.toLowerCase().includes(searchText.toLowerCase())
+      // )
+      setParticipantsData_D(ParticipantsData_D)
+      bootBusinessFun(ParticipantsData_D)
     }
   }, [businessData_F, subSection, sortType, searchText, selPriority])
 
@@ -220,6 +221,23 @@ const TodoListView = ({
         return b.due_date - a.due_date
       })
       setPersonalData_D(x)
+    }
+  }
+
+  const sortParticipantsDataFun = (data) => {
+    console.log('personal data is ', sortType)
+    if (sortType === 'Oldest') {
+      console.log('ami here', sortType)
+      const x = data.sort((a, b) => {
+        return a.due_date - b.due_date
+      })
+      setParticipantsData_D(x)
+    } else {
+      console.log('ami here', sortType)
+      const x = data.sort((a, b) => {
+        return b.due_date - a.due_date
+      })
+      setParticipantsData_D(x)
     }
   }
 
@@ -260,9 +278,20 @@ const TodoListView = ({
         (d.by_uid != user?.uid && d.to_uid === user?.uid) ||
         (d.by_uid === user?.uid && d.to_uid != user?.uid)
     )
+    const z = await steamLeadLogs.filter(
+      (d) => {
+
+        console.log('z o is values are',d.followersUid.includes('adFBX9QVHfbdDbxrH3TPKE3mW4M2'), d.followersUid )
+        if(d.followersUid.includes('adFBX9QVHfbdDbxrH3TPKE3mW4M2')) return d}
+        // (d.by_uid != user?.uid && d.to_uid === user?.uid) ||
+        // (d.by_uid === user?.uid && d.to_uid != user?.uid)
+    )
+
+   await  console.log('z o is ', z)
     await setBusinessData_F(y)
     await sortDataFun(y)
     await sortPersonalDataFun(x)
+    await sortParticipantsDataFun(z)
     return
   }
 
@@ -672,7 +701,7 @@ const TodoListView = ({
                               )}
                               {d.val === 'participants' && (
                                 <section className="text-[11px]  ml-1 mt-[4px]">
-                                  ({businessData_F.length})
+                                  ({ParticipantsData_D.length})
                                 </section>
                               )}
                             </section>
@@ -1283,7 +1312,7 @@ const TodoListView = ({
                               {dat?.comments?.length > 0 && (
                                 <p className="text-[11px]   leading-none  pr-2 text-green-800  mt-[6px]    rounded-full   mb-1 mr-2  ">
                                   {
-                                    dat?.comments[dat?.comments?.length - 1]
+                                    dat?.comments[0]
                                       ?.msg
                                   }
                                 </p>

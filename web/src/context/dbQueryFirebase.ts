@@ -24,10 +24,10 @@ import { v4 as uuidv4 } from 'uuid'
 import { getDirectiveName } from '@redwoodjs/testing/api'
 
 import { sendWhatAppTextSms1 } from 'src/util/axiosWhatAppApi'
+import { prettyDateTime } from 'src/util/dateConverter'
 
 import { db } from './firebaseConfig'
 import { supabase } from './supabase'
-import { prettyDateTime } from 'src/util/dateConverter'
 
 // import { userAccessRoles } from 'src/constants/userAccess'
 
@@ -51,7 +51,7 @@ export const steamUsersListByRole = (orgId, snapshot, error) => {
   return onSnapshot(itemsQuery, snapshot, error)
 }
 // get users list by Dept
-export const steamUsersListByDept = (orgId,dept, snapshot, error) => {
+export const steamUsersListByDept = (orgId, dept, snapshot, error) => {
   const itemsQuery = query(
     collection(db, 'users'),
     where('orgId', '==', orgId),
@@ -202,13 +202,13 @@ export const streamGetAllUnitTransactions = async (
   error
 ) => {
   // const itemsQuery = query(doc(db, `${orgId}_leads_log', 'W6sFKhgyihlsKmmqDG0r'))
-  const { uid, cutoffDate , unit_id} = data
+  const { uid, cutoffDate, unit_id } = data
   console.log('unit_id is ', uid)
   // return onSnapshot(doc(db, `${orgId}_leads_log`, uid), snapshot, error)
   const { data: lead_logs, error: countError } = await supabase
     .from(`${orgId}_accounts`)
     .select('*')
-  .eq('unit_id', unit_id)
+    .eq('unit_id', unit_id)
   // .is('projectId', null)
   // .isNull('projectId')
   // .eq('from', 'visitfixed')
@@ -227,6 +227,7 @@ export const streamGetAllTaskManTasks = async (
   data,
   error
 ) => {
+  // [{"uid":"4daHzWw8zSUZqYlvRGrfYwzC8al1","name":"Nithesh Reddy"}]
   // const itemsQuery = query(doc(db, `${orgId}_leads_log', 'W6sFKhgyihlsKmmqDG0r'))
   const { uid, cutoffDate } = data
   // return onSnapshot(doc(db, `${orgId}_leads_log`, uid), snapshot, error)
@@ -235,6 +236,7 @@ export const streamGetAllTaskManTasks = async (
     .select('*')
 
     .eq('status', 'InProgress')
+    // .containedBy('participantsA',{"uid":"4daHzWw8zSUZqYlvRGrfYwzC8al1","name":"Nithesh Reddy"})
   // .is('projectId', null)
   // .isNull('projectId')
   // .eq('from', 'visitfixed')
@@ -244,6 +246,7 @@ export const streamGetAllTaskManTasks = async (
     console.error(countError)
     return
   }
+  console.log(' added data is ', lead_logs)
   return lead_logs
   // return onSnapshot(itemsQuery, snapshot, error)
 }
@@ -319,15 +322,20 @@ export const editTaskManData = async (orgId, dta, user) => {
   } = dta
   let followA = []
   let attachA = []
+  let followAUid = []
+  const x = [assignedToObj?.uid
+    || '']
   if (followers) {
     followA = await followers?.map((d) => {
       const y = {}
       y.label = d?.name || d?.label
       y.value = d?.uid || d?.value
+      x.push(d?.uid)
+      followAUid.push(d?.uid)
       return y
     })
   }
-  if(attachments){
+  if (attachments) {
     attachA = await attachments?.map((d) => {
       const y = {}
       y.name = d?.name
@@ -350,11 +358,11 @@ export const editTaskManData = async (orgId, dta, user) => {
       to_name: assignedToObj?.name,
       to_uid: assignedToObj?.uid,
       participantsA: followA,
-      participantsC: followA.length ||  0,
+      participantsC: followA.length || 0,
       followersC: followA.length || 0,
+      followersUid: followAUid || [],
       attachmentsCount: attachA?.length || 0,
-      attachmentsA: attachA
-
+      attachmentsA: attachA,
     })
     .eq('id', id)
 
@@ -362,14 +370,58 @@ export const editTaskManData = async (orgId, dta, user) => {
   return lead_logs
   // return onSnapshot(itemsQuery, snapshot, error)
 }
-export const editTaskManAttachmentsData = async (orgId, dta, user) => {
+export const deleteTaskManData = async (orgId, dta, user) => {
   const {
     id,
+    taskTitle,
+    taskdesc,
+    dept,
+    due_date,
+    assignedTo,
+    assignedToObj,
+    followers,
+    priorities,
     attachments,
+    file,
   } = dta
+  let followA = []
+  let attachA = []
+  let followAUid = []
+  const x = [assignedToObj?.uid
+    || '']
+  if (followers) {
+    followA = await followers?.map((d) => {
+      const y = {}
+      y.label = d?.name || d?.label
+      y.value = d?.uid || d?.value
+      x.push(d?.uid)
+      followAUid.push(d?.uid)
+      return y
+    })
+  }
+  if (attachments) {
+    attachA = await attachments?.map((d) => {
+      const y = {}
+      y.name = d?.name
+      y.url = d?.url
+      y.type = d?.type
+      return y
+    })
+  }
+  const { data: lead_logs, error } = await supabase
+    .from(`maahomes_TM_Tasks`)
+   .delete()
+    .eq('id', id)
+
+  console.log('updating error', lead_logs, error)
+  return lead_logs
+  // return onSnapshot(itemsQuery, snapshot, error)
+}
+export const editTaskManAttachmentsData = async (orgId, dta, user) => {
+  const { id, attachments } = dta
   let attachA = []
 
-  if(attachments){
+  if (attachments) {
     attachA = await attachments?.map((d) => {
       const y = {}
       y.name = d?.name
@@ -382,8 +434,7 @@ export const editTaskManAttachmentsData = async (orgId, dta, user) => {
     .from(`maahomes_TM_Tasks`)
     .update({
       attachmentsCount: attachA?.length || 0,
-      attachmentsA: attachA
-
+      attachmentsA: attachA,
     })
     .eq('id', id)
 
@@ -392,18 +443,28 @@ export const editTaskManAttachmentsData = async (orgId, dta, user) => {
   // return onSnapshot(itemsQuery, snapshot, error)
 }
 export const CompleteTaskManData = async (orgId, dta, user, status) => {
+
+  await console.log('task details are', dta)
   const {
     id,
-    taskTitle,
-    taskdesc,
-    dept,
+    title,
+
     due_date,
-    assignedTo,
-    assignedToObj,
-    followers,
-    priorities,
-    file,
   } = dta
+
+  // // get phone no's
+  // const additionalUserInfo = await getUser(dta?.by_uid)
+  // await console.log('task details are', dta, additionalUserInfo)
+  // await sendWhatAppTextSms1(
+  //   '9849000525',
+  //   `Task has been *closed* by ${additionalUserInfo?.offPh} ${
+  //     user.displayName
+  //   } \n \n *Due Date*:${prettyDateTime(
+  //     due_date
+  //   )}  \n *Done Date*:02-Feb-2022 \n *Task*: ${title}`
+  // )
+  const x = [dta?.by_uid
+    || '', dta?.to_uid || '']
 
   const { data: lead_logs, error } = await supabase
     .from(`maahomes_TM_Tasks`)
@@ -414,18 +475,28 @@ export const CompleteTaskManData = async (orgId, dta, user, status) => {
     .eq('id', id)
 
   console.log('updating error', lead_logs, error)
+  x.map(async (userId) => {
+    // get phone no's
+    const additionalUserInfo = await getUser(userId)
+    await console.log('task details are', dta, additionalUserInfo)
+    await sendWhatAppTextSms1(
+      additionalUserInfo?.offPh,
+      `Task has been *closed* by  ${
+        user.displayName
+      } \n \n *Due Date*:${prettyDateTime(
+        due_date
+      )}  \n *Done Date*:02-Feb-2022 \n *Creator*:${dta?.by_name} \n *Task*: ${title}`
+    )
+  })
   return lead_logs
   // return onSnapshot(itemsQuery, snapshot, error)
 }
 export const AddCommentTaskManData = async (orgId, dta, user) => {
-  const {
-    id,
-    comments
-  } = dta
+  const { id, comments } = dta
   const { data: lead_logs, error } = await supabase
     .from(`maahomes_TM_Tasks`)
     .update({
-      comments: comments
+      comments: comments,
     })
     .eq('id', id)
 
@@ -1190,15 +1261,20 @@ export const addTaskBusiness = async (orgId, dta, user) => {
   console.log('adding item is ', priorities)
   let followA = []
   let attachA = []
+  let followAUid = []
+  const x = [assignedToObj?.uid
+    || '']
   if (followers) {
     followA = await followers[0]?.map((d) => {
       const y = {}
       y.label = d?.name
       y.value = d?.uid
+      x.push(d?.uid)
+      followAUid.push(d?.uid)
       return y
     })
   }
-  if(attachments){
+  if (attachments) {
     attachA = await attachments?.map((d) => {
       const y = {}
       y.name = d?.name
@@ -1227,16 +1303,23 @@ export const addTaskBusiness = async (orgId, dta, user) => {
       to_uid: assignedToObj?.uid,
       participantsA: followA,
       participantsC: followA?.length || 0,
+      followersUid: followAUid || [],
       attachmentsCount: attachA?.length || 0,
-      attachmentsA: attachA
+      attachmentsA: attachA,
     },
   ])
-  sendWhatAppTextSms1(
-    assignedToObj?.offPh,
-    `!${priorities} New Task-${taskTitle} is assigned by ${
-      user.displayName
-    } with due-  ${prettyDateTime(due_date)} !${priorities} `
-  )
+  x.map(async (userId) => {
+    // get phone no's
+    const additionalUserInfo = await getUser(userId)
+    await console.log('task details are', dta, additionalUserInfo)
+    await sendWhatAppTextSms1(
+      additionalUserInfo?.offPh,
+      `New Task Added By *${user.displayName}*
+      \n \n *Due Date*:${prettyDateTime(
+        due_date
+      )}  \n *Priority*:${priorities} \n *Task*: ${taskTitle}`
+    )
+  })
   await console.log('data is ', data, error)
 }
 export const addLead = async (orgId, data, by, msg) => {
@@ -3205,7 +3288,7 @@ export const updateUnitCrmOwner = async (
   unitId,
   assignedTo,
   by,
-  enqueueSnackbar,
+  enqueueSnackbar
 ) => {
   try {
     console.log('data is', unitId, assignedTo)
