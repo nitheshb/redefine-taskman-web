@@ -37,6 +37,7 @@ const torrowDate = new Date(
 ).getTime()
 
 const TodoListView = ({
+  moduleName,
   taskListA,
   setisImportLeadsOpen,
   selUserProfileF,
@@ -78,6 +79,10 @@ const TodoListView = ({
   const [sortType, setSortType] = useState('Latest')
 
   // const [leadsFetchedData, setLeadsFetchedData] = useState([])
+  useEffect(() => {
+   console.log('leads name is ', moduleName)
+  }, [])
+
   useEffect(() => {
     getTasksDataFun()
     // Subscribe to real-time changes in the `${orgId}_accounts` table
@@ -349,7 +354,7 @@ const TodoListView = ({
                 role="tablist"
               >
                 {[
-                  { lab: 'Sales Tasks', val: 'dept_tasks' },
+                  { lab: `${moduleName} Tasks`, val: 'dept_tasks' },
                   { lab: 'Business Tasks', val: 'business_tasks' },
                   { lab: 'Personal', val: 'personal_tasks' },
                 ].map((d, i) => {

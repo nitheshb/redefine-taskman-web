@@ -206,6 +206,7 @@ const FinanceHome = ({
     <div className="flex-1 overflow-auto">
       <div className="p-1 ">
     <TodayLeadsActivitySearchView
+    moduleName={"Accounts"}
       data={filterTable}
       searchKey={searchKey}
       setSearchKey={setSearchKey}

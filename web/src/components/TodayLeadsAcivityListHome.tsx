@@ -81,7 +81,7 @@ const TodayLeadsActivityListHomeView = ({
 
       console.log('what is thes ==> ', taskType)
       if (taskType === 'Today1Team' || taskType === 'UpcomingTeam') {
-        setSchLoading(true)
+        setSchLoading(false)
         console.log('torw date', torrowDate)
         const todoData = await getTodayTodoLeadsData(
           orgId,
@@ -213,6 +213,7 @@ const TodayLeadsActivityListHomeView = ({
   )
   return (
     <TodayLeadsActivitySearchView
+      moduleName= {'Sales'}
       data={filterTable}
       searchKey={searchKey}
       setSearchKey={setSearchKey}

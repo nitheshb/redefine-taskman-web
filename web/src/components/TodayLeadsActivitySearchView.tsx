@@ -310,6 +310,7 @@ const HighlighterStyle = (props) => {
   )
 }
 export default function TodayLeadsActivitySearchView({
+  moduleName,
   selStatus,
   rowsParent,
   todaySch,
@@ -866,6 +867,7 @@ export default function TodayLeadsActivitySearchView({
                 <div className="flex flex-wrap">
                   <div className="w-10/12">
                     <TodoListView
+                      moduleName={moduleName}
                       taskListA={schFetCleanData}
                       setisImportLeadsOpen={setisImportLeadsOpen}
                       selUserProfileF={selUserProfileF}

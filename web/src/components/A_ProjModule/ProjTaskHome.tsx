@@ -71,7 +71,7 @@ const ProjectsTaskHome = ({
 
       console.log('what is thes ==> ', taskType)
       if (true) {
-        setSchLoading(true)
+        setSchLoading(false)
         console.log('torw date', torrowDate)
         const todoData = await getProjectsTasks(
           orgId,
@@ -207,6 +207,7 @@ const ProjectsTaskHome = ({
     <div className="flex-1 overflow-auto">
       <div className="p-1 ">
     <TodayLeadsActivitySearchView
+    moduleName={"Project"}
       data={filterTable}
       searchKey={searchKey}
       setSearchKey={setSearchKey}
