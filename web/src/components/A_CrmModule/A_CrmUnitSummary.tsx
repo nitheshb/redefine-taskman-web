@@ -64,18 +64,18 @@ const CrmUnitSummary = ({
           </div>
         </div>
 
-        <CrmUnitHeader projectDetails={selUnitPayload} />
+        {/* <CrmUnitHeader projectDetails={selUnitPayload} /> */}
 
         {/* 1 } customer details */}
         {/* Unit details */}
 
-        <CrmUnitCustomerDetailsView1
+        {/* <CrmUnitCustomerDetailsView1
           Name={selUnitPayload?.customerName1}
           Mobile={selUnitPayload?.phoneNo1}
           netTotal={12345}
           selCustomerPayload={selUnitPayload}
           assets={assets}
-        />
+        /> */}
         {/* Payment Summay */}
 
         <div>

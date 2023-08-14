@@ -409,7 +409,7 @@ const AddApplicantDetails = ({
     ),
     // aadharUrl1: Yup.string().required('Required'),
     // occupation1: Yup.string().required('Required'),
-    phoneNo1: Yup.string().required('Required'),
+    // phoneNo1: Yup.string().required('Required'),
     email1: Yup.string().email('Email is invalid'),
     email2: Yup.string().email('Email is invalid'),
     // aggrementAddress: Yup.string().required('Required'),
@@ -467,9 +467,9 @@ const AddApplicantDetails = ({
       dob1: dob1,
       marital1: marital1,
       panNo1: panNo1,
-      panDocUrl1: panCard1,
+      panDocUrl1: panCard1 || '',
       aadharNo1: aadharNo1,
-      aadharUrl1: aadhrUrl1,
+      aadharUrl1: aadhrUrl1 || '',
       occupation1,
       companyName1,
     }
@@ -481,9 +481,9 @@ const AddApplicantDetails = ({
       dob2,
       marital2,
       panNo2,
-      panDocUrl2: panCard2,
+      panDocUrl2: panCard2 || '',
       aadharNo2,
-      aadharUrl2: aadhrUrl2,
+      aadharUrl2: aadhrUrl2 || '',
       occupation2,
       companyName2,
     }
@@ -613,7 +613,7 @@ const AddApplicantDetails = ({
                             <div className="rounded-t bg-[#F1F5F9] mb-0 px-3 py-2">
                               <div className="text-center flex justify-between">
                                 <p className="text-xs font-extrabold tracking-tight uppercase font-body my-1">
-                                  Customer Details
+                                  Customer Detail
                                 </p>
                               </div>
                             </div>
@@ -673,7 +673,8 @@ const AddApplicantDetails = ({
                                               name="phoneNo1"
                                               type="text"
                                               onChange={(value) => {
-                                                // formik.setFieldValue('mobileNo', value.value)
+                                                console.log('value', value.value, formik?.values?.phoneNo1)
+                                                formik.setFieldValue('phoneNo1', value.value)
                                               }}
                                               // value={formik.values.mobileNo}
                                               options={{}}
