@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react'
 
 import { TabList } from '@mui/lab'
 import { Box as Section, Card, Grid, styled } from '@mui/material'
+import { Tabs } from '@material-ui/core';
+import { Tab } from '@material-ui/core';
+
 import { useTranslation } from 'react-i18next' // styled components
 
 import { prettyDate } from 'src/util/dateConverter'
@@ -87,6 +90,11 @@ const LLeadsTableView = ({
       ? setValue('archieve_all')
       : setValue('booked')
   }, [])
+  const [val, setVal] = React.useState('one');
+
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    setVal(newValue);
+  }
 
   const archieveTab = [
     { lab: 'Archieve', val: 'archieve_all' },
@@ -95,7 +103,18 @@ const LLeadsTableView = ({
     { lab: 'Blocked', val: 'blocked' },
     { lab: 'Junk', val: 'junk' },
   ]
-
+  const[activeAll,setactiveAll]=React.useState<boolean>(true)
+  const[activeNew,setactiveNew]=React.useState<boolean>(false)
+  const[activeFollow,setactiveFollow]=React.useState<boolean>(false)
+  const[activeVisitFixed,setactiveVisitFixed]=React.useState<boolean>(false)
+  const[activeNeg,setactiveNeg]=React.useState<boolean>(false)
+  const[activeUn,setactiveUn]=React.useState<boolean>(false)
+  const[activeArch,setactiveArch]=React.useState<boolean>(true)
+  const[activeDead,setactiveDead]=React.useState<boolean>(false)
+  const[activeBlock,setactiveBlock]=React.useState<boolean>(false)
+  const[activeJunk,setactiveJunk]=React.useState<boolean>(false)
+  const[activeNotIn,setactiveNotIn]=React.useState<boolean>(false)
+  const[activeBook,setactiveBook]=React.useState<boolean>(true)
   const [newStatusA, setNewStatusA] = useState([])
   const [followupA, setfollowupA] = useState([])
   const [mySelRows, setmySelRows] = useState([])
@@ -125,6 +144,10 @@ const LLeadsTableView = ({
     } else if (val === 'unassigned') {
       return unassigned.length
     }
+  }
+  const CheckActive = () =>{
+
+
   }
   useEffect(() => {
     // split data as per
@@ -357,11 +380,17 @@ const LLeadsTableView = ({
               >
                 {tabHeadFieldsA.map((d, i) => {
                   return (
-                    <li key={i} className="mr-2" role="presentation">
+                    <ul
+                            value={value}
+                onChange={handleChange}
+                textColor="secondary"
+                indicatorColor="secondary"
+                aria-label="secondary tabs example">
+                   <li key={i} className="mr-2" role="presentation">
                       <button
-                        className={`inline-block py-4 px-4 text-sm font-medium text-center text-[#4f5861] rounded-t-lg border-b-2  hover:text-gray-600 hover:border-[#1A91EB] dark:text-gray-400 dark:hover:text-gray-300  ${
+                        className={`inline-block py-4 px-4 text-sm font-medium text-center text-gray-700 rounded-t-lg border-b-2   hover:text-gray-600 hover:border-black hover:border-b-2 dark:text-gray-400 dark:hover:text-gray-300  ${
                           value === d.val
-                            ? 'border-[#1A91EB] text-gray-800'
+                            ? 'border-black text-gray-900 '
                             : 'border-transparent'
                         }`}
                         type="button"
@@ -371,21 +400,224 @@ const LLeadsTableView = ({
                           setValue(d.val)
                           setFetchLeadsLoader(false)
                           setmySelRows(rowsCounter(leadsFetchedData, d.val))
+                          if(d.val==="all")
+                          {
+                            setactiveAll(true)
+                            setactiveNew(false)
+                            setactiveFollow(false)
+                            setactiveVisitFixed(false)
+                            setactiveNeg(false)
+                            setactiveUn(false)
+                          }
+                          else if(d.val==="new")
+                          {
+                            setactiveNew(true)
+                            setactiveAll(false)
+                            setactiveFollow(false)
+                            setactiveVisitFixed(false)
+                            setactiveNeg(false)
+                            setactiveUn(false)
+                          }
+                          else if(d.val==="followup")
+                          {
+                            setactiveFollow(true)
+                            setactiveAll(false)
+                            setactiveNew(false)
+                            setactiveVisitFixed(false)
+                            setactiveNeg(false)
+                            setactiveUn(false)
+                          }
+                          else if(d.val==="visitfixed")
+                          {
+                            setactiveVisitFixed(true)
+                             setactiveAll(false)
+                            setactiveNew(false)
+                            setactiveFollow(false)
+                            setactiveNeg(false)
+                            setactiveUn(false)
+                          }
+                          else if(d.val==="negotiation")
+                          {
+                            setactiveNeg(true)
+                            setactiveAll(false)
+                            setactiveNew(false)
+                            setactiveFollow(false)
+                            setactiveVisitFixed(false)
+                            setactiveUn(false)
+                          }
+                          else if(d.val==="unassigned")
+                          {
+                            setactiveUn(true)
+                             setactiveAll(false)
+                            setactiveNew(false)
+                            setactiveFollow(false)
+                            setactiveVisitFixed(false)
+                            setactiveNeg(false)
+
+                          }
+                          else if(d.val==="archieve_all")
+                          {
+                            setactiveArch(true)
+                            setactiveBlock(false)
+                            setactiveDead(false)
+                            setactiveJunk(false)
+                            setactiveNotIn(false)
+
+                          }
+                          else if(d.val==="dead")
+                          {
+                            setactiveArch(false)
+                            setactiveBlock(false)
+                            setactiveDead(true)
+                            setactiveJunk(false)
+                            setactiveNotIn(false)
+
+                          }
+                          else if(d.val==="blocked")
+                          {
+                            setactiveArch(false)
+                            setactiveBlock(true)
+                            setactiveDead(false)
+                            setactiveJunk(false)
+                            setactiveNotIn(false)
+
+                          }
+                          else if(d.val==="junk")
+                          {
+                            setactiveArch(false)
+                            setactiveBlock(false)
+                            setactiveDead(false)
+                            setactiveJunk(true)
+                            setactiveNotIn(false)
+
+                          }
+                          else if(d.val==="notinterested")
+                          {
+                            setactiveArch(false)
+                            setactiveBlock(false)
+                            setactiveDead(false)
+                            setactiveJunk(false)
+                            setactiveNotIn(true)
+
+                          }
+
                         }}
                       >
                         <span
-                          className={`font-PlayFair ${
+
+                          className={`font-PlayFair text-gray-450 ${
                             value === d.val
-                              ? 'text-[#0080ff] text-gray-800'
+                              ? 'text-[#0080ff] text-gray-800 '
                               : ''
                           }`}
                         >
                           {' '}
                           {`${d.lab} `}
-                        </span>
-                        <span className="bg-gray-100 text-black px-2 py-1 rounded-full ml-[4px]  ">
+                           {d.val==="all"  ? ( <span  className={` font-semibold text-white px-2 py-1 rounded-md ml-[4px]  ${
+                            activeAll === true
+                              ? 'bg-gray-950 '
+                              :'bg-gray-950'
+                            } `}
+                            >
                           {rowsCounter(leadsFetchedData, d.val).length}
+                        </span>):null
+                              }
+                               {d.val==="new" ? ( <span  className={` font-semibold px-2 py-1 rounded-md ml-[4px] active:bg-green-800  ${
+                            activeNew === true
+                              ? 'bg-green-400 text-white '
+                              :'bg-green-200 text-green-700'
+                            } `}>
+                          {rowsCounter(leadsFetchedData, d.val).length}
+
+                          </span>):null
+                              }
+                              {d.val==="followup" ? ( <span className={`  font-semibold px-2 py-1 rounded-md ml-[4px]  ${
+                            activeFollow === true
+                              ? 'bg-orange-500 text-balck '
+                              :'bg-orange-100 text-orange-500'
+                            } `}>
+                        {rowsCounter(leadsFetchedData, d.val).length}
+                      </span>):null
+                            }
+                             {d.val==="visitfixed" ? ( <span className={`  font-semibold px-2 py-1 rounded-md ml-[4px]  ${
+                            activeVisitFixed === true
+                              ? 'bg-blue-400 text-white '
+                              :'bg-blue-100 text-blue-500'
+                            } `}>
+                        {rowsCounter(leadsFetchedData, d.val).length}
+                      </span>):null
+                            }
+
+                            {d.val==="negotiation" ? ( <span className={`  font-semibold  px-2 py-1 rounded-md ml-[4px]  ${
+                            activeNeg === true
+                              ? 'bg-red-500 text-white '
+                              :'bg-red-200 text-red-500'
+                            } `}>
+                          {rowsCounter(leadsFetchedData, d.val).length}
+                        </span>):null
+                              }
+                               {d.val==="unassigned" ? ( <span className={`bg-gray-100 text-black   font-semibold px-2 py-1 rounded-md ml-[4px]  ${
+                            activeUn === true
+                              ? 'bg-gray-950 text-white '
+                              :'bg-gray-100 text-black'
+                            } `}>
+                          {rowsCounter(leadsFetchedData, d.val).length}
+                        </span>):null
+                              }
+                                {d.val==="archieve_all" ? ( <span className={`bg-gray-950 font-semibold text-white  px-2 py-1 rounded-md ml-[4px]  > ${
+                            activeArch === true
+                              ? 'bg-gray-950 '
+                              :'bg-gray-950'
+                            } `} >
+                          {rowsCounter(leadsFetchedData, d.val).length}
+                        </span>):null
+                              }
+                                {d.val==="dead" ? ( <span className={`  font-semibold px-2 py-1 rounded-md ml-[4px]   ${
+                            activeDead === true
+                            ? 'bg-red-500 text-white '
+                            :'bg-red-200 text-red-500'
+                            } `}>
+                          {rowsCounter(leadsFetchedData, d.val).length}
+                        </span>):null
+                              }
+                                {d.val==="blocked" ? ( <span className={` font-semibold  px-2 py-1 rounded-md ml-[4px]   ${
+                            activeBlock === true
+                            ? 'bg-orange-500 text-balck '
+                            :'bg-orange-100 text-orange-500'
+                            } `}>
+                          {rowsCounter(leadsFetchedData, d.val).length}
+                        </span>):null
+                              }
+                                {d.val==="junk" ? ( <span className={`bg-gray-100 text-black   font-semibold  px-2 py-1 rounded-md ml-[4px]   ${
+                            activeJunk === true
+                              ? 'bg-gray-950 text-white '
+                              :'bg-gray-100 text-black'
+                            } `}>
+                          {rowsCounter(leadsFetchedData, d.val).length}
+                        </span>):null
+                              }
+                                {d.val==="notinterested" ? ( <span className={`bg-blue-100 text-blue-500  font-semibold  px-2 py-1 rounded-md ml-[4px]  ${
+                            activeNotIn=== true
+                              ? 'bg-blue-400 text-white '
+                              :'bg-blue-100 text-blue-500'
+                            } `}>
+                          {rowsCounter(leadsFetchedData, d.val).length}
+                        </span>):null
+                              }
+                               {d.val==="booked" ? ( <span className={`bg-green-100 text-green-500  font-semibold  px-2 py-1 rounded-md ml-[4px]   ${
+                            activeBook === true
+                              ? 'bg-green-400 text-white '
+                              :'bg-green-200 text-green-700'
+                            } `}>
+                          {rowsCounter(leadsFetchedData, d.val).length}
+                        </span>):null
+                              }
+
                         </span>
+
+                        {/* // <span className="bg-gray-100 text-black px-2 py-1 rounded-md ml-[4px]  ">
+                        //   {rowsCounter(leadsFetchedData, d.val).length}
+                        // </span> */}
                         {/*
                         <div className="px-2 mt-1 text-[9px] text-black  rounded-full">
                           <span className="bg-gray-100 px-2 py-1 rounded-full">
@@ -394,6 +626,7 @@ const LLeadsTableView = ({
                         </div> */}
                       </button>
                     </li>
+                    </ul>
                   )
                 })}
               </ul>

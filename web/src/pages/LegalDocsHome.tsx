@@ -8,6 +8,8 @@ import { useState, useEffect } from 'react'
 
 import { Link } from '@redwoodjs/router'
 
+import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
+
 import FileCardAnim from 'src/components/A_LegalModule/fileCard'
 import DropCompUnitStatus from 'src/components/dropDownUnitStatus'
 import DummyBodyLayout from 'src/components/DummyBodyLayout/DummyBodyLayout'
@@ -18,6 +20,7 @@ import 'flowbite'
 import DropDownSearchBar from 'src/components/dropDownSearchBar'
 
 import { PlusIcon } from '@heroicons/react/outline'
+import { Grid } from '@mui/material'
 const LegalDocsHome = ({ project }) => {
   const { projectName } = project
   const { user } = useAuth()
@@ -32,9 +35,136 @@ const LegalDocsHome = ({ project }) => {
   const [filteredUnits, setFilteredUnits] = useState([])
   const [filStatus, setFilStatus] = useState(['available', 'booked', 'blocked'])
 
+  // interface files{
+  //   name:string
+  //   size:string,
+  //   type:string,
+  //   modified:string,
+  //   shared:string[],
+  //   id:number
+  // }
+
+  const columns: GridColDef[] = [
+    { field: 'name', headerName: 'Name', width: 340 , renderCell: (params) => (<div style={{ display: 'flex', alignItems: 'center' }}><img src={params.row.img} style={{ width: 40, height: 40, marginRight: 10 }}/>{params.row.name}</div>)},
+    { field: 'size', headerName: 'Size', width: 130 },
+    { field: 'type', headerName: 'Type', width: 130 },
+    { field: 'modified', headerName: 'Modified', width: 140 },
+    { field: 'shared', type:'string[]',headerName: 'Shared', width: 120 },
+
+  ]
+
+  const Folders = [
+    {
+      name: 'Docs',
+      size: '2.4 GB',
+      type: 'folder',
+      modified: '10 Aug 2023',
+      shared:['kunal','nithesh'],
+      id:1,
+      img:"/folder.png",
+    },
+    {
+      img:"/folder.png",
+      name: 'Docs',
+      size: '2.4 GB',
+      type: 'folder',
+      modified: '10 Aug 2023',
+      shared:['kunal','nithesh'],
+      id:2
+    },
+    {
+      img:"/folder.png",
+      name: 'Docs',
+      size: '2.4 GB',
+      type: 'folder',
+      modified: '10 Aug 2023',
+      shared:['kunal','nithesh'],
+      id:3
+    },
+    {
+      img:"/folder.png",
+      name: 'Docs',
+      size: '2.4 GB',
+      type: 'folder',
+      modified: '10 Aug 2023',
+      shared:['kunal','nithesh'],
+      id:4
+    },
+    {
+      img:"/folder.png",
+      name: 'Docs',
+      size: '2.4 GB',
+      type: 'folder',
+      modified: '10 Aug 2023',
+      shared:['kunal','nithesh'],
+      id:5
+    },
+    {
+      img:"/folder.png",
+      name: 'Docs',
+      size: '2.4 GB',
+      type: 'folder',
+      modified: '10 Aug 2023',
+      shared:['kunal','nithesh'],
+      id:6
+    },
+    {
+      img:"/folder.png",
+      name: 'Docs',
+      size: '2.4 GB',
+      type: 'folder',
+      modified: '10 Aug 2023',
+      shared:['kunal','nithesh'],
+      id:7
+    },
+    {
+      img:"/folder.png",
+      name: 'Docs',
+      size: '2.4 GB',
+      type: 'folder',
+      modified: '10 Aug 2023',
+      shared:['kunal','nithesh'],
+      id:8
+    },
+    {
+      img:"/folder.png",
+      name: 'Docs',
+      size: '2.4 GB',
+      type: 'folder',
+      modified: '10 Aug 2023',
+      shared:['kunal','nithesh'],
+      id:9
+    },
+    {
+      img:"/folder.png",
+      name: 'Docs',
+      size: '2.4 GB',
+      type: 'folder',
+      modified: '10 Aug 2023',
+      shared:['kunal','nithesh'],
+      id:10
+    },
+    {
+      img:"/folder.png",
+      name: 'Docs',
+      size: '2.4 GB',
+      type: 'folder',
+      modified: '10 Aug 2023',
+      shared:['kunal','nithesh'],
+      id:11
+    },
+  ]
+
   useEffect(() => {
     getProjects()
   }, [])
+  const LegalTab = [
+    { lab: 'Name', val: 'name' },
+    { lab: 'Size', val: 'size ' },
+    { lab: 'Type', val: 'type' },
+    { lab: 'Modified', val: 'modified' },
+    { lab: 'Shared', val: 'shared' },
+  ]
   const getProjects = async () => {
     const unsubscribe = getAllProjects(
       orgId,
@@ -65,8 +195,8 @@ const LegalDocsHome = ({ project }) => {
 
   return (
     <div>
-      <section className=" mt-2 mr-2 py-8 mb-8 leading-7 text-gray-900 bg-white sm:py-12 md:py-16 lg:py-18 rounded-lg  ">
-        <div className="box-border px-4 mx-auto border-solid sm:px-6 md:px-6 lg:px-8 max-w-full ">
+      <section className=" mt-2 mb-8 leading-7 text-gray-900 bg-white sm:py-12 md:py-16 lg:py-18 mx-1 pr-10rounded-lg px-6  w-auto">
+        <div className="  mx-auto border-solid sm:px-6 md:px-6 px-6  ">
           {/* <div className="flex flex-col  leading-7  text-gray-900 border-0 border-gray-200 ">
             <div className="flex items-center flex-shrink-0  px-0  pl-0   mb-2">
               <Link
@@ -79,21 +209,21 @@ const LegalDocsHome = ({ project }) => {
               </Link>
             </div>
           </div> */}
- <span className="relative z-10 flex items-center w-auto text-lg font-bold leading-none pl-0 mt-[18px]">
-                  Documents
-                </span>
+          <span className="relative z-10 flex items-center w-auto text-lg font-bold leading-none pl-0 mt-[18px]">
+            Documents
+          </span>
           <div className=" mt-2">
             <form className="">
               <div className="flex">
-                <div className="relative w-full">
+                <div className="relative w-full ">
                   <input
                     type="search"
                     id="search-dropdown"
-                    className="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg rounded-l-lg border-l-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder={` Search Documents, Categories, Agreements...`}
+                    className="block p-2.5 w-1/4 z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg rounded-l-lg border-l-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder={` Search Documents,Categories, Agreements...`}
                     required
                   />
-                  <section className="absolute top-0 right-0  flex flex-row">
+                  <section className="absolute top-0 right-0  flex flex-row  w-1/4  ">
                     <DropDownSearchBar
                       type={'All Projects'}
                       id={'id'}
@@ -130,6 +260,82 @@ const LegalDocsHome = ({ project }) => {
             </form>
           </div>
 
+          {/* <ul className="">
+              <li className="py-2">
+                <div className='border border-green rounded-xl mt-10 ml-2 mr-2 bg-gray-100 w-[1318px] h-16'>
+                <section className="mt-2 flex flex-row ">
+                  {LegalTab?.map((d, i) => (
+
+                    <>
+                      <div className={`text-md pt-3 ml-32 text-gray-700 leading-normal ${
+                        d.lab==="Name"? "mr-80"
+                        :""
+                      }` } key={i}>{`${d.lab} `}
+                      </div>
+                    </>
+                  ))}
+                </section>
+                </div>
+              </li>
+            </ul> */}
+          <div style={{ height: 930, width: '98%' }} className='mt-10 border-gray-200'>
+            <DataGrid rows={Folders} columns={columns}
+              sx={{
+                fontWeight: 400,
+                // width:300,
+                fontSize: 14,
+                borderRadius: 3,
+                border: 1,
+                padding:5,
+
+                // marginRight:5,
+                paddingRight:5,
+                borderTop: 0,
+                "& .MuiDataGrid-row": {
+                  height:50,
+                  border: 1,
+                  width:"99.5%",
+                  borderTop: 1,
+                  // borderRight:1,
+                  // marginRight:1,
+
+                  marginTop:2,
+                  // paddingRight:5,
+                  borderRadius: 3,
+                },
+                "& .MuiDataGrid-columnHeaders": {
+                  border: 1,
+                  width:"99.5%",
+                  borderTop: 1,
+                  // borderBottom: 1,
+                  backgroundColor:'gray',
+                  borderRadius: 3
+                },
+                "& .MuiDataGrid-footerContainer": {
+                  // border: 1
+                },
+                "& .MuiTablePagination-selectLabel": {
+                  color: "rgba(0, 54, 101, 0.6)"
+                },
+                "& .MuiSelect-select": {
+                  color: "#003665"
+                },
+                "& .MuiTablePagination-displayedRows": {
+                  color: "#003665"
+                },
+                "& .MuiSvgIcon-root": {
+                  color: "#003665"
+                }
+              }}
+             initialState={{
+          pagination: {
+            paginationModel: {pageSize: 10 },
+              },
+            }}
+            pageSizeOptions={[5, 10]}
+            checkboxSelection />
+              </div>
+
           <section className=" flex">
             {/* <div
               className="cursor-pointer  z-10 flex flex-col  max-w-md p-2 my-0  mx-4 rounded-sm inline-block  min-h-[50px]  min-w-[100px] border border-dotted border-black rounded-md"
@@ -149,6 +355,7 @@ const LegalDocsHome = ({ project }) => {
                 })
               }}
             >
+
               <div
                 className="flex flex-col items-center justify-between"
                 onClick={() => setIsOpenSideView(!isOpenSideView)}
@@ -165,34 +372,34 @@ const LegalDocsHome = ({ project }) => {
               </div>
             </div> */}
 
-            <ul className="">
-                <li className="py-2">
-                  <section className='mt-2 flex'>
-              {projects?.map((project, i) => (
-                // <span key={i}>{project?.projectName}</span>
-                <>
-                  <div
-                    key={i}
-                    className=" cursor-pointer relative max-w-md mx-auto md:max-w-2xl  min-w-0 break-words bg-white w-full mb-6  rounded-xl  mr-8 transition duration-300 ease-in-out  "
-                    onClick={() => dispDoc(project)}
-                  >
-                    <FileCardAnim projectDetails={project} />
-                  </div>
-                </>
+            {/* <ul className="">
+              <li className="py-2"> */}
+            {/* <section className="flex flex-col"> */}
+            {/* {projects?.map((project, i) => (
+                    // <span key={i}>{project?.projectName}</span>
+                    <>
+                      <div
+                        key={i}
+                        // className=" cursor-pointer relative max-w-md mx-auto md:max-w-2xl  min-w-0 break-words bg-white w-full mb-6  rounded-xl  mr-8 transition duration-300 ease-in-out  "
+                        onClick={() => dispDoc(project)}
+                      >
+                        <FileCardAnim projectDetails={project} />
+                      </div>
+                    </>
 
-                // <ProjectsMHomeBody
-                //   key={project.uid}
-                //   project={project}
-                //   onSliderOpen={() => {
-                //     // setProject(project)
-                //     // setIsEditProjectOpen(true)
-                //   }}
-                //   isEdit={false}
-                // />
-              ))}
-              </section>
-              </li></ul>
-
+                    // <ProjectsMHomeBody
+                    //   key={project.uid}
+                    //   project={project}
+                    //   onSliderOpen={() => {
+                    //     // setProject(project)
+                    //     // setIsEditProjectOpen(true)
+                    //   }}
+                    //   isEdit={false}
+                    // />
+                  ))} */}
+            {/* </section> */}
+            {/* </li>
+            </ul> */}
           </section>
           {/* <div className="grid grid-cols-1 gap-7 mt-10">
             <span>
@@ -262,8 +469,6 @@ const LegalDocsHome = ({ project }) => {
             </span>
           </div> */}
         </div>
-
-
       </section>
       <SiderForm
         open={isOpenSideView}
