@@ -17,6 +17,7 @@ import {
 import {} from '@heroicons/react/solid'
 import { Box, LinearProgress, useTheme } from '@mui/material'
 import { startOfDay } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 
 import { MetaTags } from '@redwoodjs/web'
 
@@ -28,13 +29,14 @@ import {
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import CSVDownloader from 'src/util/csvDownload'
+import { prettyDate, prettyDateTime, timeConv } from 'src/util/dateConverter'
 import {
   SlimDateSelectBox,
   SlimSelectBox,
 } from 'src/util/formFields/slimSelectBoxField'
 
-import SiderForm from '../SiderForm/SiderForm'
 import CrmSiderForm from '../SiderForm/CRM_SideForm'
+import SiderForm from '../SiderForm/SiderForm'
 
 const agreementItems = [
   {
@@ -120,6 +122,7 @@ const modifyItems = [
 ]
 const CrmRegisterModeHome = ({ leadsTyper }) => {
   const d = new window.Date()
+  const { t } = useTranslation()
   const { user } = useAuth()
   const { orgId } = user
   const [isUnitDetailsOpen, setisUnitDetailsOpen] = useState(false)
@@ -637,7 +640,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
 
   const viewTransaction = (docData, sideViewCategory, sideViewCategory1) => {
     console.log('check it ', docData, sideViewCategory, sideViewCategory1)
-     setSelSubMenu(sideViewCategory)
+    setSelSubMenu(sideViewCategory)
     setSelSubMenu1(sideViewCategory1)
     setTransactionData(docData)
     setisUnitDetailsOpen(!isUnitDetailsOpen)
@@ -853,7 +856,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
             <MetaTags title="ExecutiveHome" description="ExecutiveHome page" />
 
             {!ready && (
-              <div className="overflow-hidden  px-1 pb-1 rounded-md">
+              <div className="overflow-hidden  px-1 pb-1 rounded-md  ">
                 <div className="flex flex-col app-bg-white-1  pb-[1px]">
                   <div className="flex flex-row pt-[1px]">
                     <span className="text-lg font-bold app-color-black"></span>
@@ -875,16 +878,17 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                         pId,
                         projName,
                       } = finData
+                      console.log('fin data is ', finData)
                       return (
                         <section
                           key={c}
-                          className="border mb-1  shadow rounded-md  shadow"
+                          className="border mb-1  shadow rounded-md  shadow bg-gradient-to-r from-[#d8daff] to-[#9ae8fd]"
                         >
-                          <section className="flex flex-row">
-                            <div className="">
+                          <section className="flex flex-row bg-gradient-to-r from-[#d8daff] to-[#9ae8fd]">
+                            <div className="w-[387px]">
                               <div className="flex flex-row   ">
                                 <div
-                                  className="flex flex-col bg-gradient-to-r from-[#d8daff] to-[#9ae8fd] text-black  py-1 rounded-sm w-[220px] h-[96px]"
+                                  className="flex flex-col bg-gradient-to-r from-[#d8daff] to-[#9ae8fd] text-black  py-1 rounded-sm w-[437px] "
                                   // className="flex flex-col bg-gradient-to-r from-[#d8daff] to-[#9ae8fd] text-black p-1 rounded-sm w-[220px] h-[96px]"
                                   onClick={() =>
                                     viewTransaction(
@@ -894,24 +898,50 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                     )
                                   }
                                 >
-                                  <section className="font-rubikF flex flex-row">
-                                    {/* <img
-                                      className="w-10 h-10 mr-2"
-                                      alt=""
-                                      src="/apart.svg"
-                                    ></img> */}
-                                    <section className="flex flex-col ml-2 mt-[3px]">
-                                      <section className="flex flex-col">
-                                        <section className="flex flex-row justify-between">
-                                          <span className=" text-[14px] text-black font-[500] ml-[2px]">
-                                            {/* {finData?.[`${assets[0]}_unitDetails`]
-                                          ?.unit_no || ''} */}
-                                            Unit-{unit_no}
+                                  <section className="font-rubikF flex flex-row w-[100%] justify-between">
+                                    <section className="flex flex-col ml-2 mt-[3px] w-[100%]">
+                                      <section className="flex flex-row justify-between">
+                                        <section className="flex flex-col">
+                                          <section className="flex flex-row justify-between">
+                                            <span className=" text-[14px] text-black font-[500] ml-[2px]">
+                                              Unit-{unit_no}
+                                              {finData?.unit_type ===
+                                                'apartment' && (
+                                                <span className=" text-[10px] text-black font-[500] ml-[2px]">
+                                                  Block-{finData?.blockId}
+                                                </span>
+                                              )}
+                                              <span className=" text-[10px] text-black font-[500] ml-[2px]">
+                                                Phase-{finData?.phaseId}
+                                              </span>
+                                            </span>
+                                          </section>
+                                          <span className=" text-[12px] text-[#036046] font-[400] ml-[2px]">
+                                            {projName}
                                           </span>
-                                          <span className=" text-[10px] text-black font-bodyLato font-[600] mt-[2px] ">
-                                            {/* {finData?.[`${assets[0]}_unitDetails`]
+                                        </section>
+                                        <section className="flex flex-col mt-1 bg-[#f0f8ff] w-[40%] mr-2 rounded-lg p-[2px] px-2">
+                                          <div className=" text-[12px] text-black-900 font-[400] w-full">
+                                            {customerDetailsObj?.customerName1 ||
+                                              'NA'}
+                                          </div>
+                                          <section className="flex flex-row justify-between">
+                                            <span className=" text-[12px] text-black-500 font-[400]">
+                                              {customerDetailsObj?.phoneNo1 ||
+                                                'NA'}
+                                            </span>
+                                            <span className=" text-[10px] text-black font-[400] mt-[2px] ">
+                                              {/* {finData?.[`${assets[0]}_unitDetails`]
                                           ?.unit_no || ''} */}
-                                            ₹{' '}
+                                              {/* {prettyDate(finData?.Date)} */}
+                                            </span>
+                                          </section>
+                                        </section>
+                                      </section>
+                                      <section className="flex flex-row mt-3 ">
+                                        <span className=" text-[10px] h-[20px]  text-black font-bodyLato font-[600] mt-[2px] bg-[#faebd7] px-[6px] py-[2px] rounded-xl  mr-1">
+                                          {finData?.unit_type}
+                                          {/* ₹{' '}
                                             {finData?.plotCS
                                               ?.reduce(function (_this, val) {
                                                 return (
@@ -919,29 +949,37 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                                   val.TotalNetSaleValueGsT
                                                 )
                                               }, 0)
-                                              ?.toLocaleString('en-IN')}
-                                          </span>
-                                        </section>
-                                        <span className=" text-[12px] text-[#036046] font-[400] ml-[2px]">
-                                          {projName}
+                                              ?.toLocaleString('en-IN')} */}
                                         </span>
-                                      </section>
-                                      <section className="flex flex-col mt-1 bg-[#f0f8ff] w-[204px] rounded-lg p-[2px] px-2">
-                                        <div className=" text-[12px] text-black-900 font-[400] w-full">
-                                          {customerDetailsObj?.customerName1 ||
-                                            'NA'}
-                                        </div>
-                                        <section className="flex flex-row justify-between">
-                                          <span className=" text-[12px] text-black-500 font-[400]">
-                                            {customerDetailsObj?.phoneNo1 ||
-                                              'NA'}
-                                          </span>
-                                          <span className=" text-[10px] text-black font-[400] mt-[2px] ">
-                                            {/* {finData?.[`${assets[0]}_unitDetails`]
+
+                                        <span className=" text-[10px] h-[20px] text-black font-bodyLato font-[600] mt-[2px] bg-[#faebd7] px-[6px] py-[2px] rounded-xl mr-1 ">
+                                          {/* {finData?.[`${assets[0]}_unitDetails`]
                                           ?.unit_no || ''} */}
-                                            12-June-2023
-                                          </span>
-                                        </section>
+                                          ₹{' '}
+                                          {finData?.sqft_rate?.toLocaleString(
+                                            'en-IN'
+                                          )}
+                                          /sqft
+                                        </span>
+                                        <span className="  text-[10px] h-[20px]  text-black font-bodyLato font-[600] mt-[2px] bg-[#faebd7] px-[6px] py-[2px] rounded-xl mr-1 ">
+                                          {/* {finData?.[`${assets[0]}_unitDetails`]
+                                          ?.unit_no || ''} */}
+                                          {finData?.area?.toLocaleString(
+                                            'en-IN'
+                                          )}{' '}
+                                          sqft
+                                        </span>
+                                        <span className="  text-[10px] h-[20px] text-black font-bodyLato font-[600] mt-[2px] bg-[#faebd7] px-[6px] py-[2px] rounded-xl mr-1 ">
+                                          {finData?.facing}
+                                        </span>
+                                        <span className=" text-[10px] h-[20px] text-black font-bodyLato font-[600] mt-[2px] bg-[#faebd7] px-[6px] py-[2px] rounded-xl mr-1 ">
+                                          Booked:{' '}
+                                          {prettyDate(finData?.Date || 0)}
+                                        </span>
+                                        {/* <span className=" text-[8px] h-[18px] text-black font-bodyLato font-[600] mt-[2px] bg-[#faebd7] px-[6px] py-[2px] rounded-xl mr-1 ">
+                                        Status:{' '}
+                                            {prettyDate(finData?.Date || 0)}
+                                        </span> */}
                                       </section>
                                     </section>
                                   </section>
@@ -951,7 +989,172 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                 </div>
                               </div>
                             </div>
-                            <div className="w-2/4 bg-[#f2f3f8] px-1">
+                            <div className="w-[328px] bg-[#f2f3f8] px-1">
+                              {' '}
+                              <Box>
+                                <>
+                                  <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2 min-w-[180px]">
+                                    <div className="flex flex-row h-[70px]">
+                                      {[
+                                        {
+                                          item: 'Total Cost',
+                                          height: 28,
+                                          bg: '#00a979',
+                                          value:
+                                            finData?.plotCS
+                                              ?.reduce(function (_this, val) {
+                                                return (
+                                                  _this +
+                                                  val.TotalNetSaleValueGsT
+                                                )
+                                              }, 0)
+                                              ?.toLocaleString('en-IN') || 0,
+                                        },
+                                        {
+                                          item: 'Balance',
+                                          height: 14,
+                                          bg: '#d29a80',
+                                          value:
+                                            (
+                                              finData?.plotCS?.reduce(function (
+                                                _this,
+                                                val
+                                              ) {
+                                                return (
+                                                  _this +
+                                                  val.TotalNetSaleValueGsT
+                                                )
+                                              },
+                                              0) - finData?.T_transaction
+                                            )?.toLocaleString('en-IN') || 0,
+                                        },
+                                        // { item: 'Sold', value: finData?.T_transaction || 0 },
+                                        // { item: 'Blocked', value: finData?.T_transaction || 0 },
+                                      ].map((data, i) => (
+                                        <div
+                                          className=" w-2/4  mx-1"
+                                          style={{
+                                            display: 'inline-block',
+                                            alignSelf: 'flex-end',
+                                          }}
+                                          key={i}
+                                        >
+                                          <h6 className="font-bodyLato flex justify-center font-semibold text-xs mt-1">
+                                            ₹{t(data?.value)}
+                                          </h6>
+
+                                          <div className="">
+                                            <LinearProgress
+                                              sx={{
+                                                backgroundColor: 'white',
+                                                '& .MuiLinearProgress-bar': {
+                                                  backgroundColor: data.bg,
+                                                },
+                                              }}
+                                              variant="determinate"
+                                              value={100}
+                                              style={{
+                                                backgroundColor: '#22D3EE',
+                                                borderRadius: '3px',
+                                                height: `${data?.height}px`,
+                                                width: `100%`,
+                                              }}
+                                            />
+                                          </div>
+                                          <div className="flex  justify-center mr-1   mt[2px]">
+                                            <h6 className="font-bodyLato text-xs mt-1">
+                                              {t(data.item)}
+                                            </h6>
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                </>
+                              </Box>
+                            </div>
+                            <div className="w-[328px] bg-[#f2f3f8] px-1">
+                              {' '}
+                              <Box>
+                                <>
+                                  <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2 min-w-[180px]">
+                                    <div className="flex flex-row h-[70px]">
+                                      {[
+                                        {
+                                          item: 'Stage Cost',
+                                          height:
+                                            28,
+                                          bg: '#00a979',
+                                          value:
+                                            T_review?.toLocaleString('en-IN') ||
+                                            0,
+                                        },
+                                        {
+                                          item: 'Balance',
+                                          // height:  Number(
+                                          //   0.28* Number(
+                                          //      (T_balance / T_elgible) * 100
+                                          //    ) <= 100
+                                          //      ? Math.round(
+                                          //          (T_balance / T_elgible) *
+                                          //            100
+                                          //        )
+                                          //      : 0
+                                          //   ),
+                                          height: 14,
+                                          bg: '#d29a80',
+                                          value:
+                                            T_balance?.toLocaleString(
+                                              'en-IN'
+                                            ) || 0,
+
+                                        },
+                                        // { item: 'Sold', value: finData?.T_transaction || 0 },
+                                        // { item: 'Blocked', value: finData?.T_transaction || 0 },
+                                      ].map((data, i) => (
+                                        <div
+                                          className=" w-2/4  mx-1"
+                                          style={{
+                                            display: 'inline-block',
+                                            alignSelf: 'flex-end',
+                                          }}
+                                          key={i}
+                                        >
+                                          <h6 className="font-bodyLato flex justify-center font-semibold text-xs mt-1">
+                                            ₹{t(data?.value)}
+                                          </h6>
+
+                                          <div className="">
+                                            <LinearProgress
+                                              sx={{
+                                                backgroundColor: 'white',
+                                                '& .MuiLinearProgress-bar': {
+                                                  backgroundColor: data.bg,
+                                                },
+                                              }}
+                                              variant="determinate"
+                                              value={100}
+                                              style={{
+                                                backgroundColor: '#22D3EE',
+                                                borderRadius: '3px',
+                                                height: `${data?.height}px`,
+                                                width: `100%`,
+                                              }}
+                                            />
+                                          </div>
+                                          <div className="flex  justify-center mr-1   mt[2px]">
+                                            <h6 className="font-bodyLato text-xs mt-1">
+                                              {t(data.item)}
+                                            </h6>
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                </>
+                              </Box>
+                            </div>
+                            {/* <div className="w-1/4 bg-[#f2f3f8] px-1">
                               {' '}
                               <Box>
                                 <>
@@ -1081,7 +1284,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                   </div>
                                 </>
                               </Box>
-                            </div>
+                            </div> */}
                             <div className="w-2/4 bg-[#f2f3f8] px-1">
                               <div className="flex flex-col bg-white shadow rounded-md my-1   py-1">
                                 <div className="flex flex-row justify-between px-1">
@@ -1161,7 +1364,6 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       display: 'inline-block',
                                       alignSelf: 'flex-end',
                                     }}
-
                                     onClick={() => {
                                       setSelUnitDetails(finData)
                                       setIsSubTopicOpen(true)
@@ -1562,7 +1764,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       display: 'inline-block',
                                       alignSelf: 'flex-end',
                                     }}
-                                    key={i}
+
                                     onClick={() => {
                                       setIsSubTopic(' ')
                                     }}
@@ -1594,7 +1796,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       display: 'inline-block',
                                       alignSelf: 'flex-end',
                                     }}
-                                    key={i}
+
                                   >
                                     <div className="flex flex-col items-center justify-center mr-1  mb-1 mt-[5px]">
                                       <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
@@ -1621,7 +1823,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       display: 'inline-block',
                                       alignSelf: 'flex-end',
                                     }}
-                                    key={i}
+
                                   >
                                     <div className="flex flex-col items-center justify-center mr-1  mb-1 mt-[5px]">
                                       <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
@@ -1995,7 +2197,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       display: 'inline-block',
                                       alignSelf: 'flex-end',
                                     }}
-                                    key={i}
+
                                   >
                                     <div className="flex flex-col items-center justify-center mr-1  mb-1 mt-[5px]">
                                       <div className="flex flex-none items-center justify-center rounded-lg bg-green-50 group-hover:bg-white">
@@ -2024,7 +2226,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       display: 'inline-block',
                                       alignSelf: 'flex-end',
                                     }}
-                                    key={i}
+
                                   >
                                     <div className="flex flex-col items-center justify-center mr-1  mb-1 mt-[5px]">
                                       <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
@@ -2051,7 +2253,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       display: 'inline-block',
                                       alignSelf: 'flex-end',
                                     }}
-                                    key={i}
+
                                   >
                                     <div className="flex flex-col items-center justify-center mr-1  mb-1 mt-[5px]">
                                       <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
@@ -2425,7 +2627,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       display: 'inline-block',
                                       alignSelf: 'flex-end',
                                     }}
-                                    key={i}
+
                                   >
                                     <div className="flex flex-col items-center justify-center mr-1  mb-1 mt-[5px]">
                                       <div className="flex flex-none items-center justify-center rounded-lg bg-green-50 group-hover:bg-white">
@@ -2454,7 +2656,6 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       display: 'inline-block',
                                       alignSelf: 'flex-end',
                                     }}
-                                    key={i}
                                   >
                                     <div className="flex flex-col items-center justify-center mr-1  mb-1 mt-[5px]">
                                       <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
@@ -2483,7 +2684,6 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       display: 'inline-block',
                                       alignSelf: 'flex-end',
                                     }}
-                                    key={i}
                                   >
                                     <div className="flex flex-col items-center justify-center mr-1  mb-1 mt-[5px]">
                                       <div className="flex flex-none items-center justify-center rounded-lg bg-green-50 group-hover:bg-white">
@@ -2510,7 +2710,6 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       display: 'inline-block',
                                       alignSelf: 'flex-end',
                                     }}
-                                    key={i}
                                   >
                                     <div className="flex flex-col items-center justify-center mr-1  mb-1 mt-[5px]">
                                       <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
