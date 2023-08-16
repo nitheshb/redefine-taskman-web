@@ -939,7 +939,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                         </section>
                                       </section>
                                       <section className="flex flex-row mt-3 ">
-                                        <span className=" text-[10px] h-[20px]  text-black font-bodyLato font-[600] mt-[2px] bg-[#faebd7] px-[6px] py-[2px] rounded-xl  mr-1">
+                                        <span className=" text-[10px] h-[20px]  text-[#823d00] font-bodyLato font-[600] mt-[2px] bg-[#ffeccf] px-[6px] py-[2px] rounded-xl  mr-1">
                                           {finData?.unit_type}
                                           {/* ₹{' '}
                                             {finData?.plotCS
@@ -952,7 +952,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                               ?.toLocaleString('en-IN')} */}
                                         </span>
 
-                                        <span className=" text-[10px] h-[20px] text-black font-bodyLato font-[600] mt-[2px] bg-[#faebd7] px-[6px] py-[2px] rounded-xl mr-1 ">
+                                        <span className=" text-[10px] h-[20px] text-[#823d00] font-bodyLato font-[600] mt-[2px] bg-[#ffeccf] px-[6px] py-[2px] rounded-xl mr-1 ">
                                           {/* {finData?.[`${assets[0]}_unitDetails`]
                                           ?.unit_no || ''} */}
                                           ₹{' '}
@@ -961,7 +961,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                           )}
                                           /sqft
                                         </span>
-                                        <span className="  text-[10px] h-[20px]  text-black font-bodyLato font-[600] mt-[2px] bg-[#faebd7] px-[6px] py-[2px] rounded-xl mr-1 ">
+                                        <span className="  text-[10px] h-[20px]  text-[#823d00] font-bodyLato font-[600] mt-[2px] bg-[#ffeccf] px-[6px] py-[2px] rounded-xl mr-1 ">
                                           {/* {finData?.[`${assets[0]}_unitDetails`]
                                           ?.unit_no || ''} */}
                                           {finData?.area?.toLocaleString(
@@ -969,14 +969,14 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                           )}{' '}
                                           sqft
                                         </span>
-                                        <span className="  text-[10px] h-[20px] text-black font-bodyLato font-[600] mt-[2px] bg-[#faebd7] px-[6px] py-[2px] rounded-xl mr-1 ">
+                                        <span className="  text-[10px] h-[20px] text-[#823d00] font-bodyLato font-[600] mt-[2px] bg-[#ffeccf] px-[6px] py-[2px] rounded-xl mr-1 ">
                                           {finData?.facing}
                                         </span>
-                                        <span className=" text-[10px] h-[20px] text-black font-bodyLato font-[600] mt-[2px] bg-[#faebd7] px-[6px] py-[2px] rounded-xl mr-1 ">
+                                        <span className=" text-[10px] h-[20px] text-[#823d00] font-bodyLato font-[600] mt-[2px] bg-[#ffeccf] px-[6px] py-[2px] rounded-xl mr-1 ">
                                           Booked:{' '}
                                           {prettyDate(finData?.Date || 0)}
                                         </span>
-                                        {/* <span className=" text-[8px] h-[18px] text-black font-bodyLato font-[600] mt-[2px] bg-[#faebd7] px-[6px] py-[2px] rounded-xl mr-1 ">
+                                        {/* <span className=" text-[8px] h-[18px] text-black font-bodyLato font-[600] mt-[2px] bg-[#ffeccf] px-[6px] py-[2px] rounded-xl mr-1 ">
                                         Status:{' '}
                                             {prettyDate(finData?.Date || 0)}
                                         </span> */}
@@ -999,7 +999,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                         {
                                           item: 'Total Cost',
                                           height: 28,
-                                          bg: '#00a979',
+                                          bg: '#abffe7',
                                           value:
                                             finData?.plotCS
                                               ?.reduce(function (_this, val) {
@@ -1013,7 +1013,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                         {
                                           item: 'Balance',
                                           height: 14,
-                                          bg: '#d29a80',
+                                          bg: '#ffdbdb',
                                           value:
                                             (
                                               finData?.plotCS?.reduce(function (
@@ -1084,7 +1084,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                           item: 'Stage Cost',
                                           height:
                                             28,
-                                          bg: '#00a979',
+                                          bg: '#abffe7',
                                           value:
                                             T_review?.toLocaleString('en-IN') ||
                                             0,
@@ -1102,7 +1102,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                           //      : 0
                                           //   ),
                                           height: 14,
-                                          bg: '#d29a80',
+                                          bg: '#ffdbdb',
                                           value:
                                             T_balance?.toLocaleString(
                                               'en-IN'
