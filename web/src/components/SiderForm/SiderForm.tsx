@@ -84,6 +84,8 @@ const SiderForm = ({
 }) => {
   // dont write too many here
   //  this is for customerProfileSideView
+
+  console.log('title is ', title)
   const dispatch = useDispatch()
   return (
     <Transition.Root show={open || false} as={Fragment}>

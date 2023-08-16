@@ -128,6 +128,7 @@ const Floordetails = ({
   const [filBathrooms, setFilBathrooms] = useState([1, 2, 3, 4])
   const [selStatus, setFilSelStatus] = useState('all')
   const [isUnitDetailsOpen, setisUnitDetailsOpen] = useState(false)
+  const [isUnitQuoteBookBlock, setisUnitQuoteBookBlock] = useState(false)
   const [selUnitDetails, setSelUnitDetails1] = useState({})
   const [transactionData, setTransactionData] = useState({})
   const [selSubMenu, setSelSubMenu] = useState('summary')
@@ -895,7 +896,7 @@ const Floordetails = ({
                                 } else {
                                   console.log('customer Detailsare', data)
                                   setSelUnitDetails1(data)
-                                  setisUnitDetailsOpen(true)
+
 
                                   return
                                   // setSliderInfo({
@@ -922,17 +923,40 @@ const Floordetails = ({
                                           <div className="flex flex-row justify-between items-right">
                                             <h3
                                               className="m-0 ml-2 text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200 h-[16px] hover:border-b hover:border-blue-800"
-                                              onClick={() =>
+                                              onClick={() =>{
                                                 setActionType('unitBookingMode')
+                                                setisUnitQuoteBookBlock(true)
+                                                setSliderInfo({
+                                                  open: true,
+                                                  title: 'View Unit',
+                                                  sliderData: {
+                                                    unitDetail: data,
+                                                    phaseDetail: phaseFeed,
+                                                    leadDetailsObj: leadDetailsObj,
+                                                  },
+                                                  widthClass: 'max-w-4xl',
+                                                })
                                               }
+                                            }
                                             >
                                               Book
                                             </h3>
                                             <h3
                                               className="m-0 mr-2 text-sm  leading-tight tracking-tight text-blue-800 border-0 border-blue-800 h-[16px] hover:border-b hover:border-blue-800"
-                                              onClick={() =>
+                                              onClick={() =>{
                                                 setActionType('quoteMode')
-                                              }
+                                                setisUnitQuoteBookBlock(true)
+                                                setSliderInfo({
+                                                  open: true,
+                                                  title: 'View Unit',
+                                                  sliderData: {
+                                                    unitDetail: data,
+                                                    phaseDetail: phaseFeed,
+                                                    leadDetailsObj: leadDetailsObj,
+                                                  },
+                                                  widthClass: 'max-w-4xl',
+                                                })
+                                              }}
                                             >
                                               Quote
                                             </h3>
@@ -941,8 +965,20 @@ const Floordetails = ({
                                           <div className="flex flex-row justify-between items-right">
                                             <h3
                                               className="m-0 ml-2 mt-3 text-sm  leading-tight tracking-tight text-blue-800 text-black border-0 border-blue-200 h-[16px] hover:border-b hover:border-blue-800  "
-                                              onClick={() =>
+                                              onClick={() =>{
                                                 setActionType('unitBlockMode')
+                                                setisUnitQuoteBookBlock(true)
+                                                setSliderInfo({
+                                                  open: true,
+                                                  title: 'View Unit',
+                                                  sliderData: {
+                                                    unitDetail: data,
+                                                    phaseDetail: phaseFeed,
+                                                    leadDetailsObj: leadDetailsObj,
+                                                  },
+                                                  widthClass: 'max-w-4xl',
+                                                })
+                                              }
                                               }
                                             >
                                               Block
@@ -973,18 +1009,27 @@ const Floordetails = ({
                                       {data?.status === 'booked' && (
                                         <div className="flex flex-col items-right justify-between">
                                           <div className="flex flex-row justify-between items-right">
-                                            <h3 className="m-0 ml-2 mt- text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200">
+                                            <h3 className="m-0 ml-2 mt- text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200"
+                                            onClick={()=> {
+                                              setisUnitDetailsOpen(true)
+                                            }}>
                                               Details
                                             </h3>
-                                            <h3 className="m-0 mr-2 ml-2 mt- text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200">
+                                            <h3 className="m-0 mr-2 ml-2 mt- text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200" onClick={()=> {
+                                              setisUnitDetailsOpen(true)
+                                            }}>
                                               Payment
                                             </h3>
                                           </div>
                                           <div className="flex flex-row justify-between items-right">
-                                            <h3 className="m-0 ml-2 mt-4 text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200">
+                                            <h3 className="m-0 ml-2 mt-4 text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200" onClick={()=> {
+                                              setisUnitDetailsOpen(true)
+                                            }}>
                                               Cancel
                                             </h3>
-                                            <h3 className="m-0 ml-2 mr-2 mt-4 text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200">
+                                            <h3 className="m-0 ml-2 mr-2 mt-4 text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200" onClick={()=> {
+                                              setisUnitDetailsOpen(true)
+                                            }}>
                                               Swap
                                             </h3>
                                           </div>
@@ -1258,9 +1303,9 @@ const Floordetails = ({
         selSubMenu2={selSubMenu1}
       />
       <SiderForm
-        open={sliderInfo.open}
-        setOpen={handleSliderClose}
-        title={sliderInfo.title}
+        open={isUnitQuoteBookBlock}
+        setOpen={setisUnitQuoteBookBlock}
+        title={"View Unit"}
         data={sliderInfo.sliderData}
         widthClass={sliderInfo.widthClass}
         myBlock={selBlock}

@@ -21,14 +21,13 @@ const CrmUnitSummary = ({
   const pdfUnitSummaryComp = useRef(null)
   const { orgId } = user
 
-
   useEffect(() => {
     console.log('unit dta is ', selUnitPayload)
   }, [])
 
   return (
     <PDFExport paperSize="A4" margin="1cm" ref={pdfUnitSummaryComp}>
-      <div className="py-3 px-3 m-4 mt-2 rounded-lg border border-gray-100 h-[100%] overflow-y-scroll overflow-auto no-scrollbar">
+      <div className="py-1 px-1 m-2 mt-[1px] rounded-lg border border-gray-100 h-[100%] overflow-y-scroll overflow-auto no-scrollbar">
         {/* customer details */}
         {/* Unit details */}
         {/* payment schedule */}
@@ -37,7 +36,21 @@ const CrmUnitSummary = ({
         {/* Unit Position Summary */}
 
         {/* customer details */}
-        <div className="text-end items-end mr-2 mt-3">
+        <div className="flex flex-row justify-between text-end items-end mr-2">
+          <div className="flex flex-row">
+            <div>
+              <CrmPaymentSummary
+                selCustomerPayload={selUnitPayload}
+                assets={assets}
+              />
+            </div>
+            <div className="ml-1">
+              <CrmPaymentSummary
+                selCustomerPayload={selUnitPayload}
+                assets={assets}
+              />
+            </div>
+          </div>
           <div
             className=" flex flex-row justify-end items-center align-middle text-blue-500 text-xs cursor-pointer hover:underline"
             onClickCapture={() => {
@@ -78,12 +91,6 @@ const CrmUnitSummary = ({
         /> */}
         {/* Payment Summay */}
 
-        <div>
-          <CrmPaymentSummary
-            selCustomerPayload={selUnitPayload}
-            assets={assets}
-          />
-        </div>
         {/* Unit Position Summary */}
         {/* payment schedule */}
 

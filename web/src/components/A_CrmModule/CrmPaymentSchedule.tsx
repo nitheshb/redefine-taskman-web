@@ -12,10 +12,16 @@ const CrmUnitPaymentSchedule = ({ selCustomerPayload, assets, totalIs }) => {
       <div className="mt-2">
         <section className="mr-2 flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md ">
           <div>
-            <h1 className=" text-bodyLato text-left text-gray-800 font-semibold text-[12px] mb-2">
-              Plot - Payment Schedule
-            </h1>
-            <table className="w-full mb-10">
+            <div className="flex flex-row">
+              <img
+                src="https://static.ambitionbox.com/static/benefits/JobTraining.svg"
+                alt=""
+              />
+              <h1 className=" text-bodyLato text-left text-gray-800 font-semibold text-[14px] mb-2 mt-1 ml-1">
+                Payment Schedule
+              </h1>
+            </div>
+            <table className="w-full mb-2">
               <thead>
                 {' '}
                 <tr className=" h-6 border-b-[0.2px] border-gray-300">
@@ -25,11 +31,11 @@ const CrmUnitPaymentSchedule = ({ selCustomerPayload, assets, totalIs }) => {
                   <th className="w-[15%] text-[10px] text-right text-gray-400  text-[#8993a4] font-bodyLato tracking-wide uppercase">
                     Payment Timeline
                   </th>
-                  <th className="w-[15%] text-[10px] text-right text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
-                    Total inc GST
+                  <th className="w-[15%] text-[10px] text-center text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
+                    Eligible
                   </th>
                   <th className="w-[15%] text-[10px] text-right text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
-                    Eligible
+                    Total inc GST
                   </th>
                   <th className="w-[15%] text-[10px] text-right text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
                     Amount Received
@@ -49,19 +55,19 @@ const CrmUnitPaymentSchedule = ({ selCustomerPayload, assets, totalIs }) => {
                   // selCustomerPayload?.[`${assets[0]}_T_review`] - d1?.value
                   return (
                     <tr key={inx} className="border-b-[0.05px] border-gray-300">
-                      <th className=" text-[10px] text-left text-gray-700 ">
+                      <th className=" text-[11px] text-left text-gray-700 ">
                         {d1?.stage?.label}
                       </th>
-                      <td className="text-[10px] text-right text-gray-700 ">
+                      <td className="text-[11px] text-right text-gray-900 ">
                         {d1?.description}
                       </td>
-
-                      <td className="text-[10px] text-right text-gray-800 ">
-                        {d1?.value?.toLocaleString('en-IN')}
-                      </td>
-                      <td className="text-[10px] text-right text-gray-800 ">
+                      <td className="text-[10px] text-center text-gray-800 ">
                         {d1?.elgible ? 'Yes' : 'No'}
                       </td>
+                      <td className="text-[12px] text-right text-gray-800 ">
+                        {d1?.value?.toLocaleString('en-IN')}
+                      </td>
+
                       <td className="text-[10px] text-right text-gray-800 ">
                         {/* {totalIs > d1?.value?.toLocaleString('en-IN')
                           ? d1?.value?.toLocaleString('en-IN')
@@ -81,9 +87,15 @@ const CrmUnitPaymentSchedule = ({ selCustomerPayload, assets, totalIs }) => {
                 </tr>
               </tbody>
             </table>
-            <h1 className="text-bodyLato text-left text-gray-800 font-semibold text-[12px] mb-2">
-              Plot Sales Value Information (A)
-            </h1>
+            <div className="flex flex-row">
+              <img
+                src="https://static.ambitionbox.com/static/benefits/WFH.svg"
+                alt=""
+              />
+              <h1 className="text-bodyLato text-left text-gray-800 font-semibold text-[14px] mb-2 mt-3 ml-1">
+                Cost Sheet
+              </h1>
+            </div>
             <table className="w-[100%]">
               <thead>
                 <tr className=" h-6 border-b-[0.2px] border-gray-300 w-[100%]">
