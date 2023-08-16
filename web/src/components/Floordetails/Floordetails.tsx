@@ -883,6 +883,7 @@ const Floordetails = ({
                               onClick={() => {
                                 console.log('check is ', leadDetailsObj)
                                 if (source === 'projectManagement') {
+                                  setSelUnitDetails1(data)
                                   setSliderInfo({
                                     open: true,
                                     title: 'Edit Plot',
@@ -987,6 +988,8 @@ const Floordetails = ({
                                               <h3
                                                 className="m-0 mr-2 mt-2 mr-[21px] text-sm  leading-tight tracking-tight text-blue-800 border-0 border-blue-800 h-[16px]  hover:border-b hover:border-blue-800"
                                                 onClick={() => {
+                                                setisUnitQuoteBookBlock(true)
+
                                                   setSliderInfo({
                                                     open: true,
                                                     title: 'Edit Plot',
@@ -1305,7 +1308,7 @@ const Floordetails = ({
       <SiderForm
         open={isUnitQuoteBookBlock}
         setOpen={setisUnitQuoteBookBlock}
-        title={"View Unit"}
+        title={sliderInfo.title}
         data={sliderInfo.sliderData}
         widthClass={sliderInfo.widthClass}
         myBlock={selBlock}
