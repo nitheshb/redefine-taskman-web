@@ -75,6 +75,7 @@ import BankSelectionSwitchDrop from '../A_LoanModule/BankSelectionDroopDown'
 import LoanApplyFlowHome from '../A_LoanModule/LoanApplyFlowHome'
 
 import { supabase } from 'src/context/supabase'
+import ShowCustomerDetails from './CrmShowCustomerDetails'
 
 // interface iToastInfo {
 //   open: boolean
@@ -169,6 +170,7 @@ export default function UnitFullSummary({
   const [docsList, setDocsList] = useState([])
   const [progress, setProgress] = useState(0)
   const [openCapturePayment, setOpenCapturePayment] = useState(false)
+  const [openApplicantEdit, setShowApplicantEdit] = useState(false)
 
   const d = new window.Date()
   const [value, setValue] = useState(d)
@@ -1127,19 +1129,32 @@ if(usersList == undefined) return
         </>
       </div>
       {selFeature === 'applicant_info' && (
-        <div className="  mt-2 pb-[250px] overflow-auto no-scrollbar  h-[100%] overflow-y-scroll">
+        <>
+        {!openApplicantEdit && <div className="  mt-2 pb-[250px] overflow-auto no-scrollbar  h-[100%] overflow-y-scroll">
+          <ShowCustomerDetails
+            source="fromBookedUnit"
+            title="Booking Form"
+            selUnitDetails={selCustomerPayload}
+            leadDetailsObj2={selCustomerPayload}
+          />
+        </div>}
+         {openApplicantEdit && <div className="  mt-2 pb-[250px] overflow-auto no-scrollbar  h-[100%] overflow-y-scroll">
           <AddApplicantDetails
             source="fromBookedUnit"
             title="Booking Form"
             selUnitDetails={selCustomerPayload}
             leadDetailsObj2={selCustomerPayload}
           />
-        </div>
+        </div>}
+        </>
+
       )}
       {selFeature === 'unit_information' && (
         <>
           <div className="flex flex-col  my-10 rounded-lg bg-white border border-gray-100 px-4 m-4 mt-4">
-            <div className="py-3 grid grid-cols-3 mb-4">
+            <div className="py-3 grid grid-cols-4 mb-4">
+
+
               <section className="flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md mb-2">
                 <section className="flex flow-row justify-between mb-1">
                   <div className="font-md text-xs text-gray-700 tracking-wide">

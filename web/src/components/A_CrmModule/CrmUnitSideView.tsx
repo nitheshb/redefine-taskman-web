@@ -234,7 +234,7 @@ export default function UnitSideViewCRM({
 
   const [leadDetailsObj, setLeadDetailsObj] = useState({})
   useEffect(() => {
-   console.log('hello', customerDetails)
+    console.log('hello', customerDetails)
   }, [])
 
   const {
@@ -263,7 +263,6 @@ export default function UnitSideViewCRM({
     assignT,
     CT,
   } = customerDetails
-
 
   const totalIs = 0
   useEffect(() => {
@@ -514,7 +513,6 @@ export default function UnitSideViewCRM({
       receiverDetails,
       msgPayload
     )
-
   }
 
   const setNewProject = (leadDocId, value) => {
@@ -890,9 +888,9 @@ export default function UnitSideViewCRM({
     <div
       className={`bg-white   h-screen    ${openUserProfile ? 'hidden' : ''} `}
     >
-      <div className=" pb-[2px] px-3 mt-0 rounded-xs border-b bg-[#F2F5F8]">
+      <div className=" pb-[2px] px-3 mt-0 rounded-xs border-b bg-[#F8E7E3]">
         <div className="-mx-3 flex  sm:-mx-4 px-3">
-          <div className="w-full  xl:w-4/12  ">
+          <div className="w-full   ">
             {/* <div className="">
                 <div className="font-semibold text-[#053219]  text-sm  mt-3 mb-1  tracking-wide font-bodyLato">
                   <span className="mb-[4px] text-xl uppercase">{Name}</span>
@@ -911,35 +909,61 @@ export default function UnitSideViewCRM({
               </div> */}
 
             <div className="flex flex-col justify-between">
-              <p className="text-md font-bold tracking-tight uppercase font-body  ml-2">
-                {selCustomerPayload?.unit_no}
+              <section className="flex flex-row justify-between bg-[#F8E7E3] px-3 py-2 border border-[#e5e7f8] rounded-md ">
+                <section>
+                  <section className="flex flex-row">
+                    <img
+                      src="https://static.ambitionbox.com/static/benefits/WFH.svg"
+                      alt=""
+                      className="w-10 h-10"
+                    />
+                    <p className="text-md font-bold text-[23px] tracking-tight uppercase font-body  ml-2 mt-2">
+                      {selCustomerPayload?.unit_no}
+                      <span className="ml-1 font-normal text-green-800 text-xs px-2 py-[2px] bg-green-300 rounded-xl">
+                        Phase:{selCustomerPayload?.phaseId}{' '}
+                        <span className="text-[23px] mb-2">.</span>
+                        <span className="ml1">{selProjectIs?.value}</span>
+                      </span>
+                      <span className="ml-1 font-normal text-blue-800 text-xs">
+                        {selCustomerPayload?.status}
+                      </span>
+                    </p>
+                  </section>
 
-                <span className="ml-1 font-normal text-blue-800 text-xs">
-                  {selCustomerPayload?.status}
-                </span>
-              </p>
-              <p className="ml-2">{selProjectIs?.value}</p>
-              <p className="text-xs tracking-tight uppercase font-body mt-[2px] ml-2">
-                {selCustomerPayload?.customerDetailsObj?.customerName1} &{' '}
-                {selCustomerPayload?.secondaryCustomerDetailsObj?.customerName2}
-              </p>
-              <p className="text-xs tracking-tight  font-body my-[2px] ml-2">
-                <span className="">
-                  {selCustomerPayload?.customerDetailsObj?.phoneNo1}
-                </span>
-                <span className="ml-2">
-                  {selCustomerPayload?.customerDetailsObj?.email1}
-                </span>
-              </p>
-            </div>
-          </div>
-          <div className="w-full px-1  xl:w-8/12 mt-1 mb-1 bg-white  pl-3 pt-2 ">
-            <div className="relative z-10 my-1 pb-2  rounded-md bg-white">
-              <div className="grid grid-cols-3 gap-5">
-                <CrmPaymentSummary selCustomerPayload={selCustomerPayload} />
-                <section className="flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md">
-                  <section className="flex flow-row justify-between mb-1">
-                    <div className="font-md text-xs text-gray-700 tracking-wide">
+                  <p className="text-xs tracking-tight uppercase font-body mt-[2px] ml-2 font-bold flex flex-row">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      aria-hidden="true"
+                      role="img"
+                      className="component-iconify MuiBox-root css-bla85z iconify iconify--solar mt-[2px] mr-[2px]"
+                      width="1em"
+                      height="1em"
+                      viewBox="0 0 24 24"
+                    >
+                      <g fill="currentColor">
+                        <circle cx="9.001" cy="6" r="4"></circle>
+                        <ellipse cx="9.001" cy="17.001" rx="7" ry="4"></ellipse>
+                        <path d="M21 17c0 1.657-2.036 3-4.521 3c.732-.8 1.236-1.805 1.236-2.998c0-1.195-.505-2.2-1.239-3.001C18.962 14 21 15.344 21 17ZM18 6a3 3 0 0 1-4.029 2.82A5.688 5.688 0 0 0 14.714 6c0-1.025-.27-1.987-.742-2.819A3 3 0 0 1 18 6.001Z"></path>
+                      </g>
+                    </svg>
+                    {selCustomerPayload?.customerDetailsObj?.customerName1} &{' '}
+                    {
+                      selCustomerPayload?.secondaryCustomerDetailsObj
+                        ?.customerName2
+                    }
+                  </p>
+                  <p className="text-xs tracking-tight  font-body my-[2px] ml-2">
+                    <span className="">
+                      {selCustomerPayload?.customerDetailsObj?.phoneNo1}
+                    </span>
+                    <span className="ml-2">
+                      {selCustomerPayload?.customerDetailsObj?.email1}
+                    </span>
+                  </p>
+                </section>
+                <section className="flex flex-row  h-[28px] mt-6">
+                  <section className="flex flow-row justify-between mb-1 mr-2 py-[0px] px-[10px] bg-gradient-to-r from-violet-200 to-pink-200 text-black rounded-3xl items-center align-middle text-xs cursor-pointer hover:underline">
+                    <div className="font-md text-xs text-gray-700 tracking-wide mr-1">
                       CRM Owner
                     </div>
                     <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
@@ -962,8 +986,8 @@ export default function UnitSideViewCRM({
                       )}
                     </div>
                   </section>
-                  <section className="flex flow-row justify-between mb-1">
-                    <div className="font-md text-xs text-gray-700 tracking-wide">
+                  <section className="flex flow-row justify-between mb-1 mr-2 py-[0px] px-[10px] bg-gradient-to-r from-violet-200 to-pink-200 text-black rounded-3xl items-center align-middle text-xs cursor-pointer hover:underline">
+                    <div className="font-md text-xs text-gray-700 tracking-wide mr-1">
                       Status
                     </div>
                     <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
@@ -986,33 +1010,24 @@ export default function UnitSideViewCRM({
                       )}
                     </div>
                   </section>
+                  <section
+                    className="text-center px-[10px] py-[2px] pt-[3px] h-[24px] bg-gradient-to-r from-violet-200 to-pink-200 text-black rounded-3xl items-center align-middle text-xs cursor-pointer hover:underline"
+                    onClickCapture={() => {
+                      openPaymentFun()
+                    }}
+                  >
+                    CAPTURE PAYMENT
+                  </section>
+                  <section
+                    className="text-center px-[10px] py-[2px]  pt-[3px] h-[24px] ml-2 bg-gradient-to-r from-violet-200 to-pink-200 text-black rounded-3xl items-center align-middle text-xs cursor-pointer hover:underline"
+                    onClickCapture={() => {
+                      openPaymentFun()
+                    }}
+                  >
+                    RAISE NEW DEMAND
+                  </section>
                 </section>
-
-                <section>
-                  <div>
-                    <div className="text-center items-center mr-2 mt-1">
-                      <div
-                        className="text-center p-[10px] bg-gradient-to-r from-violet-200 to-pink-200 text-black rounded-3xl items-center align-middle text-xs cursor-pointer hover:underline"
-                        onClickCapture={() => {
-                          openPaymentFun()
-                        }}
-                      >
-                        CAPTURE PAYMENT
-                      </div>
-                      <div className="text-center items-center mr-2 mt-3 w-full">
-                        <div
-                          className="text-center p-[10px] bg-gradient-to-r from-violet-200 to-pink-200 text-black rounded-3xl items-center align-middle text-xs cursor-pointer hover:underline"
-                          onClickCapture={() => {
-                            openPaymentFun()
-                          }}
-                        >
-                          RAISE NEW DEMAND
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </section>
-              </div>
+              </section>
             </div>
           </div>
         </div>
@@ -1033,7 +1048,7 @@ export default function UnitSideViewCRM({
             </div>
           </div>
         )}
-        <div className="flex flex-row justify-between">
+        {/* <div className="flex flex-row justify-between">
           <div className="px-1 py-2 flex flex-row  text-xs  border-t border-[#ebebeb] font-thin   font-bodyLato text-[12px]  py-[6px] ">
             Recent Comments:{' '}
             <span className="text-[#867777] ml-1 ">
@@ -1043,11 +1058,11 @@ export default function UnitSideViewCRM({
           </div>
           <div
             className="relative flex flex-col  group"
-            // style={{ alignItems: 'end' }}
+
           >
             <div
               className="absolute bottom-0 right-0 flex-col items-center hidden mb-6 group-hover:flex"
-              // style={{  width: '300px' }}
+
               style={{ zIndex: '9999' }}
             >
               <span
@@ -1071,10 +1086,7 @@ export default function UnitSideViewCRM({
             </div>
             <div className=" flex flex-row ">
               <span className="font-bodyLato text-[#867777] text-xs mt-2">
-                {/* <HighlighterStyle
-                            searchKey={searchKey}
-                            source={row.Source.toString()}
-                          /> */}
+
 
                 {Source?.toString() || 'NA'}
               </span>
@@ -1102,7 +1114,7 @@ export default function UnitSideViewCRM({
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
         {timeHide && (
           <>
             <div className="w-full border-b border-[#ebebeb]"></div>

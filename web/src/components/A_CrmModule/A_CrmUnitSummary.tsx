@@ -10,6 +10,7 @@ import CrmUnitCustomerDetailsView1 from './CrmUnitCustomerDetailsView1'
 import CrmUnitDetailsView1 from './CrmUnitDetailsView1'
 import CrmUnitFinanceHistory from './CrmUnitFinanceHistory'
 import CrmUnitHeader from './CrmUnitHeader'
+import CrmUnitPaymentGraph from './CrmUnitPaymentGraph'
 
 const CrmUnitSummary = ({
   selCustomerPayload: selUnitPayload,
@@ -39,7 +40,7 @@ const CrmUnitSummary = ({
         <div className="flex flex-row justify-between text-end items-end mr-2">
           <div className="flex flex-row">
             <div>
-              <CrmPaymentSummary
+              <CrmUnitPaymentGraph
                 selCustomerPayload={selUnitPayload}
                 assets={assets}
               />

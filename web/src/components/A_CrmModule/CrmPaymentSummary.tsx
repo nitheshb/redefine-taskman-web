@@ -12,17 +12,17 @@ const CrmPaymentSummary = ({ selCustomerPayload, assets }) => {
   return (
     <section className="flex flex-col  rounded-md ">
       <>
-        <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2 min-w-[180px]">
-          <div className="flex flex-row justify-between mx-">
+        <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  pt-2 min-w-[260px]">
+          <div className="flex flex-row justify-between tracking-wide mx-">
             <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
-              ₹{selCustomerPayload?.T_review?.toLocaleString('en-IN')}
+            <span className="text-[#637381] tracking-wide font-thin">Paid</span> {' '} ₹{selCustomerPayload?.T_review?.toLocaleString('en-IN')}
             </h6>
             <section className="flex flex-row">
               {/* <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
                 {selCustomerPayload?.T_elgible?.toLocaleString('en-IN')}
               </h6> */}
               <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
-                ₹{selCustomerPayload?.T_balance?.toLocaleString('en-IN')}
+              <span className="text-[#637381] tracking-wide font-thin">🔥Left:</span>  {' '} ₹{selCustomerPayload?.T_balance?.toLocaleString('en-IN')}
               </h6>
             </section>
           </div>
@@ -41,7 +41,7 @@ const CrmPaymentSummary = ({ selCustomerPayload, assets }) => {
                     sx={{
                       backgroundColor: 'white',
                       '& .MuiLinearProgress-bar': {
-                        backgroundColor: '#A798FF',
+                        backgroundColor: '#22c55e',
                       },
                     }}
                     variant="determinate"
@@ -56,15 +56,7 @@ const CrmPaymentSummary = ({ selCustomerPayload, assets }) => {
                     }}
                   />
                 </div>
-                <div className="flex  justify-left mr-1  mb-1 mt-[4px]">
-                  <section className='flex flex-row'>
-                  <h6 className="font-bodyLato font-semibold text-xs mt-1">
-                    {data.item}
 
-                  </h6>
-
-                  </section>
-                </div>
               </div>
             ))}
 
@@ -82,13 +74,13 @@ const CrmPaymentSummary = ({ selCustomerPayload, assets }) => {
                     sx={{
                       backgroundColor: 'white',
                       '& .MuiLinearProgress-bar': {
-                        backgroundColor: '#E87F7F',
+                        backgroundColor: '#22c55e3d',
                       },
                     }}
                     variant="determinate"
                     value={100}
                     style={{
-                      backgroundColor: '#E87F7F',
+                      backgroundColor: '#22c55e3d',
                       borderRadius: '3px',
                       borderTopLeftRadius: '0px',
                       borderBottomLeftRadius: '0px',
@@ -97,13 +89,22 @@ const CrmPaymentSummary = ({ selCustomerPayload, assets }) => {
                     }}
                   />
                 </div>
-                <div className="flex  justify-end mr-1  mb-1 mt-[4px]">
-                  <h6 className="font-bodyLato font-semibold text-xs mt-1">
-                    {data.item}
-                  </h6>
-                </div>
+
               </div>
             ))}
+          </div>
+          <div className="flex flex-row justify-between mx-">
+            <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
+
+            </h6>
+            <section className="flex flex-row">
+              {/* <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
+                {selCustomerPayload?.T_elgible?.toLocaleString('en-IN')}
+              </h6> */}
+              <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
+              <span className="text-[#637381] tracking-wide font-thin">Stage Total:</span> {' '}₹{selCustomerPayload?.T_elgible?.toLocaleString('en-IN')}
+              </h6>
+            </section>
           </div>
         </div>
       </>
