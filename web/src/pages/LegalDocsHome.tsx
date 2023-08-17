@@ -5,8 +5,11 @@
 // import ProjectStatsCard from '../ProjectStatsCard/ProjectStatsCard'
 // import PhaseDetailsCard from '../PhaseDetailsCard/PhaseDetailsCard'
 import { useState, useEffect } from 'react'
-
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { Link } from '@redwoodjs/router'
+import AppsIcon from '@mui/icons-material/Apps';
+import SortIcon from '@mui/icons-material/Sort';
 
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
 
@@ -20,7 +23,7 @@ import 'flowbite'
 import DropDownSearchBar from 'src/components/dropDownSearchBar'
 
 import { PlusIcon } from '@heroicons/react/outline'
-import { Grid } from '@mui/material'
+import { Card, Grid } from '@mui/material'
 const LegalDocsHome = ({ project }) => {
   const { projectName } = project
   const { user } = useAuth()
@@ -34,6 +37,7 @@ const LegalDocsHome = ({ project }) => {
 
   const [filteredUnits, setFilteredUnits] = useState([])
   const [filStatus, setFilStatus] = useState(['available', 'booked', 'blocked'])
+  const [formats, setFormats] = React.useState("list");
 
   // interface files{
   //   name:string
@@ -45,7 +49,7 @@ const LegalDocsHome = ({ project }) => {
   // }
 
   const columns: GridColDef[] = [
-    { field: 'name', headerName: 'Name', width: 340 , renderCell: (params) => (<div style={{ display: 'flex', alignItems: 'center' }}><img src={params.row.img} style={{ width: 40, height: 40, marginRight: 10 }}/>{params.row.name}</div>)},
+    { field: 'name', headerName: 'Name', width: 340 , renderCell: (params) => (<div style={{ display: 'flex', alignItems: 'center' }}><img src={params.row.img} style={{ width: 35, height: 40, marginRight: 10 }}/>{params.row.name}</div>)},
     { field: 'size', headerName: 'Size', width: 130 },
     { field: 'type', headerName: 'Type', width: 130 },
     { field: 'modified', headerName: 'Modified', width: 140 },
@@ -61,34 +65,38 @@ const LegalDocsHome = ({ project }) => {
       modified: '10 Aug 2023',
       shared:['kunal','nithesh'],
       id:1,
+      files:'10',
       img:"/folder.png",
     },
     {
       img:"/folder.png",
-      name: 'Docs',
+      name: 'Food',
       size: '2.4 GB',
       type: 'folder',
       modified: '10 Aug 2023',
+      files:'10',
       shared:['kunal','nithesh'],
       id:2
     },
     {
       img:"/folder.png",
-      name: 'Docs',
+      name: 'Projects',
       size: '2.4 GB',
       type: 'folder',
       modified: '10 Aug 2023',
       shared:['kunal','nithesh'],
-      id:3
+      id:3,
+      files:'10',
     },
     {
       img:"/folder.png",
-      name: 'Docs',
+      name: 'Sport',
       size: '2.4 GB',
       type: 'folder',
       modified: '10 Aug 2023',
       shared:['kunal','nithesh'],
-      id:4
+      id:4,
+      files:'10',
     },
     {
       img:"/folder.png",
@@ -100,55 +108,58 @@ const LegalDocsHome = ({ project }) => {
       id:5
     },
     {
-      img:"/folder.png",
-      name: 'Docs',
-      size: '2.4 GB',
-      type: 'folder',
+      img:"/jpgIcon.png",
+      name: 'Cover-8.jpg',
+      size: '2.2 MB',
+      type: 'jpg',
       modified: '10 Aug 2023',
       shared:['kunal','nithesh'],
+
       id:6
     },
     {
-      img:"/folder.png",
-      name: 'Docs',
-      size: '2.4 GB',
-      type: 'folder',
+      img:"/jpgIcon.png",
+      name: 'Cover-12.jpg',
+      size: '1.2 MB',
+      type: 'jpg',
       modified: '10 Aug 2023',
       shared:['kunal','nithesh'],
       id:7
+
+
     },
     {
-      img:"/folder.png",
-      name: 'Docs',
-      size: '2.4 GB',
-      type: 'folder',
+      img:"/music.png",
+      name: 'Music.mp3',
+      size: '177 KB',
+      type: 'mp3',
       modified: '10 Aug 2023',
       shared:['kunal','nithesh'],
       id:8
     },
     {
-      img:"/folder.png",
-      name: 'Docs',
-      size: '2.4 GB',
-      type: 'folder',
+      img:"/pptIcon.png",
+      name: 'presentation.ppt',
+      size: '144 MB',
+      type: 'ppt',
       modified: '10 Aug 2023',
       shared:['kunal','nithesh'],
       id:9
     },
     {
-      img:"/folder.png",
-      name: 'Docs',
-      size: '2.4 GB',
-      type: 'folder',
+      img:"/video.png",
+      name: 'expertise.mp4',
+      size: '1.4 GB',
+      type: 'mp4',
       modified: '10 Aug 2023',
       shared:['kunal','nithesh'],
       id:10
     },
     {
-      img:"/folder.png",
-      name: 'Docs',
-      size: '2.4 GB',
-      type: 'folder',
+      img:"/docxIcon.png",
+      name: 'data.docx',
+      size: '10 MB',
+      type: 'docx',
       modified: '10 Aug 2023',
       shared:['kunal','nithesh'],
       id:11
@@ -193,9 +204,10 @@ const LegalDocsHome = ({ project }) => {
     setIsDocViewOpenSideView(!isDocViewOpenSideView)
   }
 
+
   return (
     <div>
-      <section className=" mt-2 mb-8 leading-7 text-gray-900 bg-white sm:py-12 md:py-16 lg:py-18 mx-1 pr-10rounded-lg px-6  w-auto">
+      <section className=" mt-2 mb-8 leading-7 text-gray-900 bg-white sm:py-12 md:py-16 lg:py-18 mx-1 pr-10 rounded-lg px-6  w-[1430px]">
         <div className="  mx-auto border-solid sm:px-6 md:px-6 px-6  ">
           {/* <div className="flex flex-col  leading-7  text-gray-900 border-0 border-gray-200 ">
             <div className="flex items-center flex-shrink-0  px-0  pl-0   mb-2">
@@ -254,11 +266,29 @@ const LegalDocsHome = ({ project }) => {
                       </svg>
                       <span className="sr-only">Search</span>
                     </button>
+
                   </section>
+
                 </div>
               </div>
             </form>
+
           </div>
+          <div className='mt-4'> <ToggleButtonGroup
+                      value={formats}
+                      // onChange={()=>{console.log(formats)}}
+                      aria-label="text formatting"
+
+                    >
+      <ToggleButton value="list" aria-label="List" onClick={()=>{setFormats("list")}}>
+      <SortIcon/>
+      </ToggleButton>
+      <ToggleButton value="grid" aria-label="Grid" onClick={()=>{setFormats("grid")}}>
+      <AppsIcon/>
+      </ToggleButton>
+
+    </ToggleButtonGroup>
+    </div>
 
           {/* <ul className="">
               <li className="py-2">
@@ -278,24 +308,30 @@ const LegalDocsHome = ({ project }) => {
                 </div>
               </li>
             </ul> */}
-          <div style={{ height: 930, width: '98%' }} className='mt-10 border-gray-200'>
+
+
+    {formats==="list" ?
+     <div style={{ width: '98%' }} className='mt-16 h-auto'>
             <DataGrid rows={Folders} columns={columns}
+             rowHeight={75}
               sx={{
                 fontWeight: 400,
                 // width:300,
+                // height:"820px",
                 fontSize: 14,
                 borderRadius: 3,
-                border: 1,
+                marginTop:5,
+                paddingTop:10,
                 padding:5,
+                // borderColor:"#FFFFFF",
 
                 // marginRight:5,
                 paddingRight:5,
-                borderTop: 0,
                 "& .MuiDataGrid-row": {
-                  height:50,
+                  height:80,
                   border: 1,
+                  borderColor:"#EDEFF1",
                   width:"99.5%",
-                  borderTop: 1,
                   // borderRight:1,
                   // marginRight:1,
 
@@ -304,11 +340,12 @@ const LegalDocsHome = ({ project }) => {
                   borderRadius: 3,
                 },
                 "& .MuiDataGrid-columnHeaders": {
-                  border: 1,
+                  // border: 1,
                   width:"99.5%",
-                  borderTop: 1,
-                  // borderBottom: 1,
-                  backgroundColor:'gray',
+                  marginBottom:2,
+                  // borderTop: 1,
+boxShadow:2,
+                  backgroundColor:'#F4F6F8',
                   borderRadius: 3
                 },
                 "& .MuiDataGrid-footerContainer": {
@@ -325,7 +362,16 @@ const LegalDocsHome = ({ project }) => {
                 },
                 "& .MuiSvgIcon-root": {
                   color: "#003665"
-                }
+                },
+                '&>.MuiDataGrid-main': {
+                  // '&>.MuiDataGrid-columnHeaders': {
+                  //     borderBottom: 'none'
+                  // },
+
+                  '& div div div div >.MuiDataGrid-cell': {
+                      borderBottom: 'none',
+                  }
+              }
               }}
              initialState={{
           pagination: {
@@ -334,7 +380,105 @@ const LegalDocsHome = ({ project }) => {
             }}
             pageSizeOptions={[5, 10]}
             checkboxSelection />
-              </div>
+            </div>
+            :null}
+            {formats==="grid" ?
+             <div style={{  width: '98%' }} className='mt-16 h-auto'>
+              <div className="ml-14 mt-5 font-bold">Folders</div>
+            <ul className="">
+              <li className="py-2">
+             <section className="flex flex-row mt-5 grid grid-cols-4 ">
+
+            {Folders?.map((project, i) => (
+                    // <span key={i}>{project?.projectName}</span>
+                    <>
+
+                    {project.type==='folder' ?
+                    <>
+
+                      <div
+                        key={i}
+                        className=" cursor-pointer relative mx-auto break-words bg-white  mb-6  rounded-xl  mr-8 transition duration-300 ease-in-out  "
+                        onClick={() => dispDoc(project)}
+                      >
+                        {/* <FileCardAnim projectDetails={project} /> */}
+                        <Card sx={{
+                          borderRadius:4,
+                        }} variant="outlined" className='w-[230px] m-3 p-3'>
+                          <img alt='' className="h-12 w-10 bg-white " src={project.img} />
+                          <div className='font-semibold	'>{project.name}</div>
+                          <div className='text-xs'>{project.size}</div>
+                          <div className='text-xs'>{project.shared}</div>
+
+                          </Card>
+                      </div>
+
+                      </>
+                     :null }
+                    </>
+
+                    // <ProjectsMHomeBody
+                    //   key={project.uid}
+                    //   project={project}
+                    //   onSliderOpen={() => {
+                    //     // setProject(project)
+                    //     // setIsEditProjectOpen(true)
+                    //   }}
+                    //   isEdit={false}
+                    // />
+                  ))}
+            </section>
+          </li>
+            </ul>
+
+            <div className='ml-14 mt-5 font-bold'>Files</div>
+            <ul className="">
+              <li className="py-2">
+             <section className="flex flex-row mt-5 grid grid-cols-4 ">
+
+            {Folders?.map((project, i) => (
+                    // <span key={i}>{project?.projectName}</span>
+                    <>
+
+                    {project.type!=='folder' ?
+                    <>
+
+                      <div
+                        key={i}
+                        className=" cursor-pointer relative mx-auto break-words bg-white  mb-6  rounded-xl  mr-8 transition duration-300 ease-in-out  "
+                        onClick={() => dispDoc(project)}
+                      >
+                        {/* <FileCardAnim projectDetails={project} /> */}
+                        <Card sx={{
+                          borderRadius:4,
+                        }} variant="outlined" className='w-[230px] m-3 p-3'>
+                          <img alt='' className="h-12 w-10 bg-white " src={project.img} />
+                          <div className='font-semibold	'>{project.name}</div>
+                          <div className='text-xs'>{project.size}</div>
+                          <div className='text-xs'>{project.shared}</div>
+
+                          </Card>
+                      </div>
+
+                      </>
+                     :null }
+                    </>
+
+                    // <ProjectsMHomeBody
+                    //   key={project.uid}
+                    //   project={project}
+                    //   onSliderOpen={() => {
+                    //     // setProject(project)
+                    //     // setIsEditProjectOpen(true)
+                    //   }}
+                    //   isEdit={false}
+                    // />
+                  ))}
+            </section>
+          </li>
+            </ul>
+            </div>
+           :null }
 
           <section className=" flex">
             {/* <div

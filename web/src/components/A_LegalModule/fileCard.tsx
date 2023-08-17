@@ -23,15 +23,15 @@ const FileCardAnim = (props) => {
       {/* <div className="folder"> */}
       {/* <div className="folder-back"> */}
       {/* <p className="files">Files</p> */}
-      <div className=" border border-green rounded-xl hover:shadow-lg ml-2 mb-2 mr-2 ">
-        <section className=" m-2 flex flex-row w-[1300px] px-2 ">
+      <div className=" border border-green rounded-xl hover:shadow-lg ml-2 mb-2 mr-2 mt-5 ">
+        <section className=" m-2 flex flex-col w-[250px] px-2">
 
 
-            <span><img className="h-12 w-12 "src="/folder.png" alt="" /></span>
-
-          <span className="text-md  ml-5 pt-3  text-gray-700 leading-normal ">
-            {projectDetails?.projectName}
-          </span>
+            <div><img className="h-12 w-12 "src={projectDetails.img} alt="" /></div>
+            <br/>
+          <div className="text-md  ml-2  text-gray-700 leading-normal ">
+            {projectDetails?.name}
+          </div>
           {/* <div className="text-xs mt-5 border border-black mb-2 text-white-700 font-bold uppercase">
             {"Phase-I"}
           </div> */}
