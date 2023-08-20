@@ -4,7 +4,7 @@ import { LinearProgress } from '@mui/material'
 
 import { useAuth } from 'src/context/firebase-auth-context'
 
-const CrmPaymentSummary = ({ selCustomerPayload, assets }) => {
+const CrmPaymentSummary = ({ selCustomerPayload }) => {
   const { user } = useAuth()
 
   const { orgId } = user

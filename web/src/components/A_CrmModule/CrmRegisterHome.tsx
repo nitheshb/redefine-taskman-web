@@ -1323,9 +1323,10 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                   {/* section 2 */}
                                   <div
                                     className={`w-full  cursor-pointer  h-[80px] ${
-                                      finData?.man_cs_approval
+                                      finData?.man_cs_approval == "approved"
                                         ? 'bg-green-100'
-                                        : 'bg-[#F1F5F9] '
+                                        :finData?.man_cs_approval == "rejected"
+                                        ? 'bg-[#ffdbdb]' : 'bg-[#F1F5F9] '
                                     }  p-3 rounded-md mx-1`}
                                     style={{
                                       display: 'inline-block',
@@ -1341,7 +1342,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       <div className="flex flex-none items-center justify-center rounded-lg bg-green-50 group-hover:bg-white">
                                         <ChartPieIcon
                                           className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
-                                            finData?.man_cs_approval
+                                            finData?.man_cs_approval === "approved"
                                               ? 'text-green-900'
                                               : 'text-gray-600 '
                                           }`}

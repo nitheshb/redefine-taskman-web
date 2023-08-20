@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect, useState, useRef } from 'react'
 
 import { Menu, Transition } from '@headlessui/react'
 import {
@@ -29,10 +29,12 @@ import BankSelectionSwitchDrop from 'src/components/A_LoanModule/BankSelectionDr
 import CostBreakUpSheet from 'src/components/costBreakUpSheet'
 import DocRow from 'src/components/LegalModule/Docu_row'
 import { USER_ROLES } from 'src/constants/userRoles'
+import { getPhasesByProject } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
+import CostBreakUpEditor from 'src/util/costBreakUpEditor'
+import CostBreakUpPdf from 'src/util/costBreakUpPdf'
 
 import CSBody from './cs_body'
-import { getPhasesByProject } from 'src/context/dbQueryFirebase'
 
 // import BankSelectionSwitchDrop from './BankSelectionDroopDown'
 
@@ -41,6 +43,11 @@ export default function CSManagerApprovalBody({
   setStatusFun,
   selUnitPayload,
 }) {
+  const { user } = useAuth()
+
+  const { orgId } = user
+  const pdfExportComponent = useRef(null)
+  const pdfExportComponentConstruct = useRef(null)
   const [selLoanBank, setLoanBank] = useState({})
   const [preSanctionReview, SetPreSanctionReview] = useState('In-Review')
   const [postSanctionReview, SetPostSanctionReview] = useState('In-Review')
@@ -51,9 +58,19 @@ export default function CSManagerApprovalBody({
   const [addiChargesObj, setAddiChargesObj] = useState({})
   const [costSheetA, setCostSheetA] = useState([])
   const [selPhaseObj, setSelPhaseObj] = useState({})
-  const { user } = useAuth()
   const [phases, setPhases] = useState([])
   const [phasesList, setPhasesList] = useState([])
+  const [newPlotCostSheetA, setNewPlotCostSheetA] = useState([])
+  const [newPlotCsObj, setNewPlotCsObj] = useState([])
+  const [newPlotPS, setNewPlotPS] = useState([])
+  const [newConstructCsObj, setNewConstructCsObj] = useState([])
+  const [newConstructCostSheetA, setNewConstructCostSheetA] = useState([])
+  const [newConstructPS, setNewConstructPS] = useState([])
+  const [newAdditonalChargesObj, setNewAdditonalChargesObj] = useState([])
+  const [StatusListA, setStatusListA] = useState([])
+  const [showGstCol, setShowGstCol] = useState(true)
+
+
   if (!user?.role?.includes(USER_ROLES.ADMIN)) {
     return null
   }
@@ -62,8 +79,6 @@ export default function CSManagerApprovalBody({
     getPhases(selUnitPayload)
   }, [])
   const getPhases = async (projectDetails) => {
-
-
     try {
       const unsubscribe = getPhasesByProject(
         orgId,
@@ -143,7 +158,7 @@ export default function CSManagerApprovalBody({
           </span>
         </div>
       </div>
-      <CSBody
+      {/* <CSBody
         csMode="plot_cs"
         costSheetA={costSheetA}
         selUnitDetails={selUnitPayload}
@@ -151,7 +166,23 @@ export default function CSManagerApprovalBody({
         setSelPhaseObj={setSelPhaseObj}
         selPhaseObj={selPhaseObj}
         setAddiChargesObj={setAddiChargesObj}
+      /> */}
+      <CostBreakUpEditor
+        csMode={'plot_cs'}
+        // costSheetA={costSheetA}
+        pdfExportComponent={pdfExportComponent}
+        selPhaseObj={selPhaseObj}
+        leadDetailsObj1={{ id: 'leadId' }}
+        selUnitDetails={selUnitPayload}
+        setNewPlotCsObj={setNewPlotCsObj}
+        newPlotCsObj={newPlotCsObj}
+        costSheetA={newPlotCostSheetA}
+        setAddiChargesObj={setNewAdditonalChargesObj}
+        setCostSheetA={setNewPlotCostSheetA}
+        setNewPS={setNewPlotPS}
+        newPlotPS={newPlotPS}
       />
+
     </div>
   )
 }

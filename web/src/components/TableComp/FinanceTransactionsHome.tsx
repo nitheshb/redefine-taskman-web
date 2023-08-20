@@ -25,6 +25,11 @@ import {
   SlimDateSelectBox,
   SlimSelectBox,
 } from 'src/util/formFields/slimSelectBoxField'
+import {
+  timeConv,
+  prettyDate
+
+} from 'src/util/dateConverter'
 
 import CircleProgress from '../Charts_Graphs/CircleProgress'
 import SemiCircleProgress from '../Charts_Graphs/SemiCircleProgress'
@@ -596,7 +601,7 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
                               <td>
                                 <div className="flex flex-row ml-4 py-2">
                                   <span className="font-normal text-xs app-color-gray-1">
-                                    {finData?.txt_dated}
+                                    {prettyDate(finData?.txt_dated)}
                                   </span>
                                 </div>
                               </td>
@@ -610,9 +615,9 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
                                     <span className="font-normal text-xs app-color-gray-1">
                                       {finData?.txt_id}
                                     </span>
-                                    <span className="font-normal text-xs app-color-gray-1">
-                                      {finData?.dated}
-                                    </span>
+                                    {/* <span className="font-normal text-xs app-color-gray-1">
+                                      {timeConv(finData?.txt_dated)}
+                                    </span> */}
                                   </div>
                                 </div>
                               </td>
@@ -624,14 +629,14 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
                                       {finData?.txt_id}
                                     </span>
                                     <span className="font-normal text-xs app-color-gray-1">
-                                      {finData?.txt_dated}
+                                      {timeConv(finData?.txt_dated)}
                                     </span>
                                   </div>
                                 </div>
                               </td>
                               <td className="text-right">
                                 <span className="text-right font-semibold text-sm app-color-gray-1 mr-10">
-                                  Rs {finData?.totalAmount}
+                                  ₹ {finData?.totalAmount?.toLocaleString('en-IN')}
                                 </span>
                               </td>
                               <td className="text-center">

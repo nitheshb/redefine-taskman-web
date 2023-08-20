@@ -287,6 +287,31 @@ export const getEmployeesTaskProgressDept = async (
     console.log('erro in emp performance Upate getemployee')
   }
 }
+export const updateTransactionStatus = async (
+  orgId,
+  data1,
+  enqueueSnackbar
+) => {
+  // const itemsQuery = query(doc(db, `${orgId}_leads_log', 'W6sFKhgyihlsKmmqDG0r'))
+  const { id,status } = data1
+  // return onSnapshot(doc(db, `${orgId}_leads_log`, uid), snapshot, error)
+  const { data: lead_logs, error } = await supabase
+    .from(`${orgId}_accounts`)
+    .update({ status: status })
+    .eq('id', id)
+    if(lead_logs){
+  await  enqueueSnackbar('Marked as Amount Recived', {
+      variant: 'success',
+    })}
+      if(error){
+  await  enqueueSnackbar('Transaction Updation Failed', {
+      variant: 'error',
+    })}
+
+  console.log('updating error', lead_logs, error)
+  return lead_logs
+  // return onSnapshot(itemsQuery, snapshot, error)
+}
 export const updateLeadsLogWithProject = async (
   orgId,
   snapshot,
@@ -3278,6 +3303,38 @@ export const updateUnitStatus = async (
       ...data,
     })
     enqueueSnackbar('Unit Status updation failed BBB', {
+      variant: 'error',
+    })
+  }
+  return
+}
+export const updateManagerApproval = async (
+  orgId,
+  unitId,
+  data,
+  by,
+  enqueueSnackbar
+) => {
+  try {
+    console.log('data is===>', unitId, data)
+    const {status, plotCS, addChargesCS,  fullPs, T_balance, T_Total} = data
+    await updateDoc(doc(db, `${orgId}_units`, unitId), {
+      man_cs_approval: status,
+      plotCS: plotCS,
+      addChargesCS,
+      fullPs,
+      T_balance,
+      T_Total
+
+    })
+    enqueueSnackbar('CS Approved..!', {
+      variant: 'success',
+    })
+  } catch (error) {
+    console.log('CS Approved Updation Failed', error, {
+      ...data,
+    })
+    enqueueSnackbar('CS Approved Updation Failed .', {
       variant: 'error',
     })
   }

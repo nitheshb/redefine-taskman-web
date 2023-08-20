@@ -11,6 +11,7 @@ import CrmUnitDetailsView1 from './CrmUnitDetailsView1'
 import CrmUnitFinanceHistory from './CrmUnitFinanceHistory'
 import CrmUnitHeader from './CrmUnitHeader'
 import CrmUnitPaymentGraph from './CrmUnitPaymentGraph'
+import CrmUnitCostSheetView from './CrmCostSheetView'
 
 const CrmUnitSummary = ({
   selCustomerPayload: selUnitPayload,
@@ -94,6 +95,13 @@ const CrmUnitSummary = ({
 
         {/* Unit Position Summary */}
         {/* payment schedule */}
+        <div>
+        <CrmUnitCostSheetView
+            selCustomerPayload={selUnitPayload}
+            assets={assets}
+            totalIs={totalIs}
+          />
+        </div>
 
         <div>
           <CrmUnitPaymentSchedule

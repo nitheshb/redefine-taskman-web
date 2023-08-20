@@ -24,20 +24,28 @@ import {
   ArrowDownIcon,
   ArrowUpIcon,
 } from '@heroicons/react/solid'
+import { useSnackbar } from 'notistack'
 
 import { Link, routes } from '@redwoodjs/router'
 
 import BankSelectionSwitchDrop from 'src/components/A_LoanModule/BankSelectionDroopDown'
+import CaptureUnitPayment from 'src/components/FinanceModule/CapturePayment'
 import DocRow from 'src/components/LegalModule/Docu_row'
 import { USER_ROLES } from 'src/constants/userRoles'
-import { capturePaymentS, streamGetAllUnitTransactions } from 'src/context/dbQueryFirebase'
+import {
+  capturePaymentS,
+  streamGetAllUnitTransactions,
+} from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import { supabase } from 'src/context/supabase'
 import { prettyDateTime } from 'src/util/dateConverter'
 
+import CrmPaymentSummary from '../CrmPaymentSummary'
+import CrmUnitPaymentGraph from '../CrmUnitPaymentGraph'
+
 import PaymentDocUtility from './paymentDocUtility'
-import CaptureUnitPayment from 'src/components/FinanceModule/CapturePayment'
-import { useSnackbar } from 'notistack'
+import CrmUnitPaymentSchedule from '../CrmPaymentSchedule'
+import CrmUnitFinanceHistory from '../CrmUnitFinanceHistory'
 
 // import BankSelectionSwitchDrop from './BankSelectionDroopDown'
 
@@ -65,7 +73,6 @@ export default function BookingPaymentFlow({
   const { orgId } = user
   const { enqueueSnackbar } = useSnackbar()
 
-
   if (!user?.role?.includes(USER_ROLES.ADMIN)) {
     return null
   }
@@ -75,7 +82,7 @@ export default function BookingPaymentFlow({
   }, [selUnitPayload])
 
   useEffect(() => {
-      streamTransactions()
+    streamTransactions()
   }, [])
   useEffect(() => {
     getAllTransactionsUnit()
@@ -95,42 +102,42 @@ export default function BookingPaymentFlow({
     await setUnitTransactionsA(steamLeadLogs)
     return
   }
-  const streamTransactions = ()=>{
-        // Subscribe to real-time changes in the `${orgId}_accounts` table
-        const subscription = supabase
-        .from(`${orgId}_accounts`)
-        .on('*', (payload) => {
-          // When a change occurs, update the 'leadLogs' state with the latest data
-          console.log('account records', payload)
-          // Check if the updated data has the id 12
-          const updatedData = payload.new
-          const { id } = payload.old
-          const updatedLeadLogs = [...unitTransactionsA]
-          setUnitTransactionsA((prevLogs) => {
-            const existingLog = prevLogs.find(
-              (log) => log.id === id && log.unit_id === selUnitPayload?.id
+  const streamTransactions = () => {
+    // Subscribe to real-time changes in the `${orgId}_accounts` table
+    const subscription = supabase
+      .from(`${orgId}_accounts`)
+      .on('*', (payload) => {
+        // When a change occurs, update the 'leadLogs' state with the latest data
+        console.log('account records', payload)
+        // Check if the updated data has the id 12
+        const updatedData = payload.new
+        const { id } = payload.old
+        const updatedLeadLogs = [...unitTransactionsA]
+        setUnitTransactionsA((prevLogs) => {
+          const existingLog = prevLogs.find(
+            (log) => log.id === id && log.unit_id === selUnitPayload?.id
+          )
+
+          if (existingLog) {
+            console.log('Existing record found!')
+            const updatedLogs = prevLogs.map((log) =>
+              log.id === id ? payload.new : log
             )
-
-            if (existingLog) {
-              console.log('Existing record found!')
-              const updatedLogs = prevLogs.map((log) =>
-                log.id === id ? payload.new : log
-              )
-              return [...updatedLogs]
-            } else {
-              console.log('New record added!',  [...prevLogs, payload.new])
-              if(payload?.new.unit_id === selUnitPayload?.id){
+            return [...updatedLogs]
+          } else {
+            console.log('New record added!', [...prevLogs, payload.new])
+            if (payload?.new.unit_id === selUnitPayload?.id) {
               return [...prevLogs, payload.new]
-              }
             }
-          })
+          }
         })
-        .subscribe()
+      })
+      .subscribe()
 
-      // Clean up the subscription when the component unmounts
-      return () => {
-        supabase.removeSubscription(subscription)
-      }
+    // Clean up the subscription when the component unmounts
+    return () => {
+      supabase.removeSubscription(subscription)
+    }
   }
   const paymentCaptureFun = async (data, resetForm) => {
     const {
@@ -182,6 +189,108 @@ export default function BookingPaymentFlow({
               /{selUnitPayload?.projName}{' '}
             </p>
           </div>
+        </div>
+      </div>
+      <div className="flex flex-row">
+        <div>
+          <CrmUnitPaymentGraph selCustomerPayload={selUnitPayload} />
+        </div>
+        <div className="ml-1">
+          <CrmPaymentSummary selCustomerPayload={selUnitPayload} />
+        </div>
+      </div>
+      <div className="flex flex-row">
+        {/* 4 */}
+        <div
+          className={`border border-gray-200 w-[154px] cursor-pointer mt-2 group relative flex items-center gap-x-2 rounded-lg p-1 pr-4  text-sm leading-6 hover:bg-gray-50 ${
+            allPayment === 'all_payments'
+              ? 'bg-gradient-to-r from-violet-100 to-pink-100'
+              : ''
+          }`}
+          onClick={() => {
+            SetAllPayment('all_payments')
+          }}
+        >
+          <div
+            className={`flex h-9 w-9 flex-none items-center justify-center rounded-lg bg-gray-50 ${
+              allPayment === 'all_payments' ? 'group-hover:bg-white' : ''
+            }  `}
+          >
+            <PlusIcon
+              className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 ${
+                allPayment === 'all_payments' ? 'text-indigo-600' : ''
+              }`}
+              aria-hidden="true"
+            />
+          </div>
+          <div className="flex-auto">
+            <a
+              className={`block font-semibold text-gray-900 ${
+                allPayment === 'all_payments' ? 'text-indigo-600' : ''
+              } group-hover:text-indigo-600`}
+            >
+              {'All Payments'}
+              <span className="absolute inset-0" />
+            </a>
+            {/* <p className="mt- pb-2 border-b text-gray-600">
+                              Project Setup, Insights, Access...
+                            </p> */}
+          </div>
+        </div>
+
+        <div
+          className={`border border-gray-200 w-[154px] cursor-pointer mt-2 ml-2 group relative flex items-center gap-x-2 rounded-lg p-1 pr-4  text-sm leading-6 hover:bg-gray-50 ${
+            allPayment === 'new_payments'
+              ? 'bg-gradient-to-r from-violet-100 to-pink-100'
+              : ''
+          }`}
+          onClick={() => {
+            SetAllPayment('new_payments')
+          }}
+        >
+          <div
+            className={`flex h-9 w-9 flex-none items-center justify-center rounded-lg bg-gray-50 ${
+              allPayment === 'new_payments' ? 'group-hover:bg-white' : ''
+            }  `}
+          >
+            <PlusIcon
+              className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 ${
+                allPayment === 'new_payments' ? 'text-indigo-600' : ''
+              }`}
+              aria-hidden="true"
+            />
+          </div>
+          <div className="flex-auto">
+            <a
+              className={`block font-semibold text-gray-900 ${
+                allPayment === 'new_payments' ? 'text-indigo-600' : ''
+              } group-hover:text-indigo-600`}
+            >
+              {'New Payment'}
+              <span className="absolute inset-0" />
+            </a>
+            {/* <p className="mt- pb-2 border-b text-gray-600">
+                              Project Setup, Insights, Access...
+                            </p> */}
+          </div>
+        </div>
+      </div>
+
+      <div>
+
+      <div>
+          <CrmUnitPaymentSchedule
+            selCustomerPayload={selUnitPayload}
+
+          />
+        </div>
+        {/* Finance History */}
+        <div>
+          <CrmUnitFinanceHistory
+            selCustomerPayload={selUnitPayload}
+
+            unitTransactionsA={unitTransactionsA}
+          />
         </div>
       </div>
       <div className="max-w-3xl mx-auto py-4 text-sm text-gray-700">
@@ -352,52 +461,56 @@ export default function BookingPaymentFlow({
                 />
               </section>
             ))}
-                  {S1 &&
+          {S1 &&
             newDemands === 'active_demands' &&
-            selUnitPayload.fullPs?.filter((dataObj)=> dataObj?.elgFrom != undefined).map((doc, i) => (
-              <section
-                key={i}
-                onClick={() => {
-                  // show sidebar and display the worddoc
-                  setSliderInfo({
-                    open: true,
-                    title: 'viewDocx',
-                    sliderData: {},
-                    widthClass: 'max-w-xl',
-                  })
-                }}
-              >
-                <PaymentDocUtility
-                  id={doc?.id}
-                  key={doc?.id}
-                  fileName={doc?.stage?.label}
-                  date={doc?.elgFrom}
-                />
-              </section>
-            ))}
-                {S1 &&
+            selUnitPayload.fullPs
+              ?.filter((dataObj) => dataObj?.elgFrom != undefined)
+              .map((doc, i) => (
+                <section
+                  key={i}
+                  onClick={() => {
+                    // show sidebar and display the worddoc
+                    setSliderInfo({
+                      open: true,
+                      title: 'viewDocx',
+                      sliderData: {},
+                      widthClass: 'max-w-xl',
+                    })
+                  }}
+                >
+                  <PaymentDocUtility
+                    id={doc?.id}
+                    key={doc?.id}
+                    fileName={doc?.stage?.label}
+                    date={doc?.elgFrom}
+                  />
+                </section>
+              ))}
+          {S1 &&
             newDemands === 'new_demands' &&
-            selUnitPayload.fullPs?.filter((dataObj)=> dataObj?.elgFrom == undefined).map((doc, i) => (
-              <section
-                key={i}
-                onClick={() => {
-                  // show sidebar and display the worddoc
-                  setSliderInfo({
-                    open: true,
-                    title: 'viewDocx',
-                    sliderData: {},
-                    widthClass: 'max-w-xl',
-                  })
-                }}
-              >
-                <PaymentDocUtility
-                  id={doc?.id}
-                  key={doc?.id}
-                  fileName={doc?.stage?.label}
-                  date={doc?.elgFrom}
-                />
-              </section>
-            ))}
+            selUnitPayload.fullPs
+              ?.filter((dataObj) => dataObj?.elgFrom == undefined)
+              .map((doc, i) => (
+                <section
+                  key={i}
+                  onClick={() => {
+                    // show sidebar and display the worddoc
+                    setSliderInfo({
+                      open: true,
+                      title: 'viewDocx',
+                      sliderData: {},
+                      widthClass: 'max-w-xl',
+                    })
+                  }}
+                >
+                  <PaymentDocUtility
+                    id={doc?.id}
+                    key={doc?.id}
+                    fileName={doc?.stage?.label}
+                    date={doc?.elgFrom}
+                  />
+                </section>
+              ))}
         </section>
       </div>
       <div className="max-w-3xl mx-auto py-3 text-sm text-gray-700">
@@ -556,28 +669,32 @@ export default function BookingPaymentFlow({
               ) : (
                 ''
               )}
-              {unitTransactionsA?.sort((a,b)=> {return b.txt_dated - a.txt_dated}).map((doc, i) => (
-                <section
-                  key={i}
-                  onClick={() => {
-                    // show sidebar and display the worddoc
-                    setSliderInfo({
-                      open: true,
-                      title: 'viewDocx',
-                      sliderData: {},
-                      widthClass: 'max-w-xl',
-                    })
-                  }}
-                >
-                  <DocRow
-                    id={doc?.id}
-                    amount={doc?.totalAmount}
-                    fileName={doc?.payReason}
-                    status={doc?.status}
-                    date={doc?.created_at}
-                  />
-                </section>
-              ))}
+              {unitTransactionsA
+                ?.sort((a, b) => {
+                  return b.txt_dated - a.txt_dated
+                })
+                .map((doc, i) => (
+                  <section
+                    key={i}
+                    onClick={() => {
+                      // show sidebar and display the worddoc
+                      setSliderInfo({
+                        open: true,
+                        title: 'viewDocx',
+                        sliderData: {},
+                        widthClass: 'max-w-xl',
+                      })
+                    }}
+                  >
+                    <DocRow
+                      id={doc?.id}
+                      amount={doc?.totalAmount}
+                      fileName={doc?.payReason}
+                      status={doc?.status}
+                      date={doc?.created_at}
+                    />
+                  </section>
+                ))}
             </section>
           )}
           {S2 && allPayment === 'active_payments' && (
@@ -606,12 +723,12 @@ export default function BookingPaymentFlow({
               ))}
             </section>
           )}
-           {S2 && allPayment === 'new_payments' && (
+          {S2 && allPayment === 'new_payments' && (
             <section className="mt-1 container">
-           <CaptureUnitPayment
-                    selUnitDetails={selUnitPayload}
-                    onSubmitFun={paymentCaptureFun}
-                  />
+              <CaptureUnitPayment
+                selUnitDetails={selUnitPayload}
+                onSubmitFun={paymentCaptureFun}
+              />
             </section>
           )}
         </section>

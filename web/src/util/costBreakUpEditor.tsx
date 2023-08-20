@@ -5,9 +5,14 @@ import { Checkbox } from '@mui/material'
 import { PDFExport } from '@progress/kendo-react-pdf'
 import { Timestamp } from 'firebase/firestore'
 import { Field, Form, Formik } from 'formik'
+import { useSnackbar } from 'notistack'
 import * as Yup from 'yup'
 
 import CrmUnitHeader from 'src/components/A_CrmModule/CrmUnitHeader'
+import {
+  updateManagerApproval,
+  updateUnitStatus,
+} from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 
 import { computeTotal } from './computeCsTotals'
@@ -16,7 +21,7 @@ import { TextFieldFlat } from './formFields/TextFieldFlatType'
 
 import '../styles/myStyles.css'
 
-const CostBreakUpPdf = ({
+const CostBreakUpEditor = ({
   projectDetails,
   csMode,
   pdfExportComponent,
@@ -35,11 +40,12 @@ const CostBreakUpPdf = ({
   setNewPlotPS,
 }) => {
   const { user } = useAuth()
+  const { orgId } = user
+
+  const { enqueueSnackbar } = useSnackbar()
+
   const ref = createRef()
 
-  useEffect(() => {
-    console.log('sel unti detials ', selUnitDetails)
-  }, [])
   const [initialValuesA, setInitialValuesA] = useState({})
 
   const [newSqftPrice, setNewSqftPrice] = useState(0)
@@ -54,303 +60,38 @@ const CostBreakUpPdf = ({
   const [showGstCol, setShowGstCol] = useState(true)
 
   useEffect(() => {
-    console.log('gen costSheetA', costSheetA)
+    boot()
+  }, [selUnitDetails])
+  // useEffect(() => {
+  //   CreateNewPsFun(netTotal, plotBookingAdv, csMode)
+  // }, [netTotal, plotBookingAdv, csMode])
 
-    setTotalFun()
-  }, [costSheetA, selPhaseObj])
-
-  useEffect(() => {
-    setNewPlotCsObj(costSheetA)
-  }, [newSqftPrice])
-
-  useEffect(() => {
-    const {
-      additonalChargesObj,
-      ConstructOtherChargesObj,
-      ConstructPayScheduleObj,
-      paymentScheduleObj,
-    } = selPhaseObj
-    const { uid } = selUnitDetails
-    const y =
-      leadDetailsObj1[`${uid}_cs`]?.newSqftPrice || selUnitDetails?.sqft_rate
-    const z =
-      leadDetailsObj1[`${uid}_cs`]?.newPLC || selUnitDetails?.plc_per_sqft
-
-    const plotTotalSaleValue = Number.isFinite(y)
-      ? Number(selUnitDetails?.selUnitDetails?.area * y)
-      : Number(
-          selUnitDetails?.area *
-            (selUnitDetails?.rate_per_sqft || selUnitDetails?.sqft_rate)
-        )
-
-    const plot_gstValue = Math.round(plotTotalSaleValue) * 0.05
-    console.log(
-      'gen costSheetA values are ',
-      Number.isFinite(y),
-      y,
-      selUnitDetails?.selUnitDetails?.area,
-      selUnitDetails?.rate_per_sqft,
-      selUnitDetails
-    )
-    let x = []
-    if (csMode === 'plot_cs') {
-      setPartBPayload(additonalChargesObj)
-      setAddiChargesObj(additonalChargesObj)
-      setPSPayload(paymentScheduleObj)
-      x = [
-        {
-          myId: '1',
-          units: {
-            value: 'fixedcost',
-            label: 'Fixed cost',
-          },
-          component: {
-            value: 'unit_cost_charges',
-            label: 'Unit Cost',
-          },
-          others: selUnitDetails?.rate_per_sqft || selUnitDetails?.sqft_rate,
-          charges: selUnitDetails?.sqft_rate,
-          TotalSaleValue: plotTotalSaleValue,
-          gst: {
-            label: '0.05',
-            value: plot_gstValue,
-          },
-          TotalNetSaleValueGsT: plotTotalSaleValue + plot_gstValue,
-          // others: selUnitDetails?.rate_per_sqft || selUnitDetails?.sqft_rate,
-          // charges: Number.isFinite(y) ? y : selUnitDetails?.rate_per_sqft || selUnitDetails?.sqft_rate,
-          // TotalSaleValue: Number.isFinite(y)
-          //   ? Number(selUnitDetails?.plot_Sqf * y)
-          //   : Number(selUnitDetails?.plot_Sqf * selUnitDetails?.rate_per_sqft),
-          // // charges: y,
-          // gst: {
-          //   label: '0.05',
-          //   value: Number.isFinite(y)
-          //     ? Number(selUnitDetails?.plot_Sqf * y)
-          //     : Math.round(
-          //         selUnitDetails?.plot_Sqf * selUnitDetails?.rate_per_sqft
-          //       ) * 0.05,
-          // },
-          // TotalNetSaleValueGsT:
-          //   (Number.isFinite(y)
-          //     ? Number(selUnitDetails?.plot_Sqf * y)
-          //     : Number(
-          //         selUnitDetails?.plot_Sqf * selUnitDetails?.rate_per_sqft
-          //       )) +
-          //   (Number.isFinite(y)
-          //     ? Number(selUnitDetails?.plot_Sqf * y)
-          //     : Math.round(
-          //         selUnitDetails?.plot_Sqf * selUnitDetails?.rate_per_sqft
-          //       ) * 0.05),
-        },
-        {
-          myId: '2',
-          units: {
-            value: 'fixedcost',
-            label: 'Fixed cost',
-          },
-          component: {
-            value: 'plc_cost_sqft',
-            label: 'PLC',
-          },
-          others: selUnitDetails?.plc || 200,
-          charges: Number.isFinite(z)
-            ? z
-            : selUnitDetails?.plc || selUnitDetails?.plc_per_sqft,
-          TotalSaleValue: Math.round(
-            selUnitDetails?.super_built_up_area ||
-              selUnitDetails?.area *
-                (selUnitDetails?.plc || selUnitDetails?.plc_per_sqft)
-          ),
-          // charges: y,
-          gst: {
-            label: '0.05',
-            value: Math.round(
-              Number(
-                selUnitDetails?.super_built_up_area ||
-                  selUnitDetails?.area * (selUnitDetails?.plc || 200)
-              ) * 0.05
-            ),
-          },
-          TotalNetSaleValueGsT:
-            Math.round(
-              selUnitDetails?.super_built_up_area ||
-                selUnitDetails?.area * (selUnitDetails?.plc || 200)
-            ) +
-            Math.round(
-              Number(
-                selUnitDetails?.super_built_up_area ||
-                  selUnitDetails?.area * (selUnitDetails?.plc || 200)
-              ) * 0.05
-            ),
-        },
-      ]
-    } else {
-      setPartBPayload(ConstructOtherChargesObj)
-      setPSPayload(ConstructPayScheduleObj)
-      x = [
-        {
-          myId: '1',
-          units: {
-            value: 'fixedcost',
-            label: 'Fixed cost',
-          },
-          component: {
-            value: 'villa_construct_cost',
-            label: 'Villa Construction Cost',
-          },
-          others: selUnitDetails?.construct_price,
-          charges: Number.isFinite(y) ? y : selUnitDetails?.construct_price,
-          TotalSaleValue: Number.isFinite(y)
-            ? Number(selUnitDetails?.builtup_area * y)
-            : Number(
-                selUnitDetails?.builtup_area * selUnitDetails?.construct_price
-              ),
-          // charges: y,
-          gst: {
-            label: '0.05',
-            value: Number.isFinite(y)
-              ? Number(selUnitDetails?.builtup_area * y)
-              : Math.round(
-                  selUnitDetails?.builtup_area * selUnitDetails?.construct_price
-                ) * 0.05,
-          },
-          TotalNetSaleValueGsT:
-            (Number.isFinite(y)
-              ? Number(selUnitDetails?.builtup_area * y)
-              : Number(
-                  selUnitDetails?.builtup_area * selUnitDetails?.construct_price
-                )) +
-            (Number.isFinite(y)
-              ? Number(selUnitDetails?.builtup_area * y)
-              : Math.round(
-                  selUnitDetails?.builtup_area * selUnitDetails?.construct_price
-                ) * 0.05),
-        },
-        // {
-        //   myId: '2',
-        //   units: {
-        //     value: 'fixedcost',
-        //     label: 'Fixed cost',
-        //   },
-        //   component: {
-        //     value: 'Bescom_Sewage_Charges',
-        //     label: 'Bescom & Sewage Charges ',
-        //   },
-        //   others: selUnitDetails?.PLC,
-        //   charges: Number.isFinite(y) ? y : selUnitDetails?.PLC || 200,
-        //   TotalSaleValue: Math.round(
-        //     selUnitDetails?.builtup_area * (selUnitDetails?.PLC || 200)
-        //   ),
-        //   gst: {
-        //     label: '0.05',
-        //     value: Math.round(
-        //       Number(
-        //         selUnitDetails?.builtup_area * (selUnitDetails?.PLC || 200)
-        //       ) * 0.05
-        //     ),
-        //   },
-        //   TotalNetSaleValueGsT:
-        //     Math.round(
-        //       selUnitDetails?.builtup_area * (selUnitDetails?.PLC || 200)
-        //     ) +
-        //     Math.round(
-        //       Number(
-        //         selUnitDetails?.builtup_area * (selUnitDetails?.PLC || 200)
-        //       ) * 0.05
-        //     ),
-        // },
-        // {
-        //   myId: '3',
-        //   units: {
-        //     value: 'fixedcost',
-        //     label: 'Fixed cost',
-        //   },
-        //   component: {
-        //     value: 'clubhouse',
-        //     label: 'Club House ',
-        //   },
-        //   others: selUnitDetails?.PLC,
-        //   charges: 0,
-        //   TotalSaleValue: 354000,
-        //   // charges: y,
-        //   gst: {
-        //     label: '0.05',
-        //     value: Math.round(354000 * 0.0),
-        //   },
-        //   TotalNetSaleValueGsT: 354000,
-        // },
-      ]
-    }
-    // const x = costSheetA
-    let merged = []
-    try {
-      if (leadDetailsObj1) {
-        if (leadDetailsObj1[`${uid}_cs`]['costSheetA']) {
-          const removeFulCostFieldA = leadDetailsObj1[`${uid}_cs`][
-            'costSheetA'
-          ].filter((dat) => dat?.component?.value != 'unit_cost_charges')
-          merged = [...x, ...removeFulCostFieldA]
-        } else {
-          merged = [...x, ...additonalChargesObj]
-        }
-      }
-    } catch (error) {
-      console.log('error at feching the leadDetails Obj')
-      console.log('gen costSheetA', x)
-      merged = [...x, ...additonalChargesObj]
-    }
-
-    const initformValues = {}
-    merged.map((d) => {
-      const x = d['component']['value']
-      initformValues[`${x}`] = d?.charges
-    })
-    setInitialValuesA(initformValues)
-    console.log('gen costSheetA', x)
-    setCostSheetA(x)
-  }, [selPhaseObj, leadDetailsObj1, csMode])
-
-  useEffect(() => {
-    CreateNewPsFun(netTotal, plotBookingAdv, csMode)
-  }, [])
-  useEffect(() => {
-    CreateNewPsFun(netTotal, plotBookingAdv, csMode)
-  }, [netTotal, plotBookingAdv, csMode])
-
-  const CreateNewPsFun = (netTotal, plotBookingAdv, csMode) => {
-    const newPs = psPayload.map((d1) => {
-      const z = d1
-      if (csMode === 'plot_cs') {
-        z.value = ['on_booking'].includes(d1?.stage?.value)
-          ? Number(d1?.percentage)
-          : Math.round((netTotal - plotBookingAdv) * (d1?.percentage / 100))
-        if (['on_booking'].includes(d1?.stage?.value)) {
-          z.elgible = true
-          z.elgFrom = Timestamp.now().toMillis()
-          return z
-        }
-        return z
-      } else {
-        z.value = ['Total_Other_Charges_Amenities:\t'].includes(
-          d1?.stage?.value
-        )
-          ? Number(partBTotal)
-          : Math.round((netTotal - partBTotal) * (d1?.percentage / 100))
-        return z
+  const boot = async () => {
+    console.log('sel unti detials ', selUnitDetails)
+    const { addChargesCS, plotCS, fullPs } = selUnitDetails
+    await setCostSheetA(plotCS)
+    await setPartBPayload(addChargesCS)
+    await setTotalFun(plotCS, addChargesCS)
+    await setNewPS(fullPs)
+    await setPSPayload(fullPs)
+    await fullPs?.map((data) => {
+      if (data.stage?.value === 'on_booking') {
+        setPlotBookingAdv(data?.percentage)
       }
     })
-    setNewPS(newPs)
   }
+  const handlePriceChange = (index, price) => {
+    console.log('changed price is ', price)
+    const updatedRows = [...partBPayload]
+    updatedRows[index].charges = price
+    setPartBPayload(updatedRows)
+    setTotalFun(costSheetA, partBPayload)
 
-  const initialState = initialValuesA
-  const validate = Yup.object({
-    // blockReason: Yup.number()
-    //   .max(15, 'Must be 15 characters or less')
-    //   .required('Name is Required'),
-  })
+  }
+  const setTotalFun = async (costSheetA, partBPayload) => {
+    console.log('ami here', partBPayload, costSheetA, selUnitDetails)
 
-  const setTotalFun = async () => {
-    const partBTotal = selPhaseObj?.additonalChargesObj.reduce(
+    const partBTotal = partBPayload.reduce(
       (partialSum, obj) =>
         partialSum +
         Number(
@@ -361,87 +102,72 @@ const CostBreakUpPdf = ({
         ),
       0
     )
-
     const partATotal = costSheetA.reduce(
       (partialSum, obj) => partialSum + Number(obj?.TotalNetSaleValueGsT),
       0
     )
     setPartBTotal(partBTotal)
+    console.log('sel unti details =>', partBTotal )
     setPartATotal(partATotal)
+    CreateNewPsFun(partATotal + partBTotal, plotBookingAdv, csMode)
     setNetTotal(partATotal + partBTotal)
-    selPhaseObj?.paymentScheduleObj.map((data) => {
-      if (data.stage?.value === 'on_booking') {
+    selUnitDetails?.fullPs?.map((data) => {
+      if (data?.stage?.value === 'on_booking') {
         setPlotBookingAdv(data?.percentage)
       }
     })
   }
-  const onSubmit = async (data, resetForm) => {
-    const { uid } = selUnitDetails
-    const { id } = leadDetailsObj1
-    // const x = {
-    //   myId: '2',
-    //   units: {
-    //     value: 'fixedcost',
-    //     label: 'Fixed cost',
-    //   },
-    //   component: {
-    //     value: 'ratePerSqft',
-    //     label: 'sqftCost',
-    //   },
-    //   charges: Number(newSqftPrice),
-    //   gst: {
-    //     label: '0',
-    //     value: '0',
-    //   },
-    // }
+  const CreateNewPsFun = (netTotal, plotBookingAdv, csMode) => {
+    console.log('sel unti details', psPayload, netTotal, partATotal ,partBTotal)
+    const newPs = psPayload.map((d1) => {
+      const z = d1
+      console.log('sel unti details')
+      if (csMode === 'plot_cs') {
+        z.value = ['on_booking'].includes(d1?.stage?.value)
+          ? Number(d1?.percentage)
+         : Math.round((netTotal - plotBookingAdv) * (d1?.percentage / 100))
 
-    const newCostSheetA = costSheetA.map((dat) => {
-      dat.charges = data[dat?.component?.value]
-      return dat
+
+        z.preCheck = ['on_booking'].includes(d1?.stage?.value)
+          ? Number(netTotal)
+          : Math.round(netTotal - plotBookingAdv)
+
+        if (['on_booking'].includes(d1?.stage?.value)) {
+          z.elgible = true
+          z.elgFrom = Timestamp.now().toMillis()
+          return z
+        }
+        console.log('z value is ', d1?.stage?.value, '=>', z.value)
+        return z
+      } else {
+        z.value = ['Total_Other_Charges_Amenities:\t']?.includes(
+          d1?.stage?.value
+        )
+          ? Number(partBTotal)
+          : Math.round((netTotal - partBTotal) * (d1?.percentage / 100))
+
+        return z
+      }
     })
-    // newCostSheetA.push(x)
-    // i need unit_uID & unit details
-    const xData = {}
-
-    xData[`${uid}${'_cs'}`] = {
-      oldUnitDetailsObj: selUnitDetails,
-      newSqftPrice: Number(newSqftPrice),
-      soldPrice: Number(soldPrice),
-      costSheetA: newCostSheetA,
-    }
-
-    updateLeadCostSheetDetailsTo(
-      orgId,
-      id,
-      xData,
-      'nitheshreddy.email@gmail.com',
-      enqueueSnackbar,
-      resetForm
-    )
+    console.log('new ps is ', newPs)
+    setNewPS(newPs)
   }
-  const changeOverallCostFun = async (inx, payload, newValue) => {
-    const y = costSheetA
-    let total = 0
-    let gstTotal = 0
-
-    if (csMode === 'plot_cs') {
-      total = Math.round(selUnitDetails?.area * newValue)
-      gstTotal = Math.round(total * 0.05)
-    } else {
-      total = Math.round(selUnitDetails?.super_built_up_area * newValue)
-      gstTotal = Math.round(
-        Number(selUnitDetails?.super_built_up_area * newValue) * 0.05
-      )
+  const submitManagerApproval = (status) => {
+    const dataObj = {
+      status: status,
+      plotCS: costSheetA,
+      fullPs: newPlotPS,
+      addChargesCS: partBPayload,
+      T_balance: netTotal - selUnitDetails?.T_review,
+      T_Total: netTotal,
     }
-
-    y[inx].charges = newValue
-    y[inx].TotalSaleValue = total
-    y[inx].gst.value = gstTotal
-    y[inx].TotalNetSaleValueGsT = total + gstTotal
-    console.log('gen costSheetA', y)
-
-    setCostSheetA(y)
-    setTotalFun()
+    updateManagerApproval(
+      orgId,
+      selUnitDetails?.id,
+      dataObj,
+      user.email,
+      enqueueSnackbar
+    )
   }
   return (
     <div>
@@ -449,17 +175,17 @@ const CostBreakUpPdf = ({
         <div>
           <Formik
             enableReinitialize={true}
-            initialValues={initialState}
-            validationSchema={validate}
+            // initialValues={initialState}
+            // validationSchema={validate}
             onSubmit={(values, { resetForm }) => {
-              onSubmit(values, resetForm)
+              // onSubmit(values, resetForm)
             }}
           >
             {(formik) => (
               <PDFExport
                 paperSize="A4"
                 margin="0.5cm"
-                fileName={`${selUnitDetails?.unit_no}_${leadDetailsObj1?.Name}_Nirvana`}
+                fileName={`${selUnitDetails?.unit_no}`}
                 ref={pdfExportComponent}
               >
                 <div className="">
@@ -544,44 +270,18 @@ const CostBreakUpPdf = ({
                                           e.target.value
                                         )
                                         setNewSqftPrice(Number(e.target.value))
-                                        changeOverallCostFun(
-                                          inx,
-                                          d1,
-                                          e.target.value
-                                        )
-                                        // formik.setFieldValue(
-                                        //   'ratePerSqft',
+                                        // changeOverallCostFun(
+                                        //   inx,
+                                        //   d1,
                                         //   e.target.value
                                         // )
-                                        // console.log(
-                                        //   'what is =it',
-                                        //   value.value
-                                        // )
-                                        // formik.setFieldValue(
-                                        //   `${d1?.component?.value}`,
-                                        //   value
-                                        // )
                                       }}
-                                      // value={formik.values[`unit_cost_charges`]}
                                       value={d1?.charges}
-                                      // value={newSqftPrice}
-                                      // type="number"
                                     />
                                     <TextFieldFlat
                                       className=" hidden  "
                                       label=""
                                       name={d1?.component?.value}
-                                      // onChange={(value) => {
-                                      //   console.log('what is =it', value.value)
-                                      //   formik.setFieldValue(
-                                      //     `${d1?.component?.value}`,
-                                      //     value
-                                      //   )
-                                      // }}
-                                      // value={
-                                      //   formik.values[`${d1?.component?.value}`]
-                                      // }
-                                      // value={d1?.charges}
                                       type="number"
                                     />
                                   </td>
@@ -660,20 +360,6 @@ const CostBreakUpPdf = ({
                             </tbody>
                           </table>
                           <table className="w-full mt-1">
-                            {/* <thead>
-                            {' '}
-                            <tr className=" h-6  border-b-[0.2px] border-gray-300">
-                              <th className="w-[50%] text-[12px] text-left text-gray-700 text-[#8993a4] tracking-wide uppercase ">
-                                Particulars
-                              </th>
-                              <th className="w-[35%] text-[12px] text-left text-gray-700 text-[#8993a4] tracking-wide uppercase ">
-                                Timeline
-                              </th>
-                              <th className="w-[15%] text-[12px] text-right text-gray-700  text-[#8993a4] tracking-wide uppercase">
-                                Total Inc GST
-                              </th>
-                            </tr>
-                          </thead> */}
                             <tbody>
                               {partBPayload?.map((d1, inx) => (
                                 <tr
@@ -682,13 +368,37 @@ const CostBreakUpPdf = ({
                                 >
                                   <th className=" text-[12px] px-2 text-left text-gray-700 ">
                                     {d1?.component?.label}
-                                    {/* {d1?.units?.value === 'costpersqft' && `(${d1?.charges}% on Sale value)`} */}
                                   </th>
                                   <td className="text-[12px] px-2 text-left text-gray-700 ">
                                     {d1?.description}
                                   </td>
                                   <td className="text-[12px] px-2 text-right text-gray-700 ">
-                                    {/* {Number(d1?.charges)?.toLocaleString('en-IN')} */}
+                                    {/* {Number(
+                                      computeTotal(d1, selUnitDetails?.area)
+                                    )?.toLocaleString('en-IN')} */}
+                                    <TextFieldFlat
+                                      label=""
+                                      className="w-[100%] text-[12px] text-right font-bold border  border-[#919eab33] rounded pr-1 py-[4px] text-[#B76E00]"
+                                      name="rate_by"
+                                      onChange={(e) => {
+                                        // setNewSqftPrice(e.target.value)
+                                        // formik.setFieldValue(
+                                        //   'unit_cost_charges',
+                                        //   e.target.value
+                                        // )
+                                        // setNewSqftPrice(Number(e.target.value))
+                                        // changeOverallCostFun(
+                                        //   inx,
+                                        //   d1,
+                                        //   e.target.value
+                                        // )
+                                        handlePriceChange(inx, e.target.value)
+                                        // console.log('value sis',e , d1)
+                                      }}
+                                      value={d1?.charges}
+                                    />
+                                  </td>
+                                  <td className="text-[12px] px-2 text-right text-gray-700 ">
                                     {Number(
                                       computeTotal(d1, selUnitDetails?.area)
                                     )?.toLocaleString('en-IN')}
@@ -699,6 +409,7 @@ const CostBreakUpPdf = ({
                                 <th className="text-[12px] px-2 text-left  text-[#118D57] ">
                                   Total (B)
                                 </th>
+                                <td className="text-[12px] px-2 text-right text-gray-400 "></td>
                                 <td className="text-[12px] px-2 text-right text-gray-400 "></td>
                                 <td className="text-[12px] px-2 text-right text-[#118D57] font-bold ">
                                   ₹{partBTotal?.toLocaleString('en-IN')}
@@ -764,7 +475,9 @@ const CostBreakUpPdf = ({
                                   </th>
                                   <td className="text-[12px] px-2  text-left text-gray-700 ">
                                     {d1?.description}
+
                                   </td>
+
                                   <td className="text-[12px] px-2  text-right text-gray-800 ">
                                     ₹{d1?.value?.toLocaleString('en-IN')}
                                   </td>
@@ -791,10 +504,33 @@ const CostBreakUpPdf = ({
               </PDFExport>
             )}
           </Formik>
+          <div className="mt-5 left-0 text-right md:space-x-3 md:block flex flex-col-reverse py-3 mr-6 flex flex-col mt-2 z-10 flex flex-row justify-between mt-2 pr-6 bg-white shadow-lg absolute bottom-0  w-full">
+            <button
+              className="bg-red-400 text-white active:bg-pink-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+              type="submit"
+              onClick={() => {
+                submitManagerApproval('rejected')
+              }}
+              // disabled={loading}
+            >
+              {'Reject'}
+            </button>
+            <button
+              className="bg-green-400 text-white active:bg-pink-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+              type="submit"
+              // disabled={loading}
+              onClick={() => {
+                // mark man_cs_approval as true
+                submitManagerApproval('approved')
+              }}
+            >
+              {'Approve'}
+            </button>
+          </div>
         </div>
       )}
 
-      {pdfPreview && (
+      {/* {pdfPreview && (
         <CostBreakUpPdfPreview
           projectDetails={projectDetails}
           csMode={csMode}
@@ -811,9 +547,9 @@ const CostBreakUpPdf = ({
           newPlotPS={newPlotPS}
           showGstCol={showGstCol}
         />
-      )}
+      )} */}
     </div>
   )
 }
 
-export default CostBreakUpPdf
+export default CostBreakUpEditor
