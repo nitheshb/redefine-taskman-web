@@ -59,7 +59,7 @@ const LegalDocsHome = ({ project }) => {
 
   const Folders = [
     {
-      name: 'Docs',
+      name: 'Agreements',
       size: '2.4 GB',
       type: 'folder',
       modified: '10 Aug 2023',
@@ -70,7 +70,7 @@ const LegalDocsHome = ({ project }) => {
     },
     {
       img:"/folder.png",
-      name: 'Food',
+      name: 'EC',
       size: '2.4 GB',
       type: 'folder',
       modified: '10 Aug 2023',
@@ -80,7 +80,7 @@ const LegalDocsHome = ({ project }) => {
     },
     {
       img:"/folder.png",
-      name: 'Projects',
+      name: 'Registrations',
       size: '2.4 GB',
       type: 'folder',
       modified: '10 Aug 2023',
@@ -90,7 +90,7 @@ const LegalDocsHome = ({ project }) => {
     },
     {
       img:"/folder.png",
-      name: 'Sport',
+      name: 'Other Docs',
       size: '2.4 GB',
       type: 'folder',
       modified: '10 Aug 2023',
@@ -109,7 +109,7 @@ const LegalDocsHome = ({ project }) => {
     },
     {
       img:"/jpgIcon.png",
-      name: 'Cover-8.jpg',
+      name: 'Unit-101',
       size: '2.2 MB',
       type: 'jpg',
       modified: '10 Aug 2023',
@@ -119,7 +119,7 @@ const LegalDocsHome = ({ project }) => {
     },
     {
       img:"/jpgIcon.png",
-      name: 'Cover-12.jpg',
+      name: 'Unit-102',
       size: '1.2 MB',
       type: 'jpg',
       modified: '10 Aug 2023',
@@ -130,7 +130,7 @@ const LegalDocsHome = ({ project }) => {
     },
     {
       img:"/music.png",
-      name: 'Music.mp3',
+      name: 'Unit-103',
       size: '177 KB',
       type: 'mp3',
       modified: '10 Aug 2023',
@@ -139,7 +139,7 @@ const LegalDocsHome = ({ project }) => {
     },
     {
       img:"/pptIcon.png",
-      name: 'presentation.ppt',
+      name: 'Unit-104',
       size: '144 MB',
       type: 'ppt',
       modified: '10 Aug 2023',
@@ -148,7 +148,7 @@ const LegalDocsHome = ({ project }) => {
     },
     {
       img:"/video.png",
-      name: 'expertise.mp4',
+      name: 'Unit-203',
       size: '1.4 GB',
       type: 'mp4',
       modified: '10 Aug 2023',
@@ -157,7 +157,7 @@ const LegalDocsHome = ({ project }) => {
     },
     {
       img:"/docxIcon.png",
-      name: 'data.docx',
+      name: 'Unit-206',
       size: '10 MB',
       type: 'docx',
       modified: '10 Aug 2023',
@@ -384,10 +384,10 @@ boxShadow:2,
             :null}
             {formats==="grid" ?
              <div style={{  width: '98%' }} className='mt-16 h-auto'>
-              <div className="ml-14 mt-5 font-bold">Folders</div>
+              <div className="ml-3 mt-5 font-bold">Master Documents</div>
             <ul className="">
               <li className="py-2">
-             <section className="flex flex-row mt-5 grid grid-cols-4 ">
+             <section className="flex flex-row mt-5 grid grid-cols-5 ">
 
             {Folders?.map((project, i) => (
                     // <span key={i}>{project?.projectName}</span>
@@ -398,7 +398,7 @@ boxShadow:2,
 
                       <div
                         key={i}
-                        className=" cursor-pointer relative mx-auto break-words bg-white  mb-6  rounded-xl  mr-8 transition duration-300 ease-in-out  "
+                        className=" cursor-pointer relative mx-auto break-words bg-white  mb-6  rounded-xl  transition duration-300 ease-in-out  "
                         onClick={() => dispDoc(project)}
                       >
                         {/* <FileCardAnim projectDetails={project} /> */}
@@ -431,10 +431,10 @@ boxShadow:2,
           </li>
             </ul>
 
-            <div className='ml-14 mt-5 font-bold'>Files</div>
+            <div className='ml-2 mt-5 font-bold'>Unit Wise Documents</div>
             <ul className="">
               <li className="py-2">
-             <section className="flex flex-row mt-5 grid grid-cols-4 ">
+             <section className="flex flex-row mt-5 grid grid-cols-5 ">
 
             {Folders?.map((project, i) => (
                     // <span key={i}>{project?.projectName}</span>
@@ -445,7 +445,7 @@ boxShadow:2,
 
                       <div
                         key={i}
-                        className=" cursor-pointer relative mx-auto break-words bg-white  mb-6  rounded-xl  mr-8 transition duration-300 ease-in-out  "
+                        className=" cursor-pointer relative mx-auto break-words bg-white  mb-2  rounded-xl  transition duration-300 ease-in-out  "
                         onClick={() => dispDoc(project)}
                       >
                         {/* <FileCardAnim projectDetails={project} /> */}
