@@ -590,7 +590,10 @@ img
  .blue-bg-gradient{
   background: radial-gradient(100% 100% at 53.13% 0,#31e7fa 0,#9bb7ff 52.6%,#74cdff 100%) !important;
  }
-
+ .custom-header {
+  background-color: lightgray;
+  font-weight: bold;
+ }
 
  body {
   margin: 0;
