@@ -43,6 +43,11 @@ import ViewEditTaskManForm from '../A_TaskMan/ViewEditTaskManForm'
 import BookingPaymentFlow from '../A_CrmModule/A_Crm_sideFormBodies.tsx/booking_payment'
 import CsMangerApprovalFlow from '../A_CrmModule/A_Crm_sideFormBodies.tsx/cs_manager_approval'
 import Cs_customerKyc from '../A_CrmModule/A_Crm_sideFormBodies.tsx/cs_customerKyc'
+import Crm_legal_Clarity from '../A_CrmModule/A_Crm_sideFormBodies.tsx/cs_legal_ClarityBody'
+import Crm_ATS_Draft from '../A_CrmModule/A_Crm_sideFormBodies.tsx/cs_ats_draft'
+import Crm_Sd_approval from '../A_CrmModule/A_Crm_sideFormBodies.tsx/cs_sd_approval'
+import Crm_ATS_approval from '../A_CrmModule/A_Crm_sideFormBodies.tsx/cs_ats_approval'
+import Crm_Unit_Posession from '../A_CrmModule/A_Crm_sideFormBodies.tsx/cs_posession'
 
 const CrmSiderForm = ({
   BlockFeed,
@@ -168,6 +173,21 @@ const CrmSiderForm = ({
 
                 {title === 'crm_KYC' && (
                   <Cs_customerKyc title={title} dialogOpen={setOpen} selUnitPayload={selUnitPayload} />
+                )}
+                {title === 'crm_legal_clarity' && (
+                  <Crm_legal_Clarity title={title} dialogOpen={setOpen} selUnitPayload={selUnitPayload} />
+                )}
+                {title === 'crm_ATS_Draft' && (
+                  <Crm_ATS_Draft title={title} dialogOpen={setOpen} selUnitPayload={selUnitPayload} />
+                )}
+                {title === 'crm_SD_Approval' && (
+                  <Crm_Sd_approval title={title} dialogOpen={setOpen} selUnitPayload={selUnitPayload} />
+                )}
+                   {title === 'crm_ATS_Approval' && (
+                  <Crm_ATS_approval title={title} dialogOpen={setOpen} selUnitPayload={selUnitPayload} />
+                )}
+                  {title === 'crm_posession' && (
+                  <Crm_Unit_Posession title={title} dialogOpen={setOpen} selUnitPayload={selUnitPayload} />
                 )}
 
 

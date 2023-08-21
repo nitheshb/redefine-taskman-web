@@ -1357,9 +1357,10 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                   {/* section 3*/}
                                   <div
                                     className={`w-full cursor-pointer  h-[80px] ${
-                                      finData?.kyc_status
-                                        ? 'bg-green-100'
-                                        : 'bg-[#F1F5F9] '
+                                      finData?.kyc_status == "approved"
+                                      ? 'bg-green-100'
+                                      :finData?.kyc_status == "rejected"
+                                      ? 'bg-[#ffdbdb]' : 'bg-[#F1F5F9] '
                                     }  p-3 rounded-md mx-1`}
                                     style={{
                                       display: 'inline-block',
@@ -1375,9 +1376,10 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
                                         <NewspaperIcon
                                           className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
-                                            finData?.kyc_status
-                                              ? 'text-green-900'
-                                              : 'text-gray-600 '
+                                            finData?.kyc_status == "approved"
+                                            ? 'bg-green-100'
+                                            :finData?.kyc_status == "rejected"
+                                            ? 'bg-[#ffdbdb]' : 'bg-[#F1F5F9] '
                                           }`}
                                           aria-hidden="true"
                                         />
@@ -1757,9 +1759,10 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                   {/* section 2 */}
                                   <div
                                     className={`w-full  h-[80px] ${
-                                      finData?.man_cs_approval
-                                        ? 'bg-green-100'
-                                        : 'bg-[#F1F5F9] '
+                                      finData?.man_cs_approval == "approved"
+                                      ? 'bg-green-100'
+                                      :finData?.man_cs_approval == "rejected"
+                                      ? 'bg-[#ffdbdb]' : 'bg-[#F1F5F9] '
                                     }  p-3 rounded-md mx-1`}
                                     style={{
                                       display: 'inline-block',
@@ -1767,16 +1770,19 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                     }}
 
                                     onClick={() => {
-                                      setIsSubTopic(' ')
+                                      setSelUnitDetails(finData)
+                                      setIsSubTopicOpen(true)
+                                      setIsSubTopic('crm_legal_clarity')
                                     }}
                                   >
                                     <div className="flex flex-col items-center justify-center mr-1  mb-1 mt-[5px]">
                                       <div className="flex flex-none items-center justify-center rounded-lg bg-green-50 group-hover:bg-white">
                                         <ChartPieIcon
                                           className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
-                                            finData?.man_cs_approval
-                                              ? 'text-green-900'
-                                              : 'text-gray-600 '
+                                            finData?.man_ats_approval == "approved"
+                                        ? 'bg-green-100'
+                                        :finData?.man_ats_approval == "rejected"
+                                        ? 'bg-[#ffdbdb]' : 'bg-[#F1F5F9] '
                                           }`}
                                           aria-hidden="true"
                                         />
@@ -1789,15 +1795,20 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                   {/* section 3*/}
                                   <div
                                     className={`w-full  h-[80px] ${
-                                      finData?.kyc_status
-                                        ? 'bg-green-100'
-                                        : 'bg-[#F1F5F9] '
+                                      finData?.man_ats_approval == "approved"
+                                      ? 'bg-green-100'
+                                      :finData?.man_ats_approval == "rejected"
+                                      ? 'bg-[#ffdbdb]' : 'bg-[#F1F5F9] '
                                     }  p-3 rounded-md mx-1`}
                                     style={{
                                       display: 'inline-block',
                                       alignSelf: 'flex-end',
                                     }}
-
+                                    onClick={() => {
+                                      setSelUnitDetails(finData)
+                                      setIsSubTopicOpen(true)
+                                      setIsSubTopic('crm_ATS_Draft')
+                                    }}
                                   >
                                     <div className="flex flex-col items-center justify-center mr-1  mb-1 mt-[5px]">
                                       <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
@@ -2190,23 +2201,29 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                   {/* section 2 */}
                                   <div
                                     className={`w-full  h-[80px] ${
-                                      finData?.man_cs_approval
-                                        ? 'bg-green-100'
-                                        : 'bg-[#F1F5F9] '
+                                      finData?.both_sd_approval == "approved"
+                                      ? 'bg-green-100'
+                                      :finData?.both_sd_approval == "rejected"
+                                      ? 'bg-[#ffdbdb]' : 'bg-[#F1F5F9] '
                                     }  p-3 rounded-md mx-1`}
                                     style={{
                                       display: 'inline-block',
                                       alignSelf: 'flex-end',
                                     }}
-
+                                    onClick={() => {
+                                      setSelUnitDetails(finData)
+                                      setIsSubTopicOpen(true)
+                                      setIsSubTopic('crm_SD_Approval')
+                                    }}
                                   >
                                     <div className="flex flex-col items-center justify-center mr-1  mb-1 mt-[5px]">
                                       <div className="flex flex-none items-center justify-center rounded-lg bg-green-50 group-hover:bg-white">
                                         <ChartPieIcon
                                           className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
-                                            finData?.ats_creation
-                                              ? 'text-green-900'
-                                              : 'text-gray-600 '
+                                            finData?.both_sd_approval == "approved"
+                                            ? 'bg-green-100'
+                                            :finData?.both_sd_approval == "rejected"
+                                            ? 'bg-[#ffdbdb]' : 'bg-[#F1F5F9] '
                                           }`}
                                           aria-hidden="true"
                                         />
@@ -2219,23 +2236,29 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                   {/* section 3*/}
                                   <div
                                     className={`w-full  h-[80px] ${
-                                      finData?.both_ats_approval
-                                        ? 'bg-green-100'
-                                        : 'bg-[#F1F5F9] '
+                                      finData?.both_sd_approval == "approved"
+                                      ? 'bg-green-100'
+                                      :finData?.both_sd_approval == "rejected"
+                                      ? 'bg-[#ffdbdb]' : 'bg-[#F1F5F9] '
                                     }  p-3 rounded-md mx-1`}
                                     style={{
                                       display: 'inline-block',
                                       alignSelf: 'flex-end',
                                     }}
-
+                                    onClick={() => {
+                                      setSelUnitDetails(finData)
+                                      setIsSubTopicOpen(true)
+                                      setIsSubTopic('crm_SD_Approval')
+                                    }}
                                   >
                                     <div className="flex flex-col items-center justify-center mr-1  mb-1 mt-[5px]">
                                       <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
                                         <NewspaperIcon
                                           className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
-                                            finData?.both_ats_approval
-                                              ? 'text-green-900'
-                                              : 'text-gray-600 '
+                                            finData?.both_sd_approval == "approved"
+                                            ? 'bg-green-100'
+                                            :finData?.both_sd_approval == "rejected"
+                                            ? 'bg-[#ffdbdb]' : 'bg-[#F1F5F9] '
                                           }`}
                                           aria-hidden="true"
                                         />
@@ -2620,23 +2643,29 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                   {/* section 2 */}
                                   <div
                                     className={`w-full  h-[80px] ${
-                                      finData?.man_cs_approval
-                                        ? 'bg-green-100'
-                                        : 'bg-[#F1F5F9] '
+                                      finData?.ats_approval == "approved"
+                                      ? 'bg-green-100'
+                                      :finData?.ats_approval == "rejected"
+                                      ? 'bg-[#ffdbdb]' : 'bg-[#F1F5F9] '
                                     }  p-3 rounded-md mx-1`}
                                     style={{
                                       display: 'inline-block',
                                       alignSelf: 'flex-end',
                                     }}
-
+                                    onClick={() => {
+                                      setSelUnitDetails(finData)
+                                      setIsSubTopicOpen(true)
+                                      setIsSubTopic('crm_ATS_Approval')
+                                    }}
                                   >
                                     <div className="flex flex-col items-center justify-center mr-1  mb-1 mt-[5px]">
                                       <div className="flex flex-none items-center justify-center rounded-lg bg-green-50 group-hover:bg-white">
                                         <ChartPieIcon
                                           className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
-                                            finData?.ats_creation
-                                              ? 'text-green-900'
-                                              : 'text-gray-600 '
+                                            finData?.ats_approval == "approved"
+                                            ? 'bg-green-100'
+                                            :finData?.ats_approval == "rejected"
+                                            ? 'bg-[#ffdbdb]' : 'bg-[#F1F5F9] '
                                           }`}
                                           aria-hidden="true"
                                         />
@@ -2649,22 +2678,29 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                   {/* section 3*/}
                                   <div
                                     className={`w-full  h-[80px] ${
-                                      finData?.both_ats_approval
-                                        ? 'bg-green-100'
-                                        : 'bg-[#F1F5F9] '
+                                      finData?.ats_approval == "approved"
+                                      ? 'bg-green-100'
+                                      :finData?.ats_approval == "rejected"
+                                      ? 'bg-[#ffdbdb]' : 'bg-[#F1F5F9] '
                                     }  p-3 rounded-md mx-1`}
                                     style={{
                                       display: 'inline-block',
                                       alignSelf: 'flex-end',
+                                    }}
+                                    onClick={() => {
+                                      setSelUnitDetails(finData)
+                                      setIsSubTopicOpen(true)
+                                      setIsSubTopic('crm_ATS_Approval')
                                     }}
                                   >
                                     <div className="flex flex-col items-center justify-center mr-1  mb-1 mt-[5px]">
                                       <div className="flex flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
                                         <NewspaperIcon
                                           className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
-                                            finData?.both_ats_approval
-                                              ? 'text-green-900'
-                                              : 'text-gray-600 '
+                                            finData?.ats_approval == "approved"
+                                            ? 'bg-green-100'
+                                            :finData?.ats_approval == "rejected"
+                                            ? 'bg-[#ffdbdb]' : 'bg-[#F1F5F9] '
                                           }`}
                                           aria-hidden="true"
                                         />
@@ -2677,22 +2713,29 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                   {/* section 4 */}
                                   <div
                                     className={`w-[120px]  h-[80px] ${
-                                      finData?.man_cs_approval
-                                        ? 'bg-green-100'
-                                        : 'bg-[#F1F5F9] '
+                                      finData?.kyc_approval == "approved"
+                                      ? 'bg-green-100'
+                                      :finData?.kyc_approval == "rejected"
+                                      ? 'bg-[#ffdbdb]' : 'bg-[#F1F5F9] '
                                     }  p-3 rounded-md mx-1`}
                                     style={{
                                       display: 'inline-block',
                                       alignSelf: 'flex-end',
+                                    }}
+                                    onClick={() => {
+                                      setSelUnitDetails(finData)
+                                      setIsSubTopicOpen(true)
+                                      setIsSubTopic('crm_posession')
                                     }}
                                   >
                                     <div className="flex flex-col items-center justify-center mr-1  mb-1 mt-[5px]">
                                       <div className="flex flex-none items-center justify-center rounded-lg bg-green-50 group-hover:bg-white">
                                         <ChartPieIcon
                                           className={`h-4 w-4 text-gray-600 group-hover:text-indigo-600 hover:text-green-600 ${
-                                            finData?.ats_creation
-                                              ? 'text-green-900'
-                                              : 'text-gray-600 '
+                                            finData?.kyc_approval == "approved"
+                                            ? 'bg-green-100'
+                                            :finData?.kyc_approval == "rejected"
+                                            ? 'bg-[#ffdbdb]' : 'bg-[#F1F5F9] '
                                           }`}
                                           aria-hidden="true"
                                         />

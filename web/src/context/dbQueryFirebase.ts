@@ -3340,6 +3340,136 @@ export const updateManagerApproval = async (
   }
   return
 }
+export const updateLegalClarityApproval = async (
+  orgId,
+  unitId,
+  data,
+  by,
+  enqueueSnackbar
+) => {
+  try {
+    console.log('data is===>', unitId, data)
+    const {status} = data
+    await updateDoc(doc(db, `${orgId}_units`, unitId), {
+      legal_clarity: status
+    })
+    enqueueSnackbar('Legal Clarified..!', {
+      variant: 'success',
+    })
+  } catch (error) {
+    console.log('Legal Clarified Updation Failed', error, {
+      ...data,
+    })
+    enqueueSnackbar('Legal Clarified  Approved Updation Failed .', {
+      variant: 'error',
+    })
+  }
+  return
+}
+export const updateATSApproval = async (
+  orgId,
+  unitId,
+  data,
+  by,
+  enqueueSnackbar
+) => {
+  try {
+    console.log('data is===>', unitId, data)
+    const {status} = data
+    await updateDoc(doc(db, `${orgId}_units`, unitId), {
+      man_ats_approval: status
+    })
+    enqueueSnackbar('ATS Approved..!', {
+      variant: 'success',
+    })
+  } catch (error) {
+    console.log('ATS Approved Updation Failed', error, {
+      ...data,
+    })
+    enqueueSnackbar('ATS Approved Updation Failed .', {
+      variant: 'error',
+    })
+  }
+  return
+}
+export const updateKycApproval = async (
+  orgId,
+  unitId,
+  data,
+  by,
+  enqueueSnackbar
+) => {
+  try {
+    console.log('data is===>', unitId, data)
+    const {status} = data
+    await updateDoc(doc(db, `${orgId}_units`, unitId), {
+      kyc_status: status
+    })
+    enqueueSnackbar('KYC Approved..!', {
+      variant: 'success',
+    })
+  } catch (error) {
+    console.log('KYC Approved Updation Failed', error, {
+      ...data,
+    })
+    enqueueSnackbar('KYC Approved Updation Failed .', {
+      variant: 'error',
+    })
+  }
+  return
+}
+export const updatePosessionApproval = async (
+  orgId,
+  unitId,
+  data,
+  by,
+  enqueueSnackbar
+) => {
+  try {
+    console.log('data is===>', unitId, data)
+    const {status} = data
+    await updateDoc(doc(db, `${orgId}_units`, unitId), {
+      kyc_approval: status
+    })
+    enqueueSnackbar('Posession Approved..!', {
+      variant: 'success',
+    })
+  } catch (error) {
+    console.log('Posession Approved Updation Failed', error, {
+      ...data,
+    })
+    enqueueSnackbar('Posession Approved Updation Failed .', {
+      variant: 'error',
+    })
+  }
+  return
+}
+export const updateSDApproval = async (
+  orgId,
+  unitId,
+  data,
+  by,
+  enqueueSnackbar
+) => {
+  try {
+    console.log('data is===>', unitId, data)
+    const {status} = data
+    await updateDoc(doc(db, `${orgId}_units`, unitId), {
+      both_sd_approval: status
+    })
+    enqueueSnackbar('Sale Deed Approved..!', {
+      variant: 'success',
+    })
+  } catch (error) {
+    console.log('SD Approved Updation Failed', error, {
+      ...data,
+    })
+    enqueueSnackbar('SD Approved Updation Failed .', {
+      variant: 'error',
+    })
+  }
+  return
+}
 export const updateUnitCrmOwner = async (
   orgId,
   unitId,
