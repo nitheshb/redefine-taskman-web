@@ -3,15 +3,21 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import { useEffect, useState } from 'react'
 
+import { Switch } from '@headlessui/react'
 import { SearchIcon } from '@heroicons/react/outline'
 import { ArrowNarrowRightIcon, PlusIcon } from '@heroicons/react/solid'
 import { PaperClipIcon, UsersIcon } from '@heroicons/react/solid'
 import { TabList } from '@mui/lab'
 import { Box, Card, Grid, styled } from '@mui/material'
+import { Checkbox } from '@mui/material'
 import { startOfDay } from 'date-fns'
+import { Field, Form, Formik } from 'formik'
 import { useTranslation } from 'react-i18next' // styled components
 
-import { streamGetAllTaskManTasks } from 'src/context/dbQueryFirebase'
+import {
+  streamGetAllTaskManTasks,
+  streamGetAllParticipantTasks,
+} from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import { supabase } from 'src/context/supabase'
 import CSVDownloader from 'src/util/csvDownload'
@@ -64,6 +70,8 @@ const TodoListView = ({
   const [showSettings, setShowSettings] = useState(true)
   const [searchText, setSearchText] = useState('')
   const [selPriority, setSelPriority] = useState('')
+  const [showCompletedTasks, setShowCompletedTasks] = useState(false)
+  const [showOnlyDone, setShowOnlyDone] = useState(false)
 
   const [sourceDateRange, setSourceDateRange] = useState(
     startOfDay(d).getTime()
@@ -77,14 +85,20 @@ const TodoListView = ({
   const [isClicked, setisClicked] = useState('dept_tasks')
   const [subSection, setSubSection] = useState('all_business')
   const [sortType, setSortType] = useState('Latest')
+  const [isChecked, setIsChecked] = useState(false)
+
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked)
+  }
 
   // const [leadsFetchedData, setLeadsFetchedData] = useState([])
   useEffect(() => {
-   console.log('leads name is ', moduleName)
-  }, [])
+    getTasksDataFun()
+  }, [showCompletedTasks, showOnlyDone])
 
   useEffect(() => {
     getTasksDataFun()
+
     // Subscribe to real-time changes in the `${orgId}_accounts` table
     const subscription = supabase
       .from(`maahomes_TM_Tasks`)
@@ -95,50 +109,55 @@ const TodoListView = ({
         const updatedData = payload.new
         const { id } = payload.old
         const updatedLeadLogs = [...businessData_F]
-
         if (
-          updatedData.by_uid === user?.uid &&
-          updatedData.to_uid === user?.uid
+          updatedData.by_uid === user?.uid ||
+          updatedData?.to_uid === user?.uid ||
+          updatedData?.followersUid.includes(user?.uid)
         ) {
-          setPersonalData_F((prevLogs) => {
-            const existingLog = prevLogs.find((log) => log.id === id)
+          if (
+            updatedData.by_uid === user?.uid &&
+            updatedData.to_uid === user?.uid
+          ) {
+            setPersonalData_F((prevLogs) => {
+              const existingLog = prevLogs.find((log) => log.id === id)
 
-            if (existingLog) {
-              console.log('Existing record found!')
-              if (payload.new.status === 'Done') {
-                const updatedLogs = prevLogs.filter((log) => log.id != id)
-                return [...updatedLogs]
+              if (existingLog) {
+                console.log('Existing record found!')
+                if (payload.new.status === 'Done') {
+                  const updatedLogs = prevLogs.filter((log) => log.id != id)
+                  return [...updatedLogs]
+                } else {
+                  const updatedLogs = prevLogs.map((log) =>
+                    log.id === id ? payload.new : log
+                  )
+                  return [...updatedLogs]
+                }
               } else {
-                const updatedLogs = prevLogs.map((log) =>
-                  log.id === id ? payload.new : log
-                )
-                return [...updatedLogs]
+                console.log('New record added!')
+                return [...prevLogs, payload.new]
               }
-            } else {
-              console.log('New record added!')
-              return [...prevLogs, payload.new]
-            }
-          })
-        } else {
-          setBusinessData_F((prevLogs) => {
-            const existingLog = prevLogs.find((log) => log.id === id)
+            })
+          } else {
+            setBusinessData_F((prevLogs) => {
+              const existingLog = prevLogs.find((log) => log.id === id)
 
-            if (existingLog) {
-              console.log('Existing record found!')
-              if (payload.new.status === 'Done') {
-                const updatedLogs = prevLogs.filter((log) => log.id != id)
-                return [...updatedLogs]
+              if (existingLog) {
+                console.log('Existing record found!')
+                if (payload.new.status === 'Done') {
+                  const updatedLogs = prevLogs.filter((log) => log.id != id)
+                  return [...updatedLogs]
+                } else {
+                  const updatedLogs = prevLogs.map((log) =>
+                    log.id === id ? payload.new : log
+                  )
+                  return [...updatedLogs]
+                }
               } else {
-                const updatedLogs = prevLogs.map((log) =>
-                  log.id === id ? payload.new : log
-                )
-                return [...updatedLogs]
+                console.log('New record added!')
+                return [...prevLogs, payload.new]
               }
-            } else {
-              console.log('New record added!')
-              return [...prevLogs, payload.new]
-            }
-          })
+            })
+          }
         }
       })
       .subscribe()
@@ -267,6 +286,18 @@ const TodoListView = ({
       'snap',
       {
         uid,
+        statusVAl: showCompletedTasks,
+        showOnlyDone: showOnlyDone,
+      },
+      (error) => []
+    )
+    const steamParticipantLogs = await streamGetAllParticipantTasks(
+      orgId,
+      'snap',
+      {
+        uid,
+        statusVAl: showCompletedTasks,
+        showOnlyDone: showOnlyDone,
       },
       (error) => []
     )
@@ -283,16 +314,21 @@ const TodoListView = ({
         (d.by_uid != user?.uid && d.to_uid === user?.uid) ||
         (d.by_uid === user?.uid && d.to_uid != user?.uid)
     )
-    const z = await steamLeadLogs.filter(
-      (d) => {
+    // const z = await steamLeadLogs.filter(
+    //   (d) => {
+    //     console.log(
+    //       'z o is values are',
+    //       d.followersUid.includes('adFBX9QVHfbdDbxrH3TPKE3mW4M2'),
+    //       d.followersUid
+    //     )
+    //     if (d.followersUid.includes('adFBX9QVHfbdDbxrH3TPKE3mW4M2')) return d
+    //   }
+    //   // (d.by_uid != user?.uid && d.to_uid === user?.uid) ||
+    //   // (d.by_uid === user?.uid && d.to_uid != user?.uid)
+    // )
+    const z = await steamParticipantLogs
 
-        console.log('z o is values are',d.followersUid.includes('adFBX9QVHfbdDbxrH3TPKE3mW4M2'), d.followersUid )
-        if(d.followersUid.includes('adFBX9QVHfbdDbxrH3TPKE3mW4M2')) return d}
-        // (d.by_uid != user?.uid && d.to_uid === user?.uid) ||
-        // (d.by_uid === user?.uid && d.to_uid != user?.uid)
-    )
-
-   await  console.log('z o is ', z)
+    await console.log('z o is ', z)
     await setBusinessData_F(y)
     await sortDataFun(y)
     await sortPersonalDataFun(x)
@@ -341,6 +377,11 @@ const TodoListView = ({
     { lab: 'Cleared', val: 'cleared' },
     { lab: 'Uncleared', val: 'uncleared' },
   ]
+  const changeFun = () => {
+    setShowCompletedTasks(!showCompletedTasks)
+    setShowOnlyDone(false)
+  }
+
   return (
     <>
       <Box pb={4} className="font-sanF">
@@ -569,7 +610,23 @@ const TodoListView = ({
                   </select>
                 </div>
 
-                <span
+                <div className="flex items-center ml-2 mb-2 h-[31px]">
+                  <Checkbox
+                    color="primary"
+                    checked={showOnlyDone}
+                    onClick={() => {
+                      setShowCompletedTasks(true)
+                      setShowOnlyDone(!showOnlyDone)
+                    }}
+                  />
+                  <label
+                    htmlFor="area"
+                    className="label font-regular text-[10px] font-bodyLato"
+                  >
+                    Show Only Completed
+                  </label>
+                </div>
+                {/* <span
                   className="mt-2 ml-2 text-red-400 cursor-pointer text-xs"
                   onClick={() => {
                     handleFilterClearFun()
@@ -577,7 +634,7 @@ const TodoListView = ({
                 >
                   {' '}
                   Clear
-                </span>
+                </span> */}
               </div>
               <span style={{ display: '' }}>
                 <CSVDownloader
@@ -632,7 +689,7 @@ const TodoListView = ({
               </div>
             )}
             {isClicked === 'business_tasks' && (
-              <div className=" rounded px-1 mt-4 mb-3">
+              <div className=" rounded px-1 mt-4 mb-3 flex flex-row justify-between">
                 <div className="sm:flex items-center justify-between bg-white rounded">
                   <div className="flex items-center">
                     {[
@@ -716,13 +773,33 @@ const TodoListView = ({
                     })}
                   </div>
                 </div>
+                <div className="flex flex-row">
+                  <span className="text-[10px] mt-1 mr-1">Show Completed</span>
+                  <Switch
+                    checked={showCompletedTasks}
+                    onChange={changeFun}
+                    className={`${
+                      showCompletedTasks ? 'bg-blue-600' : 'bg-gray-200'
+                    } relative inline-flex h-6 w-11 items-center rounded-full`}
+                  >
+                    <span
+                      className={`${
+                        showCompletedTasks ? 'translate-x-6' : 'translate-x-1'
+                      } inline-block h-4 w-4 transform rounded-full bg-white transition`}
+                    />
+                  </Switch>
+                </div>
               </div>
             )}
             {((isClicked === 'dept_tasks' && taskListA.length === 0) ||
-              (isClicked === 'personal_tasks' && personalData_F.length === 0) ||
+              (isClicked === 'personal_tasks' && personalData_D.length === 0) ||
               (isClicked === 'business_tasks' &&
-                businessData_F.length === 0)) && (
-              <div className="py-8 px-8 flex flex-col items-center bg-red-100 rounded">
+                businessSection_D.length === 0)) && (
+              <div
+                className={`py-8 px-8 flex flex-col items-center bg-red-100 rounded ${
+                  isClicked === 'personal_tasks' ? 'mt-[55px]' : ''
+                }`}
+              >
                 <div className="font-md font-medium text-xs mb-4 text-gray-800 items-center">
                   <img
                     className="w-[180px] h-[180px] inline"
@@ -1067,158 +1144,178 @@ const TodoListView = ({
                 </table>
               </div>
             )}
-            {['personal_tasks'].includes(isClicked) && (
-              <div className="overflow-x-auto mt-2 rounded-xl">
-                <table className="w-full whitespace-nowrap">
-                  <thead className="">
-                    <tr className="tabHeader">
-                      <th className="text-left pl-[1rem]">
-                        {' '}
-                        <span className="headTxt" tabIndex="0" role="button">
-                          S.no{' '}
-                        </span>
-                      </th>
-                      <th className="text-left">
-                        {' '}
-                        <span
-                          className="max-w-[300px] headTxt"
-                          tabIndex="0"
-                          role="button"
+            {['personal_tasks'].includes(isClicked) &&
+              personalData_D?.length > 0 && (
+                <div className="overflow-x-auto mt-2 rounded-xl">
+                  <table className="w-full whitespace-nowrap">
+                    <thead className="">
+                      <tr className="tabHeader">
+                        <th className="text-left pl-[1rem]">
+                          {' '}
+                          <span className="headTxt" tabIndex="0" role="button">
+                            S.no{' '}
+                          </span>
+                        </th>
+                        <th className="text-left">
+                          {' '}
+                          <span
+                            className="max-w-[300px] headTxt"
+                            tabIndex="0"
+                            role="button"
+                          >
+                            Task{' '}
+                          </span>
+                        </th>
+                        <th>
+                          {' '}
+                          <span
+                            className="text-left headTxt"
+                            tabIndex="0"
+                            role="button"
+                          >
+                            Created By
+                          </span>
+                        </th>
+                        <th className="pl-6 text-left headTxt">
+                          {' '}
+                          <span tabIndex="0" role="button">
+                            Status{' '}
+                          </span>
+                        </th>
+                        <th className=" text-left pl-[3rem] headTxt">
+                          {' '}
+                          <span className="" tabIndex="0" role="button">
+                            Deadline{' '}
+                          </span>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {personalData_D?.map((dat, i) => (
+                        <tr
+                          tabIndex={0}
+                          className="focus:outline-none h-16 border border-gray-100 rounded"
+                          key={i}
+                          onClick={() => {
+                            selTaskManObjF(dat)
+                          }}
                         >
-                          Task{' '}
-                        </span>
-                      </th>
-                      <th>
-                        {' '}
-                        <span
-                          className="text-left headTxt"
-                          tabIndex="0"
-                          role="button"
-                        >
-                          Created By
-                        </span>
-                      </th>
-                      <th className="pl-6 text-left headTxt">
-                        {' '}
-                        <span tabIndex="0" role="button">
-                          Status{' '}
-                        </span>
-                      </th>
-                      <th className=" text-left pl-[3rem] headTxt">
-                        {' '}
-                        <span className="" tabIndex="0" role="button">
-                          Deadline{' '}
-                        </span>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {personalData_D?.map((dat, i) => (
-                      <tr
-                        tabIndex={0}
-                        className="focus:outline-none h-16 border border-gray-100 rounded"
-                        key={i}
-                        onClick={() => {
-                          selTaskManObjF(dat)
-                        }}
-                      >
-                        <td>
-                          <div className="ml-5">
-                            <div className="rounded-sm h-5 w-5 flex flex-shrink-0 justify-center items-center relative">
-                              {i + 1}
-                            </div>
-                          </div>
-                        </td>
-                        <td className=" max-w-[300px]">
-                          <div className="flex items-center ">
-                            <div className="flex flex-col">
-                              <p className="text-base max-w-[350px] text-[13px] overflow-ellipsis overflow-hidden font-semibold leading-none text-blue-800 mr-2 mt-2">
-                                {dat?.title}
-                              </p>
-                              {dat?.comments?.length > 0 && (
-                                <p className="text-[11px]   leading-none  pr-2 text-green-800  mt-[6px]    rounded-full   mb-1 mr-2  ">
-                                  {
-                                    dat?.comments[dat?.comments?.length - 1]
-                                      ?.msg
-                                  }
-                                </p>
-                              )}
-                              <div className="flex flex-row">
-                                <p className="text-[9px]   leading-none  pr-2 text-green-800  mt-[6px]  py-[4px]  rounded-full   mb-1 mr-2  ">
-                                  {dat?.priority?.toUpperCase()}
-                                </p>
-                                <section>
-                                  <PaperClipIcon className="w-3 h-3 mr-[2px] inline-block text-gray-400 " />
-                                </section>
-                                <p className="text-[9px]  leading-none text-red-800  mt-[6px] font-sanF  py-[4px]  rounded-full   mb-1 mr-4  ">
-                                  {dat?.attachmentsCount || 0}
-                                </p>
-                                <section>
-                                  <UsersIcon className="w-3 h-3 mr-[2px]  inline-block text-gray-400  " />{' '}
-                                </section>
-                                <p className="text-[9px]  leading-none text-red-800  mt-[6px] font-sanF  py-[4px]  rounded-full   mb-1 mr-4  ">
-                                  {dat?.participantsA?.length || 0}
-                                </p>
+                          <td>
+                            <div className="ml-5">
+                              <div className="rounded-sm h-5 w-5 flex flex-shrink-0 justify-center items-center relative">
+                                {i + 1}
                               </div>
                             </div>
-                          </div>
-                        </td>
-                        <td className="text">
-                          <p className="text-[13px] leading-none text-[#212b36] ">
-                            {dat?.by_name}
-                          </p>
-                        </td>
-                        <td className="pl-5">
-                          <div className="flex flex-col">
-                            <p className="text-[12px] leading-none text-blue-600 ml-2">
-                              {dat?.status}
+                          </td>
+                          <td className=" max-w-[300px]">
+                            <div className="flex items-center ">
+                              <div className="flex flex-col">
+                                <p className="text-base max-w-[350px] text-[13px] overflow-ellipsis overflow-hidden font-semibold leading-none text-blue-800 mr-2 mt-2">
+                                  {dat?.title}
+                                </p>
+                                {dat?.comments?.length > 0 && (
+                                  <p className="text-[11px]   leading-none  pr-2 text-green-800  mt-[6px]    rounded-full   mb-1 mr-2  ">
+                                    {
+                                      dat?.comments[dat?.comments?.length - 1]
+                                        ?.msg
+                                    }
+                                  </p>
+                                )}
+                                <div className="flex flex-row">
+                                  <p className="text-[9px]   leading-none  pr-2 text-green-800  mt-[6px]  py-[4px]  rounded-full   mb-1 mr-2  ">
+                                    {dat?.priority?.toUpperCase()}
+                                  </p>
+                                  <section>
+                                    <PaperClipIcon className="w-3 h-3 mr-[2px] inline-block text-gray-400 " />
+                                  </section>
+                                  <p className="text-[9px]  leading-none text-red-800  mt-[6px] font-sanF  py-[4px]  rounded-full   mb-1 mr-4  ">
+                                    {dat?.attachmentsCount || 0}
+                                  </p>
+                                  <section>
+                                    <UsersIcon className="w-3 h-3 mr-[2px]  inline-block text-gray-400  " />{' '}
+                                  </section>
+                                  <p className="text-[9px]  leading-none text-red-800  mt-[6px] font-sanF  py-[4px]  rounded-full   mb-1 mr-4  ">
+                                    {dat?.participantsA?.length || 0}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="text">
+                            <p className="text-[13px] leading-none text-[#212b36] ">
+                              {dat?.by_name}
                             </p>
-                            <p className="text-[11px] leading-none text-gray-600 ml-2 mt-2">
-                              {dat?.to_name}
-                            </p>
-
-                            <p className="text-sm leading-none text-gray-600 ml-2">
-                              {/* {prettyDateTime(dat['schTime'])} */}
-                            </p>
-                          </div>
-                        </td>
-                        <td className="pl-5">
-                          <div className="flex flex-row">
-                            <button className="py-3 px-3 text-[13px] focus:outline-none leading-none text-red-700 rounded">
-                              {Math.abs(
-                                getDifferenceInMinutes(dat['due_date'], '')
-                              ) > 60
-                                ? Math.abs(
-                                    getDifferenceInMinutes(dat['due_date'], '')
-                                  ) > 1440
-                                  ? `${getDifferenceInDays(
-                                      dat['due_date'],
-                                      ''
-                                    )} Days `
-                                  : `${getDifferenceInHours(
-                                      dat['due_date'],
-                                      ''
-                                    )} Hours `
-                                : `${getDifferenceInMinutes(
-                                    dat['due_date'],
-                                    ''
-                                  )} Min`}
-                              {getDifferenceInMinutes(dat['due_date'], '') < 0
-                                ? 'Due'
-                                : 'Left'}
-                              <p className="text-[11px] leading-none text-gray-600 ml-2 mt-2">
-                                {prettyDateTime(dat['due_date'])}
+                          </td>
+                          <td className="pl-5">
+                            <div className="flex flex-col">
+                              <p className="text-[12px] leading-none text-blue-600 ml-2">
+                                {dat?.status}
                               </p>
-                            </button>
-                          </div>
-                        </td>
-                        {/* <td className="pl-4">
+                              <p className="text-[11px] leading-none text-gray-600 ml-2 mt-2">
+                                {dat?.to_name}
+                              </p>
+
+                              <p className="text-sm leading-none text-gray-600 ml-2">
+                                {/* {prettyDateTime(dat['schTime'])} */}
+                              </p>
+                            </div>
+                          </td>
+                          <td className="pl-5">
+                            <div className="flex flex-row">
+                              <button className="py-3 px-3 text-[13px] focus:outline-none leading-none text-red-700 rounded">
+                                {dat?.status != 'Done' && (
+                                  <span>
+                                    {' '}
+                                    {Math.abs(
+                                      getDifferenceInMinutes(
+                                        dat['due_date'],
+                                        ''
+                                      )
+                                    ) > 60
+                                      ? Math.abs(
+                                          getDifferenceInMinutes(
+                                            dat['due_date'],
+                                            ''
+                                          )
+                                        ) > 1440
+                                        ? `${getDifferenceInDays(
+                                            dat['due_date'],
+                                            ''
+                                          )} Days `
+                                        : `${getDifferenceInHours(
+                                            dat['due_date'],
+                                            ''
+                                          )} Hours `
+                                      : `${getDifferenceInMinutes(
+                                          dat['due_date'],
+                                          ''
+                                        )} Min`}
+                                    {getDifferenceInMinutes(
+                                      dat['due_date'],
+                                      ''
+                                    ) < 0
+                                      ? 'Due'
+                                      : 'Left'}
+                                  </span>
+                                )}
+                                {dat?.status == 'Done' && (
+                                  <p className="text-[11px] leading-none text-gray-600 ml-2 mt-2">
+                                    {prettyDateTime(dat['closedOn'])}
+                                  </p>
+                                )}
+                                <p className="text-[11px] leading-none text-gray-600 ml-2 mt-2">
+                                  {prettyDateTime(dat['due_date'])}
+                                </p>
+                              </button>
+                            </div>
+                          </td>
+                          {/* <td className="pl-4">
 
                           <span className="ml-4 px-4 py-[4px] inline-flex text-xs leading-5 font-semibold rounded-full  text-green-800">
                             {dat?.sts}
                           </span>
                         </td> */}
-                        {/* <td>
+                          {/* <td>
                         <div className="relative px-1">
                           <button
                             className="focus:ring-2 rounded-md focus:outline-none"
@@ -1238,164 +1335,181 @@ const TodoListView = ({
                           </div>
                         </div>
                       </td> */}
-                      </tr>
-                    ))}
+                        </tr>
+                      ))}
 
-                    <tr className="h-3"></tr>
-                  </tbody>
-                </table>
-              </div>
-            )}
-            {['business_tasks'].includes(isClicked) && (
-              <div className="overflow-x-auto mt-2 rounded-xl">
-                <table className="w-full whitespace-nowrap">
-                  <thead className="">
-                    <tr className="tabHeader">
-                      <th className="text-left pl-[1rem]">
-                        {' '}
-                        <span className="headTxt" tabIndex="0" role="button">
-                          S.no{' '}
-                        </span>
-                      </th>
-                      <th className="text-left">
-                        {' '}
-                        <span
-                          className="max-w-[300px] headTxt"
-                          tabIndex="0"
-                          role="button"
+                      <tr className="h-3"></tr>
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            {['business_tasks'].includes(isClicked) &&
+              businessSection_D.length > 0 && (
+                <div className="overflow-x-auto mt-2 rounded-xl">
+                  <table className="w-full whitespace-nowrap">
+                    <thead className="">
+                      <tr className="tabHeader">
+                        <th className="text-left pl-[1rem]">
+                          {' '}
+                          <span className="headTxt" tabIndex="0" role="button">
+                            S.no {businessSection_D.length}
+                          </span>
+                        </th>
+                        <th className="text-left">
+                          {' '}
+                          <span
+                            className="max-w-[300px] headTxt"
+                            tabIndex="0"
+                            role="button"
+                          >
+                            Task{' '}
+                          </span>
+                        </th>
+                        <th>
+                          {' '}
+                          <span
+                            className="text-left headTxt"
+                            tabIndex="0"
+                            role="button"
+                          >
+                            Created By
+                          </span>
+                        </th>
+                        <th className="pl-6 text-left headTxt">
+                          {' '}
+                          <span tabIndex="0" role="button">
+                            Status{' '}
+                          </span>
+                        </th>
+                        <th className=" text-left pl-[3rem] headTxt">
+                          {' '}
+                          <span className="" tabIndex="0" role="button">
+                            Deadline{' '}
+                          </span>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {businessSection_D?.map((dat, i) => (
+                        <tr
+                          tabIndex={0}
+                          className="focus:outline-none h-16 border border-gray-100 rounded"
+                          key={i}
+                          onClick={() => {
+                            selTaskManObjF(dat)
+                          }}
                         >
-                          Task{' '}
-                        </span>
-                      </th>
-                      <th>
-                        {' '}
-                        <span
-                          className="text-left headTxt"
-                          tabIndex="0"
-                          role="button"
-                        >
-                          Created By
-                        </span>
-                      </th>
-                      <th className="pl-6 text-left headTxt">
-                        {' '}
-                        <span tabIndex="0" role="button">
-                          Status{' '}
-                        </span>
-                      </th>
-                      <th className=" text-left pl-[3rem] headTxt">
-                        {' '}
-                        <span className="" tabIndex="0" role="button">
-                          Deadline{' '}
-                        </span>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {businessSection_D?.map((dat, i) => (
-                      <tr
-                        tabIndex={0}
-                        className="focus:outline-none h-16 border border-gray-100 rounded"
-                        key={i}
-                        onClick={() => {
-                          selTaskManObjF(dat)
-                        }}
-                      >
-                        <td>
-                          <div className="ml-5">
-                            <div className="rounded-sm h-5 w-5 flex flex-shrink-0 justify-center items-center relative">
-                              {i + 1}
-                            </div>
-                          </div>
-                        </td>
-                        <td className=" max-w-[300px]">
-                          <div className="flex items-center ">
-                            <div className="flex flex-col">
-                              <p className="text-base max-w-[350px] text-[13px] overflow-ellipsis overflow-hidden font-semibold leading-none text-blue-800 mr-2 mt-2">
-                                {dat?.title}
-                              </p>
-                              {dat?.comments?.length > 0 && (
-                                <p className="text-[11px]   leading-none  pr-2 text-green-800  mt-[6px]    rounded-full   mb-1 mr-2  ">
-                                  {
-                                    dat?.comments[0]
-                                      ?.msg
-                                  }
-                                </p>
-                              )}
-                              <div className="flex flex-row">
-                                <p className="text-[9px]   leading-none  pr-2 text-green-800 ]  py-[4px]  rounded-full   mb-1 mr-2  ">
-                                  {dat?.priority?.toUpperCase()}
-                                </p>
-                                <section>
-                                  <PaperClipIcon className="w-3 h-3 mr-[2px] inline-block text-gray-400 mb-[10px]" />
-                                </section>
-                                <p className="text-[9px]  leading-none text-red-800   font-sanF  py-[4px]  rounded-full   mb-1 mr-4  ">
-                                  {dat?.attachmentsCount || 0}
-                                </p>
-                                <section>
-                                  <UsersIcon className="w-3 h-3 mr-[2px]  inline-block text-gray-400 mb-[10px]  " />{' '}
-                                </section>
-                                <p className="text-[9px]  leading-none text-red-800   font-sanF  py-[4px]  rounded-full   mb-1 mr-4  ">
-                                  {dat?.participantsA?.length || 0}
-                                </p>
+                          <td>
+                            <div className="ml-5">
+                              <div className="rounded-sm h-5 w-5 flex flex-shrink-0 justify-center items-center relative">
+                                {i + 1}
                               </div>
                             </div>
-                          </div>
-                        </td>
-                        <td className="text">
-                          <p className="text-[13px] leading-none text-[#212b36]">
-                            {dat?.by_name}
-                          </p>
-                        </td>
-                        <td className="pl-5">
-                          <div className="flex flex-col">
-                            <p className="text-[12px] leading-none text-blue-600 ml-2">
-                              {dat?.status}
+                          </td>
+                          <td className=" max-w-[300px]">
+                            <div className="flex items-center ">
+                              <div className="flex flex-col">
+                                <p className="text-base max-w-[350px] text-[13px] overflow-ellipsis overflow-hidden font-semibold leading-none text-blue-800 mr-2 mt-2">
+                                  {dat?.title}
+                                </p>
+                                {dat?.comments?.length > 0 && (
+                                  <p className="text-[11px]   leading-none  pr-2 text-green-800  mt-[6px]    rounded-full   mb-1 mr-2  ">
+                                    {dat?.comments[0]?.msg}
+                                  </p>
+                                )}
+                                <div className="flex flex-row mt-[2px]">
+                                  <p className="text-[9px]   leading-none  pr-2 text-green-800 ]  py-[4px]  rounded-full   mb-1 mr-2  ">
+                                    {dat?.priority?.toUpperCase()}
+                                  </p>
+                                  <section>
+                                    <PaperClipIcon className="w-3 h-3 mr-[2px] inline-block text-gray-400 mb-[10px]" />
+                                  </section>
+                                  <p className="text-[9px]  leading-none text-red-800   font-sanF  py-[4px]  rounded-full   mb-1 mr-4  ">
+                                    {dat?.attachmentsCount || 0}
+                                  </p>
+                                  <section>
+                                    <UsersIcon className="w-3 h-3 mr-[2px]  inline-block text-gray-400 mb-[10px]  " />{' '}
+                                  </section>
+                                  <p className="text-[9px]  leading-none text-red-800   font-sanF  py-[4px]  rounded-full   mb-1 mr-4  ">
+                                    {dat?.participantsA?.length || 0}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="text">
+                            <p className="text-[13px] leading-none text-[#212b36]">
+                              {dat?.by_name}
                             </p>
-                            <p className="text-[11px] leading-none text-gray-600 ml-2 mt-2">
-                              {dat?.to_name}
-                            </p>
-                            <p className="text-sm leading-none text-gray-600 ml-2"></p>
-                          </div>
-                        </td>
-                        <td className="pl-5">
-                          <div className="flex flex-row">
-                            <button className="py-3 px-3 text-[13px] focus:outline-none leading-none text-red-700 rounded">
-                              {Math.abs(
-                                getDifferenceInMinutes(dat['due_date'], '')
-                              ) > 60
-                                ? Math.abs(
-                                    getDifferenceInMinutes(dat['due_date'], '')
-                                  ) > 1440
-                                  ? `${getDifferenceInDays(
-                                      dat['due_date'],
-                                      ''
-                                    )} Days `
-                                  : `${getDifferenceInHours(
-                                      dat['due_date'],
-                                      ''
-                                    )} Hours `
-                                : `${getDifferenceInMinutes(
-                                    dat['due_date'],
-                                    ''
-                                  )} Min`}
-                              {getDifferenceInMinutes(dat['due_date'], '') < 0
-                                ? 'Due'
-                                : 'Left'}
-                              <p className="text-[11px] leading-none text-gray-600 ml-2 mt-2">
-                                {prettyDateTime(dat['due_date'])}
+                          </td>
+                          <td className="pl-5">
+                            <div className="flex flex-col">
+                              <p className="text-[12px] leading-none text-blue-600 ml-2">
+                                {dat?.status}
                               </p>
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
+                              <p className="text-[11px] leading-none text-gray-600 ml-2 mt-2">
+                                {dat?.to_name}
+                              </p>
+                              <p className="text-sm leading-none text-gray-600 ml-2"></p>
+                            </div>
+                          </td>
+                          <td className="pl-5">
+                            <div className="flex flex-row">
+                              <button className="py-3 px-3 text-[13px] focus:outline-none leading-none text-red-700 rounded">
+                              {dat?.status != 'Done' && (
+                                  <span>
+                                    {' '}
+                                    {Math.abs(
+                                      getDifferenceInMinutes(
+                                        dat['due_date'],
+                                        ''
+                                      )
+                                    ) > 60
+                                      ? Math.abs(
+                                          getDifferenceInMinutes(
+                                            dat['due_date'],
+                                            ''
+                                          )
+                                        ) > 1440
+                                        ? `${getDifferenceInDays(
+                                            dat['due_date'],
+                                            ''
+                                          )} Days `
+                                        : `${getDifferenceInHours(
+                                            dat['due_date'],
+                                            ''
+                                          )} Hours `
+                                      : `${getDifferenceInMinutes(
+                                          dat['due_date'],
+                                          ''
+                                        )} Min`}
+                                    {getDifferenceInMinutes(
+                                      dat['due_date'],
+                                      ''
+                                    ) < 0
+                                      ? 'Due'
+                                      : 'Left'}
+                                  </span>
+                                )}
+                                {dat?.status == 'Done' && (
+                                  <p className="text-[11px] leading-none text-green-600 ml-2 mt-2">
+                                    {prettyDateTime(dat['closedOn'])}
+                                  </p>
+                                )}
+                                <p className="text-[11px] leading-none text-gray-600 ml-2 mt-2">
+                                  {prettyDateTime(dat['due_date'])}
+                                </p>
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
 
-                    <tr className="h-3"></tr>
-                  </tbody>
-                </table>
-              </div>
-            )}
+                      <tr className="h-3"></tr>
+                    </tbody>
+                  </table>
+                </div>
+              )}
           </div>
         </div>
         {/* <script src="./index.js"></script>

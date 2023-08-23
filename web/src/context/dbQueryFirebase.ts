@@ -229,14 +229,18 @@ export const streamGetAllTaskManTasks = async (
 ) => {
   // [{"uid":"4daHzWw8zSUZqYlvRGrfYwzC8al1","name":"Nithesh Reddy"}]
   // const itemsQuery = query(doc(db, `${orgId}_leads_log', 'W6sFKhgyihlsKmmqDG0r'))
-  const { uid, cutoffDate } = data
+  const { uid, cutoffDate, statusVAl, showOnlyDone } = data
   // return onSnapshot(doc(db, `${orgId}_leads_log`, uid), snapshot, error)
-  const { data: lead_logs, error: countError } = await supabase
-    .from(`maahomes_TM_Tasks`)
-    .select('*')
 
-    .eq('status', 'InProgress')
-    // .containedBy('participantsA',{"uid":"4daHzWw8zSUZqYlvRGrfYwzC8al1","name":"Nithesh Reddy"})
+  let query = supabase.from(`maahomes_TM_Tasks`).select('*')
+  if (showOnlyDone) {
+    query = query.eq('status', 'Done')
+  } else if (!statusVAl) {
+    query = query.eq('status', 'InProgress')
+  }
+  const { data: lead_logs, error: countError } = await query
+
+  // .containedBy('participantsA',{"uid":"4daHzWw8zSUZqYlvRGrfYwzC8al1","name":"Nithesh Reddy"})
   // .is('projectId', null)
   // .isNull('projectId')
   // .eq('from', 'visitfixed')
@@ -247,6 +251,44 @@ export const streamGetAllTaskManTasks = async (
     return
   }
   console.log(' added data is ', lead_logs)
+  return lead_logs
+  // return onSnapshot(itemsQuery, snapshot, error)
+}
+// get all TaskManTasks from supabase
+export const streamGetAllParticipantTasks = async (
+  orgId,
+  snapshot,
+  data,
+  error
+) => {
+  // [{"uid":"4daHzWw8zSUZqYlvRGrfYwzC8al1","name":"Nithesh Reddy"}]
+  // const itemsQuery = query(doc(db, `${orgId}_leads_log', 'W6sFKhgyihlsKmmqDG0r'))
+  const { uid, cutoffDate, statusVAl, showOnlyDone } = data
+  // return onSnapshot(doc(db, `${orgId}_leads_log`, uid), snapshot, error)
+
+  const query = supabase
+    .from(`maahomes_TM_Tasks`)
+    .select('*')
+    .textSearch('followersUid', `${uid}`, { config: 'english' })
+  //  if(showOnlyDone){
+  //   query = query.eq('status', 'Done')
+  //  }
+  //   else if (!statusVAl) {
+  //     query = query.eq('status', 'InProgress')
+  //   }
+  const { data: lead_logs, error: countError } = await query
+
+  // .containedBy('participantsA',{"uid":"4daHzWw8zSUZqYlvRGrfYwzC8al1","name":"Nithesh Reddy"})
+  // .is('projectId', null)
+  // .isNull('projectId')
+  // .eq('from', 'visitfixed')
+  //.order('due_date', { ascending: false })
+
+  if (countError) {
+    console.error('added followers data is', countError)
+    return
+  }
+  console.log(' added followers data is ', lead_logs)
   return lead_logs
   // return onSnapshot(itemsQuery, snapshot, error)
 }
@@ -293,20 +335,22 @@ export const updateTransactionStatus = async (
   enqueueSnackbar
 ) => {
   // const itemsQuery = query(doc(db, `${orgId}_leads_log', 'W6sFKhgyihlsKmmqDG0r'))
-  const { id,status } = data1
+  const { id, status } = data1
   // return onSnapshot(doc(db, `${orgId}_leads_log`, uid), snapshot, error)
   const { data: lead_logs, error } = await supabase
     .from(`${orgId}_accounts`)
     .update({ status: status })
     .eq('id', id)
-    if(lead_logs){
-  await  enqueueSnackbar('Marked as Amount Recived', {
+  if (lead_logs) {
+    await enqueueSnackbar('Marked as Amount Recived', {
       variant: 'success',
-    })}
-      if(error){
-  await  enqueueSnackbar('Transaction Updation Failed', {
+    })
+  }
+  if (error) {
+    await enqueueSnackbar('Transaction Updation Failed', {
       variant: 'error',
-    })}
+    })
+  }
 
   console.log('updating error', lead_logs, error)
   return lead_logs
@@ -345,11 +389,12 @@ export const editTaskManData = async (orgId, dta, user) => {
     attachments,
     file,
   } = dta
+
+  console.log('data is ', followers)
   let followA = []
   let attachA = []
-  let followAUid = []
-  const x = [assignedToObj?.uid
-    || '']
+  const followAUid = []
+  const x = [assignedToObj?.uid || '']
   if (followers) {
     followA = await followers?.map((d) => {
       const y = {}
@@ -411,9 +456,8 @@ export const deleteTaskManData = async (orgId, dta, user) => {
   } = dta
   let followA = []
   let attachA = []
-  let followAUid = []
-  const x = [assignedToObj?.uid
-    || '']
+  const followAUid = []
+  const x = [assignedToObj?.uid || '']
   if (followers) {
     followA = await followers?.map((d) => {
       const y = {}
@@ -435,7 +479,7 @@ export const deleteTaskManData = async (orgId, dta, user) => {
   }
   const { data: lead_logs, error } = await supabase
     .from(`maahomes_TM_Tasks`)
-   .delete()
+    .delete()
     .eq('id', id)
 
   console.log('updating error', lead_logs, error)
@@ -468,7 +512,6 @@ export const editTaskManAttachmentsData = async (orgId, dta, user) => {
   // return onSnapshot(itemsQuery, snapshot, error)
 }
 export const CompleteTaskManData = async (orgId, dta, user, status) => {
-
   await console.log('task details are', dta)
   const {
     id,
@@ -488,14 +531,14 @@ export const CompleteTaskManData = async (orgId, dta, user, status) => {
   //     due_date
   //   )}  \n *Done Date*:02-Feb-2022 \n *Task*: ${title}`
   // )
-  const x = [dta?.by_uid
-    || '', dta?.to_uid || '']
+  const x = [dta?.by_uid || '', dta?.to_uid || '']
 
   const { data: lead_logs, error } = await supabase
     .from(`maahomes_TM_Tasks`)
     .update({
       closedBy: user.uid,
       status: status,
+      closedOn: Timestamp.now().toMillis(),
     })
     .eq('id', id)
 
@@ -510,7 +553,9 @@ export const CompleteTaskManData = async (orgId, dta, user, status) => {
         user.displayName
       } \n \n *Due Date*:${prettyDateTime(
         due_date
-      )}  \n *Done Date*:02-Feb-2022 \n *Creator*:${dta?.by_name} \n *Task*: ${title}`
+      )}  \n *Done Date*: ${prettyDateTime(
+        Timestamp.now().toMillis()
+      )} \n *Creator*:${dta?.by_name} \n *Task*: ${title}`
     )
   })
   return lead_logs
@@ -1286,9 +1331,8 @@ export const addTaskBusiness = async (orgId, dta, user) => {
   console.log('adding item is ', priorities)
   let followA = []
   let attachA = []
-  let followAUid = []
-  const x = [assignedToObj?.uid
-    || '']
+  const followAUid = []
+  const x = [assignedToObj?.uid || '']
   if (followers) {
     followA = await followers[0]?.map((d) => {
       const y = {}
@@ -3317,15 +3361,14 @@ export const updateManagerApproval = async (
 ) => {
   try {
     console.log('data is===>', unitId, data)
-    const {status, plotCS, addChargesCS,  fullPs, T_balance, T_Total} = data
+    const { status, plotCS, addChargesCS, fullPs, T_balance, T_Total } = data
     await updateDoc(doc(db, `${orgId}_units`, unitId), {
       man_cs_approval: status,
       plotCS: plotCS,
       addChargesCS,
       fullPs,
       T_balance,
-      T_Total
-
+      T_Total,
     })
     enqueueSnackbar('CS Approved..!', {
       variant: 'success',
@@ -3349,9 +3392,9 @@ export const updateLegalClarityApproval = async (
 ) => {
   try {
     console.log('data is===>', unitId, data)
-    const {status} = data
+    const { status } = data
     await updateDoc(doc(db, `${orgId}_units`, unitId), {
-      legal_clarity: status
+      legal_clarity: status,
     })
     enqueueSnackbar('Legal Clarified..!', {
       variant: 'success',
@@ -3375,9 +3418,9 @@ export const updateATSApproval = async (
 ) => {
   try {
     console.log('data is===>', unitId, data)
-    const {status} = data
+    const { status } = data
     await updateDoc(doc(db, `${orgId}_units`, unitId), {
-      man_ats_approval: status
+      man_ats_approval: status,
     })
     enqueueSnackbar('ATS Approved..!', {
       variant: 'success',
@@ -3401,9 +3444,9 @@ export const updateKycApproval = async (
 ) => {
   try {
     console.log('data is===>', unitId, data)
-    const {status} = data
+    const { status } = data
     await updateDoc(doc(db, `${orgId}_units`, unitId), {
-      kyc_status: status
+      kyc_status: status,
     })
     enqueueSnackbar('KYC Approved..!', {
       variant: 'success',
@@ -3427,9 +3470,9 @@ export const updatePosessionApproval = async (
 ) => {
   try {
     console.log('data is===>', unitId, data)
-    const {status} = data
+    const { status } = data
     await updateDoc(doc(db, `${orgId}_units`, unitId), {
-      kyc_approval: status
+      kyc_approval: status,
     })
     enqueueSnackbar('Posession Approved..!', {
       variant: 'success',
@@ -3453,9 +3496,9 @@ export const updateSDApproval = async (
 ) => {
   try {
     console.log('data is===>', unitId, data)
-    const {status} = data
+    const { status } = data
     await updateDoc(doc(db, `${orgId}_units`, unitId), {
-      both_sd_approval: status
+      both_sd_approval: status,
     })
     enqueueSnackbar('Sale Deed Approved..!', {
       variant: 'success',

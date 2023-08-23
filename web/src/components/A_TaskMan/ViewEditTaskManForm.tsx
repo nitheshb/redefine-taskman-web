@@ -133,7 +133,7 @@ const formatOptionLabel = ({ value, label, dept }) => (
         paddingBottom: '2px',
         borderRadius: '10px',
         fontSize: '10px',
-        height: '16px'
+        height: '16px',
       }}
     >
       {dept}
@@ -525,42 +525,46 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                       <span className="ml-1 ">Re-Open Task</span>
                     </button>
                   )}
-                  {myTaskStatus === 'InProgress' && (
-                    <button
-                      className={`flex mt-2  cursor-pointer rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium  text-[#535c69]  bg-[#bbed21]   hover:shadow-lg `}
-                      onClick={() => {
-                        // setActionMode('unitBookingMode')
-                        setMyTaskStatus('Done')
-                        confettiRef.current.fire()
-                        CompleteTaskManData(orgId, taskManObj, user, 'Done')
-                      }}
-                      // disabled={loading}
-                    >
-                      <span className="ml-1 ">Close Task</span>
-                    </button>
-                  )}
-                  {taskManObj?.by_email === user?.email && (
-                    <button
-                      className={`flex mt-2 ml- rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium   `}
-                      onClick={() => {
-                        selShowEditTask(!showEditTask)
-                      }}
-                    >
-                      <span className="ml-1 ">Edit</span>
-                    </button>
-                  )}
-                     {taskManObj?.by_email === user?.email && (
-                    <button
-                      className={`flex mt-2 ml- rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium   `}
-                      onClick={() => {
-                        // selShowEditTask(!showEditTask)
-                        deleteTaskManData(orgId, taskManObj, user)
-                        dialogOpen(false)
-                      }}
-                    >
-                      <span className="ml-1 ">Delete</span>
-                    </button>
-                  )}
+                  {myTaskStatus === 'InProgress' &&
+                    (taskManObj?.to_uid === user?.uid ||
+                      taskManObj?.by_uid === user?.uid) && (
+                      <button
+                        className={`flex mt-2  cursor-pointer rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium  text-[#535c69]  bg-[#bbed21]   hover:shadow-lg `}
+                        onClick={() => {
+                          // setActionMode('unitBookingMode')
+                          setMyTaskStatus('Done')
+                          confettiRef.current.fire()
+                          CompleteTaskManData(orgId, taskManObj, user, 'Done')
+                        }}
+                        // disabled={loading}
+                      >
+                        <span className="ml-1 ">Close Task</span>
+                      </button>
+                    )}
+                  {taskManObj?.by_email === user?.email &&
+                    taskManObj?.status != 'Done' && (
+                      <button
+                        className={`flex mt-2 ml- rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium   `}
+                        onClick={() => {
+                          selShowEditTask(!showEditTask)
+                        }}
+                      >
+                        <span className="ml-1 ">Edit</span>
+                      </button>
+                    )}
+                  {taskManObj?.by_email === user?.email &&
+                    taskManObj?.status != 'Done' && (
+                      <button
+                        className={`flex mt-2 ml- rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium   `}
+                        onClick={() => {
+                          // selShowEditTask(!showEditTask)
+                          deleteTaskManData(orgId, taskManObj, user)
+                          dialogOpen(false)
+                        }}
+                      >
+                        <span className="ml-1 ">Delete</span>
+                      </button>
+                    )}
                 </section>
 
                 <span className="mt-1 text-sm text-semibold ml-[2px]">
@@ -820,25 +824,42 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
           </div>
           <section className="w-[350px] h-full bg-white rounded-lg border border-gray-100 mr-2 mt-2">
             <div className="flex flex-col w-full">
-              <div className="w-full bg-[#56d1e0] px-2 py-3 flex flex-row justify-between rounded-t-lg text-white text-xs text-semibold">
-                <section>Pending Since</section>
-                <section className="font-semibold">
-                  {Math.abs(getDifferenceInMinutes(taskManObj?.due_date, '')) >
-                  60
-                    ? Math.abs(
-                        getDifferenceInMinutes(taskManObj?.due_date, '')
-                      ) > 1440
-                      ? `${getDifferenceInDays(taskManObj?.due_date, '')} Days `
-                      : `${getDifferenceInHours(
+              {taskManObj?.status != 'Done' && (
+                <div className="w-full bg-[#56d1e0] px-2 py-3 flex flex-row justify-between rounded-t-lg text-white text-xs text-semibold">
+                  <section>Pending Since</section>
+                  <section className="font-semibold">
+                    {Math.abs(
+                      getDifferenceInMinutes(taskManObj?.due_date, '')
+                    ) > 60
+                      ? Math.abs(
+                          getDifferenceInMinutes(taskManObj?.due_date, '')
+                        ) > 1440
+                        ? `${getDifferenceInDays(
+                            taskManObj?.due_date,
+                            ''
+                          )} Days `
+                        : `${getDifferenceInHours(
+                            taskManObj?.due_date,
+                            ''
+                          )} Hours `
+                      : `${getDifferenceInMinutes(
                           taskManObj?.due_date,
                           ''
-                        )} Hours `
-                    : `${getDifferenceInMinutes(taskManObj?.due_date, '')} Min`}
-                  {getDifferenceInMinutes(taskManObj?.due_date, '') < 0
-                    ? 'Due'
-                    : 'Left'}
-                </section>
-              </div>
+                        )} Min`}
+                    {getDifferenceInMinutes(taskManObj?.due_date, '') < 0
+                      ? 'Due'
+                      : 'Left'}
+                  </section>
+                </div>
+              )}
+              {taskManObj?.status == 'Done' && (
+                <div className="w-full bg-[#56d1e0] px-2 py-3 flex flex-row justify-between rounded-t-lg text-white text-xs text-semibold">
+                  <section>Closed On</section>
+                  <section className="font-semibold">
+                    {prettyDateTime(taskManObj?.closedOn)}
+                  </section>
+                </div>
+              )}
               <div className="w-[100%]  px-2 py-3 rounded-t-lg flex flex-row text-xs text-semibold p-4  border-b border-[#eef2f4]">
                 <div className="w-[110px]">Deadline:</div>
                 <div>{prettyDateTime(taskManObj?.due_date)}</div>
@@ -1068,7 +1089,7 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                                     formik.setFieldValue('followers', value)
                                   }}
                                   options={usersList}
-                                formatOptionLabel={formatOptionLabel}
+                                  formatOptionLabel={formatOptionLabel}
                                   value={formik?.values?.followers || []}
                                   className="basic-multi-select w-full"
                                   classNamePrefix="myselect"
