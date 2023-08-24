@@ -468,7 +468,7 @@ const HomePage = () => {
                 viewable != 'Bank Accounts' &&
                 viewable != 'Virtual Accounts' &&
                 viewable != 'unitsInventory' &&
-                viewable != 'Marketing'  && (
+                viewable != 'Marketing' && viewable != 'projectReports' && (
                   <>
                     <div className="">
                       <div className="flex items-center justify-between py-2 pb-8 ">

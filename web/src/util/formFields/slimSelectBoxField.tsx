@@ -28,6 +28,35 @@ const customStyles = {
   }),
   menu: (provided) => ({ ...provided, marginTop: 0, zIndex: 9999 }),
 }
+const customStylesVerySmall = {
+  control: (base) => ({
+    ...base,
+    height: 30,
+    minHeight: 30,
+    padding: 0,
+  }),
+  valueContainer: (base) => ({
+    ...base,
+    alignItems: 'initial',
+    paddingTop: 0,
+    marginTop: 3,
+  }),
+  dropdownIndicator: (base) => ({
+    ...base,
+    paddingTop: 5,
+  }),
+  indicatorSeparator: (base) => ({
+    ...base,
+    marginTop: 6,
+    marginBottom: 10,
+  }),
+  menu: (provided) => ({ ...provided, marginTop: 0, zIndex: 9999 }),
+  menuList: (provided, state) => ({
+    ...provided,
+    paddingTop: 0,
+    paddingBottom: 0,
+  }),
+}
 
 export const SlimSelectBox = ({
   onChange,
@@ -69,6 +98,55 @@ export const SlimSelectBox = ({
         name={name}
         className="error-message text-red-700 text-xs px-2"
       /> */}
+    </div>
+  )
+}
+export const VerySlimSelectBox = ({
+  onChange,
+  options,
+  value,
+  name,
+  label,
+  placeholder,
+  className,
+}) => {
+  const defaultValue = (options, value) => {
+    return (
+      (options ? options.find((option) => option.value === value) : '') || ''
+    )
+  }
+
+  return (
+    <div className="">
+      {label != '' && !['Assign To', 'Add Participants'].includes(label) && (
+        <label className="label font-regular text-sm font-semibold text-semibold ">
+          {label}
+        </label>
+      )}
+      <Select
+        maxMenuHeight={150}
+        name={name}
+        value={defaultValue(options, value)}
+        placeholder={placeholder || label || 'All Projects'}
+        onChange={(value) => {
+          onChange(value)
+        }}
+        options={options}
+        className={`text-sm font-semibold mt-0  ${
+          label != '' ? '' : ''
+        } border-transparent p-0`}
+        classNamePrefix="react-select"
+        styles={customStylesVerySmall}
+        theme={(theme) => ({
+          ...theme,
+
+          colors: {
+            ...theme.colors,
+            primary25: '#efefef',
+            primary: '#444',
+          },
+        })}
+      />
     </div>
   )
 }
@@ -130,7 +208,7 @@ export const SlimDateSelectBox = ({
       setValue('This Week')
     } else if (label === startOfMonth(d).getTime()) {
       setValue('This Month')
-    }else if (label === subMonths(startOfMonth(d), 6).getTime()) {
+    } else if (label === subMonths(startOfMonth(d), 6).getTime()) {
       setValue('Last 6 months')
     }
   }, [label])

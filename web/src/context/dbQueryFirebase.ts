@@ -511,6 +511,45 @@ export const editTaskManAttachmentsData = async (orgId, dta, user) => {
   return lead_logs
   // return onSnapshot(itemsQuery, snapshot, error)
 }
+export const ReOpenTaskManData = async (orgId, dta, user, status) => {
+  await console.log('task details are', dta)
+  const {
+    id,
+    title,
+
+    due_date,
+  } = dta
+
+  const x = [dta?.by_uid || '', dta?.to_uid || '']
+
+  const { data: lead_logs, error } = await supabase
+    .from(`maahomes_TM_Tasks`)
+    .update({
+      closedBy: user.uid,
+      status: status,
+      closedOn: Timestamp.now().toMillis(),
+    })
+    .eq('id', id)
+
+  console.log('updating error', lead_logs, error)
+  x.map(async (userId) => {
+    // get phone no's
+    const additionalUserInfo = await getUser(userId)
+    await console.log('task details are', dta, additionalUserInfo)
+    await sendWhatAppTextSms1(
+      additionalUserInfo?.offPh,
+      `Task has been *Re-Open* by  ${
+        user.displayName
+      } \n \n *Due Date*:${prettyDateTime(
+        due_date
+      )}  \n *Done Date*: ${prettyDateTime(
+        Timestamp.now().toMillis()
+      )} \n *Creator*:${dta?.by_name} \n *Task*: ${title}`
+    )
+  })
+  return lead_logs
+  // return onSnapshot(itemsQuery, snapshot, error)
+}
 export const CompleteTaskManData = async (orgId, dta, user, status) => {
   await console.log('task details are', dta)
   const {
@@ -520,17 +559,6 @@ export const CompleteTaskManData = async (orgId, dta, user, status) => {
     due_date,
   } = dta
 
-  // // get phone no's
-  // const additionalUserInfo = await getUser(dta?.by_uid)
-  // await console.log('task details are', dta, additionalUserInfo)
-  // await sendWhatAppTextSms1(
-  //   '9849000525',
-  //   `Task has been *closed* by ${additionalUserInfo?.offPh} ${
-  //     user.displayName
-  //   } \n \n *Due Date*:${prettyDateTime(
-  //     due_date
-  //   )}  \n *Done Date*:02-Feb-2022 \n *Task*: ${title}`
-  // )
   const x = [dta?.by_uid || '', dta?.to_uid || '']
 
   const { data: lead_logs, error } = await supabase

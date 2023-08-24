@@ -43,6 +43,7 @@ import { useRouterStateSetter } from '@redwoodjs/router/dist/router-context'
 import {
   AddCommentTaskManData,
   CompleteTaskManData,
+  ReOpenTaskManData,
   addLead,
   addTaskBusiness,
   checkIfLeadAlreadyExists,
@@ -513,7 +514,7 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                       onClick={() => {
                         // setActionMode('unitBookingMode')
                         setMyTaskStatus('InProgress')
-                        CompleteTaskManData(
+                        ReOpenTaskManData(
                           orgId,
                           taskManObj,
                           user,

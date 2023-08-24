@@ -107,7 +107,9 @@ const TodoListView = ({
         console.log('account records', payload)
         // Check if the updated data has the id 12
         const updatedData = payload.new
+        // const oldData = payload.old
         const { id } = payload.old
+        const eventType = payload.eventType
         const updatedLeadLogs = [...businessData_F]
         if (
           updatedData.by_uid === user?.uid ||
@@ -137,7 +139,58 @@ const TodoListView = ({
                 return [...prevLogs, payload.new]
               }
             })
-          } else {
+          }
+          else if(updatedData?.followersUid.includes(user?.uid)) {
+            setParticipantsData_D((prevLogs)=>{
+              const existingLog = prevLogs.find((log) => log.id === id)
+              if (existingLog) {
+                console.log('Existing record found!')
+                if (payload.new.status === 'Done') {
+                  const updatedLogs = prevLogs.filter((log) => log.id != id)
+                  return [...updatedLogs]
+                } else {
+                  const updatedLogs = prevLogs.map((log) =>
+                    log.id === id ? payload.new : log
+                  )
+                  return [...updatedLogs]
+                }
+              } else {
+                console.log('New record added!')
+                return [...prevLogs, payload.new]
+              }
+            })
+          }
+    // else if (
+    //         eventType == 'UPDATE' &&
+    //         oldData?.followersUid.includes(user?.uid) &&
+    //         !updatedData?.followersUid.includes(user?.uid)
+    //       ) {
+    //         setParticipantsData_D((prevLogs) => {
+    //           const existingLog = prevLogs.find((log) => log.id === id)
+    //           if (existingLog) {
+    //             console.log('Existing record found!')
+    //             if (payload.new.status === 'Done') {
+    //               const updatedLogs = prevLogs.filter((log) => log.id != id)
+    //               return [...updatedLogs]
+    //             } else {
+    //               const updatedLogs = prevLogs.filter((log) => log.id != id)
+    //               return [...updatedLogs]
+    //               // const updatedLogs = prevLogs.map((log) =>
+    //               //   log.id === id ? payload.new : log
+    //               // )
+    //               return [...updatedLogs]
+    //             }
+    //           } else {
+    //             console.log('New record added!')
+    //             return [...prevLogs, payload.new]
+    //           }
+    //         })
+    //       }
+
+          else {
+            if (
+              updatedData.by_uid === user?.uid ||
+              updatedData?.to_uid === user?.uid){
             setBusinessData_F((prevLogs) => {
               const existingLog = prevLogs.find((log) => log.id === id)
 
@@ -156,7 +209,7 @@ const TodoListView = ({
                 console.log('New record added!')
                 return [...prevLogs, payload.new]
               }
-            })
+            })}
           }
         }
       })
@@ -213,7 +266,7 @@ const TodoListView = ({
       setParticipantsData_D(ParticipantsData_D)
       bootBusinessFun(ParticipantsData_D)
     }
-  }, [businessData_F, subSection, sortType, searchText, selPriority])
+  }, [businessData_F, ParticipantsData_D, subSection, sortType, searchText, selPriority])
 
   const sortDataFun = (data) => {
     if (sortType === 'Oldest') {

@@ -37,6 +37,7 @@ import {
 import SiderForm from '../SiderForm/SiderForm'
 
 import SourceAddTemplate from './SourceAddTemplate'
+import { SlimSelectBox, VerySlimSelectBox } from 'src/util/formFields/slimSelectBoxField'
 
 const ProjectReportsBody = ({ title, pId, data }) => {
   const d = new window.Date()
@@ -56,8 +57,11 @@ const ProjectReportsBody = ({ title, pId, data }) => {
   const [showSettings, setShowSettings] = useState(true)
   const [searchText, setSearchText] = useState('')
   const [selPriority, setSelPriority] = useState('')
+  const [selTaskDispType, setSelTaskDispType] = useState('todo_tasks')
   const [showCompletedTasks, setShowCompletedTasks] = useState(false)
   const [showOnlyDone, setShowOnlyDone] = useState(false)
+  const [isViewTaskMan, setisViewTaskMan] = useState(false)
+  const [selTaskMan, setSelTaskMan]  = useState({})
 
   const [sourceDateRange, setSourceDateRange] = useState(
     startOfDay(d).getTime()
@@ -72,6 +76,8 @@ const ProjectReportsBody = ({ title, pId, data }) => {
   const [subSection, setSubSection] = useState('all_business')
   const [sortType, setSortType] = useState('Latest')
   const [isChecked, setIsChecked] = useState(false)
+
+
 
   const [selUserId, setSelUserId] = useState(user?.uid)
   const [selUserObj, setSelUserObj] = useState(user)
@@ -206,7 +212,7 @@ const ProjectReportsBody = ({ title, pId, data }) => {
       setParticipantsData_D(ParticipantsData_D)
       bootBusinessFun(ParticipantsData_D)
     }
-  }, [businessData_F, subSection, sortType, searchText, selPriority, selUserId])
+  }, [businessData_F,selTaskDispType, subSection, sortType, searchText, selPriority, selUserId])
 
   const sortDataFun = (data) => {
     if (sortType === 'Oldest') {
@@ -420,7 +426,7 @@ const ProjectReportsBody = ({ title, pId, data }) => {
       </div>
       {selCat === 'enquiry_journey_status' && (
         <div className="w-full flex  flex-row">
-          <section className="m-2 w-[200px]">
+          <section className="m-2 w-[200px] min-h-[400px]">
             <div className="bg-[#FFEDEA] p-4 rounded-xl shadow-md shadow-neutral-200 ">
               <h2 className="text-sm font-semibold pb-2 border-b border-grey">
                 {'Employees'}
@@ -440,6 +446,7 @@ const ProjectReportsBody = ({ title, pId, data }) => {
                       key={i}
                       className={`mt-4 cursor-pointer ${selUserId === data?.uid ? 'bg-red-800 text-white rounded-xl' : ''}`}
                       onClick={() => {
+                        console.log('user is ', data)
                         setSelUserObj(data)
                         setSelUserId(data?.uid)
                       }}
@@ -464,9 +471,41 @@ const ProjectReportsBody = ({ title, pId, data }) => {
           {/* row 2 */}
           <section className="m-2 mx-0 w-full">
             <div className="bg-[#FFEDEA] p-4 rounded-xl shadow-md shadow-neutral-200 ">
+             <section className='flex flex-row justify-between'>
               <h2 className="text-sm font-semibold pb-2 border-b border-grey">
                 {`${selUserObj?.name || selUserObj?.displayName} Tasks`}
               </h2>
+                              <div className=" mr-2 w-[180px]">
+                  <VerySlimSelectBox
+                    name="Priority"
+                    placeholder="Priority"
+                    label=""
+                    className="input text-semibold"
+                    onChange={(value) => {
+                      console.log('sel valu s', value)
+                      setSelTaskDispType(value.value)
+                      if(value.value === 'only_completed'){
+                        setShowOnlyDone(true)
+                      }else if(value.value === 'todo_tasks') {
+                        setShowOnlyDone(false)
+                        setShowCompletedTasks(false)
+                      }else {
+                        setShowOnlyDone(false)
+                        setShowCompletedTasks(true)
+                      }
+                      // setSelProject(value)
+                      // formik.setFieldValue('project', value.value)
+                    }}
+                    value={selTaskDispType}
+                    // options={aquaticCreatures}
+                    options={[
+                      { label: 'All Tasks', value: '' },
+                      { label: 'Incompleted Tasks', value: 'todo_tasks' },
+                      { label: 'Completed Tasks', value: 'only_completed' },
+                    ]}
+                  />
+                </div>
+              </section>
               {/* <table className="w-full whitespace-nowrap">
                 <thead>
                   <tr className="border-b">
@@ -478,6 +517,30 @@ const ProjectReportsBody = ({ title, pId, data }) => {
                 </thead>
                 <tbody></tbody>
               </table> */}
+                 {((isClicked === 'dept_tasks' && taskListA.length === 0) ||
+              (isClicked === 'personal_tasks' && personalData_D.length === 0) ||
+              (isClicked === 'business_tasks' &&
+                businessSection_D.length === 0)) && (
+              <div
+                className={`py-8 px-8 flex flex-col items-center bg-red-100 rounded ${
+                  isClicked === 'personal_tasks' ? 'mt-[55px]' : ''
+                }`}
+              >
+                <div className="font-md font-medium text-xs mb-4 text-gray-800 items-center">
+                  <img
+                    className="w-[180px] h-[180px] inline"
+                    alt=""
+                    src="../note-widget.svg"
+                  />
+                </div>
+                <h3 className="mb-1 text-sm font-semibold text-gray-900">
+                  No Tasks Found for <span className="text-blue-600">{selUserObj?.name }</span>
+                </h3>
+                <time className="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
+                  <span className="text-blue-600"> {selUserObj?.roles?.length >0 ?selUserObj?.roles[0] === 'admin' ? 'Super User' :selUserObj?.roles[0] : selUserObj?.department }</span>
+                </time>
+              </div>
+            )}
               {['business_tasks'].includes(isClicked) &&
                 businessSection_D.length > 0 && (
                   <div className="overflow-x-auto mt-2 rounded-xl">
@@ -535,7 +598,8 @@ const ProjectReportsBody = ({ title, pId, data }) => {
                             className="focus:outline-none h-16 border border-gray-100 rounded"
                             key={i}
                             onClick={() => {
-                              selTaskManObjF(dat)
+                              setisViewTaskMan(true)
+                              setSelTaskMan(dat)
                             }}
                           >
                             <td>
@@ -548,7 +612,7 @@ const ProjectReportsBody = ({ title, pId, data }) => {
                             <td className=" max-w-[300px]">
                               <div className="flex items-center ">
                                 <div className="flex flex-col">
-                                  <p className="text-base max-w-[350px] text-[13px] overflow-ellipsis overflow-hidden font-semibold leading-none text-blue-800 mr-2 mt-2">
+                                  <p className="text-base max-w-[350px] text-[13px] overflow-ellipsis overflow-hidden font-semibold leading-5 text-blue-800 mr-2 mt-2">
                                     {dat?.title}
                                   </p>
                                   {dat?.comments?.length > 0 && (
@@ -557,19 +621,19 @@ const ProjectReportsBody = ({ title, pId, data }) => {
                                     </p>
                                   )}
                                   <div className="flex flex-row mt-[2px]">
-                                    <p className="text-[9px]   leading-none  pr-2 text-green-800 ]  py-[4px]  rounded-full   mb-1 mr-2  ">
+                                    <p className="text-[9px]   leading-none  pr-2 text-green-800 ]  py-[4px]  rounded-full   mb-1 mr-2  mt-[2px] ">
                                       {dat?.priority?.toUpperCase()}
                                     </p>
                                     <section>
                                       <PaperClipIcon className="w-3 h-3 mr-[2px] inline-block text-gray-400 mb-[10px]" />
                                     </section>
-                                    <p className="text-[9px]  leading-none text-red-800   font-sanF  py-[4px]  rounded-full   mb-1 mr-4  ">
+                                    <p className="text-[9px]  leading-none text-green-800   font-sanF  py-[4px]  rounded-full   mb-1 mr-4 mt-[1px] font-bold text-[11px] ">
                                       {dat?.attachmentsCount || 0}
                                     </p>
                                     <section>
                                       <UsersIcon className="w-3 h-3 mr-[2px]  inline-block text-gray-400 mb-[10px]  " />{' '}
                                     </section>
-                                    <p className="text-[9px]  leading-none text-red-800   font-sanF  py-[4px]  rounded-full   mb-1 mr-4  ">
+                                    <p className="text-[9px]  leading-none text-green-800   font-sanF  py-[4px]  rounded-full   mb-1 mr-4 mt-[1px] font-bold text-[11px]">
                                       {dat?.participantsA?.length || 0}
                                     </p>
                                   </div>
@@ -660,6 +724,13 @@ const ProjectReportsBody = ({ title, pId, data }) => {
         title={'Notification Setup'}
         widthClass="max-w-md"
         wbPayload={wbSelPayload}
+      />
+       <SiderForm
+        open={isViewTaskMan}
+        setOpen={setisViewTaskMan}
+        title={'view_task_man'}
+        taskManObj={selTaskMan}
+        widthClass="max-w-4xl"
       />
     </>
   )
