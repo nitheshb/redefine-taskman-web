@@ -378,11 +378,15 @@ const ProjectReportsBody = ({ title, pId, data }) => {
   const getLeadsDataFun = async () => {
     const unsubscribe = steamUsersList(
       orgId,
-      (querySnapshot) => {
-        const usersListA = querySnapshot.docs.map((docSnapshot) =>
+     async (querySnapshot) => {
+        const usersListA = await querySnapshot.docs.map((docSnapshot) =>
           docSnapshot.data()
         )
-        setLeadsFetchedData(usersListA)
+      await  usersListA.sort((a, b) => {
+        console.log('am it', b)
+          return  a.name.localeCompare(b.name)
+        })
+     await   setLeadsFetchedData(usersListA)
       },
       () => setLeadsFetchedData([])
     )
@@ -427,19 +431,19 @@ const ProjectReportsBody = ({ title, pId, data }) => {
       {selCat === 'enquiry_journey_status' && (
         <div className="w-full flex  flex-row">
           <section className="m-2 w-[200px] min-h-[400px]">
-            <div className="bg-[#FFEDEA] p-4 rounded-xl shadow-md shadow-neutral-200 ">
-              <h2 className="text-sm font-semibold pb-2 border-b border-grey">
+            <div className="bg-[#FFEDEA] p-4 px-2 rounded-xl shadow-md shadow-neutral-200 ">
+              <h2 className="text-sm font-semibold pb-2 border-b border-grey px-2">
                 {'Employees'}
               </h2>
               <table className="w-full whitespace-nowrap">
-                <thead>
+                {/* <thead>
                   <tr className="border-b">
-                    <th></th>
-                    <th className="text-left p-[10px] pr-[12px] pl-0 text-xs text-green-800 ">
-                      Marketing
+
+                    <th className="text-left p-[10px]  pr-[12px] pl-0 text-xs text-green-800 ">
+                      <span className="ml-2">Marketing</span>
                     </th>
                   </tr>
-                </thead>
+                </thead> */}
                 <tbody>
                   {leadsFetchedData?.map((data, i) => (
                     <tr
@@ -451,15 +455,19 @@ const ProjectReportsBody = ({ title, pId, data }) => {
                         setSelUserId(data?.uid)
                       }}
                     >
-                      <td className=" w-[34px]">
-                        <div className="ml-5">
-                          <div className="rounded-sm h-5 w-5 flex flex-shrink-0 justify-center items-center text-xs relative">
+                      <td className="py-2 pr-2  font-medium text-xs leading-6  whitespace-nowrap">
+                    <div className='flex flex-row '>
+                    <div className="rounded-sm h-5 w-5 mt-2 flex flex-shrink-0 justify-center items-center text-xs relative">
                             {i + 1}
                           </div>
-                        </div>
-                      </td>
-                      <td className="py-2 pr-2  font-medium text-xs leading-6  whitespace-nowrap">
-                        {data.name}
+                      <div className=" w-7 h-7 mr-2 mt-[5px] rounded-full ">
+
+              <img src="/avatar_1.png" alt="" className='mr-2'/>
+            </div>
+            <div className="flex flex-col">
+              <span className='leading-[19px] font-bold text-[12px]'>{data.name}</span>
+              <span className='leading-[12px]'>{data?.roles[0]}</span> </div>
+            </div>
                       </td>
                     </tr>
                   ))}

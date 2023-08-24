@@ -75,7 +75,11 @@ const HeadNavBarAccounts = ({selModule, setSelModule}) => {
           <Box display="flex" flexDirection="column" mr={2}>
             <Typography variant="body2" className='text-black'>{user?.displayName}</Typography>
             <Typography variant="caption" className="text-gray-900">
-              {user?.role?.[0]}
+            {user?.roles?.length > 0
+                  ? user?.roles[0] === 'admin'
+                    ? 'Super User'
+                    : user?.roles[0]
+                  : user?.department}
             </Typography>
           </Box>
         </Box>

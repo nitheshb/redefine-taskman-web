@@ -317,7 +317,12 @@ const HeadNavBar = (props) => {
             <section className="mr-3">
               <div className="text-gray-800 text-sm"> {user?.displayName}</div>
               <div className="h-[14px] text-xs  text-gray-500">
-                {user?.orgName || user?.orgId} - {user?.role?.[0]}
+                {user?.orgName || user?.orgId} -{' '}
+                {user?.roles?.length > 0
+                  ? user?.roles[0] === 'admin'
+                    ? 'Super User'
+                    : user?.roles[0]
+                  : user?.department}
               </div>
             </section>
             {/* <Box display="flex" flexDirection="column" mr={2}>

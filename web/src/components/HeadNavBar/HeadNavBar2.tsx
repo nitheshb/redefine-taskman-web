@@ -76,7 +76,15 @@ const HeadNavBar2 = ({selModule, setSelModule}) => {
           <Box display="flex" flexDirection="column" mr={2}>
             <Typography variant="body2">{user?.displayName}</Typography>
             <Typography variant="caption" className="text-gray-500">
-              {user?.role?.[0]}
+           {user?.roles?.length > 0
+                  ? user?.roles[0] == 'admin'
+                    ? 'Super User'
+                    : user?.roles[0]
+                  : user?.role?.length > 0
+                  ? user?.role[0] == 'admin'
+                    ? 'Super User'
+                    : user?.role[0]
+                  : user?.department}
             </Typography>
           </Box>
         </Box>
