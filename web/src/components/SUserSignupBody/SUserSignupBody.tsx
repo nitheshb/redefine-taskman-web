@@ -46,6 +46,7 @@ const SUserSignupBody = ({ title, dialogOpen, empData }) => {
     department,
     uid,
     roles: rolees,
+    userStatus
   } = empData
   console.log('empData is ', empData)
 
@@ -87,12 +88,14 @@ const SUserSignupBody = ({ title, dialogOpen, empData }) => {
       setisdeptEmpty(false)
     }
     const filRoles = ROLES_LIST.filter((item) => item.dept === data.value)
+
+console.log('rolws are ', filRoles)
     setroles(filRoles)
   }
   const onSubmit = async (data) => {
     console.log('check fo this ', data)
     setLoading(true)
-    const { empId, email, myRole, deptVal, name, offPh, perPh } = data
+    const { empId, email, myRole, deptVal, name, offPh, perPh, userStatus } = data
 
     if (editMode) {
       updateUserRole(
@@ -105,7 +108,8 @@ const SUserSignupBody = ({ title, dialogOpen, empData }) => {
         email,
         offPh,
         perPh,
-        'nitheshreddy.email@gmail.com'
+        userStatus,
+        user?.email
       )
       //  add docs to report page
 
@@ -115,12 +119,12 @@ const SUserSignupBody = ({ title, dialogOpen, empData }) => {
         type: 'updateRole',
         subtype: 'updateRole',
         txt: `${email} as ${myRole}`,
-        by: 'nitheshreddy.email@gmail.com',
+        by: user?.email,
       })
 
       setFormMessage({
         color: 'green',
-        message: `Role is updated Successfully`,
+        message: `User updated Successfully`,
       })
     } else {
       const data = {
@@ -277,6 +281,7 @@ const SUserSignupBody = ({ title, dialogOpen, empData }) => {
             empId: empId,
             perPh: perPh,
             offPh: offPh,
+            userStatus: userStatus,
           }}
           validationSchema={validate}
           onSubmit={(values) => {
@@ -371,6 +376,17 @@ const SUserSignupBody = ({ title, dialogOpen, empData }) => {
                 ) : null}
 
                 {/*  */}
+
+                <CustomSelect
+                  name="userStatus"
+                  label="User Status"
+                  className="input mt-3"
+                  onChange={(value) =>
+                    formik.setFieldValue('userStatus', value.value)
+                  }
+                  value={formik.values.userStatus || ''}
+                  options={[{label:'Active', value: 'active'}, {label:'Inactive', value: 'Inactive'}]}
+                />
 
                 <div className="md:flex md:flex-row md:space-x-4 w-full text-xs mt-5">
                   <div className="w-full flex flex-col mb-3">

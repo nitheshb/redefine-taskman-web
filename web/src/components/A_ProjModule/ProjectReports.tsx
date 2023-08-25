@@ -33,11 +33,14 @@ import {
   getDifferenceInMinutes,
   prettyDateTime,
 } from 'src/util/dateConverter'
+import {
+  SlimSelectBox,
+  VerySlimSelectBox,
+} from 'src/util/formFields/slimSelectBoxField'
 
 import SiderForm from '../SiderForm/SiderForm'
 
 import SourceAddTemplate from './SourceAddTemplate'
-import { SlimSelectBox, VerySlimSelectBox } from 'src/util/formFields/slimSelectBoxField'
 
 const ProjectReportsBody = ({ title, pId, data }) => {
   const d = new window.Date()
@@ -61,7 +64,7 @@ const ProjectReportsBody = ({ title, pId, data }) => {
   const [showCompletedTasks, setShowCompletedTasks] = useState(false)
   const [showOnlyDone, setShowOnlyDone] = useState(false)
   const [isViewTaskMan, setisViewTaskMan] = useState(false)
-  const [selTaskMan, setSelTaskMan]  = useState({})
+  const [selTaskMan, setSelTaskMan] = useState({})
 
   const [sourceDateRange, setSourceDateRange] = useState(
     startOfDay(d).getTime()
@@ -77,8 +80,6 @@ const ProjectReportsBody = ({ title, pId, data }) => {
   const [sortType, setSortType] = useState('Latest')
   const [isChecked, setIsChecked] = useState(false)
 
-
-
   const [selUserId, setSelUserId] = useState(user?.uid)
   const [selUserObj, setSelUserObj] = useState(user)
 
@@ -93,7 +94,6 @@ const ProjectReportsBody = ({ title, pId, data }) => {
   useEffect(() => {
     console.log('user is ', user)
   }, [user])
-
 
   useEffect(() => {
     getTasksDataFun()
@@ -212,7 +212,15 @@ const ProjectReportsBody = ({ title, pId, data }) => {
       setParticipantsData_D(ParticipantsData_D)
       bootBusinessFun(ParticipantsData_D)
     }
-  }, [businessData_F,selTaskDispType, subSection, sortType, searchText, selPriority, selUserId])
+  }, [
+    businessData_F,
+    selTaskDispType,
+    subSection,
+    sortType,
+    searchText,
+    selPriority,
+    selUserId,
+  ])
 
   const sortDataFun = (data) => {
     if (sortType === 'Oldest') {
@@ -378,15 +386,15 @@ const ProjectReportsBody = ({ title, pId, data }) => {
   const getLeadsDataFun = async () => {
     const unsubscribe = steamUsersList(
       orgId,
-     async (querySnapshot) => {
+      async (querySnapshot) => {
         const usersListA = await querySnapshot.docs.map((docSnapshot) =>
           docSnapshot.data()
         )
-      await  usersListA.sort((a, b) => {
-        console.log('am it', b)
-          return  a.name.localeCompare(b.name)
+        await usersListA.sort((a, b) => {
+          console.log('am it', b)
+          return a.name.localeCompare(b.name)
         })
-     await   setLeadsFetchedData(usersListA)
+        await setLeadsFetchedData(usersListA)
       },
       () => setLeadsFetchedData([])
     )
@@ -435,55 +443,165 @@ const ProjectReportsBody = ({ title, pId, data }) => {
               <h2 className="text-sm font-semibold pb-2 border-b border-grey px-2">
                 {'Employees'}
               </h2>
-              <table className="w-full whitespace-nowrap">
-                {/* <thead>
-                  <tr className="border-b">
-
-                    <th className="text-left p-[10px]  pr-[12px] pl-0 text-xs text-green-800 ">
-                      <span className="ml-2">Marketing</span>
-                    </th>
-                  </tr>
-                </thead> */}
-                <tbody>
-                  {leadsFetchedData?.map((data, i) => (
-                    <tr
-                      key={i}
-                      className={`mt-4 cursor-pointer ${selUserId === data?.uid ? 'bg-red-800 text-white rounded-xl' : ''}`}
-                      onClick={() => {
-                        console.log('user is ', data)
-                        setSelUserObj(data)
-                        setSelUserId(data?.uid)
-                      }}
-                    >
-                      <td className="py-2 pr-2  font-medium text-xs leading-6  whitespace-nowrap">
-                    <div className='flex flex-row '>
-                    <div className="rounded-sm h-5 w-5 mt-2 flex flex-shrink-0 justify-center items-center text-xs relative">
-                            {i + 1}
-                          </div>
-                      <div className=" w-7 h-7 mr-2 mt-[5px] rounded-full ">
-
-              <img src="/avatar_1.png" alt="" className='mr-2'/>
-            </div>
-            <div className="flex flex-col">
-              <span className='leading-[19px] font-bold text-[12px]'>{data.name}</span>
-              <span className='leading-[12px]'>{data?.roles[0]}</span> </div>
-            </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <span className="text-[10px] ml-2 ">Super User</span>
+              {leadsFetchedData
+                .filter((d) => d.department == 'admin')
+                ?.map((data, i) => (
+                  <section
+                    key={i}
+                    className={` cursor-pointer flex flex-row ${
+                      selUserId === data?.uid
+                        ? 'bg-red-800 text-white rounded-xl'
+                        : ''
+                    }`}
+                    onClick={() => {
+                      console.log('user is ', data)
+                      setSelUserObj(data)
+                      setSelUserId(data?.uid)
+                    }}
+                  >
+                    <section className="py-2 pr-2  font-medium text-xs leading-6  whitespace-nowrap">
+                      <div className="flex flex-row ">
+                        <div className="rounded-sm h-5 w-5 mt-2 flex flex-shrink-0 justify-center items-center text-xs relative">
+                          {/* {i + 1} */}
+                        </div>
+                        <div className=" w-7 h-7 mr-2 mt-[5px] rounded-full ">
+                          <img src="/avatar_1.png" alt="" className="mr-2" />
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="leading-[19px] font-bold text-[12px]">
+                            {data.name}
+                          </span>
+                          <span className="leading-[12px]">
+                            {data?.roles[0]}
+                          </span>{' '}
+                        </div>
+                      </div>
+                    </section>
+                  </section>
+                ))}
+              <div className="text-[10px] ml-2 ">Marketing</div>
+              {leadsFetchedData
+                .filter((d) => d.department == 'marketing')
+                ?.map((data, i) => (
+                  <section
+                    key={i}
+                    className={` cursor-pointer flex flex-row ${
+                      selUserId === data?.uid
+                        ? 'bg-red-800 text-white rounded-xl'
+                        : ''
+                    }`}
+                    onClick={() => {
+                      console.log('user is ', data)
+                      setSelUserObj(data)
+                      setSelUserId(data?.uid)
+                    }}
+                  >
+                    <section className="py-2 pr-2  font-medium text-xs leading-6  whitespace-nowrap">
+                      <div className="flex flex-row ">
+                        <div className="rounded-sm h-5 w-5 mt-2 flex flex-shrink-0 justify-center items-center text-xs relative">
+                          {/* {i + 1} */}
+                        </div>
+                        <div className=" w-7 h-7 mr-2 mt-[5px] rounded-full ">
+                          <img src="/avatar_1.png" alt="" className="mr-2" />
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="leading-[19px] font-bold text-[12px]">
+                            {data.name}
+                          </span>
+                          <span className="leading-[12px]">
+                            {data?.roles[0]}
+                          </span>{' '}
+                        </div>
+                      </div>
+                    </section>
+                  </section>
+                ))}
+              <div className="text-[10px] ml-2 ">Sales</div>
+              {leadsFetchedData
+                .filter((d) => d.department == 'sales')
+                ?.map((data, i) => (
+                  <section
+                    key={i}
+                    className={` cursor-pointer flex flex-row ${
+                      selUserId === data?.uid
+                        ? 'bg-red-800 text-white rounded-xl'
+                        : ''
+                    }`}
+                    onClick={() => {
+                      console.log('user is ', data)
+                      setSelUserObj(data)
+                      setSelUserId(data?.uid)
+                    }}
+                  >
+                    <section className="py-2 pr-2  font-medium text-xs leading-6  whitespace-nowrap">
+                      <div className="flex flex-row ">
+                        <div className="rounded-sm h-5 w-5 mt-2 flex flex-shrink-0 justify-center items-center text-xs relative">
+                          {/* {i + 1} */}
+                        </div>
+                        <div className=" w-7 h-7 mr-2 mt-[5px] rounded-full ">
+                          <img src="/avatar_1.png" alt="" className="mr-2" />
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="leading-[19px] font-bold text-[12px]">
+                            {data.name}
+                          </span>
+                          <span className="leading-[12px]">
+                            {data?.roles[0]}
+                          </span>{' '}
+                        </div>
+                      </div>
+                    </section>
+                  </section>
+                ))}
+              <div className="text-[10px] ml-2 ">Crm</div>
+              {leadsFetchedData
+                .filter((d) => d.department == 'crm')
+                ?.map((data, i) => (
+                  <section
+                    key={i}
+                    className={` cursor-pointer flex flex-row ${
+                      selUserId === data?.uid
+                        ? 'bg-red-800 text-white rounded-xl'
+                        : ''
+                    }`}
+                    onClick={() => {
+                      console.log('user is ', data)
+                      setSelUserObj(data)
+                      setSelUserId(data?.uid)
+                    }}
+                  >
+                    <section className="py-2 pr-2  font-medium text-xs leading-6  whitespace-nowrap">
+                      <div className="flex flex-row ">
+                        <div className="rounded-sm h-5 w-5 mt-2 flex flex-shrink-0 justify-center items-center text-xs relative">
+                          {i + 1}
+                        </div>
+                        <div className=" w-7 h-7 mr-2 mt-[5px] rounded-full ">
+                          <img src="/avatar_1.png" alt="" className="mr-2" />
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="leading-[19px] font-bold text-[12px]">
+                            {data.name}
+                          </span>
+                          <span className="leading-[12px]">
+                            {data?.roles[0]}
+                          </span>{' '}
+                        </div>
+                      </div>
+                    </section>
+                  </section>
+                ))}
             </div>
           </section>
 
           {/* row 2 */}
           <section className="m-2 mx-0 w-full">
             <div className="bg-[#FFEDEA] p-4 rounded-xl shadow-md shadow-neutral-200 ">
-             <section className='flex flex-row justify-between'>
-              <h2 className="text-sm font-semibold pb-2 border-b border-grey">
-                {`${selUserObj?.name || selUserObj?.displayName} Tasks`}
-              </h2>
-                              <div className=" mr-2 w-[180px]">
+              <section className="flex flex-row justify-between">
+                <h2 className="text-sm font-semibold pb-2 border-b border-grey">
+                  {`${selUserObj?.name || selUserObj?.displayName} Tasks`}
+                </h2>
+                <div className=" mr-2 w-[180px]">
                   <VerySlimSelectBox
                     name="Priority"
                     placeholder="Priority"
@@ -492,12 +610,12 @@ const ProjectReportsBody = ({ title, pId, data }) => {
                     onChange={(value) => {
                       console.log('sel valu s', value)
                       setSelTaskDispType(value.value)
-                      if(value.value === 'only_completed'){
+                      if (value.value === 'only_completed') {
                         setShowOnlyDone(true)
-                      }else if(value.value === 'todo_tasks') {
+                      } else if (value.value === 'todo_tasks') {
                         setShowOnlyDone(false)
                         setShowCompletedTasks(false)
-                      }else {
+                      } else {
                         setShowOnlyDone(false)
                         setShowCompletedTasks(true)
                       }
@@ -525,30 +643,39 @@ const ProjectReportsBody = ({ title, pId, data }) => {
                 </thead>
                 <tbody></tbody>
               </table> */}
-                 {((isClicked === 'dept_tasks' && taskListA.length === 0) ||
-              (isClicked === 'personal_tasks' && personalData_D.length === 0) ||
-              (isClicked === 'business_tasks' &&
-                businessSection_D.length === 0)) && (
-              <div
-                className={`py-8 px-8 flex flex-col items-center bg-red-100 rounded ${
-                  isClicked === 'personal_tasks' ? 'mt-[55px]' : ''
-                }`}
-              >
-                <div className="font-md font-medium text-xs mb-4 text-gray-800 items-center">
-                  <img
-                    className="w-[180px] h-[180px] inline"
-                    alt=""
-                    src="../note-widget.svg"
-                  />
+              {((isClicked === 'dept_tasks' && taskListA.length === 0) ||
+                (isClicked === 'personal_tasks' &&
+                  personalData_D.length === 0) ||
+                (isClicked === 'business_tasks' &&
+                  businessSection_D.length === 0)) && (
+                <div
+                  className={`py-8 px-8 flex flex-col items-center bg-red-100 rounded ${
+                    isClicked === 'personal_tasks' ? 'mt-[55px]' : ''
+                  }`}
+                >
+                  <div className="font-md font-medium text-xs mb-4 text-gray-800 items-center">
+                    <img
+                      className="w-[180px] h-[180px] inline"
+                      alt=""
+                      src="../note-widget.svg"
+                    />
+                  </div>
+                  <h3 className="mb-1 text-sm font-semibold text-gray-900">
+                    No Tasks Found for{' '}
+                    <span className="text-blue-600">{selUserObj?.name}</span>
+                  </h3>
+                  <time className="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
+                    <span className="text-blue-600">
+                      {' '}
+                      {selUserObj?.roles?.length > 0
+                        ? selUserObj?.roles[0] === 'admin'
+                          ? 'Super User'
+                          : selUserObj?.roles[0]
+                        : selUserObj?.department}
+                    </span>
+                  </time>
                 </div>
-                <h3 className="mb-1 text-sm font-semibold text-gray-900">
-                  No Tasks Found for <span className="text-blue-600">{selUserObj?.name }</span>
-                </h3>
-                <time className="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
-                  <span className="text-blue-600"> {selUserObj?.roles?.length >0 ?selUserObj?.roles[0] === 'admin' ? 'Super User' :selUserObj?.roles[0] : selUserObj?.department }</span>
-                </time>
-              </div>
-            )}
+              )}
               {['business_tasks'].includes(isClicked) &&
                 businessSection_D.length > 0 && (
                   <div className="overflow-x-auto mt-2 rounded-xl">
@@ -733,7 +860,7 @@ const ProjectReportsBody = ({ title, pId, data }) => {
         widthClass="max-w-md"
         wbPayload={wbSelPayload}
       />
-       <SiderForm
+      <SiderForm
         open={isViewTaskMan}
         setOpen={setisViewTaskMan}
         title={'view_task_man'}

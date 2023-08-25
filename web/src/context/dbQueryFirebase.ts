@@ -37,7 +37,7 @@ import { supabase } from './supabase'
 
 // get users list
 export const steamUsersList = (orgId, snapshot, error) => {
-  const itemsQuery = query(collection(db, 'users'), where('orgId', '==', orgId))
+  const itemsQuery = query(collection(db, 'users'), where('orgId', '==', orgId), where('userStatus', '==', 'active'))
   console.log('orgname is ====>', orgId)
   return onSnapshot(itemsQuery, snapshot, error)
 }
@@ -2500,6 +2500,7 @@ export const updateUserRole = async (
   email,
   offPh,
   perPh,
+  userStatus,
   by
 ) => {
   await updateDoc(doc(db, 'users', uid), {
@@ -2510,6 +2511,7 @@ export const updateUserRole = async (
     roles: [role],
     offPh: offPh || '',
     perPh: perPh || '',
+    userStatus: userStatus
   })
   return await addUserLog(orgId, {
     s: 's',
