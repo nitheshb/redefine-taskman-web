@@ -473,7 +473,7 @@ const ProjectReportsBody = ({ title, pId, data }) => {
                             {data.name}
                           </span>
                           <span className="leading-[12px]">
-                            {data?.roles[0]}
+                            {/* {data?.roles[0]} */} Super User
                           </span>{' '}
                         </div>
                       </div>
@@ -574,7 +574,7 @@ const ProjectReportsBody = ({ title, pId, data }) => {
                     <section className="py-2 pr-2  font-medium text-xs leading-6  whitespace-nowrap">
                       <div className="flex flex-row ">
                         <div className="rounded-sm h-5 w-5 mt-2 flex flex-shrink-0 justify-center items-center text-xs relative">
-                          {i + 1}
+                          {/* {i + 1} */}
                         </div>
                         <div className=" w-7 h-7 mr-2 mt-[5px] rounded-full ">
                           <img src="/avatar_1.png" alt="" className="mr-2" />
