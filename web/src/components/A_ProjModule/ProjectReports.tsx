@@ -519,7 +519,7 @@ const ProjectReportsBody = ({ title, pId, data }) => {
                 ))}
               <div className="text-[10px] ml-2 ">Sales</div>
               {leadsFetchedData
-                .filter((d) => d.department == 'sales')
+                .filter((d) =>(d.department == 'sales' && d?.roles[0] != 'cp-agent'))
                 ?.map((data, i) => (
                   <section
                     key={i}
