@@ -469,10 +469,10 @@ const ProjectReportsBody = ({ title, pId, data }) => {
                           <img src="/avatar_1.png" alt="" className="mr-2" />
                         </div>
                         <div className="flex flex-col">
-                          <span className="leading-[19px] font-bold text-[12px]">
+                          <span className="leading-[19px] font-bold text-[12px] ">
                             {data.name}
                           </span>
-                          <span className="leading-[12px]">
+                          <span className="leading-[12px] text-[10px] text-[#6c6969]">
                             {/* {data?.roles[0]} */} Super User
                           </span>{' '}
                         </div>
@@ -505,11 +505,11 @@ const ProjectReportsBody = ({ title, pId, data }) => {
                         <div className=" w-7 h-7 mr-2 mt-[5px] rounded-full ">
                           <img src="/avatar_1.png" alt="" className="mr-2" />
                         </div>
-                        <div className="flex flex-col">
+                        <div className="flex flex-col mt-[9px]">
                           <span className="leading-[19px] font-bold text-[12px]">
                             {data.name}
                           </span>
-                          <span className="leading-[12px]">
+                          <span className="leading-[12px] text-[10px] text-[#6c6969]">
                             {data?.roles[0]}
                           </span>{' '}
                         </div>
@@ -542,11 +542,11 @@ const ProjectReportsBody = ({ title, pId, data }) => {
                         <div className=" w-7 h-7 mr-2 mt-[5px] rounded-full ">
                           <img src="/avatar_1.png" alt="" className="mr-2" />
                         </div>
-                        <div className="flex flex-col">
+                        <div className="flex flex-col mt-[9px]">
                           <span className="leading-[19px] font-bold text-[12px]">
                             {data.name}
                           </span>
-                          <span className="leading-[12px]">
+                          <span className="leading-[12px] text-[10px] text-[#6c6969]">
                             {data?.roles[0]}
                           </span>{' '}
                         </div>
@@ -579,11 +579,11 @@ const ProjectReportsBody = ({ title, pId, data }) => {
                         <div className=" w-7 h-7 mr-2 mt-[5px] rounded-full ">
                           <img src="/avatar_1.png" alt="" className="mr-2" />
                         </div>
-                        <div className="flex flex-col">
-                          <span className="leading-[19px] font-bold text-[12px]">
+                        <div className="flex flex-col mt-[9px]">
+                          <span className="leading-[19px] font-bold text-[12px] ">
                             {data.name}
                           </span>
-                          <span className="leading-[12px]">
+                          <span className="leading-[12px] text-[10px] text-[#6c6969]">
                             {data?.roles[0]}
                           </span>{' '}
                         </div>

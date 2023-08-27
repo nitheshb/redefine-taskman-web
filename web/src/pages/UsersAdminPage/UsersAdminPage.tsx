@@ -43,10 +43,10 @@ const UsersAdminPage = () => {
               selModule ={selModule}
               setSelModule={setSelModule}
             />
-          <div className="flex-grow p-6 overflow-auto  text-gray-700 bg-gradient-to-tr from-blue-200 via-indigo-200 to-pink-200">
-            <div className="flex items-center flex-shrink-0 h-16 px-0  pl-0  ">
+          <div className="flex-grow px-6 overflow-auto no-scrollbar  text-gray-700 bg-gradient-to-tr from-blue-200 via-indigo-200 to-pink-200">
+            <div className="flex items-center flex-shrink-0 h-10 mt-2 px-0  pl-0  ">
               {/* <h1 className="text-lg font-medium">redefine.</h1> */}
-              <span className="relative  flex items-center w-auto text-2xl font-bold leading-none pl-0">
+              <span className="relative  flex items-center w-auto text-xl font-bold leading-none pl-0">
                 {viewable}
               </span>
 

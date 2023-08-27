@@ -375,6 +375,7 @@ const AddPaymentDetailsForm = ({
     console.log('unit space is ', uid)
     updateUnitAsBooked(
       orgId,
+      leadDetailsObj2?.ProjectId,
       uid,
       id,
       unitUpdate,

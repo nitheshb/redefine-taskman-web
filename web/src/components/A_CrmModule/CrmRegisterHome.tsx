@@ -938,20 +938,25 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                           </section>
                                         </section>
                                       </section>
-                                      <section className="flex flex-row mt-3 ">
-                                        <span className=" text-[10px] h-[20px]  text-[#823d00] font-bodyLato font-[600] mt-[2px] bg-[#ffeccf] px-[6px] py-[2px] rounded-xl  mr-1">
+                                      <section className="flex flex-row mt-3 justify-between ">
+                                        {/* <span className=" text-[10px] h-[20px]  text-[#823d00] font-bodyLato font-[600] mt-[2px] bg-[#ffeccf] px-[6px] py-[2px] rounded-xl  mr-1">
                                           {finData?.unit_type}
-                                          {/* ₹{' '}
-                                            {finData?.plotCS
-                                              ?.reduce(function (_this, val) {
-                                                return (
-                                                  _this +
-                                                  val.TotalNetSaleValueGsT
-                                                )
-                                              }, 0)
-                                              ?.toLocaleString('en-IN')} */}
+
+                                        </span> */}
+                                        <section>
+                                        <span className="  text-[10px] h-[20px]  text-[#823d00] font-bodyLato font-[600] mt-[2px] bg-[#ffeccf] px-[6px] py-[2px] rounded-xl mr-1 ">
+                                          {/* {finData?.[`${assets[0]}_unitDetails`]
+                                          ?.unit_no || ''} */}
+                                          {finData?.area?.toLocaleString(
+                                            'en-IN'
+                                          )}{' '}
+                                          sqft
                                         </span>
 
+
+                                        <span className="  text-[10px] h-[20px] text-[#823d00] font-bodyLato font-[600] mt-[2px] bg-[#ffeccf] px-[6px] py-[2px] rounded-xl mr-1 ">
+                                          {finData?.facing}
+                                        </span>
                                         <span className=" text-[10px] h-[20px] text-[#823d00] font-bodyLato font-[600] mt-[2px] bg-[#ffeccf] px-[6px] py-[2px] rounded-xl mr-1 ">
                                           {/* {finData?.[`${assets[0]}_unitDetails`]
                                           ?.unit_no || ''} */}
@@ -961,17 +966,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                           )}
                                           /sqft
                                         </span>
-                                        <span className="  text-[10px] h-[20px]  text-[#823d00] font-bodyLato font-[600] mt-[2px] bg-[#ffeccf] px-[6px] py-[2px] rounded-xl mr-1 ">
-                                          {/* {finData?.[`${assets[0]}_unitDetails`]
-                                          ?.unit_no || ''} */}
-                                          {finData?.area?.toLocaleString(
-                                            'en-IN'
-                                          )}{' '}
-                                          sqft
-                                        </span>
-                                        <span className="  text-[10px] h-[20px] text-[#823d00] font-bodyLato font-[600] mt-[2px] bg-[#ffeccf] px-[6px] py-[2px] rounded-xl mr-1 ">
-                                          {finData?.facing}
-                                        </span>
+                                        </section>
                                         <span className=" text-[10px] h-[20px] text-[#823d00] font-bodyLato font-[600] mt-[2px] bg-[#ffeccf] px-[6px] py-[2px] rounded-xl mr-1 ">
                                           Booked:{' '}
                                           {prettyDate(finData?.Date || 0)}
@@ -989,302 +984,216 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                 </div>
                               </div>
                             </div>
-                            <div className="w-[328px] bg-[#f2f3f8] px-1">
-                              {' '}
-                              <Box>
-                                <>
-                                  <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2 min-w-[180px]">
-                                    <div className="flex flex-row h-[70px]">
-                                      {[
-                                        {
-                                          item: 'Total Cost',
-                                          height: 28,
-                                          bg: '#abffe7',
-                                          value:
-                                            finData?.plotCS
+                            <div>
+                            <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2 min-w-[200px] mr-2">
+          <div className="flex flex-row justify-between mx-">
+            <h6 className="font-bodyLato font-semibold text-xs m-1">
+           <div>₹
+              {finData?.T_review?.toLocaleString('en-IN') || 0}</div>
+              <span className="text-[#637381] tracking-wide font-thin">Paid:</span>
+            </h6>
+            <h6 className="font-bodyLato font-semibold text-xs m-1 text-right">
+          <div> ₹
+              {((finData?.plotCS
                                               ?.reduce(function (_this, val) {
                                                 return (
                                                   _this +
                                                   val.TotalNetSaleValueGsT
                                                 )
                                               }, 0)
-                                              ?.toLocaleString('en-IN') || 0,
-                                        },
-                                        {
-                                          item: 'Balance',
-                                          height: 14,
-                                          bg: '#ffdbdb',
-                                          value:
-                                            (
-                                              finData?.plotCS?.reduce(function (
-                                                _this,
-                                                val
-                                              ) {
+                                             || 0) - finData?.T_review)?.toLocaleString(
+                'en-IN'
+              ) || 0 }</div>
+                 <span className="text-[#637381] tracking-wide font-thin text-right">Left:</span>
+            </h6>
+          </div>
+          <div className="flex flex-row mx-1 pt-">
+            {[{ item: 'Paid', value: 3 }].map((data, i) => (
+              <div
+                className=" w-3/4  "
+                style={{
+                  display: 'inline-block',
+                  alignSelf: 'flex-end',
+                }}
+                key={i}
+              >
+                <div className="">
+                  <LinearProgress
+                    sx={{
+                      backgroundColor: 'white',
+                      '& .MuiLinearProgress-bar': {
+                        backgroundColor: '#ffab00',
+                      },
+                    }}
+                    variant="determinate"
+                    value={100}
+                    style={{
+                      backgroundColor: '#E5EAF2',
+                      borderRadius: '3px',
+                      borderTopRightRadius: '0px',
+                      borderBottomRightRadius: '0px',
+                      height: `${data.value}px`,
+                      width: `100%`,
+                    }}
+                  />
+                </div>
+              </div>
+            ))}
+            {[{ item: 'Due', value: 3 }].map((data, i) => (
+              <div
+                className=" w-2/4  "
+                style={{
+                  display: 'inline-block',
+                  alignSelf: 'flex-end',
+                }}
+                key={i}
+              >
+                <div className="">
+                  <LinearProgress
+                    sx={{
+                      backgroundColor: 'white',
+                      '& .MuiLinearProgress-bar': {
+                        backgroundColor: '#ffab003d',
+                      },
+                    }}
+                    variant="determinate"
+                    value={100}
+                    style={{
+                      backgroundColor: '#ffab003d',
+                      borderRadius: '3px',
+                      borderTopLeftRadius: '0px',
+                      borderBottomLeftRadius: '0px',
+                      height: `${data.value}px`,
+                      width: `100%`,
+                    }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="flex flex-row justify-between mx-">
+          <h6 className="font-bodyLato font-semibold text-xs m-1">
+
+            </h6>
+            <section className="flex flex-row">
+              {/* <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
+                {selCustomerPayload?.T_elgible?.toLocaleString('en-IN')}
+              </h6> */}
+
+              <h6 className="font-bodyLato font-semibold text-xs m-1">
+              <span className="text-[#637381] tracking-wide font-thin">Total Cost :</span> ₹{finData?.plotCS
+                                              ?.reduce(function (_this, val) {
                                                 return (
                                                   _this +
                                                   val.TotalNetSaleValueGsT
                                                 )
-                                              },
-                                              0) - finData?.T_transaction
-                                            )?.toLocaleString('en-IN') || 0,
-                                        },
-                                        // { item: 'Sold', value: finData?.T_transaction || 0 },
-                                        // { item: 'Blocked', value: finData?.T_transaction || 0 },
-                                      ].map((data, i) => (
-                                        <div
-                                          className=" w-2/4  mx-1"
-                                          style={{
-                                            display: 'inline-block',
-                                            alignSelf: 'flex-end',
-                                          }}
-                                          key={i}
-                                        >
-                                          <h6 className="font-bodyLato flex justify-center font-semibold text-xs mt-1">
-                                            ₹{t(data?.value)}
-                                          </h6>
-
-                                          <div className="">
-                                            <LinearProgress
-                                              sx={{
-                                                backgroundColor: 'white',
-                                                '& .MuiLinearProgress-bar': {
-                                                  backgroundColor: data.bg,
-                                                },
-                                              }}
-                                              variant="determinate"
-                                              value={100}
-                                              style={{
-                                                backgroundColor: '#22D3EE',
-                                                borderRadius: '3px',
-                                                height: `${data?.height}px`,
-                                                width: `100%`,
-                                              }}
-                                            />
-                                          </div>
-                                          <div className="flex  justify-center mr-1   mt[2px]">
-                                            <h6 className="font-bodyLato text-xs mt-1">
-                                              {t(data.item)}
-                                            </h6>
-                                          </div>
-                                        </div>
-                                      ))}
-                                    </div>
-                                  </div>
-                                </>
-                              </Box>
+                                              }, 0)
+                                              ?.toLocaleString('en-IN') || 0}
+              </h6>
+            </section>
+          </div>
+        </div>
                             </div>
-                            <div className="w-[328px] bg-[#f2f3f8] px-1">
-                              {' '}
-                              <Box>
-                                <>
-                                  <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2 min-w-[180px]">
-                                    <div className="flex flex-row h-[70px]">
-                                      {[
-                                        {
-                                          item: 'Stage Cost',
-                                          height:
-                                            28,
-                                          bg: '#abffe7',
-                                          value:
-                                            T_review?.toLocaleString('en-IN') ||
-                                            0,
-                                        },
-                                        {
-                                          item: 'Balance',
-                                          // height:  Number(
-                                          //   0.28* Number(
-                                          //      (T_balance / T_elgible) * 100
-                                          //    ) <= 100
-                                          //      ? Math.round(
-                                          //          (T_balance / T_elgible) *
-                                          //            100
-                                          //        )
-                                          //      : 0
-                                          //   ),
-                                          height: 14,
-                                          bg: '#ffdbdb',
-                                          value:
-                                            T_balance?.toLocaleString(
-                                              'en-IN'
-                                            ) || 0,
+                            <div>
+                            <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  pt-2 min-w-[200px]">
+          <div className="flex flex-row justify-between tracking-wide mx-">
+            <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
+            {' '} <div>₹{finData?.T_review?.toLocaleString('en-IN')}</div> <span className="text-[#637381] tracking-wide font-thin">Paid</span>
+            </h6>
+            <section className="flex flex-row">
+              {/* <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
+                {finData?.T_elgible?.toLocaleString('en-IN')}
+              </h6> */}
+              <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2 text-right ">
+               {' '}
+              <div> ₹{finData?.T_balance?.toLocaleString('en-IN')}</div>
+              <span className="text-[#637381] tracking-wide font-thin text-right ">🔥Left:</span>
+              </h6>
+            </section>
+          </div>
+          <div className="flex flex-row mx-1">
+            {[{ item: 'Paid', value: 3 }].map((data, i) => (
+              <div
+                className=" w-3/4  "
+                style={{
+                  display: 'inline-block',
+                  alignSelf: 'flex-end',
+                }}
+                key={i}
+              >
+                <div className="">
+                  <LinearProgress
+                    sx={{
+                      backgroundColor: 'white',
+                      '& .MuiLinearProgress-bar': {
+                        backgroundColor: '#22c55e',
+                      },
+                    }}
+                    variant="determinate"
+                    value={100}
+                    style={{
+                      backgroundColor: '#E5EAF2',
+                      borderRadius: '3px',
+                      borderTopRightRadius: '0px',
+                      borderBottomRightRadius: '0px',
+                      height: `${data.value}px`,
+                      width: `100%`,
+                    }}
+                  />
+                </div>
 
-                                        },
-                                        // { item: 'Sold', value: finData?.T_transaction || 0 },
-                                        // { item: 'Blocked', value: finData?.T_transaction || 0 },
-                                      ].map((data, i) => (
-                                        <div
-                                          className=" w-2/4  mx-1"
-                                          style={{
-                                            display: 'inline-block',
-                                            alignSelf: 'flex-end',
-                                          }}
-                                          key={i}
-                                        >
-                                          <h6 className="font-bodyLato flex justify-center font-semibold text-xs mt-1">
-                                            ₹{t(data?.value)}
-                                          </h6>
+              </div>
+            ))}
 
-                                          <div className="">
-                                            <LinearProgress
-                                              sx={{
-                                                backgroundColor: 'white',
-                                                '& .MuiLinearProgress-bar': {
-                                                  backgroundColor: data.bg,
-                                                },
-                                              }}
-                                              variant="determinate"
-                                              value={100}
-                                              style={{
-                                                backgroundColor: '#22D3EE',
-                                                borderRadius: '3px',
-                                                height: `${data?.height}px`,
-                                                width: `100%`,
-                                              }}
-                                            />
-                                          </div>
-                                          <div className="flex  justify-center mr-1   mt[2px]">
-                                            <h6 className="font-bodyLato text-xs mt-1">
-                                              {t(data.item)}
-                                            </h6>
-                                          </div>
-                                        </div>
-                                      ))}
-                                    </div>
-                                  </div>
-                                </>
-                              </Box>
+            {[{ item: 'Due', value: 3 }].map((data, i) => (
+              <div
+                className=" w-2/4  "
+                style={{
+                  display: 'inline-block',
+                  alignSelf: 'flex-end',
+                }}
+                key={i}
+              >
+                <div className="">
+                  <LinearProgress
+                    sx={{
+                      backgroundColor: 'white',
+                      '& .MuiLinearProgress-bar': {
+                        backgroundColor: '#22c55e3d',
+                      },
+                    }}
+                    variant="determinate"
+                    value={100}
+                    style={{
+                      backgroundColor: '#22c55e3d',
+                      borderRadius: '3px',
+                      borderTopLeftRadius: '0px',
+                      borderBottomLeftRadius: '0px',
+                      height: `${data.value}px`,
+                      width: `100%`,
+                    }}
+                  />
+                </div>
+
+              </div>
+            ))}
+          </div>
+          <div className="flex flex-row justify-between mx-">
+            <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
+
+            </h6>
+            <section className="flex flex-row">
+              {/* <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
+                {finData?.T_elgible?.toLocaleString('en-IN')}
+              </h6> */}
+              <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
+              <span className="text-[#637381] tracking-wide font-thin">Stage Total:</span> {' '}₹{finData?.T_elgible?.toLocaleString('en-IN')}
+              </h6>
+            </section>
+          </div>
+        </div>
                             </div>
-                            {/* <div className="w-1/4 bg-[#f2f3f8] px-1">
-                              {' '}
-                              <Box>
-                                <>
-                                  <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2 min-w-[180px]">
-                                    <div className="flex flex-row justify-between mx-1">
-                                      <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
-                                        ₹{T_review?.toLocaleString('en-IN')}
-                                      </h6>
-                                      <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
-                                        ₹{T_balance?.toLocaleString('en-IN')}
-                                      </h6>
-                                    </div>
-                                    <div className="flex flex-row mx-1">
-                                      {[{ item: 'Paid', value: 6 }].map(
-                                        (data, e) => (
-                                          <div
-                                            style={{
-                                              display: 'inline-block',
-                                              alignSelf: 'flex-end',
-                                              width: `${
-                                                Number(
-                                                  (T_review / T_elgible) * 100
-                                                ) <= 100
-                                                  ? Math.round(
-                                                      (T_review / T_elgible) *
-                                                        100
-                                                    )
-                                                  : 100
-                                              }%`,
-                                            }}
-                                            key={e}
-                                          >
-                                            <div className="">
-                                              <LinearProgress
-                                                sx={{
-                                                  backgroundColor: 'white',
-                                                  '& .MuiLinearProgress-bar': {
-                                                    backgroundColor: '#00a979',
-                                                  },
-                                                }}
-                                                variant="determinate"
-                                                value={100}
-                                                style={{
-                                                  backgroundColor: '#E5EAF2',
-                                                  borderRadius: '3px',
-                                                  borderTopRightRadius: '0px',
-                                                  borderBottomRightRadius:
-                                                    '0px',
-                                                  height: `${data.value}px`,
-                                                  width: `100%`,
-                                                }}
-                                              />
-                                            </div>
-                                            <div className="flex  justify-left mr-1  mb-1 mt-[4px] min-w-[100px]">
-                                              <h6 className="font-bodyLato font-semibold text-xs mt-1">
-                                                {data.item} (
-                                                {Number(
-                                                  (T_review / T_elgible) * 100
-                                                ) <= 100
-                                                  ? Math.round(
-                                                      (T_review / T_elgible) *
-                                                        100
-                                                    )
-                                                  : 100}
-                                                %)
-                                              </h6>
-                                            </div>
-                                          </div>
-                                        )
-                                      )}
-                                      {[{ item: 'Due', value: 6 }].map(
-                                        (data, f) => (
-                                          <div
-                                            style={{
-                                              display: 'inline-block',
-                                              alignSelf: 'flex-end',
-                                              width: `${
-                                                Number(
-                                                  (T_balance / T_elgible) * 100
-                                                ) > 0
-                                                  ? Math.round(
-                                                      (T_balance / T_elgible) *
-                                                        100
-                                                    )
-                                                  : 0
-                                              }%`,
-                                            }}
-                                            key={f}
-                                          >
-                                            <div className="">
-                                              <LinearProgress
-                                                sx={{
-                                                  backgroundColor: 'white',
-                                                  '& .MuiLinearProgress-bar': {
-                                                    backgroundColor: '#d29a80',
-                                                  },
-                                                }}
-                                                variant="determinate"
-                                                value={100}
-                                                style={{
-                                                  backgroundColor: '#E87F7F',
-                                                  borderRadius: '3px',
-                                                  borderTopLeftRadius: '0px',
-                                                  borderBottomLeftRadius: '0px',
-                                                  height: `${data.value}px`,
-                                                  width: `100%`,
-                                                }}
-                                              />
-                                            </div>
-                                            <div className="flex  justify-end mr-1  mb-1 mt-[4px]">
-                                              <h6 className="font-bodyLato font-semibold text-xs mt-1">
-                                                {Number(
-                                                  (T_balance / T_elgible) * 100
-                                                ) > 0
-                                                  ? `(${Math.round(
-                                                      (T_balance / T_elgible) *
-                                                        100
-                                                    )})%`
-                                                  : ''}{' '}
-                                                {data.item}
-                                              </h6>
-                                            </div>
-                                          </div>
-                                        )
-                                      )}
-                                    </div>
-                                  </div>
-                                </>
-                              </Box>
-                            </div> */}
+
                             <div className="w-2/4 bg-[#f2f3f8] px-1">
                               <div className="flex flex-col bg-white shadow rounded-md my-1   py-1">
                                 <div className="flex flex-row justify-between px-1">

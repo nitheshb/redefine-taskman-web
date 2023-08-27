@@ -58,15 +58,18 @@ const UserManageTable = ({ editEmployeeFun }) => {
     <div className="flex flex-col">
       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-          <section className="flex ml-auto mt-[18px]  bg-white  border-gray-100 py-4 md:py-7 px-4 md:px-8 xl:px-10">
+          <section className="flex ml-auto mt-[18px]  bg-white  border-gray-100 py-4 rounded-t-xl px-3 ">
             {[
               { label: 'All', val: 'all' },
               { label: 'Admin', val: 'admin' },
               { label: 'Crm', val: 'crm' },
-              { label: 'Legal', val: 'legal' },
+              { label: 'Marketing', val: 'marketing' },
               { label: 'Project', val: 'project' },
               { label: 'Legal', val: 'legal' },
               { label: 'Sales', val: 'sales' },
+              { label: 'Hr', val: 'hr' },
+              { label: 'Finance', val: 'finance' },
+              { label: 'Construction', val: 'construction' },
             ].map((dat, index) => (
               <a
                 key={index}
@@ -74,7 +77,7 @@ const UserManageTable = ({ editEmployeeFun }) => {
                 onClick={() => showOnlyDept(dat.val)}
               >
                 <div
-                  className={`py-2 px-8 rounded-full hover:text-indigo-700 hover:bg-indigo-100  ${
+                  className={`py-1 px-8 rounded-full hover:text-indigo-700 hover:bg-indigo-100  ${
                     selDept.includes(dat.val)
                       ? 'bg-indigo-100 text-indigo-700'
                       : 'text-gray-600'
@@ -85,7 +88,7 @@ const UserManageTable = ({ editEmployeeFun }) => {
               </a>
             ))}
           </section>
-          <div className="shadow overflow-hidden border-b border-gray-200  bg-white pb-4 md:py-7 px-4 md:px-8 xl:px-10">
+          <div className="shadow overflow-hidden border-b border-gray-200  bg-white pb-4  px-2  xl:px-10">
             <table className="min-w-full divide-y divide-gray-200 ">
               <thead className="bg-gray-50">
                 <tr>
@@ -133,7 +136,7 @@ const UserManageTable = ({ editEmployeeFun }) => {
                           <img
                             className="h-10 w-10 rounded-full"
                             src={
-                              'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60'
+                              '/avatar_1.png'
                             }
                             alt=""
                           />

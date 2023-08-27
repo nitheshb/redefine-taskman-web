@@ -21,7 +21,6 @@ import {
   createNewCustomerS,
   steamBankDetailsList,
   updateLeadStatus,
-  updateUnitAsBooked,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import { CustomSelect } from 'src/util/formFields/selectBoxField'

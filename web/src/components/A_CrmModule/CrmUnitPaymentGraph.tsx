@@ -135,23 +135,6 @@ const CrmUnitPaymentGraph = ({ selCustomerPayload }) => {
           </div>
         </div>
       </>
-
-      {/* <section className="flex flow-row justify-between mb-1">
-        <div className="font-md text-xs text-gray-500  tracking-wide">
-          Total Review
-        </div>
-        <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-          Rs {selCustomerPayload?.T_review?.toLocaleString('en-IN')}
-        </div>
-      </section>
-      <section className="flex flow-row justify-between mb-1">
-        <div className="font-md text-xs text-gray-500  tracking-wide">
-          Out Standing Balance
-        </div>
-        <div className="font-md text-xs tracking-wide font-semibold text-slate-900 ">
-          Rs {selCustomerPayload?.T_balance?.toLocaleString('en-IN')}
-        </div>
-      </section> */}
     </section>
   )
 }

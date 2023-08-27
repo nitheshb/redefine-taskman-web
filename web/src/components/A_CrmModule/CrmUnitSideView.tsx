@@ -93,6 +93,7 @@ import CrmPaymentSummary from './CrmPaymentSummary'
 import UnitFullSummary from './CrmUnitFullSummary'
 
 import { getWhatsAppTemplates } from 'src/util/TuneWhatsappMsg'
+import { supabase } from 'src/context/supabase'
 
 // interface iToastInfo {
 //   open: boolean
@@ -482,6 +483,21 @@ export default function UnitSideViewCRM({
     // const todayTasksIncre = leadSchFetchedData?.filter(
     //   (d) => d?.sts === 'pending' && d?.schTime < torrowDate
     // ).length
+
+    const { data: data4, error: error4 } =  supabase
+    .from(`${orgId}_unit_logs`)
+    .insert([
+      {
+        type: 'assign_change',
+        subtype: 'crm_owner',
+        T: Timestamp.now().toMillis(),
+        Uuid: selCustomerPayload?.id,
+        by,
+        payload: {  },
+        from: '',
+        to: value.name,
+      },
+    ])
     const txt = `A New Customer is assigned to ${value.name}`
     updateUnitCrmOwner(
       orgId,
@@ -909,7 +925,7 @@ export default function UnitSideViewCRM({
               </div> */}
 
             <div className="flex flex-col justify-between">
-              <section className="flex flex-row justify-between bg-[#F8E7E3] px-3 py-2 border border-[#e5e7f8] rounded-md ">
+              <section className="flex flex-row justify-between bg-[#F8E7E3] px-3 py-1 border border-[#e5e7f8] rounded-md ">
                 <section>
                   <section className="flex flex-row">
                     <img
@@ -919,14 +935,16 @@ export default function UnitSideViewCRM({
                     />
                     <p className="text-md font-bold text-[23px] tracking-tight uppercase font-body  ml-2 mt-2">
                       {selCustomerPayload?.unit_no}
-                      <span className="ml-1 font-normal text-green-800 text-xs px-2 py-[2px] bg-green-300 rounded-xl">
+                      <span className="ml-2 font-normal text-green-800 text-xs px-2 py-[2px] bg-green-300 rounded-xl">
                         Phase:{selCustomerPayload?.phaseId}{' '}
                         <span className="text-[23px] mb-2">.</span>
                         <span className="ml1">{selProjectIs?.value}</span>
                       </span>
-                      <span className="ml-1 font-normal text-blue-800 text-xs">
-                        {selCustomerPayload?.status}
-                      </span>
+
+                      <span className=" ml-1 text-[12px] h-[20px] text-[#823d00] font-bodyLato font-[600] mt-[2px] bg-[#ffeccf] px-[6px] py-[2px] rounded-xl mr-1 ">
+                                          Booked:{' '}
+                                          {prettyDate(selCustomerPayload?.Date || 0)}
+                                        </span>
                     </p>
                   </section>
 

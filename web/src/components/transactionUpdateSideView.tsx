@@ -230,7 +230,7 @@ export default function TransactionUpdateSideView({
   }
   const updateTnxStatus = (status, id) => {
     const data = {status, id}
-    updateTransactionStatus(orgId,data, enqueueSnackbar )
+    updateTransactionStatus(orgId,data, user?.email,  enqueueSnackbar )
   }
   return (
     <div

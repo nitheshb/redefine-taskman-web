@@ -31,6 +31,11 @@ import DatePicker from 'react-datepicker'
 import { v4 as uuidv4 } from 'uuid'
 import * as Yup from 'yup'
 
+import AddLeadTaskComment from 'src/components/Comp_CustomerProfileSideView/AddLeadTaskComment'
+import EditLeadTask from 'src/components/Comp_CustomerProfileSideView/EditLeadTask'
+import LeadTaskDisplayHead from 'src/components/Comp_CustomerProfileSideView/LeadTaskDisplayHead'
+import LeadTaskFooter from 'src/components/Comp_CustomerProfileSideView/LeadTaskFooter'
+import SelectDropDownComp from 'src/components/comps/dropDownhead'
 import LogSkelton from 'src/components/shimmerLoaders/logSkelton'
 import { USER_ROLES } from 'src/constants/userRoles'
 import {
@@ -76,11 +81,6 @@ import {
 } from 'src/util/dateConverter'
 import { CustomSelect } from 'src/util/formFields/selectBoxField'
 import { getWhatsAppTemplates } from 'src/util/TuneWhatsappMsg'
-import EditLeadTask from 'src/components/Comp_CustomerProfileSideView/EditLeadTask'
-import LeadTaskDisplayHead from 'src/components/Comp_CustomerProfileSideView/LeadTaskDisplayHead'
-import AddLeadTaskComment from 'src/components/Comp_CustomerProfileSideView/AddLeadTaskComment'
-import SelectDropDownComp from 'src/components/comps/dropDownhead'
-import LeadTaskFooter from 'src/components/Comp_CustomerProfileSideView/LeadTaskFooter'
 
 // import BankSelectionSwitchDrop from './BankSelectionDroopDown'
 const torrowDate = new Date(
@@ -174,6 +174,7 @@ export default function Crm_legal_Clarity({
   const [progress, setProgress] = useState(0)
   const [editTaskObj, setEditTaskObj] = useState({})
   const [selType, setSelType] = useState('')
+  const [showAddTask, setShowAddTask] = useState(false)
 
   const d = new window.Date()
   const [value, setValue] = useState(d)
@@ -379,6 +380,7 @@ export default function Crm_legal_Clarity({
   }
 
   const cancelResetStatusFun = () => {
+    setShowAddTask(false)
     setCloseTask(false)
     setClosePrevious(false)
     setEditTaskObj({})
@@ -913,41 +915,6 @@ export default function Crm_legal_Clarity({
           </div>
         </div>
       </div>
-      <div className="grid grid-row-2 gap-2">
-        <div className="">
-          <span className="inline-block bg-[#BDE5B3] rounded-t-md px-2 py-[4px] text-[10px] font-bold">
-            #80418
-          </span>
-          <div className="py-1   px-2 rounded-tr-md rounded-b-md px-2 flex flex-row justify-between bg-white">
-            <div className="flex flex-col ">
-              <h2 className="font-medium flex-grow text-[12px]">
-                Provided Latest EC
-              </h2>
-              <p className="text-md text-[10px] flex-grow text-right">
-                Legal Team will answers the questions{' '}
-              </p>
-            </div>
-            <p className="text-md text-[10px] flex-grow text-right">Open </p>
-          </div>
-        </div>
-
-        <div className="mt-2">
-          <span className="inline-block bg-[#BDE5B3] rounded-t-md px-2 py-[4px] text-[10px] font-bold">
-            #80418
-          </span>
-          <div className="py-1  px-2 rounded-tr-md rounded-b-md px-2 flex flex-row justify-between bg-white">
-            <div className="flex flex-col ">
-              <h2 className="font-medium flex-grow text-[12px]">
-                Provided Latest EC
-              </h2>
-              <p className="text-md text-[10px] flex-grow text-right">
-                Legal Team will answers the questions{' '}
-              </p>
-            </div>
-            <p className="text-md text-[10px] flex-grow text-right">Open </p>
-          </div>
-        </div>
-      </div>
 
       <Formik
         initialValues={initialState1}
@@ -961,10 +928,6 @@ export default function Crm_legal_Clarity({
             {(showNotInterested || showVisitFeedBackStatus || showJunk) &&
               selSchGrpO?.ct === undefined && (
                 <div className="flex flex-col pt-0 my-10 mt-[10px] rounded bg-[#FFF9F2] mx-4 p-4">
-
-
-
-
                   {!showJunk && (
                     <div className="  outline-none border  rounded p-4 mt-4">
                       <textarea
@@ -999,7 +962,7 @@ export default function Crm_legal_Clarity({
                 </div>
               )}
 
-            <div className="font-md font-medium text-xs  ml-2 text-gray-800 flex flex-row justify-between mr-4 py-2">
+            <div className="font-md font-medium text-xs  ml-2 text-gray-800 flex flex-row justify-between py-2">
               <section className="flex flex-row py-1"></section>
               <div className="flex flex-row ">
                 <div className="flex flex-row bg-white rounded-xl border ">
@@ -1050,20 +1013,37 @@ export default function Crm_legal_Clarity({
                     }
                   </div>
                 </div>
+                {!showAddTask && (
+                  <span
+                    className="ml-2 mt-1 text-blue-800 cursor-pointer w-[70px]"
+                    onClick={() => {
+                      setShowAddTask(!showAddTask)
+                    }}
+                  >
+                    Create Task
+                  </span>
+                )}
+                {showAddTask && (
+                  <span
+                    className="ml-2 mt-1 text-blue-800 cursor-pointer w-[70px]"
+                    onClick={() => {
+                      setShowAddTask(!showAddTask)
+                    }}
+                  >
+                    Close   Task
+                  </span>
+                )}
               </div>
             </div>
-            {loader && (
+            {showAddTask && (
               <div
                 id="toast-success"
-                className="flex items-center w-[95%] mx-4  p-2 text-white
+                className="flex items-center  mx-  p-2 text-white
                      bg-[#516F90]"
                 role="alert"
               >
-
-
                 <div className=" text-sm font-normal font-bodyLato tight-wider">
-
-                  Hey, Plan your{' '}
+                  Hey, Post your Legal Query{' '}
                   <span className="text-xs  tight-wider ">
                     {tempLeadStatus.toLocaleUpperCase()}{' '}
                   </span>
@@ -1091,8 +1071,8 @@ export default function Crm_legal_Clarity({
                 </button>
               </div>
             )}
-            {addSch && (
-              <div className="flex flex-col pt-0 my-10 mx-4 mt-[0px] ">
+            {showAddTask && (
+              <div className="flex flex-col pt-0 my-10  mt-[0px] ">
                 <Formik
                   enableReinitialize={true}
                   initialValues={initialState}
@@ -1228,9 +1208,46 @@ export default function Crm_legal_Clarity({
                 </Formik>
               </div>
             )}
+            <div className="grid grid-row-2 gap-2 mb-3">
+              <div className="">
+                <span className="inline-block bg-[#BDE5B3] rounded-t-md px-2 py-[4px] text-[10px] font-bold">
+                  #80418
+                </span>
+                <div className="py-1   px-2 rounded-tr-md rounded-b-md px-2 flex flex-row justify-between bg-white">
+                  <div className="flex flex-col ">
+                    <h2 className="font-medium flex-grow text-[12px]">
+                      Provided Latest EC
+                    </h2>
+                    <p className="text-md text-[10px] flex-grow text-right">
+                      Legal Team will answers the questions{' '}
+                    </p>
+                  </div>
+                  <p className="text-md text-[10px] flex-grow text-right">
+                    Open{' '}
+                  </p>
+                </div>
+              </div>
 
-            {leadSchLoading &&
-              [1, 2, 3].map((data, i) => <LogSkelton key={i} />)}
+              <div className="mt-2">
+                <span className="inline-block bg-[#BDE5B3] rounded-t-md px-2 py-[4px] text-[10px] font-bold">
+                  #80418
+                </span>
+                <div className="py-1  px-2 rounded-tr-md rounded-b-md px-2 flex flex-row justify-between bg-white">
+                  <div className="flex flex-col ">
+                    <h2 className="font-medium flex-grow text-[12px]">
+                      Provided Latest EC
+                    </h2>
+                    <p className="text-md text-[10px] flex-grow text-right">
+                      Legal Team will answers the questions{' '}
+                    </p>
+                  </div>
+                  <p className="text-md text-[10px] flex-grow text-right">
+                    Open{' '}
+                  </p>
+                </div>
+              </div>
+            </div>
+           
 
             {!leadSchLoading && leadSchFetchedData.length == 0 && !addSch && (
               <div className="py-8 px-8 flex flex-col items-center">
@@ -1376,7 +1393,6 @@ export default function Crm_legal_Clarity({
                                 />
                               </div>
                             )}
-
 
                             <div className="  outline-none border  rounded p-4 mt-4">
                               <textarea

@@ -37,7 +37,11 @@ import { supabase } from './supabase'
 
 // get users list
 export const steamUsersList = (orgId, snapshot, error) => {
-  const itemsQuery = query(collection(db, 'users'), where('orgId', '==', orgId), where('userStatus', '==', 'active'))
+  const itemsQuery = query(
+    collection(db, 'users'),
+    where('orgId', '==', orgId),
+    where('userStatus', '==', 'active')
+  )
   console.log('orgname is ====>', orgId)
   return onSnapshot(itemsQuery, snapshot, error)
 }
@@ -332,15 +336,31 @@ export const getEmployeesTaskProgressDept = async (
 export const updateTransactionStatus = async (
   orgId,
   data1,
+  by,
   enqueueSnackbar
 ) => {
   // const itemsQuery = query(doc(db, `${orgId}_leads_log', 'W6sFKhgyihlsKmmqDG0r'))
-  const { id, status } = data1
+  const { id, status, Uuid,  } = data1
   // return onSnapshot(doc(db, `${orgId}_leads_log`, uid), snapshot, error)
   const { data: lead_logs, error } = await supabase
     .from(`${orgId}_accounts`)
     .update({ status: status })
     .eq('id', id)
+
+    const { data: data4, error: error4 } = await supabase
+    .from(`${orgId}_unit_logs`)
+    .insert([
+      {
+        type: 'accounts',
+        subtype: 'pay_reviewer',
+        T: Timestamp.now().toMillis(),
+        Uuid: Uuid,
+        by,
+        payload: { comments: '' },
+        from: 'review',
+        to: status,
+      },
+    ])
   if (lead_logs) {
     await enqueueSnackbar('Marked as Amount Recived', {
       variant: 'success',
@@ -610,6 +630,20 @@ export const steamLeadActivityLog = async (orgId, snapshot, data, error) => {
   // return onSnapshot(doc(db, `${orgId}_leads_log`, uid), snapshot, error)
   const { data: lead_logs, error1 } = await supabase
     .from(`${orgId}_lead_logs`)
+    .select('type,subtype,T, by, from, to ')
+    .eq('Luid', uid)
+    .order('T', { ascending: false })
+  return lead_logs
+  // return onSnapshot(itemsQuery, snapshot, error)
+}
+//  get lead activity list
+export const steamUnitActivityLog = async (orgId, snapshot, data, error) => {
+  // const itemsQuery = query(doc(db, `${orgId}_leads_log', 'W6sFKhgyihlsKmmqDG0r'))
+  const { uid } = data
+  console.log('is uid g', data, uid)
+  // return onSnapshot(doc(db, `${orgId}_leads_log`, uid), snapshot, error)
+  const { data: lead_logs, error1 } = await supabase
+    .from(`${orgId}_unit_logs`)
     .select('type,subtype,T, by, from, to ')
     .eq('Luid', uid)
     .order('T', { ascending: false })
@@ -2285,8 +2319,38 @@ export const addPaymentReceivedEntrySup = async (
       created: Timestamp.now().toMillis(),
     }
     // const ref = doc(db, `${orgId}_fincance', unitDocId)
+    // const { data, error } = await supabase.from(`${orgId}_accounts`).insert([
+    //   {
+    //     projectId,
+    //     unit_id: unitId,
+    //     towards: builderName,
+    //     towards_id: towardsBankDocId,
+    //     mode,
+    //     custId: custNo,
+    //     customerName: Name,
+    //     receive_by: paylaod?.bookedBy,
+    //     txt_dated: dated, // modify this to dated time entred by user
+    //     status: paylaod?.status || 'review',
+    //     payReason: paylaod?.payReason,
+    //     totalAmount: amount,
+    //     bank_ref: bank_ref_no,
+    //   },
+    // ])
     const x = await addDoc(collection(db, `${orgId}_fincance`), updated)
-
+    // const { data: data4, error: error4 } = await supabase
+    // .from(`${orgId}_unit_logs`)
+    // .insert([
+    //   {
+    //     type: 'accounts',
+    //     subtype: 'pay_capture',
+    //     T: Timestamp.now().toMillis(),
+    //     Uuid: unitDocId,
+    //     by,
+    //     payload: { receivedBy: by, amount: amount, mode, bank_ref_no },
+    //     from: 'capture',
+    //     to: 'review',
+    //   },
+    // ])
     enqueueSnackbar('Payment Captured..!', {
       variant: 'success',
     })
@@ -2511,7 +2575,7 @@ export const updateUserRole = async (
     roles: [role],
     offPh: offPh || '',
     perPh: perPh || '',
-    userStatus: userStatus
+    userStatus: userStatus,
   })
   return await addUserLog(orgId, {
     s: 's',
@@ -3243,6 +3307,20 @@ export const capturePaymentS = async (
           payload: {},
         },
       ])
+    const { data: data4, error: error4 } = await supabase
+      .from(`${orgId}_unit_logs`)
+      .insert([
+        {
+          type: 'accounts',
+          subtype: 'pay_capture',
+          T: Timestamp.now().toMillis(),
+          Uuid: unitId,
+          by,
+          payload: { receivedBy: by, amount: amount, mode, bank_ref_no },
+          from: 'review',
+          to: 'review',
+        },
+      ])
     enqueueSnackbar(`Captured Payment`, {
       variant: 'success',
     })
@@ -3400,6 +3478,20 @@ export const updateManagerApproval = async (
       T_balance,
       T_Total,
     })
+   const { data: data4, error: error4 } = await supabase
+    .from(`${orgId}_unit_logs`)
+    .insert([
+      {
+        type: 'approval',
+        subtype: 'cs_approval',
+        T: Timestamp.now().toMillis(),
+        Uuid: unitId,
+        by,
+        payload: { },
+        from: 'cs_review',
+        to: status,
+      },
+    ])
     enqueueSnackbar('CS Approved..!', {
       variant: 'success',
     })
@@ -3426,6 +3518,20 @@ export const updateLegalClarityApproval = async (
     await updateDoc(doc(db, `${orgId}_units`, unitId), {
       legal_clarity: status,
     })
+    const { data: data4, error: error4 } = await supabase
+    .from(`${orgId}_unit_logs`)
+    .insert([
+      {
+        type: 'approval',
+        subtype: 'legal_approval',
+        T: Timestamp.now().toMillis(),
+        Uuid: unitId,
+        by,
+        payload: { },
+        from: 'legal_review',
+        to: status,
+      },
+    ])
     enqueueSnackbar('Legal Clarified..!', {
       variant: 'success',
     })
@@ -3452,6 +3558,20 @@ export const updateATSApproval = async (
     await updateDoc(doc(db, `${orgId}_units`, unitId), {
       man_ats_approval: status,
     })
+    const { data: data4, error: error4 } = await supabase
+    .from(`${orgId}_unit_logs`)
+    .insert([
+      {
+        type: 'approval',
+        subtype: 'ats_approval',
+        T: Timestamp.now().toMillis(),
+        Uuid: unitId,
+        by,
+        payload: { },
+        from: 'ats_review',
+        to: status,
+      },
+    ])
     enqueueSnackbar('ATS Approved..!', {
       variant: 'success',
     })
@@ -3478,6 +3598,20 @@ export const updateKycApproval = async (
     await updateDoc(doc(db, `${orgId}_units`, unitId), {
       kyc_status: status,
     })
+    const { data: data4, error: error4 } = await supabase
+    .from(`${orgId}_unit_logs`)
+    .insert([
+      {
+        type: 'approval',
+        subtype: 'kyc_approval',
+        T: Timestamp.now().toMillis(),
+        Uuid: unitId,
+        by,
+        payload: { },
+        from: 'kyc_review',
+        to: status,
+      },
+    ])
     enqueueSnackbar('KYC Approved..!', {
       variant: 'success',
     })
@@ -3502,8 +3636,22 @@ export const updatePosessionApproval = async (
     console.log('data is===>', unitId, data)
     const { status } = data
     await updateDoc(doc(db, `${orgId}_units`, unitId), {
-      kyc_approval: status,
+      posession_status: status,
     })
+    const { data: data4, error: error4 } = await supabase
+    .from(`${orgId}_unit_logs`)
+    .insert([
+      {
+        type: 'unitStatus',
+        subtype: 'possession',
+        T: Timestamp.now().toMillis(),
+        Uuid: unitId,
+        by,
+        payload: { },
+        from: 'cs_review',
+        to: 'posession',
+      },
+    ])
     enqueueSnackbar('Posession Approved..!', {
       variant: 'success',
     })
@@ -3530,6 +3678,20 @@ export const updateSDApproval = async (
     await updateDoc(doc(db, `${orgId}_units`, unitId), {
       both_sd_approval: status,
     })
+    const { data: data4, error: error4 } = await supabase
+    .from(`${orgId}_unit_logs`)
+    .insert([
+      {
+        type: 'approval',
+        subtype: 'sd_approval',
+        T: Timestamp.now().toMillis(),
+        Uuid: unitId,
+        by,
+        payload: { },
+        from: 'sd_review',
+        to: status,
+      },
+    ])
     enqueueSnackbar('Sale Deed Approved..!', {
       variant: 'success',
     })
@@ -3610,6 +3772,7 @@ export const updateLeadCostSheetDetailsTo = async (
 }
 export const updateUnitAsBooked = async (
   orgId,
+  projectId,
   unitId,
   leadDocId,
   data,
@@ -3623,6 +3786,18 @@ export const updateUnitAsBooked = async (
     await updateDoc(doc(db, `${orgId}_units`, unitId), {
       ...data,
     })
+    const { data1, error1 } = await supabase.from(`${orgId}_unit_logs`).insert([
+      {
+        type: 'sts_change',
+        subtype: 'booked',
+        T: Timestamp.now().toMillis(),
+        Uuid: unitId,
+        by,
+        payload: { bookedBy: by },
+        from: 'lead',
+        to: 'booked',
+      },
+    ])
     enqueueSnackbar('Cost Sheet Updated for Customer', {
       variant: 'success',
     })

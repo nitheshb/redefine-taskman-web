@@ -25,6 +25,7 @@ export const DEPARTMENT_LIST = [
   { label: 'Select the Department', value: '' },
   { label: 'Admin', value: 'admin' },
   { label: 'CRM', value: 'crm' },
+  { label: 'Construction', val: 'construction' },
   { label: 'Finance', value: 'finance' },
   { label: 'Helper', value: 'helper' },
   { label: 'HR', value: 'hr' },
