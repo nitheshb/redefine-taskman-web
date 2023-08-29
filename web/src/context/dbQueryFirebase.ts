@@ -661,6 +661,19 @@ export const steamUnitTasks = async (orgId, data) => {
     console.log('task value is ', lead_logs, error1)
   return lead_logs
 }
+//  get legal Tasks All
+export const getAllLegalTasks = async (orgId, data) => {
+  // const itemsQuery = query(doc(db, `${orgId}_leads_log', 'W6sFKhgyihlsKmmqDG0r'))
+  const { uid } = data
+  console.log('is uid g', data, uid)
+  const { data: lead_logs, error: error1 } = await supabase
+    .from(`${orgId}_unit_tasks`)
+    .select('*')
+    .eq('dept', 'legal')
+    .order('created_on', { ascending: false })
+    console.log('task value is ', lead_logs, error1)
+  return lead_logs
+}
 export const steamLeadNotes = (orgId, snapshot, data, error) => {
   // const itemsQuery = query(doc(db, `${orgId}_leads_log', 'W6sFKhgyihlsKmmqDG0r'))
   const { uid } = data

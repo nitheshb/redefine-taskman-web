@@ -17,6 +17,7 @@ import { useAuth } from 'src/context/firebase-auth-context'
 
 import HeadNavBar from '../../components/HeadNavBar/HeadNavBar'
 import LegalDocsHome from '../LegalDocsHome'
+import LegalHome from 'src/components/A_LegalModule/LegalHome'
 
 const LegalHomePage = () => {
   const { user } = useAuth()
@@ -89,7 +90,7 @@ const LegalHomePage = () => {
                 <ExecutiveHomeViewerPage leadsTyper={'inProgress'} />
               )}
               {viewable === 'Today1' && (
-                <TodayLeadsHomePage taskType={viewable} />
+                <LegalHome taskType={viewable} />
               )}
               {viewable === 'Upcoming' && (
                 <TodayLeadsHomePage taskType={viewable} />

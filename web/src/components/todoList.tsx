@@ -448,7 +448,7 @@ const TodoListView = ({
                 role="tablist"
               >
                 {[
-                  { lab: `${moduleName} Tasks`, val: 'dept_tasks' },
+                  { lab: `${moduleName} Tasks `, val: 'dept_tasks' },
                   { lab: 'Business Tasks', val: 'business_tasks' },
                   { lab: 'Personal', val: 'personal_tasks' },
                 ].map((d, i) => {
