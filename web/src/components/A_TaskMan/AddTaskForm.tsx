@@ -437,7 +437,6 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                               } bg-white`}
                             ></Field>
                           </div>
-
                           <div className="flex flex-row">
                             <input
                               data-bx-id="task-edit-priority-cb"
@@ -452,10 +451,9 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                                 console.log('is this checked ', priorTxt)
                               }}
                             />
-
-                            <div className="w-[85px] ml-1 mt-[8px] text-sm text-[#00000080]">
-                              High Priority
-                            </div>
+                          <div className="w-[85px] ml-1 mt-[8px] text-sm text-[#00000080]">
+                            High Priority
+                          </div>
                             <FireIcon
                               className={`w-4 h-4 mt-[11px] ${
                                 prior ? 'text-[#f36b00]' : 'text-[#00000080] '

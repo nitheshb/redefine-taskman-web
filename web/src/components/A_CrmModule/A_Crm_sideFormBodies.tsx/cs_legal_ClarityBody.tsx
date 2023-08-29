@@ -1,27 +1,11 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import { useEffect, useState } from 'react'
 
-import {
-  ArrowRightIcon,
-  PhoneIcon,
-  DeviceMobileIcon,
-  MailIcon,
-} from '@heroicons/react/outline'
-import {
-  BadgeCheckIcon,
-  CheckIcon,
-  CheckCircleIcon,
-  DocumentIcon,
-  EyeIcon,
-  ViewBoardsIcon,
-  ViewGridIcon,
-  ArrowDownIcon,
-  ArrowUpIcon,
-  AdjustmentsIcon,
-  XIcon,
-} from '@heroicons/react/solid'
+import FireIcon from '@heroicons/react/outline/FireIcon'
+import { CheckCircleIcon } from '@heroicons/react/solid'
 import { setHours, setMinutes } from 'date-fns'
 import { Timestamp } from 'firebase/firestore'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
@@ -39,6 +23,8 @@ import SelectDropDownComp from 'src/components/comps/dropDownhead'
 import LogSkelton from 'src/components/shimmerLoaders/logSkelton'
 import { USER_ROLES } from 'src/constants/userRoles'
 import {
+  addLegalClarificationTicket,
+  steamUnitTasks,
   updateLegalClarityApproval,
   updateManagerApproval,
 } from 'src/context/dbQueryFirebase'
@@ -71,6 +57,8 @@ import {
   decreCountOnResheduleOtherDay,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
+import { storage } from 'src/context/firebaseConfig'
+import { supabase } from 'src/context/supabase'
 import {
   getDifferenceInDays,
   getDifferenceInHours,
@@ -237,6 +225,9 @@ export default function Crm_legal_Clarity({
   const [streamCoveredA, setStreamCoveredA] = useState([])
   const [streamCurrentStatus, setStreamCurrentStatus] = useState('new')
   const [streamfrom, setStreamFrom] = useState('')
+  const [files, setFiles] = useState([])
+  const [prior, setPrior] = useState(false)
+  const [unitFetchedActivityData, setUnitFetchedActivityData] = useState([])
 
   const [closePrevious, setClosePrevious] = useState(false)
   if (!user?.role?.includes(USER_ROLES.ADMIN)) {
@@ -245,6 +236,93 @@ export default function Crm_legal_Clarity({
   useEffect(() => {
     console.log('yo yo ', selUnitPayload)
   }, [])
+  useEffect(() => {
+    console.log('unit dta is ', selUnitPayload, selUnitPayload?.id)
+    boot()
+    const subscription = supabase
+      .from(`${orgId}_unit_tasks`)
+      .on('*', (payload) => {
+        console.log('account records', payload)
+        const updatedData = payload.new
+        const { id } = payload.old
+        const eventType = payload.eventType
+        console.log('account records', updatedData.Uuid, selUnitPayload?.id)
+
+        if (updatedData.Uuid === selUnitPayload?.id) {
+          if (updatedData.Uuid === selUnitPayload?.id) {
+            console.log('account records', updatedData.Uuid, selUnitPayload?.id)
+            setUnitFetchedActivityData((prevLogs) => {
+              const existingLog = prevLogs.find((log) => log.id === id)
+              console.log(
+                'account records',
+                prevLogs,
+                existingLog,
+                id,
+                payload.old,
+                id
+              )
+              if (existingLog) {
+                console.log('Existing record found!')
+                if (payload.new.status === 'Done') {
+                  const updatedLogs = prevLogs.filter((log) => log.id != id)
+                  return [...updatedLogs]
+                } else {
+                  const updatedLogs = prevLogs.map((log) =>
+                    log.id === id ? payload.new : log
+                  )
+                  return [...updatedLogs]
+                }
+              } else {
+                console.log('New record added!')
+                return [...prevLogs, payload.new]
+              }
+            })
+          } else {
+            if (
+              updatedData.by_uid === user?.uid ||
+              updatedData?.to_uid === user?.uid
+            ) {
+              setUnitFetchedActivityData((prevLogs) => {
+                const existingLog = prevLogs.find((log) => log.id === id)
+
+                if (existingLog) {
+                  console.log('Existing record found!')
+                  if (payload.new.status === 'Done') {
+                    const updatedLogs = prevLogs.filter((log) => log.id != id)
+                    return [...updatedLogs]
+                  } else {
+                    const updatedLogs = prevLogs.map((log) =>
+                      log.id === id ? payload.new : log
+                    )
+                    return [...updatedLogs]
+                  }
+                } else {
+                  console.log('New record added!')
+                  return [...prevLogs, payload.new]
+                }
+              })
+            }
+          }
+        }
+      })
+      .subscribe()
+
+    // Clean up the subscription when the component unmounts
+    return () => {
+      supabase.removeSubscription(subscription)
+    }
+  }, [])
+  const boot = async () => {
+    const unsubscribe = steamUnitTasks(orgId, {
+      uid: selUnitPayload?.id,
+      pId: selUnitPayload?.pId,
+    })
+
+    const y = await unsubscribe
+    setUnitFetchedActivityData(y)
+    await console.log('new setup ', unitFetchedActivityData)
+    await console.log('new setup ', y)
+  }
   const receiverDetails = {
     customerName: Name,
     executiveName: assignerName,
@@ -1030,7 +1108,7 @@ export default function Crm_legal_Clarity({
                       setShowAddTask(!showAddTask)
                     }}
                   >
-                    Close   Task
+                    Close Task
                   </span>
                 )}
               </div>
@@ -1077,8 +1155,26 @@ export default function Crm_legal_Clarity({
                   enableReinitialize={true}
                   initialValues={initialState}
                   validationSchema={validateSchema}
-                  onSubmit={(values, { resetForm }) => {
-                    fAddSchedule()
+                  onSubmit={async (data, { resetForm }) => {
+                    // fAddSchedule()
+                    // create duplicate table
+                    // insert value to it with unassigned values
+                    // save data in db
+                    //
+                    // data.due_date = startDate.getTime()
+                    // data.priorities = prior ? 'high' : 'medium'
+                    // data.attachments = files
+                    // setLoading(true)
+                    data.due_date = startDate
+                    data.priorities = prior ? 'high' : 'medium'
+                    data.attachments = files
+                    data.Uuid = selUnitPayload?.id
+                    await addLegalClarificationTicket(orgId, data, user)
+
+                    // await resetForm()
+                    // await setFormMessage('Task Created..!')
+                    // await setLoading(false)
+                    return
                   }}
                 >
                   {(formik) => (
@@ -1146,34 +1242,76 @@ export default function Crm_legal_Clarity({
                             placeholder="Enter a short title"
                             className="w-full h-full pb-1 outline-none text-sm font-bodyLato focus:border-blue-600 hover:border-blue-600  border-b border-[#cdcdcd] text-[33475b] bg-[#F2F5F8] "
                           ></input>
-                          <div className="flex flex-row mt-3">
-                            <section>
-                              <span className="text-xs font-bodyLato text-[#516f90]">
-                                <span className="">
-                                  {tempLeadStatus.charAt(0).toUpperCase() +
-                                    tempLeadStatus.slice(1)}{' '}
+                          <div className="flex flex-row ">
+                            <div className="flex flex-row mt-3">
+                              <section>
+                                <span className="text-xs font-bodyLato text-[#516f90]">
+                                  <span className="">
+                                    {tempLeadStatus.charAt(0).toUpperCase() +
+                                      tempLeadStatus.slice(1)}{' '}
+                                  </span>
+                                  Due Date
                                 </span>
-                                Due Date
-                              </span>
-                              <div className="bg-green   pl-   flex flex-row ">
-                                {/* <CalendarIcon className="w-4  ml-1 inline text-[#058527]" /> */}
-                                <span className="inline">
-                                  <DatePicker
-                                    className=" mt-[2px] pl- px- min-w-[240px] inline text-xs text-[#0091ae] bg-[#F2F5F8]"
-                                    selected={startDate}
-                                    onChange={(date) => setStartDate(date)}
-                                    showTimeSelect
-                                    timeFormat="HH:mm"
-                                    injectTimes={[
-                                      setHours(setMinutes(d, 1), 0),
-                                      setHours(setMinutes(d, 5), 12),
-                                      setHours(setMinutes(d, 59), 23),
-                                    ]}
-                                    dateFormat="MMMM d, yyyy h:mm aa"
-                                  />
+                                <div className="bg-green   pl-   flex flex-row ">
+                                  {/* <CalendarIcon className="w-4  ml-1 inline text-[#058527]" /> */}
+                                  <span className="inline">
+                                    <DatePicker
+                                      className=" mt-[2px] pl- px- min-w-[240px] inline text-xs text-[#0091ae] bg-[#F2F5F8]"
+                                      selected={startDate}
+                                      onChange={(date) => setStartDate(date)}
+                                      showTimeSelect
+                                      timeFormat="HH:mm"
+                                      injectTimes={[
+                                        setHours(setMinutes(d, 1), 0),
+                                        setHours(setMinutes(d, 5), 12),
+                                        setHours(setMinutes(d, 59), 23),
+                                      ]}
+                                      dateFormat="MMMM d, yyyy h:mm aa"
+                                    />
+                                  </span>
+                                </div>
+                              </section>
+                            </div>
+                            <div className="flex flex-row mt-3">
+                              <section>
+                                <span className="text-xs font-bodyLato text-[#516f90]">
+                                  <span className="">
+                                    {tempLeadStatus.charAt(0).toUpperCase() +
+                                      tempLeadStatus.slice(1)}{' '}
+                                  </span>
+                                  Priority
                                 </span>
-                              </div>
-                            </section>
+                                <div className="bg-green   pl-   flex flex-row  ">
+                                  {/* <CalendarIcon className="w-4  ml-1 inline text-[#058527]" /> */}
+                                  <span className="inline">
+                                    <input
+                                      data-bx-id="task-edit-priority-cb"
+                                      type="checkbox"
+                                      name="priorities"
+                                      value={prior}
+                                      className="mb-[5px]"
+                                      onChange={(value) => {
+                                        setPrior(!prior)
+                                        const priorTxt = prior
+                                          ? 'high'
+                                          : 'medium'
+                                        formik.setFieldValue(
+                                          'priorities',
+                                          priorTxt
+                                        )
+                                        console.log(
+                                          'is this checked ',
+                                          priorTxt
+                                        )
+                                      }}
+                                    />
+                                  </span>
+                                  <div className="w-[85px] ml-1 mt-[1px] text-sm text-[#00000080]">
+                                    High Priority
+                                  </div>
+                                </div>
+                              </section>
+                            </div>
                           </div>
                         </section>
                         <div className="flex flex-row mt-4 justify-between pr-4 border-t">
@@ -1208,46 +1346,54 @@ export default function Crm_legal_Clarity({
                 </Formik>
               </div>
             )}
-            <div className="grid grid-row-2 gap-2 mb-3">
-              <div className="">
-                <span className="inline-block bg-[#BDE5B3] rounded-t-md px-2 py-[4px] text-[10px] font-bold">
-                  #80418
-                </span>
-                <div className="py-1   px-2 rounded-tr-md rounded-b-md px-2 flex flex-row justify-between bg-white">
-                  <div className="flex flex-col ">
-                    <h2 className="font-medium flex-grow text-[12px]">
-                      Provided Latest EC
-                    </h2>
-                    <p className="text-md text-[10px] flex-grow text-right">
-                      Legal Team will answers the questions{' '}
-                    </p>
+            <div className="flex flex-col mb-3">
+              {unitFetchedActivityData?.map((d, i) => {
+                return (
+                  <div key={i} className="">
+                    <span className="inline-block bg-[#BDE5B3] rounded-t-md px-2 py-[4px] text-[10px] font-bold">
+                      #80418
+                    </span>
+                    <div className="py-1   px-2 rounded-tr-md rounded-b-md px-2 flex flex-row justify-between bg-white">
+                      <div className="flex flex-col ">
+                        <h2 className="font-medium flex-grow text-[12px]">
+                          {d?.title}
+                        </h2>
+                        <p className="text-md text-[10px] flex-grow text-right">
+                          {d?.desc}
+                        </p>
+                      </div>
+                      <p className="text-md text-[10px] flex-grow text-right">
+                        {d?.status}
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-md text-[10px] flex-grow text-right">
-                    Open{' '}
-                  </p>
-                </div>
-              </div>
+                )
+              })}
+              {unitFetchedActivityData?.length == 0 && !showAddTask && (
+                        <div className="py-8 px-8 flex flex-col items-center mt-8">
+                        <div className="font-md font-medium text-xs mb-4  text-gray-800 items-center">
+                          <img
+                            className="w-[200px] h-[200px] inline"
+                            alt=""
+                            src="/target.svg"
+                          />
+                        </div>
+                        <h3 className="mb-1 text-sm font-semibold text-gray-900 ">
+                          No Tasks
+                        </h3>
+                        <time className="block mb-2 text-sm font-normal leading-none text-gray-400 ">
+                          Legal Clarifications always bring more trust{' '}
+                          <span
+                            className="text-blue-600"
+                            onClick={() => setShowAddTask(!showAddTask)}
+                          >
+                              Create New Task
+                          </span>
+                        </time>
+                      </div>
 
-              <div className="mt-2">
-                <span className="inline-block bg-[#BDE5B3] rounded-t-md px-2 py-[4px] text-[10px] font-bold">
-                  #80418
-                </span>
-                <div className="py-1  px-2 rounded-tr-md rounded-b-md px-2 flex flex-row justify-between bg-white">
-                  <div className="flex flex-col ">
-                    <h2 className="font-medium flex-grow text-[12px]">
-                      Provided Latest EC
-                    </h2>
-                    <p className="text-md text-[10px] flex-grow text-right">
-                      Legal Team will answers the questions{' '}
-                    </p>
-                  </div>
-                  <p className="text-md text-[10px] flex-grow text-right">
-                    Open{' '}
-                  </p>
-                </div>
-              </div>
+              )}
             </div>
-           
 
             {!leadSchLoading && leadSchFetchedData.length == 0 && !addSch && (
               <div className="py-8 px-8 flex flex-col items-center">

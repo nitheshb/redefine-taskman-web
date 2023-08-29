@@ -340,14 +340,14 @@ export const updateTransactionStatus = async (
   enqueueSnackbar
 ) => {
   // const itemsQuery = query(doc(db, `${orgId}_leads_log', 'W6sFKhgyihlsKmmqDG0r'))
-  const { id, status, Uuid,  } = data1
+  const { id, status, Uuid } = data1
   // return onSnapshot(doc(db, `${orgId}_leads_log`, uid), snapshot, error)
   const { data: lead_logs, error } = await supabase
     .from(`${orgId}_accounts`)
     .update({ status: status })
     .eq('id', id)
 
-    const { data: data4, error: error4 } = await supabase
+  const { data: data4, error: error4 } = await supabase
     .from(`${orgId}_unit_logs`)
     .insert([
       {
@@ -637,18 +637,29 @@ export const steamLeadActivityLog = async (orgId, snapshot, data, error) => {
   // return onSnapshot(itemsQuery, snapshot, error)
 }
 //  get lead activity list
-export const steamUnitActivityLog = async (orgId, snapshot, data, error) => {
+export const steamUnitActivityLog = async (orgId, data) => {
   // const itemsQuery = query(doc(db, `${orgId}_leads_log', 'W6sFKhgyihlsKmmqDG0r'))
   const { uid } = data
   console.log('is uid g', data, uid)
-  // return onSnapshot(doc(db, `${orgId}_leads_log`, uid), snapshot, error)
   const { data: lead_logs, error1 } = await supabase
     .from(`${orgId}_unit_logs`)
-    .select('type,subtype,T, by, from, to ')
-    .eq('Luid', uid)
+    .select('*')
+    .eq('Uuid', uid)
     .order('T', { ascending: false })
   return lead_logs
-  // return onSnapshot(itemsQuery, snapshot, error)
+}
+//  get lead activity list
+export const steamUnitTasks = async (orgId, data) => {
+  // const itemsQuery = query(doc(db, `${orgId}_leads_log', 'W6sFKhgyihlsKmmqDG0r'))
+  const { uid } = data
+  console.log('is uid g', data, uid)
+  const { data: lead_logs, error: error1 } = await supabase
+    .from(`${orgId}_unit_tasks`)
+    .select('*')
+    .eq('Uuid', uid)
+    .order('created_on', { ascending: false })
+    console.log('task value is ', lead_logs, error1)
+  return lead_logs
 }
 export const steamLeadNotes = (orgId, snapshot, data, error) => {
   // const itemsQuery = query(doc(db, `${orgId}_leads_log', 'W6sFKhgyihlsKmmqDG0r'))
@@ -1446,6 +1457,97 @@ export const addTaskBusiness = async (orgId, dta, user) => {
     await sendWhatAppTextSms1(
       additionalUserInfo?.offPh,
       `New Task Added By *${user.displayName}*
+      \n \n *Due Date*:${prettyDateTime(
+        due_date
+      )}  \n *Priority*:${priorities} \n *Task*: ${taskTitle}`
+    )
+  })
+  await console.log('data is ', data, error)
+}
+export const addLegalClarificationTicket = async (orgId, dta, user) => {
+  const {
+    taskTitle,
+    taskdesc,
+    dept,
+    due_date,
+    assignedTo,
+    assignedToObj,
+    followers,
+    priorities,
+    attachments,
+    Uuid,
+  } = dta
+  console.log('adding item is ', priorities)
+  let followA = []
+  let attachA = []
+  const followAUid = []
+  const x = [assignedToObj?.uid || '']
+  if (followers) {
+    followA = await followers[0]?.map((d) => {
+      const y = {}
+      y.label = d?.name
+      y.value = d?.uid
+      x.push(d?.uid)
+      followAUid.push(d?.uid)
+      return y
+    })
+  }
+  if (attachments) {
+    attachA = await attachments?.map((d) => {
+      const y = {}
+      y.name = d?.name
+      y.url = d?.url
+      y.type = d?.type
+      return y
+    })
+  }
+  console.log('value is ', followA)
+
+  const { data, error } = await supabase.from(`${orgId}_unit_tasks`).insert([
+    {
+      created_on: Timestamp.now().toMillis(),
+      Uuid: Uuid,
+      followersC: followA?.length || 0,
+      by_email: user.email,
+      by_name: user.displayName,
+      by_uid: user.uid,
+      dept: 'legal',
+      due_date: due_date,
+      priority: priorities,
+      status: 'InProgress',
+      desc: taskdesc,
+      title: taskTitle,
+      to_email: assignedToObj?.email,
+      to_name: assignedToObj?.name,
+      to_uid: assignedToObj?.uid,
+      participantsA: followA,
+      participantsC: followA?.length || 0,
+      followersUid: followAUid || [],
+      attachmentsCount: attachA?.length || 0,
+      attachmentsA: attachA,
+    },
+  ])
+  const { data: data4, error: error4 } = await supabase
+  .from(`${orgId}_unit_logs`)
+  .insert([
+    {
+      type: 'task',
+      subtype: 'legal',
+      T: Timestamp.now().toMillis(),
+      Uuid: Uuid,
+      by: user?.email,
+      payload: {'p': priorities},
+      from: 'Created',
+      to: 'InProgress',
+    },
+  ])
+  x.map(async (userId) => {
+    // get phone no's
+    const additionalUserInfo = await getUser(userId)
+    await console.log('task details are', dta, additionalUserInfo)
+    await sendWhatAppTextSms1(
+      additionalUserInfo?.offPh,
+      `New Legal Task Added By *${user.displayName}*
       \n \n *Due Date*:${prettyDateTime(
         due_date
       )}  \n *Priority*:${priorities} \n *Task*: ${taskTitle}`
@@ -3321,6 +3423,7 @@ export const capturePaymentS = async (
           to: 'review',
         },
       ])
+    console.log('unit log', data4, error4)
     enqueueSnackbar(`Captured Payment`, {
       variant: 'success',
     })
@@ -3478,20 +3581,20 @@ export const updateManagerApproval = async (
       T_balance,
       T_Total,
     })
-   const { data: data4, error: error4 } = await supabase
-    .from(`${orgId}_unit_logs`)
-    .insert([
-      {
-        type: 'approval',
-        subtype: 'cs_approval',
-        T: Timestamp.now().toMillis(),
-        Uuid: unitId,
-        by,
-        payload: { },
-        from: 'cs_review',
-        to: status,
-      },
-    ])
+    const { data: data4, error: error4 } = await supabase
+      .from(`${orgId}_unit_logs`)
+      .insert([
+        {
+          type: 'approval',
+          subtype: 'cs_approval',
+          T: Timestamp.now().toMillis(),
+          Uuid: unitId,
+          by,
+          payload: {},
+          from: 'cs_review',
+          to: status,
+        },
+      ])
     enqueueSnackbar('CS Approved..!', {
       variant: 'success',
     })
@@ -3519,19 +3622,19 @@ export const updateLegalClarityApproval = async (
       legal_clarity: status,
     })
     const { data: data4, error: error4 } = await supabase
-    .from(`${orgId}_unit_logs`)
-    .insert([
-      {
-        type: 'approval',
-        subtype: 'legal_approval',
-        T: Timestamp.now().toMillis(),
-        Uuid: unitId,
-        by,
-        payload: { },
-        from: 'legal_review',
-        to: status,
-      },
-    ])
+      .from(`${orgId}_unit_logs`)
+      .insert([
+        {
+          type: 'approval',
+          subtype: 'legal_approval',
+          T: Timestamp.now().toMillis(),
+          Uuid: unitId,
+          by,
+          payload: {},
+          from: 'legal_review',
+          to: status,
+        },
+      ])
     enqueueSnackbar('Legal Clarified..!', {
       variant: 'success',
     })
@@ -3559,19 +3662,19 @@ export const updateATSApproval = async (
       man_ats_approval: status,
     })
     const { data: data4, error: error4 } = await supabase
-    .from(`${orgId}_unit_logs`)
-    .insert([
-      {
-        type: 'approval',
-        subtype: 'ats_approval',
-        T: Timestamp.now().toMillis(),
-        Uuid: unitId,
-        by,
-        payload: { },
-        from: 'ats_review',
-        to: status,
-      },
-    ])
+      .from(`${orgId}_unit_logs`)
+      .insert([
+        {
+          type: 'approval',
+          subtype: 'ats_approval',
+          T: Timestamp.now().toMillis(),
+          Uuid: unitId,
+          by,
+          payload: {},
+          from: 'ats_review',
+          to: status,
+        },
+      ])
     enqueueSnackbar('ATS Approved..!', {
       variant: 'success',
     })
@@ -3599,19 +3702,19 @@ export const updateKycApproval = async (
       kyc_status: status,
     })
     const { data: data4, error: error4 } = await supabase
-    .from(`${orgId}_unit_logs`)
-    .insert([
-      {
-        type: 'approval',
-        subtype: 'kyc_approval',
-        T: Timestamp.now().toMillis(),
-        Uuid: unitId,
-        by,
-        payload: { },
-        from: 'kyc_review',
-        to: status,
-      },
-    ])
+      .from(`${orgId}_unit_logs`)
+      .insert([
+        {
+          type: 'approval',
+          subtype: 'kyc_approval',
+          T: Timestamp.now().toMillis(),
+          Uuid: unitId,
+          by,
+          payload: {},
+          from: 'kyc_review',
+          to: status,
+        },
+      ])
     enqueueSnackbar('KYC Approved..!', {
       variant: 'success',
     })
@@ -3639,19 +3742,19 @@ export const updatePosessionApproval = async (
       posession_status: status,
     })
     const { data: data4, error: error4 } = await supabase
-    .from(`${orgId}_unit_logs`)
-    .insert([
-      {
-        type: 'unitStatus',
-        subtype: 'possession',
-        T: Timestamp.now().toMillis(),
-        Uuid: unitId,
-        by,
-        payload: { },
-        from: 'cs_review',
-        to: 'posession',
-      },
-    ])
+      .from(`${orgId}_unit_logs`)
+      .insert([
+        {
+          type: 'unitStatus',
+          subtype: 'possession',
+          T: Timestamp.now().toMillis(),
+          Uuid: unitId,
+          by,
+          payload: {},
+          from: 'cs_review',
+          to: 'posession',
+        },
+      ])
     enqueueSnackbar('Posession Approved..!', {
       variant: 'success',
     })
@@ -3679,19 +3782,19 @@ export const updateSDApproval = async (
       both_sd_approval: status,
     })
     const { data: data4, error: error4 } = await supabase
-    .from(`${orgId}_unit_logs`)
-    .insert([
-      {
-        type: 'approval',
-        subtype: 'sd_approval',
-        T: Timestamp.now().toMillis(),
-        Uuid: unitId,
-        by,
-        payload: { },
-        from: 'sd_review',
-        to: status,
-      },
-    ])
+      .from(`${orgId}_unit_logs`)
+      .insert([
+        {
+          type: 'approval',
+          subtype: 'sd_approval',
+          T: Timestamp.now().toMillis(),
+          Uuid: unitId,
+          by,
+          payload: {},
+          from: 'sd_review',
+          to: status,
+        },
+      ])
     enqueueSnackbar('Sale Deed Approved..!', {
       variant: 'success',
     })
