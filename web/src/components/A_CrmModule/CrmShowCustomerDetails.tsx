@@ -52,6 +52,7 @@ const ShowCustomerDetails = ({
   leadDetailsObj2,
   selUnitDetails,
   dialogOpen,
+  setShowApplicantEdit
 }) => {
   const d = new window.Date()
   const { user } = useAuth()
@@ -619,11 +620,19 @@ const ShowCustomerDetails = ({
                     '?'}
                 </span>
               </div>
-              <div className="flex flex-col">
+<div className="flex flex-row">
+              <div className="flex flex-col cursor-pointer" onClick={()=> setShowApplicantEdit(true)}>
+                <span className="font-semibold text-[12px] px-4 py-[1px] border border-[#F04A2D] bg-[#FFF0EB] text-[#D96038] rounded-md mt-[2px]">
+                  Edit
+                </span>
+              </div>
+              <div className="flex flex-col ml-1 ">
                 <span className="font-semibold text-[12px] px-4 py-[1px] border border-[#F04A2D] bg-[#FFF0EB] text-[#D96038] rounded-md mt-[2px]">
                   Primary
                 </span>
               </div>
+              </div>
+
             </div>
             {/* info panel */}
             <div className="flex flex-col mt-4 px-4 py-1 border border-[#E6E7E8]  rounded-md ">
@@ -730,7 +739,7 @@ const ShowCustomerDetails = ({
             </div>
           </div>
         </div>
-     
+
       </div>
 
       {/* old form  */}

@@ -2,12 +2,15 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import { useState, useEffect, useRef } from 'react'
 
+import { AttachFile } from '@mui/icons-material'
 import { format } from 'date-fns'
 import { setHours, setMinutes } from 'date-fns'
 import { arrayUnion } from 'firebase/firestore'
+import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage'
 import { Form, Formik } from 'formik'
 import { useSnackbar } from 'notistack'
 import DatePicker from 'react-datepicker'
+import { v4 as uuidv4 } from 'uuid'
 import * as Yup from 'yup'
 
 import { useParams } from '@redwoodjs/router'
@@ -23,6 +26,7 @@ import {
   updateLeadStatus,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
+import { storage } from 'src/context/firebaseConfig'
 import { CustomSelect } from 'src/util/formFields/selectBoxField'
 import { MultiSelectMultiLineField } from 'src/util/formFields/selectBoxMultiLineField'
 import { TextField2 } from 'src/util/formFields/TextField2'
@@ -54,6 +58,10 @@ const CaptureUnitPayment = ({
   const [startDate, setStartDate] = useState(d)
 
   const [paymentModex, setPaymentModex] = useState('cheque')
+  const [files, setFiles] = useState([])
+
+  const [commentAttachUrl, setCommentAttachUrl] = useState('')
+  const [cmntFileType, setCmntFileType] = useState('')
 
   const { enqueueSnackbar } = useSnackbar()
   const { uid } = useParams()
@@ -66,7 +74,7 @@ const CaptureUnitPayment = ({
   }
 
   useEffect(() => {
-   console.log('unit details are ', selUnitDetails)
+    console.log('unit details are ', selUnitDetails)
   }, [])
 
   useEffect(() => {
@@ -90,10 +98,49 @@ const CaptureUnitPayment = ({
 
     return unsubscribe
   }, [])
+  const handleFileUploadFun = async (file, type) => {
+    console.log('am i inside handle FileUpload')
+    if (!file) return
+    try {
+      const uid = uuidv4()
+      const storageRef = ref(storage, `/spark_files/${'taskFiles'}_${uid}`)
+      const uploadTask = uploadBytesResumable(storageRef, file)
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          const prog =
+            Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 100
 
+          // setProgress(prog)
+          file.isUploading = false
+        },
+        (err) => console.log(err),
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+            // createAttach(orgId, url, by, file.name, id, attachType)
+            file.url = url
+            // setCmntFileType(file.name.split('.').pop())
+            // setFiles([...files, file])
+
+            setCommentAttachUrl(url)
+            return url
+            //  save this doc as a new file in spark_leads_doc
+          })
+        }
+      )
+    } catch (error) {
+      console.log('upload error is ', error)
+    }
+  }
   const onSubmitSupabase = async (data, resetForm) => {
     console.log('inside supabase support', data)
-    await onSubmitFun(data, resetForm)
+    let y = {}
+    y = data
+
+    await handleFileUploadFun(data?.fileUploader, 'panCard1')
+     const z = await commentAttachUrl
+
+    await onSubmitFun(y, resetForm)
 
     await confettiRef?.current?.fire()
 
@@ -208,7 +255,8 @@ const CaptureUnitPayment = ({
     dated: bankData?.dated || datee,
     bookingSource: '',
     bookedBy: bankData?.bookedBy || email,
-    status: 'review'
+    status: 'review',
+    fileUploader: '',
   }
 
   // const validateSchema = Yup.object({
@@ -225,6 +273,9 @@ const CaptureUnitPayment = ({
     formik.handleSubmit()
   }
 
+  const setDateFun = (date) => {
+    setStartDate(date)
+  }
   return (
     <div className="">
       <div className="">
@@ -245,7 +296,7 @@ const CaptureUnitPayment = ({
                 console.log(values)
               }}
             >
-              {(formik) => (
+              {(formik, setFieldValue) => (
                 <Form>
                   <div className="form">
                     {/* Phase Details */}
@@ -260,7 +311,7 @@ const CaptureUnitPayment = ({
                               </p>
                             </div>
                           </div>
-                          <div className="flex-auto px-2 py-4 mx-auto">
+                          <div className="flex-auto px-2 py-4 mx-auto h-[600px] overflow-y-scroll overflow-auto no-scrollbar">
                             <section
                               className="bg-[#fff] p-4 rounded-md w-[500px] border border-black"
                               style={{
@@ -396,14 +447,16 @@ const CaptureUnitPayment = ({
                                         className="h-8 outline-none border-t-0 border-l-0 border-r-0 border-b border-gray-500  border-solid mt-[-4px] pb-1  min-w-[125px]  inline  text-[#0091ae]   lg:w-4/12 w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] "
                                         label="Dated"
                                         name="dated"
-                                        selected={startDate}
+                                        // selected={startDate}
+                                        selected={formik.values.dated}
                                         onChange={(date) => {
+                                          // setFieldValue('dated')
                                           formik.setFieldValue(
                                             'dated',
                                             date.getTime()
                                           )
-                                          setStartDate(date)
-                                          // console.log(startDate)
+                                          // setStartDate(date)
+                                          console.log(startDate)
                                         }}
                                         timeFormat="HH:mm"
                                         injectTimes={[
@@ -411,7 +464,7 @@ const CaptureUnitPayment = ({
                                           setHours(setMinutes(d, 5), 12),
                                           setHours(setMinutes(d, 59), 23),
                                         ]}
-                                        dateFormat="MMMM d, yyyy"
+                                        dateFormat="MMM d, yyyy"
                                       />
                                     </span>
                                   </div>
@@ -426,6 +479,54 @@ const CaptureUnitPayment = ({
                                   </div>
                                 </div>
                               </div>
+                              <div>
+                                <label
+                                  htmlFor="formFile1"
+                                  className="form-label cursor-pointer inline-block mt-2  font-regular text-xs bg-[#efef] rounded-2xl  py-1 "
+                                >
+                                  <AttachFile
+                                    className="w-4 h-4 text-[18px]"
+                                    style={{ fontSize: '18px' }}
+                                  />
+                                </label>
+                                {/* {panCard1 != '' && (
+                        <button
+                          onClick={() =>
+                            downloadImage(panCard1, 'pancard1.PNG')
+                          }
+                        >
+                          {' '}
+                          <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[9px] mr-2 inline-block text-gray-400 " />
+                        </button>
+                      )} */}
+                                <input
+                                  type="file"
+                                  className="hidden"
+                                  id="formFile1"
+                                  name="fileUploader"
+                                  onChange={(e) => {
+                                    formik.setFieldValue(
+                                      'fileUploader',
+                                      e.target.files[0]
+                                    )
+                                    // handleFileUploadFun(
+                                    //   e.target.files[0],
+                                    //   'panCard1'
+                                    // )
+                                  }}
+                                />
+                              </div>
+                              {formik.values.fileUploader && (
+                                <img
+                                  src={URL.createObjectURL(
+                                    formik.values.fileUploader
+                                  )}
+                                  alt="Uploaded File"
+                                  className="img-preview"
+                                />
+                              )}
+                              {formik?.file?.fileUploader}
+
                               <div className="flex flex-row-reverse mt-4 mx-4">
                                 <div>
                                   <div className="text-md font-weight-[700] text-[13px]">

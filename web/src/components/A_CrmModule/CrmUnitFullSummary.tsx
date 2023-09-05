@@ -1136,6 +1136,7 @@ if(usersList == undefined) return
             title="Booking Form"
             selUnitDetails={selCustomerPayload}
             leadDetailsObj2={selCustomerPayload}
+            setShowApplicantEdit= {setShowApplicantEdit}
           />
         </div>}
          {openApplicantEdit && <div className="  mt-2 pb-[250px] overflow-auto no-scrollbar  h-[100%] overflow-y-scroll">
@@ -1144,6 +1145,7 @@ if(usersList == undefined) return
             title="Booking Form"
             selUnitDetails={selCustomerPayload}
             leadDetailsObj2={selCustomerPayload}
+            setShowApplicantEdit= {setShowApplicantEdit}
           />
         </div>}
         </>

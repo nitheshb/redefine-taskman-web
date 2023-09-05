@@ -230,8 +230,14 @@ export default function TransactionUpdateSideView({
   }
   const updateTnxStatus = (status, id) => {
     const data = {status, id}
+    data.Uuid = data?.unit_id
     updateTransactionStatus(orgId,data, user?.email,  enqueueSnackbar )
   }
+
+  useEffect(() => {
+  console.log('value si ', transactionData)
+  }, [])
+
   return (
     <div
       className={`bg-white   h-screen    ${openUserProfile ? 'hidden' : ''} `}
@@ -274,7 +280,7 @@ export default function TransactionUpdateSideView({
                 Trxn Id
               </div>
               <div className="font-md text-xs mt-1 tracking-wide font-semibold text-slate-900 ">
-                {transactionData?.txt_id}
+                {transactionData?.bank_ref || transactionData?.txt_id}
               </div>
             </section>
           </section>

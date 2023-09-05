@@ -12,6 +12,7 @@ const CrmUnitPaymentSchedule = ({ selCustomerPayload, assets, totalIs }) => {
   const [partATotal, setPartA] = useState(0)
   const [partBTotal, setPartB] = useState(0)
   const [unitTotal, setUnitTotal] = useState(0)
+  const [unitReceivedTotal, setReceivedTotal] = useState(0)
 
   console.log('payload is ', selCustomerPayload)
   useEffect(() => {
@@ -33,6 +34,7 @@ const CrmUnitPaymentSchedule = ({ selCustomerPayload, assets, totalIs }) => {
     setPartA(a)
     setPartB(b)
     setUnitTotal(a + b)
+    setReceivedTotal(selCustomerPayload?.T_review?.toLocaleString('en-IN'))
   }, [selCustomerPayload])
 
   return (
@@ -40,8 +42,8 @@ const CrmUnitPaymentSchedule = ({ selCustomerPayload, assets, totalIs }) => {
       <div className="mt-2">
         <section className="mr-2 flex flex-col  ">
           <div>
-            <div className=" bg-[#FFF5E4] bg-gradient-to-r from-green-50 to-amber-50 border border-[#b9efcd] rounded-md p-3 pb-4">
-              <div className="flex flex-row">
+            <div className="  from-green-50 to-amber-50 border border-[#b9efcd] bg-[#9AE8FC] bg-[#c1f2ff] rounded-md p-3 pb-4">
+              <div className="flex flex-row ">
                 <img
                   src="https://static.ambitionbox.com/static/benefits/JobTraining.svg"
                   alt=""
@@ -50,28 +52,28 @@ const CrmUnitPaymentSchedule = ({ selCustomerPayload, assets, totalIs }) => {
                   Payment Schedule
                 </h1>
               </div>
-              <table className="w-full mb-">
+              <table className="w-full mb- ">
                 <thead>
                   {' '}
-                  <tr className=" h-6 border-b-[0.2px] border-gray-300">
-                    <th className="w-[30%] text-[10px] text-left text-gray-400 text-[#823d00]  tracking-wide uppercase ">
+                  <tr className=" h-6 border-b-[0.2px] border-gray-300 h-[51px]">
+                    <th className="w-[40%] text-[10px] px-3 text-left text-gray-400 text-[#823d00]  tracking-wide uppercase ">
                       Particulars
                     </th>
-                    <th className="w-[15%] text-[10px] text-right text-gray-400  text-[#823d00]  tracking-wide uppercase">
+                    {/* <th className="w-[10%] text-[10px] text-right text-gray-400  text-[#823d00]  tracking-wide uppercase">
                       Payment Timeline
-                    </th>
+                    </th> */}
                     <th className="w-[15%] text-[10px] text-center text-gray-400 text-[#823d00]  tracking-wide uppercase ">
                       Eligible
                     </th>
-                    <th className="w-[15%] text-[10px] text-right text-gray-400 text-[#823d00] tracking-wide uppercase ">
+                    <th className="w-[15%] text-[10px]  px-2  text-right text-gray-400 text-[#823d00] tracking-wide uppercase ">
                       Total inc GST
                     </th>
-                    <th className="w-[15%] text-[10px] text-right text-gray-400 text-[#823d00]  tracking-wide uppercase ">
+                    <th className="w-[15%] text-[10px]  px-2 text-right text-gray-400 text-[#823d00]  tracking-wide uppercase ">
                       Amount Received
                     </th>
-                    <th className="w-[15%] text-[10px] text-right text-gray-400 text-[#823d00]  tracking-wide uppercase ">
+                    {/* <th className="w-[15%] text-[10px] text-right text-gray-400 text-[#823d00]  tracking-wide uppercase ">
                       Status
-                    </th>
+                    </th> */}
                   </tr>
                 </thead>
 
@@ -85,22 +87,22 @@ const CrmUnitPaymentSchedule = ({ selCustomerPayload, assets, totalIs }) => {
                     return (
                       <tr
                         key={inx}
-                        className="border-b-[0.05px] border-gray-300"
+                        className={`border-b-[0.05px] border-gray-300 py-3 h-[51px] ${!d1?.elgible ? '': '' } `}
                       >
-                        <th className=" text-[11px] text-left text-gray-700 ">
-                          {d1?.stage?.label}
+                        <th className=" text-[13px] text-left text-blue-500 text-[#0c272e] text-[#363ad9] text-[#272991] tracking-wide pl-3 ">
+                         <div>{d1?.stage?.label}
+                         <div className="text-[9px] text-left text-[#60679f] tracking-wider "> {d1?.description}</div>
+                         </div>
                         </th>
-                        <td className="text-[11px] text-right text-gray-900 ">
-                          {d1?.description}
+
+                        <td className="text-[10px] text-center text-gray-800 font-bold ">
+                         <span className={`text-[10px] px-2 py-[2px] rounded-2xl  ${!d1?.elgible ? '': 'bg-[#98ebc9]  ' } `}>{d1?.elgible ? 'Yes' : 'No'}</span>
                         </td>
-                        <td className="text-[10px] text-center text-gray-800 ">
-                          {d1?.elgible ? 'Yes' : 'No'}
-                        </td>
-                        <td className="text-[12px] text-right text-gray-800 ">
+                        <td className="text-[12px] text-right text-gray-800 bg-[#F3FFFA] px-2 font-bold ">
                           ₹{d1?.value?.toLocaleString('en-IN')}
                         </td>
 
-                        <td className="text-[10px] text-right text-gray-800 ">
+                        <td className="text-[12px] text-right text-gray-800 bg-[#FFF6F4] px-2 font-bold">
                           {/* {totalIs > d1?.value?.toLocaleString('en-IN')
                           ? d1?.value?.toLocaleString('en-IN')
                           : 0} */}
@@ -110,27 +112,33 @@ const CrmUnitPaymentSchedule = ({ selCustomerPayload, assets, totalIs }) => {
                     )
                   })}
 
-                  <tr className="border-b-[0.05px] border-gray-300 ">
-                    <th className="text-[10px] text-left text-gray-800 ">
-                    Total Value Rs.:
+                  <tr className="border-b-[0.05px] border-gray-300 py-3 h-[51px] ">
+
+                    <td className="text-[10px] text-right text-gray-400 "></td>
+                    {/* <td className="text-[10px] text-right text-gray-400 "></td> */}
+                    <th className="text-[14px] text-left text-gray-800 ">
+                    Total Value:
                     </th>
-                    <td className="text-[10px] text-right text-gray-400 "></td>
-                    <td className="text-[10px] text-right text-gray-400 "></td>
-                    <th className="text-[10px] text-right text-gray-800 ">
-                    <section className="py-1 d-md font-bold text-[14px] text-[#000000e6] leading-none">
+                    <th className="text-[10px] text-right text-gray-800 bg-[#98ebc9] ">
+                    <section className="py-1 d-md font-bold text-[14px] text-[#000000e6] leading-none px-2 ">
                     ₹{unitTotal?.toLocaleString('en-IN')}
                   </section>
                     </th>
-                    <th className="text-[10px] text-right text-gray-800 ">
+                    <th className="text-[10px] text-right text-gray-800 bg-[#FFDAD2] ">
+                    <section className="py-1 d-md font-bold text-[14px] text-[#000000e6] leading-none px-2 ">
+                    ₹{unitReceivedTotal?.toLocaleString('en-IN')}
+                  </section>
+                    </th>
+                    {/* <th className="text-[10px] text-right text-gray-800 ">
                     <section className="py-1 d-md font-bold text-[14px] text-[#000000e6] leading-none">
                     ₹{unitTotal?.toLocaleString('en-IN')}
                   </section>
-                    </th>
+                    </th> */}
                   </tr>
                 </tbody>
               </table>
             </div>
-          
+
           </div>
         </section>
       </div>

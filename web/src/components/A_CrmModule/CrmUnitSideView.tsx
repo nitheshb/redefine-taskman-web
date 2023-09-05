@@ -888,8 +888,15 @@ export default function UnitSideViewCRM({
       customerDetailsObj,
     } = selCustomerPayload
     const customLeadObj = { Name: customerDetailsObj?.customerName1 }
+    data.attchUrl = data?.fileUploader?.url || "";
     data.category = 'Payment'
-    const x = await capturePaymentS(
+    const y = {}
+    y.m = data?.fileUploader
+
+    console.log('unit log ', data, y, y.m, y['m']['url'])
+
+    
+        const x = await capturePaymentS(
       orgId,
       projectId,
       unitId,

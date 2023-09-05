@@ -37,10 +37,10 @@ const CrmUnitCostSheetView = ({ selCustomerPayload, assets, totalIs }) => {
 
   return (
     <>
-      <div className="mt-2 bg-[#e5e5e5]">
-        <section className="mr-2 flex flex-row  ">
+      <div className="mt-2 bg-[#e5e5e5] bg-white ">
+        <section className="mr- flex flex-row  ">
           <div className="w-full">
-            <div className="bg-[#00a76f14] bg-gradient-to-r from-red-50 to-stone-50 border border-[#e5e7f8] rounded-md mt-[4px]">
+            <div className="border border-[#e5e7f8] bg-[#c1f2ff] rounded-md mt-[4px]">
               <div className="flex flex-row  px-3">
                 <img
                   src="https://static.ambitionbox.com/static/benefits/WFH.svg"
@@ -67,7 +67,7 @@ const CrmUnitCostSheetView = ({ selCustomerPayload, assets, totalIs }) => {
                         <th className="w-[15%] text-[10px] text-right text-[#00a76f] tracking-wide uppercase">
                           Sale Value
                         </th>
-                        <th className="w-[15%] text-[10px] text-right text-[#00a76f]  tracking-wide uppercase">
+                        <th className="w-[15%] text-[10px] text-right text-[#00a76f]  tracking-wide uppercase px-2">
                           GST
                         </th>
                         <th className="w-[15%] text-[10px] text-right text-[#00a76f]  tracking-wide uppercase ">
@@ -92,10 +92,10 @@ const CrmUnitCostSheetView = ({ selCustomerPayload, assets, totalIs }) => {
                           <td className="w-[15%] text-[12px] text-right text-gray-700 ">
                             ₹{d1?.TotalSaleValue?.toLocaleString('en-IN')}
                           </td>
-                          <td className="w-[15%] text-[12px] text-right text-gray-700 ">
+                          <td className="w-[15%] text-[12px] text-right text-gray-700 px-2">
                             ₹{d1?.gst?.value?.toLocaleString('en-IN')}
                           </td>
-                          <td className="w-[15%] text-[12px] text-right text-gray-800 ">
+                          <td className="w-[15%] text-[12px] text-right font-bold text-gray-800 bg-[#FFF6F4] px-2">
                             ₹{' '}
                             {d1?.TotalNetSaleValueGsT?.toLocaleString('en-IN')}
                           </td>
@@ -108,8 +108,8 @@ const CrmUnitCostSheetView = ({ selCustomerPayload, assets, totalIs }) => {
                         <td className="w-[15%] font-bold text-[10px] text-right text-gray-800 "></td>
                         <td className="w-[15%] font-bold  text-[10px] text-right text-gray-800 "></td>
                         <td className="w-[15%] font-bold  text-[10px] text-right text-gray-800 "></td>
-                        <td className="w-[15%] font-bold  text-[12px] text-right text-gray-800 ">
-                          {partATotal?.toLocaleString('en-IN')}
+                        <td className="w-[15%] font-bold  text-[12px] text-right text-gray-800 bg-[#FFDAD2] px-2">
+                          ₹{partATotal?.toLocaleString('en-IN')}
                         </td>
                       </tr>
                     </tbody>
@@ -129,7 +129,7 @@ const CrmUnitCostSheetView = ({ selCustomerPayload, assets, totalIs }) => {
                         <th className="w-[30%] text-[10px] text-right text-gray-700 text-[#00a76f]  tracking-wide uppercase ">
                           Timeline
                         </th>
-                        <th className="w-[15%] text-[10px] text-right text-gray-700  text-[#00a76f] tracking-wide uppercase">
+                        <th className="w-[15%] text-[10px] text-right text-gray-700  text-[#00a76f] tracking-wide uppercase px-2">
                           Rate
                         </th>
                         <th className="w-[20%] text-[10px] text-right text-gray-700  text-[#00a76f] tracking-wide uppercase">
@@ -149,10 +149,10 @@ const CrmUnitCostSheetView = ({ selCustomerPayload, assets, totalIs }) => {
                           <td className="text-[12px] text-right text-gray-700 ">
                             {d1?.description}
                           </td>
-                          <td className="text-[12px] text-right text-gray-700 ">
+                          <td className="text-[12px] text-right text-gray-700 px-2 ">
                             ₹{Number(d1?.charges)?.toLocaleString('en-IN')}
                           </td>
-                          <td className="text-[12px] text-right text-gray-700 ">
+                          <td className="text-[12px] text-right text-gray-700 font-bold bg-[#FFF6F4] px-2">
                             ₹{' '}
                             {Number(
                               computeTotal(d1, selCustomerPayload?.area)
@@ -166,7 +166,7 @@ const CrmUnitCostSheetView = ({ selCustomerPayload, assets, totalIs }) => {
                         <td className="text-[12px] text-right text-gray-800 font-bold  ">
                           Total (B) :
                         </td>
-                        <td className="text-[12px] text-right text-gray-800 font-bold ">
+                        <td className="text-[12px] text-right text-gray-800 font-bold bg-[#FFDAD2] px-2">
                           ₹{partBTotal?.toLocaleString('en-IN')}
                         </td>
                       </tr>
@@ -201,7 +201,7 @@ const CrmUnitCostSheetView = ({ selCustomerPayload, assets, totalIs }) => {
               </section>
             </div>
           </div>
-         
+
         </section>
       </div>
     </>

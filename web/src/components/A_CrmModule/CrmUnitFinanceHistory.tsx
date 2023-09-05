@@ -17,44 +17,48 @@ const CrmUnitFinanceHistory = ({
 
 
       <div className="mt-2">
-        <section className="mr-2 flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md ">
+        <section className="mr-2 flex flex-col bg-[#F6F7FF] from-green-50 to-amber-50  bg-[#e3d5c0] bg-[#6E3AB0] bg-[#ffeeea] p-3 border border-[#e5e7f8] rounded-md ">
           <div>
-            <h1 className=" text-bodyLato text-left text-gray-800 font-semibold text-[12px] mb-2">
-              Payment History
-            </h1>
-            <table className="w-full mb-10">
+            <div className="flex flex-row ">
+                <img
+                  src="https://static.ambitionbox.com/static/benefits/JobTraining.svg"
+                  alt=""
+                />
+                <h1 className=" text-bodyLato text-left text-[#1E223C] font-semibold text-[14px] mb-2 mt-1 ml-1">
+                Payment History
+                </h1>
+              </div>
+            <table className="w-full mb-10 mt-2">
               <thead>
                 {' '}
-                <tr className=" h-6 border-b-[0.2px] border-gray-300">
-                  <th className="w-[12%] text-[10px] text-left text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
+                <tr className=" h-6 border-b-[0.2px] border-gray-300 ">
+                  <th className="w-[12%] text-[10px]  text-left text-gray-400 text-[#823d00] tracking-wide uppercase pl-2 ">
                     Paid On
                   </th>
-                  <th className="w-[8%] text-[10px] text-center text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
+                  <th className="w-[8%] text-[10px] text-center text-gray-400 text-[#823d00] font-bodyLato tracking-wide uppercase ">
                     Mode
                   </th>
-                  <th className="w-[15%] text-[10px] text-center text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
+                  <th className="w-[15%] text-[10px] text-center text-gray-400 text-[#823d00] font-bodyLato tracking-wide uppercase ">
                     Bank Ref Id
                   </th>
-                  <th className="w-[10%] text-[10px] text-right text-gray-400  text-[#8993a4] font-bodyLato tracking-wide uppercase">
+                  <th className="w-[10%] text-[10px] text-right text-gray-400  text-[#823d00] font-bodyLato tracking-wide uppercase">
                     Amount
                   </th>
-                  <th className="w-[10%] text-[10px] text-center text-gray-400  text-[#8993a4] font-bodyLato tracking-wide uppercase">
+                  {/* <th className="w-[10%] text-[10px] text-center text-gray-400  text-[#823d00] font-bodyLato tracking-wide uppercase">
                     Event
-                  </th>
-                  <th className="w-[10%] text-[10px] text-center text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
+                  </th> */}
+                  <th className="w-[10%] text-[10px] text-center text-gray-400 text-[#823d00] font-bodyLato tracking-wide uppercase ">
                     Status
                   </th>
 
-                  <th className="w-[8%] text-[10px] text text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
-                    From
+
+                  <th className="w-[15%] text-[10px] text text-gray-400 text-[#823d00] font-bodyLato tracking-wide uppercase ">
+                    Accounts
                   </th>
-                  <th className="w-[15%] text-[10px] text text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
-                    To
-                  </th>
-                  <th className="w-[15%] text-[10px] text-center text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
+                  {/* <th className="w-[15%] text-[10px] text-center text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
                     Tx Id
-                  </th>
-                  <th className="w-[15%] text-[10px] text-center text-gray-400 text-[#8993a4] font-bodyLato tracking-wide uppercase ">
+                  </th> */}
+                  <th className="w-[15%] text-[10px] text-center text-gray-400 text-[#823d00] font-bodyLato tracking-wide uppercase ">
                     Reviewer
                   </th>
                 </tr>
@@ -65,50 +69,50 @@ const CrmUnitFinanceHistory = ({
                   totalIs = 0
                     // selCustomerPayload?.[`${assets[0]}_T_review`] - d1?.value
                   return (
-                    <tr key={inx} className="border-b-[0.05px] border-gray-300">
-                      <th className=" text-[10px] text-left text-gray-700 ">
-                        {timeConv(d1?.txt_dated ||d1?.dated).toLocaleString() }
+                    <tr key={inx} className={`border-b-[0.05px] border-gray-300 h-[45px] ${inx%2 === 0 ? '': ' '}`}>
+                      <th className=" text-[12px] text-left text-blue-700  pl-2">
+                        {prettyDate(d1?.txt_dated ||d1?.dated).toLocaleString() }
                       </th>
-                      <td className="text-[10px] text-center  text-gray-800 ">
+                      <td className="text-[12px] text-center  text-gray-800 ">
                         {d1?.mode}
                       </td>
-                      <td className="text-[10px] text-center text-gray-800 ">
+                      <td className="text-[12px] text-center text-gray-800 ">
                         {d1?.bank_ref || d1?.chequeno}
                       </td>
-                      <td className="text-[10px] text-right text-gray-700 ">
-                        {d1?.totalAmount?.toLocaleString('en-IN') || d1?.amount?.toLocaleString('en-IN')}
+                      <td className="text-[13px] text-right text-gray-800 font-bold ">
+                        ₹{d1?.totalAmount?.toLocaleString('en-IN') || d1?.amount?.toLocaleString('en-IN')}
                       </td>
-                      <td className="text-[10px] text-center text-gray-800 ">
+                      {/* <td className="text-[10px] text-center text-gray-800 ">
                         {d1?.payReason}
+                      </td> */}
+
+                      <td className="text-[12px] text-center text-gray-800 ">
+                      <span className="bg-[#f3c69e] text-[10px] px-2 py-[2px] rounded-2xl font-bold">{d1?.status}</span>
                       </td>
 
-                      <td className="text-[10px] text-center text-gray-800 ">
-                        {d1?.status}
-                      </td>
 
-                      <td className="text-[10px] text-center text-gray-800 ">
-                        {d1?.customerName}
-                      </td>
-                      <td className="text-[10px] text-center text-gray-800 ">
+                      <td className="text-[12px] text-center text-gray-800 ">
+
                         {d1?.towards ||d1?.builderName}
+                        <div>  {d1?.customerName}</div>
                       </td>
-                      <td className="text-[10px] text-center text-gray-800 ">
+                      {/* <td className="text-[10px] text-center text-gray-800 ">
                         {d1?.created}
-                      </td>
-                      <td className="text-[10px] text-center text-gray-800 ">
+                      </td> */}
+                      <td className="text-[12px] text-center text-gray-800 ">
                         {d1?.Reviewer || "NA"}
                       </td>
                     </tr>
                   )
                 })}
 
-                <tr className="border-b-[0.05px] border-gray-300">
+                {/* <tr className="border-b-[0.05px] border-gray-300">
                   <th className="text-[10px] text-left text-gray-800 ">
                     Plot Value Total Rs.:
                   </th>
                   <td className="text-[10px] text-right text-gray-400 "></td>
                   <th className="text-[10px] text-right text-gray-800 "></th>
-                </tr>
+                </tr> */}
               </tbody>
             </table>
           </div>

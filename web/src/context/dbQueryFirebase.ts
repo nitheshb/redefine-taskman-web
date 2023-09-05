@@ -340,7 +340,7 @@ export const updateTransactionStatus = async (
   enqueueSnackbar
 ) => {
   // const itemsQuery = query(doc(db, `${orgId}_leads_log', 'W6sFKhgyihlsKmmqDG0r'))
-  const { id, status, Uuid } = data1
+  const { id, status, Uuid, projectId } = data1
   // return onSnapshot(doc(db, `${orgId}_leads_log`, uid), snapshot, error)
   const { data: lead_logs, error } = await supabase
     .from(`${orgId}_accounts`)
@@ -359,8 +359,10 @@ export const updateTransactionStatus = async (
         payload: { comments: '' },
         from: 'review',
         to: status,
+        projectId:projectId || ''
       },
     ])
+    console.log('check it ', data4, error4)
   if (lead_logs) {
     await enqueueSnackbar('Marked as Amount Recived', {
       variant: 'success',
@@ -658,7 +660,7 @@ export const steamUnitTasks = async (orgId, data) => {
     .select('*')
     .eq('Uuid', uid)
     .order('created_on', { ascending: false })
-    console.log('task value is ', lead_logs, error1)
+  console.log('task value is ', lead_logs, error1)
   return lead_logs
 }
 //  get legal Tasks All
@@ -671,7 +673,7 @@ export const getAllLegalTasks = async (orgId, data) => {
     .select('*')
     .eq('dept', 'legal')
     .order('created_on', { ascending: false })
-    console.log('task value is ', lead_logs, error1)
+  console.log('task value is ', lead_logs, error1)
   return lead_logs
 }
 export const steamLeadNotes = (orgId, snapshot, data, error) => {
@@ -1541,19 +1543,19 @@ export const addLegalClarificationTicket = async (orgId, dta, user) => {
     },
   ])
   const { data: data4, error: error4 } = await supabase
-  .from(`${orgId}_unit_logs`)
-  .insert([
-    {
-      type: 'task',
-      subtype: 'legal',
-      T: Timestamp.now().toMillis(),
-      Uuid: Uuid,
-      by: user?.email,
-      payload: {'p': priorities},
-      from: 'Created',
-      to: 'InProgress',
-    },
-  ])
+    .from(`${orgId}_unit_logs`)
+    .insert([
+      {
+        type: 'task',
+        subtype: 'legal',
+        T: Timestamp.now().toMillis(),
+        Uuid: Uuid,
+        by: user?.email,
+        payload: { p: priorities },
+        from: 'Created',
+        to: 'InProgress',
+      },
+    ])
   x.map(async (userId) => {
     // get phone no's
     const additionalUserInfo = await getUser(userId)
@@ -3342,7 +3344,7 @@ export const capturePaymentS = async (
   unitId,
   custNo,
   leadDetailsObj2,
-  paylaod,
+  payload,
   by,
   enqueueSnackbar
 ) => {
@@ -3360,8 +3362,9 @@ export const capturePaymentS = async (
       towardsBankDocId,
       category,
       bank_ref_no,
-    } = paylaod
+    } = payload
 
+    console.log('unit log', payload)
     const { data, error } = await supabase.from(`${orgId}_accounts`).insert([
       {
         projectId,
@@ -3371,12 +3374,13 @@ export const capturePaymentS = async (
         mode,
         custId: custNo,
         customerName: Name,
-        receive_by: paylaod?.bookedBy,
+        receive_by: payload?.bookedBy,
         txt_dated: dated, // modify this to dated time entred by user
-        status: paylaod?.status || 'review',
-        payReason: paylaod?.payReason,
+        status: payload?.status || 'review',
+        payReason: payload?.payReason,
         totalAmount: amount,
         bank_ref: bank_ref_no,
+        attchUrl: payload?.fileUploader?.url || payload?.attchUrl || '',
       },
     ])
     const paymentCB = await addPaymentReceivedEntry(
@@ -3391,10 +3395,10 @@ export const capturePaymentS = async (
         mode,
         custId: custNo,
         customerName: Name,
-        receive_by: paylaod?.bookedBy,
+        receive_by: payload?.bookedBy,
         txt_dated: dated, // modify this to dated time entred by user
-        status: paylaod?.status || 'review',
-        payReason: paylaod?.payReason,
+        status: payload?.status || 'review',
+        payReason: payload?.payReason,
         totalAmount: amount,
         bank_ref: bank_ref_no,
       },
@@ -3436,7 +3440,7 @@ export const capturePaymentS = async (
           to: 'review',
         },
       ])
-    console.log('unit log', data4, error4)
+    console.log('unit log', data4, error4, data, error)
     enqueueSnackbar(`Captured Payment`, {
       variant: 'success',
     })

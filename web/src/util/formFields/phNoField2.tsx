@@ -7,6 +7,7 @@ import NumberFormat from 'react-number-format'
 
 export const PhoneNoField2 = ({ label, ...props }) => {
   const [field, meta] = useField(props)
+  console.log('phonenumber value si ', props)
   return (
     <div className="relative z-0 text-sm">
       {/* <input

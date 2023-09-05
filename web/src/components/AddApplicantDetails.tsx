@@ -50,6 +50,7 @@ const AddApplicantDetails = ({
   leadDetailsObj2,
   selUnitDetails,
   dialogOpen,
+  setShowApplicantEdit
 }) => {
   const d = new window.Date()
   const { user } = useAuth()
@@ -590,7 +591,6 @@ const AddApplicantDetails = ({
           {title}
         </Dialog.Title> */}
         </div>
-
         <div className="grid gap-8 grid-cols-1">
           <div className="flex flex-col rounded-lg bg-white ">
             <div className="mt-0">
@@ -671,7 +671,8 @@ const AddApplicantDetails = ({
                                             <PhoneNoField2
                                               label="Phone No"
                                               name="phoneNo1"
-                                              type="text"
+                                              type="number"
+                                              value={formik.values.phoneNo1}
                                               onChange={(value) => {
                                                 console.log('value', value.value, formik?.values?.phoneNo1)
                                                 formik.setFieldValue('phoneNo1', value.value)
@@ -714,7 +715,7 @@ const AddApplicantDetails = ({
                                               Date Of Birth
                                             </label>
                                             <span className="inline">
-                                              <DatePicker
+                                              {/* <DatePicker
                                                 className="h-8 outline-none border-t-0 border-l-0 border-r-0 border-gray-500 text-sm border-solid mt-[-4px] pb-1  min-w-[125px]  inline  text-[#0091ae]   lg:w-4/12 w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] "
                                                 label="Dated"
                                                 name="dob1"
@@ -740,7 +741,7 @@ const AddApplicantDetails = ({
                                                   ),
                                                 ]}
                                                 dateFormat="MMMM d, yyyy"
-                                              />
+                                              /> */}
                                             </span>
                                           </div>
                                         </div>
@@ -946,8 +947,11 @@ const AddApplicantDetails = ({
                                               label="Phone No"
                                               name="phoneNo2"
                                               type="text"
+                                              value={formik.values.phoneNo2}
+
                                               onChange={(value) => {
                                                 // formik.setFieldValue('mobileNo', value.value)
+                                                formik.setFieldValue('phoneNo2', value.value)
                                               }}
                                               // value={formik.values.mobileNo}
                                               options={{}}
@@ -984,7 +988,7 @@ const AddApplicantDetails = ({
                                               Date Of Birth
                                             </label>
                                             <span className="inline">
-                                              <DatePicker
+                                              {/* <DatePicker
                                                 className="h-8 outline-none border-t-0 border-l-0 border-r-0 border-gray-500 text-sm border-solid mt-[-4px] pb-1  min-w-[125px]  inline  text-[#0091ae]   lg:w-4/12 w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] "
                                                 label="Dated"
                                                 name="dob2"
@@ -1010,7 +1014,7 @@ const AddApplicantDetails = ({
                                                   ),
                                                 ]}
                                                 dateFormat="MMMM d, yyyy"
-                                              />
+                                              /> */}
                                             </span>
                                           </div>
                                         </div>
@@ -1304,6 +1308,14 @@ const AddApplicantDetails = ({
                       </section>
                     </div>
                     <div className="mt-5 text-right md:space-x-3 md:block flex flex-col-reverse py-3 mr-6 flex flex-col mt-2 z-10 flex flex-row justify-between mt-2 pr-6 bg-white shadow-lg absolute bottom-0  w-full">
+                   {setShowApplicantEdit !=undefined && (<button
+                        className="bg-red-400 text-white active:bg-pink-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+                        disabled={loading}
+                        onClick={()=> setShowApplicantEdit(false) }
+                      >
+                        {'Cancel'}
+                      </button>)
+}
                       <button
                         className="bg-green-400 text-white active:bg-pink-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
                         type="submit"
