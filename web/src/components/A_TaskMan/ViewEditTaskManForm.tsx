@@ -327,6 +327,7 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
     data.id = taskManObj.id
     data.priorities = prior ? 'high' : 'medium'
     data.attachments = files
+    data.due_date = startDate.getTime()
 
     await editTaskManData(orgId, data, user)
     await setFormMessage('Task Edited..!')

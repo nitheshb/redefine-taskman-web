@@ -191,6 +191,14 @@ const UserAccessTable = () => {
         >
           SALES
         </StyledButton>
+        <StyledButton
+          variant="outlined"
+          size="small"
+          isCategoryMatched={category === 'sales'}
+          onClick={() => setCategory('sales')}
+        >
+          Admin Team 
+        </StyledButton>
       </Box>
       <Box
         sx={{

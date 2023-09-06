@@ -57,6 +57,12 @@ export const navigateBasedOnUser = async (userData) => {
     userData.role.includes(USER_ROLES.LEGAL_EXECUTIVE)
   ) {
     await navigate(routes.legalModule(), { replace: true })
+  }
+  else if (
+    userData.role.includes(USER_ROLES.ADMIN_SUPPORT_MANAGER) ||
+    userData.role.includes(USER_ROLES.ADMIN_SUPPORT_EXECUTIVE)
+  ) {
+    await navigate(routes.administrationTeam(), { replace: true })
   } else {
     userData.role && navigate(routes.accessDenied(), { replace: true })
   }

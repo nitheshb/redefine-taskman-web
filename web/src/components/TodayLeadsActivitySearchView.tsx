@@ -320,7 +320,6 @@ export default function TodayLeadsActivitySearchView({
   setSearchKey,
 }) {
   const { user } = useAuth()
-  const { orgId, access } = user
   const [order, setOrder] = React.useState('asc')
   const [orderBy, setOrderBy] = React.useState('calories')
   const [selected, setSelected] = React.useState([])
@@ -382,7 +381,7 @@ export default function TodayLeadsActivitySearchView({
 
   const getMyTodayProgress = async () => {
     const unsubscribe = steamUserTodayProgress(
-      orgId,
+      user?.orgId,
       (doc) => {
         const myTaskA = doc.data()
         // setprojectList(projectsListA)
@@ -400,7 +399,7 @@ export default function TodayLeadsActivitySearchView({
 
   useEffect(() => {
     const unsubscribe = getAllProjects(
-      orgId,
+      user?.orgId,
       (querySnapshot) => {
         const projectsListA = querySnapshot.docs.map((docSnapshot) =>
           docSnapshot.data()
@@ -421,7 +420,7 @@ export default function TodayLeadsActivitySearchView({
 
   useEffect(() => {
     const unsubscribe = steamUsersListByRole(
-      orgId,
+      user?.orgId,
       (querySnapshot) => {
         const usersListA = querySnapshot.docs.map((docSnapshot) =>
           docSnapshot.data()
@@ -755,7 +754,7 @@ export default function TodayLeadsActivitySearchView({
                     ]}
                   />
                 </div>
-                {access?.includes('manage_leads') && (
+                {user?.access?.includes('manage_leads') && (
                   <div className=" flex flex-col  w-40">
                     <SlimSelectBox
                       name="project"

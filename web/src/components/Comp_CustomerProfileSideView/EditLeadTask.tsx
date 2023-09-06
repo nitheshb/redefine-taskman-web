@@ -83,6 +83,7 @@ export default function EditLeadTask({
             type="submit"
             onClick={() => {
               if (!error) {
+                console.log('edit tsk obj ', editTaskObj)
                 editTaskFun(editTaskObj)
               }
             }}

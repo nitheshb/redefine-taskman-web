@@ -242,7 +242,7 @@ export default function ModuleSwitchDrop({
                   )}
                 </Menu.Item>
 
-                <Menu.Item>
+                {/* <Menu.Item>
                   {({ active }) => (
                     <Link to={routes.constructModule()}>
                       <div
@@ -269,7 +269,7 @@ export default function ModuleSwitchDrop({
                       </div>
                     </Link>
                   )}
-                </Menu.Item>
+                </Menu.Item> */}
 
                 <Menu.Item>
                   {({ active }) => (
@@ -321,6 +321,34 @@ export default function ModuleSwitchDrop({
                           </a>
                           <p className="mt- pb-2 border-b text-gray-600">
                             Emp Addition, Role, Access
+                          </p>
+                        </div>
+                      </div>
+                    </Link>
+                  )}
+                </Menu.Item>
+                <Menu.Item>
+                  {({ active }) => (
+                    <Link to={routes.administrationTeam()}>
+                      <div
+                        className="group relative flex items-center gap-x-6 rounded-lg p-2 pb-0 text-sm leading-6 hover:bg-gray-50"
+                        onClick={() => {
+                          setStatusFun('1', 'ADMINTEAM')
+                        }}
+                      >
+                        <div className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                        <PuzzleIcon
+                            className="h-6 w-6 text-gray-600 group-hover:text-indigo-600"
+                            aria-hidden="true"
+                          />
+                        </div>
+                        <div className="flex-auto">
+                          <a className="block font-semibold text-gray-900">
+                            Admin Team
+                            <span className="absolute inset-0" />
+                          </a>
+                          <p className="mt- pb-2 border-b text-gray-600">
+                            Facilitators, Help
                           </p>
                         </div>
                       </div>

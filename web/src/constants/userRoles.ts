@@ -18,12 +18,15 @@ export const USER_ROLES = {
   PROJECT_EXECUTIVE: 'project-executive',
   MARKETING_MANAGER: 'marketing-manager',
   MARKETING_EXECUTIVE: 'marketing-executive',
+  ADMIN_SUPPORT_MANAGER: 'admin-support-manager',
+  ADMIN_SUPPORT_EXECUTIVE: 'admin-support-executive',
   ADMIN: 'admin',
 }
 
 export const DEPARTMENT_LIST = [
   { label: 'Select the Department', value: '' },
-  { label: 'Admin', value: 'admin' },
+  { label: 'Super User', value: 'admin' },
+  { label: 'Admin Team', value: 'admin_support' },
   { label: 'CRM', value: 'crm' },
   { label: 'Construction', val: 'construction' },
   { label: 'Finance', value: 'finance' },
@@ -100,6 +103,16 @@ export const ROLES_LIST = [
     label: 'project manager',
     value: USER_ROLES.PROJECT_EXECUTIVE,
     dept: 'project',
+  },
+  {
+    label: 'admin Support manager',
+    value: USER_ROLES.ADMIN_SUPPORT_MANAGER,
+    dept: 'admin_support',
+  },
+  {
+    label: 'admin support executive',
+    value: USER_ROLES.ADMIN_SUPPORT_EXECUTIVE,
+    dept: 'admin_support',
   },
   { label: 'Admin', value: USER_ROLES.ADMIN, dept: 'admin' },
 ]

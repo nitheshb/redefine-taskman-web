@@ -11,7 +11,6 @@ const TaskProgress = ({ userTodayPerfA }) => {
 
   const { t } = useTranslation()
   const { user } = useAuth()
-  const { orgId, uid, name } = user
 
   return (
     <section className="bg-white rounded  flex flex-col p-4 w-100 ">

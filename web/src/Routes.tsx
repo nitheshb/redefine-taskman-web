@@ -68,6 +68,7 @@ const Routes = () => {
     )
     // return <Redirect to="/login" />
   } else if (user?.role?.includes(USER_ROLES.ADMIN)) {
+    console.log('am i hre at admin support', USER_ROLES.ADMIN)
     UpdatedRoutes = (
       <>
         <Route path="/admin/home" page={HomePage} name="home" />
@@ -81,7 +82,10 @@ const Routes = () => {
         <Route path="/admin/finance-module" page={FinanceHomePagePage} name="financeModule" />
         <Route path="/admin/legal-module" page={LegalHomePage} name="legalModule" />
         <Route path="/admin/erp-account" page={ErpAccountHomePage} name="erpAccount" />
+        <Route path="/admin/administration-team" page={AdministrationTeamPage} name="administrationTeam" />
+
         <Route path="/privacyPolicy" page={PrivacyPolicyPage} name="privacyPolicy" />
+
       </>
     )
   } else if (user?.role?.includes(USER_ROLES.HR_MANAGER) || user?.role?.includes(USER_ROLES.HR_EXECUTIVE)) {
@@ -130,7 +134,17 @@ const Routes = () => {
         <Route path="/legal-module" page={LegalHomePage} name="legalModule" />
       </>
     )
-  } else if (user?.role?.includes(USER_ROLES.PROJECT_MANAGER) || user?.role?.includes(USER_ROLES.PROJECT_EXECUTIVE)) {
+  }
+  else if (user?.role?.includes(USER_ROLES.ADMIN_SUPPORT_MANAGER) || user?.role?.includes(USER_ROLES.ADMIN_SUPPORT_EXECUTIVE)) {
+   console.log('am i hre at admin support', USER_ROLES.ADMIN_SUPPORT_MANAGER)
+    UpdatedRoutes = (
+      <>
+                <Route path="/administration-team" page={AdministrationTeamPage} name="administrationTeam" />
+
+      </>
+    )
+  }
+  else if (user?.role?.includes(USER_ROLES.PROJECT_MANAGER) || user?.role?.includes(USER_ROLES.PROJECT_EXECUTIVE)) {
     UpdatedRoutes = (
       <>
         <Route path="/home" page={HomePage} name="home" />
@@ -157,6 +171,8 @@ const Routes = () => {
       <Route path="/legal-home" page={LegalHomePage} name="legalHome" />
       <Route path="/crm-home" page={CrmHomePage} name="crmHome" />
       <Route path="/finance-home-page" page={FinanceHomePagePage} name="financeHomePage" />
+      <Route path="/administration-team" page={AdministrationTeamPage} name="administrationTeam" />
+
       {UpdatedRoutes}
       <Route path="/profile" page={Profile} name="profile" />
       <Route path="/admin/login" page={LoginPage} name="login" />

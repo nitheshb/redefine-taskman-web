@@ -62,7 +62,6 @@ const TodoListView = ({
   const { t } = useTranslation()
   const [value, setValue] = useState('new')
   const { user } = useAuth()
-  const { orgId } = user
   const [tableData, setTableData] = useState([])
   const [businessData_F, setBusinessData_F] = useState([])
   const [businessSection_D, setBusinessSection_D] = useState([])
@@ -99,7 +98,7 @@ const TodoListView = ({
   useEffect(() => {
     getTasksDataFun()
 
-    // Subscribe to real-time changes in the `${orgId}_accounts` table
+    // Subscribe to real-time changes in the `${user?.orgId}_accounts` table
     const subscription = supabase
       .from(`maahomes_TM_Tasks`)
       .on('*', (payload) => {
@@ -335,7 +334,7 @@ const TodoListView = ({
     const { uid } = user
 
     const steamLeadLogs = await streamGetAllTaskManTasks(
-      orgId,
+      user?.orgId,
       'snap',
       {
         uid,
@@ -345,7 +344,7 @@ const TodoListView = ({
       (error) => []
     )
     const steamParticipantLogs = await streamGetAllParticipantTasks(
-      orgId,
+      user?.orgId,
       'snap',
       {
         uid,
