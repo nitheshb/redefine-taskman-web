@@ -323,11 +323,14 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
     // uploadStuff(file)
   }
   const onSubmitFun = async (data, resetForm) => {
-    console.log('edit task and button taskManObj', taskManObj, data)
+    console.log('edit task and button taskManObj',startDate, taskManObj, data)
     data.id = taskManObj.id
     data.priorities = prior ? 'high' : 'medium'
     data.attachments = files
-    data.due_date = startDate.getTime()
+    if(startDate instanceof Date){
+      data.due_date = startDate.getTime()
+    }
+
 
     await editTaskManData(orgId, data, user)
     await setFormMessage('Task Edited..!')
