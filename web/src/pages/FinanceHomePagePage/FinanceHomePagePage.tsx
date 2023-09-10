@@ -36,7 +36,7 @@ const FinanceHomePagePage = () => {
   const handleEditProjectClose = () => setIsEditProjectOpen(false)
   const [projects, setProjects] = useState([])
   // const [viewable, setViewable] = useState('Home')
-  const [viewable, setViewable] = useState('Payments')
+  const [viewable, setViewable] = useState('Today1')
 
   const [selModule, setSelModule] = useState('Finance')
 
@@ -364,13 +364,18 @@ const FinanceHomePagePage = () => {
             />
 
             <div className="w-full flex-grow  my- border-t  items-center overflow-y-auto bg-blue h-[98%]  py-300">
-              <HeadNavBarAccounts
+              {/* <HeadNavBarAccounts
+                selModule={selModule}
+                setSelModule={setSelModule}
+              />   */}
+              <HeadNavBar2
                 selModule={selModule}
                 setSelModule={setSelModule}
               />
               {(viewable === 'Today1' || viewable === 'Home') && (
                 <FinanceHome leadsTyper={undefined} />
               )}
+
               {viewable === 'Dashboard' && (
                 <div className="flex flex-row h-full">
                   <div className="flex flex-col w-full mx-16 ">
@@ -585,6 +590,8 @@ const FinanceHomePagePage = () => {
                   </div>
                 </div>
               )}
+
+
 
               {viewable === 'Payments' && (
                 <div className=" h-full rounded-3xl">

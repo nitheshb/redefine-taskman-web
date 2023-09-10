@@ -115,10 +115,10 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
   }, [])
 
   const rowsCounter = (parent, searchKey) => {
-    return parent.filter((item) => {
+    return parent?.filter((item) => {
       if (searchKey === 'all') {
         return item
-      } else if (item.status.toLowerCase() === searchKey.toLowerCase()) {
+      } else if (item?.status?.toLowerCase() === searchKey.toLowerCase()) {
         console.log('All1', item)
         return item
       }
@@ -238,7 +238,7 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
             className="
             "
           >
-            <div className="items-center justify-between  py-2 px-2 bg-[#3cdc94] pl-[13%] ">
+            <div className="items-center justify-between  py-2 px-2 bg-[#3cdc94] pl-[1%] ">
               {/* <div>
                 <h2 className="text-lg font-semibold text-gray-900 leading-light py-2 ">
                   Accounts Transactions Space
@@ -265,25 +265,35 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
                   <section className="flex flex-row justify-between">
                     <section className="flex flex-row mt-2 mr-1  mb-1 leading-7 text-gray-900  rounded-lg  ">
                       {[
-                        { type: 'Cheques' },
-                        { type: 'Imps/Neft/Rtgs' },
-                        { type: 'Hand Cash' },
-                      ].map((dat, i) => {
+    { lab: 'All Payments', val: 'all' },
+    { lab: 'Reviewing', val: 'reviewing' },
+    { lab: 'Cleared', val: 'cleared' },
+    { lab: 'Rejected', val: 'rejected' },
+  ].map((dat, i) => {
                         return (
-                          <div className=" m-1" key={i}>
-                            <div className=" border-[#E5EAF2] bg-white rounded-xl border w-60 p-2">
+                          <div className=" m-1 cursor-pointer" key={i}  onClick={() => setValue(dat?.val)}>
+                            <div className={`border-[#E5EAF2]  rounded-xl border w-60 p-2  ${value === dat?.val ? ' bg-[#ffe4c4]': 'bg-white'}`}>
                               <section>
+                                <div className='flex flex-row justify-between'>
                                 <span className="flex mt-[13px] ml-[12px] justify-center items-center w-6 h-6 bg-[#3cdc94] rounded-full ring-8 ring-white  ">
                                   <DocumentIcon className=" w-3 h-3" />
                                 </span>
-                                <div className="mt-2">
-                                  <span className="css-1lpgd8m text-[#209653] text-black text-[16px] pt-4 mt-4">
-                                    {dat?.type}
+                                <div className="px-2 mt-[13px] flex flex-row justify-between">
+                                  <h3 className=" css-5mn5yy">₹0</h3>
+                                </div>
+                               </div>
+                                <div className="flex flex-row justify-between">
+                                  <span className="css-1lpgd8m text-[#209653] text-black text-[16px] pt-4 ml-2">
+                                    {dat?.lab}
                                   </span>
+                                  <div className=" text-gray-800 px-1  rounded ml-[4px] text-[10px]  mt-3 mr-2">
+                                  {
+                                    rowsCounter(finFetchedData, dat?.val)
+                                      ?.length
+                                  }
                                 </div>
-                                <div className="px-2 flex flex-row justify-between">
-                                  <h3 className=" css-5mn5yy">0</h3>
                                 </div>
+
                                 <div
                                   className="flex flex-row justify-between bg-[#F7F7F7]"
                                   style={{
@@ -396,7 +406,7 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
                                   {/* {statusSepA[0][d.val]?.length || 0} */}
                                   {
                                     rowsCounter(finFetchedData, fieldHead?.val)
-                                      .length
+                                      ?.length
                                   }
                                 </span>
                                 {/*
@@ -555,7 +565,7 @@ const FinanceTransactionsHome = ({ leadsTyper }) => {
                           </tr>
                         </thead>
                         <tbody className="p-2">
-                          {finFetchedData.map((finData, i) => (
+                          {finFetchedData?.map((finData, i) => (
                             <tr
                               className="app-border-1 border-y border-slate-200 "
                               key={i}

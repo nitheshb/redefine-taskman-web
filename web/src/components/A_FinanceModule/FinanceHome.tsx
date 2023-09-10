@@ -11,16 +11,14 @@ import { useTranslation } from 'react-i18next' // styled components
 import {
   getCRMdocById1,
   getCRMTeamTasks,
-  getFinanceTeamTasks,
   getLeadbyId1,
   getTodayTodoLeadsData,
   getTodayTodoLeadsDataByUser,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import uniqueId from 'src/util/generatedId'
+
 import TodayLeadsActivitySearchView from '../TodayLeadsActivitySearchView'
-
-
 
 const rowsCounter = (parent, searchKey) => {
   return parent.filter((item) => {
@@ -33,11 +31,7 @@ const rowsCounter = (parent, searchKey) => {
   })
 }
 
-const FinanceHome = ({
-  setisImportLeadsOpen,
-  selUserProfileF,
-  taskType,
-}) => {
+const FinanceHome = ({ setisImportLeadsOpen, selUserProfileF, taskType }) => {
   // change navbar title
   // useTitle('Data Table V1')
   const { t } = useTranslation()
@@ -51,14 +45,10 @@ const FinanceHome = ({
   const [searchKey, setSearchKey] = useState(['pending'])
   const [schLoading, setSchLoading] = useState(true)
 
-
-
   useEffect(() => {
     console.log('check if this is loading on new page check', user?.uid)
     getLeadsDataFun()
   }, [taskType, user])
-
-
 
   const getLeadsDataFun = async () => {
     const uid = user?.uid
@@ -70,60 +60,63 @@ const FinanceHome = ({
 
       console.log('what is thes ==> ', taskType)
       if (true) {
-        setSchLoading(true)
+        setSchLoading(false)
         console.log('torw date', torrowDate)
-        const todoData = await getFinanceTeamTasks(
-          orgId,
-          (querySnapshot) => {
-            let pro
-            let y = []
-            setTodaySchL([])
-            console.log('git values is 0', querySnapshot.docs[0].id)
-            const projects = querySnapshot.docs.map(async (docSnapshot) => {
-              const x = docSnapshot.data()
-              const { staDA } = x
-              y = staDA
-              if (y.length > 0) {
-                x.uid = docSnapshot.id
-                // eslint-disable-next-line prefer-const
-                let y1 = await getCRMdocById1(orgId, x.uid)
-                console.log('fetched customer doc is ', y1, x.uid)
+        try {
+          const todoData = await getCRMTeamTasks(
+            orgId,
+            (querySnapshot) => {
+              let pro
+              let y = []
+              setTodaySchL([])
+              console.log('git values is 0', querySnapshot.docs[0].id)
+              const projects = querySnapshot.docs.map(async (docSnapshot) => {
+                const x = docSnapshot.data()
+                const { staDA } = x
+                y = staDA
+                if (y.length > 0) {
+                  x.uid = docSnapshot.id
+                  // eslint-disable-next-line prefer-const
+                  let y1 = await getCRMdocById1(orgId, x.uid)
+                  console.log('fetched customer doc is ', y1, x.uid)
+                  x.leadUser = await y1
+                  return x
+                } else {
+                  setSchLoading(false)
+                  return 'remove'
+                }
+              })
 
-                x.leadUser = await y1
-                return x
-              } else {
-                setSchLoading(false)
-                return 'remove'
-              }
-            })
-
-            //  get the task details from docid
-            if (projects.length > 0) {
-              console.log(
-                'my values are ',
-                projects.filter((data) => data != 'remove')
-              )
-              projects.filter((data) => data != undefined)
-              Promise.all(projects).then(function (results) {
+              //  get the task details from docid
+              if (projects.length > 0) {
                 console.log(
                   'my values are ',
-                  results.filter((data) => data != 'remove')
+                  projects.filter((data) => data != 'remove')
                 )
-                results.filter((data) => data != 'remove')
-                setTodaySchL(results.filter((data) => data != 'remove'))
+                projects.filter((data) => data != undefined)
+                Promise.all(projects).then(function (results) {
+                  console.log(
+                    'my values are ',
+                    results.filter((data) => data != 'remove')
+                  )
+                  results.filter((data) => data != 'remove')
+                  setTodaySchL(results.filter((data) => data != 'remove'))
+                  setSchLoading(false)
+                })
+              } else {
                 setSchLoading(false)
-              })
-            } else {
-              setSchLoading(false)
-              console.log('my values are 1 ', projects)
+                console.log('my values are 1 ', projects)
+              }
+            },
+            { type: 'upcoming' },
+            () => {
+              console.log('error')
             }
-          },
-          { type: 'upcoming' },
-          () => {
-            console.log('error')
-          }
-        )
-        await console.log('what are we', todoData)
+          )
+        } catch (error) {
+          setSchLoading(false)
+        }
+        // await console.log('what are we', todoData)
       } else {
         console.log('git values is 1', taskType)
         setSchLoading(true)
@@ -196,32 +189,32 @@ const FinanceHome = ({
     // getValueByIdFun()
   }, [todaySchL])
 
-
-
   const filterTable = tableData.filter((item) =>
     value !== '' ? item.role.toLowerCase() === value : item.role
   )
   return (
     <div className="flex  flex-row  text-gray-700">
-    <div className="flex-1 overflow-auto">
-      <div className="p-1 ">
-    <TodayLeadsActivitySearchView
-    moduleName={"Accounts"}
-      data={filterTable}
-      searchKey={searchKey}
-      setSearchKey={setSearchKey}
-      handleDelete={{}}
-      selStatus={value}
-      todaySch={todaySchL}
-      schLoading={schLoading}
-      rowsParent={leadsFetchedData}
-      selUserProfileF={selUserProfileF}
-      taskType={taskType}
-    />
-    </div>
-    </div>
+      <div className="flex-1 overflow-auto">
+        <div className="p-1 ">
+          <TodayLeadsActivitySearchView
+            moduleName={"Accounts"}
+            data={filterTable}
+            searchKey={searchKey}
+            setSearchKey={setSearchKey}
+            handleDelete={{}}
+            selStatus={value}
+            todaySch={todaySchL}
+            schLoading={schLoading}
+            rowsParent={leadsFetchedData}
+            selUserProfileF={selUserProfileF}
+            taskType={taskType}
+          />
+        </div>
+      </div>
     </div>
   )
 }
+
+
 
 export default FinanceHome

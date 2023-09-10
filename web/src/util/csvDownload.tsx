@@ -46,7 +46,7 @@ export default function CSVDownloader({
       bom={true}
       data={fromLeadsBank ? downloadData : downloadRows}
     >
-      <Tooltip title={`Download ${downloadRows.length} Rows`}>
+      <Tooltip title={`Download ${downloadRows?.length} Rows`}>
         <IconButton>
           {/* style={{ background: '#f9f9f9' }} */}
           <DownloadTwoToneIcon style={{ height: '20px', width: '20px' }} />

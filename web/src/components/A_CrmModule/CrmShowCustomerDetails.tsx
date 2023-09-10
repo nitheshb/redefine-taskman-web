@@ -35,6 +35,7 @@ import {
   sendWhatAppMediaSms,
   sendWhatAppTextSms,
 } from 'src/util/axiosWhatAppApi'
+import { prettyDate } from 'src/util/dateConverter'
 import { PhoneNoField } from 'src/util/formFields/phNoField'
 import { PhoneNoField2 } from 'src/util/formFields/phNoField2'
 import { CustomSelect } from 'src/util/formFields/selectBoxField'
@@ -52,7 +53,7 @@ const ShowCustomerDetails = ({
   leadDetailsObj2,
   selUnitDetails,
   dialogOpen,
-  setShowApplicantEdit
+  setShowApplicantEdit,
 }) => {
   const d = new window.Date()
   const { user } = useAuth()
@@ -620,19 +621,21 @@ const ShowCustomerDetails = ({
                     '?'}
                 </span>
               </div>
-<div className="flex flex-row">
-              <div className="flex flex-col cursor-pointer" onClick={()=> setShowApplicantEdit(true)}>
-                <span className="font-semibold text-[12px] px-4 py-[1px] border border-[#F04A2D] bg-[#FFF0EB] text-[#D96038] rounded-md mt-[2px]">
-                  Edit
-                </span>
+              <div className="flex flex-row">
+                <div
+                  className="flex flex-col cursor-pointer"
+                  onClick={() => setShowApplicantEdit(true)}
+                >
+                  <span className="font-semibold text-[12px] px-4 py-[1px] border border-[#F04A2D] bg-[#FFF0EB] text-[#D96038] rounded-md mt-[2px]">
+                    Edit
+                  </span>
+                </div>
+                <div className="flex flex-col ml-1 ">
+                  <span className="font-semibold text-[12px] px-4 py-[1px] border border-[#F04A2D] bg-[#FFF0EB] text-[#D96038] rounded-md mt-[2px]">
+                    Primary
+                  </span>
+                </div>
               </div>
-              <div className="flex flex-col ml-1 ">
-                <span className="font-semibold text-[12px] px-4 py-[1px] border border-[#F04A2D] bg-[#FFF0EB] text-[#D96038] rounded-md mt-[2px]">
-                  Primary
-                </span>
-              </div>
-              </div>
-
             </div>
             {/* info panel */}
             <div className="flex flex-col mt-4 px-4 py-1 border border-[#E6E7E8]  rounded-md ">
@@ -650,7 +653,7 @@ const ShowCustomerDetails = ({
               </span>
               <span className="font-semibold text-[12px] px-4 py-1 border border-[#EA84DD] bg-[#FCEEFA]  rounded-md mt-[8px]">
                 <span className="text-[#99488e]">D.O.B:</span>{' '}
-                {leadDetailsObj2?.customerDetailsObj?.dob1 || datee}
+                {prettyDate(leadDetailsObj2?.customerDetailsObj?.dob1 || datee)}
               </span>
               <span className="font-semibold text-[12px] px-4 py-1 border border-[#EA84DD] bg-[#FCEEFA]  rounded-md mt-[8px]">
                 <span className="text-[#99488e]">Maritural Status:</span>{' '}
@@ -683,13 +686,10 @@ const ShowCustomerDetails = ({
             <div className="flex flex-row w-full justify-between">
               <div className="flex flex-col">
                 <span className="font-semibold text-[14px]">
-                  {leadDetailsObj2?.customerDetailsObj?.customerName2 ||
-                    '?'}
+                  {leadDetailsObj2?.secondaryCustomerDetailsObj?.customerName2 || '?'}
                 </span>
                 <span className="font-semibold text-[12px] px-2 bg-[#E6E7E8] rounded-md mt-[2px]">
-                  {leadDetailsObj2?.customerDetailsObj?.phoneNo2 ||
-
-                    '?'}
+                  {leadDetailsObj2?.secondaryCustomerDetailsObj?.phoneNo2 || '?'}
                 </span>
               </div>
               <div className="flex flex-col">
@@ -710,15 +710,17 @@ const ShowCustomerDetails = ({
               </section>
               <span className="font-semibold text-[12px] px-4 py-1 border border-[#EA84DD] bg-[#FCEEFA]  rounded-md mt-[8px]">
                 <span className="text-[#99488e]">S/O:</span>{' '}
-                {leadDetailsObj2?.customerDetailsObj?.co_Name2 || '?'}
+                {leadDetailsObj2?.secondaryCustomerDetailsObj?.co_Name2 || '?'}
               </span>
               <span className="font-semibold text-[12px] px-4 py-1 border border-[#EA84DD] bg-[#FCEEFA]  rounded-md mt-[8px]">
                 <span className="text-[#99488e]">D.O.B:</span>{' '}
-                {leadDetailsObj2?.customerDetailsObj?.dob2 || datee}
+                {prettyDate(
+                  leadDetailsObj2?.secondaryCustomerDetailsObj?.dob2 || datee
+                )}
               </span>
               <span className="font-semibold text-[12px] px-4 py-1 border border-[#EA84DD] bg-[#FCEEFA]  rounded-md mt-[8px]">
                 <span className="text-[#99488e]">Maritural Status:</span>{' '}
-                {leadDetailsObj2?.customerDetailsObj?.marital2?.value}
+                {leadDetailsObj2?.secondaryCustomerDetailsObj?.marital2?.value}
               </span>
               <section className="flex flex-row justify-between mt-4">
                 <span className="font-semibold text-[12px]  py-1 ">
@@ -730,16 +732,15 @@ const ShowCustomerDetails = ({
               </section>
               <span className="font-semibold text-[12px] px-4 py-1 border border-[#EA84DD] bg-[#FCEEFA]  rounded-md mt-[8px]">
                 <span className="text-[#99488e]">Pan:</span>{' '}
-                {leadDetailsObj2?.customerDetailsObj?.panNo2 || '?'}
+                {leadDetailsObj2?.secondaryCustomerDetailsObj?.panNo2 || '?'}
               </span>
               <span className="font-semibold text-[12px] px-4 py-1 border border-[#EA84DD] bg-[#FCEEFA]  rounded-md mt-[8px] mb-2">
                 <span className="text-[#99488e]">Aadhar:</span>{' '}
-                {leadDetailsObj2?.customerDetailsObj?.aadharNo2 || '?'}
+                {leadDetailsObj2?.secondaryCustomerDetailsObj?.aadharNo2 || '?'}
               </span>
             </div>
           </div>
         </div>
-
       </div>
 
       {/* old form  */}
