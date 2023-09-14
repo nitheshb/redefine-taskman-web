@@ -20,6 +20,7 @@ import { useAuth } from 'src/context/firebase-auth-context'
 import HeadNavBar from '../../components/HeadNavBar/HeadNavBar'
 import ReportMain from '../../components/Reports/ReportMainCom'
 import UnitsInventoryHome from 'src/components/A_ProjModule/UnitsInvertoryHome'
+import CrmDashboardHome from 'src/components/A_CrmModule/CrmDashboard'
 
 const MarketingModulePage = (props) => {
   const { user } = useAuth()
@@ -106,6 +107,12 @@ const MarketingModulePage = (props) => {
                     }}
                     isEdit={false}
                   />
+                    {/* <CrmDashboardHome
+                    project={{
+                      projectName: 'Projects',
+                    }}
+                    isEdit={undefined}
+                  /> */}
                 </>
               )}
             </div>

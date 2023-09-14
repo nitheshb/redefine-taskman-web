@@ -23,6 +23,7 @@ import { useAuth } from 'src/context/firebase-auth-context'
 
 import SiderForm from '../../components/SiderForm/SiderForm'
 import UnitsInventoryHome from 'src/components/A_ProjModule/UnitsInvertoryHome'
+import CrmAnalyticsHome from 'src/components/A_CrmModule/CrmAnalyticsHome'
 
 const CrmHomePage = () => {
   const { user } = useAuth()
@@ -370,8 +371,17 @@ const CrmHomePage = () => {
             <div className="flex-grow  items-center overflow-y-auto  h-[98%]  px-300  py-300">
               <HeadNavBar2 selModule={selModule} setSelModule={setSelModule} />
               <div className="px-1">
-                {viewable === 'crmDashboard' && (
+                {/* {viewable === 'crmDashboard' && (
                   <CrmDashboardHome
+                    project={{
+                      projectName: 'Projects',
+                    }}
+                    isEdit={undefined}
+                  />
+                )} */}
+
+                 {viewable === 'crmAnalytics' && (
+                  <CrmAnalyticsHome
                     project={{
                       projectName: 'Projects',
                     }}

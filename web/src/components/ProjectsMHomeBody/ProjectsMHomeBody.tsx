@@ -426,7 +426,6 @@ const ProjectsMHomeBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                     key={i}
                     className=" w-1/4  mx-1"
                     style={{ display: 'inline-block', alignSelf: 'flex-end' }}
-                    key={i}
                   >
                     <div className="flex flex-col  justify-center mr-1  mb-1 mt[2px]">
                       <h6 className="font-bodyLato font-semibold text-xs mt-1">
