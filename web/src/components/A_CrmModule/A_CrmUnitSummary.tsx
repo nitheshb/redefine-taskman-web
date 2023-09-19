@@ -17,6 +17,9 @@ import CrmUnitDetailsView1 from './CrmUnitDetailsView1'
 import CrmUnitFinanceHistory from './CrmUnitFinanceHistory'
 import CrmUnitHeader from './CrmUnitHeader'
 import CrmUnitPaymentGraph from './CrmUnitPaymentGraph'
+import PdfInvoiceGenerator from 'src/util/PdfInvoiceGenerator'
+import PdfUnitSummaryFile from 'src/util/PDF_Files/pdfUnitSummaryFile'
+import { computeTotal } from 'src/util/computeCsTotals'
 
 const CrmUnitSummary = ({
   selCustomerPayload: selUnitPayload,
@@ -28,10 +31,23 @@ const CrmUnitSummary = ({
   const pdfUnitSummaryComp = useRef(null)
   const { orgId } = user
   const [unitFetchedActivityData, setUnitFetchedActivityData] = useState([])
+  const [newPlotCostSheetA, setNewPlotCostSheetA] = useState([])
+  const [newPlotCsObj, setNewPlotCsObj] = useState([])
+  const [newPlotPS, setNewPlotPS] = useState([])
+  const [newConstructCsObj, setNewConstructCsObj] = useState([])
+  const [newConstructCostSheetA, setNewConstructCostSheetA] = useState([])
+  const [newConstructPS, setNewConstructPS] = useState([])
+  const [newAdditonalChargesObj, setNewAdditonalChargesObj] = useState([])
+  const [StatusListA, setStatusListA] = useState([])
+
+  const [netTotal, setNetTotal] = useState(0)
+  const [partATotal, setPartATotal] = useState(0)
+  const [partBTotal, setPartBTotal] = useState(0)
 
   useEffect(() => {
     console.log('unit dta is ', selUnitPayload, selUnitPayload?.id)
     boot()
+    setTotalFun()
     const subscription = supabase
       .from(`${orgId}_unit_logs`)
       .on('*', (payload) => {
@@ -117,6 +133,32 @@ const CrmUnitSummary = ({
     await console.log('new setup ', unitFetchedActivityData)
     await console.log('new setup ', y)
   }
+  const setTotalFun = async () => {
+
+    const partBTotal = selUnitPayload?.additonalChargesObj.reduce(
+      (partialSum, obj) =>
+        partialSum +
+        Number(
+          computeTotal(
+            obj,
+            selUnitPayload?.super_built_up_area || selUnitPayload?.area
+          )
+        ),
+      0
+    )
+
+
+    const partATotal = selUnitPayload?.plotCS.reduce(
+      (partialSum, obj) => partialSum + Number(obj?.TotalNetSaleValueGsT),0)
+
+
+      console.log('myObj', partATotal)
+
+    setPartBTotal(partBTotal)
+    setPartATotal(partATotal)
+    setNetTotal(partATotal + partBTotal)
+
+  }
 
   return (
     <PDFExport paperSize="A4" margin="1cm" ref={pdfUnitSummaryComp}>
@@ -145,30 +187,22 @@ const CrmUnitSummary = ({
                   />
                 </div>
               </div>
-              <div
-                className=" flex flex-row justify-end items-center align-middle text-blue-500 text-xs cursor-pointer hover:underline"
-                onClickCapture={() => {
-                  pdfUnitSummaryComp.current.save()
-                }}
-              >
-                <>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="w-4 h-4 pr-1"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"
-                    />
-                  </svg>
-                  <span className="text-[11px]">CUSTOMER SUMMARY</span>
-                </>
-              </div>
+              <PdfUnitSummaryFile
+                  user={user}
+                    selUnitDetails={selUnitPayload}
+                    myObj={newPlotCostSheetA}
+                    myAdditionalCharges={newAdditonalChargesObj}
+                    netTotal={netTotal}
+                    setNetTotal={setNetTotal}
+                    partATotal={partATotal}
+                    partBTotal={partBTotal}
+                    setPartATotal={setPartATotal}
+                    setPartBTotal={setPartBTotal}
+                    projectDetails={[]}
+                  leadDetailsObj1={[]}
+
+                  />
+            
             </div>
 
             {/* <CrmUnitHeader projectDetails={selUnitPayload} /> */}

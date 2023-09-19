@@ -1,15 +1,14 @@
-import { MetaTags } from '@redwoodjs/web'
-import { Fragment, useState } from 'react'
+import { useState } from 'react'
 
-import HeadNavBar from 'src/components/HeadNavBar/HeadNavBar'
-import HeadSideBar from 'src/components/HeadSideBar/HeadSideBar'
-import SUserSignup from 'src/components/SUserSignup/SUserSignup'
-import UserManageTable from 'src/components/UserManageTable/UserManageTable'
-import UserAccessTable from 'src/components/UserAccessTable/UserAccessTable'
-import HeadSideBarDetailView from 'src/components/HeadDetailSideBar'
-import MyActivityHome from 'src/components/MyActivityHome/MyActivityHome'
+import { MetaTags } from '@redwoodjs/web'
+
+import HrModuleHome from 'src/components/A_HrModule/HrModuleHome'
 import SlimSideMenuBar from 'src/components/A_SideMenu/slimSideMenu'
 import HeadNavBar2 from 'src/components/HeadNavBar/HeadNavBar2'
+import MyActivityHome from 'src/components/MyActivityHome/MyActivityHome'
+import SUserSignup from 'src/components/SUserSignup/SUserSignup'
+import UserAccessTable from 'src/components/UserAccessTable/UserAccessTable'
+import UserManageTable from 'src/components/UserManageTable/UserManageTable'
 
 const UsersAdminPage = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -27,22 +26,17 @@ const UsersAdminPage = () => {
       <MetaTags title="UsersAdmin" description="UsersAdmin page" />
 
       <div className="flex w-screen h-screen text-gray-700">
-
-
         <SlimSideMenuBar
-              pgName={'hrModule'}
-              sourceLink={'hrModule'}
-              showSideView1={undefined}
-              setViewable={setViewable}
-              viewable={viewable}
-            />
+          pgName={'hrModule'}
+          sourceLink={'hrModule'}
+          showSideView1={undefined}
+          setViewable={setViewable}
+          viewable={viewable}
+        />
 
         <div className="flex flex-col flex-grow">
           {/* <HeadNavBar /> */}
-          <HeadNavBar2
-              selModule ={selModule}
-              setSelModule={setSelModule}
-            />
+          <HeadNavBar2 selModule={selModule} setSelModule={setSelModule} />
           <div className="flex-grow px-6 overflow-auto no-scrollbar  text-gray-700 bg-gradient-to-tr from-blue-200 via-indigo-200 to-pink-200">
             <div className="flex items-center flex-shrink-0 h-10 mt-2 px-0  pl-0  ">
               {/* <h1 className="text-lg font-medium">redefine.</h1> */}
@@ -77,7 +71,7 @@ const UsersAdminPage = () => {
             {viewable === 'User Management' && (
               <UserManageTable editEmployeeFun={editEmployeeFun} />
             )}
-
+            {viewable === 'MyHR' && <HrModuleHome leadsTyper={undefined} />}
             {viewable === 'Roles Management' && (
               <>
                 <UserAccessTable />
