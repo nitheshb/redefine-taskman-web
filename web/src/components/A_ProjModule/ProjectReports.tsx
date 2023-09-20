@@ -10,6 +10,7 @@ import {
   TrashIcon,
   UsersIcon,
 } from '@heroicons/react/outline'
+import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/solid'
 import PencilIcon from '@heroicons/react/solid/PencilIcon'
 import SendTwoToneIcon from '@mui/icons-material/SendTwoTone'
 import { startOfDay } from 'date-fns'
@@ -82,6 +83,8 @@ const ProjectReportsBody = ({ title, pId, data }) => {
 
   const [selUserId, setSelUserId] = useState(user?.uid)
   const [selUserObj, setSelUserObj] = useState(user)
+  const [expandedModulesA, setExpandedModulesA] = useState([])
+  const [expandedModulesA1, setExpandedModulesA1] = useState(false)
 
   // const [leadsFetchedData, setLeadsFetchedData] = useState([])
   useEffect(() => {
@@ -218,6 +221,25 @@ const ProjectReportsBody = ({ title, pId, data }) => {
     selUserId,
   ])
 
+  const expandFun = (value) => {
+    const arr = expandedModulesA
+    const index = arr.indexOf(value)
+    setExpandedModulesA1(!expandedModulesA1)
+    if (index === -1) {
+      // Value not found, add it to the array
+      arr.push(value)
+    } else {
+      // Value found, remove it from the array
+      arr.splice(index, 1)
+    }
+    console.log(
+      'approach value is ',
+      expandedModulesA,
+      arr,
+      expandedModulesA.includes('hr')
+    )
+    setExpandedModulesA(arr)
+  }
   const sortDataFun = (data) => {
     if (sortType === 'Oldest') {
       console.log('ami here', sortType)
@@ -587,10 +609,7 @@ ${x?.length > 0 ? `${personalFinalText}` : ''}\n \n
 
               <span className="text-[10px] ml-2 ">Super User</span>
               {empsFetchedData
-                .filter(
-                  (d) =>
-                    d.department == 'admin'
-                )
+                .filter((d) => d.department == 'admin')
                 ?.map((data, i) => (
                   <section
                     key={i}
@@ -625,267 +644,125 @@ ${x?.length > 0 ? `${personalFinalText}` : ''}\n \n
                     </section>
                   </section>
                 ))}
-              <div className="text-[10px] ml-2 ">HR</div>
-              {empsFetchedData
-                .filter((d) => d.department == 'hr')
-                ?.map((data, i) => (
-                  <section
-                    key={i}
-                    className={` cursor-pointer flex flex-row ${
-                      selUserId === data?.uid
-                        ? 'bg-red-800 text-white rounded-xl'
-                        : ''
-                    }`}
-                    onClick={() => {
-                      console.log('user is ', data)
-                      setSelUserObj(data)
-                      setSelUserId(data?.uid)
-                    }}
-                  >
-                    <section className="py-2 pr-2  font-medium text-xs leading-6  whitespace-nowrap">
-                      <div className="flex flex-row ">
-                        <div className="rounded-sm h-5 w-5 mt-2 flex flex-shrink-0 justify-center items-center text-xs relative">
-                          {/* {i + 1} */}
-                        </div>
-                        <div className=" w-7 h-7 mr-2 mt-[5px] rounded-full ">
-                          <img src="/avatar_1.png" alt="" className="mr-2" />
-                        </div>
-                        <div className="flex flex-col mt-[9px]">
-                          <span className="leading-[19px] font-bold text-[12px]">
-                            {data.name}
-                          </span>
-                          <span className="leading-[12px] text-[10px] text-[#6c6969]">
-                            {data?.roles[0]}
-                          </span>{' '}
-                        </div>
-                      </div>
-                    </section>
-                  </section>
-                ))}
-              <div className="text-[10px] ml-2 ">Marketing</div>
-              {empsFetchedData
-                .filter((d) => d.department == 'marketing')
-                ?.map((data, i) => (
-                  <section
-                    key={i}
-                    className={` cursor-pointer flex flex-row ${
-                      selUserId === data?.uid
-                        ? 'bg-red-800 text-white rounded-xl'
-                        : ''
-                    }`}
-                    onClick={() => {
-                      console.log('user is ', data)
-                      setSelUserObj(data)
-                      setSelUserId(data?.uid)
-                    }}
-                  >
-                    <section className="py-2 pr-2  font-medium text-xs leading-6  whitespace-nowrap">
-                      <div className="flex flex-row ">
-                        <div className="rounded-sm h-5 w-5 mt-2 flex flex-shrink-0 justify-center items-center text-xs relative">
-                          {/* {i + 1} */}
-                        </div>
-                        <div className=" w-7 h-7 mr-2 mt-[5px] rounded-full ">
-                          <img src="/avatar_1.png" alt="" className="mr-2" />
-                        </div>
-                        <div className="flex flex-col mt-[9px]">
-                          <span className="leading-[19px] font-bold text-[12px]">
-                            {data.name}
-                          </span>
-                          <span className="leading-[12px] text-[10px] text-[#6c6969]">
-                            {data?.roles[0]}
-                          </span>{' '}
-                        </div>
-                      </div>
-                    </section>
-                  </section>
-                ))}
-              <div className="text-[10px] ml-2 ">Sales</div>
-              {empsFetchedData
-                .filter(
-                  (d) => d.department == 'sales' && d?.roles[0] != 'cp-agent'
-                )
-                ?.map((data, i) => (
-                  <section
-                    key={i}
-                    className={` cursor-pointer flex flex-row ${
-                      selUserId === data?.uid
-                        ? 'bg-red-800 text-white rounded-xl'
-                        : ''
-                    }`}
-                    onClick={() => {
-                      console.log('user is ', data)
-                      setSelUserObj(data)
-                      setSelUserId(data?.uid)
-                    }}
-                  >
-                    <section className="py-2 pr-2  font-medium text-xs leading-6  whitespace-nowrap">
-                      <div className="flex flex-row ">
-                        <div className="rounded-sm h-5 w-5 mt-2 flex flex-shrink-0 justify-center items-center text-xs relative">
-                          {/* {i + 1} */}
-                        </div>
-                        <div className=" w-7 h-7 mr-2 mt-[5px] rounded-full ">
-                          <img src="/avatar_1.png" alt="" className="mr-2" />
-                        </div>
-                        <div className="flex flex-col mt-[9px]">
-                          <span className="leading-[19px] font-bold text-[12px]">
-                            {data.name}
-                          </span>
-                          <span className="leading-[12px] text-[10px] text-[#6c6969]">
-                            {data?.roles[0]}
-                          </span>{' '}
-                        </div>
-                      </div>
-                    </section>
-                  </section>
-                ))}
-              <div className="text-[10px] ml-2 ">Crm</div>
-              {empsFetchedData
-                .filter((d) => d.department == 'crm')
-                ?.map((data, i) => (
-                  <section
-                    key={i}
-                    className={` cursor-pointer flex flex-row ${
-                      selUserId === data?.uid
-                        ? 'bg-red-800 text-white rounded-xl'
-                        : ''
-                    }`}
-                    onClick={() => {
-                      console.log('user is ', data)
-                      setSelUserObj(data)
-                      setSelUserId(data?.uid)
-                    }}
-                  >
-                    <section className="py-2 pr-2  font-medium text-xs leading-6  whitespace-nowrap">
-                      <div className="flex flex-row ">
-                        <div className="rounded-sm h-5 w-5 mt-2 flex flex-shrink-0 justify-center items-center text-xs relative">
-                          {/* {i + 1} */}
-                        </div>
-                        <div className=" w-7 h-7 mr-2 mt-[5px] rounded-full ">
-                          <img src="/avatar_1.png" alt="" className="mr-2" />
-                        </div>
-                        <div className="flex flex-col mt-[9px]">
-                          <span className="leading-[19px] font-bold text-[12px] ">
-                            {data.name}
-                          </span>
-                          <span className="leading-[12px] text-[10px] text-[#6c6969]">
-                            {data?.roles[0]}
-                          </span>{' '}
-                        </div>
-                      </div>
-                    </section>
-                  </section>
-                ))}
-              <div className="text-[10px] ml-2 ">Legal</div>
-              {empsFetchedData
-                .filter((d) => d.department == 'legal')
-                ?.map((data, i) => (
-                  <section
-                    key={i}
-                    className={` cursor-pointer flex flex-row ${
-                      selUserId === data?.uid
-                        ? 'bg-red-800 text-white rounded-xl'
-                        : ''
-                    }`}
-                    onClick={() => {
-                      console.log('user is ', data)
-                      setSelUserObj(data)
-                      setSelUserId(data?.uid)
-                    }}
-                  >
-                    <section className="py-2 pr-2  font-medium text-xs leading-6  whitespace-nowrap">
-                      <div className="flex flex-row ">
-                        <div className="rounded-sm h-5 w-5 mt-2 flex flex-shrink-0 justify-center items-center text-xs relative">
-                          {/* {i + 1} */}
-                        </div>
-                        <div className=" w-7 h-7 mr-2 mt-[5px] rounded-full ">
-                          <img src="/avatar_1.png" alt="" className="mr-2" />
-                        </div>
-                        <div className="flex flex-col mt-[9px]">
-                          <span className="leading-[19px] font-bold text-[12px]">
-                            {data.name}
-                          </span>
-                          <span className="leading-[12px] text-[10px] text-[#6c6969]">
-                            {data?.roles[0]}
-                          </span>{' '}
-                        </div>
-                      </div>
-                    </section>
-                  </section>
-                ))}
-              <div className="text-[10px] ml-2 ">Finance</div>
-              {empsFetchedData
-                .filter((d) => d.department == 'finance')
-                ?.map((data, i) => (
-                  <section
-                    key={i}
-                    className={` cursor-pointer flex flex-row ${
-                      selUserId === data?.uid
-                        ? 'bg-red-800 text-white rounded-xl'
-                        : ''
-                    }`}
-                    onClick={() => {
-                      console.log('user is ', data)
-                      setSelUserObj(data)
-                      setSelUserId(data?.uid)
-                    }}
-                  >
-                    <section className="py-2 pr-2  font-medium text-xs leading-6  whitespace-nowrap">
-                      <div className="flex flex-row ">
-                        <div className="rounded-sm h-5 w-5 mt-2 flex flex-shrink-0 justify-center items-center text-xs relative">
-                          {/* {i + 1} */}
-                        </div>
-                        <div className=" w-7 h-7 mr-2 mt-[5px] rounded-full ">
-                          <img src="/avatar_1.png" alt="" className="mr-2" />
-                        </div>
-                        <div className="flex flex-col mt-[9px]">
-                          <span className="leading-[19px] font-bold text-[12px]">
-                            {data.name}
-                          </span>
-                          <span className="leading-[12px] text-[10px] text-[#6c6969]">
-                            {data?.roles[0]}
-                          </span>{' '}
-                        </div>
-                      </div>
-                    </section>
-                  </section>
-                ))}
-              <div className="text-[10px] ml-2 ">Admin Team</div>
-              {empsFetchedData
-                .filter((d) => d.department == 'admin_support')
-                ?.map((data, i) => (
-                  <section
-                    key={i}
-                    className={` cursor-pointer flex flex-row ${
-                      selUserId === data?.uid
-                        ? 'bg-red-800 text-white rounded-xl'
-                        : ''
-                    }`}
-                    onClick={() => {
-                      console.log('user is ', data)
-                      setSelUserObj(data)
-                      setSelUserId(data?.uid)
-                    }}
-                  >
-                    <section className="py-2 pr-2  font-medium text-xs leading-6  whitespace-nowrap">
-                      <div className="flex flex-row ">
-                        <div className="rounded-sm h-5 w-5 mt-2 flex flex-shrink-0 justify-center items-center text-xs relative">
-                          {/* {i + 1} */}
-                        </div>
-                        <div className=" w-7 h-7 mr-2 mt-[5px] rounded-full ">
-                          <img src="/avatar_1.png" alt="" className="mr-2" />
-                        </div>
-                        <div className="flex flex-col mt-[9px]">
-                          <span className="leading-[19px] font-bold text-[12px]">
-                            {data.name}
-                          </span>
-                          <span className="leading-[12px] text-[10px] text-[#6c6969]">
-                            {data?.roles[0]}
-                          </span>{' '}
-                        </div>
-                      </div>
-                    </section>
-                  </section>
-                ))}
+         
+
+
+
+              {[{value: 'hr', label: 'HR'},{value: 'admin_support', label: 'Admin Team'},{value: 'marketing', label: 'Marketing'},{value: 'crm', label: 'CRM'},{value: 'legal', label: 'Legal'},{value: 'finance', label: 'Finance'}].map((dataV, indexx)=> {
+                return <section  key={indexx}><section
+                className="flex flex-row justify-between"
+                onClick={() => expandFun(dataV.value)}
+              >
+                {' '}
+                <div className="text-[10px] ml-2 ">{dataV.label}</div>{' '}
+                {expandedModulesA.includes(dataV.label) ? (
+                  <ChevronUpIcon className="w-4 h-4 mr-1 mt-[7px] cursor-pointer inline" />
+                ) : (
+                  <ChevronDownIcon className="w-4 h-4 mr-1 mt-[7px] cursor-pointer inline" />
+                )}
+              </section>
+              {expandedModulesA.includes(dataV.value) ? (
+                <span>
+                  {empsFetchedData
+                    .filter((d) => d.department == dataV.value)
+                    ?.map((data, i) => (
+                      <section
+                        key={i}
+                        className={` cursor-pointer flex flex-row ${
+                          selUserId === data?.uid
+                            ? 'bg-red-800 text-white rounded-xl'
+                            : ''
+                        }`}
+                        onClick={() => {
+                          console.log('user is ', data)
+                          setSelUserObj(data)
+                          setSelUserId(data?.uid)
+                        }}
+                      >
+                        <section className="py-2 pr-2  font-medium text-xs leading-6  whitespace-nowrap">
+                          <div className="flex flex-row ">
+                            <div className="rounded-sm h-5 w-5 mt-2 flex flex-shrink-0 justify-center items-center text-xs relative">
+                              {/* {i + 1} */}
+                            </div>
+                            <div className=" w-7 h-7 mr-2 mt-[5px] rounded-full ">
+                              <img
+                                src="/avatar_1.png"
+                                alt=""
+                                className="mr-2"
+                              />
+                            </div>
+                            <div className="flex flex-col mt-[9px]">
+                              <span className="leading-[19px] font-bold text-[12px]">
+                                {data.name}
+                              </span>
+                              <span className="leading-[12px] text-[10px] text-[#6c6969]">
+                                {data?.roles[0]}
+                              </span>{' '}
+                            </div>
+                          </div>
+                        </section>
+                      </section>
+                    ))}
+                </span>
+              ) : null}
+              </section>
+              })}
+              <section
+                className="flex flex-row justify-between"
+                onClick={() => expandFun('sales')}
+              >
+                {' '}
+                <div className="text-[10px] ml-2 ">Sales</div>{' '}
+                {expandedModulesA.includes('sales') ? (
+                  <ChevronUpIcon className="w-4 h-4 mr-1 mt-[7px] cursor-pointer inline" />
+                ) : (
+                  <ChevronDownIcon className="w-4 h-4 mr-1 mt-[7px] cursor-pointer inline" />
+                )}
+              </section>
+                 {expandedModulesA.includes('sales') ? (
+                <span>
+                  {empsFetchedData
+                    .filter((d) => d.department == 'sales' && d?.roles[0] != 'cp-agent')
+                    ?.map((data, i) => (
+                      <section
+                        key={i}
+                        className={` cursor-pointer flex flex-row ${
+                          selUserId === data?.uid
+                            ? 'bg-red-800 text-white rounded-xl'
+                            : ''
+                        }`}
+                        onClick={() => {
+                          console.log('user is ', data)
+                          setSelUserObj(data)
+                          setSelUserId(data?.uid)
+                        }}
+                      >
+                        <section className="py-2 pr-2  font-medium text-xs leading-6  whitespace-nowrap">
+                          <div className="flex flex-row ">
+                            <div className="rounded-sm h-5 w-5 mt-2 flex flex-shrink-0 justify-center items-center text-xs relative">
+                              {/* {i + 1} */}
+                            </div>
+                            <div className=" w-7 h-7 mr-2 mt-[5px] rounded-full ">
+                              <img
+                                src="/avatar_1.png"
+                                alt=""
+                                className="mr-2"
+                              />
+                            </div>
+                            <div className="flex flex-col mt-[9px]">
+                              <span className="leading-[19px] font-bold text-[12px]">
+                                {data.name}
+                              </span>
+                              <span className="leading-[12px] text-[10px] text-[#6c6969]">
+                                {data?.roles[0]}
+                              </span>{' '}
+                            </div>
+                          </div>
+                        </section>
+                      </section>
+                    ))}
+                </span>
+              ) : null}
             </div>
           </section>
 

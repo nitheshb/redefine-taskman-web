@@ -75,7 +75,7 @@ const CrmAnalyticsHome = ({ project }) => {
   return (
     <div>
       <section className=" mt-1 mr-1 py-8 mb-2 leading-7 text-gray-900 bg-white  rounded-lg  ">
-        <div className="box-border px-4 mx-auto border-solid sm:px-6 md:px-6 lg:px-8 max-w-full ">
+        {/* <div className="box-border px-4 mx-auto border-solid sm:px-6 md:px-6 lg:px-8 max-w-full ">
           <section className="flex flex-row justify-between">
             <div className="">
               <h3 className="h1MainText">Congratulations Nithesh! 🎉</h3>
@@ -83,10 +83,6 @@ const CrmAnalyticsHome = ({ project }) => {
                 You have done <span>76%</span> more sales today. <br></br>
                 Check your inventory and update your stocks.
               </p>
-
-              {/* <p className=" MuiBox-root css-1veg4n0">You have done */}
-              {/* <span className=" MuiBox-root css-1sej3o2">76%</span> more sales today. <br>
-            Check your inventory and update your stocks.</p> */}
               <div className="montF MuiBox-root cardBg">
                 <div className="montF flex w-full">
                   <svg
@@ -145,7 +141,7 @@ const CrmAnalyticsHome = ({ project }) => {
               <img src="/userDashboard.svg" width="100%" alt="User" />
             </div>
           </section>
-        </div>
+        </div> */}
         <div className='px-2 mt-2'>
         {projects.map((project) => (
           <CrmAnalyticsUnitHome

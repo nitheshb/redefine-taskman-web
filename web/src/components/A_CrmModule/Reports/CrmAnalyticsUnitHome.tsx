@@ -316,7 +316,7 @@ const CrmAnalyticsUnitHome = ({ project }) => {
                           fillOpacity="0"
                         ></path>
                       </svg>
-                      ₹1,23,00,000
+                      ₹0,00,00,000
                     </span>
                   </section>
                 </div>
