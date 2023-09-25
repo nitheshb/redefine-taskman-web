@@ -696,7 +696,7 @@ const MyDocument = ({
               >
                 <Text>
                   {fCurrency(partATotal)}{' '}
-                  {selUnitDetails?.plotCS.reduce(
+                  {selUnitDetails?.plotCS?.reduce(
                     (partialSum, obj) =>
                       partialSum + Number(obj?.TotalNetSaleValueGsT),
                     0
@@ -839,7 +839,7 @@ const MyDocument = ({
               <View style={styles.tableCell_3}>
                 <Text>
                   {fCurrency(partATotal)}
-                  {selUnitDetails?.plotCS.reduce(
+                  {selUnitDetails?.plotCS?.reduce(
                     (partialSum, obj) =>
                       partialSum + Number(obj?.TotalNetSaleValueGsT),
                     0
@@ -872,8 +872,8 @@ const MyDocument = ({
               <View style={[styles.tableCell_3, styles.alignRight, styles.pr4]}>
                 <Text>
                   {fCurrency(netTotal)}
-                  {selUnitDetails?.plotCS.reduce(
-      (partialSum, obj) => partialSum + Number(obj?.TotalNetSaleValueGsT),0) + selUnitDetails?.addChargesCS.reduce(
+                  {selUnitDetails?.plotCS?.reduce(
+      (partialSum, obj) => partialSum + Number(obj?.TotalNetSaleValueGsT),0) + selUnitDetails?.addChargesCS?.reduce(
                     (partialSum, obj) =>
                       partialSum +
                       Number(
@@ -955,8 +955,8 @@ const MyDocument = ({
               <View style={styles.tableCell_3}></View>
 
               <View style={[styles.tableCell_3, styles.alignRight]}>
-                <Text>{selUnitDetails?.plotCS.reduce(
-      (partialSum, obj) => partialSum + Number(obj?.TotalNetSaleValueGsT),0) + selUnitDetails?.addChargesCS.reduce(
+                <Text>{selUnitDetails?.plotCS?.reduce(
+      (partialSum, obj) => partialSum + Number(obj?.TotalNetSaleValueGsT),0) + selUnitDetails?.addChargesCS?.reduce(
                     (partialSum, obj) =>
                       partialSum +
                       Number(

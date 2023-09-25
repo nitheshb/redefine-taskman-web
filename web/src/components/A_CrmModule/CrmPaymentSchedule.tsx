@@ -42,7 +42,7 @@ const CrmUnitPaymentSchedule = ({ selCustomerPayload, assets, totalIs }) => {
       <div className="mt-2">
         <section className="mr-2 flex flex-col  ">
           <div>
-            <div className="  from-green-50 to-amber-50 border border-[#b9efcd] bg-[#9AE8FC] bg-[#c1f2ff] rounded-md p-3 pb-4">
+            <div className="  from-green-50 to-amber-50 border border-[#b9efcd] rounded-md p-3 pb-4">
               <div className="flex flex-row ">
                 <img
                   src="https://static.ambitionbox.com/static/benefits/JobTraining.svg"
@@ -89,13 +89,13 @@ const CrmUnitPaymentSchedule = ({ selCustomerPayload, assets, totalIs }) => {
                         key={inx}
                         className={`border-b-[0.05px] border-gray-300 py-3 h-[51px] ${!d1?.elgible ? '': '' } `}
                       >
-                        <th className=" text-[13px] text-left text-blue-500 text-[#0c272e] text-[#363ad9] text-[#272991] tracking-wide pl-3 ">
+                        <th className=" text-[13px] text-left text-blue-500 text-[#0c272e] text-[#363ad9] text-[#272991] bg-[#FFF6F4] tracking-wide pl-3 ">
                          <div>{d1?.stage?.label}
                          <div className="text-[9px] text-left text-[#60679f] tracking-wider "> {d1?.description}</div>
                          </div>
                         </th>
 
-                        <td className="text-[10px] text-center text-gray-800 font-bold ">
+                        <td className="text-[10px] text-center text-gray-800 font-bold bg-[#fffaee]">
                          <span className={`text-[10px] px-2 py-[2px] rounded-2xl  ${!d1?.elgible ? '': 'bg-[#98ebc9]  ' } `}>{d1?.elgible ? 'Yes' : 'No'}</span>
                         </td>
                         <td className="text-[12px] text-right text-gray-800 bg-[#F3FFFA] px-2 font-bold ">

@@ -40,6 +40,7 @@ import CrmAnalyticsUnitHome from './Reports/CrmAnalyticsUnitHome'
 import ReportBars from './Reports/ReportBars'
 import TransactionCard from './Reports/TransactionCard'
 import UnitStatusCardReport from './Reports/UnitStatusCardReport'
+import AdvancedDataTableTest from './Reports/bookingSummaryHome'
 
 const CrmAnalyticsHome = ({ project }) => {
   const theme = useTheme()
@@ -49,6 +50,8 @@ const CrmAnalyticsHome = ({ project }) => {
 
   const { orgId } = user
   const [projects, setProjects] = useState([])
+  const [selCat, setSelCat] = useState('proj_summary')
+
 
   useEffect(() => {
     getProjects()
@@ -74,6 +77,55 @@ const CrmAnalyticsHome = ({ project }) => {
 
   return (
     <div>
+
+      <div className="flex overflow-x-auto ml-2 border-b pb-2">
+            <div className="flex items-center flex-shrink-0   border-grey maahome">
+              {/* <Link
+                className="flex items-center"
+               // to={routes.projectEdit({ uid })}
+              > */}
+
+              <span className="relative  flex items-center w-auto text-xl font-bold leading-none pl-0 mt-[18px]">
+
+              </span>
+              {/* </Link> */}
+            </div>
+              {[
+                { label: 'Project Summary', value: 'proj_summary' },
+                { label: 'Booking Summary', value: 'booking_summary' },
+                { label: 'Collections', value: 'collections-summary' },
+
+                // { label: 'Source Report', value: 'source_report' },
+                // { label: 'Employee Report', value: 'emp_status_report' },
+                // { label: 'Project Leads Report', value: 'proj_leads_report' },
+                //  { label: 'Employee Leads Aging', value: 'emp_leads_report' },
+              ].map((data, i) => {
+                return (
+                  <section
+                    key={i}
+                    className="flex  mt-[18px]"
+                    onClick={() => {
+                      console.log('am i clicked', data.value)
+                      setSelCat(data.value)
+                    }}
+                  >
+                    <button>
+                      <span
+                        className={`flex mr-2 items-center py-3 px-3 text-xs flex flex-col  min-w-[120px] ${
+                          selCat === data.value
+                            ? 'font-normal text-green-800 bg-[#FFEDEA]'
+                            : 'font-normal text-black-100 bg-[#f0f8ff]'
+                        }  rounded`}
+                      >
+                        {/* <PencilIcon className="h-3 w-3 mr-1" aria-hidden="true" /> */}
+                        <img alt="" src="/temp2.png" className="h-5 w-5 mr-1 mb-1" />
+                        {data?.label}
+                      </span>
+                    </button>
+                  </section>
+                )
+              })}
+            </div>
       <section className=" mt-1 mr-1 py-8 mb-2 leading-7 text-gray-900 bg-white  rounded-lg  ">
         {/* <div className="box-border px-4 mx-auto border-solid sm:px-6 md:px-6 lg:px-8 max-w-full ">
           <section className="flex flex-row justify-between">
@@ -142,7 +194,7 @@ const CrmAnalyticsHome = ({ project }) => {
             </div>
           </section>
         </div> */}
-        <div className='px-2 mt-2'>
+      {selCat === "proj_summary"  && <div className='px-2 mt-2'>
         {projects.map((project) => (
           <CrmAnalyticsUnitHome
             key={project.uid}
@@ -155,7 +207,21 @@ const CrmAnalyticsHome = ({ project }) => {
           />
         ))}
       {projects.length === 0 && <DummyBodyLayout />}
-      </div>
+      </div>}
+      {selCat === "booking_summary"  && <div className='px-2 mt-2'>
+        {projects.map((project) => (
+          <AdvancedDataTableTest
+            key={project.uid}
+            project={project}
+            // onSliderOpen={() => {
+            //   setProject(project)
+            //   setIsEditProjectOpen(true)
+            // }}
+            // isEdit={false}
+          />
+        ))}
+      {projects.length === 0 && <DummyBodyLayout />}
+      </div>}
 
       </section>
 

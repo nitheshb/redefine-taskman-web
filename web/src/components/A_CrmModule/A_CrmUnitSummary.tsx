@@ -135,7 +135,7 @@ const CrmUnitSummary = ({
   }
   const setTotalFun = async () => {
 
-    const partBTotal = selUnitPayload?.additonalChargesObj.reduce(
+    const partBTotal = selUnitPayload?.additonalChargesObj?.reduce(
       (partialSum, obj) =>
         partialSum +
         Number(
@@ -202,7 +202,7 @@ const CrmUnitSummary = ({
                   leadDetailsObj1={[]}
 
                   />
-            
+
             </div>
 
             {/* <CrmUnitHeader projectDetails={selUnitPayload} /> */}
