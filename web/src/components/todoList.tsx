@@ -138,9 +138,8 @@ const TodoListView = ({
                 return [...prevLogs, payload.new]
               }
             })
-          }
-          else if(updatedData?.followersUid.includes(user?.uid)) {
-            setParticipantsData_D((prevLogs)=>{
+          } else if (updatedData?.followersUid.includes(user?.uid)) {
+            setParticipantsData_D((prevLogs) => {
               const existingLog = prevLogs.find((log) => log.id === id)
               if (existingLog) {
                 console.log('Existing record found!')
@@ -159,56 +158,57 @@ const TodoListView = ({
               }
             })
           }
-    // else if (
-    //         eventType == 'UPDATE' &&
-    //         oldData?.followersUid.includes(user?.uid) &&
-    //         !updatedData?.followersUid.includes(user?.uid)
-    //       ) {
-    //         setParticipantsData_D((prevLogs) => {
-    //           const existingLog = prevLogs.find((log) => log.id === id)
-    //           if (existingLog) {
-    //             console.log('Existing record found!')
-    //             if (payload.new.status === 'Done') {
-    //               const updatedLogs = prevLogs.filter((log) => log.id != id)
-    //               return [...updatedLogs]
-    //             } else {
-    //               const updatedLogs = prevLogs.filter((log) => log.id != id)
-    //               return [...updatedLogs]
-    //               // const updatedLogs = prevLogs.map((log) =>
-    //               //   log.id === id ? payload.new : log
-    //               // )
-    //               return [...updatedLogs]
-    //             }
-    //           } else {
-    //             console.log('New record added!')
-    //             return [...prevLogs, payload.new]
-    //           }
-    //         })
-    //       }
-
+          // else if (
+          //         eventType == 'UPDATE' &&
+          //         oldData?.followersUid.includes(user?.uid) &&
+          //         !updatedData?.followersUid.includes(user?.uid)
+          //       ) {
+          //         setParticipantsData_D((prevLogs) => {
+          //           const existingLog = prevLogs.find((log) => log.id === id)
+          //           if (existingLog) {
+          //             console.log('Existing record found!')
+          //             if (payload.new.status === 'Done') {
+          //               const updatedLogs = prevLogs.filter((log) => log.id != id)
+          //               return [...updatedLogs]
+          //             } else {
+          //               const updatedLogs = prevLogs.filter((log) => log.id != id)
+          //               return [...updatedLogs]
+          //               // const updatedLogs = prevLogs.map((log) =>
+          //               //   log.id === id ? payload.new : log
+          //               // )
+          //               return [...updatedLogs]
+          //             }
+          //           } else {
+          //             console.log('New record added!')
+          //             return [...prevLogs, payload.new]
+          //           }
+          //         })
+          //       }
           else {
             if (
               updatedData.by_uid === user?.uid ||
-              updatedData?.to_uid === user?.uid){
-            setBusinessData_F((prevLogs) => {
-              const existingLog = prevLogs.find((log) => log.id === id)
+              updatedData?.to_uid === user?.uid
+            ) {
+              setBusinessData_F((prevLogs) => {
+                const existingLog = prevLogs.find((log) => log.id === id)
 
-              if (existingLog) {
-                console.log('Existing record found!')
-                if (payload.new.status === 'Done') {
-                  const updatedLogs = prevLogs.filter((log) => log.id != id)
-                  return [...updatedLogs]
+                if (existingLog) {
+                  console.log('Existing record found!')
+                  if (payload.new.status === 'Done') {
+                    const updatedLogs = prevLogs.filter((log) => log.id != id)
+                    return [...updatedLogs]
+                  } else {
+                    const updatedLogs = prevLogs.map((log) =>
+                      log.id === id ? payload.new : log
+                    )
+                    return [...updatedLogs]
+                  }
                 } else {
-                  const updatedLogs = prevLogs.map((log) =>
-                    log.id === id ? payload.new : log
-                  )
-                  return [...updatedLogs]
+                  console.log('New record added!')
+                  return [...prevLogs, payload.new]
                 }
-              } else {
-                console.log('New record added!')
-                return [...prevLogs, payload.new]
-              }
-            })}
+              })
+            }
           }
         }
       })
@@ -265,7 +265,14 @@ const TodoListView = ({
       setParticipantsData_D(ParticipantsData_D)
       bootBusinessFun(ParticipantsData_D)
     }
-  }, [businessData_F, ParticipantsData_D, subSection, sortType, searchText, selPriority])
+  }, [
+    businessData_F,
+    ParticipantsData_D,
+    subSection,
+    sortType,
+    searchText,
+    selPriority,
+  ])
 
   const sortDataFun = (data) => {
     if (sortType === 'Oldest') {
@@ -1262,17 +1269,83 @@ const TodoListView = ({
                           <td className=" max-w-[300px]">
                             <div className="flex items-center ">
                               <div className="flex flex-col">
-                                <p className="text-base max-w-[350px] text-[13px] overflow-ellipsis overflow-hidden font-semibold leading-none text-blue-800 mr-2 mt-2">
-                                  {dat?.title}
-                                </p>
+                              <span className="relative flex flex-col  group">
+                                  <div
+                                    className="absolute bottom-0 flex-col items-center hidden mb-4 group-hover:flex"
+                                    // style={{  width: '300px' }}
+                                    style={{ zIndex: '9' }}
+                                  >
+                                    <span
+                                      className="rounded italian relative mr-2 z-100000 p-2 text-xs leading-none text-white whitespace-no-wrap bg-black shadow-lg"
+                                      style={{
+                                        color: 'black',
+                                        background: '#e2c062',
+                                        wordWrap: 'break-word',
+                                        // maxWidth: '400px',
+                                      }}
+                                    >
+                                      <p
+                                        className="break-words"
+                                        style={{ wordWrap: 'break-word' }}
+                                      >
+                                        {dat?.title}
+                                      </p>
+                                    </span>
+                                    <div
+                                      className="w-3 h-3  -mt-2 rotate-45 bg-black"
+                                      style={{
+                                        background: '#e2c062',
+                                        marginRight: '12px',
+                                      }}
+                                    ></div>
+                                  </div>
+                                  <p className="text-base max-w-[350px] text-[13px] overflow-ellipsis overflow-hidden font-semibold leading-none text-blue-800 mr-2 mt-2">
+                                    {dat?.title}
+                                  </p>
+                                </span>
+                                <span className="relative flex flex-col  group">
                                 {dat?.comments?.length > 0 && (
-                                  <p className="text-[11px]   leading-none  pr-2 text-green-800  mt-[6px]    rounded-full   mb-1 mr-2  ">
-                                    {
-                                      dat?.comments[dat?.comments?.length - 1]
-                                        ?.msg
-                                    }
+                                  <p className="text-[11px]   leading-none  pr-2 text-green-800  mt-[6px] max-w-[300px] min-w-[300px] overflow-ellipsis overflow-hidden   rounded-full   mb-1 mr-2  ">
+                                    {dat?.comments[0]?.msg}
                                   </p>
                                 )}
+                                  <div
+                                    className="absolute top-0 flex-col items-center hidden mt-6 group-hover:flex"
+                                    // style={{  width: '300px' }}
+                                    style={{ zIndex: '9' }}
+                                  >
+                                     <div
+                                      className="w-3 h-3 absolute top-1 left-2 -mt-2 mt-2 rotate-45 bg-black"
+                                      style={{
+                                        background: '#e2c062',
+                                        marginRight: '12px',
+
+                                      }}
+                                    ></div>
+                                    <span
+                                      className="rounded italian relative mr-2 z-100000 p-2 text-xs leading-none text-white whitespace-no-wrap bg-black shadow-lg"
+                                      style={{
+                                        color: 'black',
+                                        background: '#e2c062',
+                                        wordWrap: 'break-word',
+                                        // maxWidth: '400px',
+                                      }}
+                                    >
+                                      <p
+                                        className="break-words"
+                                        style={{ wordWrap: 'break-word' }}
+                                      >
+                                       {dat?.comments?.length > 0 && (
+                                  <p className="text-[11px]   leading-none  pr-2 text-green-800  mt-[6px]    rounded-full   mb-1 mr-2  ">
+                                    {dat?.comments[0]?.msg}
+                                  </p>
+                                )}
+                                      </p>
+                                    </span>
+
+                                  </div>
+
+                                </span>
                                 <div className="flex flex-row">
                                   <p className="text-[9px]   leading-none  pr-2 text-green-800  mt-[6px]  py-[4px]  rounded-full   mb-1 mr-2  ">
                                     {dat?.priority?.toUpperCase()}
@@ -1300,9 +1373,9 @@ const TodoListView = ({
                           </td>
                           <td className="pl-5">
                             <div className="flex flex-col">
-                              <p className="text-[12px] leading-none text-blue-600 ml-2">
+                            <span className={`text-[12px] leading-none text-blue-600 ml-2 ${dat?.status == 'Done' ? 'text-green-600 ' : ''} `}>
                                 {dat?.status}
-                              </p>
+                              </span>
                               <p className="text-[11px] leading-none text-gray-600 ml-2 mt-2">
                                 {dat?.to_name}
                               </p>
@@ -1461,14 +1534,83 @@ const TodoListView = ({
                           <td className=" max-w-[300px]">
                             <div className="flex items-center ">
                               <div className="flex flex-col">
-                                <p className="text-base max-w-[350px] text-[13px] overflow-ellipsis overflow-hidden font-semibold leading-none text-blue-800 mr-2 mt-2">
-                                  {dat?.title}
-                                </p>
+                                <span className="relative flex flex-col  group">
+                                  <div
+                                    className="absolute bottom-0 flex-col items-center hidden mb-4 group-hover:flex"
+                                    // style={{  width: '300px' }}
+                                    style={{ zIndex: '9' }}
+                                  >
+                                    <span
+                                      className="rounded italian relative mr-2 z-100000 p-2 text-xs leading-none text-white whitespace-no-wrap bg-black shadow-lg"
+                                      style={{
+                                        color: 'black',
+                                        background: '#e2c062',
+                                        wordWrap: 'break-word',
+                                        // maxWidth: '400px',
+                                      }}
+                                    >
+                                      <p
+                                        className="break-words"
+                                        style={{ wordWrap: 'break-word' }}
+                                      >
+                                        {dat?.title}
+                                      </p>
+                                    </span>
+                                    <div
+                                      className="w-3 h-3  -mt-2 rotate-45 bg-black"
+                                      style={{
+                                        background: '#e2c062',
+                                        marginRight: '12px',
+                                      }}
+                                    ></div>
+                                  </div>
+                                  <p className="text-base max-w-[350px] text-[13px] overflow-ellipsis overflow-hidden font-semibold leading-none text-blue-800 mr-2 mt-2">
+                                    {dat?.title}
+                                  </p>
+                                </span>
+                                <span className="relative flex flex-col  group">
                                 {dat?.comments?.length > 0 && (
+                                  <p className="text-[11px]   leading-none  pr-2 text-green-800  mt-[6px] max-w-[300px] min-w-[300px] overflow-ellipsis overflow-hidden   rounded-full   mb-1 mr-2  ">
+                                    {dat?.comments[0]?.msg}
+                                  </p>
+                                )}
+                                  <div
+                                    className="absolute top-0 flex-col items-center hidden mt-6 group-hover:flex"
+                                    // style={{  width: '300px' }}
+                                    style={{ zIndex: '9' }}
+                                  >
+                                     <div
+                                      className="w-3 h-3 absolute top-1 left-2 -mt-2 mt-2 rotate-45 bg-black"
+                                      style={{
+                                        background: '#e2c062',
+                                        marginRight: '12px',
+
+                                      }}
+                                    ></div>
+                                    <span
+                                      className="rounded italian relative mr-2 z-100000 p-2 text-xs leading-none text-white whitespace-no-wrap bg-black shadow-lg"
+                                      style={{
+                                        color: 'black',
+                                        background: '#e2c062',
+                                        wordWrap: 'break-word',
+                                        // maxWidth: '400px',
+                                      }}
+                                    >
+                                      <p
+                                        className="break-words"
+                                        style={{ wordWrap: 'break-word' }}
+                                      >
+                                       {dat?.comments?.length > 0 && (
                                   <p className="text-[11px]   leading-none  pr-2 text-green-800  mt-[6px]    rounded-full   mb-1 mr-2  ">
                                     {dat?.comments[0]?.msg}
                                   </p>
                                 )}
+                                      </p>
+                                    </span>
+
+                                  </div>
+
+                                </span>
                                 <div className="flex flex-row mt-[2px]">
                                   <p className="text-[9px]   leading-none  pr-2 text-green-800 ]  py-[4px]  rounded-full   mb-1 mr-2  ">
                                     {dat?.priority?.toUpperCase()}
@@ -1496,9 +1638,9 @@ const TodoListView = ({
                           </td>
                           <td className="pl-5">
                             <div className="flex flex-col">
-                              <p className="text-[12px] leading-none text-blue-600 ml-2">
+                              <span className={`text-[12px] leading-none text-blue-600 ml-2 ${dat?.status == 'Done' ? 'text-green-600 ' : ''} `}>
                                 {dat?.status}
-                              </p>
+                              </span>
                               <p className="text-[11px] leading-none text-gray-600 ml-2 mt-2">
                                 {dat?.to_name}
                               </p>
@@ -1508,7 +1650,7 @@ const TodoListView = ({
                           <td className="pl-5">
                             <div className="flex flex-row">
                               <button className="py-3 px-3 text-[13px] focus:outline-none leading-none text-red-700 rounded">
-                              {dat?.status != 'Done' && (
+                                {dat?.status != 'Done' && (
                                   <span>
                                     {' '}
                                     {Math.abs(

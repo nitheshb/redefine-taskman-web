@@ -415,15 +415,16 @@ export const editTaskManData = async (orgId, dta, user) => {
   console.log('data is ', followers)
   let followA = []
   let attachA = []
-  const followAUid = []
+  let followAUid = []
   const x = [assignedToObj?.uid || '']
   if (followers) {
     followA = await followers?.map((d) => {
       const y = {}
       y.label = d?.name || d?.label
       y.value = d?.uid || d?.value
+      followAUid.push(d?.uid || d?.value)
       x.push(d?.uid)
-      followAUid.push(d?.uid)
+
       return y
     })
   }
