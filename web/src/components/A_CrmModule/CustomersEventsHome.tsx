@@ -469,10 +469,10 @@ const CustomersEventsHome = () => {
     const unsubscribe = getAllProjects(
       orgId,
       (querySnapshot) => {
-        const projects = querySnapshot.docs.map((docSnapshot) =>
+        const projects = querySnapshot.docs?.map((docSnapshot) =>
           docSnapshot.data()
         )
-        projects.map((user) => {
+        projects?.map((user) => {
           user.label = user?.projectName
           user.value = user?.uid
         })
@@ -498,7 +498,7 @@ const CustomersEventsHome = () => {
       'rejected',
       '',
       // 'booked',
-    ].map((status) => {
+    ]?.map((status) => {
       const items = array.filter((data) => data.Status.toLowerCase() == status)
 
       return { name: status, items }
@@ -514,7 +514,7 @@ const CustomersEventsHome = () => {
     if (category === 'all') {
       setFilterData(settings)
     } else {
-      const updatedData = settings.map((item) => {
+      const updatedData = settings?.map((item) => {
         return {
           ...item,
           access: item.access.filter((access) =>
@@ -528,9 +528,9 @@ const CustomersEventsHome = () => {
 
   const onRoleChangeListener = async (role, element) => {
     let newAccess = {}
-    const newSettings = settings.map((item) => {
+    const newSettings = settings?.map((item) => {
       if (item.uid === role.uid) {
-        newAccess = item.access.map((accessRole) => {
+        newAccess = item.access?.map((accessRole) => {
           if (accessRole.key === element.key) {
             return {
               ...accessRole,
@@ -571,7 +571,7 @@ const CustomersEventsHome = () => {
       const unsubscribe = getCRMCustomerByProject(
         orgId,
         async (querySnapshot) => {
-          const usersListA = querySnapshot.docs.map((docSnapshot) => {
+          const usersListA = querySnapshot.docs?.map((docSnapshot) => {
             const x = docSnapshot.data()
             x.id = docSnapshot.id
             return x
@@ -600,7 +600,7 @@ const CustomersEventsHome = () => {
       const unsubscribe = getCRMCustomerByProject(
         orgId,
         async (querySnapshot) => {
-          const usersListA = querySnapshot.docs.map((docSnapshot) => {
+          const usersListA = querySnapshot.docs?.map((docSnapshot) => {
             const x = docSnapshot.data()
             x.id = docSnapshot.id
             return x
@@ -1061,7 +1061,7 @@ const CustomersEventsHome = () => {
                   name: 'Queries',
                   bg: '#ffead6',
                 },
-              ].map(({ name, bg, i }) => (
+              ]?.map(({ name, bg, i }) => (
                 <StyledTableCell key={i} style={{ background: `${bg}` }}>
                   {name}
                 </StyledTableCell>
@@ -1085,7 +1085,7 @@ const CustomersEventsHome = () => {
                 ))}
               </StyledTableRow>
             ))} */}
-            {dummyData.map((finData, i) => {
+            {dummyData?.map((finData, i) => {
               const {
                 plotId,
                 crmOwner,

@@ -895,7 +895,7 @@ export default function UnitSideViewCRM({
 
     console.log('unit log ', data, y, y.m, y['m']['url'])
 
-    
+
         const x = await capturePaymentS(
       orgId,
       projectId,
@@ -1062,7 +1062,7 @@ export default function UnitSideViewCRM({
             <div className=" w-full flex flex-row justify-between pt-1 font-md text-xs text-gray-500 mb-[2px] tracking-wide mr-4 ml-1 flex flex-row">
               {' '}
               <section>
-                <span className="font-Rubik  text-[#844b00] font-[500]   text-[11px]  py-[6px]">
+                <span className="font-Rubik font-sanF text-[#844b00] font-[500]   text-[11px]  py-[6px]">
                   {newStatusErrorList}
                 </span>
               </section>
