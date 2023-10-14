@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 // /* eslint-disable react/jsx-key */
 // // src/App.js
 // import React from 'react'
@@ -84,6 +86,7 @@
 import { useState, useCallback, useEffect } from 'react'
 
 // @mui
+import { SearchIcon } from '@heroicons/react/solid'
 import { BookTwoTone } from '@mui/icons-material'
 import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
@@ -97,6 +100,7 @@ import TableBody from '@mui/material/TableBody'
 import TableContainer from '@mui/material/TableContainer'
 import Tabs from '@mui/material/Tabs'
 import Tooltip from '@mui/material/Tooltip'
+import { startOfDay } from 'date-fns'
 import isEqual from 'lodash/isEqual'
 
 // routes
@@ -131,6 +135,12 @@ import {
   getBookedUnitsByProject,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
+import CSVDownloader from 'src/util/csvDownload'
+import { prettyDate, prettyDateTime, timeConv } from 'src/util/dateConverter'
+import {
+  SlimDateSelectBox,
+  SlimSelectBox,
+} from 'src/util/formFields/slimSelectBoxField'
 
 import { _userList, _roles, USER_STATUS_OPTIONS } from './_mock'
 import ConfirmDialog from './_mock/comps/confirm-dialog'
@@ -158,6 +168,7 @@ import UserTableToolbar, {
   IUserTableFilters,
   IUserTableFilterValue,
 } from './_mock/comps/usersTable/user-table-toolbar'
+import zIndex from '@mui/material/styles/zIndex'
 
 // ----------------------------------------------------------------------
 
@@ -191,13 +202,15 @@ const TABLE_HEAD = [
 
 const defaultFilters: IUserTableFilters = {
   name: '',
-  role: [],
+  projects: [],
   status: 'all',
 }
 
 // ----------------------------------------------------------------------
 
 export default function UserListView() {
+  const d = new window.Date()
+
   const table = useTable()
   const { user } = useAuth()
   const { orgId } = user
@@ -208,10 +221,25 @@ export default function UserListView() {
 
   const confirm = useBoolean()
 
-  const [tableData, setTableData] = useState(_userList)
+  const [tableData, setTableData] = useState([])
   const [projectList, setprojectList] = useState([])
+  const [dispRows, setDispRows] = useState([])
+  const [showSettings, setShowSettings] = useState(true)
+  const [sourceDateRange, setSourceDateRange] = useState(
+    startOfDay(d).getTime()
+  )
 
+  const [selProject, setSelProject] = useState({
+    label: 'alltransactions',
+    value: '',
+    uid: '',
+  })
   const [filters, setFilters] = useState(defaultFilters)
+
+
+
+
+
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -223,7 +251,11 @@ export default function UserListView() {
     table.page * table.rowsPerPage,
     table.page * table.rowsPerPage + table.rowsPerPage
   )
-
+  useEffect(() => {
+    const z = dataFiltered.filter((data)=>  data?.pId == selProject?.value)
+    console.log('filtered values are', z, dataFiltered)
+    setDispRows(z)
+  }, [dataFiltered, selProject])
   table.dense = true
   const denseHeight = table.dense ? 52 : 72
 
@@ -294,7 +326,8 @@ export default function UserListView() {
           user.value = user.projectName
         })
         console.log('fetched proejcts list is', projectsListA)
-        setprojectList(projectsListA)
+        let z = [{'label': 'All Projects', value: 'allprojects'}, ...projectsListA]
+        setprojectList(z)
       },
       (error) => setprojectList([])
     )
@@ -357,7 +390,7 @@ export default function UserListView() {
       <Paper variant="outlined" sx={{ width: '100%', px: 0 }}>
         <Paper
           maxWidth={settings.themeStretch ? false : 'lg'}
-          sx={{ width: '100%', px: 0,'!important': { px: 0 } }}
+          sx={{ width: '100%', px: 0, '!important': { px: 0 } }}
         >
           {/* <CustomBreadcrumbs
           heading="List"
@@ -381,58 +414,133 @@ export default function UserListView() {
         /> */}
 
           <Card sx={{ px: 0 }}>
-            <Tabs
-              value={filters.status}
-              onChange={handleFilterStatus}
-              sx={{
-                px: 0,
-                boxShadow: (theme) =>
-                  `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
-              }}
-            >
-              {STATUS_OPTIONS.map((tab) => (
-                <Tab
-                  sx={{ minHeight: '47px' }}
-                  key={tab.value}
-                  iconPosition="end"
-                  value={tab.value}
-                  label={tab.label}
-                  icon={
-                    <Label
-                      variant={
-                        ((tab.value === 'all' ||
-                          tab.value === filters.status) &&
-                          'filled') ||
-                        'soft'
-                      }
-                      color={
-                        (tab.value === 'booked' && 'success') ||
-                        (tab.value === 'agreement_pipeline' && 'warning') ||
-                        (tab.value === 'sd_pipeline' && 'error') ||
-                        'default'
-                      }
-                    >
-                      {tab.value === 'all' && tableData.length}
-                      {tab.value === 'booked' &&
-                        tableData.filter((user) => user.status === 'booked')
-                          .length}
+            <div className="flex flex-row ">
+              <Tabs
+                value={filters.status}
+                onChange={handleFilterStatus}
+                sx={{
+                  px: 0,
+                  boxShadow: (theme) =>
+                    `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
+                }}
+              >
+                {STATUS_OPTIONS.map((tab) => (
+                  <Tab
+                    sx={{ minHeight: '47px' }}
+                    key={tab.value}
+                    iconPosition="end"
+                    value={tab.value}
+                    label={tab.label}
+                    icon={
+                      <Label
+                        variant={
+                          ((tab.value === 'all' ||
+                            tab.value === filters.status) &&
+                            'filled') ||
+                          'soft'
+                        }
+                        color={
+                          (tab.value === 'booked' && 'success') ||
+                          (tab.value === 'agreement_pipeline' && 'warning') ||
+                          (tab.value === 'sd_pipeline' && 'error') ||
+                          'default'
+                        }
+                      >
+                        {tab.value === 'all' && tableData.length}
+                        {tab.value === 'booked' &&
+                          tableData.filter((user) => user.status === 'booked')
+                            .length}
 
-                      {tab.value === 'agreement_pipeline' &&
-                        tableData.filter(
-                          (user) => user.status === 'agreement_pipeline'
-                        ).length}
-                      {tab.value === 'sd_pipeline' &&
-                        tableData.filter(
-                          (user) => user.status === 'sd_pipeline'
-                        ).length}
-                      {tab.value === 'registered' &&
-                        tableData.filter((user) => user.status === 'registered')
-                          .length}
-                    </Label>
-                  }
+                        {tab.value === 'agreement_pipeline' &&
+                          tableData.filter(
+                            (user) => user.status === 'agreement_pipeline'
+                          ).length}
+                        {tab.value === 'sd_pipeline' &&
+                          tableData.filter(
+                            (user) => user.status === 'sd_pipeline'
+                          ).length}
+                        {tab.value === 'registered' &&
+                          tableData.filter(
+                            (user) => user.status === 'registered'
+                          ).length}
+                      </Label>
+                    }
+                  />
+                ))}
+              </Tabs>
+              <div className="flex flex-row mr-4 mt-2">
+                <span
+                  className="flex mt-[4px] mr-[0px] justify-center items-center w-6 h-6 bg-gradient-to-r from-violet-200 to-pink-200 rounded-full  cursor-pointer "
+                  onClick={() => {
+                    setShowSettings(!showSettings)
+                  }}
+                >
+                  <SearchIcon className=" w-3 h-3" />
+                </span>
+              </div>
+            </div>
+            <div
+              className={`${showSettings ? 'hidden' : ''} flex flex-row py-2  `}
+            >
+              <div className="flex flex-row w-full">
+                <span className="flex ml-2 mr-2 h-[34px] w-[300px] bg-gray-50 border border-gray-300 border-solid box-border w-1/3 rounded-md">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4  mt-[9px] mx-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    ></path>
+                  </svg>
+                  <input
+                    type="text"
+                    id="globalSearch"
+                    placeholder="Search Unit No, Customer name, Phone no, Dues..."
+                    // onChange={searchKeyField}
+                    autoComplete="off"
+                    // value={searchKey}
+                    className="w-52 bg-transparent focus:border-transparent focus:ring-0 focus-visible:border-transparent focus-visible:ring-0 focus:outline-none text-sm leading-7 text-gray-900 w-4/5 relative"
+                  />
+                </span>
+                <div className=" mr-2 min-w-[200px] max-w-[200px]">
+                  <SlimSelectBox
+                    name="project"
+                    label=""
+                    className="input "
+                    onChange={(value) => {
+                      console.log('value is ', value)
+                      setSelProject({
+                        label: value?.value,
+                        value: value?.uid,
+                        uid: value?.uid,
+                      })
+                      // formik.setFieldValue('project', value.value)
+                    }}
+                    value={selProject?.label}
+                    // options={aquaticCreatures}
+                    options={projectList}
+                  />
+                </div>
+
+                <span className="mt-2 ml-2 text-red-400 cursor-pointer text-xs">
+                  {' '}
+                  Clear
+                </span>
+              </div>
+              <span style={{ display: '' }}>
+                <CSVDownloader
+                  className="mr-6 h-[20px] w-[20px] mt-2"
+                  downloadRows={dataFiltered}
+                  style={{ height: '20px', width: '20px' }}
                 />
-              ))}
-            </Tabs>
+              </span>
+            </div>
 
             {/* <UserTableToolbar
             filters={filters}
@@ -499,7 +607,7 @@ export default function UserListView() {
                     />
 
                     <TableBody>
-                      {dataFiltered
+                      {dispRows
                         // .slice(
                         //   table.page * table.rowsPerPage,
                         //   table.page * table.rowsPerPage + table.rowsPerPage
@@ -583,7 +691,7 @@ function applyFilter({
   comparator: (a: any, b: any) => number
   filters: IUserTableFilters
 }) {
-  const { name, status, role } = filters
+  const { name, status, projects } = filters
 
   const stabilizedThis = inputData.map((el, index) => [el, index] as const)
 
@@ -605,8 +713,8 @@ function applyFilter({
     inputData = inputData.filter((user) => user.status === status)
   }
 
-  if (role.length) {
-    inputData = inputData.filter((user) => role.includes(user.role))
+  if (projects.length) {
+    inputData = inputData.filter((user) => projects.includes(user?.pId))
   }
 
   return inputData

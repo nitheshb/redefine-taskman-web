@@ -129,6 +129,7 @@ const Floordetails = ({
   const [selStatus, setFilSelStatus] = useState('all')
   const [isUnitDetailsOpen, setisUnitDetailsOpen] = useState(false)
   const [isUnitQuoteBookBlock, setisUnitQuoteBookBlock] = useState(false)
+  const [isUnitAddOpen, setisUnitAddOpen] = useState(false)
   const [selUnitDetails, setSelUnitDetails1] = useState({})
   const [transactionData, setTransactionData] = useState({})
   const [selSubMenu, setSelSubMenu] = useState('summary')
@@ -149,6 +150,12 @@ const Floordetails = ({
   ])
 
   const [sliderInfo, setSliderInfo] = useState({
+    open: false,
+    title: '',
+    sliderData: {},
+    widthClass: 'max-w-2xl',
+  })
+  const [addUnitSlider, setAddUnitSlider] = useState({
     open: false,
     title: '',
     sliderData: {},
@@ -1193,7 +1200,8 @@ const Floordetails = ({
                   className=" cursor-pointer z-10 flex flex-col  max-w-md p-2 my-0 mx-3 rounded-sm inline-block min-h-[50px]  min-w-[100px] border border-dotted border-black"
                   // style={{ backgroundColor: '#fef7f7' }}
                   onClick={() => {
-                    setSliderInfo({
+                    setisUnitAddOpen(true)
+                    setAddUnitSlider({
                       open: true,
                       title: 'Add Unit',
                       sliderData: {
@@ -1224,7 +1232,9 @@ const Floordetails = ({
                 <div
                   className="cursor-pointer  z-10 flex flex-col  max-w-md p-2 my-0  mx-4 rounded-sm inline-block  min-h-[50px]  min-w-[100px] border border-dotted border-black rounded-md"
                   onClick={() => {
-                    setSliderInfo({
+                    setisUnitAddOpen(true)
+
+                    setAddUnitSlider({
                       open: true,
                       title: ['Apartments'].includes(
                         projectDetails?.projectType?.name
@@ -1311,6 +1321,21 @@ const Floordetails = ({
         title={sliderInfo.title}
         data={sliderInfo.sliderData}
         widthClass={sliderInfo.widthClass}
+        myBlock={selBlock}
+        pId={pId}
+        phaseFeed={phaseFeed}
+        BlockFeed={BlockFeed}
+        projectDetails={projectDetails}
+        phaseDetails={phaseDetails}
+        blockDetails={selBlock}
+        unitViewActionType={actionType}
+      />
+         <SiderForm
+        open={isUnitAddOpen}
+        setOpen={setisUnitAddOpen}
+        title={addUnitSlider.title}
+        data={addUnitSlider.sliderData}
+        widthClass={addUnitSlider.widthClass}
         myBlock={selBlock}
         pId={pId}
         phaseFeed={phaseFeed}

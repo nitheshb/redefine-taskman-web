@@ -60,6 +60,8 @@ export default function UserTableRow({
     role,
     status,
     email,
+    projName,
+    pId,
     phoneNumber,
     Plot_area,
     sqft_rate,
@@ -136,13 +138,14 @@ export default function UserTableRow({
 
           <ListItemText
             primary={customerDetailsObj?.customerName1}
-            secondary={email}
+            secondary={projName}
             primaryTypographyProps={{ typography: 'body2' }}
             secondaryTypographyProps={{
               component: 'span',
               color: 'text.disabled',
             }}
           />
+
         </TableCell>
 
         <TableCell align="center" sx={{ whiteSpace: 'nowrap' }}>

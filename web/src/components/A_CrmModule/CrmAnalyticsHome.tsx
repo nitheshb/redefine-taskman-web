@@ -41,6 +41,7 @@ import CrmAnalyticsUnitHome from './Reports/CrmAnalyticsUnitHome'
 import ReportBars from './Reports/ReportBars'
 import TransactionCard from './Reports/TransactionCard'
 import UnitStatusCardReport from './Reports/UnitStatusCardReport'
+import UnitBookingSummaryHomePage from './Reports/bookingSummaryHome1'
 
 const CrmAnalyticsHome = ({ project }) => {
   const theme = useTheme()
@@ -211,14 +212,9 @@ const CrmAnalyticsHome = ({ project }) => {
       </section> )}
             {selCat === 'booking_summary' && (
           <div className="">
-            <AdvancedDataTableTest />
-            {/* {projects.map((project) => (
-          <AdvancedDataTableTest
-            key={project.uid}
-            project={project}
+            {/* <AdvancedDataTableTest /> */}
+            <UnitBookingSummaryHomePage/>
 
-          />
-        ))} */}
             {projects.length === 0 && <DummyBodyLayout />}
           </div>
         )}

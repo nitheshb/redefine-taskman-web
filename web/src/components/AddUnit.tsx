@@ -56,6 +56,16 @@ const AddUnit = ({
   const [phaseList, setphaseList] = useState([])
   const [blockList, setblockList] = useState([])
   const [unitDetails, setUnitDetails] = useState({})
+  console.log('inside it ', {
+    title,
+    dialogOpen,
+    BlockFeed,
+    phaseFeed,
+    projectDetails,
+    phaseDetails,
+    blockDetails,
+    data,
+  });
 
   useEffect(() => {
     const unsubscribe = steamUsersListByRole(
