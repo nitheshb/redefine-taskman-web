@@ -257,7 +257,45 @@ export default function DropCompUnitStatus({
                   )}
                 </>
               )}
-
+              {type === 'Show Fields' && (
+                <>
+                  {[
+                    'Phone No',
+                    'Email Id',
+                    'Cost Split',
+                    'Avg sqft Cost',
+                    'CRM Executive',
+                    'Sales Executive',
+                    'Remarks'
+                  ].map((viewData, i) => (
+                    <Menu.Item key={i}>
+                      {({ active }) => (
+                        <button
+                          className={`${
+                            active
+                              ? 'bg-violet-500 text-white rounded-sm'
+                              : 'text-gray-900'
+                          } group flex  items-center w-full px-2 py-2 text-sm`}
+                          onClick={() => pickCustomViewer(viewData)}
+                        >
+                          {viewUnitStatusA.includes(viewData) ? (
+                            <CheckIcon
+                              className="h-5 w-5 mr-2"
+                              aria-hidden="true"
+                            />
+                          ) : (
+                            <CheckIcon
+                              className="w-5 h-5 mr-2 text-transparent"
+                              aria-hidden="true"
+                            />
+                          )}
+                          {viewData}
+                        </button>
+                      )}
+                    </Menu.Item>
+                  ))}
+                </>
+              )}
               {type === 'show' && (
                 <>
                   {[

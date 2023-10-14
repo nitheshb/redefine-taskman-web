@@ -2,20 +2,31 @@ import { useEffect, useState } from 'react'
 
 import { Tabs } from '@material-ui/core'
 import { Tab } from '@material-ui/core'
+import DeleteIcon from '@mui/icons-material/Delete'
 import { TabList } from '@mui/lab'
-import { Box as Section, Card, Grid, styled } from '@mui/material'
+import {
+  Box as Section,
+  Card,
+  Grid,
+  styled,
+  Tooltip,
+  IconButton,
+} from '@mui/material'
 import { useTranslation } from 'react-i18next' // styled components
 
+import DropCompUnitStatus from 'src/components/dropDownUnitStatus'
 import LogSkelton from 'src/components/shimmerLoaders/logSkelton'
+import CSVDownloader from 'src/util/csvDownload'
 import { prettyDate } from 'src/util/dateConverter'
 
 import UnitSummaryTableBody from './BookingSummaryTable'
 
 const rowsCounter = (parent, searchKey) => {
- return searchKey === 'all'
-    ? parent :  parent.filter(
-      (item) => item?.status?.toLowerCase() === searchKey.toLowerCase()
-    )
+  return searchKey === 'all'
+    ? parent
+    : parent.filter(
+        (item) => item?.status?.toLowerCase() === searchKey.toLowerCase()
+      )
 }
 
 const UnitBookingSummaryTableLayout = ({
@@ -94,6 +105,10 @@ const UnitBookingSummaryTableLayout = ({
   const [newStatusA, setNewStatusA] = useState([])
   const [followupA, setfollowupA] = useState([])
   const [mySelRows, setmySelRows] = useState([])
+  const [viewUnitStatusA, setViewUnitStatusA] = React.useState([
+    'Phone No',
+    'Last Activity',
+  ])
 
   const newStatus = []
   const followup = []
@@ -126,7 +141,7 @@ const UnitBookingSummaryTableLayout = ({
     // split data as per
     console.time('query Fetch Time')
     console.timeLog('query Fetch Time')
-    console.log('query Fetch Time',leadsFetchedData )
+    console.log('query Fetch Time', leadsFetchedData)
     return
     for (let i = 0; i < leadsFetchedData.length; i++) {
       // your operations
@@ -314,12 +329,26 @@ const UnitBookingSummaryTableLayout = ({
     switch (value) {
       case 'all':
         return setFilLeadsA(leadsFetchedData)
-      default :
-        return setFilLeadsA(leadsFetchedData.filter((dat) => dat?.status === value))
-
+      default:
+        return setFilLeadsA(
+          leadsFetchedData.filter((dat) => dat?.status === value)
+        )
     }
   }, [value, leadsFetchedData])
   useEffect(() => {}, [leadsFetchedData])
+  const pickCustomViewer = (item) => {
+    const newViewer = viewUnitStatusA
+    if (viewUnitStatusA.includes(item)) {
+      const filtered = newViewer.filter(function (value) {
+        return value != item
+      })
+      setViewUnitStatusA(filtered)
+      console.log('reviwed is ', viewUnitStatusA)
+    } else {
+      setViewUnitStatusA([...newViewer, item])
+      console.log('reviwed is add ', viewUnitStatusA)
+    }
+  }
   return (
     <Section pb={4}>
       <Card
@@ -329,68 +358,82 @@ const UnitBookingSummaryTableLayout = ({
       >
         <Grid container>
           <Grid item xs={12}>
-            <div className="mb-1 border-b border-gray-200 ">
+            <div className="border-b border-gray-200 flex flex-row justify-between ">
               <ul
                 className="flex flex-wrap -mb-px "
                 id="myTab"
                 data-tabs-toggle="#myTabContent"
                 role="tablist"
               >
-                   {tabHeadFieldsA.map((d, i) => {
+                {tabHeadFieldsA.map((d, i) => {
                   return (
                     <ul
-                    value={value}
-                    key={i}
-                    onChange={handleChange}
-                    textColor="secondary"
-                    indicatorColor="secondary"
-                    aria-label="secondary tabs example"
-                  >
-                    <li key={i} className="mr-2" role="presentation">
-                      <button
-                        className={`inline-block py-4 px-4 text-sm font-medium text-center text-gray-700 rounded-t-lg border-b-2   hover:text-gray-600 hover:border-black hover:border-b-2 dark:text-gray-400 dark:hover:text-gray-300  ${
-                          value === d.value
-                            ? 'border-black text-gray-900 '
-                            : 'border-transparent'
-                        }`}
-                        type="button"
-                        role="tab"
-                        onClick={() => {
-                          setFetchLeadsLoader(true)
-                          setValue(d.value)
-                          setFetchLeadsLoader(false)
-                          setmySelRows(rowsCounter(leadsFetchedData, d.val))}}
-
-                      >
-                        <span
-                          className={`font-PlayFair text-gray-450 ${
+                      value={value}
+                      key={i}
+                      onChange={handleChange}
+                      textColor="secondary"
+                      indicatorColor="secondary"
+                      aria-label="secondary tabs example"
+                    >
+                      <li key={i} className="mr-2" role="presentation">
+                        <button
+                          className={`inline-block py-4 px-4 text-sm font-medium text-center text-gray-700 rounded-t-lg border-b-2   hover:text-gray-600 hover:border-black hover:border-b-2 dark:text-gray-400 dark:hover:text-gray-300  ${
                             value === d.value
-                              ? 'text-[#0080ff] text-gray-800 '
-                              : ''
+                              ? 'border-black text-gray-900 '
+                              : 'border-transparent'
                           }`}
+                          type="button"
+                          role="tab"
+                          onClick={() => {
+                            setFetchLeadsLoader(true)
+                            setValue(d.value)
+                            setFetchLeadsLoader(false)
+                            setmySelRows(rowsCounter(leadsFetchedData, d.val))
+                          }}
                         >
-                          {' '}
-                          {`${d.lab}`}
-
-                          {<span
-                              className={` font-semibold px-2 py-1 rounded-md ml-[4px] active:bg-green-800  ${
-                                activeNew === true
-                                  ? 'bg-green-400 text-black '
-                                  : 'bg-green-200 text-green-700'
-                              } `}
-                            >
-                              {rowsCounter(leadsFetchedData, d.value).length}
-                            </span>}
-
-
-
-                        </span>
-
-                      </button>
-                    </li>
-                  </ul>
-                  )})}
+                          <span
+                            className={`font-PlayFair text-gray-450 ${
+                              value === d.value
+                                ? 'text-[#0080ff] text-gray-800 '
+                                : ''
+                            }`}
+                          >
+                            {' '}
+                            {`${d.lab}`}
+                            {
+                              <span
+                                className={` font-semibold px-2 py-1 rounded-md ml-[4px] active:bg-green-800  ${
+                                  activeNew === true
+                                    ? 'bg-green-400 text-black '
+                                    : 'bg-green-200 text-green-700'
+                                } `}
+                              >
+                                {rowsCounter(leadsFetchedData, d.value).length}
+                              </span>
+                            }
+                          </span>
+                        </button>
+                      </li>
+                    </ul>
+                  )
+                })}
               </ul>
+              <section className="pt-1 mt-2 mx-3">
+                <DropCompUnitStatus
+                  type={'Show Fields'}
+                  id={'id'}
+                  setStatusFun={{}}
+                  viewUnitStatusA={viewUnitStatusA}
+                  pickCustomViewer={pickCustomViewer}
+                />
+                {filLeadsA.length > 0 && <Tooltip title={`Download ${filLeadsA?.length} Row`}>
+                    <CSVDownloader
+                      className="mr-6 h-[20px] w-[20px]"
+                      downloadRows={leadsFetchedData}
+                      style={{ height: '20px', width: '20px' }}
+                    />
+                  </Tooltip>}
+              </section>
             </div>
 
             {fetchLeadsLoader &&
@@ -417,6 +460,7 @@ const UnitBookingSummaryTableLayout = ({
                 selStatus={value}
                 rowsParent={statusSepA[0]}
                 selUserProfileF={selUserProfileF}
+                viewUnitStatusA={viewUnitStatusA}
                 newArray={statusSepA[0]?.[value]}
                 leadsFetchedData={filLeadsA}
                 mySelRows={mySelRows}

@@ -881,8 +881,8 @@ const AddUnit = ({
                       </section>
                       {/* 6 */}
 
-                      <div className="mb-8 mx-7">
-                        <p className="text-xs text-red-400 text-right my-3">
+                      <div className=" z-10 flex flex-row justify-between mt-4 pb-2 pr-6 bg-white shadow-lg absolute bottom-0  w-full">
+                        <p className="text-xs text-red-400 text-right my-3 mt-10 mx-3">
                           <abbr title="Required field">*</abbr> fields are
                           mandatory
                         </p>

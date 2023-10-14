@@ -115,11 +115,17 @@ const headCells = [
   {
     id: 'AssignedOn',
     numeric: false,
-    disablePadding: true,
+    disablePadding: false,
     align: 'center',
     label: 'Unit',
   },
-
+  {
+    id: 'Project',
+    numeric: false,
+    disablePadding: false,
+    align: 'left',
+    label: 'Project',
+  },
   {
     id: 'Clientdetails',
     numeric: false,
@@ -127,97 +133,105 @@ const headCells = [
     align: 'center',
     label: 'Status',
   },
-  {
-    id: 'Project',
-    numeric: false,
-    disablePadding: false,
-    align: 'center',
-    label: 'BMRDA/STRR',
-  },
+
+  // {
+  //   id: 'bmrda_strr',
+  //   numeric: false,
+  //   disablePadding: false,
+  //   align: 'center',
+  //   label: 'BMRDA/STRR',
+  // },
 
   {
-    id: 'Assigned',
+    id: 'booked',
     numeric: false,
     disablePadding: false,
     align: 'center',
     label: 'Booked On',
   },
   {
-    id: 'Source',
+    id: 'partA',
     numeric: false,
     disablePadding: false,
     align: 'right',
     label: 'Land Cost',
   },
   {
-    id: 'Currentstatus',
+    id: 'infra',
     numeric: false,
     disablePadding: false,
     align: 'right',
     label: 'Infrastructure',
   },
   {
-    id: 'leadUpT',
+    id: 'club',
     numeric: false,
     disablePadding: false,
     align: 'right',
     label: 'ClubHouse Charges',
   },
   {
-    id: 'leadUpT',
+    id: 'maintenance',
     numeric: false,
     disablePadding: false,
     align: 'right',
     label: 'Maintenance Charges',
   },
   {
-    id: 'leadUpT',
+    id: 'legal',
     numeric: false,
     disablePadding: false,
     align: 'right',
     label: 'Legal Charges',
   },
   {
-    id: 'leadUpT',
+    id: 'sale',
     numeric: false,
     disablePadding: false,
     align: 'right',
     label: 'Sale Value',
   },
   {
-    id: 'leadUpT',
+    id: 'avgsft',
     numeric: false,
     disablePadding: false,
     align: 'right',
     label: 'Sft Cost',
   },
   {
-    id: 'leadUpT',
+    id: 'sv_sft',
     numeric: false,
     disablePadding: false,
     align: 'right',
     label: 'Sv/Sft',
   },
   {
-    id: 'leadUpT',
+    id: 'received',
     numeric: false,
     disablePadding: false,
     align: 'right',
     label: 'Received',
   },
   {
-    id: 'leadUpT',
+    id: 'balance',
     numeric: false,
     disablePadding: false,
     align: 'right',
     label: 'Balance',
   },
   {
-    id: 'leadUpT',
+    id: 'crm_executive',
     numeric: false,
     disablePadding: true,
     align: 'left',
     label: 'CRM Executive',
+  },
+  {
+    id: 'sale_executive',
+    numeric: false,
+    disablePadding: true,
+    align: 'left',
+    label: 'Sale Executive',
   },
   {
     id: 'Notes',
@@ -244,20 +258,21 @@ function EnhancedTableHead(props) {
 
   const displayHeadersFun = (headCell) => {
 
-    if (['Assigned', 'schTime', 'leadUpT'].includes(headCell)) {
-      switch (headCell) {
-        case 'Assigned':
-          return viewUnitStatusA.includes('Assigned To') ? '' : 'none'
-        case 'leadUpT':
-          return viewUnitStatusA.includes('Last Activity') ? '' : 'none'
-        case 'schTime':
-          return viewUnitStatusA.includes('Next Sch') ? '' : 'none'
-        default:
-          break;
-      }
-    } else {
+    if(['partA', 'legal', 'maintenance', 'club', 'infra'].includes(headCell)){
+      return viewUnitStatusA.includes('Cost Split') ? '' : 'none'
+    }  else if(['avgsft', 'sv_sft', 'bmrda_strr'].includes(headCell)){
+      return viewUnitStatusA.includes('Avg sqft Cost') ? '' : 'none'
+    } else if(['crm_executive'].includes(headCell)){
+      return viewUnitStatusA.includes('CRM Executive') ? '' : 'none'
+    }else if(['sale_executive'].includes(headCell)){
+      return viewUnitStatusA.includes('Sales Executive') ? '' : 'none'
+    }else if(['Notes'].includes(headCell)){
+      return viewUnitStatusA.includes('Remarks') ? '' : 'none'
+    }
+    else {
       return ''
     }
+
     //   if(viewUnitStatusA.includes('Assigned To') &&
     //   headCell === 'Assigned'){
     //   return ''
@@ -491,11 +506,11 @@ React.useEffect(()=>{
 
       </span> */}
 
-   
+
       <span style={{ display: 'flex' }}>
         <section className="pt-1">
           <DropCompUnitStatus
-            type={'show'}
+            type={'Show Fields'}
             id={'id'}
             setStatusFun={{}}
             viewUnitStatusA={viewUnitStatusA}
@@ -570,6 +585,7 @@ export default function UnitSummaryTableBody({
   leadsFetchedData,
   mySelRows,
   searchVal,
+  viewUnitStatusA
 }) {
   const { user } = useAuth()
   const [order, setOrder] = React.useState('desc')
@@ -702,41 +718,12 @@ export default function UnitSummaryTableBody({
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0
 
   const [selBlock, setSelBlock] = React.useState({})
-  const [viewUnitStatusA, setViewUnitStatusA] = React.useState([
-    'Phone No',
-    'Last Activity',
 
-    // 'Blocked',
-    // 'Booked',
-    // 'Total',
-  ])
-  React.useEffect(() => {
-    if (user) {
-      const { role } = user
 
-      if (role[0] === 'sales-manager') {
-        setViewUnitStatusA(['Phone No', 'Assigned To'])
-      }
-    }
-  }, [user])
-
-  const pickCustomViewer = (item) => {
-    const newViewer = viewUnitStatusA
-    if (viewUnitStatusA.includes(item)) {
-      const filtered = newViewer.filter(function (value) {
-        return value != item
-      })
-      setViewUnitStatusA(filtered)
-      console.log('reviwed is ', viewUnitStatusA)
-    } else {
-      setViewUnitStatusA([...newViewer, item])
-      console.log('reviwed is add ', viewUnitStatusA)
-    }
-  }
 
   return (
     <Section sx={{ width: '100%' }} style={{ border: 'none', radius: 0 }}>
-      <EnhancedTableToolbar
+      {/* <EnhancedTableToolbar
         numSelected={selected.length}
         selStatus={selStatus}
         filteredData={rows}
@@ -751,7 +738,7 @@ export default function UnitSummaryTableBody({
         setViewUnitStatusA={setViewUnitStatusA}
         leadsFetchedData={leadsFetchedData}
         searchVal={searchVal}
-      />
+      /> */}
       <section
         style={{ borderTop: '1px solid #efefef', background: '#fefafb' }}
       >
@@ -859,6 +846,7 @@ export default function UnitSummaryTableBody({
                           scope="row"
                           padding="none"
                           size="small"
+                          sx={{ whiteSpace: 'nowrap',  background: "#d1d1fb",  }}
                         >
                           {index + 1}
                         </TableCell>
@@ -868,14 +856,16 @@ export default function UnitSummaryTableBody({
                           id={labelId}
                           scope="row"
                           padding="none"
+                          sx={{ whiteSpace: 'nowrap',  paddingRight: '6px' , paddingLeft: '6px', background: "#c3c3f1",  }}
+
                         >
                           <section>
                             <div className="font-bodyLato">
                             {row?.customerDetailsObj?.customerName1?.toString()}
                             </div>
-                            <div className="font-bodyLato">
+                            {/* <div className="font-bodyLato">
                             {row?.customerDetailsObj?.email1?.toString()}
-                            </div>
+                            </div> */}
 
                           </section>
                         </TableCell>
@@ -887,6 +877,8 @@ export default function UnitSummaryTableBody({
                           scope="row"
                           padding="none"
                           align="center"
+                          sx={{background: '#d1d1fb', paddingTop: '4px', paddingBottom:'4px', }}
+
                         >
                           <section>
                             <span className="font-bodyLato">
@@ -894,7 +886,15 @@ export default function UnitSummaryTableBody({
                             </span>
                           </section>
                         </TableCell>
-                        <TableCell align="center">
+                          <TableCell
+                          align="left"
+                          style={{ maxWidth:'80px', maxHeight: '40px', textOverflow: 'ellipsis',  whiteSpace: 'nowrap', overflow: 'hidden', paddingRight: '8px' , paddingLeft: '8px', paddingTop: '4px', paddingBottom:'4px', background: "#d1d1fb",}}
+                          padding='none'
+                        >
+
+                          <span className="font-bodyLato" style={{maxHeight: '40px', textOverflow: 'ellipsis', fontSize: '12px' }}>{row.projName}</span>
+                        </TableCell>
+                        <TableCell align="center" sx={{background: "#c3c3f1"}} padding="none">
                         <span className="px-2 uppercase inline-flex text-[10px] leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                           <HighlighterStyle
                             searchKey={searchKey}
@@ -903,50 +903,51 @@ export default function UnitSummaryTableBody({
                         </span>
                         </TableCell>
 
-                        <TableCell align="center" sx={{ whiteSpace: 'nowrap' }}>
+                        <TableCell align="center" sx={{ whiteSpace: 'nowrap', background: "#d1d1fb",  }} padding="none">
           {prettyDate(row?.Date)}
         </TableCell>
-        <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>
+        {viewUnitStatusA.includes('Cost Split') && (  <TableCell align="right" sx={{ whiteSpace: 'nowrap', background: "#d1d1fb", paddingRight: '6px' }} padding="none">
           ₹{partACost?.toLocaleString('en-IN')}
-        </TableCell>
-        <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>
+        </TableCell>)}
+        {viewUnitStatusA.includes('Cost Split') && (<TableCell align="right" sx={{ whiteSpace: 'nowrap', background: "#d1d1fb", paddingRight: '6px' }} padding="none">
         ₹{infraCharges?.toLocaleString('en-IN')}
-        </TableCell>
-        <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>
+        </TableCell>)}
+       {viewUnitStatusA.includes('Cost Split') && (<TableCell align="right" sx={{ whiteSpace: 'nowrap', background: "#d1d1fb", paddingRight: '6px' }} padding="none">
         ₹{clubHouseCharges?.toLocaleString('en-IN')}
-        </TableCell>
-        <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>
+        </TableCell>)}
+        {viewUnitStatusA.includes('Cost Split') && (<TableCell align="right" sx={{ whiteSpace: 'nowrap', background: "#d1d1fb", paddingRight: '6px' }} padding="none">
         ₹{maintenanceCharges?.toLocaleString('en-IN')}
-        </TableCell>
-        <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>
+        </TableCell>)}
+        {viewUnitStatusA.includes('Cost Split') && (<TableCell align="right" sx={{ whiteSpace: 'nowrap', background: "#d1d1fb", paddingRight: '6px'  }} padding="none">
         ₹{legalCharge?.toLocaleString('en-IN')}
-        </TableCell>
-        <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>
+        </TableCell>)}
+       <TableCell align="right" sx={{ whiteSpace: 'nowrap', background: "#c3c3f1", paddingRight: '6px' }} padding="none" >
         ₹{(partACost + partBCost)?.toLocaleString('en-IN')}
         </TableCell>
-        <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>
+        {viewUnitStatusA.includes('Avg sqft Cost') && (<TableCell align="right" sx={{ whiteSpace: 'nowrap', background: "#d1d1fb", paddingRight: '6px' }} padding="none">
         ₹{row?.sqft_rate?.toLocaleString('en-IN')}
-        </TableCell>
-        <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>
+        </TableCell>)}
+        {viewUnitStatusA.includes('Avg sqft Cost') && (<TableCell align="right" sx={{ whiteSpace: 'nowrap', background: "#d1d1fb", paddingRight: '6px' }} padding="none">
         ₹{row?.sqft_rate?.toLocaleString('en-IN')}
-        </TableCell>
-        <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>
+        </TableCell>)}
+        <TableCell align="right" sx={{ whiteSpace: 'nowrap', background: "#DAECE5", paddingRight: '6px' }} padding="none">
         ₹{row?.T_review?.toLocaleString('en-IN')}
         </TableCell>
-        <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>
+      <TableCell align="right" sx={{ whiteSpace: 'nowrap', background: "#f6cdca", paddingRight: '6px' }} padding="none">
         ₹{row?.T_balance?.toLocaleString('en-IN')}
         </TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{row?.by}</TableCell>
+        {viewUnitStatusA.includes('CRM Executive') && <TableCell sx={{ whiteSpace: 'nowrap',  paddingRight: '8px' , paddingLeft: '8px', background: "#d1d1fb",  }} padding="none">{row?.by}</TableCell>}
 
+       {viewUnitStatusA.includes('Sales Executive') && <TableCell sx={{ whiteSpace: 'nowrap',  paddingRight: '8px' , paddingLeft: '8px', background: "#d1d1fb",  }} padding="none">{row?.by}</TableCell>}
 
-
-                        {viewUnitStatusA.includes('Last Activity') && (
+                        {viewUnitStatusA.includes('Remarks') && (
                           <TableCell
                             component="th"
                             id={labelId}
                             scope="row"
                             padding="none"
+                            sx={{ whiteSpace: 'nowrap',  paddingRight: '8px' , paddingLeft: '8px', background: "#d1d1fb",  }}
                           >
                             <>
                               {/* <span className="font-bodyLato">
@@ -992,6 +993,7 @@ export default function UnitSummaryTableBody({
                           id={labelId}
                           scope="row"
                           padding="none"
+                          sx={{ whiteSpace: 'nowrap',  paddingRight: '8px' , paddingLeft: '8px', background: "#d1d1fb",  }}
                         >
                           <>
                             {/* <span className="font-bodyLato">
@@ -1032,13 +1034,7 @@ export default function UnitSummaryTableBody({
                           </>
                         </TableCell>
                         }
-                        <TableCell
-                          align="left"
-                          style={{ maxWidth: '100px', maxHeight: '100px', textOverflow: 'ellipsis' }}
-                        >
-                          {' '}
-                          <span className="font-bodyLato" style={{ maxWidth: '100px', maxHeight: '100px', textOverflow: 'ellipsis' }}>{row.Remarks}</span>
-                        </TableCell>
+
                       </TableRow>
                     )
                   })}

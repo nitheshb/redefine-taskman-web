@@ -98,6 +98,11 @@ const UnitBookingSummaryHomePage = ({
   }, [])
 
   useEffect(() => {
+
+    boot()
+  }, [projectList])
+
+  useEffect(() => {
     setSearchValue(searchVal)
   }, [searchVal])
   const searchData = useSelector((state: RootStateOrAny) => state.searchData)
@@ -139,7 +144,7 @@ const UnitBookingSummaryHomePage = ({
         // await serealizeData(usersListA)
         console.log('values are',usersListA )
         await setUnitsFetchData(usersListA)
-  
+
       },
       {
         status: ['booked', 'agreement_pipeline', 'sd_pipeline', 'registered'],
@@ -219,8 +224,8 @@ switch (selProjectIs.value) {
             className="
             px-3 py-6"
           >
-            <div className="flex items-center flex-row flex-wrap py-1 pb-5 ">
-              <h2 className="text-md font-semibold text-black leading-light font-Playfair w-[43%]">
+            <div className="flex items-center flex-row flex-wrap py-1 pb-5 justify-between">
+              <h2 className="text-md font-semibold text-black leading-light font-Playfair">
                 Booked Unit Summary
               </h2>
 
@@ -272,6 +277,18 @@ switch (selProjectIs.value) {
         unitsViewMode={unitsViewMode}
         setUnitsViewMode={setUnitsViewMode}
         setIsClicked={setIsClicked}
+      />
+       <SiderForm
+        open={isImportLeadsOpen}
+        setOpen={setisImportLeadsOpen}
+        title={'unitDetails_crm_view'}
+        customerDetails={selUserProfile}
+        widthClass="max-w-7xl"
+        transactionData={selUserProfile}
+        unitsViewMode={false}
+        selCustomerPayload={selUserProfile}
+        selSubMenu={'unit_information'}
+        selSubMenu2={'unit_information'}
       />
     </>
   )
