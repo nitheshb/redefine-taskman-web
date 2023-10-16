@@ -19,10 +19,11 @@ import {
   updatePaymentScheduleCharges,
   steamUsersListByRole,
   updateUserAccessProject,
+  steamUsersList,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 
-const PaymentLeadAccess = ({ title, data, source }) => {
+const PaymentLeadAccess = ({ title, data,dept,  source }) => {
   const { user } = useAuth()
   const { orgId, email } = user
   const [tableData, setTableData] = useState([])
@@ -40,7 +41,7 @@ const PaymentLeadAccess = ({ title, data, source }) => {
   }, [data])
 
   useEffect(() => {
-    const unsubscribe = steamUsersListByRole(
+    const unsubscribe = steamUsersList(
       orgId,
       (querySnapshot) => {
         const usersListA = querySnapshot.docs.map((docSnapshot) =>
@@ -116,7 +117,8 @@ const PaymentLeadAccess = ({ title, data, source }) => {
           </div>
         </div>
         <div className="bg-white p-4">
-          {salesPeopleList.map((salesPerson, i) => {
+          {salesPeopleList.filter((d) => (d.department == dept && d?.roles[0] != 'cp-agent'))
+                ?.map((salesPerson, i) => {
             return (
               <div key={i}>
                 <Checkbox

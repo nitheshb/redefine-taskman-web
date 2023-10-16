@@ -688,6 +688,7 @@ const ProjPhaseHome = ({
                           title={'Project Access'}
                           dialogOpen={'false'}
                           data={{ phase: phase }}
+                          projectDetails={projectDetails}
                           source={source}
                         />
                       )}

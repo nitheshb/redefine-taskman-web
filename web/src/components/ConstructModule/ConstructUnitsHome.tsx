@@ -19,9 +19,9 @@ import DropDownSearchBar from 'src/components/dropDownSearchBar'
 import { PlusIcon } from '@heroicons/react/outline'
 
 import Floordetails from '../Floordetails/Floordetails'
+import ProjPhaseHome from '../ProjPhaseHome/ProjPhaseHome'
 
 import ConstructProjectUnitsDisplay from './Const_ProjectUnitsDisplay'
-import ProjPhaseHome from '../ProjPhaseHome/ProjPhaseHome'
 const ConstructUnitsHome = ({ project }) => {
   const { projectName } = project
   const { user } = useAuth()
@@ -138,12 +138,11 @@ const ConstructUnitsHome = ({ project }) => {
           </div> */}
 
           <div className="   ">
-
             <form className="">
               <div className="flex flex-row justify-between">
-              <span className="relative flex  items-center w-auto text-xl  leading-none pl-0">
-                Projects
-              </span>
+                <span className="relative flex  items-center w-auto text-xl  leading-none pl-0">
+                  Projects
+                </span>
                 <div className="relative w-[286px]">
                   <input
                     type="search"
@@ -207,14 +206,14 @@ const ConstructUnitsHome = ({ project }) => {
             </form>
           </div>
           {projectDetails.uid === undefined && (
-
-            <section className='w-full'>
-          <ProjPhaseHome
-              projectDetails={projectDetails}
-              source={"ConstructModule"}
-              unitDetails={undefined}
-            />
-            </section>)}
+            <section className="w-full">
+              <ProjPhaseHome
+                projectDetails={projectDetails}
+                source={'ConstructModule'}
+                unitDetails={undefined}
+              />
+            </section>
+          )}
           {projectDetails.uid === undefined && (
             <section className="grid justify-center md:grid-cols-3 lg:grid-cols-4 gap-5 lg:gap-7 my-10 ">
               <div
@@ -226,7 +225,7 @@ const ConstructUnitsHome = ({ project }) => {
                       projectDetails?.projectType?.name
                     )
                       ? 'Import Units'
-                      : 'Import Project Units',
+                      : 'Import Apartment Units',
                     sliderData: {
                       phase: {},
                       block: {},

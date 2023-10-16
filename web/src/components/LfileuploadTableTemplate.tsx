@@ -444,9 +444,11 @@ const EnhancedTableToolbar = (props) => {
           </IconButton>
         </Tooltip>
       ) : sourceTab != 'all' &&
-        ['Import Units', 'Import Project Units', 'Import Plot Units'].includes(
-          title
-        ) ? (
+        [
+          'Import Units',
+          'Import Apartment Units',
+          'Import Plot Units',
+        ].includes(title) ? (
         <span style={{ display: 'flex' }}>
           {sourceTab === 'validR' && !unitUploadMessage && (
             <span className="ml-3">
@@ -621,7 +623,7 @@ export default function LfileuploadTableTemplate({
           id: 'unit_d',
           label: 'Unit Dimension*(m)',
           minWidth: 10,
-          align: 'left'
+          align: 'left',
         },
         {
           id: 'east_d',
@@ -695,10 +697,9 @@ export default function LfileuploadTableTemplate({
           format: (value) => value.toFixed(2),
         },
       ]
-    } else if (title === 'Import Project Units') {
+    } else if (title === 'Import Apartment Units') {
       columns = [
         { id: 'unit_no', label: 'unit_no', minWidth: 80 },
-        // { id: 'floor', label: 'floor', minWidth: 100 },
         {
           id: 'status',
           label: 'status',
@@ -714,29 +715,29 @@ export default function LfileuploadTableTemplate({
           format: (value) => value.toLocaleString('en-US'),
         },
         {
-          id: 'east',
-          label: 'east',
+          id: 'area_sqm',
+          label: 'Area sqm',
           minWidth: 10,
           align: 'left',
           format: (value) => value.toFixed(2),
         },
         {
-          id: 'west',
-          label: 'west',
+          id: 'area',
+          label: 'Area sqft',
           minWidth: 10,
           align: 'left',
           format: (value) => value.toFixed(2),
         },
         {
-          id: 'north',
-          label: 'north',
+          id: 'uds_sqm',
+          label: 'Uds sqm',
           minWidth: 10,
           align: 'left',
           format: (value) => value.toFixed(2),
         },
         {
-          id: 'south',
-          label: 'South',
+          id: 'uds_sqft',
+          label: 'Uds sft',
           minWidth: 10,
           align: 'left',
           format: (value) => value.toFixed(2),

@@ -18,6 +18,7 @@ import UnitSideViewCRM from '../A_CrmModule/CrmUnitSideView'
 import ViewDocxFile from '../A_LegalModule/viewDocxFile'
 import NotificationsSetupForm from '../A_ProjModule/NotificatoinsSetupFromHome'
 import AddTaskForm from '../A_TaskMan/AddTaskForm'
+import ViewEditTaskManForm from '../A_TaskMan/ViewEditTaskManForm'
 import AddBankDetailsForm from '../addBankDetailsForm'
 import AddBlockForm from '../AddBlockForm/AddBlockForm'
 import AdditionalChargesForm from '../AdditionalChargesForm/AdditionalChargesForm'
@@ -39,7 +40,6 @@ import PaymentScheduleForm from '../PaymentScheduleForm/PaymentScheduleForm'
 import ProjPhaseHome from '../ProjPhaseHome/ProjPhaseHome'
 import TransactionUpdateSideView from '../transactionUpdateSideView'
 import ViewUnitDetails from '../ViewUnitDetails'
-import ViewEditTaskManForm from '../A_TaskMan/ViewEditTaskManForm'
 
 const SiderForm = ({
   BlockFeed,
@@ -157,7 +157,11 @@ const SiderForm = ({
                   <AddTaskForm title={title} dialogOpen={setOpen} />
                 )}
                 {title === 'view_task_man' && (
-                  <ViewEditTaskManForm title={title} dialogOpen={setOpen} taskManObj={taskManObj}/>
+                  <ViewEditTaskManForm
+                    title={title}
+                    dialogOpen={setOpen}
+                    taskManObj={taskManObj}
+                  />
                 )}
                 {(title === 'Create Project' || title === 'Edit Project') && (
                   <DialogFormBody
@@ -181,7 +185,7 @@ const SiderForm = ({
                   />
                 )}
                 {title === 'Import Units' ||
-                  (title === 'Import Project Units' && (
+                  (title === 'Import Apartment Units' && (
                     <LeadsDropHomes
                       title={title}
                       dialogOpen={setOpen}

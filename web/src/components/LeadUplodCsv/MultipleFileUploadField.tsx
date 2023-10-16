@@ -252,7 +252,7 @@ export function MultipleFileUploadField({
         console.log('import stuff is', records)
         // await setfileRecords((existing) => [...existing, ...input.data])
         // set All records
-        if (['Import Units', 'Import Project Units'].includes(title)) {
+        if (['Import Units'].includes(title)) {
           console.log('import stuff is ', records)
           const clean1 = records.filter((row) => row['unit_no'] != '')
 
@@ -284,60 +284,61 @@ export function MultipleFileUploadField({
           // let x =   await getLedsData()
 
           await console.log('Finished: records', serialData, fileRecords)
-        }
-        else if (['Import Plot Units'].includes(title)) {
+        } else if (['Import Plot Units'].includes(title)) {
           console.log('import stuff is ', records)
-          const clean1 = records.filter((row) => row['Plot No.*'] != '')
-
+          const clean1 = records.filter((row) => {
+            return (
+              (row['Plot No.*'] != '' && row['Plot No.*'] != undefined) ||
+              (row['Unit No.*'] != '' && row['Unit No.*'] != undefined)
+            )
+          })
           // set duplicate & valid records
           // check in db if record exists with matched phone Number & email
           const serialData = await Promise.all(
             clean1.map(async (dRow) => {
-              console.log('input date is ', dRow)
               const foundLength = await checkIfUnitAlreadyExists(
                 `${orgId}_units`,
                 pId,
                 myPhase?.uid || '',
                 myBlock?.uid || '',
-                dRow['Plot No.*']
+                dRow['Plot No.*'] || dRow['Unit No.*']
               )
               // Plot Type*
               const computPlotObj = {
                 mode: await makeMode(foundLength),
                 pId,
-                phaseId: dRow[""] || 1,
-                blockId: dRow[""] || 1,
+                phaseId: dRow[''] || 1,
+                blockId: dRow[''] || 1,
                 Date: Timestamp.now().toMillis(),
-                unit_no: dRow["Plot No.*"],
-                survey_no: dRow["Survey No"] || "",
-                Katha_no: dRow["Katha No"],
-                PID_no: dRow["PID No"],
-                area: dRow["Plot area *(Sq.Ft)"],
-                area_sqm: dRow["Plot Area*(Sq.m)"],
-                sqft_rate: dRow["Rate Per Sqft"],
-                plc_per_sqft: dRow["PLC Per Sqft"],
-                size: dRow["Plot Size*"],
-                facing: dRow["Plot Type*"],
+                unit_no: dRow['Plot No.*'] || dRow['Unit No.*'],
+                survey_no: dRow['Survey No'] || '',
+                Katha_no: dRow['Katha No'],
+                PID_no: dRow['PID No'],
+                area: dRow['Plot area *(Sq.Ft)'],
+                area_sqm: dRow['Plot Area*(Sq.m)'],
+                sqft_rate: dRow['Rate Per Sqft'],
+                plc_per_sqft: dRow['PLC Per Sqft'],
+                size: dRow['Plot Size*'],
+                facing: dRow['Plot Type*'] || dRow['Unit Type*'],
                 unit_d: dRow['Unit Dimension*(m)'],
-                east_d: dRow["East Dimension*(m)"],
-                west_d: dRow["West Dimension*(m)"] || 0,
-                north_d: dRow["North Dimension*(m)"],
-                south_d: dRow["South Dimension*(m)"],
-                east_west_d: dRow[""] ||0,
-                north_south_d: dRow[""]||0,
-                north_sch_by: dRow["North Schedule Dimension*"],
-                south_sch_by: dRow["South Schedule Dimension*"],
-                east_sch_by: dRow["East Schedule Dimension*"],
-                west_sch_by: dRow["West Schedule Dimension*"],
-                status: dRow["Status"],
-                release_status: dRow["Release Status"],
-                mortgage_type: dRow["Mortgage Type"],
+                east_d: dRow['East Dimension*(m)'],
+                west_d: dRow['West Dimension*(m)'] || 0,
+                north_d: dRow['North Dimension*(m)'],
+                south_d: dRow['South Dimension*(m)'],
+                east_west_d: dRow[''] || 0,
+                north_south_d: dRow[''] || 0,
+                north_sch_by: dRow['North Schedule Dimension*'],
+                south_sch_by: dRow['South Schedule Dimension*'],
+                east_sch_by: dRow['East Schedule Dimension*'],
+                west_sch_by: dRow['West Schedule Dimension*'],
+                status: dRow['Status'],
+                release_status: dRow['Release Status'],
+                mortgage_type: dRow['Mortgage Type'],
                 intype: 'bulk',
                 unit_type: 'plot',
                 by: user?.email,
               }
               return await computPlotObj
-
             })
           )
 
@@ -345,7 +346,69 @@ export function MultipleFileUploadField({
           // let x =   await getLedsData()
 
           await console.log('Finished: records', serialData, fileRecords)
-        }else if (['Plan Diagram', 'Brouchers', 'Approvals'].includes(title)) {
+        } else if (['Import Apartment Units'].includes(title)) {
+          console.log('import stuff is ', records)
+          const clean1 = records.filter((row) => {
+            return (
+              (row['Plot No.*'] != '' && row['Plot No.*'] != undefined) ||
+              (row['Unit No.*'] != '' && row['Unit No.*'] != undefined)
+            )
+          })
+          // set duplicate & valid records
+          // check in db if record exists with matched phone Number & email
+          const serialData = await Promise.all(
+            clean1.map(async (dRow) => {
+              const foundLength = await checkIfUnitAlreadyExists(
+                `${orgId}_units`,
+                pId,
+                myPhase?.uid || '',
+                myBlock?.uid || '',
+                dRow['Plot No.*'] || dRow['Unit No.*']
+              )
+              // Plot Type*
+              const computPlotObj = {
+                mode: await makeMode(foundLength),
+                pId,
+                phaseId: dRow[''] || 1,
+                blockId: dRow[''] || 1,
+                Date: Timestamp.now().toMillis(),
+                unit_no: dRow['Plot No.*'] || dRow['Unit No.*'],
+                survey_no: dRow['Survey No'] || '',
+                Katha_no: dRow['Katha No'],
+                PID_no: dRow['PID No'],
+                area: dRow['Plot area *(Sq.Ft)'],
+                area_sqm: dRow['Plot Area*(Sq.m)'],
+                sqft_rate: dRow['Rate Per Sqft'],
+                plc_per_sqft: dRow['PLC Per Sqft'],
+                size: dRow['Plot Size*'],
+                facing: dRow['Plot Type*'] || dRow['Unit Type*'],
+                unit_d: dRow['Unit Dimension*(m)'],
+                east_d: dRow['East Dimension*(m)'],
+                west_d: dRow['West Dimension*(m)'] || 0,
+                north_d: dRow['North Dimension*(m)'],
+                south_d: dRow['South Dimension*(m)'],
+                east_west_d: dRow[''] || 0,
+                north_south_d: dRow[''] || 0,
+                north_sch_by: dRow['North Schedule Dimension*'],
+                south_sch_by: dRow['South Schedule Dimension*'],
+                east_sch_by: dRow['East Schedule Dimension*'],
+                west_sch_by: dRow['West Schedule Dimension*'],
+                status: dRow['Status'],
+                release_status: dRow['Release Status'],
+                mortgage_type: dRow['Mortgage Type'],
+                intype: 'bulk',
+                unit_type: 'plot',
+                by: user?.email,
+              }
+              return await computPlotObj
+            })
+          )
+
+          await setfileRecords(serialData)
+          // let x =   await getLedsData()
+
+          await console.log('Finished: records', serialData, fileRecords)
+        } else if (['Plan Diagram', 'Brouchers', 'Approvals'].includes(title)) {
           console.log('data os jere', records)
           // uploadFile(file)
           // upload pdf to cloud
@@ -459,11 +522,9 @@ export function MultipleFileUploadField({
         'Approvals',
         'legal_doc_upload',
       ].includes(title)
-        ? [
-
-          'legal_doc_upload',
-        ].includes(title)
-          ? '.doc, .docx':'.pdf'
+        ? ['legal_doc_upload'].includes(title)
+          ? '.doc, .docx'
+          : '.pdf'
         : '.csv, text/csv, .xlsx',
       maxSize: 40000 * 1024, // 1200KB
     })
@@ -514,7 +575,7 @@ export function MultipleFileUploadField({
               </a>
             </div>
           )}
-          {title === 'Import Project Units' && (
+          {title === 'Import Apartment Units' && (
             <div className="w-full flex flex-row justify-between ">
               <span></span>
               <a
@@ -529,7 +590,7 @@ export function MultipleFileUploadField({
               </a>
             </div>
           )}
-           {title === 'Import Plot Units' && (
+          {title === 'Import Plot Units' && (
             <div className="w-full flex flex-row justify-between ">
               <span></span>
               <a
@@ -619,7 +680,12 @@ export function MultipleFileUploadField({
                   onUpload={onUpload}
                   file={fileWrapper.file}
                 />
-                {['Plan Diagram', 'Brouchers', 'Approvals', 'legal_doc_upload'].includes(title) && (
+                {[
+                  'Plan Diagram',
+                  'Brouchers',
+                  'Approvals',
+                  'legal_doc_upload',
+                ].includes(title) && (
                   <Formik
                     initialValues={{
                       file_name: '',

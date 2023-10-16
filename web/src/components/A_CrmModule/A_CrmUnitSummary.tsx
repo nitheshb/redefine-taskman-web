@@ -251,47 +251,43 @@ const CrmUnitSummary = ({
                       </time>
                     </div>
                   )}
-              <div className="col-span-12 space-y-6 relative px-4 sm:col-span-8 sm:space-y-8 sm:before:absolute sm:before:top-2 sm:before:bottom-0 sm:before:w-0.5 sm:before:-left-3 before:dark:bg-gray-700">
+              <div className="col-span-12 space-y-6 relative px-4 sm:col-span-8 sm:space-y-8 sm:before:absolute sm:before:top-2 sm:before:bottom-0 sm:before:w-0.5 sm:before:-left-3 before:dark:bg-gray-200">
 
 
                 {unitFetchedActivityData?.map((data, i) => {
                   return (
                     <div
                       key={i}
-                      className="flex flex-col sm:relative sm:before:absolute sm:before:top-2 sm:before:w-4 sm:before:h-4 sm:before:rounded-full sm:before:left-[-35px] sm:before:z-[1] before:dark:bg-violet-400"
+                      className="flex flex-col sm:relative sm:before:absolute sm:before:top-2 sm:before:w-4 sm:before:h-4 sm:before:rounded-full sm:before:left-[-35px] sm:before:z-[1] before:dark:bg-violet-200"
                     >
                          <section>
-                        <span className="text-xs text-red-900 ">
-                          {data?.type?.toUpperCase()}
+                        <span className="text-md font-bold text-[#151F2B]">
+                          {/* {data?.type?.toUpperCase()} */}
+                          {data?.by}
                         </span>
-                        {"/"}
-                        <span className="text-xs text-red-900 ">
+
+                        <span className="text-xs text-red-900 ml-2 ">
                           {data?.subtype?.toUpperCase()} {'  '}
                         </span>
                       </section>
-                      <section>
-                        <span className="text-xs text-red-900 ">
+                      <section className="my-2">
+                        <span className="text-xs text-[#8E5100] font-bold bg-[#FDEED6] px-2 py-1 rounded-md ">
                           {data?.from?.toUpperCase()} {'  '}
                         </span>
-                        {'->'}
-                        <span className="text-xs text-red-900 ">
+                        <span className="text-gray-400 mx-1 font-bold">{'->'}</span>
+                        <span className="text-xs text-[#398A58] font-bold bg-[#D6F4E4] px-2 py-1 rounded-md  ">
                           {data?.to?.toUpperCase()} {'  '}
                         </span>
                       </section>
                       <span className="inline-flex flex-row items-center text-xs font-normal text-gray-500 ">
                         <ClockIcon className=" w-3 h-3 text-gray-300" />
-                        <span className="text-gray-400 ml-1 mr-4">
+                        <span className="text-gray-500 ml-1 mr-4">
                           {data?.type == 'ph'
                             ? timeConv(Number(data?.time)).toLocaleString()
                             : timeConv(data?.T).toLocaleString()}
                         </span>
                       </span>
-                      <span className="inline-flex flex-row items-center text-xs font-normal text-gray-500 ">
-                        <span className="text-green-900 ">by:</span>
-                        <span className="text-gray-400 ml-1 mr-4">
-                          {data?.by}
-                        </span>
-                      </span>
+
                     </div>
                   )
                 })}
