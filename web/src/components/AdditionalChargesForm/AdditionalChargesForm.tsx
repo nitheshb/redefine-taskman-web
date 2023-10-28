@@ -9,11 +9,14 @@ import { MaterialCRUDTable } from 'src/components/MaterialCRUDTable'
 import {
   costSheetAdditionalChargesA,
   csConstruAdditionalChargesA,
+  csPartATax,
+  gstValesPartA,
   gstValesA,
   unitsCancellation,
 } from 'src/constants/projects'
 import {
   addPhaseAdditionalCharges,
+  addPhasePartAtax,
   updatePhaseAdditionalCharges,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
@@ -23,9 +26,11 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
 
   const { orgId } = user
   const [tableData, setTableData] = useState([])
+  const [partAData, setPartAData] = useState([])
   const [iserror, setIserror] = useState(false)
   const [errorMessages, setErrorMessages] = useState([])
   const [editOpitionsObj, setEditOptions] = useState({})
+  const [editOpitionsObjPartA, setEditOptionsPartA] = useState({})
 
   useEffect(() => {
     if (source === 'projectManagement') {
@@ -37,6 +42,16 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
       })
     }
   }, [source, data, tableData])
+    useEffect(() => {
+    if (source === 'projectManagement') {
+      setEditOptionsPartA({
+        onRowAdd: async (newData) => await handleRowAddPartA(newData),
+        onRowUpdate: async (newData, oldData) =>
+          await handleRowUpdatePartA(newData, oldData),
+        onRowDelete: async (oldData) => await handleRowDeletePartA(oldData),
+      })
+    }
+  }, [source, data, tableData, partAData])
 
   useEffect(() => {
     const { phase } = data
@@ -47,6 +62,8 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
         ? ConstructOtherChargesObj
         : additonalChargesObj
     setTableData(x)
+    setPartAData(phase?.partATaxObj || [])
+
     console.log('phase is ', phase, x)
   }, [data, blocksViewFeature])
 
@@ -206,6 +223,80 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
     },
   ]
 
+
+  // partA columns
+  const partAcolumns = [
+    {
+      title: 'Charges For*',
+      field: 'component',
+      headerStyle: {
+        padding: '0.25rem',
+      },
+      cellStyle: {
+        padding: '0.25rem',
+      },
+      render: (rowData) => {
+        return rowData?.component?.label
+      },
+      editComponent: ({ value, onChange, rowData }) => {
+        return (
+          <Select
+            name="component"
+            onChange={(value_x) => {
+              onChange(value_x)
+            }}
+            options={
+              blocksViewFeature === 'Construction_Other_Charges'
+                ? csPartATax
+                : csPartATax
+            }
+            value={defaultValue(
+              blocksViewFeature === 'Construction_Other_Charges'
+                ? csPartATax
+                : csPartATax,
+              value
+            )}
+            className="text-md mr-2"
+          />
+        )
+      },
+      // editComponent: ({ value, onChange }) => (
+      //   <input
+      //     placeholder="Charges For"
+      //     className="w-full min-w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 px-2"
+      //     autoComplete="off"
+      //     onChange={(e) => onChange(e.target.value)}
+      //     value={value}
+      //   />
+      // ),
+    },
+    {
+      title: 'GST*',
+      field: 'gst',
+      headerStyle: {
+        padding: '0.25rem',
+      },
+      cellStyle: {
+        padding: '0.25rem',
+      },
+      render: (rowData) => rowData?.gst?.label,
+      editComponent: ({ value, onChange, rowData }) => {
+        return (
+          <Select
+            name="Chargesdropdown"
+            onChange={(value_x) => {
+              onChange(value_x)
+            }}
+            options={gstValesPartA}
+            value={defaultValue(gstValesPartA, value)}
+            className="text-md mr-2"
+          />
+        )
+      },
+    },
+
+  ]
+
   // const getCharges = async () => {
   //   const { projectId, uid } = data?.phase || {}
 
@@ -252,6 +343,19 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
     // }
     return errorList
   }
+  const partAerrors = (formData) => {
+    //validating the data inputs
+    const errorList = []
+    if (!formData.component) {
+      errorList.push("Try Again, You didn't enter the Charges For field")
+    }
+
+    if (!formData.gst) {
+      errorList.push("Try Again, You didn't enter the gst field")
+    }
+
+    return errorList
+  }
   //function for updating the existing row details
   const handleRowUpdate = async (newData, oldData) => {
     const { uid, additonalChargesObj } = data?.phase || {}
@@ -274,6 +378,26 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
         : 'additonalChargesObj',
       enqueueSnackbar
     )
+  }  //function for updating the existing row details
+  const handleRowUpdatePartA = async (newData, oldData) => {
+    const { uid, additonalChargesObj } = data?.phase || {}
+
+    console.log('check this stuff', partAData, additonalChargesObj)
+    const c = await partAData.map((e) => {
+      console.log('check this stuff',e.myId, oldData.myId, e.myId === oldData.myId, newData)
+      if (e.myId === oldData.myId) {
+        return newData
+      }
+      return e
+    })
+    console.log('check this stuff', tableData, c)
+    await updatePhaseAdditionalCharges(
+      orgId,
+      uid,
+      c,
+    'partATaxObj',
+      enqueueSnackbar
+    )
   }
 
   //function for deleting a row
@@ -291,17 +415,27 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
       enqueueSnackbar
     )
     // await deleteAdditionalCharge(oldData?.uid, enqueueSnackbar)
+  }  //function for deleting a row
+  const handleRowDeletePartA = async (oldData) => {
+    const { uid } = data?.phase || {}
+    const c = partAData.filter((e) => e.myId != oldData.myId)
+    console.log('check this stuff', c)
+    await updatePhaseAdditionalCharges(
+      orgId,
+      uid,
+      c,
+     'partATaxObj',
+      enqueueSnackbar
+    )
+    // await deleteAdditionalCharge(oldData?.uid, enqueueSnackbar)
   }
 
   //function for adding a new row to the table
   const handleRowAdd = async (newData) => {
-    console.log('newData is', newData)
-
     setIserror(false)
     setErrorMessages([])
     const errorList = errors(newData)
     if (errorList.length < 1) {
-      console.log('newData is inside yo', newData)
       const { projectId, uid } = data?.phase || {}
 
       const additonalChargesObj = {
@@ -322,8 +456,66 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
       setIserror(true)
     }
   }
+  //function for adding a new row to the table
+  const handleRowAddPartA = async (newData) => {
+    console.log('newData is', newData)
+    setIserror(false)
+    setErrorMessages([])
+    const errorList = partAerrors(newData)
+    if (errorList.length < 1) {
+      console.log('newData is inside yo', newData)
+      const { projectId, uid } = data?.phase || {}
+
+      const additonalChargesObj = {
+        ...newData,
+      }
+      // await createAdditonalCharges(additonalChargesObj, enqueueSnackbar)
+      await addPhasePartAtax(
+        orgId,
+        uid,
+        additonalChargesObj,
+        'partATaxObj',
+        enqueueSnackbar
+      )
+    } else {
+      setErrorMessages(errorList)
+      setIserror(true)
+    }
+  }
 
   return (
+
+    <section>
+
+<div className=" min">
+          <MaterialCRUDTable
+            title=""
+            columns={partAcolumns}
+            data={partAData}
+            options={{
+              headerStyle: {
+                borderRadius: 0,
+                borderBottomWidth: '2px',
+              },
+              actionsColumnIndex: -1,
+              paging: false,
+              doubleHorizontalScroll: true,
+              position: 'absolute'
+            }}
+            style={{
+              padding: '0px 30px',
+              borderRadius: '0px',
+              boxShadow: 'none',
+
+            }}
+            actionsCellStyle={{
+              width: 'auto',
+              justifyCenter: 'center',
+            }}
+            source={source}
+            editable={editOpitionsObjPartA}
+          />
+        </div>
     <div className="h-full shadow-xl flex flex-col  mb-6 bg-[#F1F5F9] rounded-t overflow-y-scroll">
       <div className="z-10">
         {/* <Dialog.Title className="font-semibold text-xl mr-auto ml-3 text-[#053219]">
@@ -377,6 +569,7 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
         </div>
       </div>
     </div>
+    </section>
   )
 }
 

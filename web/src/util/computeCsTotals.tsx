@@ -5,7 +5,7 @@ export const computeTotal = (obj, sqftArea) => {
   const chargesAre = Number(charges)
 
   if (value === 'costpersqft') {
-    console.log('checked fig is', sqftArea, chargesAre, gst?.value)
+    // console.log('checked fig is', sqftArea, chargesAre, gst?.value)
     const total = Math.round(sqftArea * chargesAre)
 
     const gstTotal = Math.round(

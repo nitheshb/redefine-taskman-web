@@ -724,6 +724,12 @@ export const steamLeadById = (orgId, snapshot, data, error) => {
   return onSnapshot(doc(db, `${orgId}_leads`, uid), snapshot, error)
   // return onSnapshot(itemsQuery, snapshot, error)
 }
+export const streamUnitById = (orgId, snapshot, data, error) => {
+  // const itemsQuery = query(doc(db, `${orgId}_leads_log', 'W6sFKhgyihlsKmmqDG0r'))
+  const { uid } = data
+  return onSnapshot(doc(db, `${orgId}_units`, uid), snapshot, error)
+  // return onSnapshot(itemsQuery, snapshot, error)
+}
 // stream
 export const getLeadsByStatus = (orgId, snapshot, data, error) => {
   const { projAccessA, isCp } = data
@@ -1013,6 +1019,18 @@ export const getLeadbyId1 = async (orgId, uid) => {
 }
 export const getCRMdocById1 = async (orgId, uid) => {
   const docRef = doc(db, `${orgId}_customers`, uid)
+  const docSnap = await getDoc(docRef)
+
+  if (docSnap.exists()) {
+    // console.log('Document data:', docSnap.data())
+    return docSnap.data()
+  } else {
+    // doc.data() will be undefined in this case
+    console.log('No such document!')
+  }
+}
+export const getCrmUnitById1 = async (orgId, uid) => {
+  const docRef = doc(db, `${orgId}_units`, uid)
   const docSnap = await getDoc(docRef)
 
   if (docSnap.exists()) {
@@ -2807,6 +2825,32 @@ export const addPhaseAdditionalCharges = async (
     })
   }
 }
+export const addPhasePartAtax = async (
+  orgId,
+  uid,
+  chargePayload,
+  type,
+  enqueueSnackbar
+) => {
+  const usersUpdate = {}
+
+  const uuxid = uuidv4()
+  usersUpdate[uuxid] = chargePayload
+  chargePayload.myId = uuxid
+  try {
+    await updateDoc(doc(db, `${orgId}_phases`, uid), {
+      [type]: arrayUnion(chargePayload),
+    })
+    enqueueSnackbar('Charges added successfully', {
+      variant: 'success',
+    })
+  } catch (e) {
+    console.log(' error is here', e)
+    enqueueSnackbar(e.message, {
+      variant: 'error',
+    })
+  }
+}
 export const updateLeadSourcesItem = async (
   orgId,
   uid,
@@ -2829,6 +2873,28 @@ export const updateLeadSourcesItem = async (
   }
 }
 export const updatePhaseAdditionalCharges = async (
+  orgId,
+  uid,
+  chargePayloadA,
+  type,
+  enqueueSnackbar
+) => {
+  try {
+    await updateDoc(doc(db, `${orgId}_phases`, uid), {
+      [type]: chargePayloadA,
+    })
+    enqueueSnackbar('Charges updated successfully', {
+      variant: 'success',
+    })
+  } catch (e) {
+    console.log(' error is here', e)
+    enqueueSnackbar(e.message, {
+      variant: 'error',
+    })
+  }
+}
+
+export const updatePhasePartACharges = async (
   orgId,
   uid,
   chargePayloadA,

@@ -318,19 +318,24 @@ const CostBreakUpPdfPreview = ({
     const y = costSheetA
     let total = 0
     let gstTotal = 0
+    const gstTaxForProjA = selPhaseObj?.partATaxObj.filter((d)=> d?.component.value === 'sqft_cost_tax')
+    const gstTaxIs = gstTaxForProjA.length >0 ? gstTaxForProjA[0]?.gst?.value: 0
+    const plcGstForProjA = selPhaseObj?.partATaxObj.filter((d)=> d?.component.value === 'plc_tax')
+    const plcGstIs = plcGstForProjA.length >0 ? plcGstForProjA[0]?.gst?.value: 0
 
     if (csMode === 'plot_cs') {
       total = Math.round(selUnitDetails?.area * newValue)
-      gstTotal = Math.round(total * 0.05)
+      gstTotal = Math.round(total * gstTaxIs)
     } else {
       total = Math.round(selUnitDetails?.super_built_up_area * newValue)
       gstTotal = Math.round(
-        Number(selUnitDetails?.super_built_up_area * newValue) * 0.05
+        Number(selUnitDetails?.super_built_up_area * newValue) * gstTaxIs
       )
     }
 
     y[inx].charges = newValue
     y[inx].TotalSaleValue = total
+    y[inx].gst.label = gstTaxIs
     y[inx].gst.value = gstTotal
     y[inx].TotalNetSaleValueGsT = total + gstTotal
 

@@ -228,7 +228,7 @@ const CostBreakUpSheet = ({
     const initformValues = {}
     merged.map((d) => {
       const x = d['component']['value']
-      console.log('initial values ', x, d?.charges)
+      console.log('initial values ', x, d?.charges, d)
       initformValues[`${x}`] = d?.charges
     })
     console.log('initial values ', initformValues)
@@ -362,7 +362,7 @@ const CostBreakUpSheet = ({
       dat.charges = data[dat?.component?.value]
       return dat
     })
-    console.log('customer sheet form new values is', newCostSheetA)
+    console.log('${uid}', newCostSheetA, uid)
     // newCostSheetA.push(x)
     // i need unit_uID & unit details
     const xData = {}
@@ -371,7 +371,7 @@ const CostBreakUpSheet = ({
       oldUnitDetailsObj: selUnitDetails,
       newSqftPrice: Number(newSqftPrice),
       soldPrice: Number(soldPrice),
-      costSheetA: newCostSheetA,
+      costSheetA: costSheetA,
     }
 
     updateLeadCostSheetDetailsTo(
@@ -395,7 +395,7 @@ const CostBreakUpSheet = ({
             <div className="bg-[white] rounded-b-md">
               <div className=" mt-">
                 <div className=" pb-1">
-               
+
                   <div
                     className="flex flex-row justify-between   py-3 px-3  mt-[0.5px] mb-0 rounded-xs bg-[#F2F5F8]"
                     style={{ flex: '4 0 100%' }}
@@ -701,7 +701,7 @@ const CostBreakUpSheet = ({
                         initialValues={initialState}
                         validationSchema={validate}
                         onSubmit={(values, { resetForm }) => {
-                          console.log('i was clicked')
+                          console.log('i was clicked', values)
                           onSubmit(values, resetForm)
                         }}
                       >
@@ -819,6 +819,7 @@ const CostBreakUpSheet = ({
                                   user={user}
                                     selUnitDetails={selUnitDetails}
                                     myObj={newPlotCostSheetA}
+                                    newPlotPS={newPlotPS}
                                     myAdditionalCharges={newAdditonalChargesObj}
                                     netTotal={netTotal}
                                     setNetTotal={setNetTotal}

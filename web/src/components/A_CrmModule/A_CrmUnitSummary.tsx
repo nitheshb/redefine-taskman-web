@@ -7,7 +7,9 @@ import { steamUnitActivityLog } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import { supabase } from 'src/context/supabase'
 import { activeLogNameHelper } from 'src/util/activityLogHelper'
+import { computeTotal } from 'src/util/computeCsTotals'
 import { timeConv } from 'src/util/dateConverter'
+import PdfUnitSummaryFile from 'src/util/PDF_Files/pdfUnitSummaryFile'
 
 import CrmUnitCostSheetView from './CrmCostSheetView'
 import CrmUnitPaymentSchedule from './CrmPaymentSchedule'
@@ -17,9 +19,6 @@ import CrmUnitDetailsView1 from './CrmUnitDetailsView1'
 import CrmUnitFinanceHistory from './CrmUnitFinanceHistory'
 import CrmUnitHeader from './CrmUnitHeader'
 import CrmUnitPaymentGraph from './CrmUnitPaymentGraph'
-import PdfInvoiceGenerator from 'src/util/PdfInvoiceGenerator'
-import PdfUnitSummaryFile from 'src/util/PDF_Files/pdfUnitSummaryFile'
-import { computeTotal } from 'src/util/computeCsTotals'
 
 const CrmUnitSummary = ({
   selCustomerPayload: selUnitPayload,
@@ -134,7 +133,6 @@ const CrmUnitSummary = ({
     await console.log('new setup ', y)
   }
   const setTotalFun = async () => {
-
     const partBTotal = selUnitPayload?.additonalChargesObj?.reduce(
       (partialSum, obj) =>
         partialSum +
@@ -147,17 +145,16 @@ const CrmUnitSummary = ({
       0
     )
 
-
     const partATotal = selUnitPayload?.plotCS.reduce(
-      (partialSum, obj) => partialSum + Number(obj?.TotalNetSaleValueGsT),0)
+      (partialSum, obj) => partialSum + Number(obj?.TotalNetSaleValueGsT),
+      0
+    )
 
-
-      console.log('myObj', partATotal)
+    console.log('myObj', partATotal)
 
     setPartBTotal(partBTotal)
     setPartATotal(partATotal)
     setNetTotal(partATotal + partBTotal)
-
   }
 
   return (
@@ -188,21 +185,19 @@ const CrmUnitSummary = ({
                 </div>
               </div>
               <PdfUnitSummaryFile
-                  user={user}
-                    selUnitDetails={selUnitPayload}
-                    myObj={newPlotCostSheetA}
-                    myAdditionalCharges={newAdditonalChargesObj}
-                    netTotal={netTotal}
-                    setNetTotal={setNetTotal}
-                    partATotal={partATotal}
-                    partBTotal={partBTotal}
-                    setPartATotal={setPartATotal}
-                    setPartBTotal={setPartBTotal}
-                    projectDetails={[]}
-                  leadDetailsObj1={[]}
-
-                  />
-
+                user={user}
+                selUnitDetails={selUnitPayload}
+                myObj={newPlotCostSheetA}
+                myAdditionalCharges={newAdditonalChargesObj}
+                netTotal={netTotal}
+                setNetTotal={setNetTotal}
+                partATotal={partATotal}
+                partBTotal={partBTotal}
+                setPartATotal={setPartATotal}
+                setPartBTotal={setPartBTotal}
+                projectDetails={[]}
+                leadDetailsObj1={[]}
+              />
             </div>
 
             {/* <CrmUnitHeader projectDetails={selUnitPayload} /> */}
@@ -234,33 +229,31 @@ const CrmUnitSummary = ({
               Activity
             </span>
             <div className="relative col-span-12 px-4 space-y-2 sm:col-span-9 mt-3">
-            {unitFetchedActivityData?.length == 0 && (
-                    <div className="py-8 px-8 flex flex-col items-center">
-                      <div className="font-md font-medium text-xs mb-4 text-gray-800 items-center">
-                        <img
-                          className="w-[200px] h-[200px] inline"
-                          alt=""
-                          src="/templates.svg"
-                        />
-                      </div>
-                      <h3 className="mb-1 text-sm font-semibold text-gray-900 ">
-                        Timeline is Empty
-                      </h3>
-                      <time className="block mb-2 text-sm font-normal leading-none text-gray-400 ">
-                        This scenario is very rare to view
-                      </time>
-                    </div>
-                  )}
+              {unitFetchedActivityData?.length == 0 && (
+                <div className="py-8 px-8 flex flex-col items-center">
+                  <div className="font-md font-medium text-xs mb-4 text-gray-800 items-center">
+                    <img
+                      className="w-[200px] h-[200px] inline"
+                      alt=""
+                      src="/templates.svg"
+                    />
+                  </div>
+                  <h3 className="mb-1 text-sm font-semibold text-gray-900 ">
+                    Timeline is Empty
+                  </h3>
+                  <time className="block mb-2 text-sm font-normal leading-none text-gray-400 ">
+                    This scenario is very rare to view
+                  </time>
+                </div>
+              )}
               <div className="col-span-12 space-y-6 relative px-4 sm:col-span-8 sm:space-y-8 sm:before:absolute sm:before:top-2 sm:before:bottom-0 sm:before:w-0.5 sm:before:-left-3 before:dark:bg-gray-200">
-
-
                 {unitFetchedActivityData?.map((data, i) => {
                   return (
                     <div
                       key={i}
                       className="flex flex-col sm:relative sm:before:absolute sm:before:top-2 sm:before:w-4 sm:before:h-4 sm:before:rounded-full sm:before:left-[-35px] sm:before:z-[1] before:dark:bg-violet-200"
                     >
-                         <section>
+                      <section>
                         <span className="text-md font-bold text-[#151F2B]">
                           {/* {data?.type?.toUpperCase()} */}
                           {data?.by}
@@ -274,7 +267,9 @@ const CrmUnitSummary = ({
                         <span className="text-xs text-[#8E5100] font-bold bg-[#FDEED6] px-2 py-1 rounded-md ">
                           {data?.from?.toUpperCase()} {'  '}
                         </span>
-                        <span className="text-gray-400 mx-1 font-bold">{'->'}</span>
+                        <span className="text-gray-400 mx-1 font-bold">
+                          {'->'}
+                        </span>
                         <span className="text-xs text-[#398A58] font-bold bg-[#D6F4E4] px-2 py-1 rounded-md  ">
                           {data?.to?.toUpperCase()} {'  '}
                         </span>
@@ -287,7 +282,6 @@ const CrmUnitSummary = ({
                             : timeConv(data?.T).toLocaleString()}
                         </span>
                       </span>
-
                     </div>
                   )
                 })}

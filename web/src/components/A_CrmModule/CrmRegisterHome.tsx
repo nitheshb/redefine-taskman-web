@@ -2921,6 +2921,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
         setOpen={setisUnitDetailsOpen}
         title={'unitDetails_crm_view'}
         customerDetails={selUnitDetails}
+        setSelUnitDetails={setSelUnitDetails}
         widthClass="max-w-7xl"
         transactionData={transactionData}
         unitsViewMode={false}

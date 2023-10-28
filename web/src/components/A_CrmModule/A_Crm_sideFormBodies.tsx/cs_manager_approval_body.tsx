@@ -32,7 +32,6 @@ import { USER_ROLES } from 'src/constants/userRoles'
 import { getPhasesByProject } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import CostBreakUpEditor from 'src/util/costBreakUpEditor'
-import CostBreakUpPdf from 'src/util/costBreakUpPdf'
 
 import CSBody from './cs_body'
 
@@ -121,7 +120,7 @@ export default function CSManagerApprovalBody({
             Customer Details
           </p>
 
-          <span>Harsha</span>
+          <span>{selUnitPayload?.customerDetailsObj?.customerName1}</span>
           <span>8722-198-016</span>
         </div>
         <div className="flex flex-col text-right">

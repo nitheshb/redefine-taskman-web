@@ -57,6 +57,7 @@ import {
   updateUnitStatus,
   steamUsersListByDept,
   updateUnitCrmOwner,
+  streamUnitById,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import { storage } from 'src/context/firebaseConfig'
@@ -168,6 +169,7 @@ export default function UnitSideViewCRM({
   transactionData,
   customerDetails,
   selCustomerPayload,
+  setSelUnitDetails,
   selSubMenu,
   selSubMenu2,
 }) {
@@ -227,6 +229,7 @@ export default function UnitSideViewCRM({
   const [timeHide, setTimeHide] = useState(false)
   const [statusValidError, setStatusValidError] = useState(false)
   const [newStatusErrorList, setNewStatusErrorList] = useState('')
+  const [unitPayload, setUnitPayload] = useState({})
 
   const [selProjectIs, setSelProjectIs] = useState({
     projectName: '',
@@ -236,7 +239,13 @@ export default function UnitSideViewCRM({
   const [leadDetailsObj, setLeadDetailsObj] = useState({})
   useEffect(() => {
     console.log('hello', customerDetails)
+    streamUnitDataFun()
+
   }, [])
+
+  useEffect(()=> {
+    setSelUnitDetails(unitPayload)
+  }, [unitPayload])
 
   const {
     id,
@@ -266,6 +275,24 @@ export default function UnitSideViewCRM({
   } = customerDetails
 
   const totalIs = 0
+
+  const streamUnitDataFun = () => {
+    const { id } = customerDetails
+    console.log('hello', customerDetails)
+    const z = streamUnitById(
+      orgId,
+      (querySnapshot) => {
+        const SnapData = querySnapshot.data()
+        SnapData.id = id
+        console.log('hello', SnapData)
+        setUnitPayload(SnapData)
+      },
+      { uid: id },
+      () => {
+        console.log('error')
+      }
+    )
+  }
   useEffect(() => {
     const count = projectList.filter(
       (dat) => dat.uid == selCustomerPayload?.pId
@@ -1179,6 +1206,7 @@ export default function UnitSideViewCRM({
           </>
         )}
       </div>
+
 
       <UnitFullSummary
         customerDetails={customerDetails}

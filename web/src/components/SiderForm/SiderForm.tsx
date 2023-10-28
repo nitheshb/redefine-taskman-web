@@ -29,7 +29,6 @@ import ConstructUnitsDetails from '../ConstructModule/ConstructUnitsDetails'
 import CrmUnitSideView from '../crmUnitSideView'
 import DialogFormBody from '../DialogFormBody/DialogFormBody'
 import InventoryViewSideForm from '../DialogFormBody/InventoryViewSideView'
-import AddPaymentDetailsForm from '../FinanceModule/BookingPaymentForm'
 import CaptureUnitPayment from '../FinanceModule/CapturePayment'
 import LeadProfileSideView from '../LeadProfileSideView'
 import LegalDocsUplaodHome from '../LeadUplodCsv/Legal_Docs_upload'
@@ -66,6 +65,7 @@ const SiderForm = ({
   setUnitsViewMode,
   selCustomerPayload,
   selUnitDetails,
+  setSelUnitDetails,
   selPhaseObj,
   selSubMenu,
   selSubMenu2,
@@ -437,6 +437,7 @@ const SiderForm = ({
                     setUnitsViewMode={setUnitsViewMode}
                     transactionData={transactionData}
                     selCustomerPayload={selCustomerPayload}
+                    setSelUnitDetails={setSelUnitDetails}
                     selSubMenu={selSubMenu}
                     selSubMenu2={selSubMenu2}
                   />

@@ -349,6 +349,39 @@ export const gstValesA = [
     label: '18%',
   },
 ]
+
+export const gstValesPartA = [
+  {
+    value: 0,
+    label: '0%',
+  },
+  {
+    value: 0.05,
+    label: '5%',
+  },
+  {
+    value: 0.1,
+    label: '10%',
+  },
+  {
+    value: '0.12',
+    label: '12%',
+  },
+  {
+    value: '0.18',
+    label: '18%',
+  },
+]
+export const csPartATax = [
+  {
+    value: 'sqft_cost_tax',
+    label: 'sqft_cost_Gst',
+  },
+  {
+    value: 'plc_tax',
+    label: 'PLC Gst',
+  },
+]
 export const costSheetAdditionalChargesA = [
   {
     value: 'carparking',

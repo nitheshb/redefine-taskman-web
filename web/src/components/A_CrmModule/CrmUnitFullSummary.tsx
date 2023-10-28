@@ -75,6 +75,7 @@ import BankSelectionSwitchDrop from '../A_LoanModule/BankSelectionDroopDown'
 import LoanApplyFlowHome from '../A_LoanModule/LoanApplyFlowHome'
 
 import { supabase } from 'src/context/supabase'
+
 import ShowCustomerDetails from './CrmShowCustomerDetails'
 
 // interface iToastInfo {
@@ -223,7 +224,6 @@ export default function UnitFullSummary({
     assignT,
     CT,
   } = customerDetails
-
 
   const totalIs = 0
   useEffect(() => {
@@ -518,8 +518,7 @@ export default function UnitFullSummary({
     window.location.href = url
   }
   const getLeadsDataFun = async () => {
-
-    if(id == undefined) return
+    if (id == undefined) return
     console.log('ami triggered')
     const unsubscribe = steamLeadActivityLog(
       orgId,
@@ -556,7 +555,7 @@ export default function UnitFullSummary({
         console.log('my total fetched list is 1', doc.data())
         const usersList = doc.data()
         const usersListA = []
-if(usersList == undefined) return
+        if (usersList == undefined) return
         const sMapStsA = []
         console.log('this is what we found', usersList?.staA)
         setschStsA(usersList?.staA || [])
@@ -1130,33 +1129,34 @@ if(usersList == undefined) return
       </div>
       {selFeature === 'applicant_info' && (
         <>
-        {!openApplicantEdit && <div className="  mt-2 pb-[250px] overflow-auto no-scrollbar  h-[100%] overflow-y-scroll">
-          <ShowCustomerDetails
-            source="fromBookedUnit"
-            title="Booking Form"
-            selUnitDetails={selCustomerPayload}
-            leadDetailsObj2={selCustomerPayload}
-            setShowApplicantEdit= {setShowApplicantEdit}
-          />
-        </div>}
-         {openApplicantEdit && <div className="  mt-2 pb-[250px] overflow-auto no-scrollbar  h-[100%] overflow-y-scroll">
-          <AddApplicantDetails
-            source="fromBookedUnit"
-            title="Booking Form"
-            selUnitDetails={selCustomerPayload}
-            leadDetailsObj2={selCustomerPayload}
-            setShowApplicantEdit= {setShowApplicantEdit}
-          />
-        </div>}
+          {!openApplicantEdit && (
+            <div className="  mt-2 pb-[250px] overflow-auto no-scrollbar  h-[100%] overflow-y-scroll">
+              <ShowCustomerDetails
+                source="fromBookedUnit"
+                title="Booking Form"
+                selUnitDetails={selCustomerPayload}
+                leadDetailsObj2={selCustomerPayload}
+                setShowApplicantEdit={setShowApplicantEdit}
+              />
+            </div>
+          )}
+          {openApplicantEdit && (
+            <div className="  mt-2 pb-[250px] overflow-auto no-scrollbar  h-[100%] overflow-y-scroll">
+              <AddApplicantDetails
+                source="fromBookedUnit"
+                title="Booking Form"
+                selUnitDetails={selCustomerPayload}
+                leadDetailsObj2={selCustomerPayload}
+                setShowApplicantEdit={setShowApplicantEdit}
+              />
+            </div>
+          )}
         </>
-
       )}
       {selFeature === 'unit_information' && (
         <>
           <div className="flex flex-col  my-10 rounded-lg bg-white border border-gray-100 px-4 m-4 mt-4">
             <div className="py-3 grid grid-cols-4 mb-4">
-
-
               <section className="flex flex-col bg-[#F6F7FF] p-3 border border-[#e5e7f8] rounded-md mb-2">
                 <section className="flex flow-row justify-between mb-1">
                   <div className="font-md text-xs text-gray-700 tracking-wide">
@@ -1481,11 +1481,7 @@ if(usersList == undefined) return
                 })
               }}
             >
-              <DocRow
-                id={doc?.id}
-                fileName={doc?.name}
-                date={doc?.time}
-              />
+              <DocRow id={doc?.id} fileName={doc?.name} date={doc?.time} />
             </section>
           ))}
         </section>

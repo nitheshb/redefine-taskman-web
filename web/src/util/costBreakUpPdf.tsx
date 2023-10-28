@@ -15,6 +15,8 @@ import CostBreakUpPdfPreview from './costBreakUpPdfPreview'
 import { TextFieldFlat } from './formFields/TextFieldFlatType'
 
 import '../styles/myStyles.css'
+import { updateLeadCostSheetDetailsTo } from 'src/context/dbQueryFirebase'
+import { useSnackbar } from 'notistack'
 
 const CostBreakUpPdf = ({
   projectDetails,
@@ -41,6 +43,8 @@ const CostBreakUpPdf = ({
   setPartBTotal,
 }) => {
   const { user } = useAuth()
+  const { orgId } = user
+  const { enqueueSnackbar } = useSnackbar()
   const ref = createRef()
 
   useEffect(() => {
@@ -64,6 +68,7 @@ const CostBreakUpPdf = ({
   }, [costSheetA, selPhaseObj])
 
   useEffect(() => {
+    console.log('what is this ', costSheetA)
     setNewPlotCsObj(costSheetA)
   }, [newSqftPrice])
 
@@ -80,14 +85,25 @@ const CostBreakUpPdf = ({
     const z =
       leadDetailsObj1[`${uid}_cs`]?.newPLC || selUnitDetails?.plc_per_sqft
 
-    const plotTotalSaleValue = Number.isFinite(y)
+    const plotSaleValue = Number.isFinite(y)
       ? Number(selUnitDetails?.selUnitDetails?.area * y)
       : Number(
           selUnitDetails?.area *
             (selUnitDetails?.rate_per_sqft || selUnitDetails?.sqft_rate)
         )
-
-    const plot_gstValue = Math.round(plotTotalSaleValue) * 0.05
+    const plcSaleValue =   Math.round(
+      selUnitDetails?.super_built_up_area ||
+        selUnitDetails?.area *
+          (selUnitDetails?.plc || selUnitDetails?.plc_per_sqft)
+    )
+    const gstTaxForProjA = selPhaseObj?.partATaxObj.filter((d)=> d?.component.value === 'sqft_cost_tax')
+    const gstTaxIs = gstTaxForProjA.length >0 ? gstTaxForProjA[0]?.gst?.value: 0
+    const plcGstForProjA = selPhaseObj?.partATaxObj.filter((d)=> d?.component.value === 'plc_tax')
+    const plcGstIs = plcGstForProjA.length >0 ? plcGstForProjA[0]?.gst?.value: 0
+    const plot_gstValue = Math.round(plotSaleValue) * gstTaxIs
+    const plc_gstValue = Math.round(
+      plcSaleValue * plcGstIs
+    )
     console.log(
       'gen costSheetA values are ',
       Number.isFinite(y),
@@ -114,12 +130,12 @@ const CostBreakUpPdf = ({
           },
           others: selUnitDetails?.rate_per_sqft || selUnitDetails?.sqft_rate,
           charges: selUnitDetails?.sqft_rate,
-          TotalSaleValue: plotTotalSaleValue,
+          TotalSaleValue: plotSaleValue,
           gst: {
             label: '0.05',
             value: plot_gstValue,
           },
-          TotalNetSaleValueGsT: plotTotalSaleValue + plot_gstValue,
+          TotalNetSaleValueGsT: plotSaleValue + plot_gstValue,
           // others: selUnitDetails?.rate_per_sqft || selUnitDetails?.sqft_rate,
           // charges: Number.isFinite(y) ? y : selUnitDetails?.rate_per_sqft || selUnitDetails?.sqft_rate,
           // TotalSaleValue: Number.isFinite(y)
@@ -160,32 +176,15 @@ const CostBreakUpPdf = ({
           charges: Number.isFinite(z)
             ? z
             : selUnitDetails?.plc || selUnitDetails?.plc_per_sqft,
-          TotalSaleValue: Math.round(
-            selUnitDetails?.super_built_up_area ||
-              selUnitDetails?.area *
-                (selUnitDetails?.plc || selUnitDetails?.plc_per_sqft)
-          ),
+          TotalSaleValue:  plcSaleValue,
           // charges: y,
           gst: {
             label: '0.05',
-            value: Math.round(
-              Number(
-                selUnitDetails?.super_built_up_area ||
-                  selUnitDetails?.area * (selUnitDetails?.plc || 200)
-              ) * 0.05
-            ),
+            value: plc_gstValue,
           },
           TotalNetSaleValueGsT:
-            Math.round(
-              selUnitDetails?.super_built_up_area ||
-                selUnitDetails?.area * (selUnitDetails?.plc || 200)
-            ) +
-            Math.round(
-              Number(
-                selUnitDetails?.super_built_up_area ||
-                  selUnitDetails?.area * (selUnitDetails?.plc || 200)
-              ) * 0.05
-            ),
+          plcSaleValue +
+            plc_gstValue,
         },
       ]
     } else {
@@ -410,7 +409,7 @@ const CostBreakUpPdf = ({
     xData[`${uid}${'_cs'}`] = {
       oldUnitDetailsObj: selUnitDetails,
       newSqftPrice: Number(newSqftPrice),
-      soldPrice: Number(soldPrice),
+      soldPrice: Number(selUnitDetails?.sqft_rate),
       costSheetA: newCostSheetA,
     }
 
@@ -427,19 +426,22 @@ const CostBreakUpPdf = ({
     const y = costSheetA
     let total = 0
     let gstTotal = 0
-
+    const gstTaxForProjA = selPhaseObj?.partATaxObj.filter((d)=> d?.component.value === 'sqft_cost_tax')
+    const gstTaxIs = gstTaxForProjA.length >0 ? gstTaxForProjA[0]?.gst?.value: 0
+    const plcGstForProjA = selPhaseObj?.partATaxObj.filter((d)=> d?.component.value === 'plc_tax')
     if (csMode === 'plot_cs') {
       total = Math.round(selUnitDetails?.area * newValue)
-      gstTotal = Math.round(total * 0.05)
+      gstTotal = Math.round(total * gstTaxIs)
     } else {
       total = Math.round(selUnitDetails?.super_built_up_area * newValue)
       gstTotal = Math.round(
-        Number(selUnitDetails?.super_built_up_area * newValue) * 0.05
+        Number(selUnitDetails?.super_built_up_area * newValue) * gstTaxIs
       )
     }
 
     y[inx].charges = newValue
     y[inx].TotalSaleValue = total
+    y[inx].gst.label = gstTaxIs
     y[inx].gst.value = gstTotal
     y[inx].TotalNetSaleValueGsT = total + gstTotal
     console.log('gen costSheetA', y)
@@ -457,6 +459,7 @@ const CostBreakUpPdf = ({
             initialValues={initialState}
             validationSchema={validate}
             onSubmit={(values, { resetForm }) => {
+              console.log('new value is ', resetForm)
               onSubmit(values, resetForm)
             }}
           >
@@ -694,7 +697,7 @@ const CostBreakUpPdf = ({
                                   </td>
                                   <td className="text-[12px] px-2 text-right text-gray-700 ">
                                     {/* {Number(d1?.charges)?.toLocaleString('en-IN')} */}
-                                    {Number(
+                                    ₹{Number(
                                       computeTotal(d1, selUnitDetails?.area)
                                     )?.toLocaleString('en-IN')}
                                   </td>

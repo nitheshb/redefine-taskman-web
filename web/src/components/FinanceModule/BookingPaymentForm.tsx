@@ -166,6 +166,7 @@ const AddPaymentDetailsForm = ({
   const onSubmitFun = async (data, resetForm) => {
     console.log(
       'submitted data is ',
+
       newPlotCostSheetA,
       newConstructCostSheetA,
       newPlotCsObj,
@@ -244,7 +245,7 @@ const AddPaymentDetailsForm = ({
 
     x1.push('pending')
     const finPayload = {
-      by: 'nitheshreddy.email@gmail.com',
+      by: user?.email,
       type: 'schedule',
       pri: 'priority 1',
       notes: 'Need to verify a cheque payment of 1,00,000',
@@ -253,7 +254,7 @@ const AddPaymentDetailsForm = ({
       ct: Timestamp.now().toMillis(),
     }
     const crmPayload = {
-      by: 'nitheshreddy.email@gmail.com',
+      by: user?.email,
       type: 'schedule',
       pri: 'priority 1',
       notes: 'Assign a CRM Executive to new customer Raju',
@@ -262,7 +263,7 @@ const AddPaymentDetailsForm = ({
       ct: Timestamp.now().toMillis(),
     }
     const projectPaylaod = {
-      by: 'nitheshreddy.email@gmail.com',
+      by: user?.email,
       type: 'schedule',
       pri: 'priority 1',
       notes: 'CostSheet approval request for subhaEcone flat 101',
@@ -347,7 +348,7 @@ const AddPaymentDetailsForm = ({
 
         //paymentScheduleObj
       },
-      'nitheshreddy.email@gmail.com',
+      user?.email,
       enqueueSnackbar
     )
 
@@ -379,7 +380,7 @@ const AddPaymentDetailsForm = ({
       uid,
       id,
       unitUpdate,
-      'nitheshreddy.email@gmail.com',
+      user?.email,
       enqueueSnackbar,
       resetForm
     )
@@ -393,14 +394,14 @@ const AddPaymentDetailsForm = ({
       id,
       leadDetailsObj2?.Status,
       'booked',
-      'nitheshreddy.email@gmail.com',
+      user?.email,
       enqueueSnackbar
     )
     updateProjectCounts(
       orgId,
       leadDetailsObj2?.ProjectId,
       { soldVal: T_elgible, t_collect: amount },
-      'nitheshreddy.email@gmail.com',
+      user?.email,
       enqueueSnackbar
     )
     handleClick()

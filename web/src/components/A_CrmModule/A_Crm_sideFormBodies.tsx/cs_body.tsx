@@ -166,7 +166,7 @@ const CSBody = ({
               Number(
                 selUnitDetails?.super_built_up_area ||
                   selUnitDetails?.plot_Sqf * (selUnitDetails?.plc || 200)
-              ) * 0.05
+              ) * 0.00
             ),
           },
           TotalNetSaleValueGsT:

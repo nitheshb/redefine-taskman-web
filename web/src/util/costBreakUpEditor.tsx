@@ -80,11 +80,44 @@ const CostBreakUpEditor = ({
       }
     })
   }
-  const handlePriceChange = (index, price) => {
+  const handlePriceChangePartB = (index, price) => {
     console.log('changed price is ', price)
     const updatedRows = [...partBPayload]
     updatedRows[index].charges = price
     setPartBPayload(updatedRows)
+    setTotalFun(costSheetA, partBPayload)
+
+  }
+  const handlePriceChangePartA = (inx, newValue) => {
+    console.log('changed price is ', newValue)
+    const updatedRows = [...costSheetA]
+
+
+
+    const y = costSheetA
+    let total = 0
+    let gstTotal = 0
+    const gstTaxForProjA = selPhaseObj?.partATaxObj.filter((d)=> d?.component.value === 'sqft_cost_tax')
+    const gstTaxIs = gstTaxForProjA.length >0 ? gstTaxForProjA[0]?.gst?.value: 0
+    const plcGstForProjA = selPhaseObj?.partATaxObj.filter((d)=> d?.component.value === 'plc_tax')
+    if (csMode === 'plot_cs') {
+      total = Math.round(selUnitDetails?.area * newValue)
+      gstTotal = Math.round(total * gstTaxIs)
+    } else {
+      total = Math.round(selUnitDetails?.super_built_up_area * newValue)
+      gstTotal = Math.round(
+        Number(selUnitDetails?.super_built_up_area * newValue) * gstTaxIs
+      )
+    }
+
+    y[inx].charges = newValue
+    y[inx].TotalSaleValue = total
+    y[inx].gst.label = gstTaxIs
+    y[inx].gst.value = gstTotal
+    y[inx].TotalNetSaleValueGsT = total + gstTotal
+
+    updatedRows[inx].charges = newValue
+    setCostSheetA(y)
     setTotalFun(costSheetA, partBPayload)
 
   }
@@ -109,7 +142,7 @@ const CostBreakUpEditor = ({
     setPartBTotal(partBTotal)
     console.log('sel unti details =>', partBTotal )
     setPartATotal(partATotal)
-    CreateNewPsFun(partATotal + partBTotal, plotBookingAdv, csMode)
+    CreateNewPsFun(netTotal, plotBookingAdv, csMode)
     setNetTotal(partATotal + partBTotal)
     selUnitDetails?.fullPs?.map((data) => {
       if (data?.stage?.value === 'on_booking') {
@@ -265,11 +298,10 @@ const CostBreakUpEditor = ({
                                       onChange={(e) => {
                                         // setNewSqftPrice(e.target.value)
 
-                                        formik.setFieldValue(
-                                          'unit_cost_charges',
-                                          e.target.value
-                                        )
+
                                         setNewSqftPrice(Number(e.target.value))
+                                        handlePriceChangePartA(inx, e.target.value
+                                          )
                                         // changeOverallCostFun(
                                         //   inx,
                                         //   d1,
@@ -392,7 +424,7 @@ const CostBreakUpEditor = ({
                                         //   d1,
                                         //   e.target.value
                                         // )
-                                        handlePriceChange(inx, e.target.value)
+                                        handlePriceChangePartB(inx, e.target.value)
                                         // console.log('value sis',e , d1)
                                       }}
                                       value={d1?.charges}

@@ -447,6 +447,7 @@ const MyDocument = ({
   user,
   selUnitDetails,
   myObj,
+  newPlotPS,
   myAdditionalCharges,
   netTotal,
   projectDetails,
@@ -819,22 +820,22 @@ const MyDocument = ({
                 </View>
               </View>
             </View>
-            {invoiceDet[i].PaymentItems.map((item, index) => (
+            {newPlotPS.map((item, index) => (
               <View style={[styles.tableRow, styles.ml1]} key={item.id}>
                 <View style={[styles.tableCell_1, styles.pl2]}>
                   <Text>{index + 1}</Text>
                 </View>
 
                 <View style={styles.tableCell_4}>
-                  <Text style={styles.subtitle2}>{item.title}</Text>
+                  <Text style={styles.subtitle2}>{item.stage?.label}</Text>
                 </View>
 
                 <View style={styles.tableCell_5}>
-                  <Text>{item.timeline}</Text>
+                  <Text>{item.description}</Text>
                 </View>
 
                 <View style={[styles.tableCell_3, styles.alignRight]}>
-                  <Text>{fCurrency(item.total)}</Text>
+                  <Text>{fCurrency(item.value)}</Text>
                 </View>
               </View>
             ))}
@@ -843,7 +844,7 @@ const MyDocument = ({
 
               <View style={[styles.tableCell_4, styles.ml1]}>
                 <Text style={styles.subtitle2}>
-                  Total Plot Cost
+                  Total Cost
                 </Text>
               </View>
 
@@ -852,7 +853,7 @@ const MyDocument = ({
               <View style={styles.tableCell_3}></View>
 
               <View style={[styles.tableCell_3, styles.alignRight]}>
-                <Text>{fCurrency(invoiceDet[i].payment.total)}</Text>
+                <Text>{fCurrency(netTotal)}</Text>
               </View>
             </View>
           </View>
@@ -879,6 +880,7 @@ const PdfInvoiceGenerator = ({
   user,
   selUnitDetails,
   myObj,
+  newPlotPS,
   myAdditionalCharges,
   netTotal,
   setNetTotal,
@@ -889,6 +891,7 @@ const PdfInvoiceGenerator = ({
   projectDetails,
   leadDetailsObj1,
 }) => {
+  console.log('overall cost sheet is ', newPlotPS)
   return (
     <div>
       {' '}
@@ -898,6 +901,7 @@ const PdfInvoiceGenerator = ({
             user={user}
             selUnitDetails={selUnitDetails}
             myObj={myObj}
+            newPlotPS={newPlotPS}
             myAdditionalCharges={myAdditionalCharges}
             netTotal={netTotal}
             setNetTotal={setNetTotal}
