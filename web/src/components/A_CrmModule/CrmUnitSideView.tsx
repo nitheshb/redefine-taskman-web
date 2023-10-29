@@ -977,7 +977,7 @@ export default function UnitSideViewCRM({
 
                       <span className=" ml-1 text-[12px] h-[20px] text-[#823d00] font-bodyLato font-[600] mt-[2px] bg-[#ffeccf] px-[6px] py-[2px] rounded-xl mr-1 ">
                                           Booked:{' '}
-                                          {prettyDate(selCustomerPayload?.Date || 0)}
+                                          {prettyDate(selCustomerPayload?.booked_on || 0)}
                                         </span>
                     </p>
                   </section>

@@ -5,9 +5,11 @@ import { Checkbox } from '@mui/material'
 import { PDFExport } from '@progress/kendo-react-pdf'
 import { Timestamp } from 'firebase/firestore'
 import { Field, Form, Formik } from 'formik'
+import { useSnackbar } from 'notistack'
 import * as Yup from 'yup'
 
 import CrmUnitHeader from 'src/components/A_CrmModule/CrmUnitHeader'
+import { updateLeadCostSheetDetailsTo } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 
 import { computeTotal } from './computeCsTotals'
@@ -15,8 +17,6 @@ import CostBreakUpPdfPreview from './costBreakUpPdfPreview'
 import { TextFieldFlat } from './formFields/TextFieldFlatType'
 
 import '../styles/myStyles.css'
-import { updateLeadCostSheetDetailsTo } from 'src/context/dbQueryFirebase'
-import { useSnackbar } from 'notistack'
 
 const CostBreakUpPdf = ({
   projectDetails,
@@ -54,7 +54,6 @@ const CostBreakUpPdf = ({
 
   const [newSqftPrice, setNewSqftPrice] = useState(0)
 
-
   const [plotBookingAdv, setPlotBookingAdv] = useState(0)
   const [partBPayload, setPartBPayload] = useState([])
   const [psPayload, setPSPayload] = useState([])
@@ -91,19 +90,23 @@ const CostBreakUpPdf = ({
           selUnitDetails?.area *
             (selUnitDetails?.rate_per_sqft || selUnitDetails?.sqft_rate)
         )
-    const plcSaleValue =   Math.round(
+    const plcSaleValue = Math.round(
       selUnitDetails?.super_built_up_area ||
         selUnitDetails?.area *
           (selUnitDetails?.plc || selUnitDetails?.plc_per_sqft)
     )
-    const gstTaxForProjA = selPhaseObj?.partATaxObj.filter((d)=> d?.component.value === 'sqft_cost_tax')
-    const gstTaxIs = gstTaxForProjA.length >0 ? gstTaxForProjA[0]?.gst?.value: 0
-    const plcGstForProjA = selPhaseObj?.partATaxObj.filter((d)=> d?.component.value === 'plc_tax')
-    const plcGstIs = plcGstForProjA.length >0 ? plcGstForProjA[0]?.gst?.value: 0
-    const plot_gstValue = Math.round(plotSaleValue) * gstTaxIs
-    const plc_gstValue = Math.round(
-      plcSaleValue * plcGstIs
+    const gstTaxForProjA = selPhaseObj?.partATaxObj.filter(
+      (d) => d?.component.value === 'sqft_cost_tax'
     )
+    const gstTaxIs =
+      gstTaxForProjA.length > 0 ? gstTaxForProjA[0]?.gst?.value : 0
+    const plcGstForProjA = selPhaseObj?.partATaxObj.filter(
+      (d) => d?.component.value === 'plc_tax'
+    )
+    const plcGstIs =
+      plcGstForProjA.length > 0 ? plcGstForProjA[0]?.gst?.value : 0
+    const plot_gstValue = Math.round(plotSaleValue) * gstTaxIs
+    const plc_gstValue = Math.round(plcSaleValue * plcGstIs)
     console.log(
       'gen costSheetA values are ',
       Number.isFinite(y),
@@ -114,6 +117,29 @@ const CostBreakUpPdf = ({
     )
     let x = []
     if (csMode === 'plot_cs') {
+      additonalChargesObj.map((data, inx) => {
+        let total = 0
+        let gstTotal = 0
+        const isChargedPerSqft = data?.units.value === 'costpersqft'
+        // const gstTaxIs =
+        //   gstTaxForProjA.length > 0 ? gstTaxForProjA[0]?.gst?.value : 0
+        const gstPercent = Number(data?.gst?.value) >1 ? data?.gst?.value *0.01 : data?.gst?.value
+        total = isChargedPerSqft
+          ? Number(
+              selUnitDetails?.super_built_up_area || selUnitDetails?.area
+            ) * Number(data?.charges)
+          : Number(data?.charges)
+
+        gstTotal = Math.round(total * gstPercent)
+
+        console.log('myvalue is ', data)
+        data.TotalSaleValue = total
+        data.gst.label = gstTaxIs
+        // data.gst.value = gstTotal
+        data.gstValue = gstTotal
+        data.TotalNetSaleValueGsT = total + gstTotal
+        return data
+      })
       setPartBPayload(additonalChargesObj)
       setAddiChargesObj(additonalChargesObj)
       setPSPayload(paymentScheduleObj)
@@ -131,36 +157,12 @@ const CostBreakUpPdf = ({
           others: selUnitDetails?.rate_per_sqft || selUnitDetails?.sqft_rate,
           charges: selUnitDetails?.sqft_rate,
           TotalSaleValue: plotSaleValue,
+          gstValue: plot_gstValue,
           gst: {
             label: '0.05',
-            value: plot_gstValue,
+            value: gstTaxIs,
           },
           TotalNetSaleValueGsT: plotSaleValue + plot_gstValue,
-          // others: selUnitDetails?.rate_per_sqft || selUnitDetails?.sqft_rate,
-          // charges: Number.isFinite(y) ? y : selUnitDetails?.rate_per_sqft || selUnitDetails?.sqft_rate,
-          // TotalSaleValue: Number.isFinite(y)
-          //   ? Number(selUnitDetails?.plot_Sqf * y)
-          //   : Number(selUnitDetails?.plot_Sqf * selUnitDetails?.rate_per_sqft),
-          // // charges: y,
-          // gst: {
-          //   label: '0.05',
-          //   value: Number.isFinite(y)
-          //     ? Number(selUnitDetails?.plot_Sqf * y)
-          //     : Math.round(
-          //         selUnitDetails?.plot_Sqf * selUnitDetails?.rate_per_sqft
-          //       ) * 0.05,
-          // },
-          // TotalNetSaleValueGsT:
-          //   (Number.isFinite(y)
-          //     ? Number(selUnitDetails?.plot_Sqf * y)
-          //     : Number(
-          //         selUnitDetails?.plot_Sqf * selUnitDetails?.rate_per_sqft
-          //       )) +
-          //   (Number.isFinite(y)
-          //     ? Number(selUnitDetails?.plot_Sqf * y)
-          //     : Math.round(
-          //         selUnitDetails?.plot_Sqf * selUnitDetails?.rate_per_sqft
-          //       ) * 0.05),
         },
         {
           myId: '2',
@@ -176,15 +178,14 @@ const CostBreakUpPdf = ({
           charges: Number.isFinite(z)
             ? z
             : selUnitDetails?.plc || selUnitDetails?.plc_per_sqft,
-          TotalSaleValue:  plcSaleValue,
+          TotalSaleValue: plcSaleValue,
           // charges: y,
+          gstValue: plc_gstValue,
           gst: {
             label: '0.05',
-            value: plc_gstValue,
+            value: plcGstIs,
           },
-          TotalNetSaleValueGsT:
-          plcSaleValue +
-            plc_gstValue,
+          TotalNetSaleValueGsT: plcSaleValue + plc_gstValue,
         },
       ]
     } else {
@@ -426,9 +427,14 @@ const CostBreakUpPdf = ({
     const y = costSheetA
     let total = 0
     let gstTotal = 0
-    const gstTaxForProjA = selPhaseObj?.partATaxObj.filter((d)=> d?.component.value === 'sqft_cost_tax')
-    const gstTaxIs = gstTaxForProjA.length >0 ? gstTaxForProjA[0]?.gst?.value: 0
-    const plcGstForProjA = selPhaseObj?.partATaxObj.filter((d)=> d?.component.value === 'plc_tax')
+    const gstTaxForProjA = selPhaseObj?.partATaxObj.filter(
+      (d) => d?.component.value === 'sqft_cost_tax'
+    )
+    const gstTaxIs =
+      gstTaxForProjA.length > 0 ? gstTaxForProjA[0]?.gst?.value : 0
+    const plcGstForProjA = selPhaseObj?.partATaxObj.filter(
+      (d) => d?.component.value === 'plc_tax'
+    )
     if (csMode === 'plot_cs') {
       total = Math.round(selUnitDetails?.area * newValue)
       gstTotal = Math.round(total * gstTaxIs)
@@ -534,7 +540,7 @@ const CostBreakUpPdf = ({
                               {costSheetA?.map((d1, inx) => (
                                 <tr
                                   key={inx}
-                                  className="py-1 my-2 h-[40px] border-b border-dashed py-[24px]"
+                                  className="py-1 my-2 h-[32px]  py-[24px]"
                                 >
                                   <th className="w-[40%] px-2 text-[11px] text-left text-gray-700  ">
                                     {d1?.component?.label}
@@ -542,7 +548,7 @@ const CostBreakUpPdf = ({
                                   <td className="w-[15%]  px-2 text-[12px] text-right text-gray-700 ">
                                     <TextFieldFlat
                                       label=""
-                                      className="w-[100%] text-[12px] text-right font-bold border  border-[#919eab33] rounded pr-1 py-[4px] text-[#B76E00]"
+                                      className="w-[100%] text-[12px] text-right font-bold border-b  border-[#B76E00] border-dashed pr-1 py-[4px] text-[#B76E00]"
                                       name="ratePerSqft"
                                       onChange={(e) => {
                                         // setNewSqftPrice(e.target.value)
@@ -598,8 +604,7 @@ const CostBreakUpPdf = ({
                                       !showGstCol ? 'hidden' : ''
                                     } w-[15%] px-2 text-[12px] text-right text-slate-500 text-sm `}
                                   >
-                                    ₹
-                                    {d1?.TotalSaleValue?.toLocaleString(
+                                    ₹{d1?.TotalSaleValue?.toLocaleString(
                                       'en-IN'
                                     )}
                                   </td>
@@ -608,7 +613,7 @@ const CostBreakUpPdf = ({
                                       !showGstCol ? 'hidden' : ''
                                     } w-[15%] px-2 text-[12px] text-right text-slate-500 text-sm  `}
                                   >
-                                    ₹{d1?.gst?.value?.toLocaleString('en-IN')}
+                                    ₹{d1?.gstValue?.toLocaleString('en-IN')}
                                   </td>
                                   <td className="w-[15%] px-2 text-[12px] text-right text-slate-900 ">
                                     ₹
@@ -622,16 +627,7 @@ const CostBreakUpPdf = ({
                                 <th className="w-[40%] text-[12px] text-left text-[#118D57] pl-2 ">
                                   Total (A)
                                 </th>
-                                <td className="w-[15%] px-2 font-bold text-[12px] text-right text-gray-600 pr-3">
-                                  ₹
-                                  {costSheetA
-                                    .reduce(
-                                      (partialSum, obj) =>
-                                        partialSum + Number(obj?.charges),
-                                      0
-                                    )
-                                    ?.toLocaleString('en-IN')}
-                                </td>
+                                <td className="w-[15%] px-2 font-bold text-[12px] text-right text-gray-600 pr-3"></td>
                                 <td
                                   className={`${
                                     !showGstCol ? 'hidden' : ''
@@ -692,22 +688,69 @@ const CostBreakUpPdf = ({
                                     {d1?.component?.label}
                                     {/* {d1?.units?.value === 'costpersqft' && `(${d1?.charges}% on Sale value)`} */}
                                   </th>
-                                  <td className="text-[12px] px-2 text-left text-gray-700 ">
-                                    {d1?.description}
+                                  <td className="w-[15%]  px-2 text-[12px] text-right text-gray-700 ">
+                                    {d1?.charges}
+                                  </td>
+                                  <td
+                                    className={`${
+                                      !showGstCol ? 'hidden' : ''
+                                    } w-[15%] px-2 text-[12px] text-right text-slate-500 text-sm `}
+                                  >
+                                    ₹{d1?.TotalSaleValue?.toLocaleString(
+                                      'en-IN'
+                                    )}
+                                  </td>
+                                  <td
+                                    className={`${
+                                      !showGstCol ? 'hidden' : ''
+                                    } w-[15%] px-2 text-[12px] text-right text-slate-500 text-sm  `}
+                                  >
+                                    ₹{d1?.gstValue?.toLocaleString('en-IN')}
                                   </td>
                                   <td className="text-[12px] px-2 text-right text-gray-700 ">
                                     {/* {Number(d1?.charges)?.toLocaleString('en-IN')} */}
-                                    ₹{Number(
+                                    ₹
+                                    {Number(
                                       computeTotal(d1, selUnitDetails?.area)
                                     )?.toLocaleString('en-IN')}
                                   </td>
                                 </tr>
                               ))}
                               <tr className=" h-[32px] ">
-                                <th className="text-[12px] px-2 text-left  text-[#118D57] ">
+                                <th className="w-[40%] text-[12px] px-2 text-left  text-[#118D57] ">
                                   Total (B)
                                 </th>
-                                <td className="text-[12px] px-2 text-right text-gray-400 "></td>
+                                <td className="w-[15%] px-2 font-bold text-[12px] text-right text-gray-600 pr-3"></td>
+                                <td
+                                  className={`${
+                                    !showGstCol ? 'hidden' : ''
+                                  } w-[15%] px-2 font-bold  text-[12px] text-right text-gray-800 `}
+                                >
+                                  ₹
+                                  {partBPayload
+                                    .reduce(
+                                      (partialSum, obj) =>
+                                        partialSum +
+                                        Number(obj?.TotalSaleValue),
+                                      0
+                                    )
+                                    ?.toLocaleString('en-IN')}
+                                </td>
+                                <td
+                                  className={`${
+                                    !showGstCol ? 'hidden' : ''
+                                  } w-[15%] px-2 font-bold  text-[12px] text-right text-gray-800 `}
+                                >
+                                  ₹
+                                  {partBPayload
+                                    .reduce(
+                                      (partialSum, obj) =>
+                                        partialSum +
+                                        Number(obj?.gstValue),
+                                      0
+                                    )
+                                    ?.toLocaleString('en-IN')}
+                                </td>
                                 <td className="text-[12px] px-2 text-right text-[#118D57] font-bold ">
                                   ₹{partBTotal?.toLocaleString('en-IN')}
                                 </td>
@@ -821,7 +864,6 @@ const CostBreakUpPdf = ({
           partATotal={partATotal}
           partBTotal={partBTotal}
           netTotal={netTotal}
-
         />
       )}
     </div>

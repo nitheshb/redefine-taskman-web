@@ -348,7 +348,9 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
           // setBoardData
           console.log('my Array data is ', usersListA, crmCustomersDBData)
           // await serealizeData(usersListA)
-
+          usersListA.sort((a, b) => {
+            return b?.booked_on || 0  - b?.booked_on || 0
+          })
           await setCrmCustomerDBData(usersListA)
           if (statusFil === 'booked') {
             await setBookingReviewA(usersListA)
@@ -766,7 +768,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                         </section>
                                         <span className=" text-[10px] h-[20px] text-[#823d00] font-bodyLato font-[600] mt-[2px] bg-[#ffeccf] px-[6px] py-[2px] rounded-xl mr-1 ">
                                           Booked:{' '}
-                                          {prettyDate(finData?.Date || 0)}
+                                          {prettyDate(finData?.booked_on || finData?.ct || 0)}
                                         </span>
                                         {/* <span className=" text-[8px] h-[18px] text-black font-bodyLato font-[600] mt-[2px] bg-[#ffeccf] px-[6px] py-[2px] rounded-xl mr-1 ">
                                         Status:{' '}

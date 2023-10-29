@@ -83,23 +83,46 @@ const CostBreakUpEditor = ({
   const handlePriceChangePartB = (index, price) => {
     console.log('changed price is ', price)
     const updatedRows = [...partBPayload]
+    console.log('new value is ', partBPayload)
     updatedRows[index].charges = price
+
+    let total = 0
+    let gstTotal = 0
+    const isChargedPerSqft = updatedRows[index]?.units.value === 'costpersqft'
+
+    const gstPercent = Number(updatedRows[index]?.gst?.value) >1 ? updatedRows[index]?.gst?.value *0.01 : updatedRows[index]?.gst?.value
+    total = isChargedPerSqft
+      ? Number(
+          selUnitDetails?.super_built_up_area || selUnitDetails?.area
+        ) * Number(updatedRows[index]?.charges)
+      : Number(updatedRows[index]?.charges)
+
+    gstTotal = Math.round(total * gstPercent)
+
+    // console.log('myvalue is ', data)
+    updatedRows[index].TotalSaleValue = total
+    // updatedRows[index].gst.label = gstTaxIs
+
+    updatedRows[index].gstValue = gstTotal
+    updatedRows[index].TotalNetSaleValueGsT = total + gstTotal
     setPartBPayload(updatedRows)
     setTotalFun(costSheetA, partBPayload)
-
   }
   const handlePriceChangePartA = (inx, newValue) => {
     console.log('changed price is ', newValue)
     const updatedRows = [...costSheetA]
 
-
-
     const y = costSheetA
     let total = 0
     let gstTotal = 0
-    const gstTaxForProjA = selPhaseObj?.partATaxObj.filter((d)=> d?.component.value === 'sqft_cost_tax')
-    const gstTaxIs = gstTaxForProjA.length >0 ? gstTaxForProjA[0]?.gst?.value: 0
-    const plcGstForProjA = selPhaseObj?.partATaxObj.filter((d)=> d?.component.value === 'plc_tax')
+    const gstTaxForProjA = selPhaseObj?.partATaxObj.filter(
+      (d) => d?.component.value === 'sqft_cost_tax'
+    )
+    const gstTaxIs =
+      gstTaxForProjA.length > 0 ? gstTaxForProjA[0]?.gst?.value : 0
+    const plcGstForProjA = selPhaseObj?.partATaxObj.filter(
+      (d) => d?.component.value === 'plc_tax'
+    )
     if (csMode === 'plot_cs') {
       total = Math.round(selUnitDetails?.area * newValue)
       gstTotal = Math.round(total * gstTaxIs)
@@ -119,12 +142,11 @@ const CostBreakUpEditor = ({
     updatedRows[inx].charges = newValue
     setCostSheetA(y)
     setTotalFun(costSheetA, partBPayload)
-
   }
   const setTotalFun = async (costSheetA, partBPayload) => {
     console.log('ami here', partBPayload, costSheetA, selUnitDetails)
 
-    const partBTotal = partBPayload.reduce(
+    const partBTotal = partBPayload?.reduce(
       (partialSum, obj) =>
         partialSum +
         Number(
@@ -135,12 +157,12 @@ const CostBreakUpEditor = ({
         ),
       0
     )
-    const partATotal = costSheetA.reduce(
+    const partATotal = costSheetA?.reduce(
       (partialSum, obj) => partialSum + Number(obj?.TotalNetSaleValueGsT),
       0
     )
     setPartBTotal(partBTotal)
-    console.log('sel unti details =>', partBTotal )
+    console.log('sel unti details =>', partBTotal)
     setPartATotal(partATotal)
     CreateNewPsFun(netTotal, plotBookingAdv, csMode)
     setNetTotal(partATotal + partBTotal)
@@ -151,15 +173,14 @@ const CostBreakUpEditor = ({
     })
   }
   const CreateNewPsFun = (netTotal, plotBookingAdv, csMode) => {
-    console.log('sel unti details', psPayload, netTotal, partATotal ,partBTotal)
+    console.log('sel unti details', psPayload, netTotal, partATotal, partBTotal)
     const newPs = psPayload.map((d1) => {
       const z = d1
       console.log('sel unti details')
       if (csMode === 'plot_cs') {
         z.value = ['on_booking'].includes(d1?.stage?.value)
           ? Number(d1?.percentage)
-         : Math.round((netTotal - plotBookingAdv) * (d1?.percentage / 100))
-
+          : Math.round((netTotal - plotBookingAdv) * (d1?.percentage / 100))
 
         z.preCheck = ['on_booking'].includes(d1?.stage?.value)
           ? Number(netTotal)
@@ -285,7 +306,7 @@ const CostBreakUpEditor = ({
                               {costSheetA?.map((d1, inx) => (
                                 <tr
                                   key={inx}
-                                  className="py-1 my-2 h-[40px] border-b border-dashed py-[24px]"
+                                  className="py-1 my-2 h-[40px]  py-[24px]"
                                 >
                                   <th className="w-[40%] px-2 text-[11px] text-left text-gray-700  ">
                                     {d1?.component?.label}
@@ -293,15 +314,16 @@ const CostBreakUpEditor = ({
                                   <td className="w-[15%]  px-2 text-[12px] text-right text-gray-700 ">
                                     <TextFieldFlat
                                       label=""
-                                      className="w-[100%] text-[12px] text-right font-bold border  border-[#919eab33] rounded pr-1 py-[4px] text-[#B76E00]"
+                                      className="w-[100%] text-[12px] text-right font-bold border-b  border-[#B76E00] border-dashed pr-1 py-[4px] text-[#B76E00]"
                                       name="ratePerSqft"
                                       onChange={(e) => {
                                         // setNewSqftPrice(e.target.value)
 
-
                                         setNewSqftPrice(Number(e.target.value))
-                                        handlePriceChangePartA(inx, e.target.value
-                                          )
+                                        handlePriceChangePartA(
+                                          inx,
+                                          e.target.value
+                                        )
                                         // changeOverallCostFun(
                                         //   inx,
                                         //   d1,
@@ -346,16 +368,7 @@ const CostBreakUpEditor = ({
                                 <th className="w-[40%] text-[12px] text-left text-[#118D57] pl-2 ">
                                   Total (A)
                                 </th>
-                                <td className="w-[15%] px-2 font-bold text-[12px] text-right text-gray-600 pr-3">
-                                  ₹
-                                  {costSheetA
-                                    .reduce(
-                                      (partialSum, obj) =>
-                                        partialSum + Number(obj?.charges),
-                                      0
-                                    )
-                                    ?.toLocaleString('en-IN')}
-                                </td>
+                                <td className="w-[15%] px-2 font-bold text-[12px] text-right text-gray-600 pr-3"></td>
                                 <td
                                   className={`${
                                     !showGstCol ? 'hidden' : ''
@@ -363,7 +376,7 @@ const CostBreakUpEditor = ({
                                 >
                                   ₹
                                   {costSheetA
-                                    .reduce(
+                                    ?.reduce(
                                       (partialSum, obj) =>
                                         partialSum +
                                         Number(obj?.TotalSaleValue),
@@ -378,7 +391,7 @@ const CostBreakUpEditor = ({
                                 >
                                   ₹
                                   {costSheetA
-                                    .reduce(
+                                    ?.reduce(
                                       (partialSum, obj) =>
                                         partialSum + Number(obj?.gst?.value),
                                       0
@@ -394,57 +407,112 @@ const CostBreakUpEditor = ({
                           <table className="w-full mt-1">
                             <tbody>
                               {partBPayload?.map((d1, inx) => (
-                                <tr
-                                  key={inx}
-                                  className="h-[32px] border-b border-dashed"
-                                >
-                                  <th className=" text-[12px] px-2 text-left text-gray-700 ">
+                                <tr key={inx} className="py-1 my-2 h-[32px]  ">
+                                  <th className="w-[40%] px-2 text-[11px] text-left text-gray-700  ">
                                     {d1?.component?.label}
                                   </th>
-                                  <td className="text-[12px] px-2 text-left text-gray-700 ">
-                                    {d1?.description}
-                                  </td>
-                                  <td className="text-[12px] px-2 text-right text-gray-700 ">
-                                    {/* {Number(
-                                      computeTotal(d1, selUnitDetails?.area)
-                                    )?.toLocaleString('en-IN')} */}
+                                  <td className="w-[15%]  px-2 text-[12px] text-right text-gray-700 ">
                                     <TextFieldFlat
                                       label=""
-                                      className="w-[100%] text-[12px] text-right font-bold border  border-[#919eab33] rounded pr-1 py-[4px] text-[#B76E00]"
-                                      name="rate_by"
+                                      className="w-[100%] text-[12px] text-right font-bold border-b  border-[#B76E00] border-dashed pr-1 py-[4px] text-[#B76E00]"
+                                      name="ratePerSqft"
                                       onChange={(e) => {
                                         // setNewSqftPrice(e.target.value)
-                                        // formik.setFieldValue(
-                                        //   'unit_cost_charges',
-                                        //   e.target.value
-                                        // )
-                                        // setNewSqftPrice(Number(e.target.value))
+
+                                        setNewSqftPrice(Number(e.target.value))
+                                        handlePriceChangePartB(
+                                          inx,
+                                          e.target.value
+                                        )
                                         // changeOverallCostFun(
                                         //   inx,
                                         //   d1,
                                         //   e.target.value
                                         // )
-                                        handlePriceChangePartB(inx, e.target.value)
-                                        // console.log('value sis',e , d1)
                                       }}
                                       value={d1?.charges}
                                     />
+                                    <TextFieldFlat
+                                      className=" hidden  "
+                                      label=""
+                                      name={d1?.component?.value}
+                                      type="number"
+                                    />
                                   </td>
-                                  <td className="text-[12px] px-2 text-right text-gray-700 ">
+                                  <td
+                                    className={`${
+                                      !showGstCol ? 'hidden' : ''
+                                    } w-[15%] px-2 text-[12px] text-right text-slate-500 text-sm `}
+                                  >
+                                    ₹
+                                    {d1?.TotalSaleValue?.toLocaleString(
+                                      'en-IN'
+                                    )}
+                                  </td>
+                                  <td
+                                    className={`${
+                                      !showGstCol ? 'hidden' : ''
+                                    } w-[15%] px-2 text-[12px] text-right text-slate-500 text-sm  `}
+                                  >
+                                    ₹{d1?.gstValue?.toLocaleString('en-IN')}
+                                  </td>
+                                  <td className="w-[15%] px-2 text-[12px] text-right text-slate-900 ">
+                                    ₹
                                     {Number(
                                       computeTotal(d1, selUnitDetails?.area)
                                     )?.toLocaleString('en-IN')}
                                   </td>
                                 </tr>
                               ))}
+                            </tbody>
+                          </table>
+                          <table className="w-full mt-1">
+                            <tbody>
                               <tr className=" h-[32px] ">
-                                <th className="text-[12px] px-2 text-left  text-[#118D57] ">
+                                <th className=" w-[40%] text-[12px] px-2 text-left  text-[#118D57] ">
                                   Total (B)
                                 </th>
-                                <td className="text-[12px] px-2 text-right text-gray-400 "></td>
-                                <td className="text-[12px] px-2 text-right text-gray-400 "></td>
-                                <td className="text-[12px] px-2 text-right text-[#118D57] font-bold ">
+                                <td className="w-[15%] text-[12px] px-2 text-right text-gray-400 "></td>
+                                <td className=" w-[15%] text-[12px] font-bold  px-2 text-right text-gray-800 "> ₹
+                                  {partBPayload
+                                    ?.reduce(
+                                      (partialSum, obj) =>
+                                        partialSum +
+                                        Number(obj?.TotalSaleValue),
+                                      0
+                                    )
+                                    ?.toLocaleString('en-IN')}</td>
+                                <td className="w-[15%] text-[12px] font-bold  px-2 text-right text-gray-800 "> ₹
+                                  {partBPayload
+                                    ?.reduce(
+                                      (partialSum, obj) =>
+                                        partialSum +
+                                        Number(obj?.gstValue),
+                                      0
+                                    )
+                                    ?.toLocaleString('en-IN')}</td>
+                                <td className=" w-[15%] text-[12px] px-2 text-right text-[#118D57] font-bold ">
                                   ₹{partBTotal?.toLocaleString('en-IN')}
+                                </td>
+                              </tr>
+
+                              <tr className=" h-[32px] ">
+                                <td className="w-[40%] text-[12px]  px-2 text-right text-gray-400 "></td>
+                                <td className="w-[15%] text-[12px] px-2 text-right text-gray-400 "></td>
+                                <td className="w-[15%] text-[12px] px-2 text-right text-gray-400 "></td>
+                                <th className="w-[15%] text-[12px] px-2 text-right text-[#B76E00] ">
+                                  Discount
+                                </th>
+                                <td className="w-[15%] text-[12px] px-2 text-right text-[#118D57] font-bold ">
+                                  <TextFieldFlat
+                                    label=""
+                                    className="text-[12px] max-w-[76px] text-right font-bold border-b  border-[#B76E00]  border-dashed pr-1 py-[4px] text-[#B76E00]"
+                                    name="rate_by"
+                                    onChange={(e) => {
+                                      // handlePriceChangePartB(inx, e.target.value)
+                                    }}
+                                    value={'0'}
+                                  />
                                 </td>
                               </tr>
                             </tbody>
@@ -507,7 +575,6 @@ const CostBreakUpEditor = ({
                                   </th>
                                   <td className="text-[12px] px-2  text-left text-gray-700 ">
                                     {d1?.description}
-
                                   </td>
 
                                   <td className="text-[12px] px-2  text-right text-gray-800 ">

@@ -34,6 +34,7 @@ import { useAuth } from 'src/context/firebase-auth-context'
 import CostBreakUpEditor from 'src/util/costBreakUpEditor'
 
 import CSBody from './cs_body'
+import { prettyDate } from 'src/util/dateConverter'
 
 // import BankSelectionSwitchDrop from './BankSelectionDroopDown'
 
@@ -121,39 +122,39 @@ export default function CSManagerApprovalBody({
           </p>
 
           <span>{selUnitPayload?.customerDetailsObj?.customerName1}</span>
-          <span>8722-198-016</span>
+          <span>{selUnitPayload?.customerDetailsObj?.phoneNo1 || "NA"}</span>
         </div>
         <div className="flex flex-col text-right">
           <div className="flex-row font-bold uppercase text-[#1f2f3e] text-[10px]">
-            Unit No: <span className="text-[#848789] ml-[1px]">1</span>
+            Unit No: <span className="text-[#848789] ml-[1px]">{selUnitPayload?.unit_no}</span>
           </div>
           <div className="flex-row font-bold uppercase text-[#1f2f3e] text-[10px]">
-            Survey No:<span className="text-[#848789] ml-[1px]">1</span>
+            Survey No:<span className="text-[#848789] ml-[1px]">{selUnitPayload?.survey_no || "NA"}</span>
           </div>
           <div className="flex-row font-bold uppercase text-[#1f2f3e] text-[10px]">
-            Katha Id: <span className="text-[#848789] ml-[1px]">1</span>
+            Katha Id: <span className="text-[#848789] ml-[1px]">{selUnitPayload?.katha_id || "NA"}</span>
           </div>
         </div>
       </div>
       <div className="flex flex-row border-y border-[#ededed] py-[18px] mt-[12px] justify-between">
         <div className="min-w-[120px]">
           <p className="text-title text-xs font-bold uppercase">Invoice No</p>
-          <span className=" text-content3 text-[#848789]">go157864</span>
+          <span className=" text-content3 text-[#848789]">NA</span>
         </div>
         <div className="min-w-[120px]">
           <p className="text-title text-xs font-bold uppercase">Booking Date</p>
-          <span className="text-content3 text-[#848789]">26-July-2023</span>
+          <span className="text-content3 text-[#848789]">{prettyDate(selUnitPayload?.Date || "NA")}</span>
         </div>
         <div className="min-w-[120px]">
           <p className="text-title text-xs font-bold uppercase">
             payment Status
           </p>
-          <span className="text-content3 text-[#848789]">go157864</span>
+          <span className="text-content3 text-[#848789]">Partial</span>
         </div>
         <div className="min-w-[120px] text-right">
           <p className="text-title text-xs font-bold uppercase">Total Amount</p>
           <span className=" text-medium text-content3 text-[#848789]">
-            go157864
+            NA-
           </span>
         </div>
       </div>

@@ -345,6 +345,9 @@ const AddPaymentDetailsForm = ({
         [`${uid}_T_transaction`]: T_transaction,
         [`${uid}_T_review`]: T_review,
         [`${uid}_T_balance`]: T_balance,
+        booked_on: data?.dated,
+        ct: Timestamp.now().toMillis(),
+        Date: Timestamp.now().toMillis(),
 
         //paymentScheduleObj
       },
@@ -361,6 +364,9 @@ const AddPaymentDetailsForm = ({
       status: 'booked',
       customerDetailsObj: customerDetailsObj || {},
       secondaryCustomerDetailsObj: secondaryCustomerDetailsObj || {},
+      booked_on: data?.dated,
+      ct: Timestamp.now().toMillis(),
+      Date: Timestamp.now().toMillis(),
       ...otherData,
     }
     // unitUpdate[`cs`] = leadDetailsObj2[`${uid}_cs`]
