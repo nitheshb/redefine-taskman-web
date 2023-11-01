@@ -129,6 +129,10 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
   const [isUnitDetailsOpen, setisUnitDetailsOpen] = useState(false)
   const [isSubTopicOpen, setIsSubTopicOpen] = useState(false)
   const [isSubTopic, setIsSubTopic] = useState('')
+  const [selProjectIs, setSelProject] = useState({
+    label: 'All Projects',
+    value: 'allprojects',
+  })
 
   // kanban board
   const [ready, setReady] = useState(false)
@@ -194,7 +198,8 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
   const [sdPipeCo, setSdPipeCo] = useState([])
   const [registeredCo, setRegisteredCo] = useState([])
   const [unassignedCo, setUnAssignedCo] = useState([])
-  const [unqueriesCo, setQueriesCo] = useState([])
+  const [queryResult, setQueryResult] = useState([])
+  const [filteredData, setFilteredData] = useState([])
 
   const [selCategory, setSelCategory] = useState('booked')
   useEffect(() => {
@@ -225,6 +230,21 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
     getLeadsDataFun(projectList, 'registered')
     getLeadsDataFun(projectList, 'unassigned')
   }, [projectList])
+
+  useEffect(() => {
+    filter_Leads_Projects_Users_Fun()
+  }, [selProjectIs])
+
+    const filter_Leads_Projects_Users_Fun = () => {
+    // setFetchLeadsLoader(true)
+    // const x = leadsFetchedRawData
+    getLeadsDataFun(projectList, 'booked')
+    getLeadsDataFun(projectList, 'agreement_pipeline')
+    getLeadsDataFun(projectList, 'sd_pipeline')
+    getLeadsDataFun(projectList, 'registered')
+    getLeadsDataFun(projectList, 'unassigned')
+    console.log('my Array data is ', queryResult, crmCustomersDBData, bookingReviewA)
+    }
 
   const getProjectsListFun = () => {
     const unsubscribe = getAllProjects(
@@ -352,18 +372,28 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
             return b?.booked_on || 0  - b?.booked_on || 0
           })
           await setCrmCustomerDBData(usersListA)
+
+          await console.log('my Array data is =====>', usersListA.length, queryResult.length, crmCustomersDBData)
           if (statusFil === 'booked') {
+            await console.log('my Array data is ', usersListA.length, queryResult.length)
             await setBookingReviewA(usersListA)
             await setBookingReviewCo(usersListA.length)
+            await setQueryResult(usersListA)
           } else if (statusFil === 'agreement_pipeline') {
             await setAgreePipeA(usersListA)
             await setAgreePipeCo(usersListA.length)
+
+
           } else if (statusFil === 'sd_pipeline') {
             await setSdPipeA(usersListA)
             await setSdPipeCo(usersListA.length)
+
+
           } else if (statusFil === 'registered') {
             await setRegisteredA(usersListA)
             await setRegisteredCo(usersListA.length)
+
+
           } else if (statusFil === 'unassigned') {
             await setUnAssignedA(usersListA)
             await setUnAssignedCo(usersListA.length)
@@ -372,6 +402,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
         },
         {
           status: [statusFil],
+          projectId: selProjectIs?.uid
         },
         () => setCrmCustomerDBData([])
       )
@@ -570,12 +601,16 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                       label=""
                       className="input "
                       onChange={(value) => {
-                        // setSelProject(value)
+                        console.log('value is ', value)
+                        setSelProject(value)
                         // formik.setFieldValue('project', value.value)
                       }}
-                      value={'alltransactions'}
+                      value={selProjectIs?.value}
                       // options={aquaticCreatures}
-                      options={projectList}
+                      options={[
+                        ...[{ label: 'All Projects', value: 'allprojects' }],
+                        ...projectList,
+                      ]}
                     />
                   </div>
                   <div className=" mt-[-4px]">
@@ -663,7 +698,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                   </div>
 
                   {selCategory === 'booked' &&
-                    bookingReviewA.map((finData, c) => {
+                    queryResult.map((finData, c) => {
                       const {
                         uid,
                         assets,
@@ -800,8 +835,8 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                   <h6 className="font-bodyLato font-semibold text-xs m-1 text-right">
                                     <div>
                                       {' '}
-                                      ₹
-                                      {(
+                                      ₹ {finData?.T_balance}
+                                      {/* {(
                                         (finData?.plotCS?.reduce(function (
                                           _this,
                                           val
@@ -811,7 +846,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                           )
                                         },
                                         0) || 0) - finData?.T_review
-                                      )?.toLocaleString('en-IN') || 0}
+                                      )?.toLocaleString('en-IN') || 0} */}
                                     </div>
                                     <span className="text-[#637381] tracking-wide font-thin text-right">
                                       Left:
@@ -950,7 +985,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       <div>
                                         {' '}
                                         ₹
-                                        {finData?.T_balance?.toLocaleString(
+                                        {finData?.T_elgible_balance?.toLocaleString(
                                           'en-IN'
                                         )}
                                       </div>

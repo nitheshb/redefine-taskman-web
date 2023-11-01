@@ -359,10 +359,10 @@ export const updateTransactionStatus = async (
         payload: { comments: '' },
         from: 'review',
         to: status,
-        projectId:projectId || ''
+        projectId: projectId || '',
       },
     ])
-    console.log('check it ', data4, error4)
+  console.log('check it ', data4, error4)
   if (lead_logs) {
     await enqueueSnackbar('Marked as Amount Recived', {
       variant: 'success',
@@ -415,7 +415,7 @@ export const editTaskManData = async (orgId, dta, user) => {
   console.log('data is ', followers)
   let followA = []
   let attachA = []
-  let followAUid = []
+  const followAUid = []
   const x = [assignedToObj?.uid || '']
   if (followers) {
     followA = await followers?.map((d) => {
@@ -850,12 +850,20 @@ export const getCRMCustomerByProject = (orgId, snapshot, data, error) => {
 
 export const getBookedUnitsByProject = (orgId, snapshot, data, error) => {
   const { status } = data
-
-  const itemsQuery = query(
+  console.log('hello ', status, data?.projectId)
+  let itemsQuery = query(
     collection(db, `${orgId}_units`),
     where('status', 'in', status)
   )
-  console.log('hello ', status, itemsQuery)
+  if (data?.projectId) {
+    itemsQuery = query(
+      collection(db, `${orgId}_units`),
+      where('status', 'in', status),
+      where('pId', '==', data?.projectId)
+    )
+  }
+
+  console.log('hello ', status, data?.projectId,  itemsQuery)
   return onSnapshot(itemsQuery, snapshot, error)
 }
 export const getUnassignedCRMunits = (orgId, snapshot, data, error) => {
@@ -3656,7 +3664,16 @@ export const updateManagerApproval = async (
 ) => {
   try {
     console.log('data is===>', unitId, data)
-    const { status, plotCS, addChargesCS, fullPs, T_balance, T_Total } = data
+    const {
+      status,
+      plotCS,
+      addChargesCS,
+      fullPs,
+      T_balance,
+      T_Total,
+      T_elgible_balance,
+    } = data
+
     await updateDoc(doc(db, `${orgId}_units`, unitId), {
       man_cs_approval: status,
       plotCS: plotCS,
@@ -3664,6 +3681,7 @@ export const updateManagerApproval = async (
       fullPs,
       T_balance,
       T_Total,
+      T_elgible_balance,
     })
     const { data: data4, error: error4 } = await supabase
       .from(`${orgId}_unit_logs`)

@@ -90,11 +90,13 @@ const CostBreakUpEditor = ({
     let gstTotal = 0
     const isChargedPerSqft = updatedRows[index]?.units.value === 'costpersqft'
 
-    const gstPercent = Number(updatedRows[index]?.gst?.value) >1 ? updatedRows[index]?.gst?.value *0.01 : updatedRows[index]?.gst?.value
+    const gstPercent =
+      Number(updatedRows[index]?.gst?.value) > 1
+        ? updatedRows[index]?.gst?.value * 0.01
+        : updatedRows[index]?.gst?.value
     total = isChargedPerSqft
-      ? Number(
-          selUnitDetails?.super_built_up_area || selUnitDetails?.area
-        ) * Number(updatedRows[index]?.charges)
+      ? Number(selUnitDetails?.super_built_up_area || selUnitDetails?.area) *
+        Number(updatedRows[index]?.charges)
       : Number(updatedRows[index]?.charges)
 
     gstTotal = Math.round(total * gstPercent)
@@ -212,8 +214,17 @@ const CostBreakUpEditor = ({
       plotCS: costSheetA,
       fullPs: newPlotPS,
       addChargesCS: partBPayload,
-      T_balance: netTotal - selUnitDetails?.T_review,
+      T_balance:
+        netTotal - (selUnitDetails?.T_review + (selUnitDetails?.T_cleared || 0)),
       T_Total: netTotal,
+      T_review: selUnitDetails?.T_review,
+      T_cleared: selUnitDetails?.T_cleared || 0,
+      T_rejected: selUnitDetails?.T_rejected || 0,
+      // T_elgible_balance: selUnitDetails?.T_elgible_balance || 0,
+      T_elgible_balance:
+        selUnitDetails?.T_elgible -
+        (selUnitDetails?.T_review + (selUnitDetails?.T_cleared || 0)),
+      // T_elgible: selUnitDetails?.T_elgible || 0,
     }
     updateManagerApproval(
       orgId,
@@ -473,7 +484,9 @@ const CostBreakUpEditor = ({
                                   Total (B)
                                 </th>
                                 <td className="w-[15%] text-[12px] px-2 text-right text-gray-400 "></td>
-                                <td className=" w-[15%] text-[12px] font-bold  px-2 text-right text-gray-800 "> ₹
+                                <td className=" w-[15%] text-[12px] font-bold  px-2 text-right text-gray-800 ">
+                                  {' '}
+                                  ₹
                                   {partBPayload
                                     ?.reduce(
                                       (partialSum, obj) =>
@@ -481,16 +494,19 @@ const CostBreakUpEditor = ({
                                         Number(obj?.TotalSaleValue),
                                       0
                                     )
-                                    ?.toLocaleString('en-IN')}</td>
-                                <td className="w-[15%] text-[12px] font-bold  px-2 text-right text-gray-800 "> ₹
+                                    ?.toLocaleString('en-IN')}
+                                </td>
+                                <td className="w-[15%] text-[12px] font-bold  px-2 text-right text-gray-800 ">
+                                  {' '}
+                                  ₹
                                   {partBPayload
                                     ?.reduce(
                                       (partialSum, obj) =>
-                                        partialSum +
-                                        Number(obj?.gstValue),
+                                        partialSum + Number(obj?.gstValue),
                                       0
                                     )
-                                    ?.toLocaleString('en-IN')}</td>
+                                    ?.toLocaleString('en-IN')}
+                                </td>
                                 <td className=" w-[15%] text-[12px] px-2 text-right text-[#118D57] font-bold ">
                                   ₹{partBTotal?.toLocaleString('en-IN')}
                                 </td>
