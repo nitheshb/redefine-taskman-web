@@ -22,7 +22,7 @@ const CrmPaymentSummary = ({ selCustomerPayload }) => {
                 {selCustomerPayload?.T_elgible?.toLocaleString('en-IN')}
               </h6> */}
               <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
-              <span className="text-[#637381] tracking-wide font-thin">🔥Left:</span>  {' '} ₹{selCustomerPayload?.T_balance?.toLocaleString('en-IN')}
+              <span className="text-[#637381] tracking-wide font-thin">🔥Left:</span>  {' '} ₹{selCustomerPayload?.T_elgible_balance?.toLocaleString('en-IN')}
               </h6>
             </section>
           </div>

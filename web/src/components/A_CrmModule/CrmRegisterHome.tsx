@@ -835,7 +835,9 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                   <h6 className="font-bodyLato font-semibold text-xs m-1 text-right">
                                     <div>
                                       {' '}
-                                      ₹ {finData?.T_balance}
+                                      ₹ {finData?.T_balance?.toLocaleString(
+                                        'en-IN'
+                                      )}
                                       {/* {(
                                         (finData?.plotCS?.reduce(function (
                                           _this,

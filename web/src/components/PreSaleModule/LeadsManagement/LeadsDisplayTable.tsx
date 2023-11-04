@@ -49,10 +49,35 @@ const LeadsDisplayTable = ({
   })
 
   useEffect(() => {
+    console.log('yo yo ', leadsRawList)
+    // selProjectIs?.value === 'allprojects'
+    const filList = []
+    const query = (item) => {
+      if (selProjectIs?.value === 'allprojects') {
+        return item?.currentStatus === 'unassigned'
+      } else {
+        return (
+          item?.currentStatus === 'unassigned' &&
+          item.label === selProjectIs?.label
+        )
+      }
+    }
+
+    const BinQuery = (item) => {
+      if (selProjectIs?.value === 'allprojects') {
+        return ['DUPLICATE_ENTRY', 'INVALID_DATA'].includes(item?.currentStatus)
+      } else {
+        return (
+          ['DUPLICATE_ENTRY', 'INVALID_DATA'].includes(item?.currentStatus) &&
+          item.label === selProjectIs?.label
+        )
+      }
+    }
+
     if (searchKey.includes('unassigned')) {
       setSortedList(
         leadsRawList
-          .filter((item) => item?.currentStatus === 'unassigned')
+          .filter((item) => query(item))
           .sort((a, b) => {
             return b.cT - a.cT
           })
@@ -60,21 +85,30 @@ const LeadsDisplayTable = ({
     } else if (searchKey.includes('DUPLICATE_ENTRY')) {
       setSortedList(
         leadsRawList
-          .filter((item) =>
-            ['DUPLICATE_ENTRY', 'INVALID_DATA'].includes(item?.currentStatus)
-          )
+          .filter((item) => BinQuery(item))
           .sort((a, b) => {
             return b.cT - a.cT
           })
       )
     } else {
-      setSortedList(
-        leadsRawList.sort((a, b) => {
-          return b.cT - a.cT
-        })
-      )
+      if (selProjectIs?.value === 'allprojects') {
+        setSortedList(
+          leadsRawList.sort((a, b) => {
+            return b.cT - a.cT
+          })
+        )
+      } else {
+        setSortedList(
+          leadsRawList
+            .filter((item) => item.label === selProjectIs?.label)
+            .sort((a, b) => {
+              return b.cT - a.cT
+            })
+        )
+       
+      }
     }
-  }, [leadsRawList, searchKey])
+  }, [leadsRawList, searchKey, selProjectIs])
 
   return (
     <Box pb={4}>

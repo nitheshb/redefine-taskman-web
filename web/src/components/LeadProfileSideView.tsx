@@ -1995,48 +1995,48 @@ export default function LeadProfileSideView({
                   </div>
                   {selFeature == 'lead_strength' && (
                     <>
-                     <Formik
-              enableReinitialize={true}
-              // initialValues={{
-              //   name: customerDetailsTuned?.name || '',
-              //   cDate: customerDetailsTuned?.Date || '',
-              //   mobileNo: customerDetailsTuned?.phone || '',
-              //   email: customerDetailsTuned?.email || '',
-              //   source: customerDetailsTuned?.source || '',
-              //   project: customerDetailsTuned?.projectName || '',
-              //   projectId: customerDetailsTuned?.projectId || '',
-              //   assignedTo: customerDetailsTuned?.name || '',
-              //   budget: '20-30L',
-              //   deptVal: '',
-              //   myRole: '',
-              // }}
-              initialValues={{
-                assetPossesed: {}
-              }}
-              // validationSchema={validate}
-              onSubmit={(values, { resetForm }) => {
-                // console.log('ami submitted', values)
-                // console.log('ami submitted 1', values.assignedTo === '')
-                // onSubmitFun(values, resetForm)
-              }}
-            >
-                     {(formik) => (
-                      <div className="flex flex-col pt-0 my-10 mt-[30px] rounded bg-[#d1d8e7] mx-4 p-4">
-                        <div className="border border-red-100 mt-2 mt-4 bg-white rounded-md p-4 font-bold">
-                          <div className="flex justify-between w-full ">
-                            <div>Total Lead Strength</div>
-                            <div>{`${opstr}%`}</div>
-                          </div>
-                          <Slider
-                            onChange={(e) => setopstr(e.target.value)}
-                            value={opstr}
-                            defaultValue={opstr}
-                            aria-label="Default"
-                            valueLabelDisplay="auto"
-                          />
-                        </div>
-                        <div className="grid grid-cols-2 gap-8 pt-3 mx-3  mt-2">
-                          {/* <div className="mt-2">
+                      <Formik
+                        enableReinitialize={true}
+                        // initialValues={{
+                        //   name: customerDetailsTuned?.name || '',
+                        //   cDate: customerDetailsTuned?.Date || '',
+                        //   mobileNo: customerDetailsTuned?.phone || '',
+                        //   email: customerDetailsTuned?.email || '',
+                        //   source: customerDetailsTuned?.source || '',
+                        //   project: customerDetailsTuned?.projectName || '',
+                        //   projectId: customerDetailsTuned?.projectId || '',
+                        //   assignedTo: customerDetailsTuned?.name || '',
+                        //   budget: '20-30L',
+                        //   deptVal: '',
+                        //   myRole: '',
+                        // }}
+                        initialValues={{
+                          assetPossesed: {},
+                        }}
+                        // validationSchema={validate}
+                        onSubmit={(values, { resetForm }) => {
+                          // console.log('ami submitted', values)
+                          // console.log('ami submitted 1', values.assignedTo === '')
+                          // onSubmitFun(values, resetForm)
+                        }}
+                      >
+                        {(formik) => (
+                          <div className="flex flex-col pt-0 my-10 mt-[30px] rounded bg-[#d1d8e7] mx-4 p-4">
+                            <div className="border border-red-100 mt-2 mt-4 bg-white rounded-md p-4 font-bold">
+                              <div className="flex justify-between w-full ">
+                                <div>Total Lead Strength</div>
+                                <div>{`${opstr}%`}</div>
+                              </div>
+                              <Slider
+                                onChange={(e) => setopstr(e.target.value)}
+                                value={opstr}
+                                defaultValue={opstr}
+                                aria-label="Default"
+                                valueLabelDisplay="auto"
+                              />
+                            </div>
+                            <div className="grid grid-cols-2 gap-8 pt-3 mx-3  mt-2">
+                              {/* <div className="mt-2">
                             <div className="flex justify-between w-11.7/12 m-auto">
                               <div> Looking at Budget Range*</div>
                               <div> {`${optionvalues.bstr}%`}</div>
@@ -2057,91 +2057,92 @@ export default function LeadProfileSideView({
                               options={lookingAtBudgetRange}
                             />
                           </div> */}
-                          <div className="mt-2">
-                            <div className="flex justify-between w-11.7/12 m-auto">
-                              <div>Any Existing Banglore Assets ?*</div>
-                              <div> {`${optionvalues.asstr}%`}</div>
+                              <div className="mt-2">
+                                <div className="flex justify-between w-11.7/12 m-auto">
+                                  <div>Any Existing Banglore Assets ?*</div>
+                                  <div> {`${optionvalues.asstr}%`}</div>
+                                </div>
+                                <CustomSelect
+                                  name="assetPossesed"
+                                  label="Existing Asset"
+                                  className="input"
+                                  onChange={(value) => {
+                                    // formik.setFieldValue('source', value.value)
+                                    setoptionvalues({
+                                      ...optionvalues,
+                                      asset: value.value,
+                                      asstr: value.str,
+                                    })
+                                  }}
+                                  value={optionvalues.asset}
+                                  options={exitstingAsset}
+                                />
+                              </div>
+                              <div className="mt-2">
+                                <div className="flex justify-between w-11.7/12 m-auto">
+                                  <div>Reason For Purchase ?*</div>
+                                  <div> {`${optionvalues.pstr}%`}</div>
+                                </div>
+                                <CustomSelect
+                                  name="reasonPurchase"
+                                  label="Purchase Reason"
+                                  className="input"
+                                  onChange={(value) => {
+                                    // formik.setFieldValue('source', value.value)
+                                    //  setNotInterestType(value.value)
+                                    setoptionvalues({
+                                      ...optionvalues,
+                                      purchase: value.value,
+                                      pstr: value.str,
+                                    })
+                                  }}
+                                  value={optionvalues.purchase}
+                                  options={reasonPurchase}
+                                />
+                              </div>
+                              <div className="mt-2">
+                                <div className="flex justify-between w-11.7/12 m-auto">
+                                  <div>Preferred Area ?*</div>
+                                  <div> {`${optionvalues.astr}%`}</div>
+                                </div>
+                                <CustomSelect
+                                  name="preferredArea"
+                                  className="input"
+                                  onChange={(value) => {
+                                    // formik.setFieldValue('source', value.value)
+                                    setoptionvalues({
+                                      ...optionvalues,
+                                      area: value.value,
+                                      astr: value.str,
+                                    })
+                                  }}
+                                  value={optionvalues.area}
+                                  options={preferredArea}
+                                />
+                              </div>
                             </div>
-                            <CustomSelect
-                              name="assetPossesed"
-                              label="Existing Asset"
-                              className="input"
-                              onChange={(value) => {
-                                // formik.setFieldValue('source', value.value)
-                                setoptionvalues({
-                                  ...optionvalues,
-                                  asset: value.value,
-                                  asstr: value.str,
-                                })
-                              }}
-                              value={optionvalues.asset}
-                              options={exitstingAsset}
-                            />
-                          </div>
-                          <div className="mt-2">
-                            <div className="flex justify-between w-11.7/12 m-auto">
-                              <div>Reason For Purchase ?*</div>
-                              <div> {`${optionvalues.pstr}%`}</div>
-                            </div>
-                            <CustomSelect
-                              name="reasonPurchase"
-                              label="Purchase Reason"
-                              className="input"
-                              onChange={(value) => {
-                                // formik.setFieldValue('source', value.value)
-                                //  setNotInterestType(value.value)
-                                setoptionvalues({
-                                  ...optionvalues,
-                                  purchase: value.value,
-                                  pstr: value.str,
-                                })
-                              }}
-                              value={optionvalues.purchase}
-                              options={reasonPurchase}
-                            />
-                          </div>
-                          <div className="mt-2">
-                            <div className="flex justify-between w-11.7/12 m-auto">
-                              <div>Preferred Area ?*</div>
-                              <div> {`${optionvalues.astr}%`}</div>
-                            </div>
-                            <CustomSelect
-                              name="preferredArea"
-                              className="input"
-                              onChange={(value) => {
-                                // formik.setFieldValue('source', value.value)
-                                setoptionvalues({
-                                  ...optionvalues,
-                                  area: value.value,
-                                  astr: value.str,
-                                })
-                              }}
-                              value={optionvalues.area}
-                              options={preferredArea}
-                            />
-                          </div>
-                        </div>
-                        <div></div>
+                            <div></div>
 
-                        <div className="flex flex-row justify-end mt-6">
-                          <section className="flex flex-row">
-                            <button
-                              onClick={() => fAddNotes()}
-                              className={`flex mt-2 rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium text-white bg-teal-900  hover:bg-teal-700  `}
-                            >
-                              <span className="ml-1 ">Save</span>
-                            </button>
+                            <div className="flex flex-row justify-end mt-6">
+                              <section className="flex flex-row">
+                                <button
+                                  onClick={() => fAddNotes()}
+                                  className={`flex mt-2 rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium text-white bg-teal-900  hover:bg-teal-700  `}
+                                >
+                                  <span className="ml-1 ">Save</span>
+                                </button>
 
-                            <button
-                              // onClick={() => fSetLeadsType('Add Lead')}
-                              onClick={() => setFeature('appointments')}
-                              className={`flex mt-2 ml-4  rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium border  hover:bg-teal-900 hover:text-white  `}
-                            >
-                              <span className="ml-1 ">Cancel</span>
-                            </button>
-                          </section>
-                        </div>
-                      </div>)}
+                                <button
+                                  // onClick={() => fSetLeadsType('Add Lead')}
+                                  onClick={() => setFeature('appointments')}
+                                  className={`flex mt-2 ml-4  rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium border  hover:bg-teal-900 hover:text-white  `}
+                                >
+                                  <span className="ml-1 ">Cancel</span>
+                                </button>
+                              </section>
+                            </div>
+                          </div>
+                        )}
                       </Formik>
                     </>
                   )}

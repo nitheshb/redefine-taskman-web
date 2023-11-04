@@ -253,7 +253,7 @@ export default function UnitSideViewCRM({
     Project,
     ProjectId,
     Source,
-    Status,
+    status,
     by,
     Mobile,
     Date,
@@ -362,8 +362,8 @@ export default function UnitSideViewCRM({
     setAssignerName(customerDetails?.assignedToObj?.label)
     setSelProjectIs({ projectName: Project, uid: ProjectId })
 
-    setLeadStatus(Status)
-    console.log('assinger to yo yo', customerDetails)
+    setLeadStatus(status)
+    console.log('assinger to yo yo', customerDetails, customerDetails?.status)
   }, [customerDetails])
   // adopt this
   useEffect(() => {
@@ -498,7 +498,7 @@ export default function UnitSideViewCRM({
     return unsubscribe
   }
   useEffect(() => {
-    setLeadStatus(Status?.toLowerCase())
+    setLeadStatus(status?.toLowerCase())
   }, [customerDetails])
 
   const setAssigner = (leadDocId, value) => {
@@ -670,7 +670,7 @@ export default function UnitSideViewCRM({
 
     //
     // updateLeadStatus(leadDocId, newStatus)
-    // toast.success('Status Updated Successfully')
+    // toast.success('status Updated Successfully')
   }
 
   const downloadFile = (url) => {
@@ -807,7 +807,7 @@ export default function UnitSideViewCRM({
     // addSchedulerLog(id, data)
     console.log('new one ', schStsA)
     await addLeadScheduler(orgId, id, data, schStsA, '')
-    if (Status != tempLeadStatus) {
+    if (status != tempLeadStatus) {
     }
     await setTakTitle('')
     await setAddSch(false)
@@ -817,7 +817,7 @@ export default function UnitSideViewCRM({
     setAddSch(false)
     setAddNote(false)
     // if its not edit mode ignore it
-    setLeadStatus(Status)
+    setLeadStatus(status)
     setLoader(false)
   }
 
@@ -1046,7 +1046,7 @@ export default function UnitSideViewCRM({
                       {!user?.role?.includes(USER_ROLES.CP_AGENT) && (
                         <div>
                           <AssigedToDropComp
-                            assignerName={unitStatus.label}
+                            assignerName={status}
                             id={id}
                             setAssigner={setStatusFun}
                             usersList={StatusListA}

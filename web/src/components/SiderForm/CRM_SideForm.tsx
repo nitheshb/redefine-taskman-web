@@ -171,7 +171,7 @@ const CrmSiderForm = ({
                 )}
 
                 {title === 'crm_KYC' && (
-                  <Cs_customerKyc title={title} dialogOpen={setOpen} selUnitPayload={selUnitPayload} />
+                  <Cs_customerKyc title={title} dialogOpen={setOpen} selUnitPayload={customerDetails} />
                 )}
                 {title === 'crm_legal_clarity' && (
                   <Crm_legal_Clarity title={title} dialogOpen={setOpen} selUnitPayload={selUnitPayload} />
