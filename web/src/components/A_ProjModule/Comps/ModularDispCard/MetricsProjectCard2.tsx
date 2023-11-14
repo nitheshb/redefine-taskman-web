@@ -63,7 +63,7 @@ const ProjectMetrics2 = ({ project }) => {
                 >
                   <div className="flex flex-col  justify-center mr-1  mb-1 mt[2px]">
                     <h6 className="font-bodyLato font-semibold text-xs mt-1">
-                      ₹{data.value}
+                      ₹{data?.value?.toLocaleString('en-IN')}
                     </h6>
                     <h6 className="font-bodyLato text-[#828d9e] text-xs mt-1">
                       {data.item}
@@ -84,7 +84,7 @@ const ProjectMetrics2 = ({ project }) => {
                 >
                   <div className="flex flex-col  justify-center mr-1  mb-1 mt[2px]">
                     <h6 className="font-bodyLato font-semibold text-xs mt-1">
-                      ₹{data.value}
+                      ₹{data?.value?.toLocaleString('en-IN')}
                     </h6>
                     <h6 className="font-bodyLato text-[#828d9e] text-xs mt-1">
                       {data.item}
@@ -105,7 +105,7 @@ const ProjectMetrics2 = ({ project }) => {
                 >
                   <div className="flex flex-col  justify-center mr-1  mb-1 mt[2px]">
                     <h6 className="font-bodyLato font-semibold text-xs mt-1">
-                      ₹{data.value}
+                      ₹{data?.value?.toLocaleString('en-IN')}
                     </h6>
                     <h6 className="font-bodyLato text-[#828d9e] text-xs mt-1">
                       {data.item}
