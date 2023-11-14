@@ -28,6 +28,7 @@ import { prettyDateTime } from 'src/util/dateConverter'
 
 import { db } from './firebaseConfig'
 import { supabase } from './supabase'
+import { IdentificationIcon } from '@heroicons/react/outline'
 
 // import { userAccessRoles } from 'src/constants/userAccess'
 
@@ -863,7 +864,7 @@ export const getBookedUnitsByProject = (orgId, snapshot, data, error) => {
     )
   }
 
-  console.log('hello ', status, data?.projectId,  itemsQuery)
+  console.log('hello ', status, data?.projectId, itemsQuery)
   return onSnapshot(itemsQuery, snapshot, error)
 }
 export const getUnassignedCRMunits = (orgId, snapshot, data, error) => {
@@ -1767,39 +1768,55 @@ export const addPlotUnit = async (orgId, data, by, msg) => {
     east_sch_by,
     west_sch_by,
     status,
-
     release_status,
     mortgage_type,
   } = data
 
+
+
   // get the cost sheet charges obj & successully create total unit cost
   const assetVal = area * sqft_rate + (area * plc_per_sqft || 0)
+
+  data.status = status?.toLowerCase() || ''
+  const statusVal = status?.toLowerCase() || ''
+  console.log('status is ==> ', status)
   const yo = {
     totalUnitCount: increment(1),
-    availableCount: status === 'available' ? increment(1) : increment(0),
-    soldUnitCount: status === 'sold' ? increment(1) : increment(0),
-    blockedUnitCount: ['blocked_customer', 'blocked_management'].includes(
-      status
+    bookUnitCount: ['booked'].includes(statusVal) ? increment(1) : increment(0),
+    atsCount: ['ats_pipeline'].includes(statusVal) ? increment(1) : increment(0),
+    s_agreeCount: ['agreement_pipeline'].includes(statusVal) ? increment(1) : increment(0),
+    s_regisCount: ['registered_pipeline'].includes(statusVal) ? increment(1) : increment(0),
+    availableCount: statusVal === 'available' ? increment(1) : increment(0),
+    custBlockCount: statusVal === 'customer_blocked' ? increment(1) : increment(0),
+    mangBlockCount: statusVal === 'management_blocked' ? increment(1) : increment(0),
+    soldUnitCount: ['sold', 'ats_pipeline', 'agreement_pipeline', 'booked'].includes(statusVal) ? increment(1) : increment(0),
+    blockedUnitCount: ['customer_blocked', 'management_blocked'].includes(
+      statusVal
     )
       ? increment(1)
       : increment(0),
-    totalValue: increment(assetVal),
-    soldValue: status === 'sold' ? increment(assetVal) : increment(0),
-    blockedValue: ['blocked_customer', 'blocked_management'].includes(status)
+    // totalValue: increment(assetVal),
+    soldValue: ['sold', 'ats_pipeline', 'agreement_pipeline', 'booked'].includes(statusVal) ? increment(assetVal) : increment(0),
+    custBlockValue: ['customer_blocked'].includes(statusVal) ? increment(assetVal) : increment(0),
+    mangBlockValue: ['management_blocked'].includes(statusVal) ? increment(assetVal) : increment(0),
+    blockedValue: ['customer_blocked', 'management_blocked'].includes(statusVal)
       ? increment(assetVal)
       : increment(0),
-    totalEstPlotVal: increment(assetVal),
-    totalArea: increment(area),
-    soldArea: status === 'sold' ? increment(area) : increment(0),
-    blockedArea: ['blocked_customer', 'blocked_management'].includes(status)
+    // totalEstPlotVal: increment(assetVal),
+    // totalArea: increment(area),
+    soldArea: ['sold', 'ats_pipeline', 'agreement_pipeline', 'booked'].includes(statusVal) ? increment(area) : increment(0),
+    custBlockArea: ['customer_blocked'].includes(statusVal) ? increment(area) : increment(0),
+    mangBlockArea: ['management_blocked'].includes(statusVal) ? increment(area) : increment(0),
+    blockedArea: ['customer_blocked', 'management_blocked'].includes(statusVal)
       ? increment(area)
       : increment(0),
-    totalPlotArea: increment(area),
+    // totalPlotArea: increment(area),
   }
+console.log('yo', yo, statusVal === 'available' )
 
-  const x = await addDoc(collection(db, `${orgId}_units`), data)
+  // const x = await addDoc(collection(db, `${orgId}_units`), data)
   const y = await updateProjectComputedData(orgId, pId, yo)
-  await console.log('x value is', x, x.id)
+
 
   return
   // await addLeadLog(x.id, {
@@ -1918,20 +1935,20 @@ export const editPlotUnit = async (
 
   //   availableCount: status === 'available' ? increment(1) : increment(0),
   //   soldUnitCount: status === 'sold' ? increment(1) : increment(0),
-  //   blockedUnitCount: ['blocked_customer', 'blocked_management'].includes(
+  //   blockedUnitCount: ['customer_blocked', 'management_blocked'].includes(
   //     status
   //   )
   //     ? increment(1)
   //     : increment(0),
   //   totalValue: increment(assetVal),
   //   soldValue: status === 'sold' ? increment(assetVal) : increment(0),
-  //   blockedValue: ['blocked_customer', 'blocked_management'].includes(status)
+  //   blockedValue: ['customer_blocked', 'management_blocked'].includes(status)
   //     ? increment(assetVal)
   //     : increment(0),
   //   totalEstPlotVal: increment(assetVal),
   //   totalArea: increment(area),
   //   soldArea: status === 'sold' ? increment(area) : increment(0),
-  //   blockedArea: ['blocked_customer', 'blocked_management'].includes(status)
+  //   blockedArea: ['customer_blocked', 'management_blocked'].includes(status)
   //     ? increment(area)
   //     : increment(0),
   //   totalPlotArea: increment(area),
@@ -2186,12 +2203,12 @@ export const addLeadNotes = async (orgId, id, data) => {
 }
 export const updateProjectComputedData = async (orgId, id, data) => {
   try {
-    const washingtonRef = doc(db, `${orgId}_projects`, id)
-    console.log('check add LeadLog', washingtonRef)
 
+    const washingtonRef = doc(db, `${orgId}_projects`, id)
+    console.log('check add LeadLog', washingtonRef, id)
     await updateDoc(washingtonRef, data)
   } catch (error) {
-    console.log('error in updation')
+    console.log('error in updation', error)
     // await setDoc(doc(db, `${orgId}_leads_notes`, id), yo)
   }
 }
@@ -4011,6 +4028,55 @@ export const updateUnitAsBooked = async (
       ...data,
     })
     enqueueSnackbar('Cost sheet  updation failed', {
+      variant: 'error',
+    })
+  }
+
+  return
+  // return await addUserLog({
+  //   s: 's',
+  //   type: 'updateRole',
+  //   subtype: 'updateRole',
+  //   txt: `${email} is updated with ${role}`,
+  //   by,
+  // })
+}
+export const updateUnitAsBlocked = async (
+  orgId,
+  projectId,
+  unitId,
+  leadDocId,
+  data,
+  by,
+  enqueueSnackbar,
+  resetForm
+) => {
+  try {
+    console.log('data is cost sheet', leadDocId, data, unitId)
+
+    await updateDoc(doc(db, `${orgId}_units`, unitId), {
+      ...data,
+    })
+    const { data1, error1 } = await supabase.from(`${orgId}_unit_logs`).insert([
+      {
+        type: 'sts_change',
+        subtype: 'customer_blocked',
+        T: Timestamp.now().toMillis(),
+        Uuid: unitId,
+        by,
+        payload: { blockedBy: by },
+        from: 'lead',
+        to: 'blocked',
+      },
+    ])
+    enqueueSnackbar('Unit is blocked..!', {
+      variant: 'success',
+    })
+  } catch (error) {
+    console.log('Failed in blocking unit', error, {
+      ...data,
+    })
+    enqueueSnackbar('Failed in blocking unit', {
       variant: 'error',
     })
   }

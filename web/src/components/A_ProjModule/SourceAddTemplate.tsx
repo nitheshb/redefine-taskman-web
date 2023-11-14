@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 
 import { getUnits } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
-import SourceAddTable from './Comps/SourceAddTable'
+import ModularProjectMetrics from './Comps/SourceAddTable'
 
 
 const SourceAddTemplate = ({ phase, source }) => {
@@ -18,7 +18,7 @@ const SourceAddTemplate = ({ phase, source }) => {
     <div className="lg:col-span-10 border w-full ">
 
 
-      <SourceAddTable
+      <ModularProjectMetrics
         title={''}
         data={phase}
         source={source}

@@ -9,6 +9,9 @@ import { usePageLoadingContext } from '@redwoodjs/router'
 import { Link, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
 
+import MarkeingMessagesList from 'src/components/A_ProjModule/MarketingMessagesList'
+import ProjectReportsBody from 'src/components/A_ProjModule/ProjectReports'
+import ProjectsTaskHome from 'src/components/A_ProjModule/ProjTaskHome'
 import SlimSideMenuBar from 'src/components/A_SideMenu/slimSideMenu'
 import AllBankDetailsView from 'src/components/All_BankDetailsView'
 import HeadSideBarDetailView from 'src/components/HeadDetailSideBar'
@@ -23,10 +26,6 @@ import HeadNavBar from '../../components/HeadNavBar/HeadNavBar'
 import HeadSideBar from '../../components/HeadSideBar/HeadSideBar'
 import ProjectsMHomeBody from '../../components/ProjectsMHomeBody/ProjectsMHomeBody'
 import SiderForm from '../../components/SiderForm/SiderForm'
-import MarkeingMessagesList from 'src/components/A_ProjModule/MarketingMessagesList'
-import ProjectsTaskHome from 'src/components/A_ProjModule/ProjTaskHome'
-
-import ProjectReportsBody from 'src/components/A_ProjModule/ProjectReports'
 
 const HomePage = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -372,45 +371,37 @@ const HomePage = () => {
             />
 
             <div className="flex-grow   items-center overflow-y-auto no-scrollbar  h-[98%]  px-300  pt-300">
-            <HeadNavBar2
-              selModule ={selModule}
-              setSelModule={setSelModule}
-            />
-            {(viewable === 'Marketing' &&
-(
-  <>
-
-
+              <HeadNavBar2 selModule={selModule} setSelModule={setSelModule} />
+              {viewable === 'Marketing' && (
+                <>
                   <div className="mt-2 mx-1">
                     <section className="w-full py-4  leading-7 text-gray-900 bg-white  rounded-md">
                       <div className="box-border px-4 mx-auto border-solid sm:px-6 md:px-6 lg:px-8 max-w-full ">
                         <div className="flex flex-col  leading-7  text-gray-900 border-0 border-gray-200 ">
-                          <MarkeingMessagesList title={'WhatsApp Message Templates'} />
+                          <MarkeingMessagesList
+                            title={'WhatsApp Message Templates'}
+                          />
                         </div>
                       </div>
                     </section>
                   </div>
                 </>
-)
-            )}
-             {(viewable === 'projectReports' &&
-(
-  <>
-
-
+              )}
+              {viewable === 'projectReports' && (
+                <>
                   <div className="mt-2 mx-1">
                     <section className="w-full py-4  leading-7 text-gray-900 bg-white  rounded-md">
                       <div className="box-border px-2 mx-auto border-solid  max-w-full ">
                         <div className="flex flex-col  leading-7  text-gray-900 border-0 border-gray-200 ">
-                        <ProjectReportsBody title={'WhatsApp Message Templates'} />
-
+                          <ProjectReportsBody
+                            title={'WhatsApp Message Templates'}
+                          />
                         </div>
                       </div>
                     </section>
                   </div>
                 </>
-)
-            )}
+              )}
               {(viewable === 'Bank Accounts' ||
                 viewable === 'Virtual Accounts') && (
                 <>
@@ -458,17 +449,18 @@ const HomePage = () => {
                 </>
               )}
               {(viewable === 'Home' || viewable === 'MyProjectTasks') && (
-                <ProjectsTaskHome leadsTyper={undefined} />)
-              }
+                <ProjectsTaskHome leadsTyper={undefined} />
+              )}
               {viewable != 'inProgress' &&
-              viewable != 'Home' &&
-              viewable != 'MyProjectTasks' &&
+                viewable != 'Home' &&
+                viewable != 'MyProjectTasks' &&
                 viewable != 'Projects Lead Report' &&
                 viewable != 'Campaign Budget Report' &&
                 viewable != 'Bank Accounts' &&
                 viewable != 'Virtual Accounts' &&
                 viewable != 'unitsInventory' &&
-                viewable != 'Marketing' && viewable != 'projectReports' && (
+                viewable != 'Marketing' &&
+                viewable != 'projectReports' && (
                   <>
                     <div className="">
                       <div className="flex items-center justify-between py-2 pb-8 ">
@@ -481,53 +473,544 @@ const HomePage = () => {
                               viewable != 'Virtual Accounts' &&
                               viewable != 'unitsInventory' && (
                                 <>
+                                  <section className="bg-white py-4 px-4 flex flex-row rounded-sm">
+                                    <section className="w-[33%]">
+                                      <span className="text-slate-600 text-lg font-medium">
+                                        Projects
+                                      </span>
+                                      <div className="w-[299.02px] h-[0px] border border-stone-300 mt-2"></div>
+                                      <section className="flex flex-row">
+                                        <div className="text-sky-950 text-5xl font-semibold font-['Manrope'] leading-[80px]">
+                                          08
+                                        </div>
+                                        <div className="text-slate-400 text-lg font-medium font-['Inter'] leading-[30px] mt-8 ml-2">
+                                          Projects
+                                        </div>
+                                      </section>
 
+                                      <section className="flex flex-row pl-1">
+                                        <section className="flex flex-row pl-1">
+                                          <section className="flex flex-col">
+                                            <div className="w-[21px] h-[21px] bg-emerald-500" />
+                                            <div className="w-[21px] h-[38px] bg-violet-500" />
+                                            <div className="w-[21px] h-[70px] bg-cyan-400" />
+                                          </section>
+
+                                          <section className="ml-6">
+                                            <div className="flex flex-row">
+                                              <div className="w-3.5 h-3.5 bg-emerald-500 mt-[9px]" />
+                                              <div className="text-sky-950 text-2xl font-semibold font-['Manrope'] ml-3">
+                                                05
+                                              </div>
+                                              <div className="text-slate-400  font-medium font-['Inter'] text-[12px] ml-[2px] mt-[10px]">
+                                                On Going
+                                              </div>
+                                            </div>
+
+                                            <div className="flex flex-row mt-3">
+                                              <div className="w-3.5 h-3.5 bg-violet-500 mt-[9px]" />
+                                              <div className="text-sky-950 text-2xl font-semibold font-['Manrope'] ml-3">
+                                                03
+                                              </div>
+                                              <div className="text-slate-400  font-medium font-['Inter']  text-[12px] ml-[2px] mt-[10px]">
+                                                Completed
+                                              </div>
+                                            </div>
+                                            <div className="flex flex-row mt-3">
+                                              <div className="w-3.5 h-3.5 bg-cyan-400 mt-[9px]" />
+                                              <div className="text-sky-950 text-2xl font-semibold font-['Manrope'] ml-3">
+                                                01
+                                              </div>
+                                              <div className="text-slate-400  font-medium font-['Inter']  text-[12px] ml-[2px] mt-[10px]">
+                                                Coming Soon
+                                              </div>
+                                            </div>
+                                          </section>
+                                        </section>
+                                      </section>
+                                    </section>
+                                    {/* Assets */}
+                                    <section className="mx-3 w-[33%]">
+                                      <span className="text-slate-600 text-lg font-medium ">
+                                        Units
+                                      </span>
+                                      <div className="w-[299.02px] h-[0px] border border-stone-300 mt-2"></div>
+                                      <section className="flex flex-row">
+                                        <div className="text-sky-950 text-5xl font-semibold font-['Manrope'] leading-[80px]">
+                                          5000
+                                        </div>
+                                        <div className="text-slate-400 text-lg font-medium font-['Inter'] leading-[30px] mt-8 ml-2">
+                                          Units
+                                        </div>
+                                      </section>
+
+                                      <section className="flex flex-row pl-1">
+                                        <section className="flex flex-col">
+                                          <div className="w-[21px] h-[21px] bg-emerald-500" />
+                                          <div className="w-[21px] h-[38px] bg-violet-500" />
+                                          <div className="w-[21px] h-[70px] bg-cyan-400" />
+                                        </section>
+
+                                        <section className="ml-6">
+                                          <div className="flex flex-row">
+                                            <div className="w-3.5 h-3.5 bg-emerald-500 mt-[9px]" />
+                                            <div className="text-sky-950 text-2xl font-semibold font-['Manrope'] ml-3">
+                                              05
+                                            </div>
+                                            <div className="text-slate-400  font-medium font-['Inter'] text-[12px] ml-[2px] mt-[10px]">
+                                              Plots
+                                            </div>
+                                          </div>
+
+                                          <div className="flex flex-row mt-3">
+                                            <div className="w-3.5 h-3.5 bg-violet-500 mt-[9px]" />
+                                            <div className="text-sky-950 text-2xl font-semibold font-['Manrope'] ml-3">
+                                              03
+                                            </div>
+                                            <div className="text-slate-400  font-medium font-['Inter']  text-[12px] ml-[2px] mt-[10px]">
+                                              Apartments
+                                            </div>
+                                          </div>
+                                          <div className="flex flex-row mt-3">
+                                            <div className="w-3.5 h-3.5 bg-cyan-400 mt-[9px]" />
+                                            <div className="text-sky-950 text-2xl font-semibold font-['Manrope'] ml-3">
+                                              03
+                                            </div>
+                                            <div className="text-slate-400  font-medium font-['Inter']  text-[12px] ml-[2px] mt-[10px]">
+                                              Villas
+                                            </div>
+                                          </div>
+                                        </section>
+                                      </section>
+                                    </section>
+                                    {/* Assets */}
+                                    <section className="mx-3 w-[33%]">
+                                      <span className="text-slate-600 text-lg font-medium ">
+                                        Portfolio
+                                      </span>
+                                      <div className="w-[299.02px] h-[0px] border border-stone-300 mt-2"></div>
+                                      <section className="flex flex-row">
+                                        <div className="text-sky-950 text-5xl font-semibold font-['Manrope'] leading-[80px]">
+                                          2400
+                                        </div>
+                                        <div className="text-slate-400 text-lg font-medium font-['Inter'] leading-[30px] mt-8 ml-2">
+                                          Customers
+                                        </div>
+                                      </section>
+
+                                      <section className="flex flex-row pl-1">
+                                        <section className="flex flex-col">
+                                          <div className="w-[21px] h-[21px] bg-emerald-500" />
+                                          <div className="w-[21px] h-[38px] bg-violet-500" />
+                                          <div className="w-[21px] h-[70px] bg-cyan-400" />
+                                        </section>
+
+                                        <section className="ml-6">
+                                          <div className="flex flex-row">
+                                            <div className="w-3.5 h-3.5 bg-emerald-500 mt-[9px]" />
+                                            <div className="text-sky-950 text-2xl font-semibold font-['Manrope'] ml-3">
+                                              1500
+                                            </div>
+                                            <div className="text-slate-400  font-medium font-['Inter'] text-[12px] ml-[2px] mt-[10px]">
+                                              Posession
+                                            </div>
+                                          </div>
+
+                                          <div className="flex flex-row mt-3">
+                                            <div className="w-3.5 h-3.5 bg-violet-500 mt-[9px]" />
+                                            <div className="text-sky-950 text-2xl font-semibold font-['Manrope'] ml-3">
+                                              03
+                                            </div>
+                                            <div className="text-slate-400  font-medium font-['Inter']  text-[12px] ml-[2px] mt-[10px]">
+                                              Released
+                                            </div>
+                                          </div>
+                                          <div className="flex flex-row mt-3">
+                                            <div className="w-3.5 h-3.5 bg-cyan-400 mt-[9px]" />
+                                            <div className="text-sky-950 text-2xl font-semibold font-['Manrope'] ml-3">
+                                              100000
+                                            </div>
+                                            <div className="text-slate-400  font-medium font-['Inter']  text-[12px] ml-[2px] mt-[10px]">
+                                              Leads
+                                            </div>
+                                          </div>
+                                        </section>
+                                      </section>
+                                    </section>
+                                  </section>
+
+                                  <section className="flex flex-row bg-indigo-100 rounded-bl-xl rounded-br-xl border border-white">
+                                    <section className="flex flex-row px-4 py-4">
+                                      {/* sales Section */}
+                                      <section className="w-[33%]">
+                                        <section>
+                                          <span className="text-slate-600 text-lg font-medium">
+                                            Sales
+                                          </span>
+                                          <div className="w-[330.02px] h-[0px] border border-stone-300 mt-2"></div>
+                                        </section>
+                                        <section className="flex flex-row">
+                                          <div className="w-[50%]">
+                                            <div className="mt-3">
+                                              <section className="flex flex-row">
+                                                <div className="w-[46px] h-[46px] px-[17px] pt-[13px] pb-3 bg-emerald-50 justify-center items-center inline-flex">
+                                                  <div className="grow shrink basis-0 self-stretch pl-[2.61px] pr-[2.67px] py-[2.67px] justify-center items-center inline-flex" />
+                                                </div>
+                                                <section className="flex flex-col ml-2 mt-1">
+                                                  <div className="text-sky-950 text-xl font-semibold font-['Manrope'] ">
+                                                    10000+
+                                                  </div>
+                                                  <div className="text-slate-400 text-[12px] font-medium font-['Inter'] ">
+                                                    Leads
+                                                  </div>
+                                                </section>
+                                              </section>
+                                            </div>
+                                            <div className="mt-3">
+                                              <section className="flex flex-row">
+                                                <div className="w-[46px] h-[46px] px-[17px] pt-[13px] pb-3 bg-emerald-50 justify-center items-center inline-flex">
+                                                  <div className="grow shrink basis-0 self-stretch pl-[2.61px] pr-[2.67px] py-[2.67px] justify-center items-center inline-flex" />
+                                                </div>
+                                                <section className="flex flex-col ml-2 ">
+                                                  <div className="text-sky-950 text-xl font-semibold font-['Manrope'] ">
+                                                    10000+
+                                                  </div>
+                                                  <div className="text-slate-400 text-[12px] font-medium font-['Inter'] ">
+                                                    Active Visits
+                                                  </div>
+                                                </section>
+                                              </section>
+                                              <div className="mt-3">
+                                                <section className="flex flex-row">
+                                                  <div className="w-[46px] h-[46px] px-[17px] pt-[13px] pb-3 bg-emerald-50 justify-center items-center inline-flex">
+                                                    <div className="grow shrink basis-0 self-stretch pl-[2.61px] pr-[2.67px] py-[2.67px] justify-center items-center inline-flex" />
+                                                  </div>
+                                                  <section className="flex flex-col ml-2 mt-1">
+                                                    <div className="text-sky-950 text-xl font-semibold font-['Manrope'] ">
+                                                      10000+
+                                                    </div>
+                                                    <div className="text-slate-400 text-[12px] font-medium font-['Inter'] ">
+                                                      Site Visits
+                                                    </div>
+                                                  </section>
+                                                </section>
+                                              </div>
+                                            </div>
+                                          </div>
+
+                                          <div className="w-[50%]">
+                                            <div className="mt-3">
+                                              <section className="flex flex-row">
+                                                <div className="w-[46px] h-[46px] px-[17px] pt-[13px] pb-3 bg-emerald-50 justify-center items-center inline-flex">
+                                                  <div className="grow shrink basis-0 self-stretch pl-[2.61px] pr-[2.67px] py-[2.67px] justify-center items-center inline-flex" />
+                                                </div>
+                                                <section className="flex flex-col ml-2 mt-1">
+                                                  <div className="text-sky-950 text-xl font-semibold font-['Manrope'] ">
+                                                    10000+
+                                                  </div>
+                                                  <div className="text-slate-400 text-[12px] font-medium font-['Inter'] ">
+                                                    Booked
+                                                  </div>
+                                                </section>
+                                              </section>
+                                            </div>
+                                            <div className="mt-3">
+                                              <section className="flex flex-row">
+                                                <div className="w-[46px] h-[46px] px-[17px] pt-[13px] pb-3 bg-emerald-50 justify-center items-center inline-flex">
+                                                  <div className="grow shrink basis-0 self-stretch pl-[2.61px] pr-[2.67px] py-[2.67px] justify-center items-center inline-flex" />
+                                                </div>
+                                                <section className="flex flex-col ml-2 mt-1">
+                                                  <div className="text-sky-950 text-xl font-semibold font-['Manrope'] ">
+                                                    10000+
+                                                  </div>
+                                                  <div className="text-slate-400 text-[12px] font-medium font-['Inter'] ">
+                                                    Not Interested
+                                                  </div>
+                                                </section>
+                                              </section>
+                                              <div className="mt-3">
+                                                <section className="flex flex-row">
+                                                  <div className="w-[46px] h-[46px] px-[17px] pt-[13px] pb-3 bg-emerald-50 justify-center items-center inline-flex">
+                                                    <div className="grow shrink basis-0 self-stretch pl-[2.61px] pr-[2.67px] py-[2.67px] justify-center items-center inline-flex" />
+                                                  </div>
+                                                  <section className="flex flex-col ml-2 mt-1">
+                                                    <div className="text-sky-950 text-xl font-semibold font-['Manrope'] ">
+                                                      28+
+                                                    </div>
+                                                    <div className="text-slate-400 text-[12px] font-medium font-['Inter'] ">
+                                                      Sales Team
+                                                    </div>
+                                                  </section>
+                                                </section>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </section>
+                                      </section>
+
+                                      {/* CRM
+                                      Section */}
+                                      <section className="w-[33%] mx-3">
+                                        <section>
+                                          <span className="text-slate-600 text-lg font-medium">
+                                            CRM
+                                          </span>
+                                          <div className="w-[330.02px] h-[0px] border border-stone-300 mt-2"></div>
+                                        </section>
+                                        <section className="flex flex-row">
+                                          <div className="w-[50%]">
+                                            <div className="mt-3">
+                                              <section className="flex flex-row">
+                                                <div className="w-[46px] h-[46px] px-[17px] pt-[13px] pb-3 bg-emerald-50 justify-center items-center inline-flex">
+                                                  <div className="grow shrink basis-0 self-stretch pl-[2.61px] pr-[2.67px] py-[2.67px] justify-center items-center inline-flex" />
+                                                </div>
+                                                <section className="flex flex-col ml-2 mt-1">
+                                                  <div className="text-sky-950 text-xl font-semibold font-['Manrope'] ">
+                                                    10000+
+                                                  </div>
+                                                  <div className="text-slate-400 text-[12px] font-medium font-['Inter'] ">
+                                                    Collected
+                                                  </div>
+                                                </section>
+                                              </section>
+                                            </div>
+                                            <div className="mt-3">
+                                              <section className="flex flex-row">
+                                                <div className="w-[46px] h-[46px] px-[17px] pt-[13px] pb-3 bg-emerald-50 justify-center items-center inline-flex">
+                                                  <div className="grow shrink basis-0 self-stretch pl-[2.61px] pr-[2.67px] py-[2.67px] justify-center items-center inline-flex" />
+                                                </div>
+                                                <section className="flex flex-col ml-2 mt-1">
+                                                  <div className="text-sky-950 text-xl font-semibold font-['Manrope'] ">
+                                                    10000+
+                                                  </div>
+                                                  <div className="text-slate-400 text-[12px] font-medium font-['Inter'] ">
+                                                    Due
+                                                  </div>
+                                                </section>
+                                              </section>
+                                              <div className="mt-3">
+                                                <section className="flex flex-row">
+                                                  <div className="w-[46px] h-[46px] px-[17px] pt-[13px] pb-3 bg-emerald-50 justify-center items-center inline-flex">
+                                                    <div className="grow shrink basis-0 self-stretch pl-[2.61px] pr-[2.67px] py-[2.67px] justify-center items-center inline-flex" />
+                                                  </div>
+                                                  <section className="flex flex-col ml-2 mt-1">
+                                                    <div className="text-sky-950 text-xl font-semibold font-['Manrope'] ">
+                                                      10000+
+                                                    </div>
+                                                    <div className="text-slate-400 text-[12px] font-medium font-['Inter'] ">
+                                                      Projection
+                                                    </div>
+                                                  </section>
+                                                </section>
+                                              </div>
+                                            </div>
+                                          </div>
+
+                                          <div className="w-[50%]">
+                                            <div className="mt-3">
+                                              <section className="flex flex-row">
+                                                <div className="w-[46px] h-[46px] px-[17px] pt-[13px] pb-3 bg-emerald-50 justify-center items-center inline-flex">
+                                                  <div className="grow shrink basis-0 self-stretch pl-[2.61px] pr-[2.67px] py-[2.67px] justify-center items-center inline-flex" />
+                                                </div>
+                                                <section className="flex flex-col ml-2 mt-1">
+                                                  <div className="text-sky-950 text-xl font-semibold font-['Manrope'] ">
+                                                    10000+
+                                                  </div>
+                                                  <div className="text-slate-400 text-[12px] font-medium font-['Inter'] ">
+                                                    Cancelled
+                                                  </div>
+                                                </section>
+                                              </section>
+                                            </div>
+                                            <div className="mt-3">
+                                              <section className="flex flex-row">
+                                                <div className="w-[46px] h-[46px] px-[17px] pt-[13px] pb-3 bg-emerald-50 justify-center items-center inline-flex">
+                                                  <div className="grow shrink basis-0 self-stretch pl-[2.61px] pr-[2.67px] py-[2.67px] justify-center items-center inline-flex" />
+                                                </div>
+                                                <section className="flex flex-col ml-2 mt-1">
+                                                  <div className="text-sky-950 text-xl font-semibold font-['Manrope'] ">
+                                                    10000+
+                                                  </div>
+                                                  <div className="text-slate-400 text-[12px] font-medium font-['Inter'] ">
+                                                    Swapped
+                                                  </div>
+                                                </section>
+                                              </section>
+                                              <div className="mt-3">
+                                                <section className="flex flex-row">
+                                                  <div className="w-[46px] h-[46px] px-[17px] pt-[13px] pb-3 bg-emerald-50 justify-center items-center inline-flex">
+                                                    <div className="grow shrink basis-0 self-stretch pl-[2.61px] pr-[2.67px] py-[2.67px] justify-center items-center inline-flex" />
+                                                  </div>
+                                                  <section className="flex flex-col ml-2 mt-1">
+                                                    <div className="text-sky-950 text-xl font-semibold font-['Manrope'] ">
+                                                      28+
+                                                    </div>
+                                                    <div className="text-slate-400 text-[12px] font-medium font-['Inter'] ">
+                                                      Blocked
+                                                    </div>
+                                                  </section>
+                                                </section>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </section>
+                                      </section>
+
+                                      {/* Marketing
+                                      Section */}
+                                      <section className="w-[33%]">
+                                        <section>
+                                          <span className="text-slate-600 text-lg font-medium">
+                                            Teams
+                                          </span>
+                                          <div className="w-[330.02px] h-[0px] border border-stone-300 mt-2"></div>
+                                        </section>
+                                        <section className="flex flex-row">
+                                          <div className="w-[50%]">
+                                            <div className="mt-3">
+                                              <section className="flex flex-row">
+                                                <div className="w-[46px] h-[46px] px-[17px] pt-[13px] pb-3 bg-emerald-50 justify-center items-center inline-flex">
+                                                  <div className="grow shrink basis-0 self-stretch pl-[2.61px] pr-[2.67px] py-[2.67px] justify-center items-center inline-flex" />
+                                                </div>
+                                                <section className="flex flex-col ml-2 mt-1">
+                                                  <div className="text-sky-950 text-xl font-semibold font-['Manrope'] ">
+                                                    10000+
+                                                  </div>
+                                                  <div className="text-slate-400 text-[12px] font-medium font-['Inter'] ">
+                                                    Leads
+                                                  </div>
+                                                </section>
+                                              </section>
+                                            </div>
+                                            <div className="mt-3">
+                                              <section className="flex flex-row">
+                                                <div className="w-[46px] h-[46px] px-[17px] pt-[13px] pb-3 bg-emerald-50 justify-center items-center inline-flex">
+                                                  <div className="grow shrink basis-0 self-stretch pl-[2.61px] pr-[2.67px] py-[2.67px] justify-center items-center inline-flex" />
+                                                </div>
+                                                <section className="flex flex-col ml-2 mt-1">
+                                                  <div className="text-sky-950 text-xl font-semibold font-['Manrope'] ">
+                                                    10000+
+                                                  </div>
+                                                  <div className="text-slate-400 text-[12px] font-medium font-['Inter'] ">
+                                                    Active Visits
+                                                  </div>
+                                                </section>
+                                              </section>
+                                              <div className="mt-3">
+                                                <section className="flex flex-row">
+                                                  <div className="w-[46px] h-[46px] px-[17px] pt-[13px] pb-3 bg-emerald-50 justify-center items-center inline-flex">
+                                                    <div className="grow shrink basis-0 self-stretch pl-[2.61px] pr-[2.67px] py-[2.67px] justify-center items-center inline-flex" />
+                                                  </div>
+                                                  <section className="flex flex-col ml-2 mt-1">
+                                                    <div className="text-sky-950 text-xl font-semibold font-['Manrope'] ">
+                                                      10000+
+                                                    </div>
+                                                    <div className="text-slate-400 text-[12px] font-medium font-['Inter'] ">
+                                                      Site Visits
+                                                    </div>
+                                                  </section>
+                                                </section>
+                                              </div>
+                                            </div>
+                                          </div>
+
+                                          <div className="w-[50%]">
+                                            <div className="mt-3">
+                                              <section className="flex flex-row">
+                                                <div className="w-[46px] h-[46px] px-[17px] pt-[13px] pb-3 bg-emerald-50 justify-center items-center inline-flex">
+                                                  <div className="grow shrink basis-0 self-stretch pl-[2.61px] pr-[2.67px] py-[2.67px] justify-center items-center inline-flex" />
+                                                </div>
+                                                <section className="flex flex-col ml-2 mt-1">
+                                                  <div className="text-sky-950 text-xl font-semibold font-['Manrope'] ">
+                                                    10000+
+                                                  </div>
+                                                  <div className="text-slate-400 text-[12px] font-medium font-['Inter'] ">
+                                                    Booked
+                                                  </div>
+                                                </section>
+                                              </section>
+                                            </div>
+                                            <div className="mt-3">
+                                              <section className="flex flex-row">
+                                                <div className="w-[46px] h-[46px] px-[17px] pt-[13px] pb-3 bg-emerald-50 justify-center items-center inline-flex">
+                                                  <div className="grow shrink basis-0 self-stretch pl-[2.61px] pr-[2.67px] py-[2.67px] justify-center items-center inline-flex" />
+                                                </div>
+                                                <section className="flex flex-col ml-2 mt-1">
+                                                  <div className="text-sky-950 text-xl font-semibold font-['Manrope'] ">
+                                                    10000+
+                                                  </div>
+                                                  <div className="text-slate-400 text-[12px] font-medium font-['Inter'] ">
+                                                    Not Interested
+                                                  </div>
+                                                </section>
+                                              </section>
+                                              <div className="mt-3">
+                                                <section className="flex flex-row">
+                                                  <div className="w-[46px] h-[46px] px-[17px] pt-[13px] pb-3 bg-emerald-50 justify-center items-center inline-flex">
+                                                    <div className="grow shrink basis-0 self-stretch pl-[2.61px] pr-[2.67px] py-[2.67px] justify-center items-center inline-flex" />
+                                                  </div>
+                                                  <section className="flex flex-col ml-2 mt-1">
+                                                    <div className="text-sky-950 text-xl font-semibold font-['Manrope'] ">
+                                                      28+
+                                                    </div>
+                                                    <div className="text-slate-400 text-[12px] font-medium font-['Inter'] ">
+                                                      Sales Team
+                                                    </div>
+                                                  </section>
+                                                </section>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </section>
+                                      </section>
+                                    </section>
+                                  </section>
 
                                   {projects.length > 0 ? (
                                     <section className="bg-white py-2 rounded-sm">
-                                       <div className="px-4">
-                                    <div className="flex items-center justify-between py-2 pb-4  ">
-                                      <span className="relative  flex items-center w-auto text-md font-bold leading-none pl-0 font-Playfair">
-                                        Projects {viewable}
-                                      </span>
-                                      <button
-                                        onClick={() =>
-                                          setIsNewProjectOpen(true)
-                                        }
-                                        className="flex items-center justify-center h-8 px-4  bg-gray-200 ml-auto text-sm font-medium rounded hover:bg-gray-300"
-                                      >
-                                        <svg
-                                          className="w-5 h-5"
-                                          xmlns="http://www.w3.org/2000/svg"
-                                          fill="none"
-                                          viewBox="0 0 24 24"
-                                          stroke="currentColor"
-                                        >
-                                          <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth="2"
-                                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                      <div className="px-4">
+                                        <div className="flex items-center justify-between py-2 pb-4  ">
+                                          <span className="relative  flex items-center w-auto text-md font-bold leading-none pl-0 font-Playfair">
+                                            Projects {viewable}
+                                          </span>
+                                          <button
+                                            onClick={() =>
+                                              setIsNewProjectOpen(true)
+                                            }
+                                            className="flex items-center justify-center h-8 px-4  bg-gray-200 ml-auto text-sm font-medium rounded hover:bg-gray-300"
+                                          >
+                                            <svg
+                                              className="w-5 h-5"
+                                              xmlns="http://www.w3.org/2000/svg"
+                                              fill="none"
+                                              viewBox="0 0 24 24"
+                                              stroke="currentColor"
+                                            >
+                                              <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth="2"
+                                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                              />
+                                            </svg>
+                                            <span className="ml-2 leading-none">
+                                              Add Project
+                                            </span>
+                                          </button>
+                                        </div>
+                                      </div>
+                                      <section className="mx-2 rounded-xl bg-white shadow p-2">
+                                        {projects.map((project) => (
+                                          <ProjectsMHomeBody
+                                            key={project.uid}
+                                            project={project}
+                                            onSliderOpen={() => {
+                                              setProject(project)
+                                              setIsEditProjectOpen(true)
+                                            }}
+                                            isEdit={false}
                                           />
-                                        </svg>
-                                        <span className="ml-2 leading-none">
-                                          Add Project
-                                        </span>
-                                      </button>
-                                    </div>
-                                  </div>
-                                  <section className="mx-2 rounded-xl bg-white shadow p-2">
-                                      {projects.map((project) => (
-                                        <ProjectsMHomeBody
-                                          key={project.uid}
-                                          project={project}
-                                          onSliderOpen={() => {
-                                            setProject(project)
-                                            setIsEditProjectOpen(true)
-                                          }}
-                                          isEdit={false}
-                                        />
-                                      ))}
+                                        ))}
                                       </section>
                                     </section>
                                   ) : (

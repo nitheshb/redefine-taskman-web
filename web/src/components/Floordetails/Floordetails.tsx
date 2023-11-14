@@ -688,7 +688,7 @@ const Floordetails = ({
                     usersList={phaseFeed}
                   />
                 </span>
-                <span className="font-blue text-[13px] italic">showing</span>
+                <span className="font-blue text-[13px] italic">showing </span>
                 {'   '}
                 <span className="font-semibold font-blue mx-1">
                   {filteredUnits.length}
@@ -737,7 +737,10 @@ const Floordetails = ({
                   >
                     <span className="w-3 h-3 ml-2 mr-2 mt-[4px] rounded-md mr-1 bg-[#E9E9E9]"></span>{' '}
                     <span className="mr-1 text-[10px]"> Blocked</span>
-                    {unitsFeed?.filter((d) => d?.status === 'blocked').length}
+                    {
+                      unitsFeed?.filter((d) => ['customer_blocked', 'management_blocked'].includes(d?.status))
+                        .length
+                    }
                   </section>
                 </section>
 
@@ -1057,7 +1060,7 @@ const Floordetails = ({
                                         </div>
                                       )}
 
-                                      {data?.status === 'blocked' && (
+                                      {data?.status === 'customer_blocked' && (
                                         <div className="flex flex-col items-right justify-between">
                                           <div className="flex flex-row justify-between items-right">
                                             <h3 className="m-0 ml-2 mt-4 text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200">

@@ -501,7 +501,7 @@ export default function UnitSideViewCRM({
     setLeadStatus(status?.toLowerCase())
   }, [customerDetails])
 
-  const setAssigner = (leadDocId, value) => {
+  const setAssignerFun = (leadDocId, value) => {
     setAssignerName(value.name)
     setAssignedTo(value.value)
     // save assigner Details in db
@@ -1024,7 +1024,7 @@ export default function UnitSideViewCRM({
                           <AssigedToDropComp
                             assignerName={assignerName}
                             id={id}
-                            setAssigner={setAssigner}
+                            setAssigner={setAssignerFun}
                             usersList={usersList}
                             align={undefined}
                           />

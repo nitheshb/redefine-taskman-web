@@ -33,6 +33,7 @@ const ProjectsMHomeBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
     holdArea,
     totalUnitCount,
     soldUnitCount,
+    blockedUnitCount,
     availableCount,
     bookUnitCount,
     blockUnitCount,
@@ -52,35 +53,7 @@ const ProjectsMHomeBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
     t_refund,
   } = project
 
-  const aprtConfig = [
-    { k: 'Builder', v: builderName, pic: '/builder2.png' },
-    { k: 'Type', v: projectType?.name, pic: '/a1.png' },
-    { k: 'Location', v: location, pic: '/map.png' },
-    { k: 'Area', v: `${totalArea} sqft`, pic: '/x.png' },
-    { k: 'Phases', v: 0, pic: '/p1.png' },
-  ]
 
-  const areaFeedData = [
-    { k: 'Total', v: totalPlotArea, pic: '' },
-    { k: 'Sold', v: soldArea, pic: '' },
-    { k: 'Booked', v: bookArea || 0, pic: '' },
-    { k: 'Available', v: availArea || 0, pic: '' },
-    { k: 'Hold', v: blockArea || 0, pic: '' },
-  ]
-  const unitFeedData = [
-    { k: 'Total', v: totalUnitCount || 0, pic: '' },
-    { k: 'Sold', v: soldUnitCount || 0, pic: '' },
-    { k: 'Booked', v: bookUnitCount || 0, pic: '' },
-    { k: 'Available', v: availableCount || 0, pic: '' },
-    { k: 'Hold', v: blockUnitCount || 0, pic: '' },
-  ]
-  const valueFeedData = [
-    { k: 'Total', v: totalEstValue || 0, pic: '' },
-    { k: 'Sold', v: soldValue || 0, pic: '' },
-    { k: 'Booked', v: bookValue || 0, pic: '' },
-    { k: 'Collected', v: availValue || 0, pic: '' },
-    { k: 'Blocked', v: blockValue || 0, pic: '' },
-  ]
   const data = {
     series: [
       {
@@ -294,7 +267,8 @@ const ProjectsMHomeBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                       { item: 'Total', value: totalUnitCount || 0 },
                       { item: 'Available', value: availableCount || 0 },
                       { item: 'Sold', value: soldUnitCount || 0 },
-                      { item: 'Blocked', value: blockUnitCount || 0 },
+                      { item: 'Blocked', value: blockedUnitCount || 0 },
+                      { item: 'Mang B', value: blockedUnitCount || 0 },
                     ].map((data, i) => (
                       <div
                         className=" w-1/4  mx-1"
@@ -327,7 +301,7 @@ const ProjectsMHomeBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                           />
                         </div>
                         <div className="flex  justify-center mr-1  mb-1 mt[2px]">
-                          <h6 className="font-bodyLato font-semibold text-xs mt-1">
+                          <h6 className="font-bodyLato  text-xs mt-1">
                             {t(data.item)}
                           </h6>
                         </div>
@@ -341,13 +315,14 @@ const ProjectsMHomeBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
           <div className="w-2/4 bg-[#E9E9F2] ">
             <div className="flex flex-col bg-white shadow rounded-md my-2  px-2  py-2">
               <h6 className="font-bodyLato font-semibold text-xs m-1 mb-4">
-                {'Status'}
+                {'Status Pipeline'}
               </h6>
               <div className="flex flex-row justify-between px-1">
                 {[
-                  { item: 'Booked', value: bookUnitCount || 0 },
+                  { item: 'Total', value: bookUnitCount || 0 },
+                  { item: 'Booking', value: bookUnitCount || 0 },
                   { item: 'Agreement', value: s_agreeCount || 0 },
-                  { item: 'Registered', value: s_registerCount || 0 },
+
                 ].map((data, i) => (
                   <div
                     className=" w-1/4  mx-1"
@@ -367,9 +342,10 @@ const ProjectsMHomeBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
               </div>
               <div className="flex flex-row justify-between px-1 mt-3">
                 {[
+                  { item: 'Registration', value: s_registerCount || 0 },
                   { item: 'Construction', value: s_constCount || 0 },
                   { item: 'Possession', value: s_possCount || 0 },
-                  { item: '', value: '' },
+
                 ].map((data, i) => (
                   <div
                     className=" w-1/4  mx-1"
@@ -396,9 +372,10 @@ const ProjectsMHomeBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
               </h6>
               <div className="flex flex-row justify-between px-1">
                 {[
+                  { item: 'Total', value: totalValue || 0 },
                   { item: 'Sale', value: soldValue || 0 },
                   { item: 'Collected', value: t_collect || 0 },
-                  { item: 'MTD ', value: t_mtd || 0 },
+
                 ].map((data, i) => (
                   <div
                     className=" w-1/4  mx-1"
@@ -418,9 +395,10 @@ const ProjectsMHomeBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
               </div>
               <div className="flex flex-row justify-between px-1 mt-3">
                 {[
+                   { item: 'MTD ', value: t_mtd || 0 },
                   { item: 'Balance', value: t_bal || 0 },
                   { item: 'Refunds', value: t_refund || 0 },
-                  { item: '', value: '' },
+
                 ].map((data, i) => (
                   <div
                     key={i}

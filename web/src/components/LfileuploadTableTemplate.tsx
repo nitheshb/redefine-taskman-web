@@ -314,16 +314,19 @@ const EnhancedTableToolbar = (props) => {
     return unsubscribe
   }
   const insertPlotToDb = async (records) => {
+    console.log('check it', records.length);
     const mappedArry = await Promise.all(
       records.map(async (data, index) => {
+        // console.log()
         await addPlotUnit(orgId, data, user?.email, `Unit Created by bulk `)
-        //  setUploadedUnitsCount(index + 1)
+        await setUploadedUnitsCount(index + 1)
         //   return await addUnit(orgId, newData, user?.email, 'Unit Created by csv')
 
-        console.log('am inside addLeadstoDB')
+        console.log('am inside addLeadstoDB', index + 1)
+
       })
     )
-    await setUnitUploadMessage(true)
+    // await setUnitUploadMessage(true)
   }
   const addUnitsToDB = async (records, pId) => {
     setUnitUploadMessage(false)
@@ -452,7 +455,7 @@ const EnhancedTableToolbar = (props) => {
         <span style={{ display: 'flex' }}>
           {sourceTab === 'validR' && !unitUploadMessage && (
             <span className="ml-3">
-              Uploaded {uploadedLeadsCount} of {rows.length}
+              Uploaded {uploadedUnitsCount} of {rows.length}
             </span>
           )}
           {unitUploadMessage && (

@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 
 import { Timestamp } from 'firebase/firestore'
 import { ErrorMessage, Form, Formik } from 'formik'
+import { useSnackbar } from 'notistack'
 import * as Yup from 'yup'
 
 import {
@@ -12,214 +13,48 @@ import {
   checkIfLeadAlreadyExists,
   getAllProjects,
   steamUsersListByRole,
+  updateUnitAsBlocked,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
-import {
-  sendWhatAppMediaSms,
-  sendWhatAppTextSms,
-} from 'src/util/axiosWhatAppApi'
 
-const BlockingUnitForm = ({ title, dialogOpen }) => {
+const BlockingUnitForm = ({
+  title,
+  dialogOpen,
+  leadDetailsObj2,
+  selUnitDetails,
+}) => {
   const { user } = useAuth()
   const { orgId } = user
+  const { enqueueSnackbar } = useSnackbar()
 
-  const [fetchedUsersList, setfetchedUsersList] = useState([])
-  const [usersList, setusersList] = useState([])
-  const [projectList, setprojectList] = useState([])
-  useEffect(() => {
-    const unsubscribe = steamUsersListByRole(
-      orgId,
-      (querySnapshot) => {
-        const usersListA = querySnapshot.docs.map((docSnapshot) =>
-          docSnapshot.data()
-        )
-        setfetchedUsersList(usersListA)
-        usersListA.map((user) => {
-          user.label = user.displayName || user.name
-          user.value = user.uid
-        })
-        console.log('fetched users list is', usersListA)
-
-        setusersList(usersListA)
-      },
-      (error) => setfetchedUsersList([])
-    )
-
-    return unsubscribe
-  }, [])
-  useEffect(() => {
-    const unsubscribe = getAllProjects(
-      orgId,
-      (querySnapshot) => {
-        const projectsListA = querySnapshot.docs.map((docSnapshot) =>
-          docSnapshot.data()
-        )
-        setfetchedUsersList(projectsListA)
-        projectsListA.map((user) => {
-          user.label = user.projectName
-          user.value = user.projectName
-        })
-        console.log('fetched users list is', projectsListA)
-        setprojectList(projectsListA)
-      },
-      (error) => setfetchedUsersList([])
-    )
-
-    return unsubscribe
-  }, [])
-
-  const aquaticCreatures = [
-    { label: 'Select the Project', value: '' },
-    { label: 'Subha Ecostone', value: 'subhaecostone' },
-    { label: 'Esperanza', value: 'esperanza' },
-    { label: 'Nakshatra Township', value: 'nakshatratownship' },
-  ]
-  // const usersList = [
-  //   { label: 'User1', value: 'User1' },
-  //   { label: 'User2', value: 'User2' },
-  //   { label: 'User3', value: 'User3' },
-  // ]
-  const budgetList = [
-    { label: 'Select Customer Budget', value: '' },
-    { label: '5 - 10 Lacs', value: 'Bangalore,KA' },
-    { label: '10 - 20 Lacs', value: 'Cochin,KL' },
-    { label: '20 - 30 Lacs', value: 'Mumbai,MH' },
-    { label: '30 - 40 Lacs', value: 'Mumbai,MH' },
-    { label: '40 - 50 Lacs', value: 'Mumbai,MH' },
-    { label: '50 - 60 Lacs', value: 'Mumbai,MH' },
-    { label: '60 - 70 Lacs', value: 'Mumbai,MH' },
-    { label: '70 - 80 Lacs', value: 'Mumbai,MH' },
-    { label: '80 - 90 Lacs', value: 'Mumbai,MH' },
-    { label: '90 - 100 Lacs', value: 'Mumbai,MH' },
-    { label: '1.0 Cr - 1.1 Cr', value: 'Mumbai,MH' },
-    { label: '1.1 Cr - 1.2 Cr', value: 'Mumbai,MH' },
-    { label: '1.2 Cr - 1.3 Cr', value: 'Mumbai,MH' },
-    { label: '1.3 Cr - 1.4 Cr', value: 'Mumbai,MH' },
-    { label: '1.4 Cr - 1.5 Cr', value: 'Mumbai,MH' },
-    { label: '1.5 + Cr', value: 'Mumbai,MH' },
-  ]
-
-  const plans = [
-    {
-      name: 'Apartment',
-      img: '/apart1.svg',
-    },
-    {
-      name: 'Plots',
-      img: '/plot.svg',
-    },
-    {
-      name: 'WeekendVillas',
-      img: '/weekend.svg',
-    },
-    {
-      name: 'Villas',
-      img: '/villa.svg',
-    },
-  ]
-
-  const devTypeA = [
-    {
-      name: 'Outright',
-      img: '/apart.svg',
-    },
-    {
-      name: 'Joint',
-      img: '/apart1.svg',
-    },
-  ]
   const [loading, setLoading] = useState(false)
   const [formMessage, setFormMessage] = useState('')
   const [selected, setSelected] = useState({})
-  const [devType, setdevType] = useState(devTypeA[0])
   const [selDays, setSelDays] = useState(5)
 
-  const phoneRegExp =
-    /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/
-
-  const typeSel = async (sel) => {
-    await console.log('value is', selected)
-    await setSelected(sel)
-    await console.log('thsi si sel type', sel, selected)
-  }
-  const devTypeSel = async (sel) => {
-    await setdevType(sel)
-  }
   const onSubmitFun = async (data, resetForm) => {
-    console.log(data)
-    setLoading(true)
+    const { id, purpose, customerDetailsObj, secondaryCustomerDetailsObj } =
+      leadDetailsObj2
+    const { uid } = selUnitDetails
 
-    const {
-      email,
-      name,
-      mobileNo,
-      assignedTo,
-      assignedToObj,
-      source,
-      project,
-    } = data
-    // updateUserRole(uid, deptVal, myRole, email, 'nitheshreddy.email@gmail.com')
-
-    const foundLength = await checkIfLeadAlreadyExists('spark_leads', mobileNo)
-    const leadData = {
+    const unitUpdate = {
+      blocked_leadId: id,
+      status: 'customer_blocked',
+      blocked_by: customerDetailsObj?.Name || '',
+      blockedOn: Timestamp.now().toMillis(),
+      ct: Timestamp.now().toMillis(),
       Date: Timestamp.now().toMillis(),
-      Email: email,
-      Mobile: mobileNo,
-      Name: name,
-      Note: '',
-      Project: project,
-      Source: source,
-      Status: assignedTo === '' ? 'unassigned' : 'new',
-      intype: 'Form',
-      assignedTo: assignedToObj?.value || '',
-      assignedToObj: {
-        department: assignedToObj?.department || [],
-        email: assignedToObj?.email || '',
-        label: assignedToObj?.label || '',
-        name: assignedToObj?.name || '',
-        namespace: orgId,
-        roles: assignedToObj?.roles || [],
-        uid: assignedToObj?.value || '',
-        value: assignedToObj?.value || '',
-      },
-      by: user?.email,
     }
-    console.log('user is ', user)
-    if (foundLength?.length > 0) {
-      console.log('foundLENGTH IS ', foundLength)
-      setFormMessage('User Already Exists with Ph No')
-      setLoading(false)
-    } else {
-      console.log('foundLENGTH IS empty ', foundLength)
-
-      // proceed to copy
-      await addLead(
-        orgId,
-        leadData,
-        user?.email,
-        `lead created and assidged to ${assignedTo}`
-      )
-
-      await sendWhatAppTextSms(
-        mobileNo,
-        `Thank you ${name} for choosing the world className ${
-          project || 'project'
-        }`
-      )
-
-      // msg2
-      await sendWhatAppMediaSms(mobileNo)
-      const smg =
-        assignedTo === ''
-          ? 'You Interested will be addressed soon... U can contact 9123456789 mean while'
-          : 'we have assigned dedicated manager to you. Mr.Ram as ur personal manager'
-
-      // msg3
-      sendWhatAppTextSms(mobileNo, smg)
-      resetForm()
-      setFormMessage('Saved Successfully..!')
-      setLoading(false)
-    }
+    updateUnitAsBlocked(
+      orgId,
+      leadDetailsObj2?.ProjectId,
+      uid,
+      id,
+      unitUpdate,
+      user?.email,
+      enqueueSnackbar,
+      resetForm
+    )
   }
 
   const initialState = {
@@ -269,7 +104,9 @@ const BlockingUnitForm = ({ title, dialogOpen }) => {
                   initialValues={initialState}
                   validationSchema={validate}
                   onSubmit={(values, { resetForm }) => {
-                    // onSubmit(values, resetForm)
+                    onSubmitFun(values, resetForm)
+                    //
+                    console.log('block unit values are ', values, selDays)
                   }}
                 >
                   {(formik) => (
@@ -280,6 +117,13 @@ const BlockingUnitForm = ({ title, dialogOpen }) => {
                           name="blockReason"
                           placeholder="Write a blocking reason"
                           className="w-full outline-none text-gray-700 text-lg"
+                          onChange={(e) => {
+                            formik.setFieldValue('blockReason', e.target.value)
+                            // handleFileUploadFun(
+                            //   e.target.files[0],
+                            //   'panCard1'
+                            // )
+                          }}
                         />
                         <ErrorMessage
                           component="div"

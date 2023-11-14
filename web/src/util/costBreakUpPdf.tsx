@@ -95,16 +95,16 @@ const CostBreakUpPdf = ({
         selUnitDetails?.area *
           (selUnitDetails?.plc || selUnitDetails?.plc_per_sqft)
     )
-    const gstTaxForProjA = selPhaseObj?.partATaxObj.filter(
+    const gstTaxForProjA = selPhaseObj?.partATaxObj?.filter(
       (d) => d?.component.value === 'sqft_cost_tax'
     )
     const gstTaxIs =
-      gstTaxForProjA.length > 0 ? gstTaxForProjA[0]?.gst?.value : 0
-    const plcGstForProjA = selPhaseObj?.partATaxObj.filter(
+      gstTaxForProjA?.length > 0 ? gstTaxForProjA[0]?.gst?.value : 0
+    const plcGstForProjA = selPhaseObj?.partATaxObj?.filter(
       (d) => d?.component.value === 'plc_tax'
     )
     const plcGstIs =
-      plcGstForProjA.length > 0 ? plcGstForProjA[0]?.gst?.value : 0
+      plcGstForProjA?.length > 0 ? plcGstForProjA[0]?.gst?.value : 0
     const plot_gstValue = Math.round(plotSaleValue) * gstTaxIs
     const plc_gstValue = Math.round(plcSaleValue * plcGstIs)
     console.log(
@@ -117,7 +117,7 @@ const CostBreakUpPdf = ({
     )
     let x = []
     if (csMode === 'plot_cs') {
-      additonalChargesObj.map((data, inx) => {
+      additonalChargesObj?.map((data, inx) => {
         let total = 0
         let gstTotal = 0
         const isChargedPerSqft = data?.units.value === 'costpersqft'

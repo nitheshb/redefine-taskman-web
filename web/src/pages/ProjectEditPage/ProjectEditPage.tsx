@@ -13,6 +13,7 @@ import HeadSideBar from '../../components/HeadSideBar/HeadSideBar'
 import ProjectsMHomeBody from '../../components/ProjectsMHomeBody/ProjectsMHomeBody'
 import ProjPhaseHome from '../../components/ProjPhaseHome/ProjPhaseHome'
 import SiderForm from '../../components/SiderForm/SiderForm'
+import EachProjectDashboard from 'src/components/A_ProjModule/EachProjectDashboard'
 
 const ProjectEditPage = ({
   selModule,
@@ -73,13 +74,20 @@ const ProjectEditPage = ({
 
                 {project?.projectName ? (
                   <>
-                    <ProjectsMHomeBody
+                    <EachProjectDashboard
                       project={project}
                       isEdit
                       onSliderOpen={() => {
                         setIsEditProjectOpen(true)
                       }}
                     />
+                    {/* <ProjectsMHomeBody
+                      project={project}
+                      isEdit
+                      onSliderOpen={() => {
+                        setIsEditProjectOpen(true)
+                      }}
+                    /> */}
                     <ProjPhaseHome
                       projectDetails={project}
                       source="projectManagement"

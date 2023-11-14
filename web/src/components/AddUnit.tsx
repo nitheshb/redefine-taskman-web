@@ -65,7 +65,7 @@ const AddUnit = ({
     phaseDetails,
     blockDetails,
     data,
-  });
+  })
 
   useEffect(() => {
     const unsubscribe = steamUsersListByRole(
@@ -465,8 +465,8 @@ const AddUnit = ({
   const statusList = [
     { label: 'Select the Status', value: '' },
     { label: 'Available', value: 'available' },
-    { label: 'Blocked by Customer', value: 'blocked_customer' },
-    { label: 'Blocked by Management', value: 'blocked_management' },
+    { label: 'Blocked by Customer', value: 'customer_blocked' },
+    { label: 'Blocked by Management', value: 'management_blocked' },
     { label: 'Sold', value: 'sold' },
   ]
 
@@ -483,33 +483,32 @@ const AddUnit = ({
   ]
   // const validate = Yup.object({
 
+  // unit_no: Yup.string()
+  // .max(15, 'Must be 15 characters or less')
+  // .required('Unit_no is Required'),
+  // lastName: Yup.string()
+  //   .max(20, 'Must be 20 characters or less')
+  //   .required('Required'),
+  // sqft_rate: Yup.number().required('sqft rate is required'),
+  // bedRooms:
+  //   projectDetails?.projectType?.name === 'Apartment'
+  //     ? Yup.string().required('bedRooms is required')
+  //     : Yup.string().notRequired(),
+  // floor: Yup.number().required('floor is required'),
+  // bathrooms:
+  //   projectDetails?.projectType?.name === 'Apartment'
+  //     ? Yup.string().required('bathrooms is required')
+  //     : Yup.string().notRequired(),
+  // // bathrooms: Yup.string().required('bathrooms is required'),
+  // area:
+  //   projectDetails?.projectType?.name === 'Plots'
+  //     ? Yup.number().required('area is required')
+  //     : Yup.number().notRequired(),
 
-    // unit_no: Yup.string()
-      // .max(15, 'Must be 15 characters or less')
-      // .required('Unit_no is Required'),
-    // lastName: Yup.string()
-    //   .max(20, 'Must be 20 characters or less')
-    //   .required('Required'),
-    // sqft_rate: Yup.number().required('sqft rate is required'),
-    // bedRooms:
-    //   projectDetails?.projectType?.name === 'Apartment'
-    //     ? Yup.string().required('bedRooms is required')
-    //     : Yup.string().notRequired(),
-    // floor: Yup.number().required('floor is required'),
-    // bathrooms:
-    //   projectDetails?.projectType?.name === 'Apartment'
-    //     ? Yup.string().required('bathrooms is required')
-    //     : Yup.string().notRequired(),
-    // // bathrooms: Yup.string().required('bathrooms is required'),
-    // area:
-    //   projectDetails?.projectType?.name === 'Plots'
-    //     ? Yup.number().required('area is required')
-    //     : Yup.number().notRequired(),
-
-    // facing: Yup.string().required('facing is required'),
-    // carpet_area: Yup.number().required('Carpet Area is required'),
-    // buildup_area: Yup.number().required('Buildup Area is required'),
-    // super_build_up_area: Yup.number().required('Sqft Rate is required'),
+  // facing: Yup.string().required('facing is required'),
+  // carpet_area: Yup.number().required('Carpet Area is required'),
+  // buildup_area: Yup.number().required('Buildup Area is required'),
+  // super_build_up_area: Yup.number().required('Sqft Rate is required'),
   // })
   const resetter = () => {
     setSelected({})
@@ -543,7 +542,8 @@ const AddUnit = ({
                 size: unitDetails?.size || '',
                 facing: unitDetails?.facing || '',
                 unit_d: unitDetails?.unit_d || '',
-                min_rate_per_sqft: unitDetails?.min_rate_per_sqft || unitDetails?.sqft_rate || 0,
+                min_rate_per_sqft:
+                  unitDetails?.min_rate_per_sqft || unitDetails?.sqft_rate || 0,
                 east_d: unitDetails?.east_d || 0,
                 west_d: unitDetails?.west_d || 0,
                 north_d: unitDetails?.north_d || 0,
@@ -578,7 +578,6 @@ const AddUnit = ({
                         <div className="inline ">
                           <div className="bg-gradient-to-r from-blue-200 to-cyan-200">
                             <section className="flex flex-row mx-4 py-4">
-
                               <span className="ml-2 mt-[1px] ">
                                 <label className="font-semibold text-[#053219]  text-[18px]  mb-1  ">
                                   {title}
@@ -587,15 +586,13 @@ const AddUnit = ({
                               </span>
                             </section>
                           </div>
-
-
                         </div>
                       </div>
 
                       <section className="my-10 mx-3  my-4 mt-4">
                         <section className="mt-1 px-4 rounded-lg bg-white border border-gray-100 shadow">
                           <section className="flex flex-row  pt-2 ">
-                          <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
+                            <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
                             <span className="ml-1 leading-[15px] ">
                               <label className="font-semibold text-[#053219]  text-[13px] leading-[15px] mb-1  ">
                                 Unit<abbr title="required"></abbr>
@@ -629,7 +626,6 @@ const AddUnit = ({
                                 // options={aquaticCreatures}
                                 options={facingTypeList}
                               />
-
                             </div>
 
                             <div className="space-y-2 w-full text-xs mt-2">
@@ -639,14 +635,12 @@ const AddUnit = ({
                                 type="number"
                               />
                             </div>
-
-
                           </div>
                         </section>
 
                         <section className="mt-1 px-4 rounded-lg bg-white border border-gray-100 shadow">
                           <section className="flex flex-row  pt-2 ">
-                          <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
+                            <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
                             <span className="ml-1 leading-[15px] ">
                               <label className="font-semibold text-[#053219]  text-[13px] leading-[15px] mb-1  ">
                                 Pricing<abbr title="required"></abbr>
@@ -654,7 +648,7 @@ const AddUnit = ({
                             </span>
                           </section>
                           <div className="md:flex flex-row md:space-x-4 w-full text-xs mt-2 ">
-                          <div className=" space-y-2 w-full text-xs mt-">
+                            <div className=" space-y-2 w-full text-xs mt-">
                               <TextField
                                 label="Rate per Sqft *"
                                 name="sqft_rate"
@@ -681,7 +675,7 @@ const AddUnit = ({
 
                         <section className="mt-1 px-4 rounded-lg bg-white border border-gray-100 shadow">
                           <section className="flex flex-row  pt-2 ">
-                          <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
+                            <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
 
                             <span className="ml-1 leading-[15px] ">
                               <label className="font-semibold text-[#053219]  text-[13px] leading-[15px] mb-1  ">
@@ -741,7 +735,7 @@ const AddUnit = ({
 
                         <section className="mt-1 px-4 rounded-lg bg-white border border-gray-100 shadow">
                           <section className="flex flex-row  pt-2 ">
-                          <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
+                            <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
 
                             <span className="ml-1 leading-[15px] ">
                               <label className="font-semibold text-[#053219]  text-[13px] leading-[15px] mb-1  ">
@@ -784,7 +778,7 @@ const AddUnit = ({
 
                         <section className="mt-1 px-4 rounded-lg bg-white border border-gray-100 shadow">
                           <section className="flex flex-row  pt-2 ">
-                          <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
+                            <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
 
                             <span className="ml-1 leading-[15px] ">
                               <label className="font-semibold text-[#053219]  text-[13px] leading-[15px] mb-1  ">
@@ -812,7 +806,6 @@ const AddUnit = ({
                                 label="Release Status*"
                                 className="input mt-"
                                 onChange={(value) => {
-
                                   formik.setFieldValue(
                                     'release_status',
                                     value.value
@@ -846,7 +839,7 @@ const AddUnit = ({
 
                         <section className="mt-1 px-4 rounded-lg bg-white border border-gray-100 shadow">
                           <section className="flex flex-row  pt-2 ">
-                          <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
+                            <div className="border-2  h-3 rounded-xl  mt-[2px] w-1  border-cyan-200"></div>
 
                             <span className="ml-1 leading-[15px] ">
                               <label className="font-semibold text-[#053219]  text-[13px] leading-[15px] mb-1  ">

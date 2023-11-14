@@ -395,7 +395,6 @@ const CostBreakUpSheet = ({
             <div className="bg-[white] rounded-b-md">
               <div className=" mt-">
                 <div className=" pb-1">
-
                   <div
                     className="flex flex-row justify-between   py-3 px-3  mt-[0.5px] mb-0 rounded-xs bg-[#F2F5F8]"
                     style={{ flex: '4 0 100%' }}
@@ -816,7 +815,7 @@ const CostBreakUpSheet = ({
                             </Pdf> */}
                                 <div className="inline-block">
                                   <PdfInvoiceGenerator
-                                  user={user}
+                                    user={user}
                                     selUnitDetails={selUnitDetails}
                                     myObj={newPlotCostSheetA}
                                     newPlotPS={newPlotPS}
@@ -828,8 +827,7 @@ const CostBreakUpSheet = ({
                                     setPartATotal={setPartATotal}
                                     setPartBTotal={setPartBTotal}
                                     projectDetails={projectDetails}
-                                  leadDetailsObj1={leadDetailsObj1}
-
+                                    leadDetailsObj1={leadDetailsObj1}
                                   />
                                 </div>
                                 {/* <button
@@ -917,7 +915,11 @@ const CostBreakUpSheet = ({
               )}
 
               {['blocksheet'].includes(onStep) && (
-                <BlockingUnitForm title="Blocking Form" />
+                <BlockingUnitForm
+                  title="Blocking Form"
+                  leadDetailsObj2={leadDetailsObj1}
+                  selUnitDetails={selUnitDetails}
+                />
               )}
               {['Detail View'].includes(onStep) && <UnitTransactionForm />}
               <div className="mt-8 p-4">

@@ -27,11 +27,11 @@ const UnitsSmallViewCard = ({ kind, feedData, bg,  setSelUnitDetails,
   useEffect(()=>{
     if(kind.status==="available"){
       setBgColor("#fff")
-    }else if(kind.status==="booked"){
+    }else if(["booked", 'agreement_pipeline'].includes(kind.status)){
       setBgColor("#CCFBF1")
       // setBgColor("#22c55e29")
       // setFontColor("#118d57")
-    }else if(kind.status==="blocked"){
+    }else if(["blocked", 'customer_blocked', 'management_blocked'].includes(kind.status)){
       setBgColor("#e9e9e9")
     }else {
       setBgColor("#F7EAD0")
@@ -51,6 +51,7 @@ const UnitsSmallViewCard = ({ kind, feedData, bg,  setSelUnitDetails,
     setAnchorEl(event.currentTarget)
   }
 
+
   return (
     <div
       className={` min-w-[125px] z-10 flex flex-col  max-w-md p-2 mx-auto my-0 rounded-lg cursor-pointer border border-black-600 shadow-radius shadow-xl`}
@@ -59,6 +60,7 @@ const UnitsSmallViewCard = ({ kind, feedData, bg,  setSelUnitDetails,
       <div className="flex flex-row items-center justify-between">
         <h3 className="m-0 ml-2 text-sm font-semibold  leading-tight tracking-tight  border-0 border-gray-200 sm:text-1xl md:text-1xl ">
           {kind?.unit_no}
+
         </h3>
         {/* <DropCompUnitStatus
             type={'unitMode'}
