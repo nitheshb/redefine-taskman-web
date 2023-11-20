@@ -1660,7 +1660,7 @@ export default function LeadProfileSideView({
                             //   className="h-4 w-4  inline text-white"
                             //   aria-hidden="true"
                             // />
-                            <span className="px-[3px]   text-black  text-[10px] text-[#] font-semibold">
+                            <span className="px-[3px]   text-black  text-[10px] text-[#] font-semibold whitespace-nowrap">
                               {' '}
                               Show Lead
                             </span>
@@ -1669,9 +1669,9 @@ export default function LeadProfileSideView({
                             //   className="h-4 w-4 mr-1 mb-[2px] inline text-blue-600"
                             //   aria-hidden="true"
                             // />
-                            <span className="px-[3px]   text-white-300  text-[10px] text-[#] font-semibold">
+                            <span className="px-[3px]   text-white-300  text-[10px] text-[#] font-semibold whitespace-nowrap">
                               {' '}
-                              Quotation
+                              Cost sheet
                             </span>
                           ))}
                       </div>

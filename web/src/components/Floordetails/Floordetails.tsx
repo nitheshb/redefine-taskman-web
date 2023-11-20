@@ -118,7 +118,7 @@ const Floordetails = ({
   const { enqueueSnackbar } = useSnackbar()
   const unitFeedData = {}
   const [unitsFeed, setUnitsFeed] = useState([])
-  const [actionType, setActionType] = useState('quoteMode')
+  const [actionType, setActionType] = useState('costSheetMode')
   const [reportFeed, setReportFeed] = useState(unitStatsData)
   const [blocksViewFeature, setBlocksViewFeature] = useState('Units')
   const [unitShrink, setUnitShrink] = useState(true)
@@ -945,7 +945,7 @@ const Floordetails = ({
                                                     leadDetailsObj:
                                                       leadDetailsObj,
                                                   },
-                                                  widthClass: 'max-w-4xl',
+                                                  widthClass: 'max-w-2xl',
                                                 })
                                               }}
                                             >
@@ -954,7 +954,7 @@ const Floordetails = ({
                                             <h3
                                               className="m-0 mr-2 text-sm  leading-tight tracking-tight text-blue-800 border-0 border-blue-800 h-[16px] hover:border-b hover:border-blue-800"
                                               onClick={() => {
-                                                setActionType('quoteMode')
+                                                setActionType('costSheetMode')
                                                 setisUnitQuoteBookBlock(true)
                                                 setSliderInfo({
                                                   open: true,
@@ -965,7 +965,7 @@ const Floordetails = ({
                                                     leadDetailsObj:
                                                       leadDetailsObj,
                                                   },
-                                                  widthClass: 'max-w-4xl',
+                                                  widthClass: 'max-w-2xl',
                                                 })
                                               }}
                                             >
@@ -988,7 +988,7 @@ const Floordetails = ({
                                                     leadDetailsObj:
                                                       leadDetailsObj,
                                                   },
-                                                  widthClass: 'max-w-4xl',
+                                                  widthClass: 'max-w-2xl',
                                                 })
                                               }}
                                             >

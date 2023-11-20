@@ -458,6 +458,7 @@ const CostBreakUpPdf = ({
   }
   return (
     <div>
+
       {!pdfPreview && (
         <div>
           <Formik
@@ -480,11 +481,12 @@ const CostBreakUpPdf = ({
                   <div>
                     <div>
                       <div className="">
+
                         <section className="flex flex-row justify-between bg-[#f3fff2] p-2 py-1 border-b rounded-t-lg">
                           <h1 className="text-bold font-bold text-center text-gray-800  text-[14px] mt-[10px] ">
                             COST SHEET
                           </h1>
-                          <section className="">
+                          {/* <section className="">
                             <div className="w-full flex items-center ">
                               <label
                                 htmlFor="area"
@@ -504,7 +506,7 @@ const CostBreakUpPdf = ({
                                 )}
                               />
                             </div>
-                          </section>
+                          </section> */}
                         </section>
                         <div className=" rounded-md">
                           <table className="w-[100%]">

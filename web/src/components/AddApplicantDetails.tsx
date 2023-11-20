@@ -50,7 +50,9 @@ const AddApplicantDetails = ({
   leadDetailsObj2,
   selUnitDetails,
   dialogOpen,
-  setShowApplicantEdit
+  setShowApplicantEdit,
+  setOnStep,
+  currentMode,
 }) => {
   const d = new window.Date()
   const { user } = useAuth()
@@ -211,6 +213,7 @@ const AddApplicantDetails = ({
   const [startDate, setStartDate] = useState(new Date())
   const [selRef1, setRefDataFun1] = useState({ label: 'S/O', value: 'S/O' })
   const [selRef2, setRefDataFun2] = useState({ label: 'S/O', value: 'S/O' })
+  const [moveNext, setMoveNext] = useState(false)
 
   const phoneRegExp =
     /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/
@@ -528,6 +531,11 @@ const AddApplicantDetails = ({
       )
     }
 
+    if (currentMode == 'unitBookingMode') {
+      setOnStep('booksheet')
+    } else if (currentMode == 'unitBlockMode') {
+      setOnStep('blocksheet')
+    }
     // const updatedData = {
     //   ...data,
     // }
@@ -572,7 +580,14 @@ const AddApplicantDetails = ({
             } else if (type === 'aadharNo2Url') {
               setAadharUrl2(url)
             }
-            console.log('file url i s', url,'dd',type,type === 'aadharNo1Url', aadhrUrl1)
+            console.log(
+              'file url i s',
+              url,
+              'dd',
+              type,
+              type === 'aadharNo1Url',
+              aadhrUrl1
+            )
             return url
             //  save this doc as a new file in spark_leads_doc
           })
@@ -610,23 +625,16 @@ const AddApplicantDetails = ({
                       <section className=" bg-blueGray-50">
                         <div className="w-full mx-auto ">
                           <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-[#F9FBFB] border-0">
-                            <div className="rounded-t bg-[#F1F5F9] mb-0 px-3 py-2">
-                              <div className="text-center flex justify-between">
-                                <p className="text-xs font-extrabold tracking-tight uppercase font-body my-1">
-                                  Customer Detail
-                                </p>
-                              </div>
-                            </div>
                             <div className="flex-auto">
                               <section className=" lg:px-2 py-4">
                                 <div className="flex flex-wrap">
                                   <section
-                                    className="w-full flex p-4 rounded-md   mt- bg-[#fff] hover:shadow-2xl"
+                                    className="w-full flex p-4 rounded-md  flex-col mt- bg-[#fff] hover:shadow-2xl"
                                     style={{
                                       boxShadow: '0 1px 12px #f2f2f2',
                                     }}
                                   >
-                                    <div className="w-full lg:w-6/12 px-4 border-r">
+                                    <div className="w-full  px-4 border-r">
                                       <div className="w-full flex flex-row">
                                         <div className="w-3 h-3 mt-[16px] rounded-full bg-[#FB6094]  "></div>
                                         <div className="w-2 h-2 ml-[1px] rounded-md mt-[18px] bg-[#FB6094]  "></div>
@@ -636,8 +644,8 @@ const AddApplicantDetails = ({
                                         </h6>
                                       </div>
                                       <div className="flex flex-wrap">
-                                        <div className="w-full lg:w-12/12 ">
-                                          <div className="relative w-full mb-3 mt-2">
+                                        <div className="w-full lg:w-4/12  ">
+                                          <div className="relative  mb-3 mt-2 mr-8">
                                             <TextField2
                                               label="Customer Name*"
                                               name="customerName1"
@@ -646,7 +654,7 @@ const AddApplicantDetails = ({
                                           </div>
                                         </div>
 
-                                        <div className="w-full flex flex-row lg:w-12/12">
+                                        <div className="w-full flex flex-row lg:w-4/12">
                                           <section className="mt-4">
                                             <NoBorderDropDown
                                               options={[
@@ -666,87 +674,7 @@ const AddApplicantDetails = ({
                                             />
                                           </div>
                                         </div>
-                                        <div className="w-full lg:w-4/12 px-">
-                                          <div className="relative w-full mb-3 mt-2">
-                                            <PhoneNoField2
-                                              label="Phone No"
-                                              name="phoneNo1"
-                                              type="number"
-                                              value={formik.values.phoneNo1}
-                                              onChange={(value) => {
-                                                console.log('value', value.value, formik?.values?.phoneNo1)
-                                                formik.setFieldValue('phoneNo1', value.value)
-                                              }}
-                                              // value={formik.values.mobileNo}
-                                              options={{}}
-                                            />
-                                          </div>
-                                        </div>
-                                        <div className="w-full lg:w-8/12 pl-4">
-                                          <div className="relative w-full mb-3 mt-2">
-                                            <TextField2
-                                              label="Email"
-                                              name="email1"
-                                              type="text"
-                                            />
-                                          </div>
-                                        </div>
-                                        {/* </section> */}
-                                      </div>
-                                    </div>
-                                    <div className="w-full lg:w-6/12 px-4 mt">
-                                      {/* add here */}
-
-                                      <div className="w-full flex flex-row">
-                                        <div className="w-3 h-3 mt-[16px] rounded-full bg-[#FB6094]  "></div>
-                                        <div className="w-2 h-2 ml-[1px] rounded-md mt-[18px] bg-[#FB6094]  "></div>
-                                        <div className="w-1 h-1 ml-[1px] rounded-md mr-1 mt-[20px] bg-[#FB6094]  "></div>
-                                        <h6 className="w-full lg:w-12/12 text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
-                                          First Applicant Proofs
-                                        </h6>
-                                      </div>
-                                      <div className="flex flex-wrap">
-                                        <div className="w-full lg:w-4/12 mt-[-6px] ">
-                                          <div className="relative w-full mb-3 mt-2">
-                                            <label
-                                              htmlFor={'dob1'}
-                                              className="text-gray-500 text-[10px]"
-                                            >
-                                              Date Of Birth
-                                            </label>
-                                            <span className="inline">
-                                              {/* <DatePicker
-                                                className="h-8 outline-none border-t-0 border-l-0 border-r-0 border-gray-500 text-sm border-solid mt-[-4px] pb-1  min-w-[125px]  inline  text-[#0091ae]   lg:w-4/12 w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] "
-                                                label="Dated"
-                                                name="dob1"
-                                                selected={formik.values.dob1}
-                                                onChange={(date) => {
-                                                  formik.setFieldValue(
-                                                    'dob1',
-                                                    date.getTime()
-                                                  )
-                                                  setStartDate(date)
-                                                  // console.log(startDate)
-                                                }}
-                                                timeFormat="HH:mm"
-                                                injectTimes={[
-                                                  setHours(setMinutes(d, 1), 0),
-                                                  setHours(
-                                                    setMinutes(d, 5),
-                                                    12
-                                                  ),
-                                                  setHours(
-                                                    setMinutes(d, 59),
-                                                    23
-                                                  ),
-                                                ]}
-                                                dateFormat="MMMM d, yyyy"
-                                              /> */}
-                                            </span>
-                                          </div>
-                                        </div>
-
-                                        <div className="w-full lg:w-8/12 pl-4 ">
+                                        <div className=" lg:w-2/12 pl-4 ">
                                           {/* <div className="relative w-full mb-3 mt-2">
                                             <TextField2
                                               label="Marital Status"
@@ -783,60 +711,132 @@ const AddApplicantDetails = ({
                                             />
                                           </section>
                                         </div>
-                                      </div>
-                                      <div className="w-full flex flex-row">
-                                        <div className="  px-">
-                                          <div className="relative w-[130px] mb-3 mt-2">
+                                        <div className="w-[90px] mt-[-5px]">
+                                          <div className="relative w-full  ">
+                                            <label
+                                              htmlFor={'dob1'}
+                                              className="text-gray-500 text-[10px]"
+                                            >
+                                              Date Of Birth
+                                            </label>
+                                            <span className="inline">
+                                              <DatePicker
+                                                className="h-8 outline-none border-t-0 border-l-0 border-r-0 border-gray-500 text-sm border-solid mt-[-4px] pb-1  min-w-[125px]  inline  text-[#0091ae]   lg:w-4/12 w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] "
+                                                label="Dated"
+                                                name="dob1"
+                                                selected={formik.values.dob1}
+                                                onChange={(date) => {
+                                                  formik.setFieldValue(
+                                                    'dob1',
+                                                    date.getTime()
+                                                  )
+                                                  setStartDate(date)
+                                                  // console.log(startDate)
+                                                }}
+                                                timeFormat="HH:mm"
+                                                injectTimes={[
+                                                  setHours(setMinutes(d, 1), 0),
+                                                  setHours(
+                                                    setMinutes(d, 5),
+                                                    12
+                                                  ),
+                                                  setHours(
+                                                    setMinutes(d, 59),
+                                                    23
+                                                  ),
+                                                ]}
+                                                dateFormat="MMMM d, yyyy"
+                                              />
+                                            </span>
+                                          </div>
+                                        </div>
+
+                                        <div className="w-[90px] px-">
+                                          <div className="relative w-full mb-3 mt-2">
+                                            <PhoneNoField2
+                                              label="Phone No"
+                                              name="phoneNo1"
+                                              type="number"
+                                              value={formik.values.phoneNo1}
+                                              onChange={(value) => {
+                                                console.log(
+                                                  'value',
+                                                  value.value,
+                                                  formik?.values?.phoneNo1
+                                                )
+                                                formik.setFieldValue(
+                                                  'phoneNo1',
+                                                  value.value
+                                                )
+                                              }}
+                                              // value={formik.values.mobileNo}
+                                              options={{}}
+                                            />
+                                          </div>
+                                        </div>
+                                        <div className="w-full lg:w-3/12 pl-4">
+                                          <div className="relative w-full mb-3 mt-2">
                                             <TextField2
-                                              label="PAN No"
-                                              name="panNo1"
+                                              label="Email"
+                                              name="email1"
                                               type="text"
                                             />
                                           </div>
                                         </div>
-                                        <div className=" ml-3 ">
-                                          <div className="relative  mt-5">
-                                            <div>
-                                              <label
-                                                htmlFor="formFile1"
-                                                className="form-label cursor-pointer inline-block mb-2  font-regular text-xs bg-[#efef] rounded-2xl px-2 py-1 min-w-[130px] "
-                                              >
-                                                {`${
-                                                  panCard1 === ''
-                                                    ? 'Upload'
-                                                    : 'Download'
-                                                } Pan Card`}
-                                              </label>
-                                              {panCard1 != '' && (
-                                                <button
-                                                  onClick={() =>
-                                                    downloadImage(
-                                                      panCard1,
-                                                      'pancard1.PNG'
-                                                    )
-                                                  }
-                                                >
-                                                  {' '}
-                                                  <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[9px] mr-2 inline-block text-gray-400 " />
-                                                </button>
-                                              )}
-                                              <input
-                                                type="file"
-                                                className="hidden"
-                                                id="formFile1"
-                                                onChange={ (e) =>
-                                                   handleFileUploadFun(
-                                                    e.target.files[0],
-                                                    'panCard1'
-                                                  )
-                                                }
+
+                                        <div className=" ml-4  flex flex-row ">
+                                          <div className="  px-">
+                                            <div className="relative w-[100px] mb-3 mt-2">
+                                              <TextField2
+                                                label="PAN No"
+                                                name="panNo1"
+                                                type="text"
                                               />
                                             </div>
                                           </div>
+                                          <div className=" ml-3  mr-3">
+                                            <div className="relative  mt-5">
+                                              <div className="flex flex-row">
+                                                <label
+                                                  htmlFor="formFile1"
+                                                  className="form-label cursor-pointer inline-block mb-2  font-regular text-xs bg-[#efef] rounded-2xl px-2 py-1 min-w-[40px] "
+                                                >
+                                                  {`${
+                                                    panCard1 === ''
+                                                      ? 'Upload'
+                                                      : 'Download'
+                                                  }`}
+                                                </label>
+                                                {panCard1 != '' && (
+                                                  <button
+                                                    onClick={() =>
+                                                      downloadImage(
+                                                        panCard1,
+                                                        'pancard1.PNG'
+                                                      )
+                                                    }
+                                                  >
+                                                    {' '}
+                                                    <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[9px] mr-2 inline-block text-gray-400 " />
+                                                  </button>
+                                                )}
+                                                <input
+                                                  type="file"
+                                                  className="hidden"
+                                                  id="formFile1"
+                                                  onChange={(e) =>
+                                                    handleFileUploadFun(
+                                                      e.target.files[0],
+                                                      'panCard1'
+                                                    )
+                                                  }
+                                                />
+                                              </div>
+                                            </div>
+                                          </div>
                                         </div>
-                                      </div>
-                                      <div className="w-full flex flex-row">
-                                        {/* <div className="w-full lg:w-8/12 pl-4">
+                                        <div className=" ml-4 flex flex-row lg:w-3/12">
+                                          {/* <div className="w-full lg:w-8/12 pl-4">
                                           <div className="relative w-full mb-3 mt-2">
                                             <TextField2
                                               label="Aadhar Upload"
@@ -845,55 +845,58 @@ const AddApplicantDetails = ({
                                             />
                                           </div>
                                         </div> */}
-                                        <div className=" ">
-                                          <div className="relative w-[130px] mb-3 mt-2">
-                                            <TextField2
-                                              label="Aadhar No"
-                                              name="aadharNo1"
-                                              type="text"
-                                            />
-                                          </div>
-                                        </div>
-                                        <div>
-                                          <div className="relative w-full mt-5 ml-3">
-                                            <div className=" flex flex-row">
-                                              <label
-                                                htmlFor="formFile2"
-                                                className="form-label cursor-pointer inline-block mb-2  font-regular text-xs bg-[#efef] rounded-2xl px-2 py-1 min-w-[130px]"
-                                              >
-                                                {`${
-                                                  aadhrUrl1 === ''
-                                                    ? 'Upload'
-                                                    : 'Download'
-                                                } Aadhar Card`}
-                                              </label>
-                                              {aadhrUrl1 != '' && (
-                                                <button
-                                                  onClick={() =>
-                                                    downloadImage(
-                                                      aadhrUrl1,
-                                                    'Aadhar1.PNG'
-                                                    )
-                                                  }
-                                                >
-                                                  {' '}
-                                                  <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[9px] mr-2 inline-block text-gray-400 " />
-                                                </button>
-                                              )}
-                                              <input
-                                                type="file"
-                                                className="hidden"
-                                                id="formFile2"
-                                                onChange={(e) =>
-                                                  handleFileUploadFun(
-                                                    e.target.files[0],
-                                                    'aadharNo1Url'
-                                                  )
-                                                }
+                                          <div className=" ">
+                                            <div className="relative w-[130px] mb-3 mt-2">
+                                              <TextField2
+                                                label="Aadhar No"
+                                                name="aadharNo1"
+                                                type="text"
                                               />
                                             </div>
                                           </div>
+                                          <div>
+                                            <div className="relative w-full mt-5 ml-3">
+                                              <div className=" flex flex-row">
+                                                <label
+                                                  htmlFor="formFile2"
+                                                  className="form-label cursor-pointer inline-block mb-2  font-regular text-xs bg-[#efef] rounded-2xl px-2 py-1 min-w-[40px]"
+                                                >
+                                                  {`${
+                                                    aadhrUrl1 === ''
+                                                      ? 'Upload'
+                                                      : 'Download'
+                                                  } `}
+                                                </label>
+                                                {aadhrUrl1 != '' && (
+                                                  <button
+                                                    onClick={() =>
+                                                      downloadImage(
+                                                        aadhrUrl1,
+                                                        'Aadhar1.PNG'
+                                                      )
+                                                    }
+                                                  >
+                                                    {' '}
+                                                    <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[9px] mr-2 inline-block text-gray-400 " />
+                                                  </button>
+                                                )}
+                                                <input
+                                                  type="file"
+                                                  className="hidden"
+                                                  id="formFile2"
+                                                  onChange={(e) =>
+                                                    handleFileUploadFun(
+                                                      e.target.files[0],
+                                                      'aadharNo1Url'
+                                                    )
+                                                  }
+                                                />
+                                              </div>
+                                            </div>
+                                          </div>
                                         </div>
+
+                                        {/* </section> */}
                                       </div>
                                     </div>
                                   </section>
@@ -948,10 +951,12 @@ const AddApplicantDetails = ({
                                               name="phoneNo2"
                                               type="text"
                                               value={formik.values.phoneNo2}
-
                                               onChange={(value) => {
                                                 // formik.setFieldValue('mobileNo', value.value)
-                                                formik.setFieldValue('phoneNo2', value.value)
+                                                formik.setFieldValue(
+                                                  'phoneNo2',
+                                                  value.value
+                                                )
                                               }}
                                               // value={formik.values.mobileNo}
                                               options={{}}
@@ -1151,20 +1156,19 @@ const AddApplicantDetails = ({
                                                 className="hidden"
                                                 id="formFile4"
                                                 onChange={(e) => {
-                                                  console.log('iwas clicked aadharno 2')
+                                                  console.log(
+                                                    'iwas clicked aadharno 2'
+                                                  )
                                                   handleFileUploadFun(
                                                     e.target.files[0],
                                                     'aadharNo2Url'
                                                   )
-                                                }
-                                                }
+                                                }}
                                               />
                                             </div>
                                           </div>
                                         </div>
                                       </div>
-
-
                                     </div>
                                   </section>
                                 </div>
@@ -1308,21 +1312,31 @@ const AddApplicantDetails = ({
                       </section>
                     </div>
                     <div className="mt-5 text-right md:space-x-3 md:block flex flex-col-reverse py-3 mr-6 flex flex-col mt-2 z-10 flex flex-row justify-between mt-2 pr-6 bg-white shadow-lg absolute bottom-0  w-full">
-                   {setShowApplicantEdit !=undefined && (<button
-                        className="bg-red-400 text-white active:bg-pink-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
-                        disabled={loading}
-                        onClick={()=> setShowApplicantEdit(false) }
-                      >
-                        {'Cancel'}
-                      </button>)
-}
+                      {setShowApplicantEdit != undefined && (
+                        <button
+                          className="bg-red-400 text-white active:bg-pink-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+                          disabled={loading}
+                          onClick={() => setShowApplicantEdit(false)}
+                        >
+                          {'Cancel'}
+                        </button>
+                      )}
                       <button
-                        className="bg-green-400 text-white active:bg-pink-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+                        className="bg-gradient-to-r from-indigo-400 to-cyan-400 text-black active:bg-pink-600 font-bold uppercase text-xs px-4 py-1 pb-[5px] rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
                         type="submit"
                         disabled={loading}
                       >
                         {'Save'}
                       </button>
+                      {setShowApplicantEdit == undefined && (
+                        <button
+                          className="bg-gradient-to-r from-indigo-400 to-cyan-400 text-black active:bg-pink-600 font-bold uppercase text-xs px-4 py-1 pb-[5px] rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+                          type="submit"
+                          disabled={loading}
+                        >
+                          {'Save & Book'}
+                        </button>
+                      )}
                     </div>
                   </Form>
                 )}

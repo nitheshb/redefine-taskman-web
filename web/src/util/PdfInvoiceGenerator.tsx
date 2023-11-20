@@ -920,11 +920,12 @@ const PdfInvoiceGenerator = ({
             <button>Loading document...</button>
           ) : (
             <span
-              className="mb-4 md:mb-0 hover:scale-110 focus:outline-none bg-white px-5 py-2 text-sm shadow-sm font-medium tracking-wider border text-gray-600 rounded-sm hover:shadow-lg hover:bg-gray-100         hover:bg-teal-200
-            bg-teal-100
-            text-teal-700
-            border duration-200 ease-in-out
-            border-[#5671fc] transition"
+              className="mb-4 md:mb-0 hover:scale-110 focus:outline-none bg-white px-5 py-1 pb-[5px] text-sm shadow-sm font-medium tracking-wider  text-gray-600 rounded-sm hover:shadow-lg hover:bg-gray-100         hover:bg-teal-200
+
+            text-blue-700
+
+             duration-200 ease-in-out
+             transition"
             >
               Download Cost Sheet
             </span>

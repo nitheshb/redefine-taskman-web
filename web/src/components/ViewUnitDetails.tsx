@@ -15,6 +15,7 @@ import {
   steamUsersListByRole,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
+import ButtonDropDown from 'src/util/formFields/buttonDropdown'
 
 import CostBreakUpSheet from './costBreakUpSheet'
 import UnitDocumentsBody from './unitDetailsCategory/unitDocuments'
@@ -42,7 +43,13 @@ const ViewUnitDetails = ({
   const [blockList, setblockList] = useState([])
 
   useEffect(() => {
-    setActionMode(unitViewActionType)
+    if (unitViewActionType === 'costSheetMode') {
+      setActionMode({ label: 'Cost sheet', value: 'costSheetMode' })
+    } else if (unitViewActionType === 'unitBlockMode') {
+      setActionMode({ label: 'Block Unit', value: 'unitBlockMode' })
+    } else if (unitViewActionType === 'unitBookingMode') {
+      setActionMode({ label: 'Book Unit', value: 'unitBookingMode' })
+    }
   }, [unitViewActionType])
 
   useEffect(() => {
@@ -134,7 +141,10 @@ const ViewUnitDetails = ({
   const [devType, setdevType] = useState(devTypeA[0])
   const [unitDetailCat, setUnitDetailCat] = useState('overview')
   const [showUnitDetails, setShowUnitDetials] = useState(false)
-  const [actionMode, setActionMode] = useState('quoteMode')
+  const [actionMode, setActionMode] = useState({
+    label: 'Cost sheet',
+    value: 'costSheetMode',
+  })
 
   const phoneRegExp =
     /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/
@@ -312,73 +322,23 @@ const ViewUnitDetails = ({
               >
                 {showUnitDetails ? 'Hide unit details' : 'View unit details'}
               </span>
-              {data?.unitDetail?.status === 'available' && (
-                <>
-                  <button
-                    onClick={() => {
-                      setActionMode('quoteMode')
-                    }}
-                    type="button"
-                    className={`mb-4 mx-1 mr-2 md:mb-0 hover:scale-110 focus:outline-none hover:bg-teal-100
-                    ${actionMode == 'quoteMode' ? 'bg-teal-100 ' : ''}
-                    text-green-700
-                    h-8
-                    border duration-200 ease-in-out
-                    border-green-700 transition
-                     px-5  text-sm shadow-sm font-medium tracking-wider  rounded-sm hover:shadow-lg hover:bg-green-500`}
-                  >
-                    {' '}
-                    Quote{' '}
-                  </button>
-                  <button
-                    onClick={() => {
-                      setActionMode('unitBlockMode')
-                    }}
-                    type="button"
-                    className={`mb-4 mx-1 mr-2 md:mb-0 hover:scale-110 focus:outline-none hover:bg-teal-100
-                                  ${
-                                    actionMode == 'unitBlockMode'
-                                      ? 'bg-teal-100 '
-                                      : ''
-                                  }
-                                  text-green-700
-                                  h-8
-                                  border duration-200 ease-in-out
-                                  border-green-700 transition
-                                   px-5  text-sm shadow-sm font-medium tracking-wider  rounded-sm hover:shadow-lg hover:bg-green-500`}
-                  >
-                    {' '}
-                    Block{' '}
-                  </button>
-                  <button
-                    className={`mb-2 md:mb-0 hover:scale-110 focus:outline-none hover:bg-teal-100
-                                  ${
-                                    actionMode == 'unitBookingMode'
-                                      ? 'bg-teal-100 '
-                                      : ''
-                                  }
-                                  text-green-700
-                                  h-8
-                                  border duration-200 ease-in-out
-                                  border-green-700 transition
-                                  px-5 text-sm shadow-sm font-medium tracking-wider rounded-sm hover:shadow-lg hover:bg-green-500`}
-                    onClick={() => {
-                      setActionMode('unitBookingMode')
-                    }}
-                    disabled={loading}
-                    // onClick={() => submitFormFun(formik)}
-                  >
-                    {/* {loading && <Loader />} */}
-                    Book unit
-                  </button>
-                </>
-              )}
-              {/* <span
-                className={`items-center h-6 px-3 py-1 mt-1 text-xs font-semibold text-green-500 bg-green-100 rounded-full
-                      `}
-              >
-                {projectDetails?.projectType?.name}
-              </span> */}
+
+              {data?.unitDetail?.status === 'available' && (    <div className=" flex flex-col mt-1">
+
+
+                <ButtonDropDown
+                  type={'All Projects'}
+                  pickCustomViewer={setActionMode}
+                  selProjectIs={actionMode}
+                  dropDownItemsA={[
+                    ...[
+                      { label: 'Cost sheet', value: 'costSheetMode' },
+                      { label: 'Block Unit', value: 'unitBlockMode' },
+                      { label: 'Book Unit', value: 'unitBookingMode' },
+                    ],
+                  ]}
+                />
+              </div>)}
             </div>
           </div>
         </Dialog.Title>
@@ -539,7 +499,7 @@ const ViewUnitDetails = ({
                       projectDetails={projectDetails}
                       setShowCostSheetWindow={() => {}}
                       selUnitDetails={data?.unitDetail}
-                      actionMode={actionMode}
+                      actionMode={actionMode?.value}
                     />
                   )}
 

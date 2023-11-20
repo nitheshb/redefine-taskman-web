@@ -303,17 +303,11 @@ const CaptureUnitPayment = ({
 
                     <section className="  bg-blueGray-50">
                       <div className="w-full mx-auto ">
-                        <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-[#F9FBFB] border-0">
-                          <div className="rounded-t bg-[#F1F5F9] mb-0 px-3 py-2">
-                            <div className="text-center flex justify-between">
-                              <p className="text-xs font-extrabold tracking-tight uppercase font-body my-1">
-                                Payment Entry
-                              </p>
-                            </div>
-                          </div>
+                        <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-[#F9FBFB]">
+
                           <div className="flex-auto px-2 py-4 mx-auto h-[600px] overflow-y-scroll overflow-auto no-scrollbar">
                             <section
-                              className="bg-[#fff] p-4 rounded-md w-[500px] border border-black"
+                              className="bg-[#fff] p-4 rounded-md w-[500px]"
                               style={{
                                 boxShadow: '0 1px 12px #f2f2f2',
                               }}

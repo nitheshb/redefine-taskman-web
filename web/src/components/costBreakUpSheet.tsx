@@ -5,7 +5,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { useState, useEffect, createRef, useRef } from 'react'
-
+import { ChevronRightIcon,  } from '@heroicons/react/solid'
 import { Dialog } from '@headlessui/react'
 import { RadioGroup } from '@headlessui/react'
 import { Checkbox } from '@mui/material'
@@ -97,10 +97,10 @@ const CostBreakUpSheet = ({
     console.log('new cost sheet value is ', newPlotCsObj, newPlotCostSheetA)
   }, [newPlotCsObj, newPlotCostSheetA])
   useEffect(() => {
-    if (actionMode === 'quoteMode') {
+    if (actionMode === 'costSheetMode') {
       setStatusListA([
         {
-          label: 'Quotation',
+          label: 'Cost sheet',
           value: 'costsheet',
           logo: 'RefreshIcon',
           color: ' bg-violet-500',
@@ -109,16 +109,17 @@ const CostBreakUpSheet = ({
       setOnStep('costsheet')
     } else if (actionMode === 'unitBlockMode') {
       setStatusListA([
+
+        {
+          label: 'Cost sheet',
+          value: 'costsheet',
+          logo: 'RefreshIcon',
+          color: ' bg-violet-500',
+        },
         {
           label: 'Customer details',
           value: 'customerDetails',
           logo: 'FireIcon',
-          color: ' bg-violet-500',
-        },
-        {
-          label: 'Quotation',
-          value: 'costsheet',
-          logo: 'RefreshIcon',
           color: ' bg-violet-500',
         },
         {
@@ -131,16 +132,17 @@ const CostBreakUpSheet = ({
       setOnStep('blocksheet')
     } else if (actionMode === 'unitBookingMode') {
       setStatusListA([
+
+        {
+          label: 'Cost sheet',
+          value: 'costsheet',
+          logo: 'RefreshIcon',
+          color: ' bg-violet-500',
+        },
         {
           label: 'Customer details',
           value: 'customerDetails',
           logo: 'FireIcon',
-          color: ' bg-violet-500',
-        },
-        {
-          label: 'Quotation',
-          value: 'costsheet',
-          logo: 'RefreshIcon',
           color: ' bg-violet-500',
         },
         {
@@ -150,7 +152,7 @@ const CostBreakUpSheet = ({
           color: ' bg-violet-500',
         },
       ])
-      setOnStep('customerDetails')
+      setOnStep('costsheet')
     }
   }, [actionMode])
 
@@ -382,6 +384,7 @@ const CostBreakUpSheet = ({
       enqueueSnackbar,
       resetForm
     )
+    setOnStep('customerDetails')
   }
 
   const setStatusFun = async (leadDocId, newStatus) => {
@@ -394,306 +397,44 @@ const CostBreakUpSheet = ({
           <article className="overflow-hidden">
             <div className="bg-[white] rounded-b-md">
               <div className=" mt-">
-                <div className=" pb-1">
+                <div className=" flex flex-row justify-center items-center ">
                   <div
-                    className="flex flex-row justify-between   py-3 px-3  mt-[0.5px] mb-0 rounded-xs bg-[#F2F5F8]"
+                    className="flex flex-row  justify-between  py-3 px-3  mt-[0.5px] mb-0 rounded-xs bg-[#F2F5F8]"
                     style={{ flex: '4 0 100%' }}
                   >
-                    {StatusListA.map((statusFlowObj, i) => (
-                      <span
-                        key={i}
-                        className="font-bodyLato text-sm font-normal px-[2px] py-[1px] mr-1 "
-                        onClick={() => setStatusFun(i, statusFlowObj.value)}
-                        style={{
-                          ...styleO.normal,
-                          ...(statusFlowObj.value === streamCurrentStatus
-                            ? styleO.hover
-                            : null),
-                          ...(streamCoveredA.includes(statusFlowObj.value)
-                            ? styleO.completed
-                            : null),
-
-                          ...(statusFlowObj.value === onStep
-                            ? styleO.hover
-                            : null),
-                          ...(statusFlowObj.value === streamfrom
-                            ? styleO.completed
-                            : null),
-                          ...(hover && hoverId === i ? styleO.hover : null),
-                        }}
-                        onMouseEnter={() => {
-                          hoverEffectFun(i)
-                          setHover(true)
-                        }}
-                        onMouseLeave={() => {
-                          hoverEffectFun(1000)
-                          setHover(false)
-                        }}
-                      >
-                        <div>{statusFlowObj.label} </div>\
-                      </span>
-                    ))}
+                    <div className="flex flex-row mt-[1px]">
+                      {StatusListA.map((statusFlowObj, i) => (
+                        <span
+                          key={i}
+                          className={`font-bodyLato text-sm font-normal px-2 py-[4px] mr-1 cursor-pointer rounded-full ${onStep === statusFlowObj.value ? 'bg-blue-500 text-white' : ''} `}
+                          onClick={() => setStatusFun(i, statusFlowObj.value)}
+                        >
+                          <section className="flex flex-row">
+                            <span className= {`w-4 h-4 mt-[3px] text-[9px] mr-1 flex justify-center items-center rounded-full  border ${onStep === statusFlowObj.value ? 'bg-blue-500 text-white' : ''} `}>
+                              {i + 1}
+                            </span>
+                            <div>{statusFlowObj.label}</div>
+                          </section>
+                        </span>
+                      ))}
+                    </div>
+                    <span className=" w-6 h-6 mt-[3px] text-[9px] mr-2 cursor-pointer flex justify-center items-center rounded-full  border bg-blue-500 text-white">
+                    <ChevronRightIcon
+                            className="w-3 h-3 "
+                            aria-hidden="true"
+                          />
+                    </span>
                   </div>
-                  {/* <div className="flex items-center">
-                    <div
-                      className={`flex items-center  relative ${
-                        ['costsheet'].includes(onStep)
-                          ? 'text-white'
-                          : 'text-[#5671fc] '
-                      }`}
-                      onClick={() => moveStep('costsheet')}
-                    >
-                      <div
-                        className={`rounded-full transition duration-500 ease-in-out h-12 w-12 py-3 border-2 ${
-                          ['costsheet'].includes(onStep)
-                            ? 'bg-[#5671fc] border-[#5671fc] '
-                            : 'border-[#5671fc] '
-                        } `}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="100%"
-                          height="100%"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="feather feather-bookmark "
-                        >
-                          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-                        </svg>
-                      </div>
-                      <div
-                        className={`absolute top-0 -ml-10 text-center mt-16 w-32 text-xs font-medium uppercase ${
-                          ['costsheet'].includes(onStep)
-                            ? 'text-[#5671fc] '
-                            : 'text-gray-500'
-                        }`}
-                      >
-                        Cost sheet
-                      </div>
-                    </div>
-                    <div className="flex-auto border-t-2 transition duration-500 ease-in-out border-[#5671fc] "></div>
-
-
-                    <div
-                      className={`flex items-center  relative ${
-                        ['customerDetails'].includes(onStep)
-                          ? 'text-white'
-                          : 'text-[#5671fc] '
-                      }`}
-                      onClick={() => moveStep('customerDetails')}
-                    >
-                      <div
-                        className={`rounded-full transition duration-500 ease-in-out h-12 w-12 py-3 border-2 ${
-                          ['customerDetails'].includes(onStep)
-                            ? 'bg-[#5671fc] border-[#5671fc] '
-                            : 'border-[#5671fc] '
-                        } `}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="100%"
-                          height="100%"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="feather feather-user-plus "
-                        >
-                          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                          <circle cx="8.5" cy="7" r="4"></circle>
-                          <line x1="20" y1="8" x2="20" y2="14"></line>
-                          <line x1="23" y1="11" x2="17" y2="11"></line>
-                        </svg>
-                      </div>
-                      <div
-                        className={`absolute top-0 -ml-10 text-center mt-16 w-32 text-xs font-medium uppercase ${
-                          ['customerDetails'].includes(onStep)
-                            ? 'text-[#5671fc] '
-                            : 'text-gray-500'
-                        }`}
-                      >
-                        Customer details
-                      </div>
-                    </div>
-                    <div className="flex-auto border-t-2 transition duration-500 ease-in-out border-gray-300"></div>
-                    <div
-                      className={`flex items-center  relative ${
-                        ['booksheet'].includes(onStep)
-                          ? 'text-white'
-                          : 'text-[#5671fc] '
-                      }`}
-                      onClick={() => moveStep('booksheet')}
-                    >
-                      <div
-                        className={`rounded-full transition duration-500 ease-in-out h-12 w-12 py-3 border-2 ${
-                          ['booksheet'].includes(onStep)
-                            ? 'bg-[#5671fc] border-[#5671fc] '
-                            : 'border-[#5671fc] '
-                        } `}
-                      >
-
-
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="100%"
-                          height="100%"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="feather feather-mail "
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 002.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 012.916.52 6.003 6.003 0 01-5.395 4.972m0 0a6.726 6.726 0 01-2.749 1.35m0 0a6.772 6.772 0 01-3.044 0"
-                          />
-                        </svg>
-                      </div>
-                      <div
-                        className={`absolute top-0 -ml-10 text-center mt-16 w-32 text-xs font-medium uppercase ${
-                          ['booksheet'].includes(onStep)
-                            ? 'text-[#5671fc] '
-                            : 'text-gray-500'
-                        }`}
-                      >
-                        Book
-                      </div>
-                    </div>
-                    <div className="flex-auto border-t-2 transition duration-500 ease-in-out border-gray-300"></div>
-                    <div
-                      className={`flex items-center  relative ${
-                        ['blocksheet'].includes(onStep)
-                          ? 'text-white'
-                          : 'text-[#5671fc] '
-                      }`}
-                      onClick={() => moveStep('blocksheet')}
-                    >
-                      <div
-                        className={`rounded-full transition duration-500 ease-in-out h-12 w-12 py-3 border-2 ${
-                          ['blocksheet'].includes(onStep)
-                            ? 'bg-[#5671fc] border-[#5671fc] '
-                            : 'border-[#5671fc] '
-                        } `}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="100%"
-                          height="100%"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="feather feather-mail "
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M10.05 4.575a1.575 1.575 0 10-3.15 0v3m3.15-3v-1.5a1.575 1.575 0 013.15 0v1.5m-3.15 0l.075 5.925m3.075.75V4.575m0 0a1.575 1.575 0 013.15 0V15M6.9 7.575a1.575 1.575 0 10-3.15 0v8.175a6.75 6.75 0 006.75 6.75h2.018a5.25 5.25 0 003.712-1.538l1.732-1.732a5.25 5.25 0 001.538-3.712l.003-2.024a.668.668 0 01.198-.471 1.575 1.575 0 10-2.228-2.228 3.818 3.818 0 00-1.12 2.687M6.9 7.575V12m6.27 4.318A4.49 4.49 0 0116.35 15m.002 0h-.002"
-                          />
-                        </svg>
-                      </div>
-                      <div
-                        className={`absolute top-0 -ml-10 text-center mt-16 w-32 text-xs font-medium uppercase ${
-                          ['blocksheet'].includes(onStep)
-                            ? 'text-[#5671fc] '
-                            : 'text-gray-500'
-                        }`}
-                      >
-                        Block
-                      </div>
-                    </div>
-                  </div> */}
                 </div>
+
+
               </div>
 
               {['costsheet', 'allsheets'].includes(onStep) && (
                 <div className="">
-                  {/* <section className="bg-[#F6F7FE]">
 
-                    <div className=" border-gray-800 flex flex-row justify-between bg-[#F6F7FE]">
-                      <div>
-                        <ul
-                          className="flex justify-  rounded-t-lg  ml-2"
-                          id="myTab"
-                          data-tabs-toggle="#myTabContent"
-                          role="tablist"
-                        >
-                          {[
-                            { lab: 'Both', val: 'both' },
-                            { lab: 'Plot', val: 'plot_cs' },
-                            {
-                              lab: 'Construction',
-                              val: 'construct_cs',
-                            },
-                          ].map((d, i) => {
-                            return (
-                              <li
-                                key={i}
-                                className="mr-2 font-bodyLato"
-                                role="presentation"
-                              >
-                                <section className="bg-[#F6F7FE]">
-                                  <div className="w-full flex items-center ">
-                                    <label
-                                      htmlFor="area"
-                                      className="label font-regular text-sm font-bodyLato"
-                                    >
-                                      {d?.lab}
-                                    </label>
-                                    <Field
-                                      name="isGSTChecked"
-                                      type="checkbox"
-                                      component={() => (
-                                        <Checkbox
-                                          color="primary"
-                                          checked={csMode === d.val}
-                                          onClick={() => setCsMode(d.val)}
-
-                                        />
-                                      )}
-                                    />
-                                  </div>
-                                </section>
-                              </li>
-                            )
-                          })}
-                        </ul>
-                      </div>
-                      <section className="bg-[#F6F7FE]">
-                        <div className="w-full flex items-center ">
-                          <label
-                            htmlFor="area"
-                            className="label font-regular text-sm font-bodyLato"
-                          >
-                            Show Gst
-                          </label>
-                          <Field
-                            name="isGSTChecked"
-                            type="checkbox"
-                            component={() => (
-                              <Checkbox
-                                color="primary"
-                                checked={showGstCol}
-                                onClick={() => setShowGstCol(!showGstCol)}
-                              />
-                            )}
-                          />
-                        </div>
-                      </section>
-                    </div>
-                  </section> */}
                   <div className="flex flex-col mx-0 bg-[#F8FAFC] ">
+
                     <div className="">
                       <Formik
                         enableReinitialize={true}
@@ -790,29 +531,6 @@ const CostBreakUpSheet = ({
 
                             <div className="flex flex-col mt-2 z-10 flex flex-row justify-between mt-2 pr-6 bg-white shadow-lg absolute bottom-0  w-full">
                               <div className="mt-2 text-right md:space-x-3 md:block flex flex-col-reverse mb-3">
-                                <button
-                                  onClick={() => {
-                                    setisImportLeadsOpen(true)
-                                    // dialogOpen(false)
-                                  }}
-                                  type="button"
-                                  className="mb-2 md:mb-0 bg-white px-5 py-2 text-sm shadow-sm font-medium tracking-wider border text-gray-600 rounded-sm hover:shadow-lg hover:bg-gray-100"
-                                >
-                                  {' '}
-                                  Preview & send to customer{' '}
-                                </button>
-                                {/* <Pdf targetRef={ref} filename="post.pdf">
-                              {({ toPdf }) => (
-                                <button
-                                  onClick={toPdf}
-                                  type="button"
-                                  className="mb-4 md:mb-0 bg-white px-5 py-2 text-sm shadow-sm font-medium tracking-wider border text-gray-600 rounded-sm hover:shadow-lg hover:bg-gray-100"
-                                >
-                                  {' '}
-                                  Download{' '}
-                                </button>
-                              )}
-                            </Pdf> */}
                                 <div className="inline-block">
                                   <PdfInvoiceGenerator
                                     user={user}
@@ -830,38 +548,13 @@ const CostBreakUpSheet = ({
                                     leadDetailsObj1={leadDetailsObj1}
                                   />
                                 </div>
-                                {/* <button
-                                  onClick={() => {
-                                    if (
-                                      pdfExportComponent.current &&
-                                      csMode === 'plot_cs'
-                                    ) {
-                                      pdfExportComponent.current.save()
-                                    } else if (
-                                      pdfExportComponentConstruct.current &&
-                                      csMode != 'plot_cs'
-                                    ) {
-                                      pdfExportComponentConstruct.current.save()
-                                    }
-                                  }}
-                                  type="button"
-                                  className="mb-4 md:mb-0 hover:scale-110 focus:outline-none bg-white px-5 py-2 text-sm shadow-sm font-medium tracking-wider border text-gray-600 rounded-sm hover:shadow-lg hover:bg-gray-100         hover:bg-teal-200
-                                  bg-teal-100
-                                  text-teal-700
-                                  border duration-200 ease-in-out
-                                  border-[#5671fc] transition"
-                                >
-                                  {' '}
-                                  Download{' '}
-                                </button> */}
-
                                 <button
                                   className="mb-2 md:mb-0  hover:scale-110 focus:outline-none              hover:bg-[#5671fc]
-                                  bg-[#5671fc]
-                                  text-teal-100
+                                  bg-gradient-to-r from-indigo-400 to-cyan-400
+                                  text-black
                                   border duration-200 ease-in-out
-                                  border-[#5671fc] transition
-                                   px-5 py-2 text-sm shadow-sm font-medium tracking-wider text-white rounded-sm hover:shadow-lg hover:bg-green-500"
+                                  transition
+                                   px-5 py-1 pb-[5px] text-sm shadow-sm font-medium tracking-wider text-white rounded-md hover:shadow-lg hover:bg-green-500"
                                   type="submit"
                                   disabled={loading}
                                   // onClick={() => submitFormFun(formik)}
@@ -869,6 +562,21 @@ const CostBreakUpSheet = ({
                                   {/* {loading && <Loader />} */}
                                   Save
                                 </button>
+                               {['unitBookingMode', 'unitBlockMode'].includes(actionMode) && <button
+                                  className="mb-2 mr-2 md:mb-0  hover:scale-110 focus:outline-none              hover:bg-[#5671fc]
+                                  bg-gradient-to-r from-indigo-400 to-cyan-400
+                                  text-black
+
+                                  border duration-200 ease-in-out
+                                  transition
+                                   px-5 py-1 pb-[5px] text-sm shadow-sm font-medium tracking-wider text-white rounded-md hover:shadow-lg hover:bg-green-500"
+                                  type="submit"
+                                  disabled={loading}
+                                  // onClick={() => submitFormFun(formik)}
+                                >
+                                  {/* {loading && <Loader />} */}
+                                 <span>Save & Next</span>
+                                </button> }
                               </div>
                             </div>
                           </Form>
@@ -894,6 +602,9 @@ const CostBreakUpSheet = ({
                   title="Booking Form"
                   selUnitDetails={selUnitDetails}
                   leadDetailsObj2={leadDetailsObj1}
+                  setOnStep={setOnStep}
+                  source="Booking"
+                  currentMode= {actionMode}
                 />
               )}
               {['booksheet', 'allsheets'].includes(onStep) && (
