@@ -132,6 +132,12 @@ const CostBreakUpSheet = ({
       setOnStep('blocksheet')
     } else if (actionMode === 'unitBookingMode') {
       setStatusListA([
+        {
+          label: 'Customer info',
+          value: 'customerDetails',
+          logo: 'FireIcon',
+          color: ' bg-violet-500',
+        },
 
         {
           label: 'Cost sheet',
@@ -139,14 +145,15 @@ const CostBreakUpSheet = ({
           logo: 'RefreshIcon',
           color: ' bg-violet-500',
         },
+
         {
-          label: 'Customer details',
-          value: 'customerDetails',
+          label: 'Payment schedule',
+          value: 'payment_schedule',
           logo: 'FireIcon',
           color: ' bg-violet-500',
         },
         {
-          label: 'Booking Payment',
+          label: 'Payment',
           value: 'booksheet',
           logo: 'FireIcon',
           color: ' bg-violet-500',
@@ -418,19 +425,19 @@ const CostBreakUpSheet = ({
                         </span>
                       ))}
                     </div>
-                    <span className=" w-6 h-6 mt-[3px] text-[9px] mr-2 cursor-pointer flex justify-center items-center rounded-full  border bg-blue-500 text-white">
+                    {/* <span className=" w-6 h-6 mt-[3px] text-[9px] mr-2 cursor-pointer flex justify-center items-center rounded-full  border bg-blue-500 text-white">
                     <ChevronRightIcon
                             className="w-3 h-3 "
                             aria-hidden="true"
                           />
-                    </span>
+                    </span> */}
                   </div>
                 </div>
 
 
               </div>
 
-              {['costsheet', 'allsheets'].includes(onStep) && (
+              {['costsheet', 'allsheets', 'payment_schedule'].includes(onStep) && (
                 <div className="">
 
                   <div className="flex flex-col mx-0 bg-[#F8FAFC] ">
@@ -502,6 +509,7 @@ const CostBreakUpSheet = ({
                                   partBTotal={partBTotal}
                                   setPartATotal={setPartATotal}
                                   setPartBTotal={setPartBTotal}
+                                  showOnly = {onStep}
                                 />
                               )}
                               {csMode === 'construct_cs' && (

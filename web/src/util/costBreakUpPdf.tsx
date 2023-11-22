@@ -41,6 +41,7 @@ const CostBreakUpPdf = ({
   partBTotal,
   setPartATotal,
   setPartBTotal,
+  showOnly,
 }) => {
   const { user } = useAuth()
   const { orgId } = user
@@ -508,7 +509,7 @@ const CostBreakUpPdf = ({
                             </div>
                           </section> */}
                         </section>
-                        <div className=" rounded-md">
+                        {showOnly === 'costsheet' &&   <div className=" rounded-md">
                           <table className="w-[100%]">
                             <thead>
                               <tr className="h-8 mb-1 border-none w-[100%] bg-[#f3fff2] ">
@@ -783,8 +784,9 @@ const CostBreakUpPdf = ({
                               </section>
                             </section>
                           </section>
-                        </div>
-                        <div className=" mt-4 ">
+                        </div> }
+                      {showOnly === 'payment_schedule' &&
+                      <div className=" mt-4 ">
                           <section className="flex p-2">
                             <h1 className="text-bodyLato text-center text-gray-800 font-bold text-[14px] border-b ">
                               PAYMENT SCHEDULE
@@ -835,7 +837,7 @@ const CostBreakUpPdf = ({
                               </tr>
                             </tbody>
                           </table>
-                        </div>
+                        </div>}
                       </div>
                     </div>
                     {/* end of paper */}
