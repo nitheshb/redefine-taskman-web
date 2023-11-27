@@ -51,6 +51,7 @@ export const steamUsersListByRole = (orgId, snapshot, error) => {
   const itemsQuery = query(
     collection(db, 'users'),
     where('orgId', '==', orgId),
+    where('userStatus', '==', 'active'),
     where('roles', 'array-contains-any', ['sales-manager', 'sales-executive'])
   )
   return onSnapshot(itemsQuery, snapshot, error)
@@ -60,6 +61,7 @@ export const steamUsersListByDept = (orgId, dept, snapshot, error) => {
   const itemsQuery = query(
     collection(db, 'users'),
     where('orgId', '==', orgId),
+    where('userStatus', '==', 'active'),
     where('department', 'array-contains-any', dept)
   )
   return onSnapshot(itemsQuery, snapshot, error)
