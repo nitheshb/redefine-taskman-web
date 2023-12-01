@@ -63,35 +63,24 @@ export default function ModuleSwitchDrop({
           <Menu.Items
             className={`${
               ['Facing', 'show'].includes(type) ? 'right-0' : 'left-0'
-            }  absolute  w-[360px] mt-2 origin-top-left bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-[9000]`}
+            }  absolute w-[594px]   origin-top-left bg-white rounded-[6px] shadow-[0px_20px_35px_-10px_#2f32643b]`}
             // style={{ 'z-index': '9' }}
           >
-            <div className="px-1 py-1 ">
+            <div className="px-3 py-6 ">
               <>
+              <div className="flex flex-row">
+                <div className='flex flex-col'>
                 <Menu.Item>
                   {({ active }) => (
                     <Link to={routes.home()}>
-                      {/* <button
-                        className={`${
-                          active ? 'bg-violet-500 text-white' : 'text-gray-900'
-                        } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
-                        onClick={() => {
-                          setStatusFun('1', 'Projects')
-                        }}
-                      >
-                        <FireIcon
-                          className="w-5 h-5 mr-2 text-violet-500"
-                          aria-hidden="true"
-                        />
-                        {'Projects'}{' '}
-                      </button> */}
+
                       <div
-                        className="group relative flex items-center gap-x-6 rounded-lg p-2 pb-0 text-sm leading-6 hover:bg-gray-50"
+                        className="group relative flex items-center gap-x-6 rounded-lg p-2 pb-0 text-sm leading-6 hover:bg-[#ffeff2]"
                         onClick={() => {
                           setStatusFun('1', 'Projects')
                         }}
                       >
-                        <div className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                        <div className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-[#ffeff2] group-hover:bg-[#ffeff2]">
                           <OfficeBuildingIcon
                             className="h-6 w-6 text-gray-600 group-hover:text-indigo-600"
                             aria-hidden="true"
@@ -102,7 +91,7 @@ export default function ModuleSwitchDrop({
                             Projects
                             <span className="absolute inset-0" />
                           </a>
-                          <p className="mt- pb-2 border-b text-gray-600">
+                          <p className="mt- pb-3 text-gray-600">
                             Project Setup, Insights, Access...
                           </p>
                         </div>
@@ -114,12 +103,12 @@ export default function ModuleSwitchDrop({
                   {({ active }) => (
                     <Link to={routes.marketingModule()}>
                       <div
-                        className="group relative flex items-center gap-x-6 rounded-lg p-2 pb-0 text-sm leading-6 hover:bg-gray-50"
+                        className="group relative flex items-center gap-x-6 rounded-lg p-2 pb-0 text-sm leading-6 hover:bg-[#eff1ff]"
                         onClick={() => {
                           setStatusFun('1', 'Marketing')
                         }}
                       >
-                        <div className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                        <div className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-[#eff1ff] group-hover:bg-[#eff1ff]">
 
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -135,7 +124,7 @@ export default function ModuleSwitchDrop({
                             Marketing
                             <span className="absolute inset-0" />
                           </a>
-                          <p className="mt- pb-2 border-b text-gray-600">
+                          <p className="mt- pb-3  text-gray-600">
                             Campaign, Branding & Insights
                           </p>
                         </div>
@@ -147,12 +136,12 @@ export default function ModuleSwitchDrop({
                   {({ active }) => (
                     <Link to={routes.leadsManager()}>
                       <div
-                        className="group relative flex items-center gap-x-6 rounded-lg p-2 pb-0 text-sm leading-6 hover:bg-gray-50"
+                        className="group relative flex items-center gap-x-6 rounded-lg p-2 pb-0 text-sm leading-6 hover:bg-[#e8faec]"
                         onClick={() => {
                           setStatusFun('1', 'Sales')
                         }}
                       >
-                        <div className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                        <div className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-[#e8faec] group-hover:bg-[#e8faec]">
                           <NewspaperIcon
                             className="h-6 w-6 text-gray-600 group-hover:text-indigo-600"
                             aria-hidden="true"
@@ -163,7 +152,7 @@ export default function ModuleSwitchDrop({
                             Sales
                             <span className="absolute inset-0" />
                           </a>
-                          <p className="mt- pb-2 border-b text-gray-600">
+                          <p className="mt- pb-3 text-gray-600">
                             Sales Leads, Archieve, Insights
                           </p>
                         </div>
@@ -171,17 +160,16 @@ export default function ModuleSwitchDrop({
                     </Link>
                   )}
                 </Menu.Item>
-
                 <Menu.Item>
                   {({ active }) => (
                     <Link to={routes.crmModule()}>
                       <div
-                        className="group relative flex items-center gap-x-6 rounded-lg p-2 pb-0 text-sm leading-6 hover:bg-gray-50"
+                        className="group relative flex items-center gap-x-6 rounded-lg p-2 pb-0 text-sm leading-6 hover:bg-[#faf2e2]"
                         onClick={() => {
                           setStatusFun('1', 'CRM')
                         }}
                       >
-                        <div className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                        <div className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-[#faf2e2] group-hover:bg-[#faf2e2]">
                           <ChartPieIcon
                             className="h-6 w-6 text-gray-600 group-hover:text-indigo-600"
                             aria-hidden="true"
@@ -192,25 +180,28 @@ export default function ModuleSwitchDrop({
                             CRM
                             <span className="absolute inset-0" />
                           </a>
-                          <p className="mt- pb-2 border-b text-gray-600">
-                            Customer Agreements, Registrations...
+                          <p className="mt- pb-3  text-gray-600">
+                            Agreements, Registrations,...
                           </p>
                         </div>
                       </div>
                     </Link>
                   )}
                 </Menu.Item>
+                </div>
+                <div className='flex flex-col ml-5'>
+
 
                 <Menu.Item>
                   {({ active }) => (
                     <Link to={routes.financeModule()}>
                       <div
-                        className="group relative flex items-center gap-x-6 rounded-lg p-2 pb-0 text-sm leading-6 hover:bg-gray-50"
+                        className="group relative flex items-center gap-x-6 rounded-lg p-2 pb-0 text-sm leading-6 hover:bg-[#e8faec]"
                         onClick={() => {
                           setStatusFun('1', 'Finance')
                         }}
                       >
-                        <div className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                        <div className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-[#e8faec] group-hover:bg-[#e8faec]">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="h-6 w-6 text-gray-600 group-hover:text-indigo-600"
@@ -233,7 +224,7 @@ export default function ModuleSwitchDrop({
                             Finance
                             <span className="absolute inset-0" />
                           </a>
-                          <p className="mt- pb-2 border-b text-gray-600">
+                          <p className="mt- pb-3 text-gray-600">
                             Payments...
                           </p>
                         </div>
@@ -241,6 +232,95 @@ export default function ModuleSwitchDrop({
                     </Link>
                   )}
                 </Menu.Item>
+                <Menu.Item>
+                  {({ active }) => (
+                    <Link to={routes.legalModule()}>
+                      <div
+                        className="group relative flex items-center gap-x-6 rounded-lg p-2 pb-0 text-sm leading-6 hover:bg-[#faf2e2]"
+                        onClick={() => {
+                          setStatusFun('1', 'Legal')
+                        }}
+                      >
+                        <div className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-[#faf2e2] group-hover:bg-[#faf2e2]">
+                          <ScaleIcon
+                            className="h-6 w-6 text-gray-600 group-hover:text-indigo-600"
+                            aria-hidden="true"
+                          />
+                        </div>
+                        <div className="flex-auto">
+                          <a className="block font-semibold text-gray-900">
+                            Legal
+                            <span className="absolute inset-0" />
+                          </a>
+                          <p className="mt- pb-3  text-gray-600">
+                            Unit Docs, Drafts
+                          </p>
+                        </div>
+                      </div>
+                    </Link>
+                  )}
+                </Menu.Item>
+                <Menu.Item>
+                  {({ active }) => (
+                    <Link to={routes.usersAdmin()}>
+                      <div
+                        className="group relative flex items-center gap-x-6 rounded-lg p-2 pb-0 text-sm leading-6 hover:bg-[#eff1ff]"
+                        onClick={() => {
+                          setStatusFun('1', 'HR')
+                        }}
+                      >
+                        <div className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-[#eff1ff] group-hover:bg-[#eff1ff]">
+                          <UserGroupIcon
+                            className="h-6 w-6 text-gray-600 group-hover:text-indigo-600"
+                            aria-hidden="true"
+                          />
+                        </div>
+                        <div className="flex-auto">
+                          <a className="block font-semibold text-gray-900">
+                            HR
+                            <span className="absolute inset-0" />
+                          </a>
+                          <p className="mt- pb-3  text-gray-600">
+                            Emp Addition, Role, Access
+                          </p>
+                        </div>
+                      </div>
+                    </Link>
+                  )}
+                </Menu.Item>
+                <Menu.Item>
+                  {({ active }) => (
+                    <Link to={routes.administrationTeam()}>
+                      <div
+                        className="group relative flex items-center gap-x-6 rounded-lg p-2 pb-0 text-sm leading-6 hover:bg-[#ffeff2]"
+                        onClick={() => {
+                          setStatusFun('1', 'ADMINTEAM')
+                        }}
+                      >
+                        <div className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-[#ffeff2] group-hover:bg-[#ffeff2]">
+                        <PuzzleIcon
+                            className="h-6 w-6 text-gray-600 group-hover:text-indigo-600"
+                            aria-hidden="true"
+                          />
+                        </div>
+                        <div className="flex-auto">
+                          <a className="block font-semibold text-gray-900">
+                            Admin Team
+                            <span className="absolute inset-0" />
+                          </a>
+                          <p className="mt- pb-3  text-gray-600">
+                            Facilitators, Help
+                          </p>
+                        </div>
+                      </div>
+                    </Link>
+                  )}
+                </Menu.Item>
+                  </div>
+              </div>
+
+
+
 
                 {/* <Menu.Item>
                   {({ active }) => (
@@ -271,90 +351,7 @@ export default function ModuleSwitchDrop({
                   )}
                 </Menu.Item> */}
 
-                <Menu.Item>
-                  {({ active }) => (
-                    <Link to={routes.legalModule()}>
-                      <div
-                        className="group relative flex items-center gap-x-6 rounded-lg p-2 pb-0 text-sm leading-6 hover:bg-gray-50"
-                        onClick={() => {
-                          setStatusFun('1', 'Legal')
-                        }}
-                      >
-                        <div className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-                          <ScaleIcon
-                            className="h-6 w-6 text-gray-600 group-hover:text-indigo-600"
-                            aria-hidden="true"
-                          />
-                        </div>
-                        <div className="flex-auto">
-                          <a className="block font-semibold text-gray-900">
-                            Legal
-                            <span className="absolute inset-0" />
-                          </a>
-                          <p className="mt- pb-2 border-b text-gray-600">
-                            Unit Docs, Drafts
-                          </p>
-                        </div>
-                      </div>
-                    </Link>
-                  )}
-                </Menu.Item>
-                <Menu.Item>
-                  {({ active }) => (
-                    <Link to={routes.usersAdmin()}>
-                      <div
-                        className="group relative flex items-center gap-x-6 rounded-lg p-2 pb-0 text-sm leading-6 hover:bg-gray-50"
-                        onClick={() => {
-                          setStatusFun('1', 'HR')
-                        }}
-                      >
-                        <div className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-                          <UserGroupIcon
-                            className="h-6 w-6 text-gray-600 group-hover:text-indigo-600"
-                            aria-hidden="true"
-                          />
-                        </div>
-                        <div className="flex-auto">
-                          <a className="block font-semibold text-gray-900">
-                            HR
-                            <span className="absolute inset-0" />
-                          </a>
-                          <p className="mt- pb-2 border-b text-gray-600">
-                            Emp Addition, Role, Access
-                          </p>
-                        </div>
-                      </div>
-                    </Link>
-                  )}
-                </Menu.Item>
-                <Menu.Item>
-                  {({ active }) => (
-                    <Link to={routes.administrationTeam()}>
-                      <div
-                        className="group relative flex items-center gap-x-6 rounded-lg p-2 pb-0 text-sm leading-6 hover:bg-gray-50"
-                        onClick={() => {
-                          setStatusFun('1', 'ADMINTEAM')
-                        }}
-                      >
-                        <div className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-                        <PuzzleIcon
-                            className="h-6 w-6 text-gray-600 group-hover:text-indigo-600"
-                            aria-hidden="true"
-                          />
-                        </div>
-                        <div className="flex-auto">
-                          <a className="block font-semibold text-gray-900">
-                            Admin Team
-                            <span className="absolute inset-0" />
-                          </a>
-                          <p className="mt- pb-2 border-b text-gray-600">
-                            Facilitators, Help
-                          </p>
-                        </div>
-                      </div>
-                    </Link>
-                  )}
-                </Menu.Item>
+
               </>
             </div>
           </Menu.Items>

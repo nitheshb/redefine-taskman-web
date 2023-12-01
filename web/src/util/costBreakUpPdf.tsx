@@ -477,16 +477,30 @@ const CostBreakUpPdf = ({
                 margin="0.5cm"
                 fileName={`${selUnitDetails?.unit_no}_${leadDetailsObj1?.Name}_Nirvana`}
                 ref={pdfExportComponent}
-              >
-                <div className="">
+              >  <section
+              className="w-full flex flex-col  p-4 rounded-md   bg-[#fff]"
+              style={{ boxShadow: '0 1px 12px #f2f2f2' }}
+            >
+              <div className="w-full  flex flex-row">
+                <div className="w-[63.80px] h-[57px] bg-zinc-100 rounded-[5px]"></div>
+                <div className="w-full flex flex-col ml-3">
+
+                  <h6 className="w-full lg:w-12/12 text-blueGray-400 text-[13px] mt-[9px] mb- font-bold uppercase">
+                  Cost sheet
+
+                  </h6>
+                  <div className="w-[455.80px] opacity-50 text-blue-950  text-[12px] font-normal ">
+                    Quotation or estimate of unit
+                  </div>
+                </div>
+              </div>
+                <div className="mt-4">
                   <div>
                     <div>
                       <div className="">
 
-                        <section className="flex flex-row justify-between bg-[#f3fff2] p-2 py-1 border-b rounded-t-lg">
-                          <h1 className="text-bold font-bold text-center text-gray-800  text-[14px] mt-[10px] ">
-                            COST SHEET
-                          </h1>
+                        <section className="flex flex-row justify-between bg-[#f3fff2] rounded-t-lg">
+
                           {/* <section className="">
                             <div className="w-full flex items-center ">
                               <label
@@ -513,27 +527,27 @@ const CostBreakUpPdf = ({
                           <table className="w-[100%]">
                             <thead>
                               <tr className="h-8 mb-1 border-none w-[100%] bg-[#f3fff2] ">
-                                <th className="min-w-[35%] px-2  text-[10px] text-left  tracking-wide uppercase ">
+                                <th className="min-w-[35%] px-2  text-[10px] text-left  tracking-wide uppercase border border-blue-100 ">
                                   Particulars
                                 </th>
-                                <th className="w-[15%] px-2 text-[10px] text-right  tracking-wide uppercase">
+                                <th className="w-[15%] px-2 text-[10px] text-right  tracking-wide uppercase border border-blue-100">
                                   Rate/Sqft
                                 </th>
                                 <th
                                   className={`${
                                     !showGstCol ? 'hidden' : ''
-                                  } w-[15%] px-2 text-[10px] text-right  tracking-wide uppercase`}
+                                  } w-[15%] px-2 text-[10px] text-right  tracking-wide uppercase border border-blue-100`}
                                 >
                                   Sale Value
                                 </th>
                                 <th
                                   className={`${
                                     !showGstCol ? 'hidden' : ''
-                                  }  w-[15%] px-2 text-[10px] text-right  tracking-wide uppercase`}
+                                  }  w-[15%] px-2 text-[10px] text-right  tracking-wide uppercase border border-blue-100`}
                                 >
                                   GST
                                 </th>
-                                <th className="w-[15%] px-2 text-[10px] text-right  tracking-wide uppercase ">
+                                <th className="w-[15%] px-2 text-[10px] text-right  tracking-wide uppercase border border-blue-100">
                                   Total
                                 </th>
                               </tr>
@@ -545,10 +559,10 @@ const CostBreakUpPdf = ({
                                   key={inx}
                                   className="py-1 my-2 h-[32px]  py-[24px]"
                                 >
-                                  <th className="w-[40%] px-2 text-[11px] text-left text-gray-700  ">
+                                  <th className="w-[40%] px-2 text-[11px] text-left text-gray-700 border border-blue-100 ">
                                     {d1?.component?.label}
                                   </th>
-                                  <td className="w-[15%]  px-2 text-[12px] text-right text-gray-700 ">
+                                  <td className="w-[15%]  px-2 text-[12px] text-right text-gray-700 border border-blue-100 ">
                                     <TextFieldFlat
                                       label=""
                                       className="w-[100%] text-[12px] text-right font-bold border-b  border-[#B76E00] border-dashed pr-1 py-[4px] text-[#B76E00]"
@@ -605,7 +619,7 @@ const CostBreakUpPdf = ({
                                   <td
                                     className={`${
                                       !showGstCol ? 'hidden' : ''
-                                    } w-[15%] px-2 text-[12px] text-right text-slate-500 text-sm `}
+                                    } w-[15%] px-2 text-[12px] text-right text-slate-500 text-sm border border-blue-100`}
                                   >
                                     ₹{d1?.TotalSaleValue?.toLocaleString(
                                       'en-IN'
@@ -614,11 +628,11 @@ const CostBreakUpPdf = ({
                                   <td
                                     className={`${
                                       !showGstCol ? 'hidden' : ''
-                                    } w-[15%] px-2 text-[12px] text-right text-slate-500 text-sm  `}
+                                    } w-[15%] px-2 text-[12px] text-right text-slate-500 text-sm border border-blue-100 `}
                                   >
                                     ₹{d1?.gstValue?.toLocaleString('en-IN')}
                                   </td>
-                                  <td className="w-[15%] px-2 text-[12px] text-right text-slate-900 ">
+                                  <td className="w-[15%] px-2 text-[12px] text-right text-slate-900 border border-blue-100 ">
                                     ₹
                                     {d1?.TotalNetSaleValueGsT?.toLocaleString(
                                       'en-IN'
@@ -666,7 +680,7 @@ const CostBreakUpPdf = ({
                               </tr>
                             </tbody>
                           </table>
-                          <table className="w-full mt-1">
+                          <table className="w-full mt-4">
                             {/* <thead>
                             {' '}
                             <tr className=" h-6  border-b-[0.2px] border-gray-300">
@@ -681,23 +695,50 @@ const CostBreakUpPdf = ({
                               </th>
                             </tr>
                           </thead> */}
+                              <thead>
+                              <tr className="h-8 mb-1 border-none w-[100%] bg-[#f3fff2] ">
+                                <th className="min-w-[35%] px-2  text-[10px] text-left  tracking-wide uppercase border border-blue-100 ">
+                                  Particulars
+                                </th>
+                                <th className="w-[15%] px-2 text-[10px] text-right  tracking-wide uppercase border border-blue-100">
+                                  Rate/Sqft
+                                </th>
+                                <th
+                                  className={`${
+                                    !showGstCol ? 'hidden' : ''
+                                  } w-[15%] px-2 text-[10px] text-right  tracking-wide uppercase border border-blue-100`}
+                                >
+                                  Sale Value
+                                </th>
+                                <th
+                                  className={`${
+                                    !showGstCol ? 'hidden' : ''
+                                  }  w-[15%] px-2 text-[10px] text-right  tracking-wide uppercase border border-blue-100`}
+                                >
+                                  GST
+                                </th>
+                                <th className="w-[15%] px-2 text-[10px] text-right  tracking-wide uppercase border border-blue-100">
+                                  Total
+                                </th>
+                              </tr>
+                            </thead>
                             <tbody>
                               {partBPayload?.map((d1, inx) => (
                                 <tr
                                   key={inx}
                                   className="h-[32px] border-b border-dashed"
                                 >
-                                  <th className=" text-[12px] px-2 text-left text-gray-700 ">
+                                  <th className=" text-[12px] px-2 text-left text-gray-700 border border-blue-100 ">
                                     {d1?.component?.label}
                                     {/* {d1?.units?.value === 'costpersqft' && `(${d1?.charges}% on Sale value)`} */}
                                   </th>
-                                  <td className="w-[15%]  px-2 text-[12px] text-right text-gray-700 ">
+                                  <td className="w-[15%]  px-2 text-[12px] text-right text-gray-700 border border-blue-100 ">
                                     {d1?.charges}
                                   </td>
                                   <td
                                     className={`${
                                       !showGstCol ? 'hidden' : ''
-                                    } w-[15%] px-2 text-[12px] text-right text-slate-500 text-sm `}
+                                    } w-[15%] px-2 text-[12px] text-right text-slate-500 text-sm border border-blue-100 `}
                                   >
                                     ₹{d1?.TotalSaleValue?.toLocaleString(
                                       'en-IN'
@@ -706,11 +747,11 @@ const CostBreakUpPdf = ({
                                   <td
                                     className={`${
                                       !showGstCol ? 'hidden' : ''
-                                    } w-[15%] px-2 text-[12px] text-right text-slate-500 text-sm  `}
+                                    } w-[15%] px-2 text-[12px] text-right text-slate-500 text-sm border border-blue-100 `}
                                   >
                                     ₹{d1?.gstValue?.toLocaleString('en-IN')}
                                   </td>
-                                  <td className="text-[12px] px-2 text-right text-gray-700 ">
+                                  <td className="text-[12px] px-2 text-right text-gray-700 border border-blue-100 ">
                                     {/* {Number(d1?.charges)?.toLocaleString('en-IN')} */}
                                     ₹
                                     {Number(
@@ -761,28 +802,42 @@ const CostBreakUpPdf = ({
                             </tbody>
                           </table>
 
-                          <section className="flex flex-row justify-between  bg-[#dff6dd]  h-[34px] py-[7px] ">
+
+<section className='flex flex-row justify-between'>
+  <div></div>
+
+  <div>
+                          <section className="flex flex-row justify-between  bg-[#dff6dd]  h-[34px] py-[7px] pt-[12px] mt-6 ">
                             <h1 className="px-2 text-[12px] text-left  text-[12px] font-bold ">
-                              Total Plot Sale Value(A+B)
+                              Part(A)
                             </h1>
                             <section className="flex flex-row">
-                              <section className="px-2 d-md font-bold text-[12px] text-[#0000008c] ">
+                              <section className="px-2 d-md font-semibold text-[14px] text-[#000000e6] leading-none">
                                 ₹{partATotal?.toLocaleString('en-IN')}
                               </section>
-                              <section className=" d-md font-bold text-[12px] text-[#0000008c] ">
-                                +
-                              </section>
-
-                              <section className="px-2 d-md font-bold text-[12px] text-[#0000008c] ">
+                            </section>
+                          </section>
+                          <section className="flex flex-row justify-between  bg-[#dff6dd]  h-[30px] pt-[2px]">
+                            <h1 className="px-2 text-[12px] text-left  text-[12px] font-bold ">
+                              Part(B)
+                            </h1>
+                            <section className="flex flex-row">
+                              <section className="px-2 d-md font-semibold text-[14px] text-[#000000e6] leading-none">
                                 ₹{partBTotal?.toLocaleString('en-IN')}
                               </section>
-                              <section className=" d-md font-bold text-[12px] text-[#0000008c] ">
-                                =
-                              </section>
-                              <section className="px-2 d-md font-bold text-[16px] text-[#000000e6] leading-none">
+                            </section>
+                          </section>
+                          <section className="flex flex-row justify-between  bg-[#dff6dd]  h-[34px]  ">
+                            <h1 className="px-2 text-[12px] text-left  text-[12px] font-bold ">
+                              Total Cost
+                            </h1>
+                            <section className="flex flex-row">
+                              <section className="px-2 d-md font-bold text-[14px] text-[#000000e6] leading-none">
                                 ₹{netTotal?.toLocaleString('en-IN')}
                               </section>
                             </section>
+                          </section>
+                          </div>
                           </section>
                         </div> }
                       {showOnly === 'payment_schedule' &&
@@ -843,6 +898,7 @@ const CostBreakUpPdf = ({
                     {/* end of paper */}
                   </div>
                 </div>
+                </section>
               </PDFExport>
             )}
           </Formik>

@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react'
 
 import { Dialog } from '@headlessui/react'
 import { RadioGroup } from '@headlessui/react'
-import { ArrowCircleDownIcon } from '@heroicons/react/solid'
+import { ArrowCircleDownIcon, PlusIcon } from '@heroicons/react/solid'
 import { setHours, setMinutes } from 'date-fns'
 import { Timestamp } from 'firebase/firestore'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
@@ -76,9 +76,8 @@ const AddApplicantDetails = ({
   }, [])
 
   useEffect(() => {
-   console.log('yes it is', panCard1)
+    console.log('yes it is', panCard1)
   }, [panCard1])
-
 
   useEffect(() => {
     const unsubscribe = steamUsersListByRole(
@@ -631,218 +630,234 @@ const AddApplicantDetails = ({
                         <div className="w-full mx-auto ">
                           <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-[#F9FBFB] border-0">
                             <div className="flex-auto">
-                              <section className=" lg:px-2 py-4">
+                              <section className=" lg:px-2 py-2">
                                 <div className="flex flex-wrap">
-                                 
-
                                   <section
-                                    className="w-full flex p-4 rounded-md   mt-6  bg-[#fff]"
+                                    className="w-full flex flex-col  p-4 rounded-md   bg-[#fff]"
                                     style={{ boxShadow: '0 1px 12px #f2f2f2' }}
                                   >
-                                    <div className="w-full lg:w-6/12 px-4 border-r-2 ">
-                                      <div className="w-full flex flex-row">
-                                        <div className="w-3 h-3 mt-[14px] rounded-full bg-[#FB6094]  "></div>
-                                        <div className="w-2 h-2 ml-[1px] rounded-md mt-[16px] bg-[#FB6094]  "></div>
-                                        <div className="w-1 h-1 ml-[1px] rounded-md mr-1 mt-[18px] bg-[#FB6094]  "></div>
-                                        <h6 className="text-blueGray-400 text-xs mt-3 mb-3 font-bold uppercase ">
-                                          First Applicant Personal Details
-                                        </h6>
-                                      </div>
-                                      <div className="flex flex-wrap">
-                                        <div className="w-full lg:w-12/12 ">
-                                          <div className="relative w-full mb-3 mt-2">
-                                            <TextField2
-                                              label="Customer Name*"
-                                              name="customerName1"
-                                              type="text"
-                                            />
-                                          </div>
-                                        </div>
+                                    <div className="w-full  flex flex-row">
+                                      <div className="w-[63.80px] h-[57px] bg-zinc-100 rounded-[5px]"></div>
+                                      <div className="w-full flex flex-col ml-3">
 
-                                        <div className="w-full  flex flex-row lg:w-12/12">
-                                          <section className="mt-4">
-                                            <NoBorderDropDown
-                                              options={[
-                                                { label: 'D/O', value: 'D/O' },
-                                                { label: 'S/O', value: 'S/O' },
-                                                { label: 'W/O', value: 'W/O' },
-                                              ]}
-                                              setRefDropFun={setRefDataFun1}
-                                              selRefDrop={selRef1}
-                                            />
-                                          </section>
-                                          <div className="relative w-full mb-3 mt-2">
-                                            <TextField2
-                                              label="Son/Daughter/Wife of"
-                                              name="co_Name1"
-                                              type="text"
-                                            />
-                                          </div>
-                                        </div>
-                                        <div className="w-full lg:w-4/12 px-">
-                                          <div className="relative w-full mb-3 mt-2">
-                                            <PhoneNoField2
-                                              label="Phone No"
-                                              name="phoneNo1"
-                                              type="text"
-                                              value={formik.values.phoneNo2}
-                                              onChange={(value) => {
-                                                // formik.setFieldValue('mobileNo', value.value)
-                                                formik.setFieldValue(
-                                                  'phoneNo1',
-                                                  value.value
-                                                )
-                                              }}
-                                              // value={formik.values.mobileNo}
-                                              options={{}}
-                                            />
-                                          </div>
-                                        </div>
-                                        <div className="w-full lg:w-8/12 pl-4">
-                                          <div className="relative w-full mb-3 mt-2">
-                                            <TextField2
-                                              label="Email"
-                                              name="email1"
-                                              type="text"
-                                            />
-                                          </div>
+                                        <h6 className="w-full lg:w-12/12 text-blueGray-400 text-[13px] mt-[9px] mb- font-bold uppercase">
+                                        Primary Customer Details
+
+                                        </h6>
+                                        <div className="w-[455.80px] opacity-50 text-blue-950  text-[12px] font-normal ">
+                                          Add customer details to use in agreeement & registration.
                                         </div>
                                       </div>
                                     </div>
-                                    <div className="w-full lg:w-6/12 px-4 ">
-                                      <div className="w-full flex flex-row ">
-                                        <div className="w-3 h-3 mt-[12px] rounded-md bg-[#FB6094]  "></div>
-                                        <div className="w-2 h-2 ml-[1px] rounded-md mt-[16px] bg-[#FB6094]  "></div>
-                                        <div className="w-1 h-1 ml-[1px] rounded-md mr-1 mt-[18px] bg-[#FB6094]  "></div>
-                                        <h6 className="w-full lg:w-12/12 text-blueGray-400 text-xs mt-3 mb-3 font-bold uppercase">
-                                          First Applicant Proofs
-                                        </h6>
-                                      </div>
-                                      <div className="flex flex-wrap">
-                                        <div className="w-full lg:w-6/12 mt-[6px] ">
-                                          <div className="relative w-full mb-3 mt-2">
-                                            <label
-                                              htmlFor={'dob1'}
-                                              className="text-gray-500 text-[10px]"
-                                            >
-                                              Date Of Birth
-                                            </label>
-                                            <span className="inline">
-                                              <DatePicker
-                                                className="h-8 outline-none border-t-0 border-l-0 border-r-0 border-gray-500 text-sm border-solid mt-[-4px] pb-1  min-w-[125px]  inline  text-[#0091ae]   lg:w-4/12 w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] "
-                                                label="Dated"
-                                                name="dob1"
-                                                selected={formik.values.dob2}
-                                                onChange={(date) => {
-                                                  formik.setFieldValue(
-                                                    'dob1',
-                                                    date.getTime()
-                                                  )
-                                                  setStartDate(date)
-                                                  // console.log(startDate)
-                                                }}
-                                                timeFormat="HH:mm"
-                                                injectTimes={[
-                                                  setHours(setMinutes(d, 1), 0),
-                                                  setHours(
-                                                    setMinutes(d, 5),
-                                                    12
-                                                  ),
-                                                  setHours(
-                                                    setMinutes(d, 59),
-                                                    23
-                                                  ),
-                                                ]}
-                                                dateFormat="MMMM d, yyyy"
-                                              />
-                                            </span>
-                                          </div>
-                                        </div>
 
-                                        <div className="w-full lg:w-6/12 pl-4 ">
-                                          <section className="mt-4">
-                                            <NoBorderDropDown
-                                              options={[
-                                                {
-                                                  label: 'Divorced',
-                                                  value: 'Divorced',
-                                                },
-                                                {
-                                                  label: 'Married',
-                                                  value: 'Married',
-                                                },
-                                                {
-                                                  label: 'Single',
-                                                  value: 'Single',
-                                                },
-                                              ]}
-                                              setRefDropFun={(val) => {
-                                                console.log('value is ', val)
-                                                formik.setFieldValue(
-                                                  'marital1',
-                                                  val
-                                                )
-                                              }}
-                                              selRefDrop={
-                                                formik.values.marital1
-                                              }
-                                            />
-                                          </section>
-                                        </div>
-                                      </div>
-                                      <div className="w-full flex flex-row">
-                                        <div className="  px-">
-                                          <div className="relative w-[130px] mb-3 mt-2">
-                                            <TextField2
-                                              label="PAN No"
-                                              name="panNo1"
-                                              type="text"
-                                            />
+                                    <section className="flex flex-row mt-6">
+                                      <div className="w-full lg:w-6/12 pr-4  pl-1  mt-[6px] ">
+
+                                        <div className="flex flex-wrap">
+                                          <div className="w-full lg:w-12/12 ">
+                                            <div className="relative w-full mb-3 mt-2">
+                                              <TextField2
+                                                label="Customer Name*"
+                                                name="customerName1"
+                                                type="text"
+                                              />
+                                            </div>
                                           </div>
-                                        </div>
-                                        <div className=" ml-3 ">
-                                          <div className="relative  mt-5">
-                                            <div>
-                                              <label
-                                                htmlFor="formFile3"
-                                                className="form-label cursor-pointer inline-block mb-2  font-regular text-xs bg-[#efef] rounded-2xl px-2 py-1 min-w-[100px] "
-                                              >
-                                                {`${
-                                                  (panCard1 === '' || panCard1 == undefined)
-                                                    ? 'Upload'
-                                                    : 'Download'
-                                                } Pan`}
-                                              </label>
-                                              {panCard2 != '' && (
-                                                <button
-                                                  onClick={() =>
-                                                    downloadImage(
-                                                      panCard1,
-                                                      'pancard1.PNG'
-                                                    )
-                                                  }
-                                                >
-                                                  {' '}
-                                                  <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[7px] mr-2 inline-block text-gray-400 " />
-                                                </button>
-                                              )}
-                                              <input
-                                                type="file"
-                                                className="hidden"
-                                                id="formFile3"
-                                                onChange={async (e) => {
-                                                  await handleFileUploadFun(
-                                                    e.target.files[0],
-                                                    'panCard1'
+
+                                          <div className="w-full  flex flex-row lg:w-12/12">
+                                            <section className="mt-4 h-[33px] border-b border-gray-500">
+                                              <NoBorderDropDown
+                                                options={[
+                                                  {
+                                                    label: 'D/O',
+                                                    value: 'D/O',
+                                                  },
+                                                  {
+                                                    label: 'S/O',
+                                                    value: 'S/O',
+                                                  },
+                                                  {
+                                                    label: 'W/O',
+                                                    value: 'W/O',
+                                                  },
+                                                ]}
+                                                setRefDropFun={setRefDataFun1}
+                                                selRefDrop={selRef1}
+                                              />
+                                            </section>
+                                            <div className="relative w-full mb-3 mt-2">
+                                              <TextField2
+                                                label="Son/Daughter/Wife of"
+                                                name="co_Name1"
+                                                type="text"
+                                              />
+                                            </div>
+                                          </div>
+                                          <div className="w-full lg:w-4/12 px- mt-4">
+                                            <div className="relative w-full mb-3 mt-2">
+                                              <PhoneNoField2
+                                                label="Phone No"
+                                                name="phoneNo1"
+                                                type="text"
+                                                value={formik.values.phoneNo2}
+                                                onChange={(value) => {
+                                                  // formik.setFieldValue('mobileNo', value.value)
+                                                  formik.setFieldValue(
+                                                    'phoneNo1',
+                                                    value.value
                                                   )
                                                 }}
+                                                // value={formik.values.mobileNo}
+                                                options={{}}
+                                              />
+                                            </div>
+                                          </div>
+                                          <div className="w-full lg:w-8/12 pl-4 mt-4">
+                                            <div className="relative w-full mb-3 mt-2">
+                                              <TextField2
+                                                label="Email"
+                                                name="email1"
+                                                type="text"
                                               />
                                             </div>
                                           </div>
                                         </div>
                                       </div>
-                                      <div className="w-full flex flex-row">
-                                        {/* <div className="w-full lg:w-8/12 pl-4">
+                                      <div className="w-full lg:w-6/12 px-4 ">
+
+                                        <div className="flex flex-wrap">
+                                          <div className="w-full lg:w-6/12 mt-[px] ">
+                                            <div className="relative w-full mb-3 ">
+                                              <label
+                                                htmlFor={'dob1'}
+                                                className="text-gray-500 text-[10px]"
+                                              >
+                                                Date Of Birth
+                                              </label>
+                                              <span className="inline">
+                                                <DatePicker
+                                                  className="h-8 outline-none border-t-0 border-l-0 border-r-0 border-gray-500 text-sm mt-[-4px] pb-1  min-w-[125px]  inline     lg:w-4/12 w-full flex bg-grey-lighter text-grey-darker border border-gray-500 "
+                                                  label="Dated"
+                                                  name="dob1"
+                                                  selected={formik.values.dob2}
+                                                  onChange={(date) => {
+                                                    formik.setFieldValue(
+                                                      'dob1',
+                                                      date.getTime()
+                                                    )
+                                                    setStartDate(date)
+                                                    // console.log(startDate)
+                                                  }}
+                                                  timeFormat="HH:mm"
+                                                  injectTimes={[
+                                                    setHours(
+                                                      setMinutes(d, 1),
+                                                      0
+                                                    ),
+                                                    setHours(
+                                                      setMinutes(d, 5),
+                                                      12
+                                                    ),
+                                                    setHours(
+                                                      setMinutes(d, 59),
+                                                      23
+                                                    ),
+                                                  ]}
+                                                  dateFormat="MMMM d, yyyy"
+                                                />
+                                              </span>
+                                            </div>
+                                          </div>
+
+                                          <div className="w-full lg:w-6/12 pl-4 ">
+                                            <section className="mt-4">
+                                              <NoBorderDropDown
+                                                options={[
+                                                  {
+                                                    label: 'Divorced',
+                                                    value: 'Divorced',
+                                                  },
+                                                  {
+                                                    label: 'Married',
+                                                    value: 'Married',
+                                                  },
+                                                  {
+                                                    label: 'Single',
+                                                    value: 'Single',
+                                                  },
+                                                ]}
+                                                setRefDropFun={(val) => {
+                                                  console.log('value is ', val)
+                                                  formik.setFieldValue(
+                                                    'marital1',
+                                                    val
+                                                  )
+                                                }}
+                                                selRefDrop={
+                                                  formik.values.marital1
+                                                }
+                                              />
+                                            </section>
+                                          </div>
+                                        </div>
+                                        <div className="w-full flex flex-row">
+                                          <div className="  px-">
+                                            <div className="relative w-[130px] mb-3 mt-2">
+                                              <TextField2
+                                                label="PAN No"
+                                                name="panNo1"
+                                                type="text"
+                                              />
+                                            </div>
+                                          </div>
+                                          <div className=" border-b border-gray-500 mb-[12px]">
+                                            <div className=" min-w-[140px] mt-3">
+                                              <div className='flex flex-row-reverse'>
+                                                <label
+                                                  htmlFor="formFile3"
+                                                  className="form-label cursor-pointer inline-block mb-1  font-regular text-xs  rounded-2xl px-1 py-1  "
+                                                >
+                                                  {`${
+                                                    panCard1 === '' ||
+                                                    panCard1 == undefined
+                                                      ? 'Upload'
+                                                      : 'Download'
+                                                  }`}
+                                                </label>
+                                                {panCard2 != '' && (
+                                                  <button
+                                                    onClick={() =>
+                                                      downloadImage(
+                                                        panCard1,
+                                                        'pancard1.PNG'
+                                                      )
+                                                    }
+                                                  >
+                                                    {' '}
+                                                    {panCard1 === '' ||
+                                                    panCard1 == undefined
+                                                      ? <PlusIcon className="w-4 h-4 cursor-pointer ml-1 mb-[9px] mr-2 inline-block text-gray-400 border rounded-[16px] " />
+                                                      :                                                     <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[9px] mr-2 inline-block text-gray-400 " />}
+
+                                                  </button>
+                                                )}
+                                                <input
+                                                  type="file"
+                                                  className="hidden"
+                                                  id="formFile3"
+                                                  onChange={async (e) => {
+                                                    await handleFileUploadFun(
+                                                      e.target.files[0],
+                                                      'panCard1'
+                                                    )
+                                                  }}
+                                                />
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div className="w-full flex flex-row mt-4">
+                                          {/* <div className="w-full lg:w-8/12 pl-4">
                                           <div className="relative w-full mb-3 mt-2">
                                             <TextField2
                                               label="Aadhar Upload"
@@ -851,269 +866,293 @@ const AddApplicantDetails = ({
                                             />
                                           </div>
                                         </div> */}
-                                        <div className=" ">
-                                          <div className="relative w-[130px] mb-3 mt-2">
-                                            <TextField2
-                                              label="Aadhar No"
-                                              name="aadharNo1"
-                                              type="text"
-                                            />
-                                          </div>
-                                        </div>
-                                        <div>
-                                          <div className="relative w-full mt-5 ml-3">
-                                            <div className=" flex flex-row">
-                                              <label
-                                                htmlFor="formFile4"
-                                                className="form-label cursor-pointer inline-block mb-2  font-regular text-xs bg-[#efef] rounded-2xl px-2 py-1 min-w-[100px]"
-                                              >
-                                                {`${
-                                                  (aadhrUrl1 === '' || aadhrUrl1 == undefined)
-                                                    ? 'Upload'
-                                                    : 'Download'
-                                                } Aadhar`}
-                                              </label>
-                                              {aadhrUrl1 != '' && (
-                                                <button
-                                                  onClick={() =>
-                                                    downloadImage(
-                                                      aadhrUrl1,
-                                                      'Aadhar1.PNG'
-                                                    )
-                                                  }
-                                                >
-                                                  {' '}
-                                                  <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[9px] mr-2 inline-block text-gray-400 " />
-                                                </button>
-                                              )}
-                                              <input
-                                                type="file"
-                                                className="hidden"
-                                                id="formFile4"
-                                                onChange={(e) => {
-                                                  console.log(
-                                                    'iwas clicked aadharno 2'
-                                                  )
-                                                  handleFileUploadFun(
-                                                    e.target.files[0],
-                                                    'aadharNo1Url'
-                                                  )
-                                                }}
+                                          <div className=" ">
+                                            <div className="relative w-[130px] mb-3 mt-2">
+                                              <TextField2
+                                                label="Aadhar No"
+                                                name="aadharNo1"
+                                                type="text"
                                               />
+                                            </div>
+                                          </div>
+                                          <div className='border-b border-gray-500 mb-[12px]'>
+                                            <div className=" min-w-[140px] mt-3">
+                                              <div className=" flex flex-row-reverse">
+                                                <label
+                                                  htmlFor="formFile4"
+                                                  className="form-label cursor-pointer inline-block mb-2  font-regular text-xs  rounded-2xl px-1 py-1"
+                                                >
+                                                  {`${
+                                                    aadhrUrl1 === '' ||
+                                                    aadhrUrl1 == undefined
+                                                      ? 'Upload'
+                                                      : 'Download'
+                                                  }`}
+                                                </label>
+                                                {aadhrUrl1 != '' && (
+                                                  <button
+                                                    onClick={() =>
+                                                      downloadImage(
+                                                        aadhrUrl1,
+                                                        'Aadhar1.PNG'
+                                                      )
+                                                    }
+                                                  >
+                                                    {' '}
+                                                    {aadhrUrl1 === '' ||
+                                                    aadhrUrl1 == undefined
+                                                      ? <PlusIcon className="w-4 h-4 cursor-pointer ml-1 mb-[9px] mr-2 inline-block text-gray-400 border rounded-[16px] " />
+                                                      :                                                     <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[9px] mr-2 inline-block text-gray-400 " />}
+
+                                                  </button>
+                                                )}
+                                                <input
+                                                  type="file"
+                                                  className="hidden"
+                                                  id="formFile4"
+                                                  onChange={(e) => {
+                                                    console.log(
+                                                      'iwas clicked aadharno 2'
+                                                    )
+                                                    handleFileUploadFun(
+                                                      e.target.files[0],
+                                                      'aadharNo1Url'
+                                                    )
+                                                  }}
+                                                />
+                                              </div>
                                             </div>
                                           </div>
                                         </div>
                                       </div>
-                                    </div>
+                                    </section>
                                   </section>
                                   <section
-                                    className="w-full flex p-4 rounded-md   mt-6  bg-[#fff]"
+                                    className="w-full flex flex-col  p-4 rounded-md  mt-2  bg-[#fff]"
                                     style={{ boxShadow: '0 1px 12px #f2f2f2' }}
                                   >
-                                    <div className="w-full lg:w-6/12 px-4 border-r-2 ">
-                                      <div className="w-full flex flex-row">
-                                        <div className="w-3 h-3 mt-[14px] rounded-full bg-[#FB6094]  "></div>
-                                        <div className="w-2 h-2 ml-[1px] rounded-md mt-[16px] bg-[#FB6094]  "></div>
-                                        <div className="w-1 h-1 ml-[1px] rounded-md mr-1 mt-[18px] bg-[#FB6094]  "></div>
-                                        <h6 className="text-blueGray-400 text-xs mt-3 mb-3 font-bold uppercase ">
-                                          Second Applicant Personal Details
-                                        </h6>
-                                      </div>
-                                      <div className="flex flex-wrap">
-                                        <div className="w-full lg:w-12/12 ">
-                                          <div className="relative w-full mb-3 mt-2">
-                                            <TextField2
-                                              label="Customer Name*"
-                                              name="customerName2"
-                                              type="text"
-                                            />
-                                          </div>
-                                        </div>
+                                    <div className="w-full  flex flex-row">
+                                      <div className="w-[63.80px] h-[57px] bg-zinc-100 rounded-[5px]"></div>
+                                      <div className="w-full flex flex-col ml-3">
 
-                                        <div className="w-full  flex flex-row lg:w-12/12">
-                                          <section className="mt-4">
-                                            <NoBorderDropDown
-                                              options={[
-                                                { label: 'D/O', value: 'D/O' },
-                                                { label: 'S/O', value: 'S/O' },
-                                                { label: 'W/O', value: 'W/O' },
-                                              ]}
-                                              setRefDropFun={setRefDataFun2}
-                                              selRefDrop={selRef2}
-                                            />
-                                          </section>
-                                          <div className="relative w-full mb-3 mt-2">
-                                            <TextField2
-                                              label="Son/Daughter/Wife of"
-                                              name="co_Name2"
-                                              type="text"
-                                            />
-                                          </div>
-                                        </div>
-                                        <div className="w-full lg:w-4/12 px-">
-                                          <div className="relative w-full mb-3 mt-2">
-                                            <PhoneNoField2
-                                              label="Phone No"
-                                              name="phoneNo2"
-                                              type="text"
-                                              value={formik.values.phoneNo2}
-                                              onChange={(value) => {
-                                                // formik.setFieldValue('mobileNo', value.value)
-                                                formik.setFieldValue(
-                                                  'phoneNo2',
-                                                  value.value
-                                                )
-                                              }}
-                                              // value={formik.values.mobileNo}
-                                              options={{}}
-                                            />
-                                          </div>
-                                        </div>
-                                        <div className="w-full lg:w-8/12 pl-4">
-                                          <div className="relative w-full mb-3 mt-2">
-                                            <TextField2
-                                              label="Email"
-                                              name="email2"
-                                              type="text"
-                                            />
-                                          </div>
+                                        <h6 className="w-full lg:w-12/12 text-blueGray-400 text-[13px] mt-[9px] mb- font-bold uppercase">
+                                        Secondary Customer Details
+
+                                        </h6>
+                                        <div className="w-[455.80px] opacity-50 text-blue-950  text-[12px] font-normal ">
+                                          Add customer details to use in agreeement & registration.
                                         </div>
                                       </div>
                                     </div>
-                                    <div className="w-full lg:w-6/12 px-4 ">
-                                      <div className="w-full flex flex-row ">
-                                        <div className="w-3 h-3 mt-[12px] rounded-md bg-[#FB6094]  "></div>
-                                        <div className="w-2 h-2 ml-[1px] rounded-md mt-[16px] bg-[#FB6094]  "></div>
-                                        <div className="w-1 h-1 ml-[1px] rounded-md mr-1 mt-[18px] bg-[#FB6094]  "></div>
-                                        <h6 className="w-full lg:w-12/12 text-blueGray-400 text-xs mt-3 mb-3 font-bold uppercase">
-                                          Second Applicant Proofs
-                                        </h6>
-                                      </div>
-                                      <div className="flex flex-wrap">
-                                        <div className="w-full lg:w-6/12 mt-[6px] ">
-                                          <div className="relative w-full mb-3 mt-2">
-                                            <label
-                                              htmlFor={'dob1'}
-                                              className="text-gray-500 text-[10px]"
-                                            >
-                                              Date Of Birth
-                                            </label>
-                                            <span className="inline">
-                                              <DatePicker
-                                                className="h-8 outline-none border-t-0 border-l-0 border-r-0 border-gray-500 text-sm border-solid mt-[-4px] pb-1  min-w-[125px]  inline  text-[#0091ae]   lg:w-4/12 w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] "
-                                                label="Dated"
-                                                name="dob2"
-                                                selected={formik.values.dob2}
-                                                onChange={(date) => {
-                                                  formik.setFieldValue(
-                                                    'dob2',
-                                                    date.getTime()
-                                                  )
-                                                  setStartDate(date)
-                                                  // console.log(startDate)
-                                                }}
-                                                timeFormat="HH:mm"
-                                                injectTimes={[
-                                                  setHours(setMinutes(d, 1), 0),
-                                                  setHours(
-                                                    setMinutes(d, 5),
-                                                    12
-                                                  ),
-                                                  setHours(
-                                                    setMinutes(d, 59),
-                                                    23
-                                                  ),
-                                                ]}
-                                                dateFormat="MMMM d, yyyy"
-                                              />
-                                            </span>
-                                          </div>
-                                        </div>
 
-                                        <div className="w-full lg:w-6/12 pl-4 ">
-                                          <section className="mt-4">
-                                            <NoBorderDropDown
-                                              options={[
-                                                {
-                                                  label: 'Divorced',
-                                                  value: 'Divorced',
-                                                },
-                                                {
-                                                  label: 'Married',
-                                                  value: 'Married',
-                                                },
-                                                {
-                                                  label: 'Single',
-                                                  value: 'Single',
-                                                },
-                                              ]}
-                                              setRefDropFun={(val) => {
-                                                console.log('value is ', val)
-                                                formik.setFieldValue(
-                                                  'marital2',
-                                                  val
-                                                )
-                                              }}
-                                              selRefDrop={
-                                                formik.values.marital2
-                                              }
-                                            />
-                                          </section>
-                                        </div>
-                                      </div>
-                                      <div className="w-full flex flex-row">
-                                        <div className="  px-">
-                                          <div className="relative w-[130px] mb-3 mt-2">
-                                            <TextField2
-                                              label="PAN No"
-                                              name="panNo2"
-                                              type="text"
-                                            />
+                                    <section className="flex flex-row mt-6">
+                                      <div className="w-full lg:w-6/12 pr-4  pl-1  mt-[6px] ">
+
+                                        <div className="flex flex-wrap">
+                                          <div className="w-full lg:w-12/12 ">
+                                            <div className="relative w-full mb-3 mt-2">
+                                              <TextField2
+                                                label="Customer Name*"
+                                                name="customerName2"
+                                                type="text"
+                                              />
+                                            </div>
                                           </div>
-                                        </div>
-                                        <div className=" ml-3 ">
-                                          <div className="relative  mt-5">
-                                            <div>
-                                              <label
-                                                htmlFor="formFile3"
-                                                className="form-label cursor-pointer inline-block mb-2  font-regular text-xs bg-[#efef] rounded-2xl px-2 py-1 min-w-[100px] "
-                                              >
-                                                {`${
-                                                  (panCard2 === '' || panCard2 == undefined)
-                                                    ? 'Upload'
-                                                    : 'Download'
-                                                } Pan`}
-                                              </label>
-                                              {panCard2 != '' && (
-                                                <button
-                                                  onClick={() =>
-                                                    downloadImage(
-                                                      panCard2,
-                                                      'pancard2.PNG'
-                                                    )
-                                                  }
-                                                >
-                                                  {' '}
-                                                  <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[7px] mr-2 inline-block text-gray-400 " />
-                                                </button>
-                                              )}
-                                              <input
-                                                type="file"
-                                                className="hidden"
-                                                id="formFile3"
-                                                onChange={async (e) => {
-                                                  await handleFileUploadFun(
-                                                    e.target.files[0],
-                                                    'panCard2'
+
+                                          <div className="w-full  flex flex-row lg:w-12/12">
+                                            <section className="mt-4 h-[33px] border-b border-gray-500">
+                                              <NoBorderDropDown
+                                                options={[
+                                                  {
+                                                    label: 'D/O',
+                                                    value: 'D/O',
+                                                  },
+                                                  {
+                                                    label: 'S/O',
+                                                    value: 'S/O',
+                                                  },
+                                                  {
+                                                    label: 'W/O',
+                                                    value: 'W/O',
+                                                  },
+                                                ]}
+                                                setRefDropFun={setRefDataFun2}
+                                                selRefDrop={selRef2}
+                                              />
+                                            </section>
+                                            <div className="relative w-full mb-3 mt-2">
+                                              <TextField2
+                                                label="Son/Daughter/Wife of"
+                                                name="co_Name2"
+                                                type="text"
+                                              />
+                                            </div>
+                                          </div>
+                                          <div className="w-full lg:w-4/12 px- mt-4">
+                                            <div className="relative w-full mb-3 mt-2">
+                                              <PhoneNoField2
+                                                label="Phone No"
+                                                name="phoneNo2"
+                                                type="text"
+                                                value={formik.values.phoneNo2}
+                                                onChange={(value) => {
+                                                  // formik.setFieldValue('mobileNo', value.value)
+                                                  formik.setFieldValue(
+                                                    'phoneNo2',
+                                                    value.value
                                                   )
                                                 }}
+                                                // value={formik.values.mobileNo}
+                                                options={{}}
+                                              />
+                                            </div>
+                                          </div>
+                                          <div className="w-full lg:w-8/12 pl-4 mt-4">
+                                            <div className="relative w-full mb-3 mt-2">
+                                              <TextField2
+                                                label="Email"
+                                                name="email2"
+                                                type="text"
                                               />
                                             </div>
                                           </div>
                                         </div>
                                       </div>
-                                      <div className="w-full flex flex-row">
-                                        {/* <div className="w-full lg:w-8/12 pl-4">
+                                      <div className="w-full lg:w-6/12 px-4 ">
+
+                                        <div className="flex flex-wrap">
+                                          <div className="w-full lg:w-6/12 mt-[px] ">
+                                            <div className="relative w-full mb-3 ">
+                                              <label
+                                                htmlFor={'dob2'}
+                                                className="text-gray-500 text-[10px]"
+                                              >
+                                                Date Of Birth
+                                              </label>
+                                              <span className="inline">
+                                                <DatePicker
+                                                  className="h-8 outline-none border-t-0 border-l-0 border-r-0 border-gray-500 text-sm mt-[-4px] pb-1  min-w-[125px]  inline     lg:w-4/12 w-full flex bg-grey-lighter text-grey-darker border border-gray-500 "
+                                                  label="Dated"
+                                                  name="dob2"
+                                                  selected={formik.values.dob2}
+                                                  onChange={(date) => {
+                                                    formik.setFieldValue(
+                                                      'dob2',
+                                                      date.getTime()
+                                                    )
+                                                    setStartDate(date)
+                                                    // console.log(startDate)
+                                                  }}
+                                                  timeFormat="HH:mm"
+                                                  injectTimes={[
+                                                    setHours(
+                                                      setMinutes(d, 1),
+                                                      0
+                                                    ),
+                                                    setHours(
+                                                      setMinutes(d, 5),
+                                                      12
+                                                    ),
+                                                    setHours(
+                                                      setMinutes(d, 59),
+                                                      23
+                                                    ),
+                                                  ]}
+                                                  dateFormat="MMMM d, yyyy"
+                                                />
+                                              </span>
+                                            </div>
+                                          </div>
+
+                                          <div className="w-full lg:w-6/12 pl-4 ">
+                                            <section className="mt-4">
+                                              <NoBorderDropDown
+                                                options={[
+                                                  {
+                                                    label: 'Divorced',
+                                                    value: 'Divorced',
+                                                  },
+                                                  {
+                                                    label: 'Married',
+                                                    value: 'Married',
+                                                  },
+                                                  {
+                                                    label: 'Single',
+                                                    value: 'Single',
+                                                  },
+                                                ]}
+                                                setRefDropFun={(val) => {
+                                                  console.log('value is ', val)
+                                                  formik.setFieldValue(
+                                                    'marital2',
+                                                    val
+                                                  )
+                                                }}
+                                                selRefDrop={
+                                                  formik.values.marital2
+                                                }
+                                              />
+                                            </section>
+                                          </div>
+                                        </div>
+                                        <div className="w-full flex flex-row">
+                                          <div className="  px-">
+                                            <div className="relative w-[130px] mb-3 mt-2">
+                                              <TextField2
+                                                label="PAN No"
+                                                name="panNo2"
+                                                type="text"
+                                              />
+                                            </div>
+                                          </div>
+                                          <div className=" border-b border-gray-500 mb-[12px]">
+                                            <div className=" min-w-[140px] mt-3">
+                                              <div className='flex flex-row-reverse'>
+                                                <label
+                                                  htmlFor="formFile3"
+                                                  className="form-label cursor-pointer inline-block mb-1  font-regular text-xs  rounded-2xl px-1 py-1  "
+                                                >
+                                                  {`${
+                                                    panCard1 === '' ||
+                                                    panCard1 == undefined
+                                                      ? 'Upload'
+                                                      : 'Download'
+                                                  }`}
+                                                </label>
+                                                {panCard2 != '' && (
+                                                  <button
+                                                    onClick={() =>
+                                                      downloadImage(
+                                                        panCard2,
+                                                        'pancard2.PNG'
+                                                      )
+                                                    }
+                                                  >
+                                                    {' '}
+                                                    {panCard2 === '' ||
+                                                    panCard2 == undefined
+                                                      ? <PlusIcon className="w-4 h-4 cursor-pointer ml-1 mb-[9px] mr-2 inline-block text-gray-400 border rounded-[16px] " />
+                                                      :                                                     <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[9px] mr-2 inline-block text-gray-400 " />}
+
+                                                  </button>
+                                                )}
+                                                <input
+                                                  type="file"
+                                                  className="hidden"
+                                                  id="formFile3"
+                                                  onChange={async (e) => {
+                                                    await handleFileUploadFun(
+                                                      e.target.files[0],
+                                                      'panCard2'
+                                                    )
+                                                  }}
+                                                />
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div className="w-full flex flex-row mt-4">
+                                          {/* <div className="w-full lg:w-8/12 pl-4">
                                           <div className="relative w-full mb-3 mt-2">
                                             <TextField2
                                               label="Aadhar Upload"
@@ -1122,66 +1161,73 @@ const AddApplicantDetails = ({
                                             />
                                           </div>
                                         </div> */}
-                                        <div className=" ">
-                                          <div className="relative w-[130px] mb-3 mt-2">
-                                            <TextField2
-                                              label="Aadhar No"
-                                              name="aadharNo2"
-                                              type="text"
-                                            />
-                                          </div>
-                                        </div>
-                                        <div>
-                                          <div className="relative w-full mt-5 ml-3">
-                                            <div className=" flex flex-row">
-                                              <label
-                                                htmlFor="formFile4"
-                                                className="form-label cursor-pointer inline-block mb-2  font-regular text-xs bg-[#efef] rounded-2xl px-2 py-1 min-w-[100px]"
-                                              >
-                                                {`${
-                                                  (aadhrUrl2 === '' || aadhrUrl2 == undefined)
-                                                    ? 'Upload'
-                                                    : 'Download'
-                                                } Aadhar`}
-                                              </label>
-                                              {aadhrUrl2 != '' && (
-                                                <button
-                                                  onClick={() =>
-                                                    downloadImage(
-                                                      aadhrUrl2,
-                                                      'Aadhar2.PNG'
-                                                    )
-                                                  }
-                                                >
-                                                  {' '}
-                                                  <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[9px] mr-2 inline-block text-gray-400 " />
-                                                </button>
-                                              )}
-                                              <input
-                                                type="file"
-                                                className="hidden"
-                                                id="formFile4"
-                                                onChange={(e) => {
-                                                  console.log(
-                                                    'iwas clicked aadharno 2'
-                                                  )
-                                                  handleFileUploadFun(
-                                                    e.target.files[0],
-                                                    'aadharNo2Url'
-                                                  )
-                                                }}
+                                          <div className=" ">
+                                            <div className="relative w-[130px] mb-3 mt-2">
+                                              <TextField2
+                                                label="Aadhar No"
+                                                name="aadharNo2"
+                                                type="text"
                                               />
+                                            </div>
+                                          </div>
+                                          <div className='border-b border-gray-500 mb-[12px]'>
+                                            <div className=" min-w-[140px] mt-3">
+                                              <div className=" flex flex-row-reverse">
+                                                <label
+                                                  htmlFor="formFile4"
+                                                  className="form-label cursor-pointer inline-block mb-2  font-regular text-xs  rounded-2xl px-1 py-1"
+                                                >
+                                                  {`${
+                                                    aadhrUrl2 === '' ||
+                                                    aadhrUrl2 == undefined
+                                                      ? 'Upload'
+                                                      : 'Download'
+                                                  }`}
+                                                </label>
+                                                {aadhrUrl2 != '' && (
+                                                  <button
+                                                    onClick={() =>
+                                                      downloadImage(
+                                                        aadhrUrl2,
+                                                        'Aadhar2.PNG'
+                                                      )
+                                                    }
+                                                  >
+                                                    {' '}
+                                                    {aadhrUrl2 === '' ||
+                                                    aadhrUrl2 == undefined
+                                                      ? <PlusIcon className="w-4 h-4 cursor-pointer ml-1 mb-[9px] mr-2 inline-block text-gray-400 border rounded-[16px] " />
+                                                      :                                                     <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[9px] mr-2 inline-block text-gray-400 " />}
+
+                                                  </button>
+                                                )}
+                                                <input
+                                                  type="file"
+                                                  className="hidden"
+                                                  id="formFile4"
+                                                  onChange={(e) => {
+                                                    console.log(
+                                                      'iwas clicked aadharno 2'
+                                                    )
+                                                    handleFileUploadFun(
+                                                      e.target.files[0],
+                                                      'aadharNo2Url'
+                                                    )
+                                                  }}
+                                                />
+                                              </div>
                                             </div>
                                           </div>
                                         </div>
                                       </div>
-                                    </div>
+                                    </section>
                                   </section>
+
                                 </div>
 
                                 {/* <hr className="mt-6 border-b-1 border-blueGray-300" /> */}
                                 <section
-                                  className="rounded-md  p-4 mt-6 bg-[#fff]"
+                                  className="rounded-md  p-4 mt-2 bg-[#fff]"
                                   style={{ boxShadow: '0 1px 12px #f2f2f2' }}
                                 >
                                   <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
@@ -1201,7 +1247,7 @@ const AddApplicantDetails = ({
                                 </section>
                                 {/* <hr className="mt-6 border-b-1 border-blueGray-300" /> */}
                                 <section
-                                  className="rounded-md  p-4 mt-6 bg-[#fff]"
+                                  className="rounded-md  p-4 mt-2 bg-[#fff]"
                                   style={{ boxShadow: '0 1px 12px #f2f2f2' }}
                                 >
                                   <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
@@ -1239,7 +1285,7 @@ const AddApplicantDetails = ({
                                 </section>
                                 {/* <hr className="mt-6 border-b-1 border-blueGray-300" /> */}
                                 <section
-                                  className="rounded-md  p-4 mt-6 bg-[#fff]"
+                                  className="rounded-md  p-4 mt-2 bg-[#fff]"
                                   style={{ boxShadow: '0 1px 12px #f2f2f2' }}
                                 >
                                   <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
@@ -1328,7 +1374,7 @@ const AddApplicantDetails = ({
                         </button>
                       )}
                       <button
-                        className="bg-gradient-to-r from-indigo-400 to-cyan-400 text-black active:bg-pink-600 font-bold uppercase text-xs px-4 py-1 pb-[5px] rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+                        className="bg-gradient-to-r from-indigo-400 to-cyan-400 text-white active:bg-pink-600 font-bold uppercase text-xs px-4 py-1 pb-[5px] rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
                         type="submit"
                         disabled={loading}
                       >
@@ -1336,7 +1382,7 @@ const AddApplicantDetails = ({
                       </button>
                       {setShowApplicantEdit == undefined && (
                         <button
-                          className="bg-gradient-to-r from-indigo-400 to-cyan-400 text-black active:bg-pink-600 font-bold uppercase text-xs px-4 py-1 pb-[5px] rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+                          className="bg-gradient-to-r from-indigo-400 to-cyan-400 text-white active:bg-pink-600 font-bold uppercase text-xs px-4 py-1 pb-[5px] rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
                           type="submit"
                           disabled={loading}
                         >

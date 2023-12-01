@@ -26,7 +26,7 @@ export default function NoBorderDropDown({
       <Menu as="div" className="relative inline-block text-left">
         <div>
           <Menu.Button className="inline-flex justify-center w-full px-0 py-0 text-sm font-semibold text-black-500 bg- rounded-md bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-            <span className=" text-[12px] tracking-wide text-blue-600 ">
+            <span className=" text-[12px] tracking-wide  ">
               {selRefDrop?.value?.toLocaleUpperCase()}
             </span>
             <ChevronDownIcon className="w-5 h-5 mr-3 mt-[1px] inline text-[#058527]" />

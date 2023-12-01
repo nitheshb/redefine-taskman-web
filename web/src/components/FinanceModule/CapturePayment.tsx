@@ -244,6 +244,18 @@ const CaptureUnitPayment = ({
     // 4)update lead status to book
     // updateLeadStatus(leadDocId, newStatus)
   }
+
+
+
+
+
+
+
+
+
+
+
+
   const datee = new Date().getTime()
   const initialState = {
     amount: bankData?.amount || '',
@@ -278,11 +290,7 @@ const CaptureUnitPayment = ({
   }
   return (
     <div className="">
-      <div className="">
-        {/* <Dialog.Title className=" font-semibold text-xl mr-auto ml-3 text-[#053219]">
-          {title}
-        </Dialog.Title> */}
-      </div>
+
 
       <div className="grid gap-8 grid-cols-1">
         <div className="flex flex-col h-screen bg-white">
@@ -305,7 +313,26 @@ const CaptureUnitPayment = ({
                       <div className="w-full mx-auto ">
                         <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-[#F9FBFB]">
 
-                          <div className="flex-auto px-2 py-4 mx-auto h-[600px] overflow-y-scroll overflow-auto no-scrollbar">
+                          <div className=" flex flex-row px-2 py-2  h-[600px] overflow-y-scroll overflow-auto no-scrollbar">
+                          <div className="shadow-lg rounded-lg bg-[#fff] p-4 rounded-md w-[200px]">
+        {/* <Dialog.Title className=" font-semibold text-xl mr-auto ml-3 text-[#053219]">
+          {title}
+        </Dialog.Title> */}
+                 <div className="w-full  flex flex-row">
+                                      <div className="w-[63.80px] h-[57px] bg-zinc-100 rounded-[5px]"></div>
+                                      <div className="w-full flex flex-col ml-3">
+
+                                        <h6 className="w-full lg:w-12/12 text-blueGray-400 text-[13px] mt-[9px] mb- font-bold uppercase">
+                                        Capture Payment
+
+                                        </h6>
+                                        <div className="w-[455.80px] opacity-50 text-blue-950  text-[12px] font-normal ">
+                                          Amount will be reviewed.
+                                        </div>
+                                      </div>
+                                    </div>
+                                    </div>
+
                             <section
                               className="bg-[#fff] p-4 rounded-md w-[500px]"
                               style={{

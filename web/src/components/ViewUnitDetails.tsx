@@ -326,7 +326,7 @@ const ViewUnitDetails = ({
               {data?.unitDetail?.status === 'available' && (    <div className=" flex flex-col mt-1">
 
 
-                <ButtonDropDown
+                {/* <ButtonDropDown
                   type={'All Projects'}
                   pickCustomViewer={setActionMode}
                   selProjectIs={actionMode}
@@ -337,7 +337,7 @@ const ViewUnitDetails = ({
                       { label: 'Book Unit', value: 'unitBookingMode' },
                     ],
                   ]}
-                />
+                /> */}
               </div>)}
             </div>
           </div>
