@@ -8,6 +8,7 @@ import {
   DotsVerticalIcon,
   CheckIcon,
   DocumentTextIcon,
+  EyeIcon,
 } from '@heroicons/react/solid'
 
 export default function DropCompUnitStatus({
@@ -20,7 +21,7 @@ export default function DropCompUnitStatus({
   pickedValue,
 }) {
   return (
-    <div className="text-right inline-block ml-7 mt-[-5px]">
+    <div className="text-right inline-block ml-7 mt-[-5px] bg-white rounded px-2">
       <Menu as="div" className="relative inline-block text-left">
         <div>
           <Menu.Button className="inline-flex justify-center w-full px-0 py-0 text-sm font-semibold text-black-500 bg- rounded-md bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
@@ -35,10 +36,12 @@ export default function DropCompUnitStatus({
             )}
             {type != 'unitMode' && type != 'View' && (
               <>
-                <span className=" text-[12px] tracking-wide text-[#0091ae] ">
+                <span className=" text-[11px] tracking-wide text-[#0091ae] mt-[5px]">
                   {type?.toLocaleUpperCase()}
                 </span>
-                <ChevronDownIcon className="w-5 h-5 mr-3 mt-[1px] inline text-[#058527]" />
+                <EyeIcon className="w-3 h-3 mr- ml-1 mt-[9px] inline text-[#058527]" />
+
+
               </>
             )}
             {type === 'unitMode' && (

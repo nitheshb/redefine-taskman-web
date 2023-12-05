@@ -11,17 +11,17 @@ export default function DropDownSearchBar({
   selProjectIs,
 }) {
   return (
-    <div className="flex-shrink-0 z-10 inline-flex items-center  pl-3 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300  hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 w-2/3">
+    <div className="flex-shrink-0 z-10 inline-flex items-center  pl-3 text-sm font-medium text-left text-gray-900 border-r border-gray-200 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 ">
       <Menu as="div" className="relative inline-block text-left">
         <div>
           <Menu.Button className="inline-flex justify-center w-full px-0 py-0 text-sm font-semibold text-black-500 bg- rounded-md bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
             <>
-              <span className=" text-[12px] tracking-wide text-[#0091ae] max-w-[150px] min-w-[150px] text-ellipsis whitespace-nowrap ">
+              <span className=" text-[12px] tracking-wide text-[#0091ae] max-w-[150px] min-w-[150px] text-ellipsis text-left whitespace-nowrap ">
                 {selProjectIs?.projectName ||
                   selProjectIs?.phaseName ||
                   type?.toLocaleUpperCase()}
               </span>
-              <ChevronDownIcon className="w-5 h-5  mt-[1px] inline text-[#058527] ml-5 " />
+              <ChevronDownIcon className="w-5 h-5  mt-[1px] inline text-[#058527] ml-2 mr-3" />
             </>
           </Menu.Button>
         </div>
@@ -50,7 +50,7 @@ export default function DropDownSearchBar({
                           active
                             ? 'bg-violet-500 text-white rounded-sm'
                             : 'text-gray-900'
-                        } group flex  items-center w-full px-2 py-2 text-sm`}
+                        } group flex    text-left w-full py-2 text-sm`}
                         onClick={() => pickCustomViewer(viewData)}
                       >
                         {viewUnitStatusA.includes(viewData) ? (

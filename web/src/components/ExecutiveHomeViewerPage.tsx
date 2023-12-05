@@ -37,7 +37,7 @@ import {
 import { useAuth } from 'src/context/firebase-auth-context'
 import { prettyDate } from 'src/util/dateConverter'
 import { CustomSelect } from 'src/util/formFields/selectBoxField'
-import { SlimSelectBox } from 'src/util/formFields/slimSelectBoxField'
+import { SlimSelectBox, VerySlimSelectBox } from 'src/util/formFields/slimSelectBoxField'
 
 import CardItem from './leadsCard'
 import SiderForm from './SiderForm/SiderForm'
@@ -691,20 +691,20 @@ const ExecutiveHomeViewerPage = ({ leadsTyper, isClicked, setIsClicked }) => {
   }
   return (
     <>
-      <div className="">
+      <div className=" bg-white rounded-md mt-1 mx-1">
         <div className="">
           <div
             className="
-            px-3 py-6"
+           "
           >
-            <div className="flex items-center flex-row flex-wrap justify-between py-1 pb-5 ">
+            <div className="flex items-center flex-row flex-wrap justify-between py-1 pb-5  px-3 py-3 bg-gray-50 rounded-t-md ">
               <h2 className="text-md font-semibold text-black leading-light font-Playfair">
                 Leads Management
               </h2>
 
               <div className="flex">
                 <div className=" flex flex-col mr-5  w-40">
-                  <SlimSelectBox
+                  <VerySlimSelectBox
                     name="project"
                     label=""
                     className="input "
@@ -723,7 +723,7 @@ const ExecutiveHomeViewerPage = ({ leadsTyper, isClicked, setIsClicked }) => {
                 </div>
                 {access?.includes('manage_leads') && (
                   <div className=" flex flex-col   w-40">
-                    <SlimSelectBox
+                    <VerySlimSelectBox
                       name="project"
                       label=""
                       placeholder="My Leads"
@@ -746,7 +746,7 @@ const ExecutiveHomeViewerPage = ({ leadsTyper, isClicked, setIsClicked }) => {
                     />
                   </div>
                 )}
-                <span className="max-h-[42px] mt-[2px] ml-3 bg-white pl-[2px] rounded-[2px] ">
+                <span className="max-h-[42px] mt-[2px] ml-3 bg-white pl-[2px] rounded-[4px] h-[19px] ">
                   {/* <span className="text-xs font-bodyLato text-[#516f90] cursor-none">
                   Set Due Date
                 </span> */}
@@ -754,11 +754,11 @@ const ExecutiveHomeViewerPage = ({ leadsTyper, isClicked, setIsClicked }) => {
     border-color: hsl(0, 0%, 80%);
     min-height: 31px;} */}
                   {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-                  <label className="bg-green   pl-[2px]   flex flex-row cursor-pointer">
-                    <CalendarMonthTwoToneIcon className="mr-1 mt-[2px]" />
+                  <label className="bg-green   pl-[2px] h-[28px]  flex flex-row cursor-pointer border border-[#ccc] rounded-[4px]">
+                    <CalendarMonthTwoToneIcon className="mr-1 mt-[2px] h-4 w-4" />
                     <span className="inline">
                       <DatePicker
-                        className="z-[11] pl- py-1 rounded-[4px] min-h-[30px] inline text-xs text-[#0091ae] bg-white cursor-pointer min-w-[170px] border-l-[#cccccc]"
+                        className="z-[11] pl- py- rounded-[4px]  inline text-xs text-[#0091ae] bg-white cursor-pointer min-w-[170px] border-l-[#cccccc]"
                         // selected={cutOffDate}
                         // onChange={(date) => setCutOffDate(date)}
                         // calendarContainer={MyContainer(setIsOpened)}

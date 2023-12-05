@@ -678,7 +678,7 @@ const Floordetails = ({
 
             <section className="flex flex-row px-6 py-1 justify-between">
               <section className="text-sm mt-1 pr-2 font-blue text-[13px] italic flex flex-row ">
-                <span className="relative z-10 flex flex-row items-center w-auto text-sm font-bold leading-none pl-0 mt-[px]">
+                <span className="relative  flex flex-row items-center w-auto text-sm font-bold leading-none pl-0 mt-[px]">
                   {/* {phase?.phaseName} */}
                   {/* selPhaseIs, setSelPhaseIs */}
                   <AssigedToDropComp

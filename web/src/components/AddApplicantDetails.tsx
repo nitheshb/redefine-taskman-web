@@ -604,7 +604,7 @@ const AddApplicantDetails = ({
 
   return (
     <>
-      <div className="">
+      <div className="font-['Inter']">
         <div className="z-10">
           {/* <Dialog.Title className=" font-semibold text-xl mr-auto ml-3 text-[#053219]">
           {title}
@@ -1230,7 +1230,7 @@ const AddApplicantDetails = ({
                                   className="rounded-md  p-4 mt-2 bg-[#fff]"
                                   style={{ boxShadow: '0 1px 12px #f2f2f2' }}
                                 >
-                                  <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
+                                  <h6 className="text-blueGray-400 text-[13px] mt-3 mb-6 font-bold uppercase">
                                     Agreement Information
                                   </h6>
                                   <div className="flex flex-wrap">
@@ -1250,7 +1250,7 @@ const AddApplicantDetails = ({
                                   className="rounded-md  p-4 mt-2 bg-[#fff]"
                                   style={{ boxShadow: '0 1px 12px #f2f2f2' }}
                                 >
-                                  <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
+                                  <h6 className="text-blueGray-400 text-[13px] mt-3 mb-6 font-bold uppercase">
                                     Professional Information
                                   </h6>
                                   <div className="flex flex-wrap">
@@ -1288,7 +1288,7 @@ const AddApplicantDetails = ({
                                   className="rounded-md  p-4 mt-2 bg-[#fff]"
                                   style={{ boxShadow: '0 1px 12px #f2f2f2' }}
                                 >
-                                  <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
+                                  <h6 className="text-blueGray-400  text-[13px] mt-3 mb-6 font-bold uppercase">
                                     Other Information
                                   </h6>
                                   <div className="flex flex-wrap">
@@ -1373,21 +1373,41 @@ const AddApplicantDetails = ({
                           {'Cancel'}
                         </button>
                       )}
+
+
                       <button
-                        className="bg-gradient-to-r from-indigo-400 to-cyan-400 text-white active:bg-pink-600 font-bold uppercase text-xs px-4 py-1 pb-[5px] rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
-                        type="submit"
-                        disabled={loading}
-                      >
-                        {'Save'}
-                      </button>
+className="mb-2  md:mb-0  hover:scale-110 focus:outline-none              hover:bg-[#5671fc]
+bg-gradient-to-r from-violet-300 to-indigo-300
+text-black
+
+border duration-200 ease-in-out
+transition
+ px-5 py-1 pb-[5px] text-sm shadow-sm font-medium tracking-wider text-white rounded-md hover:shadow-lg hover:bg-green-500"
+type="submit"
+disabled={loading}
+// onClick={() => submitFormFun(formik)}
+>
+{/* {loading && <Loader />} */}
+<span>  {'Save'}</span>
+</button>
                       {setShowApplicantEdit == undefined && (
-                        <button
-                          className="bg-gradient-to-r from-indigo-400 to-cyan-400 text-white active:bg-pink-600 font-bold uppercase text-xs px-4 py-1 pb-[5px] rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
-                          type="submit"
-                          disabled={loading}
-                        >
-                          {'Save & Book'}
-                        </button>
+
+
+<button
+className="mb-2 mr-0 md:mb-0  hover:scale-110 focus:outline-none              hover:bg-[#5671fc]
+bg-gradient-to-r from-violet-300 to-indigo-300
+text-black
+
+border duration-200 ease-in-out
+transition
+ px-5 py-1 pb-[5px] text-sm shadow-sm font-medium tracking-wider text-white rounded-md hover:shadow-lg hover:bg-green-500"
+type="submit"
+disabled={loading}
+// onClick={() => submitFormFun(formik)}
+>
+{/* {loading && <Loader />} */}
+<span>  {'Save & Book'}</span>
+</button>
                       )}
                     </div>
                   </Form>

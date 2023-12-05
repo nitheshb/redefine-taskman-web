@@ -236,7 +236,7 @@ function EnhancedTableHead(props) {
           padding="none"
           size="small"
           style={{
-            backgroundColor: '#F7F9FB',
+            // backgroundColor: '#F7F9FB',
             color: '#1a91eb',
             maxHeight: '10px',
             height: '10px',
@@ -267,7 +267,7 @@ function EnhancedTableHead(props) {
               padding={headCell.disablePadding ? 'none' : 'normal'}
               sortDirection={orderBy === headCell.id ? order : false}
               style={{
-                backgroundColor: '#F7F9FB',
+                // backgroundColor: '#F7F9FB',
                 color: '#1a91eb',
                 height: '10px',
                 maxHeight: '10px',
@@ -280,7 +280,7 @@ function EnhancedTableHead(props) {
                 direction={orderBy === headCell.id ? order : 'asc'}
                 onClick={createSortHandler(headCell.id)}
                 style={{
-                  backgroundColor: '#F7F9FB',
+                  // backgroundColor: '#F7F9FB',
                   color: '#1a91eb',
                   fontFamily: 'inherit',
                 }}
@@ -419,9 +419,9 @@ React.useEffect(()=>{
     // setRows(rowsR)
   }
   return (
-    <section className="flex flex-row justify-between pb pt-1 px-3 ">
+    <section className="flex flex-row justify-between pb py-1 rounded px-3 bg-gray-50 mb-1">
       <span className="flex flex-row">
-        <span className="relative  p- border rounded h-7">
+        <span className="relative  p- border rounded h-7 mt-1">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-3 w-3 absolute left-0 ml-1 mt-2"

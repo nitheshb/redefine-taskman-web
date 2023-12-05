@@ -399,7 +399,7 @@ const CostBreakUpSheet = ({
   }
   return (
     <>
-      <section className="  bg-black">
+      <section className="  bg-black font-['Inter']">
         <div className="max-w-5xl mx-auto py-  bg-white">
           <article className="overflow-hidden">
             <div className="bg-[white] rounded-b-md">
@@ -413,11 +413,11 @@ const CostBreakUpSheet = ({
                       {StatusListA.map((statusFlowObj, i) => (
                         <span
                           key={i}
-                          className={`font-bodyLato text-sm font-normal px-2 py-[4px] mr-1 cursor-pointer rounded-full ${onStep === statusFlowObj.value ? 'bg-blue-500 text-white' : ''} `}
+                          className={`font-bodyLato text-sm font-normal px-2 py-[4px] mr-1 cursor-pointer rounded-full ${onStep === statusFlowObj.value ? 'bg-violet-500 text-white' : ''} `}
                           onClick={() => setStatusFun(i, statusFlowObj.value)}
                         >
                           <section className="flex flex-row">
-                            <span className= {`w-4 h-4 mt-[3px] text-[9px] mr-1 flex justify-center items-center rounded-full  border ${onStep === statusFlowObj.value ? 'bg-blue-500 text-white' : ''} `}>
+                            <span className= {`w-4 h-4 mt-[1px] text-[9px] mr-1 flex justify-center items-center rounded-full  border ${onStep === statusFlowObj.value ? 'bg-violet-500 text-white' : ''} `}>
                               {i + 1}
                             </span>
                             <div>{statusFlowObj.label}</div>
@@ -558,7 +558,8 @@ const CostBreakUpSheet = ({
                                 </div>
                                 <button
                                   className="mb-2 md:mb-0  hover:scale-110 focus:outline-none              hover:bg-[#5671fc]
-                                  bg-gradient-to-r from-indigo-400 to-cyan-400
+                                  [background:linear-gradient(180deg,rgb(156.19,195.71,255)_0%,rgb(180.07,167.87,255)_100%)]
+
                                   text-black
                                   border duration-200 ease-in-out
                                   transition
@@ -572,7 +573,7 @@ const CostBreakUpSheet = ({
                                 </button>
                                {['unitBookingMode', 'unitBlockMode'].includes(actionMode) && <button
                                   className="mb-2 mr-2 md:mb-0  hover:scale-110 focus:outline-none              hover:bg-[#5671fc]
-                                  bg-gradient-to-r from-indigo-400 to-cyan-400
+                                  bg-gradient-to-r from-violet-300 to-indigo-300
                                   text-black
 
                                   border duration-200 ease-in-out
@@ -584,7 +585,8 @@ const CostBreakUpSheet = ({
                                 >
                                   {/* {loading && <Loader />} */}
                                  <span>Save & Next</span>
-                                </button> }
+                                </button>
+                                 }
                               </div>
                             </div>
                           </Form>

@@ -287,33 +287,39 @@ const ViewUnitDetails = ({
     setFormMessage('')
   }
   return (
-    <div className="h-full flex flex-col  bg-[#f3f6f8] shadow-xl overflow-y-scroll">
-      <div className="px-3 sm:px-6 pt-2 z-10 flex items-center justify-between ">
+    <div className="h-full flex flex-col bg-white shadow-xl overflow-y-scroll font-['Inter']">
+      <div className="px-3 pt-2 z-10 flex items-center justify-between ">
         <Dialog.Title className=" font-semibold text-xl mr-auto  text-[#053219] w-full">
-          <div className="flex flex-row justify-between">
-            <div className="flex flex-col">
-              <div className="font-semibold text-[#053219]  text-xl  mb-[1] tracking-wide">
+          <div className="flex flex-row justify-between mb-1">
+<section  className="flex flex-row">
+            <div className="bg-violet-100  items-center rounded-2xl shadow-xs flex flex-col px-2 py-1">
+            <div className="font-semibold text-[#053219]  text-[22px]  mb-[1] tracking-wide">
                 {data?.unitDetail?.unit_no}
-                <span
-                  className={`items-center h-6  py-1 mt-1 ml-[1px] text-xs font-semibold text-gray-500  rounded-full mr-2
+
+
+              </div>
+              <span
+                  className={`items-center h-6   text-xs font-semibold text-gray-500  rounded-full
                       `}
                 >
                   Unit No
                 </span>
-                <span
-                  className={`items-center h-6 px-2 py-1 ml-2 text-xs font-semibold text-green-600 bg-green-200 rounded-full mr-2
+            </div>
+            <div className="flex flex-col ml-2 item-right">
+            <span
+                  className={`items-center h-1 mt-[10px] mb-2  text-xs font-semibold text-green-600
                       `}
                 >
-                  {data?.unitDetail?.status}
+                  {data?.unitDetail?.status?.toUpperCase()}
                 </span>
-              </div>
-              <div className="font text-[12px] text-gray-500 tracking-wide overflow-ellipsis overflow-hidden">
+              <div className="font text-[12px] text-gray-500 tracking-wide overflow-ellipsis overflow-hidden ">
                 {projectDetails?.projectName}
               </div>
             </div>
+            </section>
 
             {/* 2 */}
-            <div className=" flex flex-row">
+            <div className=" flex flex-row mt-2">
               <span
                 className={`items-center cursor-pointer h-6 px-3 py-1  mt-1 text-xs font-semibold text-blue-600  mr-2 `}
                 onClick={() => {

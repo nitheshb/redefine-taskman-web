@@ -289,7 +289,7 @@ const CaptureUnitPayment = ({
     setStartDate(date)
   }
   return (
-    <div className="">
+    <div className="font-['Inter']">
 
 
       <div className="grid gap-8 grid-cols-1">
@@ -339,29 +339,15 @@ const CaptureUnitPayment = ({
                                 boxShadow: '0 1px 12px #f2f2f2',
                               }}
                             >
-                              <div className="flex flex-row justify-between">
-                                <img
-                                  className="w-[89px] h-[42px] ml-4 mt-[15px]"
-                                  alt="barcode"
-                                  src="/maahomes_logo.png"
-                                />
-                                <div className="flex flex-col">
-                                  <h6 className="text-blueGray-400 text-sm mt-4 ml-3 mb- font-bold uppercase">
-                                    Payment Receipt
-                                  </h6>
-                                  <span className="text-center text-[13px] font-light">
-                                    {format(new Date(), 'dd-MMMM-yy')}
-                                  </span>
-                                </div>
-                              </div>
-                              <div className="flex flex-wrap mt-10">
+
+                              <div className="flex flex-wrap mt-3">
                                 <div className="w-full px-4 mb-4">
                                   {paymentMode.map((dat, i) => {
                                     return (
                                       <span
-                                        className={`my-2 mr-2 border rounded-md px-2 py-1 cursor-pointer hover:bg-[#318B96] hover:text-white ${
+                                        className={`my-2 mr-2 border rounded-xl px-4 py-3 cursor-pointer hover:bg-violet-400 hover:text-white ${
                                           paymentModex == dat.value
-                                            ? 'bg-[#318B96] text-white'
+                                            ? 'bg-violet-400 text-white'
                                             : ''
                                         }`}
                                         key={i}
@@ -548,13 +534,24 @@ const CaptureUnitPayment = ({
                               )}
                               {formik?.file?.fileUploader}
 
-                              <div className="flex flex-row-reverse mt-4 mx-4">
+                              <div className="flex flex-row justify-between mt-4 mx-4">
+                              <div className="flex flex-row justify-between">
+                              <div></div>
+                                <div className="flex flex-col">
+                                  <h6 className="text-blueGray-400 text-sm mt- ml-6 mb- font-weight-[700]  font-uppercase">
+                                    Payment
+                                  </h6>
+                                  <span className="text-center text-[13px] font-normal">
+                                    {format(new Date(), 'dd-MMMM-yy')}
+                                  </span>
+                                </div>
+                              </div>
                                 <div>
                                   <div className="text-md font-weight-[700] text-[13px]">
                                     Received By
                                   </div>
                                   <div className="text-center font-semibold text-[13px]">
-                                    {displayName.toLowerCase()}
+                                    {displayName.toUpperCase()}
                                   </div>
                                 </div>
                               </div>
@@ -585,35 +582,39 @@ const CaptureUnitPayment = ({
                               </div> */}
                               <hr className="mt-6 border-b-1 border-blueGray-300" />
                               <Confetti ref={confettiRef} />
-                              <div className="mt-5 text-right md:space-x-3 md:block flex flex-col-reverse mb-6">
-                                <button
-                                  className="bg-[#318B96] text-white active:bg-pink-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
-                                  onClick={handleClick}
-                                  type="button"
-                                >
-                                  Reset
-                                </button>
-                                <button
-                                  className="bg-[#318B96] text-white active:bg-pink-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
-                                  onClick={handleClick}
-                                  type="button"
-                                >
-                                  Download
-                                </button>
-                                <button
-                                  className="bg-[#318B96] text-white active:bg-green-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
-                                  type="submit"
-                                  disabled={loading}
-                                >
-                                  {'Capture Payment'}
-                                </button>
-                              </div>
+
                             </section>
                           </div>
                         </div>
                       </div>
                     </section>
                   </div>
+                  <div className="abosolute mt-5 text-right md:space-x-3 md:block flex flex-col-reverse py-2 mt-2 z-10 flex flex-row justify-between mt-2 pr-6 bg-white shadow-lg absolute bottom-0  w-full">
+                                <button
+                                  className=" bg-gradient-to-r from-violet-300 to-indigo-300
+                                  text-black font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+                                  onClick={handleClick}
+                                  type="button"
+                                >
+                                  Reset
+                                </button>
+                                <button
+                                  className=" bg-gradient-to-r from-violet-300 to-indigo-300
+                                  text-black font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+                                  onClick={handleClick}
+                                  type="button"
+                                >
+                                  Download
+                                </button>
+                                <button
+                                  className=" bg-gradient-to-r from-violet-300 to-indigo-300
+                                  text-black  font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+                                  type="submit"
+                                  disabled={loading}
+                                >
+                                  {'Capture Payment'}
+                                </button>
+                              </div>
                 </Form>
               )}
             </Formik>
