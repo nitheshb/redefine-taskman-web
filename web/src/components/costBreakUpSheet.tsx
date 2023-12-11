@@ -5,14 +5,17 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { useState, useEffect, createRef, useRef } from 'react'
-import { ChevronRightIcon,  } from '@heroicons/react/solid'
+
+// import './ScrollHighlightNabbar.css'
 import { Dialog } from '@headlessui/react'
 import { RadioGroup } from '@headlessui/react'
+import { ChevronRightIcon } from '@heroicons/react/solid'
 import { Checkbox } from '@mui/material'
 import { Timestamp } from 'firebase/firestore'
 import { Form, Formik, Field } from 'formik'
 import jsPDF from 'jspdf'
 import { useSnackbar } from 'notistack'
+import PropTypes from 'prop-types'
 import { renderToString } from 'react-dom/server'
 import NumberFormat from 'react-number-format'
 import Select from 'react-select'
@@ -42,7 +45,9 @@ import { TextField2 } from 'src/util/formFields/TextField2'
 import { TextFieldFlat } from 'src/util/formFields/TextFieldFlatType'
 import PdfInvoiceGenerator from 'src/util/PdfInvoiceGenerator'
 
+import BookingSummaryView from './A_CrmModule/A_Crm_sideFormBodies.tsx/bookingSummaryView'
 import AddApplicantDetails from './AddApplicantDetails'
+import AdditonalBookingDetails from './AdditionalBookingDetails'
 import BlockingUnitForm from './BlockingUnitForm'
 import AddPaymentDetailsForm from './FinanceModule/BookingPaymentForm'
 import Loader from './Loader/Loader'
@@ -64,6 +69,11 @@ const CostBreakUpSheet = ({
 }) => {
   const { user } = useAuth()
   const { orgId } = user
+  const section1Ref = useRef()
+  const section2Ref = useRef()
+  const section3Ref = useRef()
+  const section4Ref = useRef()
+
   const { enqueueSnackbar } = useSnackbar()
   const ref = createRef()
   const [fetchedUsersList, setfetchedUsersList] = useState([])
@@ -85,6 +95,7 @@ const CostBreakUpSheet = ({
   const [newConstructPS, setNewConstructPS] = useState([])
   const [newAdditonalChargesObj, setNewAdditonalChargesObj] = useState([])
   const [StatusListA, setStatusListA] = useState([])
+  const [reviewLinks, setReviewLinks] = useState([])
 
   const [netTotal, setNetTotal] = useState(0)
   const [partATotal, setPartATotal] = useState(0)
@@ -109,7 +120,6 @@ const CostBreakUpSheet = ({
       setOnStep('costsheet')
     } else if (actionMode === 'unitBlockMode') {
       setStatusListA([
-
         {
           label: 'Cost sheet',
           value: 'costsheet',
@@ -138,7 +148,12 @@ const CostBreakUpSheet = ({
           logo: 'FireIcon',
           color: ' bg-violet-500',
         },
-
+        {
+          label: 'Additonal info',
+          value: 'additonalInfo',
+          logo: 'FireIcon',
+          color: ' bg-violet-500',
+        },
         {
           label: 'Cost sheet',
           value: 'costsheet',
@@ -153,13 +168,41 @@ const CostBreakUpSheet = ({
           color: ' bg-violet-500',
         },
         {
-          label: 'Payment',
+          label: 'Booking Summary',
+          value: 'booking_summary',
+          logo: 'FireIcon',
+          color: ' bg-violet-500',
+        },
+        {
+          label: 'Book Unit',
           value: 'booksheet',
           logo: 'FireIcon',
           color: ' bg-violet-500',
         },
       ])
-      setOnStep('costsheet')
+      setReviewLinks([
+        {
+          headerTitle: 'Section 1',
+          headerRef: section1Ref,
+          headerID: 'section1',
+        },
+        {
+          headerTitle: 'Section 2',
+          headerRef: section2Ref,
+          headerID: 'section2',
+        },
+        {
+          headerTitle: 'Section 3',
+          headerRef: section3Ref,
+          headerID: 'section3',
+        },
+        {
+          headerTitle: 'Section 4',
+          headerRef: section4Ref,
+          headerID: 'section4',
+        },
+      ])
+      setOnStep('customerDetails')
     }
   }, [actionMode])
 
@@ -400,205 +443,182 @@ const CostBreakUpSheet = ({
   return (
     <>
       <section className="  bg-black font-['Inter']">
-        <div className="max-w-5xl mx-auto py-  bg-white">
+        <div className="max-w-5xl mx-auto py-  bg-violet-100">
           <article className="overflow-hidden">
             <div className="bg-[white] rounded-b-md">
-              <div className=" mt-">
-                <div className=" flex flex-row justify-center items-center ">
-                  <div
-                    className="flex flex-row  justify-between  py-3 px-3  mt-[0.5px] mb-0 rounded-xs bg-[#F2F5F8]"
-                    style={{ flex: '4 0 100%' }}
-                  >
-                    <div className="flex flex-row mt-[1px]">
-                      {StatusListA.map((statusFlowObj, i) => (
-                        <span
-                          key={i}
-                          className={`font-bodyLato text-sm font-normal px-2 py-[4px] mr-1 cursor-pointer rounded-full ${onStep === statusFlowObj.value ? 'bg-violet-500 text-white' : ''} `}
-                          onClick={() => setStatusFun(i, statusFlowObj.value)}
-                        >
-                          <section className="flex flex-row">
-                            <span className= {`w-4 h-4 mt-[1px] text-[9px] mr-1 flex justify-center items-center rounded-full  border ${onStep === statusFlowObj.value ? 'bg-violet-500 text-white' : ''} `}>
-                              {i + 1}
-                            </span>
-                            <div>{statusFlowObj.label}</div>
-                          </section>
-                        </span>
-                      ))}
-                    </div>
-                    {/* <span className=" w-6 h-6 mt-[3px] text-[9px] mr-2 cursor-pointer flex justify-center items-center rounded-full  border bg-blue-500 text-white">
-                    <ChevronRightIcon
-                            className="w-3 h-3 "
-                            aria-hidden="true"
-                          />
-                    </span> */}
-                  </div>
-                </div>
-
-
-              </div>
-
-              {['costsheet', 'allsheets', 'payment_schedule'].includes(onStep) && (
-                <div className="">
-
-                  <div className="flex flex-col mx-0 bg-[#F8FAFC] ">
-
+              <section className="flex flex-row">
+                <div className="w-full">
+                  {['costsheet', 'allsheets', 'payment_schedule'].includes(
+                    onStep
+                  ) && (
                     <div className="">
-                      <Formik
-                        enableReinitialize={true}
-                        initialValues={initialState}
-                        validationSchema={validate}
-                        onSubmit={(values, { resetForm }) => {
-                          console.log('i was clicked', values)
-                          onSubmit(values, resetForm)
-                        }}
-                      >
-                        {(formik) => (
-                          <Form ref={ref} className="">
-                            <section
-                              className="bg-[#fff] rounded-md border m-2"
-                              style={{
-                                boxShadow: '0 1px 12px #f2f2f2',
-                              }}
-                            >
-                              {csMode === 'both' && (
-                                <CostBreakUpPdfAll
-                                  projectDetails={projectDetails}
-                                  csMode={csMode}
-                                  // costSheetA={costSheetA}
-                                  pdfExportComponent={
-                                    pdfExportComponentConstruct
-                                  }
-                                  selPhaseObj={selPhaseObj}
-                                  leadDetailsObj1={leadDetailsObj1}
-                                  selUnitDetails={selUnitDetails}
-                                  setNewConstructCsObj={setNewConstructCsObj}
-                                  newConstructCsObj={newConstructCsObj}
-                                  newConstructCostSheetA={
-                                    newConstructCostSheetA
-                                  }
-                                  setCostSheetA={setNewConstructCostSheetA}
-                                  costSheetA={newConstructCostSheetA}
-                                  setNewPS={setNewConstructPS}
-                                  setNewConstructPS={setNewConstructPS}
-                                  newConstructPS={newConstructPS}
-                                />
-                              )}
-                              {/*   const [netTotal, setNetTotal] = useState(0)
-  const [partATotal, setPartATotal] = useState(0)
-  const [partBTotal, setPartBTotal] = useState(0) */}
-                              {csMode === 'plot_cs' && (
-                                <CostBreakUpPdf
-                                  projectDetails={projectDetails}
-                                  csMode={csMode}
-                                  // costSheetA={costSheetA}
-                                  pdfExportComponent={pdfExportComponent}
-                                  selPhaseObj={selPhaseObj}
-                                  leadDetailsObj1={leadDetailsObj1}
-                                  selUnitDetails={selUnitDetails}
-                                  setNewPlotCsObj={setNewPlotCsObj}
-                                  newPlotCsObj={newPlotCsObj}
-                                  costSheetA={newPlotCostSheetA}
-                                  setAddiChargesObj={setNewAdditonalChargesObj}
-                                  setCostSheetA={setNewPlotCostSheetA}
-                                  setNewPS={setNewPlotPS}
-                                  newPlotPS={newPlotPS}
-                                  showGstCol={showGstCol}
-                                  netTotal={netTotal}
-                                  setNetTotal={setNetTotal}
-                                  partATotal={partATotal}
-                                  partBTotal={partBTotal}
-                                  setPartATotal={setPartATotal}
-                                  setPartBTotal={setPartBTotal}
-                                  showOnly = {onStep}
-                                />
-                              )}
-                              {csMode === 'construct_cs' && (
-                                <CostBreakUpPdfConstruct
-                                  projectDetails={projectDetails}
-                                  csMode={csMode}
-                                  // costSheetA={costSheetA}
-                                  pdfExportComponent={
-                                    pdfExportComponentConstruct
-                                  }
-                                  selPhaseObj={selPhaseObj}
-                                  leadDetailsObj1={leadDetailsObj1}
-                                  selUnitDetails={selUnitDetails}
-                                  setNewConstructCsObj={setNewConstructCsObj}
-                                  newConstructCsObj={newConstructCsObj}
-                                  newConstructCostSheetA={
-                                    newConstructCostSheetA
-                                  }
-                                  setCostSheetA={setNewConstructCostSheetA}
-                                  costSheetA={newConstructCostSheetA}
-                                  setNewPS={setNewConstructPS}
-                                  setNewConstructPS={setNewConstructPS}
-                                  newConstructPS={newConstructPS}
-                                />
-                              )}
-                            </section>
+                      <div className="flex flex-col mx-0 bg-[#F8FAFC] ">
+                        <div className="">
+                          <Formik
+                            enableReinitialize={true}
+                            initialValues={initialState}
+                            validationSchema={validate}
+                            onSubmit={(values, { resetForm }) => {
+                              console.log('i was clicked', values)
+                              onSubmit(values, resetForm)
+                            }}
+                          >
+                            {(formik) => (
+                              <Form ref={ref} className="">
+                                <section
+                                  className="bg-[#fff] rounded-md border m-2"
+                                  style={{
+                                    boxShadow: '0 1px 12px #f2f2f2',
+                                  }}
+                                >
+                                  {csMode === 'both' && (
+                                    <CostBreakUpPdfAll
+                                      projectDetails={projectDetails}
+                                      csMode={csMode}
+                                      // costSheetA={costSheetA}
+                                      pdfExportComponent={
+                                        pdfExportComponentConstruct
+                                      }
+                                      selPhaseObj={selPhaseObj}
+                                      leadDetailsObj1={leadDetailsObj1}
+                                      selUnitDetails={selUnitDetails}
+                                      setNewConstructCsObj={
+                                        setNewConstructCsObj
+                                      }
+                                      newConstructCsObj={newConstructCsObj}
+                                      newConstructCostSheetA={
+                                        newConstructCostSheetA
+                                      }
+                                      setCostSheetA={setNewConstructCostSheetA}
+                                      costSheetA={newConstructCostSheetA}
+                                      setNewPS={setNewConstructPS}
+                                      setNewConstructPS={setNewConstructPS}
+                                      newConstructPS={newConstructPS}
+                                    />
+                                  )}
+                                  {csMode === 'plot_cs' && (
+                                    <CostBreakUpPdf
+                                      projectDetails={projectDetails}
+                                      csMode={csMode}
+                                      // costSheetA={costSheetA}
+                                      pdfExportComponent={pdfExportComponent}
+                                      selPhaseObj={selPhaseObj}
+                                      leadDetailsObj1={leadDetailsObj1}
+                                      selUnitDetails={selUnitDetails}
+                                      setNewPlotCsObj={setNewPlotCsObj}
+                                      newPlotCsObj={newPlotCsObj}
+                                      costSheetA={newPlotCostSheetA}
+                                      setAddiChargesObj={
+                                        setNewAdditonalChargesObj
+                                      }
+                                      setCostSheetA={setNewPlotCostSheetA}
+                                      setNewPS={setNewPlotPS}
+                                      newPlotPS={newPlotPS}
+                                      showGstCol={showGstCol}
+                                      netTotal={netTotal}
+                                      setNetTotal={setNetTotal}
+                                      partATotal={partATotal}
+                                      partBTotal={partBTotal}
+                                      setPartATotal={setPartATotal}
+                                      setPartBTotal={setPartBTotal}
+                                      showOnly={onStep}
+                                    />
+                                  )}
+                                  {csMode === 'construct_cs' && (
+                                    <CostBreakUpPdfConstruct
+                                      projectDetails={projectDetails}
+                                      csMode={csMode}
+                                      // costSheetA={costSheetA}
+                                      pdfExportComponent={
+                                        pdfExportComponentConstruct
+                                      }
+                                      selPhaseObj={selPhaseObj}
+                                      leadDetailsObj1={leadDetailsObj1}
+                                      selUnitDetails={selUnitDetails}
+                                      setNewConstructCsObj={
+                                        setNewConstructCsObj
+                                      }
+                                      newConstructCsObj={newConstructCsObj}
+                                      newConstructCostSheetA={
+                                        newConstructCostSheetA
+                                      }
+                                      setCostSheetA={setNewConstructCostSheetA}
+                                      costSheetA={newConstructCostSheetA}
+                                      setNewPS={setNewConstructPS}
+                                      setNewConstructPS={setNewConstructPS}
+                                      newConstructPS={newConstructPS}
+                                    />
+                                  )}
+                                </section>
 
-                            <div className="flex flex-col mt-2 z-10 flex flex-row justify-between mt-2 pr-6 bg-white shadow-lg absolute bottom-0  w-full">
-                              <div className="mt-2 text-right md:space-x-3 md:block flex flex-col-reverse mb-3">
-                                <div className="inline-block">
-                                  <PdfInvoiceGenerator
-                                    user={user}
-                                    selUnitDetails={selUnitDetails}
-                                    myObj={newPlotCostSheetA}
-                                    newPlotPS={newPlotPS}
-                                    myAdditionalCharges={newAdditonalChargesObj}
-                                    netTotal={netTotal}
-                                    setNetTotal={setNetTotal}
-                                    partATotal={partATotal}
-                                    partBTotal={partBTotal}
-                                    setPartATotal={setPartATotal}
-                                    setPartBTotal={setPartBTotal}
-                                    projectDetails={projectDetails}
-                                    leadDetailsObj1={leadDetailsObj1}
-                                  />
-                                </div>
-                                <button
-                                  className="mb-2 md:mb-0  hover:scale-110 focus:outline-none              hover:bg-[#5671fc]
+                                <div className="flex flex-col mt-2 z-10 flex flex-row justify-between mt-2 pr-6 bg-white shadow-lg absolute bottom-0  w-full">
+                                  <div className="mt-2 text-right md:space-x-3 md:block flex flex-col-reverse mb-3">
+                                    <div className="inline-block">
+                                      <PdfInvoiceGenerator
+                                        user={user}
+                                        selUnitDetails={selUnitDetails}
+                                        myObj={newPlotCostSheetA}
+                                        newPlotPS={newPlotPS}
+                                        myAdditionalCharges={
+                                          newAdditonalChargesObj
+                                        }
+                                        netTotal={netTotal}
+                                        setNetTotal={setNetTotal}
+                                        partATotal={partATotal}
+                                        partBTotal={partBTotal}
+                                        setPartATotal={setPartATotal}
+                                        setPartBTotal={setPartBTotal}
+                                        projectDetails={projectDetails}
+                                        leadDetailsObj1={leadDetailsObj1}
+                                      />
+                                    </div>
+                                    <button
+                                      className="mb-2 md:mb-0  hover:scale-110 focus:outline-none              hover:bg-[#5671fc]
                                   [background:linear-gradient(180deg,rgb(156.19,195.71,255)_0%,rgb(180.07,167.87,255)_100%)]
 
                                   text-black
                                   border duration-200 ease-in-out
                                   transition
                                    px-5 py-1 pb-[5px] text-sm shadow-sm font-medium tracking-wider text-white rounded-md hover:shadow-lg hover:bg-green-500"
-                                  type="submit"
-                                  disabled={loading}
-                                  // onClick={() => submitFormFun(formik)}
-                                >
-                                  {/* {loading && <Loader />} */}
-                                  Save
-                                </button>
-                               {['unitBookingMode', 'unitBlockMode'].includes(actionMode) && <button
-                                  className="mb-2 mr-2 md:mb-0  hover:scale-110 focus:outline-none              hover:bg-[#5671fc]
+                                      type="submit"
+                                      disabled={loading}
+                                      // onClick={() => submitFormFun(formik)}
+                                    >
+                                      {/* {loading && <Loader />} */}
+                                      Save
+                                    </button>
+                                    {[
+                                      'unitBookingMode',
+                                      'unitBlockMode',
+                                    ].includes(actionMode) && (
+                                      <button
+                                        className="mb-2 mr-2 md:mb-0  hover:scale-110 focus:outline-none              hover:bg-[#5671fc]
                                   bg-gradient-to-r from-violet-300 to-indigo-300
                                   text-black
 
                                   border duration-200 ease-in-out
                                   transition
                                    px-5 py-1 pb-[5px] text-sm shadow-sm font-medium tracking-wider text-white rounded-md hover:shadow-lg hover:bg-green-500"
-                                  type="submit"
-                                  disabled={loading}
-                                  // onClick={() => submitFormFun(formik)}
-                                >
-                                  {/* {loading && <Loader />} */}
-                                 <span>Save & Next</span>
-                                </button>
-                                 }
-                              </div>
-                            </div>
-                          </Form>
-                        )}
-                      </Formik>
+                                        type="submit"
+                                        disabled={loading}
+                                        // onClick={() => submitFormFun(formik)}
+                                      >
+                                        {/* {loading && <Loader />} */}
+                                        <span>Save & Next</span>
+                                      </button>
+                                    )}
+                                  </div>
+                                </div>
+                              </Form>
+                            )}
+                          </Formik>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              )}
+                  )}
 
-              {/* PaymentScheduleSheet */}
-              {/* {['payment_sch', 'allsheets'].includes(onStep) && (
+                  {/* PaymentScheduleSheet */}
+                  {/* {['payment_sch', 'allsheets'].includes(onStep) && (
                 <PaymentScheduleSheet
                   title="Booking Form"
                   leadDetailsObj2={leadDetailsObj1}
@@ -607,44 +627,85 @@ const CostBreakUpSheet = ({
                   soldPrice={soldPrice}
                 />
               )} */}
-              {['customerDetails', 'allsheets'].includes(onStep) && (
-                <AddApplicantDetails
-                  title="Booking Form"
-                  selUnitDetails={selUnitDetails}
-                  leadDetailsObj2={leadDetailsObj1}
-                  setOnStep={setOnStep}
-                  source="Booking"
-                  currentMode= {actionMode}
-                />
-              )}
-              {['booksheet', 'allsheets'].includes(onStep) && (
-                <AddPaymentDetailsForm
-                  title={'undefined'}
-                  dialogOpen={undefined}
-                  phase={selPhaseObj}
-                  leadDetailsObj2={leadDetailsObj1}
-                  selUnitDetails={selUnitDetails}
-                  newPlotCsObj={newPlotCsObj}
-                  newPlotCostSheetA={newPlotCostSheetA}
-                  newConstructCsObj={newConstructCsObj}
-                  newConstructCostSheetA={newConstructCostSheetA}
-                  newAdditonalChargesObj={newAdditonalChargesObj}
-                  newConstructPS={newConstructPS}
-                  newPlotPS={newPlotPS}
-                  projectDetails={projectDetails}
-                />
-              )}
+                  {['customerDetails', 'allsheets'].includes(onStep) && (
+                    <AddApplicantDetails
+                      title="Booking Form"
+                      selUnitDetails={selUnitDetails}
+                      leadDetailsObj2={leadDetailsObj1}
+                      setOnStep={setOnStep}
+                      source="Booking"
+                      currentMode={actionMode}
+                    />
+                  )}
+                  {['additonalInfo'].includes(onStep) && (
+                    <AdditonalBookingDetails
+                      title="Booking Form"
+                      selUnitDetails={selUnitDetails}
+                      leadDetailsObj2={leadDetailsObj1}
+                      setOnStep={setOnStep}
+                      source="Booking"
+                      currentMode={actionMode}
+                    />
+                  )}
+                  {['booksheet', 'allsheets'].includes(onStep) && (
+                    <AddPaymentDetailsForm
+                      title={'undefined'}
+                      dialogOpen={undefined}
+                      phase={selPhaseObj}
+                      leadDetailsObj2={leadDetailsObj1}
+                      selUnitDetails={selUnitDetails}
+                      newPlotCsObj={newPlotCsObj}
+                      newPlotCostSheetA={newPlotCostSheetA}
+                      newConstructCsObj={newConstructCsObj}
+                      newConstructCostSheetA={newConstructCostSheetA}
+                      newAdditonalChargesObj={newAdditonalChargesObj}
+                      newConstructPS={newConstructPS}
+                      newPlotPS={newPlotPS}
+                      projectDetails={projectDetails}
+                    />
+                  )}
 
-              {['blocksheet'].includes(onStep) && (
-                <BlockingUnitForm
-                  title="Blocking Form"
-                  leadDetailsObj2={leadDetailsObj1}
-                  selUnitDetails={selUnitDetails}
-                />
-              )}
-              {['Detail View'].includes(onStep) && <UnitTransactionForm />}
-              <div className="mt-8 p-4">
-                {/* <div>
+                  {['booking_summary'].includes(onStep) && (
+                    <BookingSummaryView
+                      projectDetails={projectDetails}
+                      csMode={csMode}
+                      // costSheetA={costSheetA}
+                      pdfExportComponent={pdfExportComponent}
+                      selPhaseObj={selPhaseObj}
+                      leadDetailsObj1={leadDetailsObj1}
+                      selUnitDetails={selUnitDetails}
+                      setNewPlotCsObj={setNewPlotCsObj}
+                      newPlotCsObj={newPlotCsObj}
+                      costSheetA={newPlotCostSheetA}
+                      setAddiChargesObj={setNewAdditonalChargesObj}
+                      setCostSheetA={setNewPlotCostSheetA}
+                      setNewPS={setNewPlotPS}
+                      newPlotPS={newPlotPS}
+                      showGstCol={showGstCol}
+                      netTotal={netTotal}
+                      setNetTotal={setNetTotal}
+                      partATotal={partATotal}
+                      partBTotal={partBTotal}
+                      setPartATotal={setPartATotal}
+                      setPartBTotal={setPartBTotal}
+                      showOnly={onStep}
+                      section1Ref={section1Ref}
+                      section2Ref={section2Ref}
+                      section3Ref={section3Ref}
+                      section4Ref={section4Ref}
+                    />
+                  )}
+
+                  {['blocksheet'].includes(onStep) && (
+                    <BlockingUnitForm
+                      title="Blocking Form"
+                      leadDetailsObj2={leadDetailsObj1}
+                      selUnitDetails={selUnitDetails}
+                    />
+                  )}
+                  {['Detail View'].includes(onStep) && <UnitTransactionForm />}
+                  {/* <div className="mt-8 p-4"> */}
+                  {/* <div>
             <div className="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">Full Name</div>
             <div className="flex flex-col md:flex-row">
                 <div className="w-full flex-1 mx-2 svelte-1l8159u">
@@ -669,7 +730,41 @@ const CostBreakUpSheet = ({
                 </div>
             </div>
         </div> */}
-              </div>
+
+                  {/* </div> */}
+                </div>
+                {actionMode === 'unitBookingMode' && (
+                  <div className="flex flex-col  w-[250px] pt-4 px-2 bg-violet-100 h-screen">
+                    {StatusListA.map((statusFlowObj, i) => (
+                      <span
+                        key={i}
+                        className={`font-bodyLato text-sm font-normal px-2 py-[4px]   mt-2 mr-1 cursor-pointer rounded-full ${
+                          onStep === statusFlowObj.value
+                            ? 'bg-violet-500 text-white'
+                            : ''
+                        } `}
+                        onClick={() => setStatusFun(i, statusFlowObj.value)}
+                      >
+                        <section className="flex flex-row">
+                          <span
+                            className={`w-4 h-4 mt-[1px] text-[9px] mr-1 flex justify-center items-center rounded-full  border ${
+                              onStep === statusFlowObj.value
+                                ? 'bg-violet-500 text-white'
+                                : ''
+                            } `}
+                          >
+                            {i + 1}
+                          </span>
+                          <div>{statusFlowObj.label}</div>
+                        </section>
+                      </span>
+                    ))}
+                    {/* <ScrollHighlightNabbar navHeader={reviewLinks} /> */}
+
+
+                  </div>
+                )}
+              </section>
             </div>
           </article>
         </div>
@@ -700,3 +795,126 @@ const CostBreakUpSheet = ({
 }
 
 export default CostBreakUpSheet
+
+export function ScrollHighlightNabbar({ navHeader }) {
+  const [activeIndex, setActiveIndex] = useState(0)
+  useEffect(() => {
+    const handleScroll = (e) => {
+      const index = nearestIndex(
+        window.scrollY,
+        navHeader,
+        0,
+        navHeader.length - 1
+      )
+      setActiveIndex(index)
+    }
+    document.addEventListener('scroll', handleScroll)
+    return () => {
+      document.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
+
+  return (
+    <div className="flex flex-col">
+      {navHeader.map((header, index) => (
+        <>
+
+
+          <a
+            key={index + header.headerID}
+            className={`font-bodyLato text-sm font-normal px-2 py-[4px]   mt-2 mr-1 cursor-pointer rounded-full ${
+              activeIndex === index ? 'bg-violet-500 text-white' : ''
+            } `}
+            href={`#${header.headerID}`}
+          >
+            <section className="flex flex-row">
+              <span
+                className={`w-4 h-4 mt-[1px] text-[9px] mr-1 flex justify-center items-center rounded-full  border ${
+                  activeIndex === index ? 'bg-violet-500 text-white' : ''
+                } `}
+              >
+                5.{index + 1}
+              </span>
+              <div>{header.headerTitle}</div>
+            </section>
+          </a>
+        </>
+      ))}
+    </div>
+  )
+}
+
+ScrollHighlightNabbar.propTypes = {
+  navHeader: PropTypes.arrayOf(
+    PropTypes.shape({
+      headerID: PropTypes.string,
+      headerRef: PropTypes.object.isRequired,
+      headerTitle: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+}
+
+/**
+ * @param {number} currentPosition Current Scroll position
+ * @param {Array} sectionPositionArray Array of positions of all sections
+ * @param {number} startIndex Start index of array
+ * @param {number} endIndex End index of array
+ * @return {number} Current Active index
+ */
+const nearestIndex = (
+  currentPosition,
+  sectionPositionArray,
+  startIndex,
+  endIndex
+) => {
+  if (startIndex === endIndex) return startIndex
+  else if (startIndex === endIndex - 1) {
+    if (
+      Math.abs(
+        sectionPositionArray[startIndex].headerRef.current.offsetTop -
+          currentPosition
+      ) <
+      Math.abs(
+        sectionPositionArray[endIndex].headerRef.current.offsetTop -
+          currentPosition
+      )
+    )
+      return startIndex
+    else return endIndex
+  } else {
+    const nextNearest = ~~((startIndex + endIndex) / 2)
+    const a = Math.abs(
+      sectionPositionArray[nextNearest].headerRef.current.offsetTop -
+        currentPosition
+    )
+    const b = Math.abs(
+      sectionPositionArray[nextNearest + 1].headerRef.current.offsetTop -
+        currentPosition
+    )
+    if (a < b) {
+      return nearestIndex(
+        currentPosition,
+        sectionPositionArray,
+        startIndex,
+        nextNearest
+      )
+    } else {
+      return nearestIndex(
+        currentPosition,
+        sectionPositionArray,
+        nextNearest,
+        endIndex
+      )
+    }
+  }
+}
+
+ScrollHighlightNabbar.propTypes = {
+  navHeader: PropTypes.arrayOf(
+    PropTypes.shape({
+      headerID: PropTypes.string,
+      headerRef: PropTypes.object.isRequired,
+      headerTitle: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+}

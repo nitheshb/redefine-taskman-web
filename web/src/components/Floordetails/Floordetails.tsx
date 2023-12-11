@@ -945,7 +945,7 @@ const Floordetails = ({
                                                     leadDetailsObj:
                                                       leadDetailsObj,
                                                   },
-                                                  widthClass: 'max-w-2xl',
+                                                  widthClass: 'max-w-4xl',
                                                 })
                                               }}
                                             >

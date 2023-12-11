@@ -3,7 +3,11 @@
 
 import { Fragment, useState, useEffect } from 'react'
 
-import { PhoneIcon, ShieldExclamationIcon } from '@heroicons/react/outline'
+import {
+  PhoneIcon,
+  PuzzleIcon,
+  ShieldExclamationIcon,
+} from '@heroicons/react/outline'
 import {
   AdjustmentsIcon,
   ChartPieIcon,
@@ -12,7 +16,6 @@ import {
   NewspaperIcon,
   UserGroupIcon,
   ScaleIcon,
-  PuzzleIcon,
 } from '@heroicons/react/solid'
 import {} from '@heroicons/react/solid'
 import { Box, LinearProgress, useTheme } from '@mui/material'
@@ -136,6 +139,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
 
   // kanban board
   const [ready, setReady] = useState(false)
+  const [horizontalMode, setHorizontalMode] = useState(true)
   const [showSettings, setShowSettings] = useState(true)
   const [sourceDateRange, setSourceDateRange] = useState(
     startOfDay(d).getTime()
@@ -235,7 +239,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
     filter_Leads_Projects_Users_Fun()
   }, [selProjectIs])
 
-    const filter_Leads_Projects_Users_Fun = () => {
+  const filter_Leads_Projects_Users_Fun = () => {
     // setFetchLeadsLoader(true)
     // const x = leadsFetchedRawData
     getLeadsDataFun(projectList, 'booked')
@@ -243,8 +247,13 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
     getLeadsDataFun(projectList, 'sd_pipeline')
     getLeadsDataFun(projectList, 'registered')
     getLeadsDataFun(projectList, 'unassigned')
-    console.log('my Array data is ', queryResult, crmCustomersDBData, bookingReviewA)
-    }
+    console.log(
+      'my Array data is ',
+      queryResult,
+      crmCustomersDBData,
+      bookingReviewA
+    )
+  }
 
   const getProjectsListFun = () => {
     const unsubscribe = getAllProjects(
@@ -369,31 +378,34 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
           console.log('my Array data is ', usersListA, crmCustomersDBData)
           // await serealizeData(usersListA)
           usersListA.sort((a, b) => {
-            return b?.booked_on || 0  - b?.booked_on || 0
+            return b?.booked_on || 0 - b?.booked_on || 0
           })
           await setCrmCustomerDBData(usersListA)
 
-          await console.log('my Array data is =====>', usersListA.length, queryResult.length, crmCustomersDBData)
+          await console.log(
+            'my Array data is =====>',
+            usersListA.length,
+            queryResult.length,
+            crmCustomersDBData
+          )
           if (statusFil === 'booked') {
-            await console.log('my Array data is ', usersListA.length, queryResult.length)
+            await console.log(
+              'my Array data is ',
+              usersListA.length,
+              queryResult.length
+            )
             await setBookingReviewA(usersListA)
             await setBookingReviewCo(usersListA.length)
             await setQueryResult(usersListA)
           } else if (statusFil === 'agreement_pipeline') {
             await setAgreePipeA(usersListA)
             await setAgreePipeCo(usersListA.length)
-
-
           } else if (statusFil === 'sd_pipeline') {
             await setSdPipeA(usersListA)
             await setSdPipeCo(usersListA.length)
-
-
           } else if (statusFil === 'registered') {
             await setRegisteredA(usersListA)
             await setRegisteredCo(usersListA.length)
-
-
           } else if (statusFil === 'unassigned') {
             await setUnAssignedA(usersListA)
             await setUnAssignedCo(usersListA.length)
@@ -402,7 +414,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
         },
         {
           status: [statusFil],
-          projectId: selProjectIs?.uid
+          projectId: selProjectIs?.uid,
         },
         () => setCrmCustomerDBData([])
       )
@@ -555,6 +567,15 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                 </ul>
                 <div className="flex flex-row mr-4 mt-2">
                   <span
+                    className="flex mt-[4px] mr-[8px] justify-center items-center w-6 h-6 bg-gradient-to-r from-violet-200 to-pink-200 rounded-full  cursor-pointer "
+                    onClick={() => {
+                      console.log('chek it', horizontalMode)
+                      setHorizontalMode(!horizontalMode)
+                    }}
+                  >
+                    <PuzzleIcon className=" w-3 h-3" />
+                  </span>
+                  <span
                     className="flex mt-[4px] mr-[0px] justify-center items-center w-6 h-6 bg-gradient-to-r from-violet-200 to-pink-200 rounded-full  cursor-pointer "
                     onClick={() => {
                       setShowSettings(!showSettings)
@@ -697,7 +718,276 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                     <span className="text-lg font-bold app-color-black"></span>
                   </div>
 
+                  {selCategory === 'booked' && horizontalMode && (
+                    <ul>
+                      <li>
+                        {queryResult.map((finData, c) => {
+                          const {
+                            uid,
+                            assets,
+                            customerDetailsObj,
+                            customerName1,
+                            phoneNo1,
+                            unit_no,
+                            T_balance,
+                            T_elgible,
+                            T_review,
+                            T_captured,
+                            pId,
+                            projName,
+                          } = finData
+                          console.log('fin data is ', finData)
+                          return (
+                            <div
+                              key={c}
+                              className="w-3/12  relative  inline-block cursor-pointer"
+                              onClick={() =>
+                                viewTransaction(
+                                  finData,
+                                  'unit_information',
+                                  'unit_information'
+                                )
+                              }
+                            >
+                              <div className='m-1 pt- pb-3 bg-white rounded-lg border border-gray-200'>
+                              <section className="flex flex-row px-3  pt-2 justify-between">
+                                <div className="flex flex-row">
+                                  <section className="bg-violet-100  items-center rounded-2xl shadow-xs flex flex-col px-2 py-1">
+                                    <div className="font-semibold text-[#053219]  text-[22px]  mb-[1] tracking-wide">
+                                      {unit_no}
+                                    </div>
+                                    <span
+                                      className={`items-center h-6   text-xs font-semibold text-gray-500  rounded-full
+                      `}
+                                    >
+                                      Unit No
+                                    </span>
+                                  </section>
+                                  <div className="flex flex-col ml-2 item-right">
+                                    <span
+                                      className={`items-center h-1 mt-[6px] mb-2  text-xs font-semibold text-green-600
+                      `}
+                                    >
+                                      {customerDetailsObj?.customerName1 ||
+                                        'NA'}
+                                    </span>
+                                    <div className="font text-[12px] text-gray-500 tracking-wide overflow-ellipsis overflow-hidden ">
+                                      {projName}
+                                    </div>
+                                    <section>
+                                      <span className="  text-[10px] h-[20px]  text-[#005E36] font-bodyLato font-[600] mt-[2px] border border-[#ECFDF5] px-[6px] py-[2px] rounded-xl mr-1 ">
+                                        {finData?.area?.toLocaleString('en-IN')}{' '}
+                                        sqft
+                                      </span>
+
+                                      <span className="  text-[10px] h-[20px] text-[#005E36] font-bodyLato font-[600] mt-[2px] border border-[#ECFDF5] px-[6px] py-[2px] rounded-xl mr-1 ">
+                                        {finData?.facing}
+                                      </span>
+                                      {/* <span className=" text-[10px] h-[20px] text-[#823d00] font-bodyLato font-[600] mt-[2px] bg-[#ffeccf] px-[6px] py-[2px] rounded-xl mr-1 ">
+                                        ₹{' '}
+                                        {finData?.sqft_rate?.toLocaleString(
+                                          'en-IN'
+                                        )}
+                                        /sqft
+                                      </span> */}
+                                    </section>
+                                  </div>
+                                </div>
+
+                              </section>
+                              <div className='flex flex-row justify-between px-4 pt-4'>
+                              <section className="flex flex-col ">
+
+<div className="flex flex-row">
+ <div className="self-stretch text-zinc-500 text-sm font-medium font-['Lato'] tracking-wide">
+   Unit Cost
+ </div>
+ <div className="px-1  h-[19px] rounded justify-center items-center gap-2 flex">
+     <div className="text-right">
+       <span className="text-emerald-600 text-xs font-medium font-['Lato'] tracking-wide">
+         ▴{' '}
+       </span>
+       <span className="text-emerald-600 text-[9px] font-bold font-['Lato'] tracking-wide">
+       ₹{' '}
+   {finData?.sqft_rate?.toLocaleString(
+     'en-IN'
+   )}
+   /sqft{' '}
+       </span>
+     </div>
+   </div>
+ </div>
+ <div className="self-stretch justify-start items-center gap-3 inline-flex">
+   <div className="text-zinc-800 text-[20px] font-bold font-['Lato'] tracking-wide">
+   ₹
+ {(
+   (finData?.plotCS?.reduce(function (
+     _this,
+     val
+   ) {
+     return (
+       _this + val.TotalNetSaleValueGsT
+     )
+   },
+   0) || 0) +
+     finData?.addChargesCS?.reduce(
+       (partialSum, obj) =>
+         partialSum +
+         Number(
+           computeTotal(
+             obj,
+             finData?.super_built_up_area ||
+               finData?.area
+           )
+         ),
+       0
+     ) || 0
+ )?.toLocaleString('en-IN')}
+   </div>
+
+ </div>
+</section>
+
+<section className='flex flex-col mt-3'>
+                                    <div className=" text-zinc-500 text-[11px] font-normal font-['Lato'] tracking-wide">
+                                Balance    ₹
+                                        {finData?.T_elgible_balance?.toLocaleString(
+                                          'en-IN'
+                                        )}
+                              </div>
+                              <div className="text-zinc-500 text-[11px] font-normal font-['Lato'] tracking-wide">
+                                Paid:    ₹
+                                      {finData?.T_review?.toLocaleString(
+                                        'en-IN'
+                                      )}
+                              </div>
+                              </section>
+                              </div>
+
+                              <div className="flex flex-row mx-3 ml-4 pt-3">
+                                  {[{ item: 'Paid', value: 3 }].map(
+                                    (data, i) => (
+                                      <div
+                                        className=" w-3/4  "
+                                        style={{
+                                          display: 'inline-block',
+                                          alignSelf: 'flex-end',
+                                        }}
+                                        key={i}
+                                      >
+                                        <div className="">
+                                          <LinearProgress
+                                            sx={{
+                                              backgroundColor: 'white',
+                                              '& .MuiLinearProgress-bar': {
+                                                backgroundColor: '#cdc4f7',
+                                              },
+                                            }}
+                                            variant="determinate"
+                                            value={100}
+
+                                            style={{
+                                              backgroundColor: '#cdc4f7',
+                                              borderRadius: '3px',
+                                              borderTopRightRadius: '0px',
+                                              borderBottomRightRadius: '0px',
+                                              height: `${data.value}px`,
+                                              width: `100%`,
+                                            }}
+                                          />
+                                        </div>
+                                      </div>
+                                    )
+                                  )}
+                                  {[{ item: 'Due', value: 3 }].map(
+                                    (data, i) => (
+                                      <div
+                                        className=" w-2/4  "
+                                        style={{
+                                          display: 'inline-block',
+                                          alignSelf: 'flex-end',
+                                        }}
+                                        key={i}
+                                      >
+                                        <div className="">
+                                          <LinearProgress
+                                            sx={{
+                                              backgroundColor: 'white',
+                                              '& .MuiLinearProgress-bar': {
+                                                backgroundColor: '#F0F4F8',
+                                              },
+                                            }}
+                                            variant="determinate"
+                                            value={100}
+                                            style={{
+                                              backgroundColor: '#F0F4F8',
+                                              borderRadius: '3px',
+                                              borderTopLeftRadius: '0px',
+                                              borderBottomLeftRadius: '0px',
+                                              height: `${data.value}px`,
+                                              width: `100%`,
+                                            }}
+                                          />
+                                        </div>
+                                      </div>
+                                    )
+                                  )}
+                                </div>
+
+
+
+                              <div className="w-[253px] mx-4 left-[25px] mt-3 ml-4 justify-start items-center gap-2 inline-flex">
+                                <div className={`grow shrink basis-0 px-2.5 py-1.5 rounded-[16px] flex-col justify-center items-center gap-2 inline-flex ${
+                                      finData?.man_cs_approval == 'approved'
+                                        ? 'bg-green-100'
+                                        : finData?.man_cs_approval == 'rejected'
+                                        ? 'bg-[#ffdbdb]'
+                                        : 'bg-[#F1F5F9] '
+                                    }  p-3 rounded-md mx-1`}
+                                    style={{
+                                      display: 'inline-block',
+                                      alignSelf: 'flex-end',
+                                    }}>
+                                  <div className={`self-stretch h-4 text-center  text-xs font-medium tracking-wide`}  onClick={() => {
+                                      setSelUnitDetails(finData)
+                                      setIsSubTopicOpen(true)
+                                      setIsSubTopic('crm_cs_approval')
+                                    }}>
+                                    CS Approval
+                                  </div>
+                                </div>
+                                <div className={`grow shrink basis-0 px-2.5 py-1.5 bg-gray-200 rounded-[16px] flex-col justify-center items-center gap-2 inline-flex ${
+                                      finData?.kyc_status == 'approved'
+                                        ? 'bg-green-100'
+                                        : finData?.kyc_status == 'rejected'
+                                        ? 'bg-[#ffdbdb]'
+                                        : 'bg-[#F1F5F9] '
+                                    }  p-3 rounded-md mx-1`}
+                                    style={{
+                                      display: 'inline-block',
+                                      alignSelf: 'flex-end',
+                                    }}    onClick={() => {
+                                      setSelUnitDetails(finData)
+                                      setIsSubTopicOpen(true)
+                                      setIsSubTopic('crm_KYC')
+                                    }}>
+                                  <div className="self-stretch h-4 text-center text-zinc-800 text-xs font-medium font-['Lato'] tracking-wide"
+                                  >
+                                    KYC
+                                  </div>
+                                </div>
+                              </div>
+
+                              </div>
+
+                            </div>
+                          )
+                        })}{' '}
+                      </li>
+                    </ul>
+                  )}
                   {selCategory === 'booked' &&
+                    !horizontalMode &&
                     queryResult.map((finData, c) => {
                       const {
                         uid,
@@ -747,7 +1037,8 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                                 </span>
                                               )}
                                               <span className=" text-[10px] text-black font-[500] ml-[2px]">
-                                                Phase-{finData?.phaseId}
+                                                Phase-{finData?.phaseId}{' '}
+                                                {horizontalMode?.toString()}
                                               </span>
                                             </span>
                                           </section>
@@ -803,7 +1094,11 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                         </section>
                                         <span className=" text-[10px] h-[20px] text-[#823d00] font-bodyLato font-[600] mt-[2px] bg-[#ffeccf] px-[6px] py-[2px] rounded-xl mr-1 ">
                                           Booked:{' '}
-                                          {prettyDate(finData?.booked_on || finData?.ct || 0)}
+                                          {prettyDate(
+                                            finData?.booked_on ||
+                                              finData?.ct ||
+                                              0
+                                          )}
                                         </span>
                                         {/* <span className=" text-[8px] h-[18px] text-black font-bodyLato font-[600] mt-[2px] bg-[#ffeccf] px-[6px] py-[2px] rounded-xl mr-1 ">
                                         Status:{' '}
@@ -835,7 +1130,8 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                   <h6 className="font-bodyLato font-semibold text-xs m-1 text-right">
                                     <div>
                                       {' '}
-                                      ₹ {finData?.T_balance?.toLocaleString(
+                                      ₹{' '}
+                                      {finData?.T_balance?.toLocaleString(
                                         'en-IN'
                                       )}
                                       {/* {(
