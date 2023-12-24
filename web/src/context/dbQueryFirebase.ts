@@ -4669,3 +4669,22 @@ export const addUnitBankComputed = async (
   }
   return
 }
+
+
+export const addAgreegatedSalesValues = async (
+  orgId,
+  docId,
+data
+) => {
+
+  try {
+
+    const washingtonRef = doc(db, `${orgId}_sales_reports`, docId)
+    await updateDoc(washingtonRef, data)
+  } catch (error) {
+    console.log('error at addUnitBankComputed', error, data)
+      await setDoc(doc(db, `${orgId}_sales_reports`, docId), data)
+
+  }
+  return
+}

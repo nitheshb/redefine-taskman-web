@@ -749,122 +749,121 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                 )
                               }
                             >
-                              <div className='m-1 pt- pb-3 bg-white rounded-lg border border-gray-200'>
-                              <section className="flex flex-row px-3  pt-2 justify-between">
-                                <div className="flex flex-row">
-                                  <section className="bg-violet-100  items-center rounded-2xl shadow-xs flex flex-col px-2 py-1">
-                                    <div className="font-semibold text-[#053219]  text-[22px]  mb-[1] tracking-wide">
-                                      {unit_no}
-                                    </div>
-                                    <span
-                                      className={`items-center h-6   text-xs font-semibold text-gray-500  rounded-full
+                              <div className="m-1 pt- pb-3 bg-white rounded-lg border border-gray-200">
+                                <section className="flex flex-row px-3  pt-2 justify-between">
+                                  <div className="flex flex-row">
+                                    <section className="bg-violet-100  items-center rounded-2xl shadow-xs flex flex-col px-2 py-1">
+                                      <div className="font-semibold text-[#053219]  text-[22px]  mb-[1] tracking-wide">
+                                        {unit_no}
+                                      </div>
+                                      <span
+                                        className={`items-center h-6   text-xs font-semibold text-gray-500  rounded-full
                       `}
-                                    >
-                                      Unit No
-                                    </span>
-                                  </section>
-                                  <div className="flex flex-col ml-2 item-right">
-                                    <span
-                                      className={`items-center h-1 mt-[6px] mb-2  text-xs font-semibold text-green-600
-                      `}
-                                    >
-                                      {customerDetailsObj?.customerName1 ||
-                                        'NA'}
-                                    </span>
-                                    <div className="font text-[12px] text-gray-500 tracking-wide overflow-ellipsis overflow-hidden ">
-                                      {projName}
-                                    </div>
-                                    <section>
-                                      <span className="  text-[10px] h-[20px]  text-[#005E36] font-bodyLato font-[600] mt-[2px] border border-[#ECFDF5] px-[6px] py-[2px] rounded-xl mr-1 ">
-                                        {finData?.area?.toLocaleString('en-IN')}{' '}
-                                        sqft
+                                      >
+                                        Unit No
                                       </span>
+                                    </section>
+                                    <div className="flex flex-col ml-2 item-right">
+                                      <span
+                                        className={`items-center h-1 mt-[6px] mb-2  text-xs font-semibold text-green-600
+                      `}
+                                      >
+                                        {customerDetailsObj?.customerName1 ||
+                                          'NA'}
+                                      </span>
+                                      <div className="font text-[12px] text-gray-500 tracking-wide overflow-ellipsis overflow-hidden ">
+                                        {projName}
+                                      </div>
+                                      <section>
+                                        <span className="  text-[10px] h-[20px]  text-[#005E36] font-bodyLato font-[600] mt-[2px] border border-[#ECFDF5] px-[6px] py-[2px] rounded-xl mr-1 ">
+                                          {finData?.area?.toLocaleString(
+                                            'en-IN'
+                                          )}{' '}
+                                          sqft
+                                        </span>
 
-                                      <span className="  text-[10px] h-[20px] text-[#005E36] font-bodyLato font-[600] mt-[2px] border border-[#ECFDF5] px-[6px] py-[2px] rounded-xl mr-1 ">
-                                        {finData?.facing}
-                                      </span>
-                                      {/* <span className=" text-[10px] h-[20px] text-[#823d00] font-bodyLato font-[600] mt-[2px] bg-[#ffeccf] px-[6px] py-[2px] rounded-xl mr-1 ">
+                                        <span className="  text-[10px] h-[20px] text-[#005E36] font-bodyLato font-[600] mt-[2px] border border-[#ECFDF5] px-[6px] py-[2px] rounded-xl mr-1 ">
+                                          {finData?.facing}
+                                        </span>
+                                        {/* <span className=" text-[10px] h-[20px] text-[#823d00] font-bodyLato font-[600] mt-[2px] bg-[#ffeccf] px-[6px] py-[2px] rounded-xl mr-1 ">
                                         ₹{' '}
                                         {finData?.sqft_rate?.toLocaleString(
                                           'en-IN'
                                         )}
                                         /sqft
                                       </span> */}
-                                    </section>
+                                      </section>
+                                    </div>
                                   </div>
-                                </div>
+                                </section>
+                                <div className="flex flex-row justify-between px-4 pt-4">
+                                  <section className="flex flex-col ">
+                                    <div className="flex flex-row">
+                                      <div className="self-stretch text-zinc-500 text-sm font-medium font-['Lato'] tracking-wide">
+                                        Unit Cost
+                                      </div>
+                                      <div className="px-1  h-[19px] rounded justify-center items-center gap-2 flex">
+                                        <div className="text-right">
+                                          <span className="text-emerald-600 text-xs font-medium font-['Lato'] tracking-wide">
+                                            ▴{' '}
+                                          </span>
+                                          <span className="text-emerald-600 text-[9px] font-bold font-['Lato'] tracking-wide">
+                                            ₹{' '}
+                                            {finData?.sqft_rate?.toLocaleString(
+                                              'en-IN'
+                                            )}
+                                            /sqft{' '}
+                                          </span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div className="self-stretch justify-start items-center gap-3 inline-flex">
+                                      <div className="text-zinc-800 text-[20px] font-bold font-['Lato'] tracking-wide">
+                                        ₹
+                                        {(
+                                          (finData?.plotCS?.reduce(function (
+                                            _this,
+                                            val
+                                          ) {
+                                            return (
+                                              _this + val.TotalNetSaleValueGsT
+                                            )
+                                          },
+                                          0) || 0) +
+                                            finData?.addChargesCS?.reduce(
+                                              (partialSum, obj) =>
+                                                partialSum +
+                                                Number(
+                                                  computeTotal(
+                                                    obj,
+                                                    finData?.super_built_up_area ||
+                                                      finData?.area
+                                                  )
+                                                ),
+                                              0
+                                            ) || 0
+                                        )?.toLocaleString('en-IN')}
+                                      </div>
+                                    </div>
+                                  </section>
 
-                              </section>
-                              <div className='flex flex-row justify-between px-4 pt-4'>
-                              <section className="flex flex-col ">
-
-<div className="flex flex-row">
- <div className="self-stretch text-zinc-500 text-sm font-medium font-['Lato'] tracking-wide">
-   Unit Cost
- </div>
- <div className="px-1  h-[19px] rounded justify-center items-center gap-2 flex">
-     <div className="text-right">
-       <span className="text-emerald-600 text-xs font-medium font-['Lato'] tracking-wide">
-         ▴{' '}
-       </span>
-       <span className="text-emerald-600 text-[9px] font-bold font-['Lato'] tracking-wide">
-       ₹{' '}
-   {finData?.sqft_rate?.toLocaleString(
-     'en-IN'
-   )}
-   /sqft{' '}
-       </span>
-     </div>
-   </div>
- </div>
- <div className="self-stretch justify-start items-center gap-3 inline-flex">
-   <div className="text-zinc-800 text-[20px] font-bold font-['Lato'] tracking-wide">
-   ₹
- {(
-   (finData?.plotCS?.reduce(function (
-     _this,
-     val
-   ) {
-     return (
-       _this + val.TotalNetSaleValueGsT
-     )
-   },
-   0) || 0) +
-     finData?.addChargesCS?.reduce(
-       (partialSum, obj) =>
-         partialSum +
-         Number(
-           computeTotal(
-             obj,
-             finData?.super_built_up_area ||
-               finData?.area
-           )
-         ),
-       0
-     ) || 0
- )?.toLocaleString('en-IN')}
-   </div>
-
- </div>
-</section>
-
-<section className='flex flex-col mt-3'>
+                                  <section className="flex flex-col mt-3">
                                     <div className=" text-zinc-500 text-[11px] font-normal font-['Lato'] tracking-wide">
-                                Balance    ₹
-                                        {finData?.T_elgible_balance?.toLocaleString(
-                                          'en-IN'
-                                        )}
-                              </div>
-                              <div className="text-zinc-500 text-[11px] font-normal font-['Lato'] tracking-wide">
-                                Paid:    ₹
+                                      Balance ₹
+                                      {finData?.T_elgible_balance?.toLocaleString(
+                                        'en-IN'
+                                      )}
+                                    </div>
+                                    <div className="text-zinc-500 text-[11px] font-normal font-['Lato'] tracking-wide">
+                                      Paid: ₹
                                       {finData?.T_review?.toLocaleString(
                                         'en-IN'
                                       )}
-                              </div>
-                              </section>
-                              </div>
+                                    </div>
+                                  </section>
+                                </div>
 
-                              <div className="flex flex-row mx-3 ml-4 pt-3">
+                                <div className="flex flex-row mx-3 ml-4 pt-3">
                                   {[{ item: 'Paid', value: 3 }].map(
                                     (data, i) => (
                                       <div
@@ -885,7 +884,6 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                             }}
                                             variant="determinate"
                                             value={100}
-
                                             style={{
                                               backgroundColor: '#cdc4f7',
                                               borderRadius: '3px',
@@ -934,10 +932,9 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                   )}
                                 </div>
 
-
-
-                              <div className="w-[253px] mx-4 left-[25px] mt-3 ml-4 justify-start items-center gap-2 inline-flex">
-                                <div className={`grow shrink basis-0 px-2.5 py-1.5 rounded-[16px] flex-col justify-center items-center gap-2 inline-flex ${
+                                <div className="w-[253px] mx-4 left-[25px] mt-3 ml-4 justify-start items-center gap-2 inline-flex">
+                                  <div
+                                    className={`grow shrink basis-0 px-2.5 py-1.5 rounded-[16px] flex-col justify-center items-center gap-2 inline-flex ${
                                       finData?.man_cs_approval == 'approved'
                                         ? 'bg-green-100'
                                         : finData?.man_cs_approval == 'rejected'
@@ -947,16 +944,21 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                     style={{
                                       display: 'inline-block',
                                       alignSelf: 'flex-end',
-                                    }}>
-                                  <div className={`self-stretch h-4 text-center  text-xs font-medium tracking-wide`}  onClick={() => {
-                                      setSelUnitDetails(finData)
-                                      setIsSubTopicOpen(true)
-                                      setIsSubTopic('crm_cs_approval')
-                                    }}>
-                                    CS Approval
+                                    }}
+                                  >
+                                    <div
+                                      className={`self-stretch h-4 text-center  text-xs font-medium tracking-wide`}
+                                      onClick={() => {
+                                        setSelUnitDetails(finData)
+                                        setIsSubTopicOpen(true)
+                                        setIsSubTopic('crm_cs_approval')
+                                      }}
+                                    >
+                                      CS Approval
+                                    </div>
                                   </div>
-                                </div>
-                                <div className={`grow shrink basis-0 px-2.5 py-1.5 bg-gray-200 rounded-[16px] flex-col justify-center items-center gap-2 inline-flex ${
+                                  <div
+                                    className={`grow shrink basis-0 px-2.5 py-1.5 bg-gray-200 rounded-[16px] flex-col justify-center items-center gap-2 inline-flex ${
                                       finData?.kyc_status == 'approved'
                                         ? 'bg-green-100'
                                         : finData?.kyc_status == 'rejected'
@@ -966,20 +968,19 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                     style={{
                                       display: 'inline-block',
                                       alignSelf: 'flex-end',
-                                    }}    onClick={() => {
+                                    }}
+                                    onClick={() => {
                                       setSelUnitDetails(finData)
                                       setIsSubTopicOpen(true)
                                       setIsSubTopic('crm_KYC')
-                                    }}>
-                                  <div className="self-stretch h-4 text-center text-zinc-800 text-xs font-medium font-['Lato'] tracking-wide"
+                                    }}
                                   >
-                                    KYC
+                                    <div className="self-stretch h-4 text-center text-zinc-800 text-xs font-medium font-['Lato'] tracking-wide">
+                                      KYC
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-
-                              </div>
-
                             </div>
                           )
                         })}{' '}
@@ -1007,9 +1008,9 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                       return (
                         <section
                           key={c}
-                          className="border mb-1  shadow rounded-md  shadow bg-gradient-to-r from-[#d8daff] to-[#9ae8fd]"
+                          className="border mb-1  shadow rounded-md  shadow "
                         >
-                          <section className="flex flex-row bg-gradient-to-r from-[#d8daff] to-[#9ae8fd]">
+                          <section className="flex flex-row bg-gradient-to-r from-[#F2F3F8] to-[#F2F3F8]">
                             <div className="w-[387px]">
                               <div className="flex flex-row   ">
                                 <div
@@ -1026,7 +1027,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                   <section className="font-rubikF flex flex-row w-[100%] justify-between">
                                     <section className="flex flex-col ml-2 mt-[3px] w-[100%]">
                                       <section className="flex flex-row justify-between">
-                                        <section className="flex flex-col">
+                                        {/* <section className="flex flex-col">
                                           <section className="flex flex-row justify-between">
                                             <span className=" text-[14px] text-black font-[500] ml-[2px]">
                                               Unit-{unit_no}
@@ -1038,33 +1039,61 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                               )}
                                               <span className=" text-[10px] text-black font-[500] ml-[2px]">
                                                 Phase-{finData?.phaseId}{' '}
-                                                {horizontalMode?.toString()}
+
                                               </span>
                                             </span>
                                           </section>
                                           <span className=" text-[12px] text-[#036046] font-[400] ml-[2px]">
                                             {projName}
                                           </span>
-                                        </section>
-                                        <section className="flex flex-col mt-1 bg-[#f0f8ff] w-[40%] mr-2 rounded-lg p-[2px] px-2">
-                                          <div className=" text-[12px] text-black-900 font-[400] w-full">
-                                            {customerDetailsObj?.customerName1 ||
-                                              'NA'}
-                                          </div>
-                                          <section className="flex flex-row justify-between">
-                                            <span className=" text-[12px] text-black-500 font-[400]">
-                                              {customerDetailsObj?.phoneNo1 ||
-                                                'NA'}
-                                            </span>
-                                            <span className=" text-[10px] text-black font-[400] mt-[2px] ">
-                                              {/* {finData?.[`${assets[0]}_unitDetails`]
-                                          ?.unit_no || ''} */}
-                                              {/* {prettyDate(finData?.Date)} */}
+                                        </section> */}
+                                        <div className="flex flex-row w-full">
+                                          <section className="bg-violet-100  items-center rounded-2xl shadow-xs flex flex-col px-2 py-1 min-w-[100px]">
+                                            <div className="font-semibold text-[#053219]  text-[22px]  mb-[1] tracking-wide">
+                                              {unit_no}
+                                            </div>
+                                            <span
+                                              className={`items-center h-6   text-xs font-semibold text-gray-500  rounded-full
+                      `}
+                                            >
+                                              Unit No
                                             </span>
                                           </section>
-                                        </section>
+                                          <div className="flex flex-col w-full  ml-2 item-right bg-[#f0f8ff]  px-2  mr-2 rounded-lg">
+                                            <span
+                                              className={`items-center h-1 mt-[6px] mb-2  text-xs font-semibold text-green-600
+                      `}
+                                            >
+                                              {customerDetailsObj?.customerName1 ||
+                                                'NA'}
+                                            </span>
+                                            <div className="font text-[12px] text-gray-500 tracking-wide overflow-ellipsis overflow-hidden ">
+                                              {projName}
+                                            </div>
+                                            <section>
+                                              <span className="  text-[10px] h-[20px]  text-[#005E36] font-bodyLato font-[600] mt-[2px] border border-[#ECFDF5] px-[6px] py-[2px] rounded-xl mr-1 ">
+                                                {finData?.area?.toLocaleString(
+                                                  'en-IN'
+                                                )}{' '}
+                                                sqft
+                                              </span>
+
+                                              <span className="  text-[10px] h-[20px] text-[#005E36] font-bodyLato font-[600] mt-[2px] border border-[#ECFDF5] px-[6px] py-[2px] rounded-xl mr-1 ">
+                                                {finData?.facing}
+                                              </span>
+                                              {/* <span className=" text-[10px] h-[20px] text-[#823d00] font-bodyLato font-[600] mt-[2px] bg-[#ffeccf] px-[6px] py-[2px] rounded-xl mr-1 ">
+                                        ₹{' '}
+                                        {finData?.sqft_rate?.toLocaleString(
+                                          'en-IN'
+                                        )}
+                                        /sqft
+                                      </span> */}
+                                            </section>
+                                          </div>
+                                        </div>
                                       </section>
-                                      <section className="flex flex-row mt-3 justify-between ">
+
+                                      <section className="flex flex-row mt-3  ">
                                         {/* <span className=" text-[10px] h-[20px]  text-[#823d00] font-bodyLato font-[600] mt-[2px] bg-[#ffeccf] px-[6px] py-[2px] rounded-xl  mr-1">
                                           {finData?.unit_type}
 
@@ -1113,28 +1142,31 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                 </div>
                               </div>
                             </div>
+                            {/* check it  */}
                             <div>
-                              <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2 min-w-[200px] mr-2">
-                                <div className="flex flex-row justify-between mx-">
-                                  <h6 className="font-bodyLato font-semibold text-xs m-1">
-                                    <div>
+                              <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2 min-w-[244px] justify-between mx-2">
+                                <div className="flex flex-row justify-between mx- mb-2">
+                                  <section className="font-bodyLato font-semibold text-xs m-1 w-full">
+                                    <div className="text-zinc-500 text-sm font-medium font-['Lato'] tracking-wide">
+                                      Unit Cost
+                                    </div>
+                                    <div className="text-zinc-800 text-[20px] font-bold font-['Lato'] tracking-wide">
                                       ₹
                                       {finData?.T_review?.toLocaleString(
                                         'en-IN'
                                       ) || 0}
                                     </div>
-                                    <span className="text-[#637381] tracking-wide font-thin">
-                                      Paid:
-                                    </span>
-                                  </h6>
-                                  <h6 className="font-bodyLato font-semibold text-xs m-1 text-right">
-                                    <div>
-                                      {' '}
-                                      ₹{' '}
+                                  </section>
+                                  <section className="flex flex-col mt-3 w-full">
+                                    <div className="flex flex-row text-zinc-500 text-[11px] font-normal font-['Lato'] tracking-wide">
+                                      Balance ₹
                                       {finData?.T_balance?.toLocaleString(
                                         'en-IN'
                                       )}
-                                      {/* {(
+                                    </div>
+                                    <div className="text-zinc-500 text-[11px] font-normal font-['Lato'] tracking-wide">
+                                      Paid: ₹
+                                      {(
                                         (finData?.plotCS?.reduce(function (
                                           _this,
                                           val
@@ -1143,13 +1175,22 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                             _this + val.TotalNetSaleValueGsT
                                           )
                                         },
-                                        0) || 0) - finData?.T_review
-                                      )?.toLocaleString('en-IN') || 0} */}
+                                        0) || 0) +
+                                          finData?.addChargesCS?.reduce(
+                                            (partialSum, obj) =>
+                                              partialSum +
+                                              Number(
+                                                computeTotal(
+                                                  obj,
+                                                  finData?.super_built_up_area ||
+                                                    finData?.area
+                                                )
+                                              ),
+                                            0
+                                          ) || 0
+                                      )?.toLocaleString('en-IN')}
                                     </div>
-                                    <span className="text-[#637381] tracking-wide font-thin text-right">
-                                      Left:
-                                    </span>
-                                  </h6>
+                                  </section>
                                 </div>
                                 <div className="flex flex-row mx-1 pt-">
                                   {[{ item: 'Paid', value: 3 }].map(
@@ -1218,44 +1259,6 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       </div>
                                     )
                                   )}
-                                </div>
-                                <div className="flex flex-row justify-between mx-">
-                                  <h6 className="font-bodyLato font-semibold text-xs m-1"></h6>
-                                  <section className="flex flex-row">
-                                    {/* <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
-                {selCustomerPayload?.T_elgible?.toLocaleString('en-IN')}
-              </h6> */}
-
-                                    <h6 className="font-bodyLato font-semibold text-xs m-1">
-                                      <span className="text-[#637381] tracking-wide font-thin">
-                                        Total Cost :
-                                      </span>{' '}
-                                      ₹
-                                      {(
-                                        (finData?.plotCS?.reduce(function (
-                                          _this,
-                                          val
-                                        ) {
-                                          return (
-                                            _this + val.TotalNetSaleValueGsT
-                                          )
-                                        },
-                                        0) || 0) +
-                                          finData?.addChargesCS?.reduce(
-                                            (partialSum, obj) =>
-                                              partialSum +
-                                              Number(
-                                                computeTotal(
-                                                  obj,
-                                                  finData?.super_built_up_area ||
-                                                    finData?.area
-                                                )
-                                              ),
-                                            0
-                                          ) || 0
-                                      )?.toLocaleString('en-IN')}
-                                    </h6>
-                                  </section>
                                 </div>
                               </div>
                             </div>

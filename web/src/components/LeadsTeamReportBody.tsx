@@ -19,6 +19,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from 'recharts'
 
 import { sourceList, sourceListItems } from 'src/constants/projects'
 import {
+  addAgreegatedSalesValues,
   getAllProjects,
   getEmployeesListDept,
   getEmployeesTaskProgressDept,
@@ -354,6 +355,12 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
     }
   }, [usersList, leadsFetchedRawData, selProjectEmpIs])
 
+
+  const updateAgreegatedValues = async ()=> {
+    projectFilList.map((data)=> {
+      addAgreegatedSalesValues(orgId, data?.uid, data)
+    })
+  }
   const showAllEmpTodayActivity = async () => {
     const todaydate = new Date()
     console.log('employee list is ', usersCleanList)
@@ -1339,6 +1346,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                     >
                       <div>Performance by Lead Created Date</div>
                       <div className="flex flex-row">
+                        <div className="mt-3 mr-2 cursor-pointer" onClick={()=> updateAgreegatedValues()}>Calculate</div>
                         <div>
                           <SlimDateSelectBox
                             onChange={async (value) => {

@@ -176,7 +176,7 @@ const SlimSideMenuBar = (props) => {
                     </svg>
                   </span>
                   <span className="text-[9px] font-bold  pl-1">
-                    Book
+                    Units
                   </span>
                 </span>
               </span>

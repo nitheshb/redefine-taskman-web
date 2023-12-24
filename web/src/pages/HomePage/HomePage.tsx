@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import { EyeIcon, PencilIcon } from '@heroicons/react/outline'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
+import CountUp from 'react-countup'
+import NumberFormat from 'react-number-format'
 
 import { usePageLoadingContext } from '@redwoodjs/router'
 import { Link, routes } from '@redwoodjs/router'
@@ -14,6 +16,8 @@ import ProjectReportsBody from 'src/components/A_ProjModule/ProjectReports'
 import ProjectsTaskHome from 'src/components/A_ProjModule/ProjTaskHome'
 import SlimSideMenuBar from 'src/components/A_SideMenu/slimSideMenu'
 import AllBankDetailsView from 'src/components/All_BankDetailsView'
+import { CountUpComp } from 'src/components/comps/countUpComp'
+import { IndianCurrencyCounter } from 'src/components/comps/countUpRupeeComp'
 import HeadSideBarDetailView from 'src/components/HeadDetailSideBar'
 import HeadSideBarDetailView2 from 'src/components/HeadDetailSideBar2'
 import HeadNavBar2 from 'src/components/HeadNavBar/HeadNavBar2'
@@ -474,14 +478,17 @@ const HomePage = () => {
                               viewable != 'unitsInventory' && (
                                 <>
                                   <section className="bg-white py-4 px-4 flex flex-row rounded-sm">
-                                    <section className="w-[33%]">
+                                    <section className="w-[25%]">
                                       <span className="text-slate-600 text-lg font-medium">
                                         Projects
                                       </span>
                                       <div className="w-[299.02px] h-[0px] border border-stone-300 mt-2"></div>
                                       <section className="flex flex-row">
                                         <div className="text-sky-950 text-5xl font-semibold font-['Manrope'] leading-[80px]">
-                                          08
+                                          {/* {projects?.length} */}
+                                          <CountUpComp
+                                            value={projects?.length}
+                                          />
                                         </div>
                                         <div className="text-slate-400 text-lg font-medium font-['Inter'] leading-[30px] mt-8 ml-2">
                                           Projects
@@ -500,7 +507,14 @@ const HomePage = () => {
                                             <div className="flex flex-row">
                                               <div className="w-3.5 h-3.5 bg-emerald-500 mt-[9px]" />
                                               <div className="text-sky-950 text-2xl font-semibold font-['Manrope'] ml-3">
-                                                05
+                                                <CountUpComp
+                                                  value={
+                                                    projects.filter(
+                                                      (log) =>
+                                                        log.status == 'ongoing'
+                                                    ).length
+                                                  }
+                                                />
                                               </div>
                                               <div className="text-slate-400  font-medium font-['Inter'] text-[12px] ml-[2px] mt-[10px]">
                                                 On Going
@@ -510,7 +524,12 @@ const HomePage = () => {
                                             <div className="flex flex-row mt-3">
                                               <div className="w-3.5 h-3.5 bg-violet-500 mt-[9px]" />
                                               <div className="text-sky-950 text-2xl font-semibold font-['Manrope'] ml-3">
-                                                03
+                                                {
+                                                  projects.filter(
+                                                    (log) =>
+                                                      log.status == 'completed'
+                                                  ).length
+                                                }
                                               </div>
                                               <div className="text-slate-400  font-medium font-['Inter']  text-[12px] ml-[2px] mt-[10px]">
                                                 Completed
@@ -519,7 +538,12 @@ const HomePage = () => {
                                             <div className="flex flex-row mt-3">
                                               <div className="w-3.5 h-3.5 bg-cyan-400 mt-[9px]" />
                                               <div className="text-sky-950 text-2xl font-semibold font-['Manrope'] ml-3">
-                                                01
+                                                {
+                                                  projects.filter(
+                                                    (log) =>
+                                                      log.status != 'ongoing'
+                                                  ).length
+                                                }
                                               </div>
                                               <div className="text-slate-400  font-medium font-['Inter']  text-[12px] ml-[2px] mt-[10px]">
                                                 Coming Soon
@@ -530,14 +554,21 @@ const HomePage = () => {
                                       </section>
                                     </section>
                                     {/* Assets */}
-                                    <section className="mx-3 w-[33%]">
+                                    <section className="mx-3 w-[25%]">
                                       <span className="text-slate-600 text-lg font-medium ">
                                         Units
                                       </span>
                                       <div className="w-[299.02px] h-[0px] border border-stone-300 mt-2"></div>
                                       <section className="flex flex-row">
                                         <div className="text-sky-950 text-5xl font-semibold font-['Manrope'] leading-[80px]">
-                                          5000
+                                          <CountUpComp
+                                            value={projects.reduce(
+                                              (acc, project) =>
+                                                acc +
+                                                (project?.totalUnitCount || 0),
+                                              0
+                                            )}
+                                          />
                                         </div>
                                         <div className="text-slate-400 text-lg font-medium font-['Inter'] leading-[30px] mt-8 ml-2">
                                           Units
@@ -555,7 +586,18 @@ const HomePage = () => {
                                           <div className="flex flex-row">
                                             <div className="w-3.5 h-3.5 bg-emerald-500 mt-[9px]" />
                                             <div className="text-sky-950 text-2xl font-semibold font-['Manrope'] ml-3">
-                                              05
+                                              <CountUpComp
+                                              value={projects.reduce(
+                                                (acc, project) =>
+                                                {
+                                                  if (project?.projectType?.name === 'Plots') {
+                                                    return acc + (project.totalUnitCount || 0);
+                                                  }
+                                                  return acc;
+                                                },
+                                                0
+                                              )}
+                                            />
                                             </div>
                                             <div className="text-slate-400  font-medium font-['Inter'] text-[12px] ml-[2px] mt-[10px]">
                                               Plots
@@ -565,7 +607,18 @@ const HomePage = () => {
                                           <div className="flex flex-row mt-3">
                                             <div className="w-3.5 h-3.5 bg-violet-500 mt-[9px]" />
                                             <div className="text-sky-950 text-2xl font-semibold font-['Manrope'] ml-3">
-                                              03
+                                            <CountUpComp
+                                              value={projects.reduce(
+                                                (acc, project) =>
+                                                {
+                                                  if (project?.projectType?.name === 'Apartment') {
+                                                    return acc + (project.totalUnitCount || 0);
+                                                  }
+                                                  return acc;
+                                                },
+                                                0
+                                              )}
+                                            />
                                             </div>
                                             <div className="text-slate-400  font-medium font-['Inter']  text-[12px] ml-[2px] mt-[10px]">
                                               Apartments
@@ -574,7 +627,18 @@ const HomePage = () => {
                                           <div className="flex flex-row mt-3">
                                             <div className="w-3.5 h-3.5 bg-cyan-400 mt-[9px]" />
                                             <div className="text-sky-950 text-2xl font-semibold font-['Manrope'] ml-3">
-                                              03
+                                            <CountUpComp
+                                              value={projects.reduce(
+                                                (acc, project) =>
+                                                {
+                                                  if (project?.projectType?.name === 'Villas') {
+                                                    return acc + (project.totalUnitCount || 0);
+                                                  }
+                                                  return acc;
+                                                },
+                                                0
+                                              )}
+                                            />
                                             </div>
                                             <div className="text-slate-400  font-medium font-['Inter']  text-[12px] ml-[2px] mt-[10px]">
                                               Villas
@@ -583,15 +647,104 @@ const HomePage = () => {
                                         </section>
                                       </section>
                                     </section>
+                                            {/* Assets */}
+                                            <section className="mx-3 w-[25%]">
+                                      <span className="text-slate-600 text-lg font-medium ">
+                                        Units
+                                      </span>
+                                      <div className="w-[299.02px] h-[0px] border border-stone-300 mt-2"></div>
+                                      <section className="flex flex-row">
+                                        <div className="text-sky-950 text-5xl font-semibold font-['Manrope'] leading-[80px]">
+                                          <CountUpComp
+                                             value={projects.reduce(
+                                              (acc, project) =>
+                                                acc +
+                                                (project?.availableCount || 0),
+                                              0
+                                            )}
+                                          />
+                                        </div>
+                                        <div className="text-slate-400 text-lg font-medium font-['Inter'] leading-[30px] mt-8 ml-2">
+                                          Available
+                                        </div>
+                                      </section>
+
+                                      <section className="flex flex-row pl-1">
+                                        <section className="flex flex-col">
+                                          <div className="w-[21px] h-[21px] bg-emerald-500" />
+                                          <div className="w-[21px] h-[38px] bg-violet-500" />
+                                          <div className="w-[21px] h-[70px] bg-cyan-400" />
+                                        </section>
+
+                                        <section className="ml-6">
+                                          <div className="flex flex-row">
+                                            <div className="w-3.5 h-3.5 bg-emerald-500 mt-[9px]" />
+                                            <div className="text-sky-950 text-2xl font-semibold font-['Manrope'] ml-3">
+                                            <CountUpComp
+                                             value={projects.reduce(
+                                              (acc, project) =>
+                                                acc +
+                                                (project?.soldUnitCount || 0),
+                                              0
+                                            )}
+                                            />
+                                            </div>
+                                            <div className="text-slate-400  font-medium font-['Inter'] text-[12px] ml-[2px] mt-[10px]">
+                                              Sold
+                                            </div>
+                                          </div>
+
+                                          <div className="flex flex-row mt-3">
+                                            <div className="w-3.5 h-3.5 bg-violet-500 mt-[9px]" />
+                                            <div className="text-sky-950 text-2xl font-semibold font-['Manrope'] ml-3">
+                                            <CountUpComp
+                                             value={projects.reduce(
+                                              (acc, project) =>
+                                                acc +
+                                                (project?.bookUnitCount || 0),
+                                              0
+                                            )}
+                                            />
+                                            </div>
+                                            <div className="text-slate-400  font-medium font-['Inter']  text-[12px] ml-[2px] mt-[10px]">
+                                              Booked
+                                            </div>
+                                          </div>
+                                          <div className="flex flex-row mt-3">
+                                            <div className="w-3.5 h-3.5 bg-cyan-400 mt-[9px]" />
+                                            <div className="text-sky-950 text-2xl font-semibold font-['Manrope'] ml-3">
+                                            <CountUpComp
+                                             value={projects.reduce(
+                                              (acc, project) =>
+                                                acc +
+                                                (project?.blockedUnitCount || 0),
+                                              0
+                                            )}
+                                            />
+                                            </div>
+                                            <div className="text-slate-400  font-medium font-['Inter']  text-[12px] ml-[2px] mt-[10px]">
+                                              Blocked
+                                            </div>
+                                          </div>
+                                        </section>
+                                      </section>
+                                    </section>
                                     {/* Assets */}
-                                    <section className="mx-3 w-[33%]">
+                                    <section className="mx-3 w-[25%]">
                                       <span className="text-slate-600 text-lg font-medium ">
                                         Portfolio
                                       </span>
                                       <div className="w-[299.02px] h-[0px] border border-stone-300 mt-2"></div>
                                       <section className="flex flex-row">
                                         <div className="text-sky-950 text-5xl font-semibold font-['Manrope'] leading-[80px]">
-                                          2400
+                                        <CountUpComp
+                                            value={projects.reduce(
+                                              (acc, project) =>
+                                                acc +
+                                                (project?.soldUnitCount || 0),
+                                              0
+                                            )}
+                                          />
                                         </div>
                                         <div className="text-slate-400 text-lg font-medium font-['Inter'] leading-[30px] mt-8 ml-2">
                                           Customers

@@ -38,6 +38,7 @@ import CircleBar from './CircleBar'
 import ReportBars from './ReportBars'
 import TransactionCard from './TransactionCard'
 import UnitStatusCardReport from './UnitStatusCardReport'
+import { CountUpComp } from 'src/components/comps/countUpComp'
 
 const CrmAnalyticsUnitHome = ({ project }) => {
   const theme = useTheme()
@@ -65,6 +66,7 @@ const CrmAnalyticsUnitHome = ({ project }) => {
     holdArea,
     totalUnitCount,
     soldUnitCount,
+    blockedUnitCount,
     availableCount,
     bookUnitCount,
     blockUnitCount,
@@ -226,18 +228,18 @@ const CrmAnalyticsUnitHome = ({ project }) => {
             </div>
             <div className="px-4 mb-4 ">
               {[
-                { item: 'Sold', value: 52, sqft: 72851, bua: 127195, price: 0 },
+                { item: 'Sold', value: soldUnitCount || 0, sqft: 72851, bua: 127195, price: 0 },
                 {
                   item: 'Available',
-                  value: 14,
+                  value: availableCount || 0,
                   sqft: 21355,
                   bua: 37051,
                   price: 0,
                 },
-                { item: 'Blocked', value: 1, sqft: 2312, bua: 3127, price: 0 },
+                { item: 'Blocked', value:  blockedUnitCount || 0, sqft: 2312, bua: 3127, price: 0 },
                 {
                   item: 'Management Blocked',
-                  value: 18,
+                  value: blockedUnitCount || 0 ,
                   sqft: 28903,
                   bua: 41612,
                   price: 0,
@@ -253,7 +255,9 @@ const CrmAnalyticsUnitHome = ({ project }) => {
                         {/* {userTodayPerfA?.followup_comp || 0}/{userTodayPerfA?.followup} */}
                         <section className="leading-[0px]">
                           <span className="font-light text-xs ">
-                            {data?.value} Units - {data?.sqft} sqft
+                          <CountUpComp
+                                            value={data?.value}
+                                          /> Units - {data?.sqft} sqft
                           </span>
                         </section>
                       </span>

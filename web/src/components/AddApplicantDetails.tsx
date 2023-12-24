@@ -428,6 +428,14 @@ const AddApplicantDetails = ({
     setFormMessage('')
   }
 
+  const setRefDataFun_1 = (x) => {
+    console.log('hello', x)
+    // setRefDataFun1({
+    //   label: 'W/O',
+    //   value: 'W/O',
+    // })
+  }
+
   const onSubmit = async (data, resetForm) => {
     console.log('customer details form', data)
     const {
@@ -631,30 +639,17 @@ const AddApplicantDetails = ({
                           <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-[#F9FBFB] border-0">
                             <div className="flex-auto">
                               <section className=" lg:px-2 py-2">
-                                <div className="flex flex-wrap">
-                                  <section
-                                    className="w-full flex flex-col  p-4 rounded-md   bg-[#fff]"
-                                    style={{ boxShadow: '0 1px 12px #f2f2f2' }}
-                                  >
-                                    <div className="w-full  flex flex-row">
-                                      <div className="w-[63.80px] h-[57px] bg-zinc-100 rounded-[5px]"></div>
-                                      <div className="w-full flex flex-col ml-3">
+                                <div className="flex flex-row gap-1">
 
-                                        <h6 className="w-full lg:w-12/12 text-blueGray-400 text-[13px] mt-[9px] mb- font-bold uppercase">
-                                        Primary Customer Details
-
-                                        </h6>
-                                        <div className="w-[455.80px] opacity-50 text-blue-950  text-[12px] font-normal ">
-                                          Add customer details to use in agreeement & registration.
-                                        </div>
-                                      </div>
-                                    </div>
-
-                                    <section className="flex flex-row mt-6">
-                                      <div className="w-full lg:w-6/12 pr-4  pl-1  mt-[6px] ">
-
-                                        <div className="flex flex-wrap">
-                                          <div className="w-full lg:w-12/12 ">
+                              <section
+                                  className="rounded-md  p-4 bg-[#fff] lg:w-6/12"
+                                  style={{ boxShadow: '0 1px 12px #f2f2f2' }}
+                                >
+                                  <h6 className="text-blueGray-400 text-[13px] mt-3 mb-6 font-bold uppercase">
+                                    Applicant
+                                  </h6>
+                                  <div className="flex flex-wrap">
+                                  <div className="w-full lg:w-12/12 ">
                                             <div className="relative w-full mb-3 mt-2">
                                               <TextField2
                                                 label="Customer Name*"
@@ -665,7 +660,7 @@ const AddApplicantDetails = ({
                                           </div>
 
                                           <div className="w-full  flex flex-row lg:w-12/12">
-                                            <section className="mt-4 h-[33px] border-b border-gray-500">
+                                            <section className="mt- h-[33px] border-b border-gray-500">
                                               <NoBorderDropDown
                                                 options={[
                                                   {
@@ -681,7 +676,7 @@ const AddApplicantDetails = ({
                                                     value: 'W/O',
                                                   },
                                                 ]}
-                                                setRefDropFun={setRefDataFun1}
+                                                setRefDropFun={setRefDataFun_1}
                                                 selRefDrop={selRef1}
                                               />
                                             </section>
@@ -693,6 +688,7 @@ const AddApplicantDetails = ({
                                               />
                                             </div>
                                           </div>
+                                          <div className="w-full  flex flex-row lg:w-12/12">
                                           <div className="w-full lg:w-4/12 px- mt-4">
                                             <div className="relative w-full mb-3 mt-2">
                                               <PhoneNoField2
@@ -721,12 +717,11 @@ const AddApplicantDetails = ({
                                               />
                                             </div>
                                           </div>
-                                        </div>
-                                      </div>
-                                      <div className="w-full lg:w-6/12 px-4 ">
-
-                                        <div className="flex flex-wrap">
-                                          <div className="w-full lg:w-6/12 mt-[px] ">
+                                          </div>
+{/* col dob etc */}
+                                          <div>
+                                          <div className="flex flex-wrap mt-3">
+                                          <div className="w-full lg:w-8/12 mt-[px] ">
                                             <div className="relative w-full mb-3 ">
                                               <label
                                                 htmlFor={'dob1'}
@@ -736,7 +731,7 @@ const AddApplicantDetails = ({
                                               </label>
                                               <span className="inline">
                                                 <DatePicker
-                                                  className="h-8 outline-none border-t-0 border-l-0 border-r-0 border-gray-500 text-sm mt-[-4px] pb-1  min-w-[125px]  inline     lg:w-4/12 w-full flex bg-grey-lighter text-grey-darker border border-gray-500 "
+                                                  className="h-8 outline-none border-t-0 border-l-0 border-r-0 border-gray-500 text-sm mt-[-4px] pb-1  min-w-[125px]  inline     lg:w-8/12 w-full flex bg-grey-lighter text-grey-darker border border-gray-500 "
                                                   label="Dated"
                                                   name="dob1"
                                                   selected={formik.values.dob2}
@@ -769,7 +764,7 @@ const AddApplicantDetails = ({
                                             </div>
                                           </div>
 
-                                          <div className="w-full lg:w-6/12 pl-4 ">
+                                          <div className="w-full lg:w-4/12 pl-4 ">
                                             <section className="mt-4">
                                               <NoBorderDropDown
                                                 options={[
@@ -800,9 +795,19 @@ const AddApplicantDetails = ({
                                             </section>
                                           </div>
                                         </div>
+
+                                        <div className="w-full lg:w-12/12 ">
+                                            <div className="relative w-full mb-3 mt-2">
+                                              <TextField2
+                                                label="Address"
+                                                name="address1"
+                                                type="text"
+                                              />
+                                            </div>
+                                          </div>
                                         <div className="w-full flex flex-row">
                                           <div className="  px-">
-                                            <div className="relative w-[130px] mb-3 mt-2">
+                                            <div className="relative w-[160px] mb-3 mt-2">
                                               <TextField2
                                                 label="PAN No"
                                                 name="panNo1"
@@ -810,7 +815,7 @@ const AddApplicantDetails = ({
                                               />
                                             </div>
                                           </div>
-                                          <div className=" border-b border-gray-500 mb-[12px]">
+                                          <div className=" border-b border-gray-500 mb-[12px] ">
                                             <div className=" min-w-[140px] mt-3">
                                               <div className='flex flex-row-reverse'>
                                                 <label
@@ -867,7 +872,7 @@ const AddApplicantDetails = ({
                                           </div>
                                         </div> */}
                                           <div className=" ">
-                                            <div className="relative w-[130px] mb-3 mt-2">
+                                            <div className="relative w-[160px] mb-3 mt-2">
                                               <TextField2
                                                 label="Aadhar No"
                                                 name="aadharNo1"
@@ -875,7 +880,7 @@ const AddApplicantDetails = ({
                                               />
                                             </div>
                                           </div>
-                                          <div className='border-b border-gray-500 mb-[12px]'>
+                                          <div className='border-b border-gray-500 mb-[12px] '>
                                             <div className=" min-w-[140px] mt-3">
                                               <div className=" flex flex-row-reverse">
                                                 <label
@@ -924,35 +929,55 @@ const AddApplicantDetails = ({
                                             </div>
                                           </div>
                                         </div>
-                                      </div>
-                                    </section>
-                                  </section>
-                                  <section
-                                    className="w-full flex flex-col  p-4 rounded-md  mt-2  bg-[#fff]"
-                                    style={{ boxShadow: '0 1px 12px #f2f2f2' }}
-                                  >
-                                    <div className="w-full  flex flex-row">
-                                      <div className="w-[63.80px] h-[57px] bg-zinc-100 rounded-[5px]"></div>
-                                      <div className="w-full flex flex-col ml-3">
 
-                                        <h6 className="w-full lg:w-12/12 text-blueGray-400 text-[13px] mt-[9px] mb- font-bold uppercase">
-                                        Secondary Customer Details
-
-                                        </h6>
-                                        <div className="w-[455.80px] opacity-50 text-blue-950  text-[12px] font-normal ">
-                                          Add customer details to use in agreeement & registration.
-                                        </div>
+                                        <section className="w-full flex flex-row mt-4">
+                                          <div className="w-full lg:w-6/12">
+                                      <div className="relative w-full mb-3">
+                                        <TextField2
+                                          label="Job Designation"
+                                          name="designation"
+                                          type="text"
+                                        />
                                       </div>
                                     </div>
+                                    <div className="w-full lg:w-6/12 pl-3">
+                                      <div className="relative w-full mb-3">
+                                        <TextField2
+                                          label="Annual Income"
+                                          name="annualIncome"
+                                          type="text"
+                                        />
+                                      </div>
+                                    </div>
+                                          </section>
+                                          </div>
 
-                                    <section className="flex flex-row mt-6">
-                                      <div className="w-full lg:w-6/12 pr-4  pl-1  mt-[6px] ">
 
-                                        <div className="flex flex-wrap">
-                                          <div className="w-full lg:w-12/12 ">
+                                  </div>
+                                </section>
+{/* section-2 */}
+<section
+                                  className="rounded-md  p-4  bg-[#fff] lg:w-6/12"
+                                  style={{ boxShadow: '0 1px 12px #f2f2f2' }}
+                                >
+                                         <div className="w-full  flex flex-row mb-2">
+                                      <div className="w-[43.80px] h-[47px] bg-zinc-100 rounded-[5px]"></div>
+                                  <div className="w-full flex flex-col">
+
+<h6 className="w-full lg:w-12/12 text-blueGray-400 text-[13px] mt-[9px] mb- font-bold uppercase">
+Co-applicant
+
+</h6>
+<div className="w-[455.80px] opacity-50 text-blue-950  text-[12px] font-normal ">
+  Details of co-applicant is not a mandatory
+</div>
+</div>
+</div>
+                                  <div className="flex flex-wrap">
+                                  <div className="w-full lg:w-12/12 ">
                                             <div className="relative w-full mb-3 mt-2">
                                               <TextField2
-                                                label="Customer Name*"
+                                                label="Co-applicant Name*"
                                                 name="customerName2"
                                                 type="text"
                                               />
@@ -988,6 +1013,7 @@ const AddApplicantDetails = ({
                                               />
                                             </div>
                                           </div>
+                                          <div className="w-full  flex flex-row lg:w-12/12">
                                           <div className="w-full lg:w-4/12 px- mt-4">
                                             <div className="relative w-full mb-3 mt-2">
                                               <PhoneNoField2
@@ -1016,12 +1042,11 @@ const AddApplicantDetails = ({
                                               />
                                             </div>
                                           </div>
-                                        </div>
-                                      </div>
-                                      <div className="w-full lg:w-6/12 px-4 ">
-
-                                        <div className="flex flex-wrap">
-                                          <div className="w-full lg:w-6/12 mt-[px] ">
+                                          </div>
+{/* col dob etc */}
+                                          <div>
+                                          <div className="flex flex-wrap mt-3">
+                                          <div className="w-full lg:w-8/12 mt-[px] ">
                                             <div className="relative w-full mb-3 ">
                                               <label
                                                 htmlFor={'dob2'}
@@ -1031,7 +1056,7 @@ const AddApplicantDetails = ({
                                               </label>
                                               <span className="inline">
                                                 <DatePicker
-                                                  className="h-8 outline-none border-t-0 border-l-0 border-r-0 border-gray-500 text-sm mt-[-4px] pb-1  min-w-[125px]  inline     lg:w-4/12 w-full flex bg-grey-lighter text-grey-darker border border-gray-500 "
+                                                  className="h-8 outline-none border-t-0 border-l-0 border-r-0 border-gray-500 text-sm mt-[-4px] pb-1  min-w-[125px]  inline     lg:w-8/12 w-full flex bg-grey-lighter text-grey-darker border border-gray-500 "
                                                   label="Dated"
                                                   name="dob2"
                                                   selected={formik.values.dob2}
@@ -1064,7 +1089,7 @@ const AddApplicantDetails = ({
                                             </div>
                                           </div>
 
-                                          <div className="w-full lg:w-6/12 pl-4 ">
+                                          <div className="w-full lg:w-4/12 pl-4 ">
                                             <section className="mt-4">
                                               <NoBorderDropDown
                                                 options={[
@@ -1095,9 +1120,19 @@ const AddApplicantDetails = ({
                                             </section>
                                           </div>
                                         </div>
+
+                                        <div className="w-full lg:w-12/12 ">
+                                            <div className="relative w-full mb-3 mt-2">
+                                              <TextField2
+                                                label="Address"
+                                                name="address2"
+                                                type="text"
+                                              />
+                                            </div>
+                                          </div>
                                         <div className="w-full flex flex-row">
                                           <div className="  px-">
-                                            <div className="relative w-[130px] mb-3 mt-2">
+                                            <div className="relative w-[160px] mb-3 mt-2">
                                               <TextField2
                                                 label="PAN No"
                                                 name="panNo2"
@@ -1105,7 +1140,7 @@ const AddApplicantDetails = ({
                                               />
                                             </div>
                                           </div>
-                                          <div className=" border-b border-gray-500 mb-[12px]">
+                                          <div className=" border-b border-gray-500 mb-[12px] ">
                                             <div className=" min-w-[140px] mt-3">
                                               <div className='flex flex-row-reverse'>
                                                 <label
@@ -1124,7 +1159,7 @@ const AddApplicantDetails = ({
                                                     onClick={() =>
                                                       downloadImage(
                                                         panCard2,
-                                                        'pancard2.PNG'
+                                                        'pancard1.PNG'
                                                       )
                                                     }
                                                   >
@@ -1143,7 +1178,7 @@ const AddApplicantDetails = ({
                                                   onChange={async (e) => {
                                                     await handleFileUploadFun(
                                                       e.target.files[0],
-                                                      'panCard2'
+                                                      'panCard1'
                                                     )
                                                   }}
                                                 />
@@ -1162,7 +1197,7 @@ const AddApplicantDetails = ({
                                           </div>
                                         </div> */}
                                           <div className=" ">
-                                            <div className="relative w-[130px] mb-3 mt-2">
+                                            <div className="relative w-[160px] mb-3 mt-2">
                                               <TextField2
                                                 label="Aadhar No"
                                                 name="aadharNo2"
@@ -1170,7 +1205,7 @@ const AddApplicantDetails = ({
                                               />
                                             </div>
                                           </div>
-                                          <div className='border-b border-gray-500 mb-[12px]'>
+                                          <div className='border-b border-gray-500 mb-[12px] '>
                                             <div className=" min-w-[140px] mt-3">
                                               <div className=" flex flex-row-reverse">
                                                 <label
@@ -1178,18 +1213,18 @@ const AddApplicantDetails = ({
                                                   className="form-label cursor-pointer inline-block mb-2  font-regular text-xs  rounded-2xl px-1 py-1"
                                                 >
                                                   {`${
-                                                    aadhrUrl2 === '' ||
-                                                    aadhrUrl2 == undefined
+                                                    aadhrUrl1 === '' ||
+                                                    aadhrUrl1 == undefined
                                                       ? 'Upload'
                                                       : 'Download'
                                                   }`}
                                                 </label>
-                                                {aadhrUrl2 != '' && (
+                                                {aadhrUrl1 != '' && (
                                                   <button
                                                     onClick={() =>
                                                       downloadImage(
                                                         aadhrUrl2,
-                                                        'Aadhar2.PNG'
+                                                        'Aadhar1.PNG'
                                                       )
                                                     }
                                                   >
@@ -1211,7 +1246,7 @@ const AddApplicantDetails = ({
                                                     )
                                                     handleFileUploadFun(
                                                       e.target.files[0],
-                                                      'aadharNo2Url'
+                                                      'aadharNo1Url2'
                                                     )
                                                   }}
                                                 />
@@ -1219,11 +1254,34 @@ const AddApplicantDetails = ({
                                             </div>
                                           </div>
                                         </div>
-                                      </div>
-                                    </section>
-                                  </section>
 
+                                        <section className="w-full flex flex-row mt-4">
+                                          <div className="w-full lg:w-6/12">
+                                      <div className="relative w-full mb-3">
+                                        <TextField2
+                                          label="Job Designation"
+                                          name="designation2"
+                                          type="text"
+                                        />
+                                      </div>
+                                    </div>
+                                    <div className="w-full lg:w-6/12 pl-3">
+                                      <div className="relative w-full mb-3">
+                                        <TextField2
+                                          label="Annual Income"
+                                          name="annualIncome2"
+                                          type="text"
+                                        />
+                                      </div>
+                                    </div>
+                                          </section>
+                                          </div>
+
+
+                                  </div>
+                                </section>
                                 </div>
+
 
                                 {/* <hr className="mt-6 border-b-1 border-blueGray-300" /> */}
                                 <section
@@ -1246,43 +1304,7 @@ const AddApplicantDetails = ({
                                   </div>
                                 </section>
                                 {/* <hr className="mt-6 border-b-1 border-blueGray-300" /> */}
-                                <section
-                                  className="rounded-md  p-4 mt-2 bg-[#fff]"
-                                  style={{ boxShadow: '0 1px 12px #f2f2f2' }}
-                                >
-                                  <h6 className="text-blueGray-400 text-[13px] mt-3 mb-6 font-bold uppercase">
-                                    Professional Information
-                                  </h6>
-                                  <div className="flex flex-wrap">
-                                    <div className="w-full lg:w-4/12 px-4">
-                                      <div className="relative w-full mb-3">
-                                        <TextField2
-                                          label="Industry"
-                                          name="industry"
-                                          type="text"
-                                        />
-                                      </div>
-                                    </div>
-                                    <div className="w-full lg:w-4/12 px-4">
-                                      <div className="relative w-full mb-3">
-                                        <TextField2
-                                          label="Job Designation"
-                                          name="designation"
-                                          type="text"
-                                        />
-                                      </div>
-                                    </div>
-                                    <div className="w-full lg:w-4/12 px-4">
-                                      <div className="relative w-full mb-3">
-                                        <TextField2
-                                          label="Annual Income"
-                                          name="annualIncome"
-                                          type="text"
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-                                </section>
+
                                 {/* <hr className="mt-6 border-b-1 border-blueGray-300" /> */}
                                 <section
                                   className="rounded-md  p-4 mt-2 bg-[#fff]"

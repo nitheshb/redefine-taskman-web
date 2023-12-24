@@ -168,13 +168,13 @@ const CostBreakUpSheet = ({
           color: ' bg-violet-500',
         },
         {
-          label: 'Booking Summary',
+          label: 'Booking summary',
           value: 'booking_summary',
           logo: 'FireIcon',
           color: ' bg-violet-500',
         },
         {
-          label: 'Book Unit',
+          label: 'Confirm booking',
           value: 'booksheet',
           logo: 'FireIcon',
           color: ' bg-violet-500',
