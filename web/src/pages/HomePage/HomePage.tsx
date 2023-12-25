@@ -956,7 +956,7 @@ const HomePage = () => {
                                                   </div>
                                                   <section className="flex flex-col ml-2 mt-1">
                                                     <div className="text-sky-950 text-xl font-semibold font-['Manrope'] ">
-                                                      28+
+                                                      21
                                                     </div>
                                                     <div className="text-slate-400 text-[12px] font-medium font-['Inter'] ">
                                                       Sales Team
