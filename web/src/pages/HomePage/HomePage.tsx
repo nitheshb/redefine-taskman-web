@@ -22,7 +22,7 @@ import HeadSideBarDetailView from 'src/components/HeadDetailSideBar'
 import HeadSideBarDetailView2 from 'src/components/HeadDetailSideBar2'
 import HeadNavBar2 from 'src/components/HeadNavBar/HeadNavBar2'
 import ProjectsUnitInventory from 'src/components/projectUnitsInventory'
-import { getAllProjects } from 'src/context/dbQueryFirebase'
+import { getAllProjects, getSalesReportsData } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 
 import DummyBodyLayout from '../../components/DummyBodyLayout/DummyBodyLayout'
@@ -41,6 +41,7 @@ const HomePage = () => {
   const handleNewProjectClose = () => setIsNewProjectOpen(false)
   const handleEditProjectClose = () => setIsEditProjectOpen(false)
   const [projects, setProjects] = useState([])
+  const [salesReportsDbData, setSalesReportsDbData] = useState([])
   const [viewable, setViewable] = useState('Home')
   const { loading } = usePageLoadingContext()
   const [selModule, setSelModule] = useState('Projects')
@@ -53,6 +54,20 @@ const HomePage = () => {
           docSnapshot.data()
         )
         setProjects(projects)
+      },
+      () => setProjects([])
+    )
+    return unsubscribe
+  }
+
+  const getSalesReportsDataFun = async () => {
+    const unsubscribe = getSalesReportsData(
+      orgId,
+      (querySnapshot) => {
+        const projects = querySnapshot.docs.map((docSnapshot) =>
+          docSnapshot.data()
+        )
+        setSalesReportsDbData(projects)
       },
       () => setProjects([])
     )
@@ -352,6 +367,7 @@ const HomePage = () => {
   ]
   useEffect(() => {
     getProjects()
+    getSalesReportsDataFun()
   }, [])
 
   const toggleOpen = () => {
@@ -781,7 +797,14 @@ const HomePage = () => {
                                           <div className="flex flex-row mt-3">
                                             <div className="w-3.5 h-3.5 bg-cyan-400 mt-[9px]" />
                                             <div className="text-sky-950 text-2xl font-semibold font-['Manrope'] ml-3">
-                                              100000
+                                            <CountUpComp
+                                            value={salesReportsDbData.reduce(
+                                              (acc, project) =>
+                                                acc +
+                                                (project?.Total || 0),
+                                              0
+                                            )}
+                                          />
                                             </div>
                                             <div className="text-slate-400  font-medium font-['Inter']  text-[12px] ml-[2px] mt-[10px]">
                                               Leads
@@ -811,7 +834,14 @@ const HomePage = () => {
                                                 </div>
                                                 <section className="flex flex-col ml-2 mt-1">
                                                   <div className="text-sky-950 text-xl font-semibold font-['Manrope'] ">
-                                                    10000+
+                                                  <CountUpComp
+                                            value={salesReportsDbData.reduce(
+                                              (acc, project) =>
+                                                acc +
+                                                (project?.Total || 0),
+                                              0
+                                            )}
+                                          />+
                                                   </div>
                                                   <div className="text-slate-400 text-[12px] font-medium font-['Inter'] ">
                                                     Leads
@@ -826,10 +856,17 @@ const HomePage = () => {
                                                 </div>
                                                 <section className="flex flex-col ml-2 ">
                                                   <div className="text-sky-950 text-xl font-semibold font-['Manrope'] ">
-                                                    10000+
+                                                  <CountUpComp
+                                            value={salesReportsDbData.reduce(
+                                              (acc, project) =>
+                                                acc +
+                                                (project?.inprogress || 0),
+                                              0
+                                            )}
+                                          />+
                                                   </div>
                                                   <div className="text-slate-400 text-[12px] font-medium font-['Inter'] ">
-                                                    Active Visits
+                                                    Active Leads
                                                   </div>
                                                 </section>
                                               </section>
@@ -840,7 +877,14 @@ const HomePage = () => {
                                                   </div>
                                                   <section className="flex flex-col ml-2 mt-1">
                                                     <div className="text-sky-950 text-xl font-semibold font-['Manrope'] ">
-                                                      10000+
+                                                    <CountUpComp
+                                            value={salesReportsDbData.reduce(
+                                              (acc, project) =>
+                                                acc +
+                                                (project?.visitdone || 0),
+                                              0
+                                            )}
+                                          />+
                                                     </div>
                                                     <div className="text-slate-400 text-[12px] font-medium font-['Inter'] ">
                                                       Site Visits
@@ -859,7 +903,14 @@ const HomePage = () => {
                                                 </div>
                                                 <section className="flex flex-col ml-2 mt-1">
                                                   <div className="text-sky-950 text-xl font-semibold font-['Manrope'] ">
-                                                    10000+
+                                                  <CountUpComp
+                                            value={salesReportsDbData.reduce(
+                                              (acc, project) =>
+                                                acc +
+                                                (project?.booked || 0),
+                                              0
+                                            )}
+                                          />+
                                                   </div>
                                                   <div className="text-slate-400 text-[12px] font-medium font-['Inter'] ">
                                                     Booked
@@ -874,7 +925,24 @@ const HomePage = () => {
                                                 </div>
                                                 <section className="flex flex-col ml-2 mt-1">
                                                   <div className="text-sky-950 text-xl font-semibold font-['Manrope'] ">
-                                                    10000+
+                                                  <CountUpComp
+                                            value={salesReportsDbData.reduce(
+                                              (acc, project) =>
+                                                acc +
+                                                (project?.Total || 0),
+                                              0
+                                            )- salesReportsDbData.reduce(
+                                              (acc, project) =>
+                                                acc +
+                                                (project?.booked || 0),
+                                              0
+                                            )-salesReportsDbData.reduce(
+                                              (acc, project) =>
+                                                acc +
+                                                (project?.inprogress || 0),
+                                              0
+                                            )}
+                                          />+
                                                   </div>
                                                   <div className="text-slate-400 text-[12px] font-medium font-['Inter'] ">
                                                     Not Interested

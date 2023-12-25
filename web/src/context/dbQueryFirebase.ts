@@ -1306,6 +1306,13 @@ export const getAllProjects = async (orgId, snapshot, error) => {
   console.log(getAllProjectsQuery, 'dcavlvblasfjv')
   return onSnapshot(getAllProjectsQuery, snapshot, error)
 }
+export const getSalesReportsData = async (orgId, snapshot, error) => {
+  console.log('org is ', orgId)
+  const getAllProjectsQuery = await query(
+    collection(db, `${orgId}_sales_reports`)
+  )
+  return onSnapshot(getAllProjectsQuery, snapshot, error)
+}
 export const getAllSources = async (orgId, snapshot, error) => {
   console.log('org is ', orgId)
   const getAllProjectsQuery = await query(
