@@ -95,7 +95,6 @@ import StatusDropComp from './statusDropComp'
 import AssigedToDropComp from './assignedToDropComp'
 import Loader from './Loader/Loader'
 import ProjPhaseHome from './ProjPhaseHome/ProjPhaseHome'
-import AddApplicantDetails from './AddApplicantDetails'
 
 import { useSnackbar } from 'notistack'
 import { async } from '@firebase/util'

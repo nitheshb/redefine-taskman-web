@@ -9,6 +9,7 @@ module.exports = {
         rubikF: ['Rubik', 'sans-serif'],
         nunF: ['Nunito Sans', 'sans-serif'],
         sanF: ['Public Sans', 'sans-serif'],
+        interF: ['Inter', 'sans-serif'],
       },
     },
   },

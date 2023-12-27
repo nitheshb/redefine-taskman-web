@@ -29,6 +29,7 @@ import {
   getAllProjects,
   steamUsersListByRole,
   updateLeadCostSheetDetailsTo,
+  updateUnitsCostSheetDetailsTo,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import {
@@ -96,6 +97,7 @@ const CostBreakUpSheet = ({
   const [newAdditonalChargesObj, setNewAdditonalChargesObj] = useState([])
   const [StatusListA, setStatusListA] = useState([])
   const [reviewLinks, setReviewLinks] = useState([])
+  const [leadPayload, setLeadPayload] = useState({})
 
   const [netTotal, setNetTotal] = useState(0)
   const [partATotal, setPartATotal] = useState(0)
@@ -103,6 +105,22 @@ const CostBreakUpSheet = ({
 
   const pdfExportComponent = useRef(null)
   const pdfExportComponentConstruct = useRef(null)
+
+useEffect(() => {
+  console.log('payload data is ', leadPayload)
+}, [leadPayload])
+
+  useEffect(() => {
+    console.log('new customer object x', title, leadDetailsObj1)
+    if (leadDetailsObj1) {
+      console.log('it exists')
+
+      setLeadPayload(leadDetailsObj1)
+    } else {
+      leadDetailsObj1 = {}
+    }
+  }, [leadDetailsObj1])
+
 
   useEffect(() => {
     console.log('new cost sheet value is ', newPlotCsObj, newPlotCostSheetA)
@@ -216,15 +234,6 @@ const CostBreakUpSheet = ({
     }
     // projectDetails
   }, [])
-
-  useEffect(() => {
-    console.log('new customer object x', title, leadDetailsObj1)
-    if (leadDetailsObj1) {
-      console.log('it exists')
-    } else {
-      leadDetailsObj1 = {}
-    }
-  }, [leadDetailsObj1])
 
   useEffect(() => {
     console.log('phase details are ', selPhaseObj)
@@ -425,16 +434,27 @@ const CostBreakUpSheet = ({
       soldPrice: Number(soldPrice),
       costSheetA: costSheetA,
     }
+    if (leadDetailsObj1?.id) {
+      updateLeadCostSheetDetailsTo(
+        orgId,
+        id,
+        xData,
+        'nitheshreddy.email@gmail.com',
+        enqueueSnackbar,
+        resetForm
+      )
+    } else {
+      updateUnitsCostSheetDetailsTo(
+        orgId,
+        selUnitDetails?.uid,
+        xData,
+        'nitheshreddy.email@gmail.com',
+        enqueueSnackbar,
+        resetForm
+      )
+    }
 
-    updateLeadCostSheetDetailsTo(
-      orgId,
-      id,
-      xData,
-      'nitheshreddy.email@gmail.com',
-      enqueueSnackbar,
-      resetForm
-    )
-    setOnStep('customerDetails')
+    setOnStep('booksheet')
   }
 
   const setStatusFun = async (leadDocId, newStatus) => {
@@ -445,7 +465,7 @@ const CostBreakUpSheet = ({
       <section className="  bg-black font-['Inter']">
         <div className="max-w-5xl mx-auto py-  bg-violet-100">
           <article className="overflow-hidden">
-            <div className="bg-[white] rounded-b-md">
+            <div className="bg-violet-100 rounded-b-md">
               <section className="flex flex-row">
                 <div className="w-full">
                   {['costsheet', 'allsheets', 'payment_schedule'].includes(
@@ -575,7 +595,6 @@ const CostBreakUpSheet = ({
                                     <button
                                       className="mb-2 md:mb-0  hover:scale-110 focus:outline-none              hover:bg-[#5671fc]
                                   [background:linear-gradient(180deg,rgb(156.19,195.71,255)_0%,rgb(180.07,167.87,255)_100%)]
-
                                   text-black
                                   border duration-200 ease-in-out
                                   transition
@@ -631,7 +650,8 @@ const CostBreakUpSheet = ({
                     <AddApplicantDetails
                       title="Booking Form"
                       selUnitDetails={selUnitDetails}
-                      leadDetailsObj2={leadDetailsObj1}
+                      leadPayload={leadPayload}
+                      setLeadPayload={setLeadPayload}
                       setOnStep={setOnStep}
                       source="Booking"
                       currentMode={actionMode}
@@ -641,7 +661,7 @@ const CostBreakUpSheet = ({
                     <AdditonalBookingDetails
                       title="Booking Form"
                       selUnitDetails={selUnitDetails}
-                      leadDetailsObj2={leadDetailsObj1}
+                      leadDetailsObj2={leadPayload}
                       setOnStep={setOnStep}
                       source="Booking"
                       currentMode={actionMode}
@@ -652,7 +672,7 @@ const CostBreakUpSheet = ({
                       title={'undefined'}
                       dialogOpen={undefined}
                       phase={selPhaseObj}
-                      leadDetailsObj2={leadDetailsObj1}
+                      leadDetailsObj2={leadPayload}
                       selUnitDetails={selUnitDetails}
                       newPlotCsObj={newPlotCsObj}
                       newPlotCostSheetA={newPlotCostSheetA}
@@ -699,7 +719,7 @@ const CostBreakUpSheet = ({
                   {['blocksheet'].includes(onStep) && (
                     <BlockingUnitForm
                       title="Blocking Form"
-                      leadDetailsObj2={leadDetailsObj1}
+                      leadDetailsObj2={leadPayload}
                       selUnitDetails={selUnitDetails}
                     />
                   )}

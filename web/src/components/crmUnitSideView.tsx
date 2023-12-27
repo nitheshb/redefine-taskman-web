@@ -60,7 +60,6 @@ import StatusDropComp from './statusDropComp'
 import AssigedToDropComp from './assignedToDropComp'
 import Loader from './Loader/Loader'
 import ProjPhaseHome from './ProjPhaseHome/ProjPhaseHome'
-import AddApplicantDetails from './AddApplicantDetails'
 import { H4 } from './Typography'
 
 import { useSnackbar } from 'notistack'

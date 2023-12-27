@@ -3,22 +3,16 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { useState, useEffect } from 'react'
 
-import { Dialog } from '@headlessui/react'
-import { RadioGroup } from '@headlessui/react'
 import { ArrowCircleDownIcon, PlusIcon } from '@heroicons/react/solid'
+import { InputAdornment, TextField as MuiTextField } from '@mui/material'
 import { setHours, setMinutes } from 'date-fns'
 import { Timestamp } from 'firebase/firestore'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
-import { Form, Formik, Field } from 'formik'
+import { Form, Formik } from 'formik'
 import { useSnackbar } from 'notistack'
 import DatePicker from 'react-datepicker'
-import NumberFormat from 'react-number-format'
-import Select from 'react-select'
 import { v4 as uuidv4 } from 'uuid'
 import * as Yup from 'yup'
-
-import { Label, InputField, TextAreaField, FieldError } from '@redwoodjs/forms'
-import { useRouterStateSetter } from '@redwoodjs/router/dist/router-context'
 
 import {
   addLead,
@@ -26,28 +20,22 @@ import {
   checkIfLeadAlreadyExists,
   getAllProjects,
   steamUsersListByRole,
-  updateUnitCustomerDetailsTo,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import { storage } from 'src/context/firebaseConfig'
-import {
-  sendWhatAppMediaSms,
-  sendWhatAppTextSms,
-} from 'src/util/axiosWhatAppApi'
-import { PhoneNoField } from 'src/util/formFields/phNoField'
 import { PhoneNoField2 } from 'src/util/formFields/phNoField2'
 import { CustomSelect } from 'src/util/formFields/selectBoxField'
 import { TextField } from 'src/util/formFields/TextField'
-import { TextField2 } from 'src/util/formFields/TextField2'
 
 import NoBorderDropDown from './comps/noBorderDropDown'
-import Loader from './Loader/Loader'
 import { useFileUpload } from './useFileUpload'
+import { PhoneNoField } from 'src/util/formFields/phNoField'
 
 const AddApplicantDetails = ({
   source,
   title,
-  leadDetailsObj2,
+  leadPayload,
+  setLeadPayload,
   selUnitDetails,
   dialogOpen,
   setShowApplicantEdit,
@@ -66,13 +54,14 @@ const AddApplicantDetails = ({
   const [panCard2, setPanCard2] = useState('')
   const [aadhrUrl1, setAadharUrl1] = useState('')
   const [aadhrUrl2, setAadharUrl2] = useState('')
+  const [startDate, setStartDate] = useState(d)
 
   useEffect(() => {
-    console.log('yo yo ', selUnitDetails, leadDetailsObj2)
-    setPanCard1(leadDetailsObj2?.customerDetailsObj?.panDocUrl1)
-    setPanCard2(leadDetailsObj2?.secondaryCustomerDetailsObj?.panDocUrl2)
-    setAadharUrl1(leadDetailsObj2?.customerDetailsObj?.aadharUrl1)
-    setAadharUrl2(leadDetailsObj2?.secondaryCustomerDetailsObj?.aadharUrl2)
+    console.log('yo yo ', selUnitDetails, leadPayload)
+    setPanCard1(leadPayload?.customerDetailsObj?.panDocUrl1)
+    setPanCard2(leadPayload?.secondaryCustomerDetailsObj?.panDocUrl2)
+    setAadharUrl1(leadPayload?.customerDetailsObj?.aadharUrl1)
+    setAadharUrl2(leadPayload?.secondaryCustomerDetailsObj?.aadharUrl2)
   }, [])
 
   useEffect(() => {
@@ -101,8 +90,8 @@ const AddApplicantDetails = ({
     return unsubscribe
   }, [])
   useEffect(() => {
-    console.log('new customer object', leadDetailsObj2)
-  }, [leadDetailsObj2])
+    console.log('new customer object', leadPayload)
+  }, [leadPayload])
 
   useEffect(() => {
     const unsubscribe = getAllProjects(
@@ -155,49 +144,6 @@ const AddApplicantDetails = ({
         console.error('Error downloading image:', error)
       })
   }
-  // const usersList = [
-  //   { label: 'User1', value: 'User1' },
-  //   { label: 'User2', value: 'User2' },
-  //   { label: 'User3', value: 'User3' },
-  // ]
-  const budgetList = [
-    { label: 'Select Customer Budget', value: '' },
-    { label: '5 - 10 Lacs', value: 'Bangalore,KA' },
-    { label: '10 - 20 Lacs', value: 'Cochin,KL' },
-    { label: '20 - 30 Lacs', value: 'Mumbai,MH' },
-    { label: '30 - 40 Lacs', value: 'Mumbai,MH' },
-    { label: '40 - 50 Lacs', value: 'Mumbai,MH' },
-    { label: '50 - 60 Lacs', value: 'Mumbai,MH' },
-    { label: '60 - 70 Lacs', value: 'Mumbai,MH' },
-    { label: '70 - 80 Lacs', value: 'Mumbai,MH' },
-    { label: '80 - 90 Lacs', value: 'Mumbai,MH' },
-    { label: '90 - 100 Lacs', value: 'Mumbai,MH' },
-    { label: '1.0 Cr - 1.1 Cr', value: 'Mumbai,MH' },
-    { label: '1.1 Cr - 1.2 Cr', value: 'Mumbai,MH' },
-    { label: '1.2 Cr - 1.3 Cr', value: 'Mumbai,MH' },
-    { label: '1.3 Cr - 1.4 Cr', value: 'Mumbai,MH' },
-    { label: '1.4 Cr - 1.5 Cr', value: 'Mumbai,MH' },
-    { label: '1.5 + Cr', value: 'Mumbai,MH' },
-  ]
-
-  const plans = [
-    {
-      name: 'Apartment',
-      img: '/apart1.svg',
-    },
-    {
-      name: 'Plots',
-      img: '/plot.svg',
-    },
-    {
-      name: 'WeekendVillas',
-      img: '/weekend.svg',
-    },
-    {
-      name: 'Villas',
-      img: '/villa.svg',
-    },
-  ]
 
   const devTypeA = [
     {
@@ -214,59 +160,64 @@ const AddApplicantDetails = ({
   const [formMessage, setFormMessage] = useState('')
   const [selected, setSelected] = useState({})
   const [devType, setdevType] = useState(devTypeA[0])
-  const [startDate, setStartDate] = useState(new Date())
   const [selRef1, setRefDataFun1] = useState({ label: 'S/O', value: 'S/O' })
   const [selRef2, setRefDataFun2] = useState({ label: 'S/O', value: 'S/O' })
   const [moveNext, setMoveNext] = useState(false)
 
-  const phoneRegExp =
-    /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/
-
-  const typeSel = async (sel) => {
-    await console.log('value is', selected)
-    await setSelected(sel)
-    await console.log('thsi si sel type', sel, selected)
-  }
-  const devTypeSel = async (sel) => {
-    await setdevType(sel)
-  }
-  const onSubmitFun = async (data, resetForm) => {
+  const onSubmitFun = async (data, updateDoc, resetForm) => {
     console.log(data)
     setLoading(true)
 
-    const {
-      email,
-      name,
-      mobileNo,
-      assignedTo,
-      assignedToObj,
-      source,
-      project,
-    } = data
+    // const { email, name, mobileNo, assignedTo, assignedToObj, project } = data
     // updateUserRole(uid, deptVal, myRole, email, 'nitheshreddy.email@gmail.com')
-
-    const foundLength = await checkIfLeadAlreadyExists('spark_leads', mobileNo)
+    const {
+      customerName1,
+      co_Name1,
+      phoneNo1,
+      email1,
+      dob1,
+      marital1,
+      panNo1,
+      panDocUrl1,
+      aadharNo1,
+      aadharUrl1,
+      occupation1,
+      companyName1,
+      customerName2,
+      co_Name2,
+      phoneNo2,
+      email2,
+      dob2,
+      marital2,
+      panNo2,
+      panDocUrl2,
+      aadharNo2,
+      aadharUrl2,
+      occupation2,
+      companyName2,
+      aggrementAddress,
+      industry,
+      designation,
+      annualIncome,
+      leadSource,
+      sourceOfPay,
+      purpose,
+      bookingSource,
+      bookedBy,
+      purchasePurpose,
+    } = data
+    const foundLength = await checkIfLeadAlreadyExists('spark_leads', phoneNo1)
     const leadData = {
       Date: Timestamp.now().toMillis(),
-      Email: email,
-      Mobile: mobileNo,
-      Name: name,
+      Email: email1 || '',
+      Mobile: phoneNo1 || '',
+      Name: customerName1,
       Note: '',
-      Project: project,
-      Source: source,
-      Status: assignedTo === '' ? 'unassigned' : 'new',
-      intype: 'Form',
-      assignedTo: assignedToObj?.value || '',
-      assignedToObj: {
-        department: assignedToObj?.department || [],
-        email: assignedToObj?.email || '',
-        label: assignedToObj?.label || '',
-        name: assignedToObj?.name || '',
-        namespace: orgId,
-        roles: assignedToObj?.roles || [],
-        uid: assignedToObj?.value || '',
-        value: assignedToObj?.value || '',
-      },
+      Project: '',
+      Source: leadSource || '',
+      Status: 'unassigned',
+      intype: 'DirectBooking',
+      assignedTo: '',
       by: user?.email,
     }
     console.log('user is ', user)
@@ -278,30 +229,23 @@ const AddApplicantDetails = ({
       console.log('foundLENGTH IS empty ', foundLength)
 
       // proceed to copy
-      await addLead(
+      const createResp = await addLead(
         orgId,
         leadData,
         user?.email,
-        `lead created and assidged to ${assignedTo}`
+        `lead created directly from booking`
       )
-
-      await sendWhatAppTextSms(
-        mobileNo,
-        `Thank you ${name} for choosing the world className ${
-          project || 'project'
-        }`
+      leadData.id = await createResp.id
+      await updateLeadCustomerDetailsTo(
+        orgId,
+        createResp.id,
+        updateDoc,
+        'nitheshreddy.email@gmail.com',
+        enqueueSnackbar,
+        resetForm
       )
-
-      // msg2
-      await sendWhatAppMediaSms(mobileNo)
-      const smg =
-        assignedTo === ''
-          ? 'You Interested will be addressed soon... U can contact 9123456789 mean while'
-          : 'we have assigned dedicated manager to you. Mr.Ram as ur personal manager'
-
-      // msg3
-      sendWhatAppTextSms(mobileNo, smg)
-      resetForm()
+      await setLeadPayload(leadData)
+      await console.log('lead data is ', leadData, leadPayload)
       setFormMessage('Saved Successfully..!')
       setLoading(false)
     }
@@ -312,74 +256,72 @@ const AddApplicantDetails = ({
   const datee = new Date().getTime()
   const initialState = {
     customerName1:
-      leadDetailsObj2?.customerDetailsObj?.customerName1 ||
-      leadDetailsObj2?.Name ||
-      '',
+      leadPayload?.customerDetailsObj?.customerName1 || leadPayload?.Name || '',
     customerName2:
-      leadDetailsObj2?.secondaryCustomerDetailsObj?.customerName2 || '',
-    co_Name1: leadDetailsObj2?.customerDetailsObj?.co_Name1 || '',
-    co_Name2: leadDetailsObj2?.secondaryCustomerDetailsObj?.co_Name2 || '',
+      leadPayload?.secondaryCustomerDetailsObj?.customerName2 || '',
+    relation1: {
+      label: 'S/O',
+      value: 'S/O',
+    },
+    relation2: {
+      label: 'S/O',
+      value: 'S/O',
+    },
+    co_Name1: leadPayload?.customerDetailsObj?.co_Name1 || '',
+    co_Name2: leadPayload?.secondaryCustomerDetailsObj?.co_Name2 || '',
+
     phoneNo1:
-      leadDetailsObj2?.customerDetailsObj?.phoneNo1 ||
-      leadDetailsObj2?.Mobile ||
-      '',
-    phoneNo2: leadDetailsObj2?.secondaryCustomerDetailsObj?.phoneNo2 || '',
-    email1:
-      leadDetailsObj2?.customerDetailsObj?.email1 ||
-      leadDetailsObj2?.Email ||
-      '',
-    email2: leadDetailsObj2?.secondaryCustomerDetailsObj?.email2 || '',
-    dob1: leadDetailsObj2?.customerDetailsObj?.dob1 || datee,
-    dob2: leadDetailsObj2?.secondaryCustomerDetailsObj?.dob2 || datee,
-    marital1: leadDetailsObj2?.customerDetailsObj?.marital1 || {
+      leadPayload?.customerDetailsObj?.phoneNo1 || leadPayload?.Mobile || '',
+    phoneNo2: leadPayload?.secondaryCustomerDetailsObj?.phoneNo2 || '',
+    email1: leadPayload?.customerDetailsObj?.email1 || leadPayload?.Email || '',
+    email2: leadPayload?.secondaryCustomerDetailsObj?.email2 || '',
+    dob1: leadPayload?.customerDetailsObj?.dob1 || d,
+    dob2: leadPayload?.secondaryCustomerDetailsObj?.dob2 || datee,
+    marital1: leadPayload?.customerDetailsObj?.marital1 || {
       label: 'Married',
       value: 'Married',
     },
-    marital2: leadDetailsObj2?.secondaryCustomerDetailsObj?.marital2 || {
+    marital2: leadPayload?.secondaryCustomerDetailsObj?.marital2 || {
       label: 'Married',
       value: 'Married',
     },
-    panNo1: leadDetailsObj2?.customerDetailsObj?.panNo1 || '',
-    panNo2: leadDetailsObj2?.secondaryCustomerDetailsObj?.panNo2 || '',
-    panDocUrl1: leadDetailsObj2?.customerDetailsObj?.panDocUrl1 || '',
+    panNo1: leadPayload?.customerDetailsObj?.panNo1 || '',
+    panNo2: leadPayload?.secondaryCustomerDetailsObj?.panNo2 || '',
+    panDocUrl1: leadPayload?.customerDetailsObj?.panDocUrl1 || '',
 
-    panDocUrl2: leadDetailsObj2?.secondaryCustomerDetailsObj?.panDocUrl2 || '',
-    aadharNo1: leadDetailsObj2?.customerDetailsObj?.aadharNo1 || '',
-    aadharNo2: leadDetailsObj2?.secondaryCustomerDetailsObj?.aadharNo2 || '',
-    aadharUrl1: leadDetailsObj2?.customerDetailsObj?.aadharUrl1 || '',
-    aadharUrl2: leadDetailsObj2?.secondaryCustomerDetailsObj?.aadharUrl2 || '',
-    occupation1: leadDetailsObj2?.customerDetailsObj?.occupation1 || '',
-    companyName1: leadDetailsObj2?.customerDetailsObj?.companyName1 || '',
+    panDocUrl2: leadPayload?.secondaryCustomerDetailsObj?.panDocUrl2 || '',
+    aadharNo1: leadPayload?.customerDetailsObj?.aadharNo1 || '',
+    aadharNo2: leadPayload?.secondaryCustomerDetailsObj?.aadharNo2 || '',
+    aadharUrl1: leadPayload?.customerDetailsObj?.aadharUrl1 || '',
+    aadharUrl2: leadPayload?.secondaryCustomerDetailsObj?.aadharUrl2 || '',
+    occupation1: leadPayload?.customerDetailsObj?.occupation1 || '',
+    companyName1: leadPayload?.customerDetailsObj?.companyName1 || '',
 
-    occupation2:
-      leadDetailsObj2?.secondaryCustomerDetailsObj?.occupation2 || '',
-    companyName2:
-      leadDetailsObj2?.secondaryCustomerDetailsObj?.companyName2 || '',
+    occupation2: leadPayload?.secondaryCustomerDetailsObj?.occupation2 || '',
+    companyName2: leadPayload?.secondaryCustomerDetailsObj?.companyName2 || '',
 
-    aggrementAddress:
-      leadDetailsObj2?.aggrementDetailsObj?.aggrementAddress || '',
-    industry: leadDetailsObj2?.industry || '',
-    designation: leadDetailsObj2?.designation || '',
-    annualIncome: leadDetailsObj2?.annualIncome || '',
+    aggrementAddress: leadPayload?.aggrementDetailsObj?.aggrementAddress || '',
+    industry: leadPayload?.industry || '',
+    designation: leadPayload?.designation || '',
+    annualIncome: leadPayload?.annualIncome || '',
     leadSource:
-      leadDetailsObj2?.Status === 'booked'
-        ? leadDetailsObj2[`${uid}_otherInfo`]?.leadSource
+      leadPayload?.Status === 'booked'
+        ? leadPayload[`${uid}_otherInfo`]?.leadSource
         : '',
     sourceOfPay:
-      leadDetailsObj2?.Status === 'booked'
-        ? leadDetailsObj2[`${uid}_otherInfo`]?.sourceOfPay
+      leadPayload?.Status === 'booked'
+        ? leadPayload[`${uid}_otherInfo`]?.sourceOfPay
         : '',
     purpose:
-      leadDetailsObj2?.Status === 'booked'
-        ? leadDetailsObj2[`${uid}_otherInfo`]?.purpose
+      leadPayload?.Status === 'booked'
+        ? leadPayload[`${uid}_otherInfo`]?.purpose
         : '',
     // leadSource: "",
     // sourceOfPay: "",
     // purpose: "",
-    bookingSource: leadDetailsObj2?.bookingSource || '',
-    bookedBy:
-      leadDetailsObj2?.bookedBy || leadDetailsObj2?.assignedToObj?.label || '',
-    purchasePurpose: leadDetailsObj2?.purchasePurpose || '',
+    bookingSource: leadPayload?.bookingSource || '',
+    bookedBy: leadPayload?.bookedBy || leadPayload?.assignedToObj?.label || '',
+    purchasePurpose: leadPayload?.purchasePurpose || '',
   }
   // Custom PAN card validation function
   const isValidPAN = (value) => {
@@ -400,16 +342,16 @@ const AddApplicantDetails = ({
     return regex.test(value)
   }
   const validateSchema = Yup.object({
-    // customerName1: Yup.string().required('Required'),
+    customerName1: Yup.string().required('Required'),
     // co_Name1: Yup.string().required('Required'),
     panNo1: Yup.string().test('pan', 'Invalid PAN card number', isValidPAN),
     panNo2: Yup.string().test('pan', 'Invalid PAN card number', isValidPAN),
     // panDocUrl1: Yup.string().required('Required'),
-    aadharNo1: Yup.string().test(
-      'aadhar',
-      'Invalid Aadhar card number',
-      isValidAadhar
-    ),
+    // aadharNo1: Yup.string().test(
+    //   'aadhar',
+    //   'Invalid Aadhar card number',
+    //   isValidAadhar
+    // ),
     aadharNo2: Yup.string().test(
       'aadhar',
       'Invalid Aadhar card number',
@@ -422,19 +364,6 @@ const AddApplicantDetails = ({
     email2: Yup.string().email('Email is invalid'),
     // aggrementAddress: Yup.string().required('Required'),
   })
-
-  const resetter = () => {
-    setSelected({})
-    setFormMessage('')
-  }
-
-  const setRefDataFun_1 = (x) => {
-    console.log('hello', x)
-    // setRefDataFun1({
-    //   label: 'W/O',
-    //   value: 'W/O',
-    // })
-  }
 
   const onSubmit = async (data, resetForm) => {
     console.log('customer details form', data)
@@ -520,22 +449,24 @@ const AddApplicantDetails = ({
       designation,
       annualIncome,
     }
-    const { id } = leadDetailsObj2
-    console.log('did you find my id', id, leadDetailsObj2)
 
-    if (source === 'fromBookedUnit') {
-      updateUnitCustomerDetailsTo(
-        orgId,
-        id,
-        updateDoc,
-        'nitheshreddy.email@gmail.com',
-        enqueueSnackbar,
-        resetForm
-      )
+    if (source === 'fromBookedUnit' || source === 'Booking') {
+      // create lead and call below function
+
+      await onSubmitFun(data, updateDoc, resetForm)
+      console.log('am here', leadPayload)
+      // await  updateLeadCustomerDetailsTo(
+      //   orgId,
+      //   leadPayload?.id,
+      //   updateDoc,
+      //   'nitheshreddy.email@gmail.com',
+      //   enqueueSnackbar,
+      //   resetForm
+      // )
     } else {
       updateLeadCustomerDetailsTo(
         orgId,
-        id,
+        leadPayload?.id,
         updateDoc,
         'nitheshreddy.email@gmail.com',
         enqueueSnackbar,
@@ -544,23 +475,10 @@ const AddApplicantDetails = ({
     }
 
     if (currentMode == 'unitBookingMode') {
-      setOnStep('booksheet')
+      setOnStep('additonalInfo')
     } else if (currentMode == 'unitBlockMode') {
       setOnStep('blocksheet')
     }
-    // const updatedData = {
-    //   ...data,
-    // }
-
-    // setLoading(true)
-    // addCustomer(
-    // orgId,
-    //   updatedData,
-    //   'nithe.nithesh@gmail.com',
-    //   enqueueSnackbar,
-    //   resetForm
-    // )
-    // setLoading(false)
   }
   const handleFileUploadFun = async (file, type) => {
     if (!file) return
@@ -626,6 +544,8 @@ const AddApplicantDetails = ({
                 initialValues={initialState}
                 validationSchema={validateSchema}
                 onSubmit={(values, { resetForm }) => {
+                  console.log('submitted', values)
+
                   onSubmit(values, resetForm)
                 }}
               >
@@ -640,28 +560,60 @@ const AddApplicantDetails = ({
                             <div className="flex-auto">
                               <section className=" lg:px-2 py-2">
                                 <div className="flex flex-row gap-1">
-
-                              <section
-                                  className="rounded-md  p-4 bg-[#fff] lg:w-6/12"
-                                  style={{ boxShadow: '0 1px 12px #f2f2f2' }}
-                                >
-                                  <h6 className="text-blueGray-400 text-[13px] mt-3 mb-6 font-bold uppercase">
-                                    Applicant
-                                  </h6>
-                                  <div className="flex flex-wrap">
-                                  <div className="w-full lg:w-12/12 ">
-                                            <div className="relative w-full mb-3 mt-2">
-                                              <TextField2
-                                                label="Customer Name*"
-                                                name="customerName1"
-                                                type="text"
-                                              />
-                                            </div>
-                                          </div>
-
-                                          <div className="w-full  flex flex-row lg:w-12/12">
-                                            <section className="mt- h-[33px] border-b border-gray-500">
+                                  <section
+                                    className="rounded-md   bg-[#fff] lg:w-6/12"
+                                    style={{ boxShadow: '0 1px 12px #f2f2f2' }}
+                                  >
+                                    <div className="w-full  flex flex-row mb-2 p-4 bg-violet-100 rounded-t-md">
+                                      <div className="w-[43.80px] h-[47px] bg-zinc-100 rounded-[5px]"></div>
+                                      <div className="w-full flex flex-col">
+                                        <h6 className="w-full lg:w-12/12 text-blueGray-400 text-[13px] mt-[9px] mb- font-bold uppercase">
+                                          Applicant
+                                        </h6>
+                                        <div className="w-[455.80px] opacity-50 text-blue-950  text-[12px] font-normal ">
+                                          Details of applicant is
+                                          mandatory
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div className="flex flex-wrap p-4 pt-2">
+                                      <div className="w-full lg:w-12/12 ">
+                                        <div className="relative w-full mb-3 mt-2">
+                                          <TextField
+                                            label="Customer Name*"
+                                            name="customerName1"
+                                            type="text"
+                                          />
+                                        </div>
+                                      </div>
+                                      <label className="label font-regular text-[12px] block mb-1 mt-1 text-gray-700">
+                                        Son/Daughter/Wife of{' '}
+                                      </label>
+                                      <MuiTextField
+                                        id="area"
+                                        className={`w-full bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 mt-1 p-0`}
+                                        size="small"
+                                        InputProps={{
+                                          style: {
+                                            height: '2rem',
+                                            paddingLeft: '7px',
+                                          },
+                                          startAdornment: (
+                                            <InputAdornment
+                                              position="start"
+                                              style={{ height: '32px' }}
+                                            >
                                               <NoBorderDropDown
+                                                name="relation1"
+                                                label=""
+                                                className="input  min-w-[85px] h-[32px]"
+                                                onChange={(value) => {
+                                                  formik.setFieldValue(
+                                                    'relation1',
+                                                    value.value
+                                                  )
+                                                }}
+                                                value={formik.values.relation1}
                                                 options={[
                                                   {
                                                     label: 'D/O',
@@ -676,71 +628,109 @@ const AddApplicantDetails = ({
                                                     value: 'W/O',
                                                   },
                                                 ]}
-                                                setRefDropFun={setRefDataFun_1}
-                                                selRefDrop={selRef1}
                                               />
+                                            </InputAdornment>
+                                          ),
+                                        }}
+                                        label=""
+                                        name="co_Name1"
+                                        type="text"
+                                        value={formik.values.co_Name1}
+                                        onChange={formik.handleChange}
+                                      />
+
+<div className="w-full  flex flex-row lg:w-12/12 mt-1">
+                                        <div className="w-full lg:w-5/12 px- ">
+                                          <div className="relative w-full mb-3 mt-[10px]">
+                                            <PhoneNoField
+                                              label="Phone No"
+                                              name="phoneNo1"
+                                              type="text"
+                                              value={formik.values.phoneNo2}
+                                              onChange={(value) => {
+                                                // formik.setFieldValue('mobileNo', value.value)
+                                                formik.setFieldValue(
+                                                  'phoneNo1',
+                                                  value.value
+                                                )
+                                              }}
+                                              // value={formik.values.mobileNo}
+                                              options={{}}
+                                              labelSize= 'text-[11px]'
+                                              textSize= 'text-[12px]'
+                                              txtPad= 'px-1'
+                                              className="text-[10px]"
+                                            />
+                                          </div>
+                                        </div>
+                                        <div className="w-full lg:w-7/12 pl-4">
+                                          <div className="relative w-full mb-3 mt-2">
+                                            <TextField
+                                              label="Email"
+                                              name="email1"
+                                              type="text"
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+                                      {/* col dob etc */}
+                                      <div>
+                                        <div className="flex flex-wrap mt-3">
+                                          <div className="w-full lg:w-5/12  ">
+                                            <section className="">
+                                              <div className="w-full flex flex-col mb-3">
+                                                <CustomSelect
+                                                  name="MaritualStatus"
+                                                  label="Status"
+                                                  className="input"
+                                                  onChange={(value) => {
+                                                    formik.setFieldValue(
+                                                      'marital1',
+                                                      value.value
+                                                    )
+                                                  }}
+                                                  value={formik.values.marital1}
+                                                  options={[
+                                                    {
+                                                      label: 'Divorced',
+                                                      value: 'Divorced',
+                                                    },
+                                                    {
+                                                      label: 'Married',
+                                                      value: 'Married',
+                                                    },
+                                                    {
+                                                      label: 'Single',
+                                                      value: 'Single',
+                                                    },
+                                                  ]}
+                                                />
+                                                <p
+                                                  className="text-sm text-red-500 hidden mt-3"
+                                                  id="error"
+                                                >
+                                                  Please fill out this field.
+                                                </p>
+                                              </div>
                                             </section>
-                                            <div className="relative w-full mb-3 mt-2">
-                                              <TextField2
-                                                label="Son/Daughter/Wife of"
-                                                name="co_Name1"
-                                                type="text"
-                                              />
-                                            </div>
                                           </div>
-                                          <div className="w-full  flex flex-row lg:w-12/12">
-                                          <div className="w-full lg:w-4/12 px- mt-4">
-                                            <div className="relative w-full mb-3 mt-2">
-                                              <PhoneNoField2
-                                                label="Phone No"
-                                                name="phoneNo1"
-                                                type="text"
-                                                value={formik.values.phoneNo2}
-                                                onChange={(value) => {
-                                                  // formik.setFieldValue('mobileNo', value.value)
-                                                  formik.setFieldValue(
-                                                    'phoneNo1',
-                                                    value.value
-                                                  )
-                                                }}
-                                                // value={formik.values.mobileNo}
-                                                options={{}}
-                                              />
-                                            </div>
-                                          </div>
-                                          <div className="w-full lg:w-8/12 pl-4 mt-4">
-                                            <div className="relative w-full mb-3 mt-2">
-                                              <TextField2
-                                                label="Email"
-                                                name="email1"
-                                                type="text"
-                                              />
-                                            </div>
-                                          </div>
-                                          </div>
-{/* col dob etc */}
-                                          <div>
-                                          <div className="flex flex-wrap mt-3">
-                                          <div className="w-full lg:w-8/12 mt-[px] ">
+                                          <div className="w-full lg:w-7/12 mt-[px] pl-4">
                                             <div className="relative w-full mb-3 ">
-                                              <label
-                                                htmlFor={'dob1'}
-                                                className="text-gray-500 text-[10px]"
-                                              >
+                                              <label className="text-gray-500 text-[10px]">
                                                 Date Of Birth
                                               </label>
                                               <span className="inline">
                                                 <DatePicker
-                                                  className="h-8 outline-none border-t-0 border-l-0 border-r-0 border-gray-500 text-sm mt-[-4px] pb-1  min-w-[125px]  inline     lg:w-8/12 w-full flex bg-grey-lighter text-grey-darker border border-gray-500 "
+                                                  className="h-8 outline-none border-radius rounded-md  px-2 border-[#cccccc] border-gray-500 text-sm mt-[-4px] pb-1  w-[90%] inline  w-full flex bg-grey-lighter text-grey-darker border border-gray-500 "
                                                   label="Dated"
                                                   name="dob1"
-                                                  selected={formik.values.dob2}
+                                                  selected={formik.values.dob1}
                                                   onChange={(date) => {
                                                     formik.setFieldValue(
                                                       'dob1',
-                                                      date.getTime()
+                                                      date
                                                     )
-                                                    setStartDate(date)
+                                                    // setStartDate(date)
                                                     // console.log(startDate)
                                                   }}
                                                   timeFormat="HH:mm"
@@ -763,52 +753,89 @@ const AddApplicantDetails = ({
                                               </span>
                                             </div>
                                           </div>
-
-                                          <div className="w-full lg:w-4/12 pl-4 ">
-                                            <section className="mt-4">
-                                              <NoBorderDropDown
-                                                options={[
-                                                  {
-                                                    label: 'Divorced',
-                                                    value: 'Divorced',
-                                                  },
-                                                  {
-                                                    label: 'Married',
-                                                    value: 'Married',
-                                                  },
-                                                  {
-                                                    label: 'Single',
-                                                    value: 'Single',
-                                                  },
-                                                ]}
-                                                setRefDropFun={(val) => {
-                                                  console.log('value is ', val)
-                                                  formik.setFieldValue(
-                                                    'marital1',
-                                                    val
-                                                  )
-                                                }}
-                                                selRefDrop={
-                                                  formik.values.marital1
-                                                }
-                                              />
-                                            </section>
-                                          </div>
                                         </div>
 
                                         <div className="w-full lg:w-12/12 ">
-                                            <div className="relative w-full mb-3 mt-2">
-                                              <TextField2
-                                                label="Address"
-                                                name="address1"
-                                                type="text"
-                                              />
-                                            </div>
+                                          <div className="relative w-full mb-3 mt-2">
+                                            <TextField
+                                              label="Address"
+                                              name="address1"
+                                              type="text"
+                                            />
                                           </div>
-                                        <div className="w-full flex flex-row">
+                                        </div>
+                                        <label className="label font-regular text-[12px] block mb-1 mt-1 text-gray-700">
+                                        PAN No{' '}
+                                      </label>
+                                        <MuiTextField
+                                        id="area"
+                                        className={`w-full bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 mt-1 p-0`}
+                                        size="small"
+                                        InputProps={{
+                                          style: {
+                                            height: '2rem',
+                                            paddingLeft: '7px',
+                                          },
+                                          endAdornment: (
+                                            <InputAdornment
+                                              position="end"
+                                              style={{ height: '32px' }}
+                                            >
+                                                <div className="flex flex-row-reverse">
+                                                <label
+                                                  htmlFor="formFile3"
+                                                  className="form-label cursor-pointer inline-block   font-regular text-xs  rounded-2xl px-1 py-1  "
+                                                >
+                                                  {`${
+                                                    panCard1 === '' ||
+                                                    panCard1 == undefined
+                                                      ? 'Upload'
+                                                      : 'Download'
+                                                  }`}
+                                                </label>
+                                                {panCard1 != '' && (
+                                                  <button
+                                                    onClick={() =>
+                                                      downloadImage(
+                                                        panCard1,
+                                                        'pancard1.PNG'
+                                                      )
+                                                    }
+                                                  >
+                                                    {' '}
+                                                    {panCard1 === '' ||
+                                                    panCard1 == undefined ? (
+                                                      <PlusIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 border rounded-[16px] " />
+                                                    ) : (
+                                                      <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " />
+                                                    )}
+                                                  </button>
+                                                )}
+                                                <input
+                                                  type="file"
+                                                  className="hidden"
+                                                  id="formFile3"
+                                                  onChange={async (e) => {
+                                                    await handleFileUploadFun(
+                                                      e.target.files[0],
+                                                      'panCard1'
+                                                    )
+                                                  }}
+                                                />
+                                              </div>
+                                            </InputAdornment>
+                                          ),
+                                        }}
+                                        label=""
+                                        name="panNo1"
+                                        type="text"
+                                        value={formik.values.panNo1}
+                                        onChange={formik.handleChange}
+                                      />
+                                        {/* <div className="w-full flex flex-row">
                                           <div className="  px-">
                                             <div className="relative w-[160px] mb-3 mt-2">
-                                              <TextField2
+                                              <TextField
                                                 label="PAN No"
                                                 name="panNo1"
                                                 type="text"
@@ -817,7 +844,7 @@ const AddApplicantDetails = ({
                                           </div>
                                           <div className=" border-b border-gray-500 mb-[12px] ">
                                             <div className=" min-w-[140px] mt-3">
-                                              <div className='flex flex-row-reverse'>
+                                              <div className="flex flex-row-reverse">
                                                 <label
                                                   htmlFor="formFile3"
                                                   className="form-label cursor-pointer inline-block mb-1  font-regular text-xs  rounded-2xl px-1 py-1  "
@@ -840,10 +867,11 @@ const AddApplicantDetails = ({
                                                   >
                                                     {' '}
                                                     {panCard1 === '' ||
-                                                    panCard1 == undefined
-                                                      ? <PlusIcon className="w-4 h-4 cursor-pointer ml-1 mb-[9px] mr-2 inline-block text-gray-400 border rounded-[16px] " />
-                                                      :                                                     <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[9px] mr-2 inline-block text-gray-400 " />}
-
+                                                    panCard1 == undefined ? (
+                                                      <PlusIcon className="w-4 h-4 cursor-pointer ml-1 mb-[9px] mr-2 inline-block text-gray-400 border rounded-[16px] " />
+                                                    ) : (
+                                                      <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[9px] mr-2 inline-block text-gray-400 " />
+                                                    )}
                                                   </button>
                                                 )}
                                                 <input
@@ -860,32 +888,28 @@ const AddApplicantDetails = ({
                                               </div>
                                             </div>
                                           </div>
-                                        </div>
-                                        <div className="w-full flex flex-row mt-4">
-                                          {/* <div className="w-full lg:w-8/12 pl-4">
-                                          <div className="relative w-full mb-3 mt-2">
-                                            <TextField2
-                                              label="Aadhar Upload"
-                                              name="aadharUrl1"
-                                              type="text"
-                                            />
-                                          </div>
                                         </div> */}
-                                          <div className=" ">
-                                            <div className="relative w-[160px] mb-3 mt-2">
-                                              <TextField2
-                                                label="Aadhar No"
-                                                name="aadharNo1"
-                                                type="text"
-                                              />
-                                            </div>
-                                          </div>
-                                          <div className='border-b border-gray-500 mb-[12px] '>
-                                            <div className=" min-w-[140px] mt-3">
-                                              <div className=" flex flex-row-reverse">
+                                           <label className="label font-regular text-[12px] block mb-1 mt-1 text-gray-700">
+                                        Aadhar No{' '}
+                                      </label>
+                                        <MuiTextField
+                                        id="area"
+                                        className={`w-full bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 mt-1 p-0`}
+                                        size="small"
+                                        InputProps={{
+                                          style: {
+                                            height: '2rem',
+                                            paddingLeft: '7px',
+                                          },
+                                          endAdornment: (
+                                            <InputAdornment
+                                              position="end"
+                                              style={{ height: '32px' }}
+                                            >
+                                                      <div className=" flex flex-row-reverse">
                                                 <label
                                                   htmlFor="formFile4"
-                                                  className="form-label cursor-pointer inline-block mb-2  font-regular text-xs  rounded-2xl px-1 py-1"
+                                                  className="form-label cursor-pointer inline-block font-regular text-xs  rounded-2xl px-1 py-1"
                                                 >
                                                   {`${
                                                     aadhrUrl1 === '' ||
@@ -905,10 +929,11 @@ const AddApplicantDetails = ({
                                                   >
                                                     {' '}
                                                     {aadhrUrl1 === '' ||
-                                                    aadhrUrl1 == undefined
-                                                      ? <PlusIcon className="w-4 h-4 cursor-pointer ml-1 mb-[9px] mr-2 inline-block text-gray-400 border rounded-[16px] " />
-                                                      :                                                     <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[9px] mr-2 inline-block text-gray-400 " />}
-
+                                                    aadhrUrl1 == undefined ? (
+                                                      <PlusIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 border rounded-[16px] " />
+                                                    ) : (
+                                                      <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " />
+                                                    )}
                                                   </button>
                                                 )}
                                                 <input
@@ -926,67 +951,95 @@ const AddApplicantDetails = ({
                                                   }}
                                                 />
                                               </div>
-                                            </div>
-                                          </div>
-                                        </div>
+                                            </InputAdornment>
+                                          ),
+                                        }}
+                                        label=""
+                                        name="aadharNo1"
+                                        type="text"
+                                        value={formik.values.aadharNo1}
+                                        onChange={formik.handleChange}
+                                      />
+
 
                                         <section className="w-full flex flex-row mt-4">
                                           <div className="w-full lg:w-6/12">
-                                      <div className="relative w-full mb-3">
-                                        <TextField2
-                                          label="Job Designation"
-                                          name="designation"
-                                          type="text"
-                                        />
-                                      </div>
-                                    </div>
-                                    <div className="w-full lg:w-6/12 pl-3">
-                                      <div className="relative w-full mb-3">
-                                        <TextField2
-                                          label="Annual Income"
-                                          name="annualIncome"
-                                          type="text"
-                                        />
-                                      </div>
-                                    </div>
-                                          </section>
-                                          </div>
-
-
-                                  </div>
-                                </section>
-{/* section-2 */}
-<section
-                                  className="rounded-md  p-4  bg-[#fff] lg:w-6/12"
-                                  style={{ boxShadow: '0 1px 12px #f2f2f2' }}
-                                >
-                                         <div className="w-full  flex flex-row mb-2">
-                                      <div className="w-[43.80px] h-[47px] bg-zinc-100 rounded-[5px]"></div>
-                                  <div className="w-full flex flex-col">
-
-<h6 className="w-full lg:w-12/12 text-blueGray-400 text-[13px] mt-[9px] mb- font-bold uppercase">
-Co-applicant
-
-</h6>
-<div className="w-[455.80px] opacity-50 text-blue-950  text-[12px] font-normal ">
-  Details of co-applicant is not a mandatory
-</div>
-</div>
-</div>
-                                  <div className="flex flex-wrap">
-                                  <div className="w-full lg:w-12/12 ">
-                                            <div className="relative w-full mb-3 mt-2">
-                                              <TextField2
-                                                label="Co-applicant Name*"
-                                                name="customerName2"
+                                            <div className="relative w-full mb-3">
+                                              <TextField
+                                                label="Job Designation"
+                                                name="designation"
                                                 type="text"
                                               />
                                             </div>
                                           </div>
-
-                                          <div className="w-full  flex flex-row lg:w-12/12">
-                                            <section className="mt-4 h-[33px] border-b border-gray-500">
+                                          <div className="w-full lg:w-6/12 pl-3">
+                                            <div className="relative w-full mb-3">
+                                              <TextField
+                                                label="Annual Income"
+                                                name="annualIncome"
+                                                type="text"
+                                              />
+                                            </div>
+                                          </div>
+                                        </section>
+                                      </div>
+                                    </div>
+                                  </section>
+                                  {/* section-2 */}
+                                  <section
+                                    className="rounded-md   bg-[#fff] lg:w-6/12"
+                                    style={{ boxShadow: '0 1px 12px #f2f2f2' }}
+                                  >
+                                    <div className="w-full  flex flex-row mb-2 p-4 bg-violet-100 rounded-t-md">
+                                      <div className="w-[43.80px] h-[47px] bg-zinc-100 rounded-[5px]"></div>
+                                      <div className="w-full flex flex-col">
+                                        <h6 className="w-full lg:w-12/12 text-blueGray-400 text-[13px] mt-[9px] mb- font-bold uppercase">
+                                          Co-applicant
+                                        </h6>
+                                        <div className="w-[455.80px] opacity-50 text-blue-950  text-[12px] font-normal ">
+                                          Details of co-applicant is not a
+                                          mandatory
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div className="flex flex-wrap p-4 pt-2 ">
+                                      <div className="w-full lg:w-12/12 ">
+                                        <div className="relative w-full mb-3 mt-2">
+                                          <TextField
+                                            label="Co-applicant Name*"
+                                            name="customerName2"
+                                            type="text"
+                                          />
+                                        </div>
+                                      </div>
+                                      <label className="label font-regular text-[12px] block mb-1 mt-1 text-gray-700">
+                                        Son/Daughter/Wife of{' '}
+                                      </label>
+                                      <MuiTextField
+                                        id="area"
+                                        className={`w-full bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 mt-1 p-0`}
+                                        size="small"
+                                        InputProps={{
+                                          style: {
+                                            height: '2rem',
+                                            paddingLeft: '7px',
+                                          },
+                                          startAdornment: (
+                                            <InputAdornment
+                                              position="start"
+                                              style={{ height: '32px' }}
+                                            >
                                               <NoBorderDropDown
+                                                name="relation2"
+                                                label=""
+                                                className="input  min-w-[85px] h-[32px]"
+                                                onChange={(value) => {
+                                                  formik.setFieldValue(
+                                                    'relation2',
+                                                    value.value
+                                                  )
+                                                }}
+                                                value={formik.values.relation2}
                                                 options={[
                                                   {
                                                     label: 'D/O',
@@ -1001,52 +1054,93 @@ Co-applicant
                                                     value: 'W/O',
                                                   },
                                                 ]}
-                                                setRefDropFun={setRefDataFun2}
-                                                selRefDrop={selRef2}
                                               />
+                                            </InputAdornment>
+                                          ),
+                                        }}
+                                        label=""
+                                        name="co_Name2"
+                                        type="text"
+                                        value={formik.values.co_Name2}
+                                        onChange={formik.handleChange}
+                                      />
+                                      <div className="w-full  flex flex-row lg:w-12/12 mt-1">
+                                        <div className="w-full lg:w-5/12 px- ">
+                                          <div className="relative w-full mb-3 mt-[10px]">
+                                            <PhoneNoField
+                                              label="Phone No"
+                                              name="phoneNo2"
+                                              type="text"
+                                              value={formik.values.phoneNo2}
+                                              onChange={(value) => {
+                                                // formik.setFieldValue('mobileNo', value.value)
+                                                formik.setFieldValue(
+                                                  'phoneNo2',
+                                                  value.value
+                                                )
+                                              }}
+                                              // value={formik.values.mobileNo}
+                                              options={{}}
+                                              labelSize= 'text-[11px]'
+                                              textSize= 'text-[12px]'
+                                              txtPad= 'px-2'
+                                              className="text-[10px]"
+                                            />
+                                          </div>
+                                        </div>
+                                        <div className="w-full lg:w-7/12 pl-4">
+                                          <div className="relative w-full mb-3 mt-2">
+                                            <TextField
+                                              label="Email"
+                                              name="email2"
+                                              type="text"
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+                                      {/* col dob etc */}
+                                      <div>
+                                        <div className="flex flex-wrap mt-3">
+                                          <div className="w-full lg:w-5/12 px-">
+                                            <section className="">
+                                              <div className="w-full flex flex-col mb-3">
+                                                <CustomSelect
+                                                  name="MaritualStatus"
+                                                  label="Status"
+                                                  className="input"
+                                                  onChange={(value) => {
+                                                    formik.setFieldValue(
+                                                      'marital2',
+                                                      value.value
+                                                    )
+                                                  }}
+                                                  value={formik.values.marital2}
+                                                  options={[
+                                                    {
+                                                      label: 'Divorced',
+                                                      value: 'Divorced',
+                                                    },
+                                                    {
+                                                      label: 'Married',
+                                                      value: 'Married',
+                                                    },
+                                                    {
+                                                      label: 'Single',
+                                                      value: 'Single',
+                                                    },
+                                                  ]}
+                                                />
+                                                <p
+                                                  className="text-sm text-red-500 hidden mt-3"
+                                                  id="error"
+                                                >
+                                                  Please fill out this field.
+                                                </p>
+                                              </div>
                                             </section>
-                                            <div className="relative w-full mb-3 mt-2">
-                                              <TextField2
-                                                label="Son/Daughter/Wife of"
-                                                name="co_Name2"
-                                                type="text"
-                                              />
-                                            </div>
                                           </div>
-                                          <div className="w-full  flex flex-row lg:w-12/12">
-                                          <div className="w-full lg:w-4/12 px- mt-4">
-                                            <div className="relative w-full mb-3 mt-2">
-                                              <PhoneNoField2
-                                                label="Phone No"
-                                                name="phoneNo2"
-                                                type="text"
-                                                value={formik.values.phoneNo2}
-                                                onChange={(value) => {
-                                                  // formik.setFieldValue('mobileNo', value.value)
-                                                  formik.setFieldValue(
-                                                    'phoneNo2',
-                                                    value.value
-                                                  )
-                                                }}
-                                                // value={formik.values.mobileNo}
-                                                options={{}}
-                                              />
-                                            </div>
-                                          </div>
-                                          <div className="w-full lg:w-8/12 pl-4 mt-4">
-                                            <div className="relative w-full mb-3 mt-2">
-                                              <TextField2
-                                                label="Email"
-                                                name="email2"
-                                                type="text"
-                                              />
-                                            </div>
-                                          </div>
-                                          </div>
-{/* col dob etc */}
-                                          <div>
-                                          <div className="flex flex-wrap mt-3">
-                                          <div className="w-full lg:w-8/12 mt-[px] ">
+
+                                          <div className="w-full lg:w-7/12 mt-[px] pl-4 ">
                                             <div className="relative w-full mb-3 ">
                                               <label
                                                 htmlFor={'dob2'}
@@ -1056,7 +1150,7 @@ Co-applicant
                                               </label>
                                               <span className="inline">
                                                 <DatePicker
-                                                  className="h-8 outline-none border-t-0 border-l-0 border-r-0 border-gray-500 text-sm mt-[-4px] pb-1  min-w-[125px]  inline     lg:w-8/12 w-full flex bg-grey-lighter text-grey-darker border border-gray-500 "
+                                                  className="h-8 outline-none border-[#cccccc] rounded-md px-2 border-gray-500 text-sm mt-[-4px] pb-1   w-[90%]  inline      w-full flex bg-grey-lighter text-grey-darker border border-gray-500 "
                                                   label="Dated"
                                                   name="dob2"
                                                   selected={formik.values.dob2}
@@ -1088,87 +1182,62 @@ Co-applicant
                                               </span>
                                             </div>
                                           </div>
-
-                                          <div className="w-full lg:w-4/12 pl-4 ">
-                                            <section className="mt-4">
-                                              <NoBorderDropDown
-                                                options={[
-                                                  {
-                                                    label: 'Divorced',
-                                                    value: 'Divorced',
-                                                  },
-                                                  {
-                                                    label: 'Married',
-                                                    value: 'Married',
-                                                  },
-                                                  {
-                                                    label: 'Single',
-                                                    value: 'Single',
-                                                  },
-                                                ]}
-                                                setRefDropFun={(val) => {
-                                                  console.log('value is ', val)
-                                                  formik.setFieldValue(
-                                                    'marital2',
-                                                    val
-                                                  )
-                                                }}
-                                                selRefDrop={
-                                                  formik.values.marital2
-                                                }
-                                              />
-                                            </section>
-                                          </div>
                                         </div>
 
                                         <div className="w-full lg:w-12/12 ">
-                                            <div className="relative w-full mb-3 mt-2">
-                                              <TextField2
-                                                label="Address"
-                                                name="address2"
-                                                type="text"
-                                              />
-                                            </div>
+                                          <div className="relative w-full mb-3 mt-2">
+                                            <TextField
+                                              label="Address"
+                                              name="address2"
+                                              type="text"
+                                            />
                                           </div>
-                                        <div className="w-full flex flex-row">
-                                          <div className="  px-">
-                                            <div className="relative w-[160px] mb-3 mt-2">
-                                              <TextField2
-                                                label="PAN No"
-                                                name="panNo2"
-                                                type="text"
-                                              />
-                                            </div>
-                                          </div>
-                                          <div className=" border-b border-gray-500 mb-[12px] ">
-                                            <div className=" min-w-[140px] mt-3">
-                                              <div className='flex flex-row-reverse'>
+                                        </div>
+                                        <label className="label font-regular text-[12px] block mb-1 mt-1 text-gray-700">
+                                        PAN No{' '}
+                                      </label>
+                                        <MuiTextField
+                                        id="area"
+                                        className={`w-full bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 mt-1 p-0`}
+                                        size="small"
+                                        InputProps={{
+                                          style: {
+                                            height: '2rem',
+                                            paddingLeft: '7px',
+                                          },
+                                          endAdornment: (
+                                            <InputAdornment
+                                              position="end"
+                                              style={{ height: '32px' }}
+                                            >
+                                                <div className="flex flex-row-reverse">
                                                 <label
                                                   htmlFor="formFile3"
-                                                  className="form-label cursor-pointer inline-block mb-1  font-regular text-xs  rounded-2xl px-1 py-1  "
+                                                  className="form-label cursor-pointer inline-block   font-regular text-xs  rounded-2xl px-1 py-1  "
                                                 >
                                                   {`${
-                                                    panCard1 === '' ||
-                                                    panCard1 == undefined
+                                                    panCard2 === '' ||
+                                                    panCard2 == undefined
                                                       ? 'Upload'
                                                       : 'Download'
                                                   }`}
                                                 </label>
-                                                {panCard2 != '' && (
+                                                {panCard1 != '' && (
                                                   <button
                                                     onClick={() =>
                                                       downloadImage(
-                                                        panCard2,
+                                                        panCard1,
                                                         'pancard1.PNG'
                                                       )
                                                     }
                                                   >
                                                     {' '}
                                                     {panCard2 === '' ||
-                                                    panCard2 == undefined
-                                                      ? <PlusIcon className="w-4 h-4 cursor-pointer ml-1 mb-[9px] mr-2 inline-block text-gray-400 border rounded-[16px] " />
-                                                      :                                                     <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[9px] mr-2 inline-block text-gray-400 " />}
-
+                                                    panCard2 == undefined ? (
+                                                      <PlusIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 border rounded-[16px] " />
+                                                    ) : (
+                                                      <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " />
+                                                    )}
                                                   </button>
                                                 )}
                                                 <input
@@ -1183,57 +1252,60 @@ Co-applicant
                                                   }}
                                                 />
                                               </div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                        <div className="w-full flex flex-row mt-4">
-                                          {/* <div className="w-full lg:w-8/12 pl-4">
-                                          <div className="relative w-full mb-3 mt-2">
-                                            <TextField2
-                                              label="Aadhar Upload"
-                                              name="aadharUrl1"
-                                              type="text"
-                                            />
-                                          </div>
-                                        </div> */}
-                                          <div className=" ">
-                                            <div className="relative w-[160px] mb-3 mt-2">
-                                              <TextField2
-                                                label="Aadhar No"
-                                                name="aadharNo2"
-                                                type="text"
-                                              />
-                                            </div>
-                                          </div>
-                                          <div className='border-b border-gray-500 mb-[12px] '>
-                                            <div className=" min-w-[140px] mt-3">
-                                              <div className=" flex flex-row-reverse">
+                                            </InputAdornment>
+                                          ),
+                                        }}
+                                        label=""
+                                        name="panNo2"
+                                        type="text"
+                                        value={formik.values.panNo2}
+                                        onChange={formik.handleChange}
+                                      />
+                                                  <label className="label font-regular text-[12px] block mb-1 mt-1 text-gray-700">
+                                        Aadhar No{' '}
+                                      </label>
+                                        <MuiTextField
+                                        id="area"
+                                        className={`w-full bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 mt-1 p-0`}
+                                        size="small"
+                                        InputProps={{
+                                          style: {
+                                            height: '2rem',
+                                            paddingLeft: '7px',
+                                          },
+                                          endAdornment: (
+                                            <InputAdornment
+                                              position="end"
+                                              style={{ height: '32px' }}
+                                            >
+                                                      <div className=" flex flex-row-reverse">
                                                 <label
                                                   htmlFor="formFile4"
-                                                  className="form-label cursor-pointer inline-block mb-2  font-regular text-xs  rounded-2xl px-1 py-1"
+                                                  className="form-label cursor-pointer inline-block  font-regular text-xs  rounded-2xl px-1 py-1"
                                                 >
                                                   {`${
-                                                    aadhrUrl1 === '' ||
-                                                    aadhrUrl1 == undefined
+                                                    aadhrUrl2 === '' ||
+                                                    aadhrUrl2 == undefined
                                                       ? 'Upload'
                                                       : 'Download'
                                                   }`}
                                                 </label>
-                                                {aadhrUrl1 != '' && (
+                                                {aadhrUrl2 != '' && (
                                                   <button
                                                     onClick={() =>
                                                       downloadImage(
                                                         aadhrUrl2,
-                                                        'Aadhar1.PNG'
+                                                        'Aadhar2.PNG'
                                                       )
                                                     }
                                                   >
                                                     {' '}
                                                     {aadhrUrl2 === '' ||
-                                                    aadhrUrl2 == undefined
-                                                      ? <PlusIcon className="w-4 h-4 cursor-pointer ml-1 mb-[9px] mr-2 inline-block text-gray-400 border rounded-[16px] " />
-                                                      :                                                     <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[9px] mr-2 inline-block text-gray-400 " />}
-
+                                                    aadhrUrl2 == undefined ? (
+                                                      <PlusIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 border rounded-[16px] " />
+                                                    ) : (
+                                                      <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " />
+                                                    )}
                                                   </button>
                                                 )}
                                                 <input
@@ -1246,42 +1318,45 @@ Co-applicant
                                                     )
                                                     handleFileUploadFun(
                                                       e.target.files[0],
-                                                      'aadharNo1Url2'
+                                                      'aadharNo2Url'
                                                     )
                                                   }}
                                                 />
                                               </div>
-                                            </div>
-                                          </div>
-                                        </div>
+                                            </InputAdornment>
+                                          ),
+                                        }}
+                                        label=""
+                                        name="aadharNo1"
+                                        type="text"
+                                        value={formik.values.aadharNo2}
+                                        onChange={formik.handleChange}
+                                      />
 
                                         <section className="w-full flex flex-row mt-4">
                                           <div className="w-full lg:w-6/12">
-                                      <div className="relative w-full mb-3">
-                                        <TextField2
-                                          label="Job Designation"
-                                          name="designation2"
-                                          type="text"
-                                        />
-                                      </div>
-                                    </div>
-                                    <div className="w-full lg:w-6/12 pl-3">
-                                      <div className="relative w-full mb-3">
-                                        <TextField2
-                                          label="Annual Income"
-                                          name="annualIncome2"
-                                          type="text"
-                                        />
-                                      </div>
-                                    </div>
-                                          </section>
+                                            <div className="relative w-full mb-3">
+                                              <TextField
+                                                label="Job Designation"
+                                                name="designation2"
+                                                type="text"
+                                              />
+                                            </div>
                                           </div>
-
-
-                                  </div>
-                                </section>
+                                          <div className="w-full lg:w-6/12 pl-3">
+                                            <div className="relative w-full mb-3">
+                                              <TextField
+                                                label="Annual Income"
+                                                name="annualIncome2"
+                                                type="text"
+                                              />
+                                            </div>
+                                          </div>
+                                        </section>
+                                      </div>
+                                    </div>
+                                  </section>
                                 </div>
-
 
                                 {/* <hr className="mt-6 border-b-1 border-blueGray-300" /> */}
                                 <section
@@ -1292,9 +1367,9 @@ Co-applicant
                                     Agreement Information
                                   </h6>
                                   <div className="flex flex-wrap">
-                                    <div className="w-full lg:w-12/12 px-4">
+                                    <div className="w-full lg:w-12/12 px-2">
                                       <div className="relative w-full mb-3">
-                                        <TextField2
+                                        <TextField
                                           label="Address"
                                           name="aggrementAddress"
                                           type="text"
@@ -1314,27 +1389,27 @@ Co-applicant
                                     Other Information
                                   </h6>
                                   <div className="flex flex-wrap">
-                                    <div className="w-full lg:w-12/12 px-4">
+                                    <div className="w-full lg:w-12/12 px-2">
                                       <div className="relative w-full mb-3">
-                                        <TextField2
+                                        <TextField
                                           label="How do you come to know about this project?"
                                           name="leadSource"
                                           type="text"
                                         />
                                       </div>
                                     </div>
-                                    <div className="w-full lg:w-12/12 px-4">
+                                    <div className="w-full lg:w-12/12 px-2">
                                       <div className="relative w-full mb-3">
-                                        <TextField2
+                                        <TextField
                                           label="Source of payment/source"
                                           name="sourceOfPay"
                                           type="text"
                                         />
                                       </div>
                                     </div>
-                                    <div className="w-full lg:w-12/12 px-4">
+                                    <div className="w-full lg:w-12/12 px-2">
                                       <div className="relative w-full mb-3">
-                                        <TextField2
+                                        <TextField
                                           label="Purpose of purchase"
                                           name="purpose"
                                           type="text"
@@ -1351,7 +1426,7 @@ Co-applicant
                                 <div className="flex flex-wrap">
                                   <div className="w-full lg:w-12/12 px-4">
                                     <div className="relative w-full mb-3">
-                                      <TextField2
+                                      <TextField
                                         label="Source"
                                         name="bookingSource"
                                         type="text"
@@ -1360,7 +1435,7 @@ Co-applicant
                                   </div>
                                   <div className="w-full lg:w-12/12 px-4">
                                     <div className="relative w-full mb-3">
-                                      <TextField2
+                                      <TextField
                                         label="Booked By"
                                         name="bookedBy"
                                         type="text"
@@ -1369,7 +1444,7 @@ Co-applicant
                                   </div>
                                   <div className="w-full lg:w-12/12 px-4">
                                     <div className="relative w-full mb-3">
-                                      <TextField2
+                                      <TextField
                                         label="Purpose of purchase"
                                         name="purchasePurpose"
                                         type="text"
@@ -1396,40 +1471,37 @@ Co-applicant
                         </button>
                       )}
 
-
                       <button
-className="mb-2  md:mb-0  hover:scale-110 focus:outline-none              hover:bg-[#5671fc]
+                        className="mb-2  md:mb-0  hover:scale-110 focus:outline-none              hover:bg-[#5671fc]
 bg-gradient-to-r from-violet-300 to-indigo-300
 text-black
 
 border duration-200 ease-in-out
 transition
  px-5 py-1 pb-[5px] text-sm shadow-sm font-medium tracking-wider text-white rounded-md hover:shadow-lg hover:bg-green-500"
-type="submit"
-disabled={loading}
-// onClick={() => submitFormFun(formik)}
->
-{/* {loading && <Loader />} */}
-<span>  {'Save'}</span>
-</button>
+                        type="submit"
+                        disabled={loading}
+                        // onClick={() => submitFormFun(formik)}
+                      >
+                        {/* {loading && <Loader />} */}
+                        <span> {'Save'}</span>
+                      </button>
                       {setShowApplicantEdit == undefined && (
-
-
-<button
-className="mb-2 mr-0 md:mb-0  hover:scale-110 focus:outline-none              hover:bg-[#5671fc]
+                        <button
+                          className="mb-2 mr-0 md:mb-0  hover:scale-110 focus:outline-none              hover:bg-[#5671fc]
 bg-gradient-to-r from-violet-300 to-indigo-300
 text-black
 
 border duration-200 ease-in-out
 transition
  px-5 py-1 pb-[5px] text-sm shadow-sm font-medium tracking-wider text-white rounded-md hover:shadow-lg hover:bg-green-500"
-type="submit"
-disabled={loading}
-// onClick={() => submitFormFun(formik)}
->
-{/* {loading && <Loader />} */}
-<span>  {'Save & Next'}</span>
-</button>
+                          type="submit"
+                          disabled={loading}
+                          // onClick={() => submitFormFun(formik)}
+                        >
+                          {/* {loading && <Loader />} */}
+                          <span> {'Save & Next'}</span>
+                        </button>
                       )}
                     </div>
                   </Form>

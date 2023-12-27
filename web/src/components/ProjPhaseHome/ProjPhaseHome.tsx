@@ -26,7 +26,6 @@ import MarketingHomeList from '../A_ProjModule/MarketingHomeList'
 import ProjectAccessHomeList from '../A_ProjModule/ProjectAccessHomeListAc'
 import SalesHomeList from '../A_ProjModule/SalesHomeList'
 import TemplatesHomeList from '../A_ProjModule/TemplatesHomeList'
-import AddApplicantDetails from '../AddApplicantDetails'
 import AdditionalChargesForm from '../AdditionalChargesForm/AdditionalChargesForm'
 import AssigedToDropComp from '../assignedToDropComp'
 import BlockingUnitForm from '../BlockingUnitForm'
@@ -259,6 +258,7 @@ const ProjPhaseHome = ({
                   selMode={selMode}
                   title="Cost Break Up Sheetx"
                   leadDetailsObj1={leadDetailsObj1}
+                  setLeadDetailsObj1={setLeadDetailsObj1}
                   selPhaseObj={selPhaseObj}
                   unitDetails={unitDetails}
                   projectDetails={myProjectDetails}

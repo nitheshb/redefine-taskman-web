@@ -1681,7 +1681,7 @@ export const addLead = async (orgId, data, by, msg) => {
     x1.push('pending')
 
     await addLeadScheduler(orgId, x.id, data1, x1, data.assignedTo)
-    return
+    return x
   } catch (error) {
     console.log('error in uploading file with data', data, error)
   }
@@ -3326,20 +3326,21 @@ export const createNewCustomerS = async (
   projectId,
   unitId,
   leadDetailsObj2,
+  selUnitDetails,
   oldStatus,
   newStatus,
   by,
   enqueueSnackbar
 ) => {
   try {
-    const leadDocId = leadDetailsObj2.id
+    const leadDocId = leadDetailsObj2.id || ""
     const { Name } = leadDetailsObj2
 
     console.log('wow it should be here', leadDocId, newStatus, Name)
 
     const { data, error } = await supabase.from(`${orgId}_customers`).insert([
       {
-        Name: Name,
+        Name: leadDetailsObj2?.Name || selUnitDetails?.customerDetailsObj?.co_Name1,
         // id: leadDocId,
         my_assets: [unitId],
         T: Timestamp.now().toMillis(),
@@ -3348,7 +3349,7 @@ export const createNewCustomerS = async (
         projects: [projectId],
       },
     ])
-    await console.log('customer data is ', data, error, {
+    await console.log('customer data is ', data, error, selUnitDetails,{
       Name: Name,
       // id: leadDocId,
       my_assets: [unitId],
@@ -3474,7 +3475,7 @@ export const capturePaymentS = async (
         towards_id: towardsBankDocId,
         mode,
         custId: custNo,
-        customerName: Name,
+        customerName: Name || "",
         receive_by: payload?.bookedBy,
         txt_dated: dated, // modify this to dated time entred by user
         status: payload?.status || 'review',
@@ -4000,6 +4001,35 @@ export const updateLeadCostSheetDetailsTo = async (
   //   txt: `${email} is updated with ${role}`,
   //   by,
   // })
+}
+export const updateUnitsCostSheetDetailsTo = async (
+  orgId,
+  leadDocId,
+  data,
+  by,
+  enqueueSnackbar,
+  resetForm
+) => {
+  try {
+    console.log('data is cost sheet', leadDocId, data)
+
+    await updateDoc(doc(db, `${orgId}_units`, leadDocId), {
+      ...data,
+    })
+    enqueueSnackbar('Cost Sheet Updated for Customer', {
+      variant: 'success',
+    })
+  } catch (error) {
+    console.log('Filed updated Cost sheet', error, {
+      ...data,
+    })
+    enqueueSnackbar('Failed to update Cost sheet', {
+      variant: 'error',
+    })
+  }
+
+  return
+
 }
 export const updateUnitAsBooked = async (
   orgId,
