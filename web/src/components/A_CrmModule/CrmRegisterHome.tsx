@@ -139,7 +139,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
 
   // kanban board
   const [ready, setReady] = useState(false)
-  const [horizontalMode, setHorizontalMode] = useState(true)
+  const [horizontalMode, setHorizontalMode] = useState(false)
   const [showSettings, setShowSettings] = useState(true)
   const [sourceDateRange, setSourceDateRange] = useState(
     startOfDay(d).getTime()
@@ -396,6 +396,9 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
             )
             await setBookingReviewA(usersListA)
             await setBookingReviewCo(usersListA.length)
+            await   usersListA.sort((a, b) => {
+              return a.unit_no - b.unit_no
+            })
             await setQueryResult(usersListA)
           } else if (statusFil === 'agreement_pipeline') {
             await setAgreePipeA(usersListA)
@@ -1144,7 +1147,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                             </div>
                             {/* check it  */}
                             <div>
-                              <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2 min-w-[244px] justify-between mx-2">
+                              <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2 pb-4 min-w-[244px] justify-between mx-2">
                                 <div className="flex flex-row justify-between mx- mb-2">
                                   <section className="font-bodyLato font-semibold text-xs m-1 w-full">
                                     <div className="text-zinc-500 text-sm font-medium font-['Lato'] tracking-wide">
@@ -1152,20 +1155,6 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                     </div>
                                     <div className="text-zinc-800 text-[20px] font-bold font-['Lato'] tracking-wide">
                                       ₹
-                                      {finData?.T_review?.toLocaleString(
-                                        'en-IN'
-                                      ) || 0}
-                                    </div>
-                                  </section>
-                                  <section className="flex flex-col mt-3 w-full">
-                                    <div className="flex flex-row text-zinc-500 text-[11px] font-normal font-['Lato'] tracking-wide">
-                                      Balance ₹
-                                      {finData?.T_balance?.toLocaleString(
-                                        'en-IN'
-                                      )}
-                                    </div>
-                                    <div className="text-zinc-500 text-[11px] font-normal font-['Lato'] tracking-wide">
-                                      Paid: ₹
                                       {(
                                         (finData?.plotCS?.reduce(function (
                                           _this,
@@ -1189,6 +1178,21 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                             0
                                           ) || 0
                                       )?.toLocaleString('en-IN')}
+
+                                    </div>
+                                  </section>
+                                  <section className="flex flex-col mt-3 w-full">
+                                    <p className="flex flex-row justify-end text-zinc-500 text-[11px] font-normal font-['Lato'] tracking-wide">
+                                      Balance: ₹
+                                      {finData?.T_balance?.toLocaleString(
+                                        'en-IN'
+                                      )}
+                                    </p>
+                                    <div className="text-zinc-500 flex flex-row justify-end text-[11px] font-normal font-['Lato'] tracking-wide">
+                                      Paid: ₹
+                                      {finData?.T_review?.toLocaleString(
+                                        'en-IN'
+                                      ) || 0}
                                     </div>
                                   </section>
                                 </div>
@@ -1262,41 +1266,42 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                 </div>
                               </div>
                             </div>
+
                             <div>
-                              <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  pt-2 min-w-[200px]">
-                                <div className="flex flex-row justify-between tracking-wide mx-">
-                                  <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
-                                    {' '}
-                                    <div>
+                              <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  py-2 pb-4 min-w-[244px] justify-between mr-1">
+                                <div className="flex flex-row justify-between mx- mb-2">
+                                  <section className="font-bodyLato font-semibold text-xs m-1 w-full">
+                                    <div className="mb-[2px] text-zinc-500 text-sm font-medium font-['Lato'] tracking-wide">
+                                      Stage Cost
+                                    </div>
+                                    <div className="text-zinc-800 text-[20px] font-bold font-['Lato'] tracking-wide">
                                       ₹
+                                      {/* {finData?.T_elgible_balance?.toLocaleString(
+                                          'en-IN'
+                                        )} */}
+                                         {finData?.T_elgible?.toLocaleString(
+                                          'en-IN'
+                                        )}
+                                    </div>
+                                  </section>
+                                  <section className="flex flex-col mt-3 w-full">
+                                    <div className="flex flex-row justify-end text-zinc-500 text-[11px] font-normal font-['Lato'] tracking-wide">
+                                    🔥 Balance: ₹
+                                    {finData?.T_balance?.toLocaleString(
+                                        'en-IN'
+                                      )}
+
+
+                                    </div>
+                                    <div className="text-zinc-500 flex flex-row justify-end text-[11px] font-normal font-['Lato'] tracking-wide">
+                                      Paid: ₹
                                       {finData?.T_review?.toLocaleString(
                                         'en-IN'
                                       )}
-                                    </div>{' '}
-                                    <span className="text-[#637381] tracking-wide font-thin">
-                                      Paid
-                                    </span>
-                                  </h6>
-                                  <section className="flex flex-row">
-                                    {/* <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
-                {finData?.T_elgible?.toLocaleString('en-IN')}
-              </h6> */}
-                                    <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2 text-right ">
-                                      {' '}
-                                      <div>
-                                        {' '}
-                                        ₹
-                                        {finData?.T_elgible_balance?.toLocaleString(
-                                          'en-IN'
-                                        )}
-                                      </div>
-                                      <span className="text-[#637381] tracking-wide font-thin text-right ">
-                                        🔥Left:
-                                      </span>
-                                    </h6>
+                                    </div>
                                   </section>
                                 </div>
-                                <div className="flex flex-row mx-1">
+                                <div className="flex flex-row mx-1 pt-">
                                   {[{ item: 'Paid', value: 3 }].map(
                                     (data, i) => (
                                       <div
@@ -1330,7 +1335,6 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                       </div>
                                     )
                                   )}
-
                                   {[{ item: 'Due', value: 3 }].map(
                                     (data, i) => (
                                       <div
@@ -1365,25 +1369,9 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                     )
                                   )}
                                 </div>
-                                <div className="flex flex-row justify-between mx-">
-                                  <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2"></h6>
-                                  <section className="flex flex-row">
-                                    {/* <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
-                {finData?.T_elgible?.toLocaleString('en-IN')}
-              </h6> */}
-                                    <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
-                                      <span className="text-[#637381] tracking-wide font-thin">
-                                        Stage Total:
-                                      </span>{' '}
-                                      ₹
-                                      {finData?.T_elgible?.toLocaleString(
-                                        'en-IN'
-                                      )}
-                                    </h6>
-                                  </section>
-                                </div>
                               </div>
                             </div>
+
 
                             <div className="w-2/4 bg-[#f2f3f8] px-1">
                               <div className="flex flex-col bg-white shadow rounded-md my-1   py-1">
