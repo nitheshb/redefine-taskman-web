@@ -527,7 +527,12 @@ const AddApplicantDetails = ({
       console.log('upload error is ', error)
     }
   }
-
+  const bgImgStyle = {
+    backgroundImage:
+      'url("https://images.unsplash.com/photo-1605106715994-18d3fecffb98?q=80&w=1926&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")',
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'cover',
+  }
   return (
     <>
       <div className="font-['Inter']">
@@ -564,13 +569,13 @@ const AddApplicantDetails = ({
                                     className="rounded-md   bg-[#fff] lg:w-6/12"
                                     style={{ boxShadow: '0 1px 12px #f2f2f2' }}
                                   >
-                                    <div className="w-full  flex flex-row mb-2 p-4 bg-violet-100 rounded-t-md">
+                                    <div className="w-full  flex flex-row mb-2 p-4 bg-violet-100 rounded-t-md" style={bgImgStyle}>
                                       <div className="w-[43.80px] h-[47px] bg-zinc-100 rounded-[5px]"></div>
                                       <div className="w-full flex flex-col">
-                                        <h6 className="w-full lg:w-12/12 text-blueGray-400 text-[13px] mt-[9px] mb- font-bold uppercase">
+                                        <h6 className="w-full lg:w-12/12 text-white text-[13px] mt-[9px] mb- font-bold uppercase">
                                           Applicant
                                         </h6>
-                                        <div className="w-[455.80px] opacity-50 text-blue-950  text-[12px] font-normal ">
+                                        <div className="w-[455.80px] opacity-50 text-white  text-[12px] font-normal ">
                                           Details of applicant is
                                           mandatory
                                         </div>
@@ -989,14 +994,15 @@ const AddApplicantDetails = ({
                                   <section
                                     className="rounded-md   bg-[#fff] lg:w-6/12"
                                     style={{ boxShadow: '0 1px 12px #f2f2f2' }}
+
                                   >
-                                    <div className="w-full  flex flex-row mb-2 p-4 bg-violet-100 rounded-t-md">
+                                    <div className="w-full  flex flex-row mb-2 p-4 bg-violet-100 rounded-t-md"  style={bgImgStyle}>
                                       <div className="w-[43.80px] h-[47px] bg-zinc-100 rounded-[5px]"></div>
                                       <div className="w-full flex flex-col">
-                                        <h6 className="w-full lg:w-12/12 text-blueGray-400 text-[13px] mt-[9px] mb- font-bold uppercase">
+                                        <h6 className="w-full lg:w-12/12 text-white text-[13px] mt-[9px] mb- font-bold uppercase">
                                           Co-applicant
                                         </h6>
-                                        <div className="w-[455.80px] opacity-50 text-blue-950  text-[12px] font-normal ">
+                                        <div className="w-[455.80px] opacity-50 text-gray-100  text-[12px] font-normal ">
                                           Details of co-applicant is not a
                                           mandatory
                                         </div>
@@ -1358,66 +1364,7 @@ const AddApplicantDetails = ({
                                   </section>
                                 </div>
 
-                                {/* <hr className="mt-6 border-b-1 border-blueGray-300" /> */}
-                                <section
-                                  className="rounded-md  p-4 mt-2 bg-[#fff]"
-                                  style={{ boxShadow: '0 1px 12px #f2f2f2' }}
-                                >
-                                  <h6 className="text-blueGray-400 text-[13px] mt-3 mb-6 font-bold uppercase">
-                                    Agreement Information
-                                  </h6>
-                                  <div className="flex flex-wrap">
-                                    <div className="w-full lg:w-12/12 px-2">
-                                      <div className="relative w-full mb-3">
-                                        <TextField
-                                          label="Address"
-                                          name="aggrementAddress"
-                                          type="text"
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-                                </section>
-                                {/* <hr className="mt-6 border-b-1 border-blueGray-300" /> */}
 
-                                {/* <hr className="mt-6 border-b-1 border-blueGray-300" /> */}
-                                <section
-                                  className="rounded-md  p-4 mt-2 bg-[#fff]"
-                                  style={{ boxShadow: '0 1px 12px #f2f2f2' }}
-                                >
-                                  <h6 className="text-blueGray-400  text-[13px] mt-3 mb-6 font-bold uppercase">
-                                    Other Information
-                                  </h6>
-                                  <div className="flex flex-wrap">
-                                    <div className="w-full lg:w-12/12 px-2">
-                                      <div className="relative w-full mb-3">
-                                        <TextField
-                                          label="How do you come to know about this project?"
-                                          name="leadSource"
-                                          type="text"
-                                        />
-                                      </div>
-                                    </div>
-                                    <div className="w-full lg:w-12/12 px-2">
-                                      <div className="relative w-full mb-3">
-                                        <TextField
-                                          label="Source of payment/source"
-                                          name="sourceOfPay"
-                                          type="text"
-                                        />
-                                      </div>
-                                    </div>
-                                    <div className="w-full lg:w-12/12 px-2">
-                                      <div className="relative w-full mb-3">
-                                        <TextField
-                                          label="Purpose of purchase"
-                                          name="purpose"
-                                          type="text"
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-                                </section>
                                 {/* <hr className="mt-6 border-b-1 border-blueGray-300" />
 
                                 <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
@@ -1456,11 +1403,10 @@ const AddApplicantDetails = ({
                                 <hr className="mt-6 border-b-1 border-blueGray-300" />
                               </section>
                             </div>
+
+
                           </div>
-                        </div>
-                      </section>
-                    </div>
-                    <div className="mt-5 text-right md:space-x-3 md:block flex flex-col-reverse py-3 mr-6 flex flex-col mt-2 z-10 flex flex-row justify-between mt-2 pr-6 bg-white shadow-lg absolute bottom-0  w-full">
+                          <div className="mt-5 text-right md:space-x-3 md:block flex flex-col-reverse py-3 mr-6 flex flex-col mt-2 z-10 flex flex-row justify-between mt-2 pr-6 bg-white shadow-lg absolute bottom-0  w-full w-[680px]">
                       {setShowApplicantEdit != undefined && (
                         <button
                           className="bg-red-400 text-white active:bg-pink-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
@@ -1504,6 +1450,10 @@ transition
                         </button>
                       )}
                     </div>
+                        </div>
+                      </section>
+                    </div>
+
                   </Form>
                 )}
               </Formik>
