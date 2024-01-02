@@ -13,6 +13,8 @@ import { TextFieldFlat } from './formFields/TextFieldFlatType'
 const CostBreakUpPdfAll = ({
   projectDetails,
   csMode,
+  costSheet,
+  setCostSheet,
   pdfExportComponent,
   selPhaseObj,
   selUnitDetails,
@@ -436,7 +438,8 @@ const CostBreakUpPdfAll = ({
       soldPrice: Number(soldPrice),
       costSheetA: newCostSheetA,
     }
-
+    console.log('my imported details is cs verification', newCostSheetA )
+    setCostSheet(newCostSheetA)
     updateLeadCostSheetDetailsTo(
       orgId,
       id,
@@ -479,6 +482,7 @@ const CostBreakUpPdfAll = ({
           initialValues={initialState}
           validationSchema={validate}
           onSubmit={(values, { resetForm }) => {
+            console.log('my imported details is', values)
             onSubmit(values, resetForm)
           }}
         >

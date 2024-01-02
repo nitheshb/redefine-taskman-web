@@ -103,6 +103,11 @@ const CostBreakUpSheet = ({
   const [partATotal, setPartATotal] = useState(0)
   const [partBTotal, setPartBTotal] = useState(0)
 
+  const [customerInfo, setCustomerInfo] = useState({})
+  const [costSheet, setCostSheet] = useState({})
+  const [paymentSchedule, setPaymentSchedule] = useState({})
+
+
   const pdfExportComponent = useRef(null)
   const pdfExportComponentConstruct = useRef(null)
 
@@ -434,6 +439,7 @@ useEffect(() => {
       soldPrice: Number(soldPrice),
       costSheetA: costSheetA,
     }
+    setCostSheet(newCostSheetA)
     if (leadDetailsObj1?.id) {
       updateLeadCostSheetDetailsTo(
         orgId,
@@ -495,6 +501,8 @@ useEffect(() => {
                                     <CostBreakUpPdfAll
                                       projectDetails={projectDetails}
                                       csMode={csMode}
+                                      setCostSheet={setCostSheet}
+                                      costSheet={costSheet}
                                       // costSheetA={costSheetA}
                                       pdfExportComponent={
                                         pdfExportComponentConstruct
@@ -520,6 +528,8 @@ useEffect(() => {
                                     <CostBreakUpPdf
                                       projectDetails={projectDetails}
                                       csMode={csMode}
+                                      setCostSheet={setCostSheet}
+                                      costSheet={costSheet}
                                       // costSheetA={costSheetA}
                                       pdfExportComponent={pdfExportComponent}
                                       selPhaseObj={selPhaseObj}
@@ -652,6 +662,8 @@ useEffect(() => {
                       selUnitDetails={selUnitDetails}
                       leadPayload={leadPayload}
                       setLeadPayload={setLeadPayload}
+                      setCustomerInfo={setCustomerInfo}
+                      customerInfo={customerInfo}
                       setOnStep={setOnStep}
                       source="Booking"
                       currentMode={actionMode}
@@ -671,6 +683,8 @@ useEffect(() => {
                     <AddPaymentDetailsForm
                       title={'undefined'}
                       dialogOpen={undefined}
+                      customerInfo={customerInfo}
+                      costSheet={costSheet}
                       phase={selPhaseObj}
                       leadDetailsObj2={leadPayload}
                       selUnitDetails={selUnitDetails}
@@ -691,6 +705,8 @@ useEffect(() => {
                       csMode={csMode}
                       // costSheetA={costSheetA}
                       pdfExportComponent={pdfExportComponent}
+                      customerInfo={customerInfo}
+                      costSheet={costSheet}
                       selPhaseObj={selPhaseObj}
                       leadDetailsObj1={leadDetailsObj1}
                       selUnitDetails={selUnitDetails}

@@ -14,9 +14,11 @@ import Confetti from 'src/components/shared/confetti'
 import { paymentMode, statesList } from 'src/constants/projects'
 import {
   addAccountslogS,
+  addLead,
   addModuleScheduler,
   addPaymentReceivedEntry,
   capturePaymentS,
+  checkIfLeadAlreadyExists,
   createBookedCustomer,
   createNewCustomerS,
   insertPSS,
@@ -34,6 +36,8 @@ import CaptureUnitPayment from './CapturePayment'
 
 const AddPaymentDetailsForm = ({
   title,
+  customerInfo,
+  costSheet,
   selUnitDetails,
   leadDetailsObj2,
   dialogOpen,
@@ -53,6 +57,8 @@ const AddPaymentDetailsForm = ({
   const [openAreaFields, setOpenAreaFields] = useState(false)
   const [bankDetailsA, setBankDetailsA] = useState([])
   const [paymentModex, setPaymentModex] = useState('Cheque')
+  const [bookCompSteps, setBookCompSteps] = useState([])
+  const [bookCurentStep, setBookCurentStep] = useState([])
 
   const { enqueueSnackbar } = useSnackbar()
 
@@ -102,6 +108,7 @@ const AddPaymentDetailsForm = ({
       projectDetails?.uid,
       selUnitDetails?.uid,
       leadDetailsObj2,
+      customerInfo,
       Status,
       'booked',
       user?.email,
@@ -205,6 +212,7 @@ const AddPaymentDetailsForm = ({
     } else {
       return
     }
+    await setBookCurentStep(['payment_captured'])
     const y = await capturePayment(custNo, data, resetForm)
     // get paymentTxn id
     let txId
@@ -214,7 +222,11 @@ const AddPaymentDetailsForm = ({
       return
     }
     await capturePayment_log(data, txId, resetForm)
+    const s1 = await  bookCompSteps;
+  await  s1.push('payment_captured')
+await setBookCompSteps(s1)
 
+await setBookCurentStep(['CS_updated', 'customer_created'])
     // get booking details, leadId, unitDetails,
     //  from existing object send values of
     //  booking
@@ -231,9 +243,45 @@ const AddPaymentDetailsForm = ({
     // await console.log('x value is', x, x.id)
 
     // I) createNewCustoreSupa
+    // const foundLength = await checkIfLeadAlreadyExists('spark_leads', phoneNo1)
+    const foundLength = []
+    let leadData = {
+      Date: Timestamp.now().toMillis(),
+      Email: customerInfo?.customerDetailsObj?.email1 || '',
+      Mobile: customerInfo?.customerDetailsObj?.email1 || '',
+      Name: customerInfo?.customerDetailsObj?.email1,
+      Note: '',
+      Project: '',
+      Source: 'Booking' || '',
+      Status: 'unassigned',
+      intype: 'DirectBooking',
+      assignedTo: '',
+      by: user?.email,
+    }
+    console.log('user is ', user)
+    if (foundLength?.length > 0) {
+      console.log('foundLENGTH IS ', foundLength)
+      setLoading(false)
+    } else {
+      console.log('foundLENGTH IS empty ', foundLength)
 
-    const { id, purpose, customerDetailsObj, secondaryCustomerDetailsObj } =
-      leadDetailsObj2
+      // proceed to copy
+      const createResp = await addLead(
+        orgId,
+        leadData,
+        user?.email,
+        `lead created directly from booking`
+      )
+      leadData.id = await createResp.id
+    }
+    // const { id, purpose,  } =
+    //   leadDetailsObj2
+// check if lead already exists
+const {id} = leadData
+    // proceed to copy
+
+
+      const { customerDetailsObj, secondaryCustomerDetailsObj } = customerInfo
     const { uid } = selUnitDetails
     // 1)Make an entry to finance Table {source: ''}
     console.log(
@@ -328,9 +376,9 @@ const AddPaymentDetailsForm = ({
         projectName: leadDetailsObj2?.Project,
         ProjectId: leadDetailsObj2?.ProjectId,
         // ...customerDetailsObj,
-        Name: leadDetailsObj2?.Name,
-        Mobile: leadDetailsObj2?.Mobile,
-        Email: leadDetailsObj2?.Email,
+        Name: customerDetailsObj?.customerName1,
+        Mobile: customerDetailsObj?.phoneNo1,
+        Email: customerDetailsObj?.email1,
         secondaryCustomerDetailsObj: secondaryCustomerDetailsObj || {},
         assets: arrayUnion(uid),
         // [`${uid}_cs`]: leadDetailsObj2[`${uid}_cs`],
@@ -354,6 +402,13 @@ const AddPaymentDetailsForm = ({
       user?.email,
       enqueueSnackbar
     )
+
+    const s2 = await  bookCompSteps;
+    await  s2.push('CS_updated')
+    await  s2.push('customer_created')
+  await setBookCompSteps(s2)
+
+  await setBookCurentStep(['unit_booked'])
 
     //
     // 3)Update unit record with customer record and mark it as booked
@@ -380,7 +435,7 @@ const AddPaymentDetailsForm = ({
     unitUpdate[`T_review`] = T_review
     unitUpdate[`T_balance`] = T_balance
     console.log('unit space is ', uid)
-    updateUnitAsBooked(
+   await updateUnitAsBooked(
       orgId,
       leadDetailsObj2?.ProjectId,
       uid,
@@ -390,15 +445,20 @@ const AddPaymentDetailsForm = ({
       enqueueSnackbar,
       resetForm
     )
+    const s3 = await  bookCompSteps;
+    await  s3.push('unit_booked')
 
+  await setBookCompSteps(s3)
+
+  await setBookCurentStep(['customer_email_send', 'notify_to_manager'])
     // 4)update lead status to book
     // updateLeadStatus(leadDocId, newStatus)
 
     updateLeadStatus(
       orgId,
-      leadDetailsObj2?.ProjectId,
+      leadDetailsObj2?.ProjectId || '',
       id,
-      leadDetailsObj2?.Status,
+      leadDetailsObj2?.Status || '',
       'booked',
       user?.email,
       enqueueSnackbar
@@ -454,6 +514,9 @@ const AddPaymentDetailsForm = ({
         <div className="flex flex-col rounded-lg bg-white">
           <div className="mt-0">
             <CaptureUnitPayment
+
+             bookCompSteps={bookCompSteps}
+              bookCurentStep={bookCurentStep}
               selUnitDetails={selUnitDetails}
               projectDetails={projectDetails}
               leadDetailsObj2={leadDetailsObj2}

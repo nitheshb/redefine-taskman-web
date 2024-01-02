@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import { useState, useEffect, useRef } from 'react'
+import { ExclamationCircleIcon, CheckCircleIcon } from '@heroicons/react/solid'
 
 import { AttachFile } from '@mui/icons-material'
 import { format } from 'date-fns'
@@ -31,13 +32,17 @@ import { CustomSelect } from 'src/util/formFields/selectBoxField'
 import { MultiSelectMultiLineField } from 'src/util/formFields/selectBoxMultiLineField'
 import { TextField2 } from 'src/util/formFields/TextField2'
 
+import Loader from '../Loader/Loader'
 import { validate_capturePayment } from '../Schemas'
 
 const CaptureUnitPayment = ({
   title,
+  customerInfo,
   selUnitDetails,
   leadDetailsObj2,
   onSubmitFun,
+  bookCompSteps,
+  bookCurentStep,
   dialogOpen,
   newPlotCsObj,
   newPlotCostSheetA,
@@ -54,7 +59,9 @@ const CaptureUnitPayment = ({
   const { orgId, displayName, email, phone } = user
   const [loading, setLoading] = useState(false)
   const [openAreaFields, setOpenAreaFields] = useState(false)
+  const [bookingProgress, setBookingProgress] = useState(false)
   const [bankDetailsA, setBankDetailsA] = useState([])
+
   const [startDate, setStartDate] = useState(d)
 
   const [paymentModex, setPaymentModex] = useState('cheque')
@@ -300,6 +307,7 @@ const CaptureUnitPayment = ({
                     initialValues={initialState}
                     validationSchema={validate_capturePayment}
                     onSubmit={(values, { resetForm }) => {
+                      setBookingProgress(true)
                       onSubmitSupabase(values, resetForm)
                       console.log(values)
                     }}
@@ -343,7 +351,7 @@ const CaptureUnitPayment = ({
                                       </div>
                                       <hr className="mt-6 border-b-1 border-blueGray-300" />
                                     </article>
-                                    {false && (
+                                    {!bookingProgress && (
                                       <section>
                                         <div className="flex flex-wrap mt-3">
                                           <div className="justify-center w-full mx-auto"></div>
@@ -370,7 +378,6 @@ const CaptureUnitPayment = ({
                                               )
                                             })}
                                           </div>
-
 
                                           <div className="w-full  px-4 mt-3">
                                             <div className=" mb-4 w-full">
@@ -409,7 +416,6 @@ const CaptureUnitPayment = ({
                                             </div>
                                           </div>
                                           <div className="w-full lg:w-4/12 px-3">
-
                                             <div className="relative w-full mb-5">
                                               <TextField2
                                                 label="Amount"
@@ -430,7 +436,6 @@ const CaptureUnitPayment = ({
                                           </div>
                                           <div className="w-full mt-3 lg:w-4/12 px-3  ">
                                             <div className="relative w-full mb-5 mt-[-1px] ">
-
                                               <span className="inline">
                                                 <DatePicker
                                                   className="h-8 outline-none border-t-0 border-l-0 border-r-0 border-b border-gray-500  border-solid mt-[-4px] pb-1  min-w-[125px]  inline  text-[#0091ae]   lg:w-4/12 w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] "
@@ -523,194 +528,178 @@ const CaptureUnitPayment = ({
                                             className="img-preview"
                                           />
                                         )}
-                                             <div className="flex flex-row justify-between mt-4 mx-4">
-                                      <div className="flex flex-row justify-between">
-                                        <div></div>
-                                        <div className="flex flex-col">
-                                          <h6 className="text-blueGray-400 text-sm mt- ml-6 mb- font-weight-[700]  font-uppercase">
-                                            Payment
-                                          </h6>
-                                          <span className="text-center text-[13px] font-normal">
-                                            {format(new Date(), 'dd-MMMM-yy')}
-                                          </span>
+                                        <div className="flex flex-row justify-between mt-4 mx-4">
+                                          <div className="flex flex-row justify-between">
+                                            <div></div>
+                                            <div className="flex flex-col">
+                                              <h6 className="text-blueGray-400 text-sm mt- ml-6 mb- font-weight-[700]  font-uppercase">
+                                                Payment
+                                              </h6>
+                                              <span className="text-center text-[13px] font-normal">
+                                                {format(
+                                                  new Date(),
+                                                  'dd-MMMM-yy'
+                                                )}
+                                              </span>
+                                            </div>
+                                          </div>
+                                          <div>
+                                            <div className="text-md font-weight-[700] text-[13px]">
+                                              Received By
+                                            </div>
+                                            <div className="text-center font-semibold text-[13px]">
+                                              {displayName.toUpperCase()}
+                                            </div>
+                                          </div>
                                         </div>
-                                      </div>
-                                      <div>
-                                        <div className="text-md font-weight-[700] text-[13px]">
-                                          Received By
-                                        </div>
-                                        <div className="text-center font-semibold text-[13px]">
-                                          {displayName.toUpperCase()}
-                                        </div>
-                                      </div>
-                                    </div>
                                       </section>
                                     )}
-                                    {true && (
-                                      <section className='mb-3'>
-                                      <div className='mx-auto flex mt-6 flex-row  '>
-                                        <section className="ml-3 w-[300px]">
-                                      <div className="flex items-center">
-                                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 ">
-                                          <svg
-                                            stroke="currentColor"
-                                            fill="currentColor"
-                                            strokeWidth="0"
-                                            viewBox="0 0 24 24"
-                                            className="h-6 w-6 text-violet-500 "
-                                            height="1em"
-                                            width="1em"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              fill="none"
-                                              d="M0 0h24v24H0z"
-                                            ></path>
-                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
-                                          </svg>
+                                    {bookingProgress && (
+                                      <section className="mb-3">
+                                        <div className="mx-auto flex mt-6 flex-row  ">
+                                          <section className="ml-3 w-[300px]">
+                                            <div className="flex items-center">
+                                              {bookCompSteps.includes(
+                                                'payment_captured'
+                                              ) && (
+                                                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 ">
+                                                  <CheckCircleIcon   className="h-6 w-6 text-violet-500 " />
+                                                </div>
+                                              )}
+                                             { (!bookCompSteps.includes(
+                                                'payment_captured'
+                                              ) && !bookCurentStep.includes(
+                                                'payment_captured'
+                                              ))  && <ExclamationCircleIcon className="w-6 h-6 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " /> }
+                                              {bookCurentStep.includes(
+                                                'payment_captured'
+                                              ) && <Loader />}
+                                              <span className="ml-2 text-md font-bold text-navy-700 ">
+                                                Payment Confirmed
+                                              </span>
+                                            </div>
+                                          </section>
+                                          {/*  */}
+                                          <section className="ml-3 w-[300px]">
+                                            <div className="flex items-center">
+                                            {bookCompSteps.includes(
+                                                'CS_updated'
+                                              ) && (
+                                                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 ">
+                                                  <CheckCircleIcon   className="h-6 w-6 text-violet-500 " />
+                                                </div>
+                                              )}
+                                             { (!bookCompSteps.includes(
+                                                'CS_updated'
+                                              ) && !bookCurentStep.includes(
+                                                'CS_updated'
+                                              ))  && <ExclamationCircleIcon className="w-6 h-6 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " /> }
+                                              {bookCurentStep.includes(
+                                                'CS_updated'
+                                              ) && <Loader />}
+                                              <span className="ml-4 text-md font-bold text-navy-700 ">
+                                                Costsheet & Payment Updated
+                                              </span>
+                                            </div>
+                                          </section>
                                         </div>
-                                        <span className="ml-2 text-md font-bold text-navy-700 ">
-                                          Payment Confirmed
-                                        </span>
-                                      </div>
-                                      </section>
-                                      {/*  */}
-                                      <section className="ml-3 w-[300px]">
-                                      <div className="flex items-center">
-                                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 ">
-                                          <svg
-                                            stroke="currentColor"
-                                            fill="currentColor"
-                                            strokeWidth="0"
-                                            viewBox="0 0 24 24"
-                                            className="h-6 w-6 text-violet-500 "
-                                            height="1em"
-                                            width="1em"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              fill="none"
-                                              d="M0 0h24v24H0z"
-                                            ></path>
-                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
-                                          </svg>
+                                        <div className="mx-auto flex mt-6 flex flex-row  ">
+                                          <section className="ml-3 w-[300px]">
+                                            <div className="flex items-center">
+                                            {bookCompSteps.includes(
+                                                'unit_booked'
+                                              ) && (
+                                                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 ">
+                                                  <CheckCircleIcon   className="h-6 w-6 text-violet-500 " />
+                                                </div>
+                                              )}
+                                             { (!bookCompSteps.includes(
+                                                'unit_booked'
+                                              ) && !bookCurentStep.includes(
+                                                'unit_booked'
+                                              ))  && <ExclamationCircleIcon className="w-6 h-6 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " /> }
+                                              {bookCurentStep.includes(
+                                                'unit_booked'
+                                              ) && <Loader />}
+                                              <span className="ml-2 text-md font-bold text-navy-700 ">
+                                                Unit Booked
+                                              </span>
+                                            </div>
+                                          </section>
+                                          {/*  */}
+                                          <section className="ml-3 w-[300px]">
+                                            <div className="flex items-center">
+                                            {bookCompSteps.includes(
+                                                'customer_created'
+                                              ) && (
+                                                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 ">
+                                                  <CheckCircleIcon   className="h-6 w-6 text-violet-500 " />
+                                                </div>
+                                              )}
+                                             { (!bookCompSteps.includes(
+                                                'customer_created'
+                                              ) && !bookCurentStep.includes(
+                                                'customer_created'
+                                              ))  && <ExclamationCircleIcon className="w-6 h-6 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " /> }
+                                              {bookCurentStep.includes(
+                                                'customer_created'
+                                              ) && <Loader />}
+                                              <span className="ml-2 text-md font-bold text-navy-700 ">
+                                                Customer Created
+                                              </span>
+                                            </div>
+                                          </section>
                                         </div>
-                                        <span className="ml-4 text-md font-bold text-navy-700 ">
-                                          Costsheet & Payment Updated
-                                        </span>
-                                      </div>
-                                      </section>
-                                      </div>
-                                      <div className='mx-auto flex mt-6 flex flex-row  '>
-                                        <section  className="ml-3 w-[300px]">
-                                      <div className="flex items-center">
-                                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 ">
-                                          <svg
-                                            stroke="currentColor"
-                                            fill="currentColor"
-                                            strokeWidth="0"
-                                            viewBox="0 0 24 24"
-                                            className="h-6 w-6 text-violet-500 "
-                                            height="1em"
-                                            width="1em"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              fill="none"
-                                              d="M0 0h24v24H0z"
-                                            ></path>
-                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
-                                          </svg>
+                                        <div className="mx-auto flex mt-6 flex flex-row  ">
+                                          <section className="ml-3 w-[300px]">
+                                            <div className="flex items-center">
+                                            {bookCompSteps.includes(
+                                                'customer_email_send'
+                                              ) && (
+                                                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 ">
+                                                  <CheckCircleIcon   className="h-6 w-6 text-violet-500 " />
+                                                </div>
+                                              )}
+                                             { (!bookCompSteps.includes(
+                                                'customer_email_send'
+                                              ) && !bookCurentStep.includes(
+                                                'customer_email_send'
+                                              ))  && <ExclamationCircleIcon className="w-6 h-6 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " /> }
+                                              {bookCurentStep.includes(
+                                                'customer_email_send'
+                                              ) && <Loader />}
+                                              <span className="ml-2 text-md font-bold text-navy-700 ">
+                                                Send Welcome E-mail
+                                              </span>
+                                            </div>
+                                          </section>
+                                          {/*  */}
+                                          <section className="ml-4 w-[300px]">
+                                            <div className="flex items-center">
+                                            {bookCompSteps.includes(
+                                                'notify_to_manager'
+                                              ) && (
+                                                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 ">
+                                                  <CheckCircleIcon   className="h-6 w-6 text-violet-500 " />
+                                                </div>
+                                              )}
+                                             { (!bookCompSteps.includes(
+                                                'notify_to_manager'
+                                              ) && !bookCurentStep.includes(
+                                                'notify_to_manager'
+                                              ))  && <ExclamationCircleIcon className="w-6 h-6 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " /> }
+                                              {bookCurentStep.includes(
+                                                'notify_to_manager'
+                                              ) && <Loader />}
+                                              <span className="ml-2 text-md font-bold text-navy-700 ">
+                                                Notified to Manager
+                                              </span>
+                                            </div>
+                                          </section>
                                         </div>
-                                        <span className="ml-2 text-md font-bold text-navy-700 ">
-                                          Unit Booked
-                                        </span>
-                                      </div>
-                                      </section>
-                                      {/*  */}
-                                      <section className="ml-3 w-[300px]">
-                                      <div className="flex items-center">
-                                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 ">
-                                          <svg
-                                            stroke="currentColor"
-                                            fill="currentColor"
-                                            strokeWidth="0"
-                                            viewBox="0 0 24 24"
-                                            className="h-6 w-6 text-violet-500 "
-                                            height="1em"
-                                            width="1em"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              fill="none"
-                                              d="M0 0h24v24H0z"
-                                            ></path>
-                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
-                                          </svg>
-                                        </div>
-                                        <span className="ml-2 text-md font-bold text-navy-700 ">
-                                         Customer Created
-                                        </span>
-                                      </div>
-                                      </section>
-                                      </div>
-                                      <div className='mx-auto flex mt-6 flex flex-row  '>
-                                        <section  className="ml-3 w-[300px]">
-                                      <div className="flex items-center">
-                                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 ">
-                                          <svg
-                                            stroke="currentColor"
-                                            fill="currentColor"
-                                            strokeWidth="0"
-                                            viewBox="0 0 24 24"
-                                            className="h-6 w-6 text-violet-500 "
-                                            height="1em"
-                                            width="1em"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              fill="none"
-                                              d="M0 0h24v24H0z"
-                                            ></path>
-                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
-                                          </svg>
-                                        </div>
-                                        <span className="ml-2 text-md font-bold text-navy-700 ">
-                                          Send Welcome E-mail
-                                        </span>
-                                      </div>
-                                      </section>
-                                      {/*  */}
-                                      <section className="ml-4 w-[300px]">
-                                      <div className="flex items-center">
-                                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 ">
-                                          <svg
-                                            stroke="currentColor"
-                                            fill="currentColor"
-                                            strokeWidth="0"
-                                            viewBox="0 0 24 24"
-                                            className="h-6 w-6 text-violet-500 "
-                                            height="1em"
-                                            width="1em"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              fill="none"
-                                              d="M0 0h24v24H0z"
-                                            ></path>
-                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
-                                          </svg>
-                                        </div>
-                                        <span className="ml-2 text-md font-bold text-navy-700 ">
-                                         Notified to Manager
-                                        </span>
-                                      </div>
-                                      </section>
-                                      </div>
                                       </section>
                                     )}
                                     {formik?.file?.fileUploader}
-
 
                                     {/* <hr className="mt-6 border-b-1 border-blueGray-300" /> */}
 

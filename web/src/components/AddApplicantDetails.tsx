@@ -33,6 +33,8 @@ import { PhoneNoField } from 'src/util/formFields/phNoField'
 
 const AddApplicantDetails = ({
   source,
+  customerInfo,
+  setCustomerInfo,
   title,
   leadPayload,
   setLeadPayload,
@@ -450,6 +452,10 @@ const AddApplicantDetails = ({
       annualIncome,
     }
 
+
+    // local updater
+    setCustomerInfo(updateDoc)
+
     if (source === 'fromBookedUnit' || source === 'Booking') {
       // create lead and call below function
 
@@ -651,7 +657,7 @@ const AddApplicantDetails = ({
                                               label="Phone No"
                                               name="phoneNo1"
                                               type="text"
-                                              value={formik.values.phoneNo2}
+                                              value={formik.values.phoneNo1}
                                               onChange={(value) => {
                                                 // formik.setFieldValue('mobileNo', value.value)
                                                 formik.setFieldValue(
@@ -967,26 +973,7 @@ const AddApplicantDetails = ({
                                       />
 
 
-                                        <section className="w-full flex flex-row mt-4">
-                                          <div className="w-full lg:w-6/12">
-                                            <div className="relative w-full mb-3">
-                                              <TextField
-                                                label="Job Designation"
-                                                name="designation"
-                                                type="text"
-                                              />
-                                            </div>
-                                          </div>
-                                          <div className="w-full lg:w-6/12 pl-3">
-                                            <div className="relative w-full mb-3">
-                                              <TextField
-                                                label="Annual Income"
-                                                name="annualIncome"
-                                                type="text"
-                                              />
-                                            </div>
-                                          </div>
-                                        </section>
+
                                       </div>
                                     </div>
                                   </section>
@@ -1232,8 +1219,8 @@ const AddApplicantDetails = ({
                                                   <button
                                                     onClick={() =>
                                                       downloadImage(
-                                                        panCard1,
-                                                        'pancard1.PNG'
+                                                        panCard2,
+                                                        'pancard2.PNG'
                                                       )
                                                     }
                                                   >
@@ -1333,32 +1320,13 @@ const AddApplicantDetails = ({
                                           ),
                                         }}
                                         label=""
-                                        name="aadharNo1"
+                                        name="aadharNo2"
                                         type="text"
                                         value={formik.values.aadharNo2}
                                         onChange={formik.handleChange}
                                       />
 
-                                        <section className="w-full flex flex-row mt-4">
-                                          <div className="w-full lg:w-6/12">
-                                            <div className="relative w-full mb-3">
-                                              <TextField
-                                                label="Job Designation"
-                                                name="designation2"
-                                                type="text"
-                                              />
-                                            </div>
-                                          </div>
-                                          <div className="w-full lg:w-6/12 pl-3">
-                                            <div className="relative w-full mb-3">
-                                              <TextField
-                                                label="Annual Income"
-                                                name="annualIncome2"
-                                                type="text"
-                                              />
-                                            </div>
-                                          </div>
-                                        </section>
+
                                       </div>
                                     </div>
                                   </section>

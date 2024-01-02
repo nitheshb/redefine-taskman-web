@@ -21,6 +21,8 @@ import '../styles/myStyles.css'
 const CostBreakUpPdf = ({
   projectDetails,
   csMode,
+  setCostSheet,
+  costSheet,
   pdfExportComponent,
   selPhaseObj,
   selUnitDetails,
@@ -418,6 +420,7 @@ const CostBreakUpPdf = ({
       costSheetA: newCostSheetA,
     }
 
+    setCostSheet(newCostSheetA)
     updateLeadCostSheetDetailsTo(
       orgId,
       id,
@@ -470,6 +473,7 @@ const CostBreakUpPdf = ({
             validationSchema={validate}
             onSubmit={(values, { resetForm }) => {
               console.log('new value is ', resetForm)
+              console.log('my imported details is', values)
               onSubmit(values, resetForm)
             }}
           >

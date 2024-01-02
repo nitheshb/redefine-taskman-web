@@ -3326,7 +3326,7 @@ export const createNewCustomerS = async (
   projectId,
   unitId,
   leadDetailsObj2,
-  selUnitDetails,
+  customerInfo,
   oldStatus,
   newStatus,
   by,
@@ -3340,7 +3340,7 @@ export const createNewCustomerS = async (
 
     const { data, error } = await supabase.from(`${orgId}_customers`).insert([
       {
-        Name: leadDetailsObj2?.Name || selUnitDetails?.customerDetailsObj?.co_Name1,
+        Name: leadDetailsObj2?.Name || customerInfo?.customerDetailsObj?.co_Name1,
         // id: leadDocId,
         my_assets: [unitId],
         T: Timestamp.now().toMillis(),
@@ -3349,7 +3349,7 @@ export const createNewCustomerS = async (
         projects: [projectId],
       },
     ])
-    await console.log('customer data is ', data, error, selUnitDetails,{
+    await console.log('customer data is ', data, error, customerInfo,{
       Name: Name,
       // id: leadDocId,
       my_assets: [unitId],

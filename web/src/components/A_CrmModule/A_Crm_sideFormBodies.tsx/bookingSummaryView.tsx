@@ -20,6 +20,8 @@ import { TextFieldFlat } from 'src/util/formFields/TextFieldFlatType'
 const BookingSummaryView = ({
   projectDetails,
   csMode,
+  customerInfo,
+  costSheet,
   pdfExportComponent,
   selPhaseObj,
   selUnitDetails,
@@ -53,6 +55,8 @@ const BookingSummaryView = ({
 
   useEffect(() => {
     console.log('sel unti detials ', selUnitDetails)
+    console.log('my imported details is  ', customerInfo)
+    console.log('my imported details is CS  ', costSheet)
   }, [])
   const [initialValuesA, setInitialValuesA] = useState({})
 
