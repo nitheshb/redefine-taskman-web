@@ -37,6 +37,7 @@ import CaptureUnitPayment from './CapturePayment'
 const AddPaymentDetailsForm = ({
   title,
   customerInfo,
+  additionalInfo,
   costSheet,
   selUnitDetails,
   leadDetailsObj2,

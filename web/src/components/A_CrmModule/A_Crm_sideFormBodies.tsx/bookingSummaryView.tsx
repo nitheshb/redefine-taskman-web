@@ -69,7 +69,7 @@ const BookingSummaryView = ({
   const [showGstCol, setShowGstCol] = useState(true)
 
   useEffect(() => {
-    console.log('gen costSheetA', costSheetA)
+    console.log('gen costSheetA', costSheetA, customerInfo)
 
     setTotalFun()
   }, [costSheetA, selPhaseObj])
@@ -506,50 +506,65 @@ const BookingSummaryView = ({
                               <h1 className="px-3 text-[12px] text-left  text-[12px] font-semibold ">
                                 Unit Owner
                               </h1>
-
                             </section>
                             <section className="flex flex-col  mt-2 mb-2">
                               <h1 className="px-3 text-[12px] text-left  text-[12px] font-normal ">
-                               Rajiv Shuffle
+                                {
+                                  customerInfo?.customerDetailsObj
+                                    ?.customerName1
+                                }
                               </h1>
                               <span className="px-3 text-[12px] text-left  text-[12px] font-normal ">
-                               s/o krishna prasad
+                                s/o {customerInfo?.customerDetailsObj?.co_Name1}
                               </span>
                               <span className="px-3 text-[12px] text-left  text-[12px] font-normal ">
-                               8-143,Veera Venkata Apartments, Flat no: 10093,Sector-2,Banglore-599384
+                                {customerInfo?.customerDetailsObj?.address1}
                               </span>
-
+                              <span className="px-3 text-[12px] text-left  text-[12px] font-normal ">
+                                {customerInfo?.customerDetailsObj?.phoneNo1}
+                              </span>
+                              <span className="px-3 text-[12px] text-left  text-[12px] font-normal ">
+                                {customerInfo?.customerDetailsObj?.email1}
+                              </span>
                             </section>
-
                           </div>
                         </section>
                         {/* col-2 */}
 
-                        <section className="flex flex-row justify-between w-52">
-                          <div></div>
+                        {customerInfo?.customerDetailsObj?.customerName2 && (
+                          <section className="flex flex-row justify-between w-52">
+                            <div></div>
 
-                          <div className="border rounded-lg shadow-lg w-full">
-                            <section className="flex flex-row justify-between mt-2   ">
-                              <h1 className="px-3 text-[12px] text-left  text-[12px] font-semibold ">
-                                Secondary Owner
-                              </h1>
-
-                            </section>
-                            <section className="flex flex-col  mt-2 mb-2">
-                              <h1 className="px-3 text-[12px] text-left  text-[12px] font-normal ">
-                               Rajiv Shuffle
-                              </h1>
-                              <span className="px-3 text-[12px] text-left  text-[12px] font-normal ">
-                               s/o krishna prasad
-                              </span>
-                              <span className="px-3 text-[12px] text-left  text-[12px] font-normal ">
-                               8-143,Flat no: 10092,Sector-2,Banglore-599384
-                              </span>
-
-                            </section>
-
-                          </div>
-                        </section>
+                            <div className="border rounded-lg shadow-lg w-full">
+                              <section className="flex flex-row justify-between mt-2   ">
+                                <h1 className="px-3 text-[12px] text-left  text-[12px] font-semibold ">
+                                  Secondary Owner
+                                </h1>
+                              </section>
+                              <section className="flex flex-col  mt-2 mb-2">
+                                <h1 className="px-3 text-[12px] text-left  text-[12px] font-normal ">
+                                  {
+                                    customerInfo?.customerDetailsObj
+                                      ?.customerName2
+                                  }
+                                </h1>
+                                <span className="px-3 text-[12px] text-left  text-[12px] font-normal ">
+                                  s/o{' '}
+                                  {customerInfo?.customerDetailsObj?.co_Name2}
+                                </span>
+                                <span className="px-3 text-[12px] text-left  text-[12px] font-normal ">
+                                  {customerInfo?.customerDetailsObj?.address2}
+                                </span>
+                                <span className="px-3 text-[12px] text-left  text-[12px] font-normal ">
+                                  {customerInfo?.customerDetailsObj?.phoneNo2}
+                                </span>
+                                <span className="px-3 text-[12px] text-left  text-[12px] font-normal ">
+                                  {customerInfo?.customerDetailsObj?.email2}
+                                </span>
+                              </section>
+                            </div>
+                          </section>
+                        )}
                         {/* col-3 */}
 
                         <section className="flex flex-row justify-between w-52">
@@ -560,91 +575,79 @@ const BookingSummaryView = ({
                               <h1 className="px-3 text-[12px] text-left  text-[12px] font-semibold ">
                                 Unit No
                               </h1>
-
                             </section>
                             <section className="flex flex-col  mt-1 mb-2">
-                              <article className='flex flex-row w-full justify-between'>
-                              <h1 className="ml-3 text-[12px] text-left  text-[12px] font-normal ">
-                               North-East
-                              </h1>
-                              <h1 className="mr- text-[12px] text-left  text-[12px] font-normal ">
-                               ₹4,500
-                              </h1>
-                              <span className="mr-3  text-[12px] text-left  text-[12px] font-normal ">
-                               1200 sqft
-                              </span>
+                              <article className="flex flex-row w-full justify-between">
+                                <h1 className="ml-3 text-[12px] text-left  text-[12px] font-normal ">
+                                  North-East
+                                </h1>
+                                <h1 className="mr- text-[12px] text-left  text-[12px] font-normal ">
+                                  ₹4,500
+                                </h1>
+                                <span className="mr-3  text-[12px] text-left  text-[12px] font-normal ">
+                                  1200 sqft
+                                </span>
                               </article>
-                              <article className='flex flex-row w-full justify-between mt-1  mb-1'>
-                              <section className="flex flex-col px-3">
-
-<div className="flex flex-row">
- <div className="self-stretch text-zinc-500 text-sm font-medium font-['Lato'] tracking-wide text-[9px]">
-   Booked By
- </div>
-
- </div>
- <div className="self-stretch justify-start items-center gap-3 inline-flex">
-   <div className="text-zinc-800 text-[10px] font-bold font-['Lato'] tracking-wide">
- Manjunath
-   </div>
-
- </div>
-</section>
-<section className="flex flex-col px-3">
-
-<div className="flex flex-row">
- <div className="self-stretch text-zinc-500 text-sm font-medium font-['Lato'] tracking-wide text-[9px]">
-   Date
- </div>
-
- </div>
- <div className="self-stretch justify-start items-center gap-3 inline-flex">
-   <div className="text-zinc-800 text-[10px] font-bold font-['Lato'] tracking-wide">
-   12-Dec-2023
-   </div>
-
- </div>
-</section>
+                              <article className="flex flex-row w-full justify-between mt-1  mb-1">
+                                <section className="flex flex-col px-3">
+                                  <div className="flex flex-row">
+                                    <div className="self-stretch text-zinc-500 text-sm font-medium font-['Lato'] tracking-wide text-[9px]">
+                                      Booked By
+                                    </div>
+                                  </div>
+                                  <div className="self-stretch justify-start items-center gap-3 inline-flex">
+                                    <div className="text-zinc-800 text-[10px] font-bold font-['Lato'] tracking-wide">
+                                      Manjunath
+                                    </div>
+                                  </div>
+                                </section>
+                                <section className="flex flex-col px-3">
+                                  <div className="flex flex-row">
+                                    <div className="self-stretch text-zinc-500 text-sm font-medium font-['Lato'] tracking-wide text-[9px]">
+                                      Date
+                                    </div>
+                                  </div>
+                                  <div className="self-stretch justify-start items-center gap-3 inline-flex">
+                                    <div className="text-zinc-800 text-[10px] font-bold font-['Lato'] tracking-wide">
+                                      12-Dec-2023
+                                    </div>
+                                  </div>
+                                </section>
                               </article>
                               <section className="flex flex-col px-3">
-
-<div className="flex flex-row">
- <div className="self-stretch text-zinc-500 text-sm font-medium font-['Lato'] tracking-wide text-[9px]">
-   Unit Cost
- </div>
-
- </div>
- <div className="self-stretch justify-start items-center gap-3 inline-flex">
-   <div className="text-zinc-800 text-[16px] font-bold font-['Lato'] tracking-wide">
-   ₹
- {netTotal?.toLocaleString('en-IN')}
-   </div>
-   <div className=" h-[19px] rounded justify-center items-center gap-2 flex">
-     <div className="text-right">
-       <span className="text-emerald-600 text-xs font-medium font-['Lato'] tracking-wide">
-         ▴{' '}
-       </span>
-       <span className="text-emerald-600 text-[9px] font-bold font-['Lato'] tracking-wide">
-       ₹{' '}
-   {0?.toLocaleString(
-     'en-IN'
-   )}
-   /sqft{' '}
-       </span>
-     </div>
-   </div>
-
- </div>
-</section>
-
+                                <div className="flex flex-row">
+                                  <div className="self-stretch text-zinc-500 text-sm font-medium font-['Lato'] tracking-wide text-[9px]">
+                                    Unit Cost
+                                  </div>
+                                </div>
+                                <div className="self-stretch justify-start items-center gap-3 inline-flex">
+                                  <div className="text-zinc-800 text-[16px] font-bold font-['Lato'] tracking-wide">
+                                    ₹{netTotal?.toLocaleString('en-IN')}
+                                  </div>
+                                  <div className=" h-[19px] rounded justify-center items-center gap-2 flex">
+                                    <div className="text-right">
+                                      <span className="text-emerald-600 text-xs font-medium font-['Lato'] tracking-wide">
+                                        ▴{' '}
+                                      </span>
+                                      <span className="text-emerald-600 text-[9px] font-bold font-['Lato'] tracking-wide">
+                                        ₹ {0?.toLocaleString('en-IN')}
+                                        /sqft{' '}
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </section>
                             </section>
-
                           </div>
                         </section>
                       </div>
                     </article>
                     {/* section-2 */}
-                    <div className="w-full  flex flex-row justify-between" ref={section2Ref} id="section2" >
+                    <div
+                      className="w-full  flex flex-row justify-between"
+                      ref={section2Ref}
+                      id="section2"
+                    >
                       <div className="w-full  flex flex-row">
                         <div className="w-[63.80px] h-[57px] bg-zinc-100 rounded-[5px]"></div>
                         <div className="w-full flex flex-col ml-3">
@@ -1122,110 +1125,101 @@ const BookingSummaryView = ({
                                 </div>
                               </section>
                             )}
-
-
                           </div>
                         </div>
                         {/* end of paper */}
                       </div>
                     </div>
                     <section className="mt-6" ref={section4Ref} id="section4">
-                                <div className="w-full  flex flex-row justify-between">
-                                  <div className="w-full  flex flex-row">
-                                    <div className="w-[63.80px] h-[57px] bg-zinc-100 rounded-[5px]"></div>
-                                    <div className="w-full flex flex-col ml-3">
-                                      <h6 className="w-full lg:w-12/12 text-blueGray-400 text-[13px] mt-[9px] mb- font-bold uppercase">
-                                        Payment Summary
-                                      </h6>
-                                      <div className=" opacity-50 text-blue-950  text-[12px] font-normal ">
-                                        Quotation or estimate of unit
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div>
-                                    <section className="flex flex-row justify-between w-52">
-                                      <div></div>
+                      <div className="w-full  flex flex-row justify-between">
+                        <div className="w-full  flex flex-row">
+                          <div className="w-[63.80px] h-[57px] bg-zinc-100 rounded-[5px]"></div>
+                          <div className="w-full flex flex-col ml-3">
+                            <h6 className="w-full lg:w-12/12 text-blueGray-400 text-[13px] mt-[9px] mb- font-bold uppercase">
+                              Payment Summary
+                            </h6>
+                            <div className=" opacity-50 text-blue-950  text-[12px] font-normal ">
+                              Quotation or estimate of unit
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <section className="flex flex-row justify-between w-52">
+                            <div></div>
 
-                                      <div className="border rounded-lg shadow-lg w-full">
-                                        <section className="flex flex-row justify-between  mt-2">
-                                          <h1 className="px-3 text-[12px] text-left  text-[12px] font-normal ">
-                                            Total Received
-                                          </h1>
-                                          <section className="flex flex-row">
-                                            <section className="px-2 d-md font-semibold text-[12px] text-[#000000e6] leading-none">
-                                              ₹
-                                              {partBTotal?.toLocaleString(
-                                                'en-IN'
-                                              )}
-                                            </section>
-                                          </section>
-                                        </section>
-                                        <section className="flex flex-row justify-between rounded-b-lg  bg-[#E8E6FE]  mt-2 py-2   ">
-                                          <h1 className="px-3 text-[12px] text-left  text-[12px] font-semibold pr-8 ">
-                                            Review
-                                          </h1>
-                                          <section className="flex flex-row mt-2">
-                                            <section className="px-2 d-md font-bold text-[12px] text-[#0D027D] leading-none">
-                                              ₹
-                                              {netTotal?.toLocaleString(
-                                                'en-IN'
-                                              )}
-                                            </section>
-                                          </section>
-                                        </section>
-                                      </div>
-                                    </section>
-                                  </div>
-                                </div>
-                                <div className=" mt-4 border rounded-lg shadow-md overflow-hidden ">
-                                  <table className="w-full border-b border-dashed">
-                                    <thead className="">
-                                      {' '}
-                                      <tr className=" h-8  border-none bg-[#E8E6FE] text-[#0D027D] font-['Inter'] font-[600]  ">
-                                        <th className="w-[50%] px-2   text-left  tracking-wide uppercase text-[11px]   ">
-                                          Particulars
-                                        </th>
-                                        <th className="w-[30%] px-2   text-left  tracking-wide uppercase text-[11px] ">
-                                          Payment Timeline
-                                        </th>
-                                        <th className="w-[20%] px-2   text-right  tracking-wide uppercase  text-[11px]">
-                                          Total inc GST
-                                        </th>
-                                      </tr>
-                                    </thead>
-
-                                    <tbody>
-                                      {newPlotPS?.map((d1, inx) => (
-                                        <tr
-                                          key={inx}
-                                          className="border-b-[0.05px] border-gray-300 py-1 my-2 h-[32px]  py-[24px]"
-                                        >
-                                          <th className=" px-2  text-[11px] text-left  font-normal tracking-wide uppercase ">
-                                            {d1?.stage?.label}
-                                          </th>
-                                          <td className="text-[11px] px-2  text-left font-normal tracking-wide uppercase ">
-                                            {d1?.description}
-                                          </td>
-                                          <td className="text-[12px] px-2  text-right tracking-wide uppercase ">
-                                            ₹
-                                            {d1?.value?.toLocaleString('en-IN')}
-                                          </td>
-                                        </tr>
-                                      ))}
-
-                                      <tr className="h-[32px]">
-                                        <th className="text-[12px] px-2  text-left text-gray-800 ">
-                                          Plot Value Total Rs.:
-                                        </th>
-                                        <td className="text-[12px] px-2  text-right text-gray-400 "></td>
-                                        <th className="text-[12px] px-2  text-right text-gray-800 ">
-                                          ₹{netTotal?.toLocaleString('en-IN')}
-                                        </th>
-                                      </tr>
-                                    </tbody>
-                                  </table>
-                                </div>
+                            <div className="border rounded-lg shadow-lg w-full">
+                              <section className="flex flex-row justify-between  mt-2">
+                                <h1 className="px-3 text-[12px] text-left  text-[12px] font-normal ">
+                                  Total Received
+                                </h1>
+                                <section className="flex flex-row">
+                                  <section className="px-2 d-md font-semibold text-[12px] text-[#000000e6] leading-none">
+                                    ₹{partBTotal?.toLocaleString('en-IN')}
+                                  </section>
+                                </section>
                               </section>
+                              <section className="flex flex-row justify-between rounded-b-lg  bg-[#E8E6FE]  mt-2 py-2   ">
+                                <h1 className="px-3 text-[12px] text-left  text-[12px] font-semibold pr-8 ">
+                                  Review
+                                </h1>
+                                <section className="flex flex-row mt-2">
+                                  <section className="px-2 d-md font-bold text-[12px] text-[#0D027D] leading-none">
+                                    ₹{netTotal?.toLocaleString('en-IN')}
+                                  </section>
+                                </section>
+                              </section>
+                            </div>
+                          </section>
+                        </div>
+                      </div>
+                      <div className=" mt-4 border rounded-lg shadow-md overflow-hidden ">
+                        <table className="w-full border-b border-dashed">
+                          <thead className="">
+                            {' '}
+                            <tr className=" h-8  border-none bg-[#E8E6FE] text-[#0D027D] font-['Inter'] font-[600]  ">
+                              <th className="w-[50%] px-2   text-left  tracking-wide uppercase text-[11px]   ">
+                                Particulars
+                              </th>
+                              <th className="w-[30%] px-2   text-left  tracking-wide uppercase text-[11px] ">
+                                Payment Timeline
+                              </th>
+                              <th className="w-[20%] px-2   text-right  tracking-wide uppercase  text-[11px]">
+                                Total inc GST
+                              </th>
+                            </tr>
+                          </thead>
+
+                          <tbody>
+                            {newPlotPS?.map((d1, inx) => (
+                              <tr
+                                key={inx}
+                                className="border-b-[0.05px] border-gray-300 py-1 my-2 h-[32px]  py-[24px]"
+                              >
+                                <th className=" px-2  text-[11px] text-left  font-normal tracking-wide uppercase ">
+                                  {d1?.stage?.label}
+                                </th>
+                                <td className="text-[11px] px-2  text-left font-normal tracking-wide uppercase ">
+                                  {d1?.description}
+                                </td>
+                                <td className="text-[12px] px-2  text-right tracking-wide uppercase ">
+                                  ₹{d1?.value?.toLocaleString('en-IN')}
+                                </td>
+                              </tr>
+                            ))}
+
+                            <tr className="h-[32px]">
+                              <th className="text-[12px] px-2  text-left text-gray-800 ">
+                                Plot Value Total Rs.:
+                              </th>
+                              <td className="text-[12px] px-2  text-right text-gray-400 "></td>
+                              <th className="text-[12px] px-2  text-right text-gray-800 ">
+                                ₹{netTotal?.toLocaleString('en-IN')}
+                              </th>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
                   </section>
                 </div>
               </PDFExport>

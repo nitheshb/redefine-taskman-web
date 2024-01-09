@@ -104,6 +104,7 @@ const CostBreakUpSheet = ({
   const [partBTotal, setPartBTotal] = useState(0)
 
   const [customerInfo, setCustomerInfo] = useState({})
+  const [additionalInfo, setAdditonalInfo] = useState({})
   const [costSheet, setCostSheet] = useState({})
   const [paymentSchedule, setPaymentSchedule] = useState({})
 
@@ -673,6 +674,8 @@ useEffect(() => {
                     <AdditonalBookingDetails
                       title="Booking Form"
                       selUnitDetails={selUnitDetails}
+                      additionalInfo ={additionalInfo}
+                      setAdditonalInfo = {setAdditonalInfo}
                       leadDetailsObj2={leadPayload}
                       setOnStep={setOnStep}
                       source="Booking"
@@ -684,6 +687,7 @@ useEffect(() => {
                       title={'undefined'}
                       dialogOpen={undefined}
                       customerInfo={customerInfo}
+                      additionalInfo ={additionalInfo}
                       costSheet={costSheet}
                       phase={selPhaseObj}
                       leadDetailsObj2={leadPayload}

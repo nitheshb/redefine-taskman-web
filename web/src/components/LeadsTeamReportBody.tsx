@@ -245,7 +245,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
   }, [])
   useEffect(() => {
     getLeadsDataFun()
-  }, [sourceDateRange])
+  }, [sourceDateRange, dateRange])
 
   useEffect(() => {
     showAllEmpTodayActivity()
@@ -593,6 +593,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
     if (access?.includes('manage_leads')) {
       const unsubscribe = getLeadsByDate(orgId, {
         cutoffDate: sourceDateRange,
+        dateRange: dateRange
       })
       console.log('my Array data is delayer 1 ', unsubscribe)
       await setLeadsFetchedRawData(await unsubscribe)
@@ -614,7 +615,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
   }, [])
   useEffect(() => {
     fetchLogsData()
-  }, [sourceDateRange])
+  }, [sourceDateRange,dateRange])
 
   const fetchLogsData = async () => {
     const steamLeadLogs = await steamAllLeadsActivity(
@@ -623,6 +624,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
       {
         uid: 'VIzMzz5rl0NAywdnpHpb',
         cutoffDate: sourceDateRange,
+        dateRange: dateRange
       },
       (error) => setLeadLogsRawData([])
     )

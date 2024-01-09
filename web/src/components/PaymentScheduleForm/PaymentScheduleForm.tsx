@@ -248,12 +248,14 @@ const PaymentScheduleForm = ({ title, data, source, blocksViewFeature }) => {
         if (e.myId === oldData.myId) {
           return update
         }
-        return e
+        const { tableData, ...rest } = e;
+        return rest
       })
+     
       console.log('check this stuff it', c)
       await updatePaymentScheduleCharges(
         orgId,
-        uid,
+        uid || data?.phase?.phase?.uid,
         c,
         blocksViewFeature === 'Construction_Payment_Schedule'
           ? 'ConstructPayScheduleObj'
@@ -270,11 +272,15 @@ const PaymentScheduleForm = ({ title, data, source, blocksViewFeature }) => {
   const handleRowDelete = async (oldData) => {
     const { uid } = data?.phase || {}
     const c = tableData.filter((e) => e.myId != oldData.myId)
+    const newArray = c.map((obj) => {
+      const { tableData, ...rest } = obj;
+      return rest;
+    });
     console.log('check this stuff', c)
     await updatePaymentScheduleCharges(
       orgId,
-      uid,
-      c,
+      uid || data?.phase?.phase?.uid,
+      newArray,
       blocksViewFeature === 'Construction_Payment_Schedule'
         ? 'ConstructPayScheduleObj'
         : 'paymentScheduleObj',
@@ -295,6 +301,7 @@ const PaymentScheduleForm = ({ title, data, source, blocksViewFeature }) => {
         // dueDate: format(newData.dueDate, 'dd/MM/yyyy'),
       }
       // await createPayment(update, enqueueSnackbar)
+
       await addPhasePaymentScheduleCharges(
         orgId,
         uid || data?.phase?.phase?.uid,

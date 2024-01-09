@@ -9,6 +9,7 @@ import MyActivityHome from 'src/components/MyActivityHome/MyActivityHome'
 import SUserSignup from 'src/components/SUserSignup/SUserSignup'
 import UserAccessTable from 'src/components/UserAccessTable/UserAccessTable'
 import UserManageTable from 'src/components/UserManageTable/UserManageTable'
+import { Switch } from '@headlessui/react'
 
 const UsersAdminPage = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -16,7 +17,12 @@ const UsersAdminPage = () => {
   const [viewable, setViewable] = useState('User Management')
   const [empData, setEmpData] = useState({})
   const [selModule, setSelModule] = useState('HR')
+  const [showCompletedTasks, setShowCompletedTasks] = useState(false)
 
+
+  const changeFun = () => {
+    setShowCompletedTasks(!showCompletedTasks)
+  }
   const editEmployeeFun = (empData) => {
     setEmpData(empData)
     setIsOpen(true)
@@ -38,13 +44,31 @@ const UsersAdminPage = () => {
           {/* <HeadNavBar /> */}
           <HeadNavBar2 selModule={selModule} setSelModule={setSelModule} />
           <div className="flex-grow px-6 overflow-auto no-scrollbar  text-gray-700 bg-gradient-to-tr from-blue-200 via-indigo-200 to-pink-200">
-            <div className="flex items-center flex-shrink-0 h-10 mt-2 px-0  pl-0  ">
+            <div className="flex flex-row justify-between items-center flex-shrink-0 h-10 mt-2 px-0  pl-0  ">
               {/* <h1 className="text-lg font-medium">redefine.</h1> */}
               <span className="relative  flex items-center w-auto text-xl font-bold leading-none pl-0">
                 {viewable}
               </span>
 
               {viewable === 'User Management' && (
+                <div className='flex flex-row'>
+                        <div className="flex flex-row mt-2 mr-2">
+                  <span className="text-[10px] mt-1 mr-1">Show InActive</span>
+                  <Switch
+                    checked={showCompletedTasks}
+                    onChange={changeFun}
+                    className={`${
+                      showCompletedTasks ? 'bg-blue-600' : 'bg-gray-200'
+                    } relative inline-flex h-6 w-11 items-center rounded-full`}
+                  >
+                    <span
+                      className={`${
+                        showCompletedTasks ? 'translate-x-6' : 'translate-x-1'
+                      } inline-block h-4 w-4 transform rounded-full bg-white transition`}
+                    />
+                  </Switch>
+                </div>
+
                 <button
                   onClick={() => editEmployeeFun({})}
                   className="flex items-center justify-center h-10 px-4  bg-gray-200 ml-auto text-sm font-medium rounded hover:bg-gray-300"
@@ -65,16 +89,17 @@ const UsersAdminPage = () => {
                   </svg>
                   <span className="ml-1 leading-none">Add Employee</span>
                 </button>
+                </div>
               )}
             </div>
 
             {viewable === 'User Management' && (
-              <UserManageTable editEmployeeFun={editEmployeeFun} />
+              <UserManageTable editEmployeeFun={editEmployeeFun}  showCompletedTasks={showCompletedTasks} />
             )}
             {viewable === 'MyHR' && <HrModuleHome leadsTyper={undefined} />}
             {viewable === 'Roles Management' && (
               <>
-                <UserAccessTable />
+                <UserAccessTable showCompletedTasks={showCompletedTasks} />
               </>
             )}
 

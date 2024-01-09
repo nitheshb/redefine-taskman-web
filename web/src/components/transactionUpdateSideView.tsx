@@ -39,7 +39,6 @@ import {
   steamLeadActivityLog,
   steamLeadPhoneLog,
   steamLeadScheduleLog,
-  steamUsersList,
   steamUsersListByRole,
   updateLeadAssigTo,
   updateLeadStatus,

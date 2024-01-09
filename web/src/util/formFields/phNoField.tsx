@@ -23,6 +23,8 @@ export const PhoneNoField = ({
         name="mobileNo"
         value={value}
         onValueChange={(value) => {
+          console.log('PhoneNoField value:', value);
+
           onChange(value)
         }}
         format="###-###-####"

@@ -76,7 +76,7 @@ const StyledCheckBox = styled(Checkbox)(() => ({
   padding: 0,
 }))
 
-const UserAccessTable = () => {
+const UserAccessTable = ({showCompletedTasks}) => {
   const [category, setCategory] = useState('all')
   const [settings, setSettings] = useState([])
   const [filterData, setFilterData] = useState([])
@@ -197,7 +197,7 @@ const UserAccessTable = () => {
           isCategoryMatched={category === 'sales'}
           onClick={() => setCategory('sales')}
         >
-          Admin Team 
+          Admin Team
         </StyledButton>
       </Box>
       <Box

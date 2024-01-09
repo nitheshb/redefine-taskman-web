@@ -14,6 +14,7 @@ import DatePicker from 'react-datepicker'
 import { v4 as uuidv4 } from 'uuid'
 import * as Yup from 'yup'
 
+import { statesList } from 'src/constants/projects'
 import {
   addLead,
   updateLeadCustomerDetailsTo,
@@ -23,13 +24,13 @@ import {
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import { storage } from 'src/context/firebaseConfig'
+import { PhoneNoField } from 'src/util/formFields/phNoField'
 import { PhoneNoField2 } from 'src/util/formFields/phNoField2'
 import { CustomSelect } from 'src/util/formFields/selectBoxField'
 import { TextField } from 'src/util/formFields/TextField'
 
 import NoBorderDropDown from './comps/noBorderDropDown'
 import { useFileUpload } from './useFileUpload'
-import { PhoneNoField } from 'src/util/formFields/phNoField'
 
 const AddApplicantDetails = ({
   source,
@@ -258,51 +259,136 @@ const AddApplicantDetails = ({
   const datee = new Date().getTime()
   const initialState = {
     customerName1:
-      leadPayload?.customerDetailsObj?.customerName1 || leadPayload?.Name || '',
+      leadPayload?.customerDetailsObj?.customerName1 ||
+      selUnitDetails?.customerDetailsObj?.customerName1 || customerInfo?.customerDetailsObj?.customerName1 ||
+      leadPayload?.Name ||
+      '',
     customerName2:
-      leadPayload?.secondaryCustomerDetailsObj?.customerName2 || '',
-    relation1: {
+      leadPayload?.secondaryCustomerDetailsObj?.customerName2 ||
+      selUnitDetails?.secondaryCustomerDetailsObj?.customerName2 || customerInfo?.secondaryCustomerDetailsObj?.customerName2 ||
+      '',
+    relation1:customerInfo?.customerDetailsObj?.relation1 || {
       label: 'S/O',
       value: 'S/O',
     },
-    relation2: {
+    relation2:customerInfo?.secondaryCustomerDetailsObj?.relation2 || {
       label: 'S/O',
       value: 'S/O',
     },
-    co_Name1: leadPayload?.customerDetailsObj?.co_Name1 || '',
-    co_Name2: leadPayload?.secondaryCustomerDetailsObj?.co_Name2 || '',
+    co_Name1:
+      leadPayload?.customerDetailsObj?.co_Name1 ||
+      selUnitDetails?.customerDetailsObj?.co_Name1 || customerInfo?.customerDetailsObj?.co_Name1 ||
+      '',
+    co_Name2:
+      leadPayload?.secondaryCustomerDetailsObj?.co_Name2 ||
+      selUnitDetails?.secondaryCustomerDetailsObj?.co_Name2 || customerInfo?.secondaryCustomerDetailsObj?.co_Name2 ||
+      '',
 
     phoneNo1:
-      leadPayload?.customerDetailsObj?.phoneNo1 || leadPayload?.Mobile || '',
-    phoneNo2: leadPayload?.secondaryCustomerDetailsObj?.phoneNo2 || '',
-    email1: leadPayload?.customerDetailsObj?.email1 || leadPayload?.Email || '',
-    email2: leadPayload?.secondaryCustomerDetailsObj?.email2 || '',
-    dob1: leadPayload?.customerDetailsObj?.dob1 || d,
-    dob2: leadPayload?.secondaryCustomerDetailsObj?.dob2 || datee,
-    marital1: leadPayload?.customerDetailsObj?.marital1 || {
-      label: 'Married',
-      value: 'Married',
+      leadPayload?.customerDetailsObj?.phoneNo1 ||
+      selUnitDetails?.customerDetailsObj?.phoneNo1 || customerInfo?.customerDetailsObj?.phoneNo1 ||
+      leadPayload?.Mobile ||
+      '',
+    phoneNo2:
+      leadPayload?.secondaryCustomerDetailsObj?.phoneNo2 ||
+      selUnitDetails?.secondaryCustomerDetailsObj?.phoneNo2 || customerInfo?.secondaryCustomerDetailsObj?.phoneNo2 ||
+      '',
+    email1:
+      leadPayload?.customerDetailsObj?.email1 ||
+      selUnitDetails?.customerDetailsObj?.email1 || customerInfo?.customerDetailsObj?.email1 ||
+      leadPayload?.Email ||
+      '',
+    email2:
+      leadPayload?.secondaryCustomerDetailsObj?.email2 ||
+      selUnitDetails?.secondaryCustomerDetailsObj?.email2 || customerInfo?.secondaryCustomerDetailsObj?.email2 ||
+      '',
+    dob1:
+      leadPayload?.customerDetailsObj?.dob1 ||
+      leadPayload?.customerDetailsObj?.dob1 || customerInfo?.customerDetailsObj?.dob1 ||
+      d,
+    dob2:
+      leadPayload?.secondaryCustomerDetailsObj?.dob2 ||
+      leadPayload?.secondaryCustomerDetailsObj?.dob2 || customerInfo?.secondaryCustomerDetailsObj?.dob2 ||
+      datee,
+    marital1: leadPayload?.customerDetailsObj?.marital1 ||
+      selUnitDetails?.customerDetailsObj?.marital1 || customerInfo?.customerDetailsObj?.marital1  ||{
+        label: 'Divorced',
+        value: 'Divorced',
+      },
+    marital2: leadPayload?.secondaryCustomerDetailsObj?.marital2 ||
+      selUnitDetails?.secondaryCustomerDetailsObj?.marital2 || customerInfo?.secondaryCustomerDetailsObj?.marital2  || {
+        label: 'Married',
+        value: 'Married',
+      },
+    city1: leadPayload?.customerDetailsObj?.city1 || selUnitDetails?.customerDetailsObj?.city1 || customerInfo?.customerDetailsObj?.city1 ||  '',
+    city2:  leadPayload?.secondaryCustomerDetailsObj?.city2 || selUnitDetails?.secondaryCustomerDetailsObj?.city2 || customerInfo?.secondaryCustomerDetailsObj?.city2 || '',
+    state1: leadPayload?.customerDetailsObj?.state1 || selUnitDetails?.customerDetailsObj?.state1 || customerInfo?.customerDetailsObj?.state1 ||  {
+      value: 'KA',
+      label: 'Karnataka',
     },
-    marital2: leadPayload?.secondaryCustomerDetailsObj?.marital2 || {
-      label: 'Married',
-      value: 'Married',
+    state2: leadPayload?.secondaryCustomerDetailsObj?.state2 || selUnitDetails?.secondaryCustomerDetailsObj?.state2 || customerInfo?.secondaryCustomerDetailsObj?.state2 ||  {
+      value: 'KA',
+      label: 'Karnataka',
     },
-    panNo1: leadPayload?.customerDetailsObj?.panNo1 || '',
-    panNo2: leadPayload?.secondaryCustomerDetailsObj?.panNo2 || '',
-    panDocUrl1: leadPayload?.customerDetailsObj?.panDocUrl1 || '',
 
-    panDocUrl2: leadPayload?.secondaryCustomerDetailsObj?.panDocUrl2 || '',
-    aadharNo1: leadPayload?.customerDetailsObj?.aadharNo1 || '',
-    aadharNo2: leadPayload?.secondaryCustomerDetailsObj?.aadharNo2 || '',
-    aadharUrl1: leadPayload?.customerDetailsObj?.aadharUrl1 || '',
-    aadharUrl2: leadPayload?.secondaryCustomerDetailsObj?.aadharUrl2 || '',
-    occupation1: leadPayload?.customerDetailsObj?.occupation1 || '',
-    companyName1: leadPayload?.customerDetailsObj?.companyName1 || '',
+    panNo1:
+      leadPayload?.customerDetailsObj?.panNo1 ||
+      selUnitDetails?.customerDetailsObj?.panNo1 || customerInfo?.customerDetailsObj?.panNo1 ||
+      '',
+    panNo2:
+      leadPayload?.secondaryCustomerDetailsObj?.panNo2 ||
+      selUnitDetails?.secondaryCustomerDetailsObj?.panNo2 || customerInfo?.secondaryCustomerDetailsObj?.panNo2  ||
+      '',
+    panDocUrl1:
+      leadPayload?.customerDetailsObj?.panDocUrl1 ||
+      selUnitDetails?.customerDetailsObj?.panDocUrl1 || customerInfo?.customerDetailsObj?.panDocUrl1  ||
+      '',
 
-    occupation2: leadPayload?.secondaryCustomerDetailsObj?.occupation2 || '',
-    companyName2: leadPayload?.secondaryCustomerDetailsObj?.companyName2 || '',
+    panDocUrl2:
+      leadPayload?.secondaryCustomerDetailsObj?.panDocUrl2 ||
+      selUnitDetails?.secondaryCustomerDetailsObj?.panDocUrl2 || customerInfo?.secondaryCustomerDetailsObj?.panDocUrl2  ||
+      '',
+    aadharNo1:
+      leadPayload?.customerDetailsObj?.aadharNo1 ||
+      selUnitDetails?.customerDetailsObj?.aadharNo1 || customerInfo?.customerDetailsObj?.aadharNo1  ||
+      '',
+    aadharNo2:
+      leadPayload?.secondaryCustomerDetailsObj?.aadharNo2 ||
+      selUnitDetails?.secondaryCustomerDetailsObj?.aadharNo2 || customerInfo?.secondaryCustomerDetailsObj?.aadharNo2  ||
+      '',
+    aadharUrl1:
+      leadPayload?.customerDetailsObj?.aadharUrl1 ||
+      selUnitDetails?.customerDetailsObj?.aadharUrl1 || customerInfo?.customerDetailsObj?.aadharUrl1  ||
+      '',
+    aadharUrl2:
+      leadPayload?.secondaryCustomerDetailsObj?.aadharUrl2 ||
+      selUnitDetails?.secondaryCustomerDetailsObj?.aadharUrl2 || customerInfo?.secondaryCustomerDetailsObj?.aadharUrl2  ||
+      '',
+    occupation1:
+      leadPayload?.customerDetailsObj?.occupation1 ||
+      selUnitDetails?.customerDetailsObj?.occupation1 || customerInfo?.customerDetailsObj?.occupation1  ||
+      '',
+    companyName1:
+      leadPayload?.customerDetailsObj?.companyName1 ||
+      selUnitDetails?.customerDetailsObj?.companyName1 || customerInfo?.customerDetailsObj?.companyName1  ||
+      '',
+      designation1:
+      leadPayload?.customerDetailsObj?.designation1 ||
+      selUnitDetails?.customerDetailsObj?.designation1 || customerInfo?.customerDetailsObj?.designation1  ||
+      '',
+      designation2:
+      leadPayload?.secondaryCustomerDetailsObj?.designation2 || selUnitDetails?.secondaryCustomerDetailsObj?.designation2 || customerInfo?.customerDetailsObj?.designation2 ||  '',
+      annualIncome1:
+      leadPayload?.customerDetailsObj?.annualIncome1 ||
+      selUnitDetails?.customerDetailsObj?.annualIncome1 || customerInfo?.customerDetailsObj?.annualIncome1  ||
+      '',
+      annualIncome2:
+      leadPayload?.secondaryCustomerDetailsObj?.annualIncome2 || selUnitDetails?.secondaryCustomerDetailsObj?.annualIncome2 || customerInfo?.customerDetailsObj?.annualIncome2 ||  '',
 
-    aggrementAddress: leadPayload?.aggrementDetailsObj?.aggrementAddress || '',
+    occupation2: leadPayload?.secondaryCustomerDetailsObj?.occupation2 || selUnitDetails?.secondaryCustomerDetailsObj?.occupation2 || customerInfo?.customerDetailsObj?.occupation2 ||  '',
+    companyName2: leadPayload?.secondaryCustomerDetailsObj?.companyName2 ||  selUnitDetails?.secondaryCustomerDetailsObj?.companyName2 || customerInfo?.secondaryCustomerDetailsObj?.companyName2  ||'',
+
+    aggrementAddress: leadPayload?.aggrementDetailsObj?.aggrementAddress ||  customerInfo?.customerDetailsObj?.aggrementAddress  || '',
     industry: leadPayload?.industry || '',
     designation: leadPayload?.designation || '',
     annualIncome: leadPayload?.annualIncome || '',
@@ -371,6 +457,7 @@ const AddApplicantDetails = ({
     console.log('customer details form', data)
     const {
       customerName1,
+      relation1,
       co_Name1,
       phoneNo1,
       email1,
@@ -383,6 +470,7 @@ const AddApplicantDetails = ({
       occupation1,
       companyName1,
       customerName2,
+      relation2,
       co_Name2,
       phoneNo2,
       email2,
@@ -404,10 +492,15 @@ const AddApplicantDetails = ({
       bookingSource,
       bookedBy,
       purchasePurpose,
+      city1,
+      address1,
+      city2,
+      address2,
     } = data
     const { uid } = selUnitDetails
     const customerDetailsObj = {
       customerName1: customerName1,
+      relation1: relation1,
       co_Name1: co_Name1,
       phoneNo1: phoneNo1,
       email1: email1,
@@ -419,9 +512,12 @@ const AddApplicantDetails = ({
       aadharUrl1: aadhrUrl1 || '',
       occupation1,
       companyName1,
+      city1,
+      address1,
     }
     const secondaryCustomerDetailsObj = {
       customerName2,
+      relation2,
       co_Name2,
       phoneNo2,
       email2,
@@ -433,6 +529,8 @@ const AddApplicantDetails = ({
       aadharUrl2: aadhrUrl2 || '',
       occupation2,
       companyName2,
+      city2,
+      address2,
     }
     const aggrementDetailsObj = {
       aggrementAddress,
@@ -451,7 +549,6 @@ const AddApplicantDetails = ({
       designation,
       annualIncome,
     }
-
 
     // local updater
     setCustomerInfo(updateDoc)
@@ -575,15 +672,17 @@ const AddApplicantDetails = ({
                                     className="rounded-md   bg-[#fff] lg:w-6/12"
                                     style={{ boxShadow: '0 1px 12px #f2f2f2' }}
                                   >
-                                    <div className="w-full  flex flex-row mb-2 p-4 bg-violet-100 rounded-t-md" style={bgImgStyle}>
+                                    <div
+                                      className="w-full  flex flex-row mb-2 p-4 bg-violet-100 rounded-t-md"
+                                      style={bgImgStyle}
+                                    >
                                       <div className="w-[43.80px] h-[47px] bg-zinc-100 rounded-[5px]"></div>
                                       <div className="w-full flex flex-col">
                                         <h6 className="w-full lg:w-12/12 text-white text-[13px] mt-[9px] mb- font-bold uppercase">
                                           Applicant
                                         </h6>
                                         <div className="w-[455.80px] opacity-50 text-white  text-[12px] font-normal ">
-                                          Details of applicant is
-                                          mandatory
+                                          Details of applicant is mandatory
                                         </div>
                                       </div>
                                     </div>
@@ -650,16 +749,17 @@ const AddApplicantDetails = ({
                                         onChange={formik.handleChange}
                                       />
 
-<div className="w-full  flex flex-row lg:w-12/12 mt-1">
+                                      <div className="w-full  flex flex-row lg:w-12/12 mt-1">
                                         <div className="w-full lg:w-5/12 px- ">
                                           <div className="relative w-full mb-3 mt-[10px]">
                                             <PhoneNoField
                                               label="Phone No"
                                               name="phoneNo1"
-                                              type="text"
+                                              // type="text"
                                               value={formik.values.phoneNo1}
                                               onChange={(value) => {
                                                 // formik.setFieldValue('mobileNo', value.value)
+                                                console.log('value is ', value)
                                                 formik.setFieldValue(
                                                   'phoneNo1',
                                                   value.value
@@ -667,9 +767,9 @@ const AddApplicantDetails = ({
                                               }}
                                               // value={formik.values.mobileNo}
                                               options={{}}
-                                              labelSize= 'text-[11px]'
-                                              textSize= 'text-[12px]'
-                                              txtPad= 'px-1'
+                                              labelSize="text-[11px]"
+                                              textSize="text-[12px]"
+                                              txtPad="px-1"
                                               className="text-[10px]"
                                             />
                                           </div>
@@ -775,74 +875,110 @@ const AddApplicantDetails = ({
                                             />
                                           </div>
                                         </div>
-                                        <label className="label font-regular text-[12px] block mb-1 mt-1 text-gray-700">
-                                        PAN No{' '}
-                                      </label>
-                                        <MuiTextField
-                                        id="area"
-                                        className={`w-full bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 mt-1 p-0`}
-                                        size="small"
-                                        InputProps={{
-                                          style: {
-                                            height: '2rem',
-                                            paddingLeft: '7px',
-                                          },
-                                          endAdornment: (
-                                            <InputAdornment
-                                              position="end"
-                                              style={{ height: '32px' }}
-                                            >
-                                                <div className="flex flex-row-reverse">
-                                                <label
-                                                  htmlFor="formFile3"
-                                                  className="form-label cursor-pointer inline-block   font-regular text-xs  rounded-2xl px-1 py-1  "
-                                                >
-                                                  {`${
-                                                    panCard1 === '' ||
-                                                    panCard1 == undefined
-                                                      ? 'Upload'
-                                                      : 'Download'
-                                                  }`}
-                                                </label>
-                                                {panCard1 != '' && (
-                                                  <button
-                                                    onClick={() =>
-                                                      downloadImage(
-                                                        panCard1,
-                                                        'pancard1.PNG'
-                                                      )
-                                                    }
-                                                  >
-                                                    {' '}
-                                                    {panCard1 === '' ||
-                                                    panCard1 == undefined ? (
-                                                      <PlusIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 border rounded-[16px] " />
-                                                    ) : (
-                                                      <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " />
-                                                    )}
-                                                  </button>
-                                                )}
-                                                <input
-                                                  type="file"
-                                                  className="hidden"
-                                                  id="formFile3"
-                                                  onChange={async (e) => {
-                                                    await handleFileUploadFun(
-                                                      e.target.files[0],
-                                                      'panCard1'
+                                        <div className="w-full  flex flex-row lg:w-12/12 mt-1">
+                                          <div className="w-full lg:w-5/12 px- ">
+                                            <div className="relative w-full mb-3 mt-2">
+                                              <TextField
+                                                label="City"
+                                                name="city1"
+                                                type="text"
+                                              />
+                                            </div>
+                                          </div>
+                                          <div className="w-full lg:w-7/12 pl-4">
+                                            <div className="relative w-full mb-3 mt-2">
+                                              <div className="w-full flex flex-col mb-3">
+                                                <CustomSelect
+                                                  name="state1"
+                                                  label="State"
+                                                  className="input"
+                                                  onChange={(value) => {
+                                                    formik.setFieldValue(
+                                                      'state1',
+                                                      value.value
                                                     )
                                                   }}
+                                                  value={formik.values.state1}
+                                                  options={statesList}
                                                 />
+                                                <p
+                                                  className="text-sm text-red-500 hidden mt-3"
+                                                  id="error"
+                                                >
+                                                  Please fill out this field.
+                                                </p>
                                               </div>
-                                            </InputAdornment>
-                                          ),
-                                        }}
-                                        label=""
-                                        name="panNo1"
-                                        type="text"
-                                        value={formik.values.panNo1}
-                                        onChange={formik.handleChange}
-                                      />
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <label className="label font-regular text-[12px] block mb-1 mt-1 text-gray-700">
+                                          PAN No{' '}
+                                        </label>
+                                        <MuiTextField
+                                          id="area"
+                                          className={`w-full bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 mt-1 p-0`}
+                                          size="small"
+                                          InputProps={{
+                                            style: {
+                                              height: '2rem',
+                                              paddingLeft: '7px',
+                                            },
+                                            endAdornment: (
+                                              <InputAdornment
+                                                position="end"
+                                                style={{ height: '32px' }}
+                                              >
+                                                <div className="flex flex-row-reverse">
+                                                  <label
+                                                    htmlFor="formFile3"
+                                                    className="form-label cursor-pointer inline-block   font-regular text-xs  rounded-2xl px-1 py-1  "
+                                                  >
+                                                    {`${
+                                                      panCard1 === '' ||
+                                                      panCard1 == undefined
+                                                        ? 'Upload'
+                                                        : 'Download'
+                                                    }`}
+                                                  </label>
+                                                  {panCard1 != '' && (
+                                                    <button
+                                                      onClick={() =>
+                                                        downloadImage(
+                                                          panCard1,
+                                                          'pancard1.PNG'
+                                                        )
+                                                      }
+                                                    >
+                                                      {' '}
+                                                      {panCard1 === '' ||
+                                                      panCard1 == undefined ? (
+                                                        <PlusIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 border rounded-[16px] " />
+                                                      ) : (
+                                                        <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " />
+                                                      )}
+                                                    </button>
+                                                  )}
+                                                  <input
+                                                    type="file"
+                                                    className="hidden"
+                                                    id="formFile3"
+                                                    onChange={async (e) => {
+                                                      await handleFileUploadFun(
+                                                        e.target.files[0],
+                                                        'panCard1'
+                                                      )
+                                                    }}
+                                                  />
+                                                </div>
+                                              </InputAdornment>
+                                            ),
+                                          }}
+                                          label=""
+                                          name="panNo1"
+                                          type="text"
+                                          value={formik.values.panNo1}
+                                          onChange={formik.handleChange}
+                                        />
                                         {/* <div className="w-full flex flex-row">
                                           <div className="  px-">
                                             <div className="relative w-[160px] mb-3 mt-2">
@@ -900,80 +1036,98 @@ const AddApplicantDetails = ({
                                             </div>
                                           </div>
                                         </div> */}
-                                           <label className="label font-regular text-[12px] block mb-1 mt-1 text-gray-700">
-                                        Aadhar No{' '}
-                                      </label>
+                                        <label className="label font-regular text-[12px] block mb-1 mt-1 text-gray-700">
+                                          Aadhar No{' '}
+                                        </label>
                                         <MuiTextField
-                                        id="area"
-                                        className={`w-full bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 mt-1 p-0`}
-                                        size="small"
-                                        InputProps={{
-                                          style: {
-                                            height: '2rem',
-                                            paddingLeft: '7px',
-                                          },
-                                          endAdornment: (
-                                            <InputAdornment
-                                              position="end"
-                                              style={{ height: '32px' }}
-                                            >
-                                                      <div className=" flex flex-row-reverse">
-                                                <label
-                                                  htmlFor="formFile4"
-                                                  className="form-label cursor-pointer inline-block font-regular text-xs  rounded-2xl px-1 py-1"
-                                                >
-                                                  {`${
-                                                    aadhrUrl1 === '' ||
-                                                    aadhrUrl1 == undefined
-                                                      ? 'Upload'
-                                                      : 'Download'
-                                                  }`}
-                                                </label>
-                                                {aadhrUrl1 != '' && (
-                                                  <button
-                                                    onClick={() =>
-                                                      downloadImage(
-                                                        aadhrUrl1,
-                                                        'Aadhar1.PNG'
-                                                      )
-                                                    }
+                                          id="area"
+                                          className={`w-full bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 mt-1 p-0`}
+                                          size="small"
+                                          InputProps={{
+                                            style: {
+                                              height: '2rem',
+                                              paddingLeft: '7px',
+                                            },
+                                            endAdornment: (
+                                              <InputAdornment
+                                                position="end"
+                                                style={{ height: '32px' }}
+                                              >
+                                                <div className=" flex flex-row-reverse">
+                                                  <label
+                                                    htmlFor="formFile4"
+                                                    className="form-label cursor-pointer inline-block font-regular text-xs  rounded-2xl px-1 py-1"
                                                   >
-                                                    {' '}
-                                                    {aadhrUrl1 === '' ||
-                                                    aadhrUrl1 == undefined ? (
-                                                      <PlusIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 border rounded-[16px] " />
-                                                    ) : (
-                                                      <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " />
-                                                    )}
-                                                  </button>
-                                                )}
-                                                <input
-                                                  type="file"
-                                                  className="hidden"
-                                                  id="formFile4"
-                                                  onChange={(e) => {
-                                                    console.log(
-                                                      'iwas clicked aadharno 2'
-                                                    )
-                                                    handleFileUploadFun(
-                                                      e.target.files[0],
-                                                      'aadharNo1Url'
-                                                    )
-                                                  }}
-                                                />
-                                              </div>
-                                            </InputAdornment>
-                                          ),
-                                        }}
-                                        label=""
-                                        name="aadharNo1"
-                                        type="text"
-                                        value={formik.values.aadharNo1}
-                                        onChange={formik.handleChange}
-                                      />
+                                                    {`${
+                                                      aadhrUrl1 === '' ||
+                                                      aadhrUrl1 == undefined
+                                                        ? 'Upload'
+                                                        : 'Download'
+                                                    }`}
+                                                  </label>
+                                                  {aadhrUrl1 != '' && (
+                                                    <button
+                                                      onClick={() =>
+                                                        downloadImage(
+                                                          aadhrUrl1,
+                                                          'Aadhar1.PNG'
+                                                        )
+                                                      }
+                                                    >
+                                                      {' '}
+                                                      {aadhrUrl1 === '' ||
+                                                      aadhrUrl1 == undefined ? (
+                                                        <PlusIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 border rounded-[16px] " />
+                                                      ) : (
+                                                        <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " />
+                                                      )}
+                                                    </button>
+                                                  )}
+                                                  <input
+                                                    type="file"
+                                                    className="hidden"
+                                                    id="formFile4"
+                                                    onChange={(e) => {
+                                                      console.log(
+                                                        'iwas clicked aadharno 2'
+                                                      )
+                                                      handleFileUploadFun(
+                                                        e.target.files[0],
+                                                        'aadharNo1Url'
+                                                      )
+                                                    }}
+                                                  />
+                                                </div>
+                                              </InputAdornment>
+                                            ),
+                                          }}
+                                          label=""
+                                          name="aadharNo1"
+                                          type="text"
+                                          value={formik.values.aadharNo1}
+                                          onChange={formik.handleChange}
+                                        />
+                                              <div className="w-full  flex flex-row lg:w-12/12 mt-1">
+                                        <div className="w-full lg:w-5/12 px- ">
+                                          <div className="relative w-full mb-3 mt-[10px]">
+                                          <TextField
+                                              label="Occupation"
+                                              name="occupation1"
+                                              type="text"
+                                            />
 
-
-
+                                          </div>
+                                        </div>
+                                        <div className="w-full lg:w-7/12 pl-4">
+                                          <div className="relative w-full mb-3 mt-2">
+                                            <TextField
+                                              label="Annual Income"
+                                              name="annualIncome1"
+                                              type="text"
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
                                       </div>
                                     </div>
                                   </section>
@@ -981,9 +1135,11 @@ const AddApplicantDetails = ({
                                   <section
                                     className="rounded-md   bg-[#fff] lg:w-6/12"
                                     style={{ boxShadow: '0 1px 12px #f2f2f2' }}
-
                                   >
-                                    <div className="w-full  flex flex-row mb-2 p-4 bg-violet-100 rounded-t-md"  style={bgImgStyle}>
+                                    <div
+                                      className="w-full  flex flex-row mb-2 p-4 bg-violet-100 rounded-t-md"
+                                      style={bgImgStyle}
+                                    >
                                       <div className="w-[43.80px] h-[47px] bg-zinc-100 rounded-[5px]"></div>
                                       <div className="w-full flex flex-col">
                                         <h6 className="w-full lg:w-12/12 text-white text-[13px] mt-[9px] mb- font-bold uppercase">
@@ -1063,7 +1219,7 @@ const AddApplicantDetails = ({
                                             <PhoneNoField
                                               label="Phone No"
                                               name="phoneNo2"
-                                              type="text"
+                                              // type="text"
                                               value={formik.values.phoneNo2}
                                               onChange={(value) => {
                                                 // formik.setFieldValue('mobileNo', value.value)
@@ -1074,9 +1230,9 @@ const AddApplicantDetails = ({
                                               }}
                                               // value={formik.values.mobileNo}
                                               options={{}}
-                                              labelSize= 'text-[11px]'
-                                              textSize= 'text-[12px]'
-                                              txtPad= 'px-2'
+                                              labelSize="text-[11px]"
+                                              textSize="text-[12px]"
+                                              txtPad="px-2"
                                               className="text-[10px]"
                                             />
                                           </div>
@@ -1152,7 +1308,7 @@ const AddApplicantDetails = ({
                                                       'dob2',
                                                       date.getTime()
                                                     )
-                                                    setStartDate(date)
+                                                    // setStartDate(date)
                                                     // console.log(startDate)
                                                   }}
                                                   timeFormat="HH:mm"
@@ -1186,152 +1342,206 @@ const AddApplicantDetails = ({
                                             />
                                           </div>
                                         </div>
+                                        <div className="w-full  flex flex-row lg:w-12/12 mt-1">
+                                          <div className="w-full lg:w-5/12 px- ">
+                                            <div className="relative w-full mb-3 mt-2">
+                                              <TextField
+                                                label="City"
+                                                name="city2"
+                                                type="text"
+                                              />
+                                            </div>
+                                          </div>
+                                          <div className="w-full lg:w-7/12 pl-4">
+                                            <div className="relative w-full mb-3 mt-2">
+                                              <div className="w-full flex flex-col mb-3">
+                                                <CustomSelect
+                                                  name="state2"
+                                                  label="State"
+                                                  className="input"
+                                                  onChange={(value) => {
+                                                    formik.setFieldValue(
+                                                      'state2',
+                                                      value.value
+                                                    )
+                                                  }}
+                                                  value={formik.values.state2}
+                                                  options={statesList}
+                                                />
+                                                <p
+                                                  className="text-sm text-red-500 hidden mt-3"
+                                                  id="error"
+                                                >
+                                                  Please fill out this field.
+                                                </p>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
                                         <label className="label font-regular text-[12px] block mb-1 mt-1 text-gray-700">
-                                        PAN No{' '}
-                                      </label>
+                                          PAN No{' '}
+                                        </label>
                                         <MuiTextField
-                                        id="area"
-                                        className={`w-full bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 mt-1 p-0`}
-                                        size="small"
-                                        InputProps={{
-                                          style: {
-                                            height: '2rem',
-                                            paddingLeft: '7px',
-                                          },
-                                          endAdornment: (
-                                            <InputAdornment
-                                              position="end"
-                                              style={{ height: '32px' }}
-                                            >
+                                          id="area"
+                                          className={`w-full bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 mt-1 p-0`}
+                                          size="small"
+                                          InputProps={{
+                                            style: {
+                                              height: '2rem',
+                                              paddingLeft: '7px',
+                                            },
+                                            endAdornment: (
+                                              <InputAdornment
+                                                position="end"
+                                                style={{ height: '32px' }}
+                                              >
                                                 <div className="flex flex-row-reverse">
-                                                <label
-                                                  htmlFor="formFile3"
-                                                  className="form-label cursor-pointer inline-block   font-regular text-xs  rounded-2xl px-1 py-1  "
-                                                >
-                                                  {`${
-                                                    panCard2 === '' ||
-                                                    panCard2 == undefined
-                                                      ? 'Upload'
-                                                      : 'Download'
-                                                  }`}
-                                                </label>
-                                                {panCard1 != '' && (
-                                                  <button
-                                                    onClick={() =>
-                                                      downloadImage(
-                                                        panCard2,
-                                                        'pancard2.PNG'
-                                                      )
-                                                    }
+                                                  <label
+                                                    htmlFor="formFile3"
+                                                    className="form-label cursor-pointer inline-block   font-regular text-xs  rounded-2xl px-1 py-1  "
                                                   >
-                                                    {' '}
-                                                    {panCard2 === '' ||
-                                                    panCard2 == undefined ? (
-                                                      <PlusIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 border rounded-[16px] " />
-                                                    ) : (
-                                                      <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " />
-                                                    )}
-                                                  </button>
-                                                )}
-                                                <input
-                                                  type="file"
-                                                  className="hidden"
-                                                  id="formFile3"
-                                                  onChange={async (e) => {
-                                                    await handleFileUploadFun(
-                                                      e.target.files[0],
-                                                      'panCard1'
-                                                    )
-                                                  }}
-                                                />
-                                              </div>
-                                            </InputAdornment>
-                                          ),
-                                        }}
-                                        label=""
-                                        name="panNo2"
-                                        type="text"
-                                        value={formik.values.panNo2}
-                                        onChange={formik.handleChange}
-                                      />
-                                                  <label className="label font-regular text-[12px] block mb-1 mt-1 text-gray-700">
-                                        Aadhar No{' '}
-                                      </label>
+                                                    {`${
+                                                      panCard2 === '' ||
+                                                      panCard2 == undefined
+                                                        ? 'Upload'
+                                                        : 'Download'
+                                                    }`}
+                                                  </label>
+                                                  {panCard1 != '' && (
+                                                    <button
+                                                      onClick={() =>
+                                                        downloadImage(
+                                                          panCard2,
+                                                          'pancard2.PNG'
+                                                        )
+                                                      }
+                                                    >
+                                                      {' '}
+                                                      {panCard2 === '' ||
+                                                      panCard2 == undefined ? (
+                                                        <PlusIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 border rounded-[16px] " />
+                                                      ) : (
+                                                        <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " />
+                                                      )}
+                                                    </button>
+                                                  )}
+                                                  <input
+                                                    type="file"
+                                                    className="hidden"
+                                                    id="formFile3"
+                                                    onChange={async (e) => {
+                                                      await handleFileUploadFun(
+                                                        e.target.files[0],
+                                                        'panCard1'
+                                                      )
+                                                    }}
+                                                  />
+                                                </div>
+                                              </InputAdornment>
+                                            ),
+                                          }}
+                                          label=""
+                                          name="panNo2"
+                                          type="text"
+                                          value={formik.values.panNo2}
+                                          onChange={formik.handleChange}
+                                        />
+                                        <label className="label font-regular text-[12px] block mb-1 mt-1 text-gray-700">
+                                          Aadhar No{' '}
+                                        </label>
                                         <MuiTextField
-                                        id="area"
-                                        className={`w-full bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 mt-1 p-0`}
-                                        size="small"
-                                        InputProps={{
-                                          style: {
-                                            height: '2rem',
-                                            paddingLeft: '7px',
-                                          },
-                                          endAdornment: (
-                                            <InputAdornment
-                                              position="end"
-                                              style={{ height: '32px' }}
-                                            >
-                                                      <div className=" flex flex-row-reverse">
-                                                <label
-                                                  htmlFor="formFile4"
-                                                  className="form-label cursor-pointer inline-block  font-regular text-xs  rounded-2xl px-1 py-1"
-                                                >
-                                                  {`${
-                                                    aadhrUrl2 === '' ||
-                                                    aadhrUrl2 == undefined
-                                                      ? 'Upload'
-                                                      : 'Download'
-                                                  }`}
-                                                </label>
-                                                {aadhrUrl2 != '' && (
-                                                  <button
-                                                    onClick={() =>
-                                                      downloadImage(
-                                                        aadhrUrl2,
-                                                        'Aadhar2.PNG'
-                                                      )
-                                                    }
+                                          id="area"
+                                          className={`w-full bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 mt-1 p-0`}
+                                          size="small"
+                                          InputProps={{
+                                            style: {
+                                              height: '2rem',
+                                              paddingLeft: '7px',
+                                            },
+                                            endAdornment: (
+                                              <InputAdornment
+                                                position="end"
+                                                style={{ height: '32px' }}
+                                              >
+                                                <div className=" flex flex-row-reverse">
+                                                  <label
+                                                    htmlFor="formFile4"
+                                                    className="form-label cursor-pointer inline-block  font-regular text-xs  rounded-2xl px-1 py-1"
                                                   >
-                                                    {' '}
-                                                    {aadhrUrl2 === '' ||
-                                                    aadhrUrl2 == undefined ? (
-                                                      <PlusIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 border rounded-[16px] " />
-                                                    ) : (
-                                                      <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " />
-                                                    )}
-                                                  </button>
-                                                )}
-                                                <input
-                                                  type="file"
-                                                  className="hidden"
-                                                  id="formFile4"
-                                                  onChange={(e) => {
-                                                    console.log(
-                                                      'iwas clicked aadharno 2'
-                                                    )
-                                                    handleFileUploadFun(
-                                                      e.target.files[0],
-                                                      'aadharNo2Url'
-                                                    )
-                                                  }}
-                                                />
-                                              </div>
-                                            </InputAdornment>
-                                          ),
-                                        }}
-                                        label=""
-                                        name="aadharNo2"
-                                        type="text"
-                                        value={formik.values.aadharNo2}
-                                        onChange={formik.handleChange}
-                                      />
+                                                    {`${
+                                                      aadhrUrl2 === '' ||
+                                                      aadhrUrl2 == undefined
+                                                        ? 'Upload'
+                                                        : 'Download'
+                                                    }`}
+                                                  </label>
+                                                  {aadhrUrl2 != '' && (
+                                                    <button
+                                                      onClick={() =>
+                                                        downloadImage(
+                                                          aadhrUrl2,
+                                                          'Aadhar2.PNG'
+                                                        )
+                                                      }
+                                                    >
+                                                      {' '}
+                                                      {aadhrUrl2 === '' ||
+                                                      aadhrUrl2 == undefined ? (
+                                                        <PlusIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 border rounded-[16px] " />
+                                                      ) : (
+                                                        <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " />
+                                                      )}
+                                                    </button>
+                                                  )}
+                                                  <input
+                                                    type="file"
+                                                    className="hidden"
+                                                    id="formFile4"
+                                                    onChange={(e) => {
+                                                      console.log(
+                                                        'iwas clicked aadharno 2'
+                                                      )
+                                                      handleFileUploadFun(
+                                                        e.target.files[0],
+                                                        'aadharNo2Url'
+                                                      )
+                                                    }}
+                                                  />
+                                                </div>
+                                              </InputAdornment>
+                                            ),
+                                          }}
+                                          label=""
+                                          name="aadharNo2"
+                                          type="text"
+                                          value={formik.values.aadharNo2}
+                                          onChange={formik.handleChange}
+                                        />
 
-
+<div className="w-full  flex flex-row lg:w-12/12 mt-1">
+                                        <div className="w-full lg:w-5/12 px- ">
+                                          <div className="relative w-full mb-3 mt-[10px]">
+                                           <TextField
+                                              label="Occupation"
+                                              name="occupation2"
+                                              type="text"
+                                            />
+                                          </div>
+                                        </div>
+                                        <div className="w-full lg:w-7/12 pl-4">
+                                          <div className="relative w-full mb-3 mt-2">
+                                            <TextField
+                                              label="Annual Income"
+                                              name="annualIncome2"
+                                              type="text"
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
                                       </div>
                                     </div>
                                   </section>
                                 </div>
-
 
                                 {/* <hr className="mt-6 border-b-1 border-blueGray-300" />
 
@@ -1371,57 +1581,54 @@ const AddApplicantDetails = ({
                                 <hr className="mt-6 border-b-1 border-blueGray-300" />
                               </section>
                             </div>
-
-
                           </div>
                           <div className="mt-5 text-right md:space-x-3 md:block flex flex-col-reverse py-3 mr-6 flex flex-col mt-2 z-10 flex flex-row justify-between mt-2 pr-6 bg-white shadow-lg absolute bottom-0  w-full w-[680px]">
-                      {setShowApplicantEdit != undefined && (
-                        <button
-                          className="bg-red-400 text-white active:bg-pink-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
-                          disabled={loading}
-                          onClick={() => setShowApplicantEdit(false)}
-                        >
-                          {'Cancel'}
-                        </button>
-                      )}
+                            {setShowApplicantEdit != undefined && (
+                              <button
+                                className="bg-red-400 text-white active:bg-pink-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+                                disabled={loading}
+                                onClick={() => setShowApplicantEdit(false)}
+                              >
+                                {'Cancel'}
+                              </button>
+                            )}
 
-                      <button
-                        className="mb-2  md:mb-0  hover:scale-110 focus:outline-none              hover:bg-[#5671fc]
+                            <button
+                              className="mb-2  md:mb-0  hover:scale-110 focus:outline-none              hover:bg-[#5671fc]
 bg-gradient-to-r from-violet-300 to-indigo-300
 text-black
 
 border duration-200 ease-in-out
 transition
  px-5 py-1 pb-[5px] text-sm shadow-sm font-medium tracking-wider text-white rounded-md hover:shadow-lg hover:bg-green-500"
-                        type="submit"
-                        disabled={loading}
-                        // onClick={() => submitFormFun(formik)}
-                      >
-                        {/* {loading && <Loader />} */}
-                        <span> {'Save'}</span>
-                      </button>
-                      {setShowApplicantEdit == undefined && (
-                        <button
-                          className="mb-2 mr-0 md:mb-0  hover:scale-110 focus:outline-none              hover:bg-[#5671fc]
+                              type="submit"
+                              disabled={loading}
+                              // onClick={() => submitFormFun(formik)}
+                            >
+                              {/* {loading && <Loader />} */}
+                              <span> {'Save'}</span>
+                            </button>
+                            {setShowApplicantEdit == undefined && (
+                              <button
+                                className="mb-2 mr-0 md:mb-0  hover:scale-110 focus:outline-none              hover:bg-[#5671fc]
 bg-gradient-to-r from-violet-300 to-indigo-300
 text-black
 
 border duration-200 ease-in-out
 transition
  px-5 py-1 pb-[5px] text-sm shadow-sm font-medium tracking-wider text-white rounded-md hover:shadow-lg hover:bg-green-500"
-                          type="submit"
-                          disabled={loading}
-                          // onClick={() => submitFormFun(formik)}
-                        >
-                          {/* {loading && <Loader />} */}
-                          <span> {'Save & Next'}</span>
-                        </button>
-                      )}
-                    </div>
+                                type="submit"
+                                disabled={loading}
+                                // onClick={() => submitFormFun(formik)}
+                              >
+                                {/* {loading && <Loader />} */}
+                                <span> {'Save & Next'}</span>
+                              </button>
+                            )}
+                          </div>
                         </div>
                       </section>
                     </div>
-
                   </Form>
                 )}
               </Formik>

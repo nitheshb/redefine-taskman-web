@@ -24,7 +24,7 @@ const SiteVisitM = ({ leadLogsRawData, showDrillDownFun }) => {
   }, [])
 
   useEffect(() => {
-    console.log('otttt')
+    console.log('otttt', leadLogsRawData)
     if (leadLogsRawData && leadLogsRawData.length > 0) {
       console.log('innn')
       // const val1 = Math.round(

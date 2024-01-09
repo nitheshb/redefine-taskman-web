@@ -4,12 +4,12 @@
 import { EyeIcon, PencilIcon } from '@heroicons/react/outline'
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { deleteUser, steamUsersList } from 'src/context/dbQueryFirebase'
+import { deleteUser, steamUsersList, steaminactiveUsersList } from 'src/context/dbQueryFirebase'
 import { TrashIcon } from '@heroicons/react/outline'
 import StyledButton from 'src/components/RoundedButton'
 import { useAuth } from 'src/context/firebase-auth-context'
 
-const UserManageTable = ({ editEmployeeFun }) => {
+const UserManageTable = ({ editEmployeeFun, showCompletedTasks }) => {
   const { user } = useAuth()
 
   const { orgId } = user
@@ -19,7 +19,7 @@ const UserManageTable = ({ editEmployeeFun }) => {
   useEffect(() => {
     getLeadsDataFun()
     setSelDept('all')
-  }, [])
+  }, [showCompletedTasks])
   useEffect(() => {
     if (selDept === 'all') {
       setFilterData(leadsFetchedData)
@@ -38,6 +38,19 @@ const UserManageTable = ({ editEmployeeFun }) => {
     }
   }, [selDept, leadsFetchedData])
   const getLeadsDataFun = async () => {
+    if(showCompletedTasks) {
+      const unsubscribe = steaminactiveUsersList(
+        orgId,
+        (querySnapshot) => {
+          const usersListA = querySnapshot.docs.map((docSnapshot) =>
+            docSnapshot.data()
+          )
+          setLeadsFetchedData(usersListA)
+        },
+        () => setLeadsFetchedData([])
+      )
+      return unsubscribe
+    }else {
     const unsubscribe = steamUsersList(
       orgId,
       (querySnapshot) => {
@@ -49,6 +62,7 @@ const UserManageTable = ({ editEmployeeFun }) => {
       () => setLeadsFetchedData([])
     )
     return unsubscribe
+    }
   }
 
   const showOnlyDept = async (category) => {

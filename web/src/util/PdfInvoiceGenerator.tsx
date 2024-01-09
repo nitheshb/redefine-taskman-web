@@ -40,6 +40,13 @@ const useStyles = () =>
         smallFitter: {
           paddingLeft: '10px',
         },
+        headFitter: {
+          padding: '10px',
+
+        },
+        AllsmallFitter: {
+          padding: '10px',
+        },
         col4: {
           width: '33%',
           paddingLeft: '20px',
@@ -73,6 +80,10 @@ const useStyles = () =>
         ml5: { marginLeft: 30 },
         pl1: { paddingLeft: 5 },
         pl2: { paddingLeft: 10 },
+        pl3: { paddingLeft: 15 },
+        pr1: { paddingRight: 5 },
+        pr2: { paddingRight: 10 },
+        pr3: { paddingRight: 15 },
         pt2: { paddingTop: 4 },
         pt5: { paddingTop: 10 },
         h3: { fontSize: 16, fontWeight: 400 },
@@ -94,7 +105,8 @@ const useStyles = () =>
           fontFamily: 'Roboto',
           backgroundColor: '#FFFFFF',
           textTransform: 'capitalize',
-          padding: '40px 24px 60px 24px',
+          padding: '0px'
+          // padding: '40px 24px 60px 24px',
         },
         footer: {
           left: 0,
@@ -111,9 +123,16 @@ const useStyles = () =>
           flexDirection: 'row',
           justifyContent: 'space-between',
         },
+        contBorder: {
+          border: 0.5,
+          borderStyle: 'solid',
+          // borderColor: '#DFE3E8',
+        },
         table: {
           display: 'flex',
           width: 'auto',
+          border: 0.5,
+          borderStyle: 'solid',
         },
         tableRow: {
           padding: '8px 0',
@@ -472,11 +491,11 @@ const MyDocument = ({
           style={[
             styles.gridContainer,
             styles.mb20,
-            styles.fitter,
-            styles.borderbottom,
+            styles.cellBgHead,
+            styles.headFitter
           ]}
         >
-          <View style={[styles.col6]}>
+          <View style={[styles.col6,styles.smallFitter, styles.pr3, styles.ml1]}>
             <Image source="/ps_logo.png" style={{ width: 85, height: 35 }} />
             <Text style={[styles.h4, styles.ml1]}>
               {projectDetails?.projectName}
@@ -484,13 +503,13 @@ const MyDocument = ({
             {/* <Text>{myObj} </Text> */}
           </View>
           <View style={[styles.col6]}>
-            <Text style={[styles.h4, styles.alignRight, styles.mT1, styles.pt5]}>Cost Sheet</Text>
+            <Text style={[styles.h4, styles.alignRight, styles.mT1, styles.pt5, styles.pr3]}>Cost Sheet</Text>
             {/* <Text>{myObj} </Text> */}
           </View>
         </View>
 
         <View style={[styles.gridContainer, styles.mb20]}>
-          <View style={[styles.col4, styles.ml4]}>
+          <View style={[styles.col4, styles.ml4, styles.cellBgHead, styles.AllsmallFitter]}>
             <Text style={[styles.subtitle2, styles.mb4]}>Invoice To</Text>
             <Text style={styles.body2}>{leadDetailsObj1?.Name}</Text>
             <Text style={styles.body2}>{leadDetailsObj1?.Address}</Text>
@@ -498,7 +517,7 @@ const MyDocument = ({
             <Text style={styles.body2}>{leadDetailsObj1?.Mobile}</Text>
           </View>
 
-          <View style={styles.col4}>
+          <View style={[styles.col4, styles.cellBgHead,styles.AllsmallFitter]}>
             <Text style={[styles.subtitle2, styles.mb4]}>Invoice From</Text>
             <Text style={styles.body2}>{user?.displayName || user?.name}</Text>
             {/* <Text style={styles.body2}>
@@ -508,7 +527,7 @@ const MyDocument = ({
             <Text style={styles.body2}>Maa Homes,HSR Layout,</Text>
             <Text style={styles.body2}>Banglore.</Text>
           </View>
-          <View style={styles.col4}>
+          <View style={[styles.col4, styles.cellBgHead, styles.AllsmallFitter]}>
             <View>
               <Text style={[styles.subtitle2, styles.mb2]}>
                 Date create:{' '}
@@ -563,7 +582,7 @@ const MyDocument = ({
             Cost Sheet
           </Text>
         </View>
-        <View style={[styles.subtitle1, styles.bg1, styles.fitter, styles.ml2]}>
+        <View style={[styles.subtitle1, styles.bg1, styles.fitter, styles.ml2, styles.contBorder]}>
           <View style={[styles.bg2, styles.cellBgHead, styles.p11]}>
             <View style={[styles.tableCell_1, styles.p11]}>
               <Text style={styles.subtitle2}></Text>
@@ -661,13 +680,13 @@ const MyDocument = ({
               </View>
             ))}
             <View style={styles.totalRowNew}>
-              <View style={[styles.tableCell_1, styles.pl2, styles.p10]}></View>
+              <View style={[styles.tableCell_1, styles.pl2, styles.p10, styles.cellBg0]}></View>
 
-              <View style={[styles.tableCell_35, styles.p10]}></View>
+              <View style={[styles.tableCell_35, styles.p10,styles.cellBg0]}></View>
 
-              <View style={[styles.tableCell_20, styles.alignRight]}></View>
+              <View style={[styles.tableCell_20, styles.alignRight,styles.cellBg1,]}></View>
 
-              <View style={[styles.tableCell_20, styles.alignRight, styles.pr4]}>
+              <View style={[styles.tableCell_20, styles.alignRight,styles.cellBg2,styles.pr4]}>
                 <Text style={[styles.subtitle2, styles.pt2]}>Total (A)</Text>
               </View>
 

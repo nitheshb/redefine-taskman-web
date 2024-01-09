@@ -37,6 +37,16 @@ import { IdentificationIcon } from '@heroicons/react/outline'
 // **********************************************
 
 // get users list
+export const steaminactiveUsersList = (orgId, snapshot, error) => {
+  const itemsQuery = query(
+    collection(db, 'users'),
+    where('orgId', '==', orgId),
+    where('userStatus', '==', 'Inactive')
+  )
+  console.log('orgname is ====>', orgId)
+  return onSnapshot(itemsQuery, snapshot, error)
+}
+
 export const steamUsersList = (orgId, snapshot, error) => {
   const itemsQuery = query(
     collection(db, 'users'),
@@ -124,8 +134,30 @@ export const steamUsersActivityOfUser = (orgId, snapshot, error) => {
 // get all leadLogs from supabase
 export const steamAllLeadsActivity = async (orgId, snapshot, data, error) => {
   // const itemsQuery = query(doc(db, `${orgId}_leads_log', 'W6sFKhgyihlsKmmqDG0r'))
-  const { uid, cutoffDate } = data
+  const { uid, cutoffDate, dateRange } = data
+  console.log('logs range data is', dateRange, cutoffDate)
   // return onSnapshot(doc(db, `${orgId}_leads_log`, uid), snapshot, error)
+  if(dateRange?.[0] == null){
+    const { data: lead_logs, error1 } = await supabase
+      .from(`${orgId}_lead_logs`)
+      .select('projectId, type,subtype,T, by, from, to, uid, Luid, payload')
+      //.eq('Luid', uid)
+      .eq('type', 'sts_change')
+      .eq('from', 'visitfixed')
+      .gte('T', cutoffDate)
+      const result = Object.values(
+        lead_logs.reduce((obj, item) => {
+          if (!obj[item.Luid]) {
+            obj[item.Luid] = { ...item, coverA: [item.to] }
+          } else {
+            obj[item.Luid].coverA.push(item.to)
+          }
+          return obj
+        }, {})
+      )
+      return result
+    }
+else if(dateRange?.[1] != null){
   const { data: lead_logs, error1 } = await supabase
     .from(`${orgId}_lead_logs`)
     .select('projectId, type,subtype,T, by, from, to, uid, Luid, payload')
@@ -133,20 +165,43 @@ export const steamAllLeadsActivity = async (orgId, snapshot, data, error) => {
     .eq('type', 'sts_change')
     .eq('from', 'visitfixed')
     .gte('T', cutoffDate)
+    .lte('T', dateRange?.[1]?.getTime() + 86400000)
+    const result = Object.values(
+      lead_logs.reduce((obj, item) => {
+        if (!obj[item.Luid]) {
+          obj[item.Luid] = { ...item, coverA: [item.to] }
+        } else {
+          obj[item.Luid].coverA.push(item.to)
+        }
+        return obj
+      }, {})
+    )
+    return result
+  }else{
+    const { data: lead_logs, error1 } = await supabase
+    .from(`${orgId}_lead_logs`)
+    .select('projectId, type,subtype,T, by, from, to, uid, Luid, payload')
+    //.eq('Luid', uid)
+    .eq('type', 'sts_change')
+    .eq('from', 'visitfixed')
+    .gte('T', cutoffDate)
+    .lte('T', cutoffDate + 86400000)
+    const result = Object.values(
+      lead_logs.reduce((obj, item) => {
+        if (!obj[item.Luid]) {
+          obj[item.Luid] = { ...item, coverA: [item.to] }
+        } else {
+          obj[item.Luid].coverA.push(item.to)
+        }
+        return obj
+      }, {})
+    )
+    return result
+  }
 
   //  below logic merges the duplicate logs with Luid and from 'visitfixed'
   // coverA contains all merge from array
-  const result = Object.values(
-    lead_logs.reduce((obj, item) => {
-      if (!obj[item.Luid]) {
-        obj[item.Luid] = { ...item, coverA: [item.to] }
-      } else {
-        obj[item.Luid].coverA.push(item.to)
-      }
-      return obj
-    }, {})
-  )
-  return result
+
   // return lead_logs
   // return onSnapshot(itemsQuery, snapshot, error)
 }
@@ -803,10 +858,54 @@ export const getMyLeadsByDate = async (orgId, data) => {
   return await citySnapshot.docs.map((doc) => doc.data())
 }
 export const getLeadsByDate = async (orgId, data) => {
-  const { cutoffDate } = data
+  const { cutoffDate, dateRange } = data
+  let itemsQuery;
+  if(dateRange?.[0] == null){
+    console.log('my Array data is delayer 1 inside two ranges', dateRange)
+ itemsQuery = query(
+    collection(db, `${orgId}_leads`),
+    where('Date', '>=', cutoffDate),
+  )}
+  else if(dateRange?.[1] != null){
+    console.log('my Array data is delayer 1 inside two ranges', dateRange)
+ itemsQuery = query(
+    collection(db, `${orgId}_leads`),
+    where('Date', '>=', cutoffDate),
+    where('Date', '<=', dateRange?.[1]?.getTime() + 86400000)
+  )}
+  // else if(dateRange?.[1] == null) {
+  //   console.log('my Array data is delayer 1 inside same', dateRange, cutoffDate, cutoffDate)
+  //   itemsQuery = query(
+  //     collection(db, `${orgId}_leads`),
+  //     where('Date', '>=', cutoffDate),
+  //     where('Date', '<=', (cutoffDate + 86400000) ))
+  // }
+  else {
+    console.log('my Array data is delayer 1 inside normal', dateRange, cutoffDate)
+    itemsQuery = query(
+      collection(db, `${orgId}_leads`),
+      where('Date', '>=', cutoffDate),
+      where('Date', '<=', (cutoffDate + 86400000)))
+  }
+
+  //  const itemsQuery = query(
+  //     collection(db, `${orgId}_leads`),
+  //     where('Date', '>=', cutoffDate))
+  const citySnapshot = await getDocs(itemsQuery)
+  // await citySnapshot.docs.map((doc) => doc.data())
+  console.log('my Array data is delayer 1', citySnapshot)
+  return await citySnapshot.docs.map((doc) => {
+    const x = doc.data()
+    x.id = doc.id
+    return x
+  })
+}
+export const getLeadsByRange = async (orgId, data) => {
+  const { startDate, cutoffDate } = data
   const itemsQuery = query(
     collection(db, `${orgId}_leads`),
-    where('Date', '>=', cutoffDate)
+    where('Date', '>=', startDate),
+    where('Date', '<=', cutoffDate)
   )
   const citySnapshot = await getDocs(itemsQuery)
   // await citySnapshot.docs.map((doc) => doc.data())
@@ -2993,7 +3092,10 @@ export const updatePaymentScheduleCharges = async (
       variant: 'success',
     })
   } catch (e) {
-    console.log(' error is here', e)
+    console.log(' error is here', e,  orgId,
+    uid,
+    chargePayloadA,
+    type,)
     enqueueSnackbar(e.message, {
       variant: 'error',
     })
