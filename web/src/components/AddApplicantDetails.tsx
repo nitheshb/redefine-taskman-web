@@ -68,8 +68,8 @@ const AddApplicantDetails = ({
   }, [])
 
   useEffect(() => {
-    console.log('yes it is', panCard1)
-  }, [panCard1])
+    console.log('customerInfo yes it is', customerInfo)
+  }, [])
 
   useEffect(() => {
     const unsubscribe = steamUsersListByRole(
@@ -260,135 +260,188 @@ const AddApplicantDetails = ({
   const initialState = {
     customerName1:
       leadPayload?.customerDetailsObj?.customerName1 ||
-      selUnitDetails?.customerDetailsObj?.customerName1 || customerInfo?.customerDetailsObj?.customerName1 ||
+      selUnitDetails?.customerDetailsObj?.customerName1 ||
+      customerInfo?.customerDetailsObj?.customerName1 ||
       leadPayload?.Name ||
       '',
     customerName2:
       leadPayload?.secondaryCustomerDetailsObj?.customerName2 ||
-      selUnitDetails?.secondaryCustomerDetailsObj?.customerName2 || customerInfo?.secondaryCustomerDetailsObj?.customerName2 ||
+      selUnitDetails?.secondaryCustomerDetailsObj?.customerName2 ||
+      customerInfo?.secondaryCustomerDetailsObj?.customerName2 ||
       '',
-    relation1:customerInfo?.customerDetailsObj?.relation1 || {
+    relation1: customerInfo?.customerDetailsObj?.relation1 || {
       label: 'S/O',
       value: 'S/O',
     },
-    relation2:customerInfo?.secondaryCustomerDetailsObj?.relation2 || {
+    relation2: customerInfo?.secondaryCustomerDetailsObj?.relation2 || {
       label: 'S/O',
       value: 'S/O',
     },
     co_Name1:
       leadPayload?.customerDetailsObj?.co_Name1 ||
-      selUnitDetails?.customerDetailsObj?.co_Name1 || customerInfo?.customerDetailsObj?.co_Name1 ||
+      selUnitDetails?.customerDetailsObj?.co_Name1 ||
+      customerInfo?.customerDetailsObj?.co_Name1 ||
       '',
     co_Name2:
       leadPayload?.secondaryCustomerDetailsObj?.co_Name2 ||
-      selUnitDetails?.secondaryCustomerDetailsObj?.co_Name2 || customerInfo?.secondaryCustomerDetailsObj?.co_Name2 ||
+      selUnitDetails?.secondaryCustomerDetailsObj?.co_Name2 ||
+      customerInfo?.secondaryCustomerDetailsObj?.co_Name2 ||
       '',
 
     phoneNo1:
       leadPayload?.customerDetailsObj?.phoneNo1 ||
-      selUnitDetails?.customerDetailsObj?.phoneNo1 || customerInfo?.customerDetailsObj?.phoneNo1 ||
+      selUnitDetails?.customerDetailsObj?.phoneNo1 ||
+      customerInfo?.customerDetailsObj?.phoneNo1 ||
       leadPayload?.Mobile ||
       '',
     phoneNo2:
       leadPayload?.secondaryCustomerDetailsObj?.phoneNo2 ||
-      selUnitDetails?.secondaryCustomerDetailsObj?.phoneNo2 || customerInfo?.secondaryCustomerDetailsObj?.phoneNo2 ||
+      selUnitDetails?.secondaryCustomerDetailsObj?.phoneNo2 ||
+      customerInfo?.secondaryCustomerDetailsObj?.phoneNo2 ||
       '',
     email1:
       leadPayload?.customerDetailsObj?.email1 ||
-      selUnitDetails?.customerDetailsObj?.email1 || customerInfo?.customerDetailsObj?.email1 ||
+      selUnitDetails?.customerDetailsObj?.email1 ||
+      customerInfo?.customerDetailsObj?.email1 ||
       leadPayload?.Email ||
       '',
     email2:
       leadPayload?.secondaryCustomerDetailsObj?.email2 ||
-      selUnitDetails?.secondaryCustomerDetailsObj?.email2 || customerInfo?.secondaryCustomerDetailsObj?.email2 ||
+      selUnitDetails?.secondaryCustomerDetailsObj?.email2 ||
+      customerInfo?.secondaryCustomerDetailsObj?.email2 ||
       '',
     dob1:
       leadPayload?.customerDetailsObj?.dob1 ||
-      leadPayload?.customerDetailsObj?.dob1 || customerInfo?.customerDetailsObj?.dob1 ||
+      leadPayload?.customerDetailsObj?.dob1 ||
+      customerInfo?.customerDetailsObj?.dob1 ||
       d,
     dob2:
       leadPayload?.secondaryCustomerDetailsObj?.dob2 ||
-      leadPayload?.secondaryCustomerDetailsObj?.dob2 || customerInfo?.secondaryCustomerDetailsObj?.dob2 ||
+      leadPayload?.secondaryCustomerDetailsObj?.dob2 ||
+      customerInfo?.secondaryCustomerDetailsObj?.dob2 ||
       datee,
     marital1: leadPayload?.customerDetailsObj?.marital1 ||
-      selUnitDetails?.customerDetailsObj?.marital1 || customerInfo?.customerDetailsObj?.marital1  ||{
+      selUnitDetails?.customerDetailsObj?.marital1 ||
+      customerInfo?.customerDetailsObj?.marital1 || {
         label: 'Divorced',
         value: 'Divorced',
       },
     marital2: leadPayload?.secondaryCustomerDetailsObj?.marital2 ||
-      selUnitDetails?.secondaryCustomerDetailsObj?.marital2 || customerInfo?.secondaryCustomerDetailsObj?.marital2  || {
+      selUnitDetails?.secondaryCustomerDetailsObj?.marital2 ||
+      customerInfo?.secondaryCustomerDetailsObj?.marital2 || {
         label: 'Married',
         value: 'Married',
       },
-    city1: leadPayload?.customerDetailsObj?.city1 || selUnitDetails?.customerDetailsObj?.city1 || customerInfo?.customerDetailsObj?.city1 ||  '',
-    city2:  leadPayload?.secondaryCustomerDetailsObj?.city2 || selUnitDetails?.secondaryCustomerDetailsObj?.city2 || customerInfo?.secondaryCustomerDetailsObj?.city2 || '',
-    state1: leadPayload?.customerDetailsObj?.state1 || selUnitDetails?.customerDetailsObj?.state1 || customerInfo?.customerDetailsObj?.state1 ||  {
-      value: 'KA',
-      label: 'Karnataka',
-    },
-    state2: leadPayload?.secondaryCustomerDetailsObj?.state2 || selUnitDetails?.secondaryCustomerDetailsObj?.state2 || customerInfo?.secondaryCustomerDetailsObj?.state2 ||  {
-      value: 'KA',
-      label: 'Karnataka',
-    },
+    city1:
+      leadPayload?.customerDetailsObj?.city1 ||
+      selUnitDetails?.customerDetailsObj?.city1 ||
+      customerInfo?.customerDetailsObj?.city1 ||
+      '',
+    city2:
+      leadPayload?.secondaryCustomerDetailsObj?.city2 ||
+      selUnitDetails?.secondaryCustomerDetailsObj?.city2 ||
+      customerInfo?.secondaryCustomerDetailsObj?.city2 ||
+      '',
+    state1: leadPayload?.customerDetailsObj?.state1 ||
+      selUnitDetails?.customerDetailsObj?.state1 ||
+      customerInfo?.customerDetailsObj?.state1 || {
+        value: 'KA',
+        label: 'Karnataka',
+      },
+    state2: leadPayload?.secondaryCustomerDetailsObj?.state2 ||
+      selUnitDetails?.secondaryCustomerDetailsObj?.state2 ||
+      customerInfo?.secondaryCustomerDetailsObj?.state2 || {
+        value: 'KA',
+        label: 'Karnataka',
+      },
 
     panNo1:
       leadPayload?.customerDetailsObj?.panNo1 ||
-      selUnitDetails?.customerDetailsObj?.panNo1 || customerInfo?.customerDetailsObj?.panNo1 ||
+      selUnitDetails?.customerDetailsObj?.panNo1 ||
+      customerInfo?.customerDetailsObj?.panNo1 ||
       '',
     panNo2:
       leadPayload?.secondaryCustomerDetailsObj?.panNo2 ||
-      selUnitDetails?.secondaryCustomerDetailsObj?.panNo2 || customerInfo?.secondaryCustomerDetailsObj?.panNo2  ||
+      selUnitDetails?.secondaryCustomerDetailsObj?.panNo2 ||
+      customerInfo?.secondaryCustomerDetailsObj?.panNo2 ||
       '',
     panDocUrl1:
       leadPayload?.customerDetailsObj?.panDocUrl1 ||
-      selUnitDetails?.customerDetailsObj?.panDocUrl1 || customerInfo?.customerDetailsObj?.panDocUrl1  ||
+      selUnitDetails?.customerDetailsObj?.panDocUrl1 ||
+      customerInfo?.customerDetailsObj?.panDocUrl1 ||
       '',
 
     panDocUrl2:
       leadPayload?.secondaryCustomerDetailsObj?.panDocUrl2 ||
-      selUnitDetails?.secondaryCustomerDetailsObj?.panDocUrl2 || customerInfo?.secondaryCustomerDetailsObj?.panDocUrl2  ||
+      selUnitDetails?.secondaryCustomerDetailsObj?.panDocUrl2 ||
+      customerInfo?.secondaryCustomerDetailsObj?.panDocUrl2 ||
       '',
     aadharNo1:
       leadPayload?.customerDetailsObj?.aadharNo1 ||
-      selUnitDetails?.customerDetailsObj?.aadharNo1 || customerInfo?.customerDetailsObj?.aadharNo1  ||
+      selUnitDetails?.customerDetailsObj?.aadharNo1 ||
+      customerInfo?.customerDetailsObj?.aadharNo1 ||
       '',
     aadharNo2:
       leadPayload?.secondaryCustomerDetailsObj?.aadharNo2 ||
-      selUnitDetails?.secondaryCustomerDetailsObj?.aadharNo2 || customerInfo?.secondaryCustomerDetailsObj?.aadharNo2  ||
+      selUnitDetails?.secondaryCustomerDetailsObj?.aadharNo2 ||
+      customerInfo?.secondaryCustomerDetailsObj?.aadharNo2 ||
       '',
     aadharUrl1:
       leadPayload?.customerDetailsObj?.aadharUrl1 ||
-      selUnitDetails?.customerDetailsObj?.aadharUrl1 || customerInfo?.customerDetailsObj?.aadharUrl1  ||
+      selUnitDetails?.customerDetailsObj?.aadharUrl1 ||
+      customerInfo?.customerDetailsObj?.aadharUrl1 ||
       '',
     aadharUrl2:
       leadPayload?.secondaryCustomerDetailsObj?.aadharUrl2 ||
-      selUnitDetails?.secondaryCustomerDetailsObj?.aadharUrl2 || customerInfo?.secondaryCustomerDetailsObj?.aadharUrl2  ||
+      selUnitDetails?.secondaryCustomerDetailsObj?.aadharUrl2 ||
+      customerInfo?.secondaryCustomerDetailsObj?.aadharUrl2 ||
       '',
     occupation1:
       leadPayload?.customerDetailsObj?.occupation1 ||
-      selUnitDetails?.customerDetailsObj?.occupation1 || customerInfo?.customerDetailsObj?.occupation1  ||
+      selUnitDetails?.customerDetailsObj?.occupation1 ||
+      customerInfo?.customerDetailsObj?.occupation1 ||
       '',
     companyName1:
       leadPayload?.customerDetailsObj?.companyName1 ||
-      selUnitDetails?.customerDetailsObj?.companyName1 || customerInfo?.customerDetailsObj?.companyName1  ||
+      selUnitDetails?.customerDetailsObj?.companyName1 ||
+      customerInfo?.customerDetailsObj?.companyName1 ||
       '',
-      designation1:
+    designation1:
       leadPayload?.customerDetailsObj?.designation1 ||
-      selUnitDetails?.customerDetailsObj?.designation1 || customerInfo?.customerDetailsObj?.designation1  ||
+      selUnitDetails?.customerDetailsObj?.designation1 ||
+      customerInfo?.customerDetailsObj?.designation1 ||
       '',
-      designation2:
-      leadPayload?.secondaryCustomerDetailsObj?.designation2 || selUnitDetails?.secondaryCustomerDetailsObj?.designation2 || customerInfo?.customerDetailsObj?.designation2 ||  '',
-      annualIncome1:
+    designation2:
+      leadPayload?.secondaryCustomerDetailsObj?.designation2 ||
+      selUnitDetails?.secondaryCustomerDetailsObj?.designation2 ||
+      customerInfo?.customerDetailsObj?.designation2 ||
+      '',
+    annualIncome1:
       leadPayload?.customerDetailsObj?.annualIncome1 ||
-      selUnitDetails?.customerDetailsObj?.annualIncome1 || customerInfo?.customerDetailsObj?.annualIncome1  ||
+      selUnitDetails?.customerDetailsObj?.annualIncome1 ||
+      customerInfo?.customerDetailsObj?.annualIncome1 ||
       '',
-      annualIncome2:
-      leadPayload?.secondaryCustomerDetailsObj?.annualIncome2 || selUnitDetails?.secondaryCustomerDetailsObj?.annualIncome2 || customerInfo?.customerDetailsObj?.annualIncome2 ||  '',
+    annualIncome2:
+      leadPayload?.secondaryCustomerDetailsObj?.annualIncome2 ||
+      selUnitDetails?.secondaryCustomerDetailsObj?.annualIncome2 ||
+      customerInfo?.customerDetailsObj?.annualIncome2 ||
+      '',
 
-    occupation2: leadPayload?.secondaryCustomerDetailsObj?.occupation2 || selUnitDetails?.secondaryCustomerDetailsObj?.occupation2 || customerInfo?.customerDetailsObj?.occupation2 ||  '',
-    companyName2: leadPayload?.secondaryCustomerDetailsObj?.companyName2 ||  selUnitDetails?.secondaryCustomerDetailsObj?.companyName2 || customerInfo?.secondaryCustomerDetailsObj?.companyName2  ||'',
+    occupation2:
+      leadPayload?.secondaryCustomerDetailsObj?.occupation2 ||
+      selUnitDetails?.secondaryCustomerDetailsObj?.occupation2 ||
+      customerInfo?.customerDetailsObj?.occupation2 ||
+      '',
+    companyName2:
+      leadPayload?.secondaryCustomerDetailsObj?.companyName2 ||
+      selUnitDetails?.secondaryCustomerDetailsObj?.companyName2 ||
+      customerInfo?.secondaryCustomerDetailsObj?.companyName2 ||
+      '',
 
-    aggrementAddress: leadPayload?.aggrementDetailsObj?.aggrementAddress ||  customerInfo?.customerDetailsObj?.aggrementAddress  || '',
+    aggrementAddress:
+      leadPayload?.aggrementDetailsObj?.aggrementAddress ||
+      customerInfo?.customerDetailsObj?.aggrementAddress ||
+      '',
     industry: leadPayload?.industry || '',
     designation: leadPayload?.designation || '',
     annualIncome: leadPayload?.annualIncome || '',
@@ -583,7 +636,7 @@ const AddApplicantDetails = ({
       setOnStep('blocksheet')
     }
   }
-  const handleFileUploadFun = async (file, type) => {
+  const handleFileUploadFun = async (file, type, formik) => {
     if (!file) return
     try {
       const uid = uuidv4()
@@ -595,7 +648,7 @@ const AddApplicantDetails = ({
           const prog =
             Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 100
 
-          setProgress(prog)
+          // setProgress(prog)
           file.isUploading = false
         },
         (err) => console.log(err),
@@ -605,13 +658,17 @@ const AddApplicantDetails = ({
             file.url = url
             // setFiles([...files, file])
             if (type === 'panCard1') {
-              setPanCard1(url)
+              // setPanCard1(url)
+              formik.setFieldValue('panDocUrl1', url)
             } else if (type === 'panCard2') {
-              setPanCard2(url)
+              // setPanCard2(url)
+              formik.setFieldValue('panDocUrl2', url)
             } else if (type === 'aadharNo1Url') {
-              setAadharUrl1(url)
+              // setAadharUrl1(url)
+              formik.setFieldValue('aadharUrl1', url)
             } else if (type === 'aadharNo2Url') {
-              setAadharUrl2(url)
+              // setAadharUrl2(url)
+              formik.setFieldValue('aadharUrl2', url)
             }
             console.log(
               'file url i s',
@@ -934,24 +991,31 @@ const AddApplicantDetails = ({
                                                     className="form-label cursor-pointer inline-block   font-regular text-xs  rounded-2xl px-1 py-1  "
                                                   >
                                                     {`${
-                                                      panCard1 === '' ||
-                                                      panCard1 == undefined
+                                                      formik.values
+                                                        .panDocUrl1 === '' ||
+                                                        formik.values
+                                                        .panDocUrl1 == undefined
                                                         ? 'Upload'
                                                         : 'Download'
                                                     }`}
                                                   </label>
-                                                  {panCard1 != '' && (
+                                                  {formik.values.panDocUrl1 !=
+                                                    '' && (
                                                     <button
                                                       onClick={() =>
                                                         downloadImage(
-                                                          panCard1,
+                                                          formik.values
+                                                            .panDocUrl1,
                                                           'pancard1.PNG'
                                                         )
                                                       }
                                                     >
                                                       {' '}
-                                                      {panCard1 === '' ||
-                                                      panCard1 == undefined ? (
+                                                      {formik.values
+                                                        .panDocUrl1 === '' ||
+                                                      formik.values
+                                                        .panDocUrl1 ==
+                                                        undefined ? (
                                                         <PlusIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 border rounded-[16px] " />
                                                       ) : (
                                                         <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " />
@@ -965,7 +1029,8 @@ const AddApplicantDetails = ({
                                                     onChange={async (e) => {
                                                       await handleFileUploadFun(
                                                         e.target.files[0],
-                                                        'panCard1'
+                                                        'panCard1',
+                                                        formik
                                                       )
                                                     }}
                                                   />
@@ -1059,24 +1124,30 @@ const AddApplicantDetails = ({
                                                     className="form-label cursor-pointer inline-block font-regular text-xs  rounded-2xl px-1 py-1"
                                                   >
                                                     {`${
-                                                      aadhrUrl1 === '' ||
-                                                      aadhrUrl1 == undefined
+                                                      formik.values
+                                                      .aadharUrl1 === '' ||
+                                                      formik.values
+                                                        .aadharUrl1 == undefined
                                                         ? 'Upload'
                                                         : 'Download'
                                                     }`}
                                                   </label>
-                                                  {aadhrUrl1 != '' && (
+                                                  {formik.values
+                                                        .aadharUrl1 != '' && (
                                                     <button
                                                       onClick={() =>
                                                         downloadImage(
-                                                          aadhrUrl1,
+                                                          formik.values
+                                                        .aadharUrl1,
                                                           'Aadhar1.PNG'
                                                         )
                                                       }
                                                     >
                                                       {' '}
-                                                      {aadhrUrl1 === '' ||
-                                                      aadhrUrl1 == undefined ? (
+                                                      { formik.values
+                                                        .aadharUrl1  === '' ||
+                                                        formik.values
+                                                        .aadharUrl1 == undefined ? (
                                                         <PlusIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 border rounded-[16px] " />
                                                       ) : (
                                                         <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " />
@@ -1093,7 +1164,8 @@ const AddApplicantDetails = ({
                                                       )
                                                       handleFileUploadFun(
                                                         e.target.files[0],
-                                                        'aadharNo1Url'
+                                                        'aadharNo1Url',
+                                                        formik
                                                       )
                                                     }}
                                                   />
@@ -1107,27 +1179,26 @@ const AddApplicantDetails = ({
                                           value={formik.values.aadharNo1}
                                           onChange={formik.handleChange}
                                         />
-                                              <div className="w-full  flex flex-row lg:w-12/12 mt-1">
-                                        <div className="w-full lg:w-5/12 px- ">
-                                          <div className="relative w-full mb-3 mt-[10px]">
-                                          <TextField
-                                              label="Occupation"
-                                              name="occupation1"
-                                              type="text"
-                                            />
-
+                                        <div className="w-full  flex flex-row lg:w-12/12 mt-1">
+                                          <div className="w-full lg:w-5/12 px- ">
+                                            <div className="relative w-full mb-3 mt-[10px]">
+                                              <TextField
+                                                label="Occupation"
+                                                name="occupation1"
+                                                type="text"
+                                              />
+                                            </div>
+                                          </div>
+                                          <div className="w-full lg:w-7/12 pl-4">
+                                            <div className="relative w-full mb-3 mt-2">
+                                              <TextField
+                                                label="Annual Income"
+                                                name="annualIncome1"
+                                                type="text"
+                                              />
+                                            </div>
                                           </div>
                                         </div>
-                                        <div className="w-full lg:w-7/12 pl-4">
-                                          <div className="relative w-full mb-3 mt-2">
-                                            <TextField
-                                              label="Annual Income"
-                                              name="annualIncome1"
-                                              type="text"
-                                            />
-                                          </div>
-                                        </div>
-                                      </div>
                                       </div>
                                     </div>
                                   </section>
@@ -1401,13 +1472,13 @@ const AddApplicantDetails = ({
                                                     className="form-label cursor-pointer inline-block   font-regular text-xs  rounded-2xl px-1 py-1  "
                                                   >
                                                     {`${
-                                                      panCard2 === '' ||
-                                                      panCard2 == undefined
+                                                      formik.values.panDocUrl2 === '' ||
+                                                      formik.values.panDocUrl2 == undefined
                                                         ? 'Upload'
                                                         : 'Download'
                                                     }`}
                                                   </label>
-                                                  {panCard1 != '' && (
+                                                  {formik.values.panDocUrl2 != '' && (
                                                     <button
                                                       onClick={() =>
                                                         downloadImage(
@@ -1417,8 +1488,8 @@ const AddApplicantDetails = ({
                                                       }
                                                     >
                                                       {' '}
-                                                      {panCard2 === '' ||
-                                                      panCard2 == undefined ? (
+                                                      {formik.values.panDocUrl2 === '' ||
+                                                      formik.values.panDocUrl2 == undefined ? (
                                                         <PlusIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 border rounded-[16px] " />
                                                       ) : (
                                                         <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " />
@@ -1432,7 +1503,8 @@ const AddApplicantDetails = ({
                                                     onChange={async (e) => {
                                                       await handleFileUploadFun(
                                                         e.target.files[0],
-                                                        'panCard1'
+                                                        'panCard2',
+                                                        formik
                                                       )
                                                     }}
                                                   />
@@ -1469,24 +1541,24 @@ const AddApplicantDetails = ({
                                                     className="form-label cursor-pointer inline-block  font-regular text-xs  rounded-2xl px-1 py-1"
                                                   >
                                                     {`${
-                                                      aadhrUrl2 === '' ||
-                                                      aadhrUrl2 == undefined
+                                                      formik.values.aadharUrl2 === '' ||
+                                                      formik.values.aadharUrl2 == undefined
                                                         ? 'Upload'
                                                         : 'Download'
                                                     }`}
                                                   </label>
-                                                  {aadhrUrl2 != '' && (
+                                                  {formik.values.aadharUrl2 != '' && (
                                                     <button
                                                       onClick={() =>
                                                         downloadImage(
-                                                          aadhrUrl2,
+                                                          formik.values.aadharUrl2,
                                                           'Aadhar2.PNG'
                                                         )
                                                       }
                                                     >
                                                       {' '}
-                                                      {aadhrUrl2 === '' ||
-                                                      aadhrUrl2 == undefined ? (
+                                                      {formik.values.aadharUrl2 === '' ||
+                                                      formik.values.aadharUrl2 == undefined ? (
                                                         <PlusIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 border rounded-[16px] " />
                                                       ) : (
                                                         <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " />
@@ -1503,7 +1575,8 @@ const AddApplicantDetails = ({
                                                       )
                                                       handleFileUploadFun(
                                                         e.target.files[0],
-                                                        'aadharNo2Url'
+                                                        'aadharNo2Url',
+                                                        formik
                                                       )
                                                     }}
                                                   />
@@ -1518,26 +1591,26 @@ const AddApplicantDetails = ({
                                           onChange={formik.handleChange}
                                         />
 
-<div className="w-full  flex flex-row lg:w-12/12 mt-1">
-                                        <div className="w-full lg:w-5/12 px- ">
-                                          <div className="relative w-full mb-3 mt-[10px]">
-                                           <TextField
-                                              label="Occupation"
-                                              name="occupation2"
-                                              type="text"
-                                            />
+                                        <div className="w-full  flex flex-row lg:w-12/12 mt-1">
+                                          <div className="w-full lg:w-5/12 px- ">
+                                            <div className="relative w-full mb-3 mt-[10px]">
+                                              <TextField
+                                                label="Occupation"
+                                                name="occupation2"
+                                                type="text"
+                                              />
+                                            </div>
+                                          </div>
+                                          <div className="w-full lg:w-7/12 pl-4">
+                                            <div className="relative w-full mb-3 mt-2">
+                                              <TextField
+                                                label="Annual Income"
+                                                name="annualIncome2"
+                                                type="text"
+                                              />
+                                            </div>
                                           </div>
                                         </div>
-                                        <div className="w-full lg:w-7/12 pl-4">
-                                          <div className="relative w-full mb-3 mt-2">
-                                            <TextField
-                                              label="Annual Income"
-                                              name="annualIncome2"
-                                              type="text"
-                                            />
-                                          </div>
-                                        </div>
-                                      </div>
                                       </div>
                                     </div>
                                   </section>

@@ -57,6 +57,7 @@ const BookingSummaryView = ({
     console.log('sel unti detials ', selUnitDetails)
     console.log('my imported details is  ', customerInfo)
     console.log('my imported details is CS  ', costSheet)
+    console.log('my imported details is CS  ', costSheetA)
   }, [])
   const [initialValuesA, setInitialValuesA] = useState({})
 
@@ -322,7 +323,7 @@ const BookingSummaryView = ({
     })
     setInitialValuesA(initformValues)
     console.log('gen costSheetA', x)
-    setCostSheetA(x)
+    // setCostSheetA(x)
   }, [selPhaseObj, leadDetailsObj1, csMode])
 
   useEffect(() => {
@@ -464,7 +465,7 @@ const BookingSummaryView = ({
     console.log('gen costSheetA', y)
     console.log(costSheetA)
 
-    setCostSheetA(y)
+    // setCostSheetA(y)
     setTotalFun()
   }
   return (
@@ -768,60 +769,9 @@ const BookingSummaryView = ({
                                             {d1?.component?.label}
                                           </th>
                                           <td className="w-[15%]  px-2 text-[12px] text-right  ">
-                                            <TextFieldFlat
-                                              label=""
-                                              className="w-[90%] text-[12px] text-right font-semibold border-b  border-[#B76E00]  pr-1 py-[4px] text-[#B76E00]"
-                                              name="ratePerSqft"
-                                              onChange={(e) => {
-                                                // setNewSqftPrice(e.target.value)
-
-                                                formik.setFieldValue(
-                                                  'unit_cost_charges',
-                                                  e.target.value
-                                                )
-                                                setNewSqftPrice(
-                                                  Number(e.target.value)
-                                                )
-                                                changeOverallCostFun(
-                                                  inx,
-                                                  d1,
-                                                  e.target.value
-                                                )
-                                                // formik.setFieldValue(
-                                                //   'ratePerSqft',
-                                                //   e.target.value
-                                                // )
-                                                // console.log(
-                                                //   'what is =it',
-                                                //   value.value
-                                                // )
-                                                // formik.setFieldValue(
-                                                //   `${d1?.component?.value}`,
-                                                //   value
-                                                // )
-                                              }}
-                                              // value={formik.values[`unit_cost_charges`]}
-                                              value={d1?.charges}
-                                              // value={newSqftPrice}
-                                              // type="number"
-                                            />
-                                            <TextFieldFlat
-                                              className=" hidden  "
-                                              label=""
-                                              name={d1?.component?.value}
-                                              // onChange={(value) => {
-                                              //   console.log('what is =it', value.value)
-                                              //   formik.setFieldValue(
-                                              //     `${d1?.component?.value}`,
-                                              //     value
-                                              //   )
-                                              // }}
-                                              // value={
-                                              //   formik.values[`${d1?.component?.value}`]
-                                              // }
-                                              // value={d1?.charges}
-                                              type="number"
-                                            />
+                                            {Number(d1?.charges)?.toLocaleString(
+                                              'en-IN'
+                                            )}
                                           </td>
                                           <td
                                             className={`${
@@ -948,7 +898,9 @@ const BookingSummaryView = ({
                                             {/* {d1?.units?.value === 'costpersqft' && `(${d1?.charges}% on Sale value)`} */}
                                           </th>
                                           <td className="w-[15%]  px-2 text-[12px] text-right   ">
-                                            {d1?.charges}
+                                           ₹ {Number(d1?.charges)?.toLocaleString(
+                                              'en-IN'
+                                            )}
                                           </td>
                                           <td
                                             className={`${

@@ -57,15 +57,11 @@ import SiderForm from './SiderForm/SiderForm'
 import UnitTransactionForm from './UnitBillTransactionForm'
 
 const CostBreakUpSheet = ({
-  selMode,
   title,
   leadDetailsObj1,
   projectDetails,
   selPhaseObj,
   selUnitDetails,
-  unitDetails,
-  dialogOpen,
-  setShowCostSheetWindow,
   actionMode,
 }) => {
   const { user } = useAuth()
@@ -108,13 +104,12 @@ const CostBreakUpSheet = ({
   const [costSheet, setCostSheet] = useState({})
   const [paymentSchedule, setPaymentSchedule] = useState({})
 
-
   const pdfExportComponent = useRef(null)
   const pdfExportComponentConstruct = useRef(null)
 
-useEffect(() => {
-  console.log('payload data is ', leadPayload)
-}, [leadPayload])
+  useEffect(() => {
+    console.log('payload data is ', leadPayload)
+  }, [leadPayload])
 
   useEffect(() => {
     console.log('new customer object x', title, leadDetailsObj1)
@@ -126,7 +121,6 @@ useEffect(() => {
       leadDetailsObj1 = {}
     }
   }, [leadDetailsObj1])
-
 
   useEffect(() => {
     console.log('new cost sheet value is ', newPlotCsObj, newPlotCostSheetA)
@@ -245,8 +239,6 @@ useEffect(() => {
     console.log('phase details are ', selPhaseObj)
     const {
       additonalChargesObj,
-      ConstructOtherChargesObj,
-      payment_scheduleObj,
     } = selPhaseObj
     console.log('unit details', selUnitDetails)
     const { uid } = selUnitDetails
@@ -309,39 +301,11 @@ useEffect(() => {
   //   console.log('value os costsheet', costSheetA)
   // }, [costSheetA])
 
-  const devTypeA = [
-    {
-      name: 'Outright',
-      img: '/apart.svg',
-    },
-    {
-      name: 'Joint',
-      img: '/apart1.svg',
-    },
-  ]
+
   const [loading, setLoading] = useState(false)
-  const [formMessage, setFormMessage] = useState('')
-  const [selected, setSelected] = useState({})
-  const [devType, setdevType] = useState(devTypeA[0])
-  const [hover, setHover] = useState(false)
-  const [hoverId, setHoverID] = useState(1000)
-  const [hoverTasId, setHoverTasId] = useState(2000)
-  const [streamCoveredA, setStreamCoveredA] = useState([])
-  const [streamCurrentStatus, setStreamCurrentStatus] = useState('new')
-  const [streamfrom, setStreamFrom] = useState('')
   const [isImportLeadsOpen, setisImportLeadsOpen] = useState(false)
 
-  const phoneRegExp =
-    /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/
 
-  const typeSel = async (sel) => {
-    await console.log('value is', selected)
-    await setSelected(sel)
-    await console.log('thsi si sel type', sel, selected)
-  }
-  const devTypeSel = async (sel) => {
-    await setdevType(sel)
-  }
 
   const initialState = initialValuesA
   const validate = Yup.object({
@@ -349,62 +313,19 @@ useEffect(() => {
     //   .max(15, 'Must be 15 characters or less')
     //   .required('Name is Required'),
   })
-  const resetter = () => {
-    setSelected({})
-    setFormMessage('')
-  }
   const moveStep = (stepper) => {
+    console.log('customerInf i s', customerInfo)
     setOnStep(stepper)
   }
 
-  const calTotal = (costSheetA, formik) => {
-    const total = costSheetA.reduce(
-      (partialSum, obj) =>
-        partialSum + Number(formik.values[`${obj['component'].value}`]),
-      0
-    )
-    setSoldPrice(total)
-    return total
-  }
-  const hoverEffectFun = (id) => {
-    setHoverID(id)
-  }
-  const hoverEffectTaskFun = (id) => {
-    setHoverTasId(id)
-  }
-  const styleO = {
-    normal: {
-      width: '100%',
-      height: '28px',
-      borderWidth: '3px 10px 3px 3px',
-      boxSizing: 'border-box',
-      borderStyle: 'solid',
-      verticalAlign: 'middle',
-      cursor: 'pointer',
-      textOverflow: 'ellipsis',
-      transition: 'all 250ms ease',
-      position: 'relative',
-      overflow: 'hidden',
-      whiteSpace: 'nowrap',
-
-      borderImage:
-        'url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2216px%22%20height%3D%2232px%22%20viewBox%3D%220%200%2016%2032%22%20version%3D%221.1%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20xmlns%3Axlink%3D%22http%3A//www.w3.org/1999/xlink%22%3E%3Cdefs%3E%3Cpath%20d%3D%22M0%2C2.99610022%20C0%2C1.34139976%201.3355407%2C0%202.99805158%2C0%20L6.90478569%2C0%20C8.56056385%2C0%2010.3661199%2C1.25756457%2010.9371378%2C2.80757311%20L16%2C16.5505376%20L11.0069874%2C29.2022189%20C10.3971821%2C30.7473907%208.56729657%2C32%206.90478569%2C32%20L2.99805158%2C32%20C1.34227341%2C32%200%2C30.6657405%200%2C29.0038998%20L0%2C2.99610022%20Z%22%20id%3D%22Bg%22/%3E%3C/defs%3E%3Cg%20id%3D%22Bar%22%20stroke%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cmask%20fill%3D%22white%22%20id%3D%22mask%22%3E%3Cuse%20xlink%3Ahref%3D%22%23Bg%22/%3E%3C/mask%3E%3Cuse%20fill%3D%22%23d3d7dc%22%20xlink%3Ahref%3D%22%23Bg%22/%3E%3Cpolygon%20id%3D%22Ln%22%20fill%3D%22%2347E4C2%22%20mask%3D%22url%28%23mask%29%22%20points%3D%220%2030%2016%2030%2016%2032%200%2032%22/%3E%3C/g%3E%3C/svg%3E") 3 10 3 3 fill / 1 / 0 repeat',
-
-      color: 'rgb(51, 51, 51)',
-      dataBaseColor: '#2fc6f6',
-    },
-    completed: {
-      borderImage:
-        'url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2216px%22%20height%3D%2232px%22%20viewBox%3D%220%200%2016%2032%22%20version%3D%221.1%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20xmlns%3Axlink%3D%22http%3A//www.w3.org/1999/xlink%22%3E%3Cdefs%3E%3Cpath%20d%3D%22M0%2C2.99610022%20C0%2C1.34139976%201.3355407%2C0%202.99805158%2C0%20L6.90478569%2C0%20C8.56056385%2C0%2010.3661199%2C1.25756457%2010.9371378%2C2.80757311%20L16%2C16.5505376%20L11.0069874%2C29.2022189%20C10.3971821%2C30.7473907%208.56729657%2C32%206.90478569%2C32%20L2.99805158%2C32%20C1.34227341%2C32%200%2C30.6657405%200%2C29.0038998%20L0%2C2.99610022%20Z%22%20id%3D%22Bg%22/%3E%3C/defs%3E%3Cg%20id%3D%22Bar%22%20stroke%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cmask%20fill%3D%22white%22%20id%3D%22mask%22%3E%3Cuse%20xlink%3Ahref%3D%22%23Bg%22/%3E%3C/mask%3E%3Cuse%20fill%3D%22%237BD500%22%20xlink%3Ahref%3D%22%23Bg%22/%3E%3Cpolygon%20id%3D%22Ln%22%20fill%3D%22%237BD500%22%20mask%3D%22url%28%23mask%29%22%20points%3D%220%2030%2016%2030%2016%2032%200%2032%22/%3E%3C/g%3E%3C/svg%3E") 3 10 3 3 fill / 1 / 0 repeat',
-    },
-
-    hover: {
-      borderImage:
-        'url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2216px%22%20height%3D%2232px%22%20viewBox%3D%220%200%2016%2032%22%20version%3D%221.1%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20xmlns%3Axlink%3D%22http%3A//www.w3.org/1999/xlink%22%3E%3Cdefs%3E%3Cpath%20d%3D%22M0%2C2.99610022%20C0%2C1.34139976%201.3355407%2C0%202.99805158%2C0%20L6.90478569%2C0%20C8.56056385%2C0%2010.3661199%2C1.25756457%2010.9371378%2C2.80757311%20L16%2C16.5505376%20L11.0069874%2C29.2022189%20C10.3971821%2C30.7473907%208.56729657%2C32%206.90478569%2C32%20L2.99805158%2C32%20C1.34227341%2C32%200%2C30.6657405%200%2C29.0038998%20L0%2C2.99610022%20Z%22%20id%3D%22Bg%22/%3E%3C/defs%3E%3Cg%20id%3D%22Bar%22%20stroke%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cmask%20fill%3D%22white%22%20id%3D%22mask%22%3E%3Cuse%20xlink%3Ahref%3D%22%23Bg%22/%3E%3C/mask%3E%3Cuse%20fill%3D%22%2347E4C2%22%20xlink%3Ahref%3D%22%23Bg%22/%3E%3Cpolygon%20id%3D%22Ln%22%20fill%3D%22%2347E4C2%22%20mask%3D%22url%28%23mask%29%22%20points%3D%220%2030%2016%2030%2016%2032%200%2032%22/%3E%3C/g%3E%3C/svg%3E") 3 10 3 3 fill / 1 / 0 repeat',
-    },
-  }
   const onSubmit = async (data, resetForm) => {
-    console.log('customer sheet form', costSheetA, selUnitDetails, data)
+    console.log(
+      'customer sheet form',
+      data,
+      Number(newSqftPrice),
+      costSheetA,
+      selUnitDetails
+    )
 
     const { uid } = selUnitDetails
     const { id } = leadDetailsObj1
@@ -441,6 +362,7 @@ useEffect(() => {
       costSheetA: costSheetA,
     }
     setCostSheet(newCostSheetA)
+    console.log('gen costSheetA', newCostSheetA)
     if (leadDetailsObj1?.id) {
       updateLeadCostSheetDetailsTo(
         orgId,
@@ -461,7 +383,7 @@ useEffect(() => {
       )
     }
 
-    setOnStep('booksheet')
+    setOnStep('payment_schedule')
   }
 
   const setStatusFun = async (leadDocId, newStatus) => {
@@ -527,6 +449,7 @@ useEffect(() => {
                                   )}
                                   {csMode === 'plot_cs' && (
                                     <CostBreakUpPdf
+                                      formik={formik}
                                       projectDetails={projectDetails}
                                       csMode={csMode}
                                       setCostSheet={setCostSheet}
@@ -674,8 +597,8 @@ useEffect(() => {
                     <AdditonalBookingDetails
                       title="Booking Form"
                       selUnitDetails={selUnitDetails}
-                      additionalInfo ={additionalInfo}
-                      setAdditonalInfo = {setAdditonalInfo}
+                      additionalInfo={additionalInfo}
+                      setAdditonalInfo={setAdditonalInfo}
                       leadDetailsObj2={leadPayload}
                       setOnStep={setOnStep}
                       source="Booking"
@@ -687,7 +610,7 @@ useEffect(() => {
                       title={'undefined'}
                       dialogOpen={undefined}
                       customerInfo={customerInfo}
-                      additionalInfo ={additionalInfo}
+                      additionalInfo={additionalInfo}
                       costSheet={costSheet}
                       phase={selPhaseObj}
                       leadDetailsObj2={leadPayload}
@@ -800,8 +723,6 @@ useEffect(() => {
                       </span>
                     ))}
                     {/* <ScrollHighlightNabbar navHeader={reviewLinks} /> */}
-
-
                   </div>
                 )}
               </section>
@@ -839,7 +760,7 @@ export default CostBreakUpSheet
 export function ScrollHighlightNabbar({ navHeader }) {
   const [activeIndex, setActiveIndex] = useState(0)
   useEffect(() => {
-    const handleScroll = (e) => {
+    const handleScroll = () => {
       const index = nearestIndex(
         window.scrollY,
         navHeader,
@@ -858,8 +779,6 @@ export function ScrollHighlightNabbar({ navHeader }) {
     <div className="flex flex-col">
       {navHeader.map((header, index) => (
         <>
-
-
           <a
             key={index + header.headerID}
             className={`font-bodyLato text-sm font-normal px-2 py-[4px]   mt-2 mr-1 cursor-pointer rounded-full ${
