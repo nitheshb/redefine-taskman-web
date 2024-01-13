@@ -763,7 +763,7 @@ const CostBreakUpPdf = ({
                                       {/* {d1?.units?.value === 'costpersqft' && `(${d1?.charges}% on Sale value)`} */}
                                     </th>
                                     <td className="w-[15%]  px-2 text-[12px] text-right   ">
-                                      {d1?.charges?.toLocaleString(
+                                      {Number(d1?.charges)?.toLocaleString(
                                               'en-IN'
                                             )}
                                     </td>

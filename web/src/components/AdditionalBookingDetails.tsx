@@ -43,10 +43,13 @@ import { TextField2 } from 'src/util/formFields/TextField2'
 import NoBorderDropDown from './comps/noBorderDropDown'
 import Loader from './Loader/Loader'
 import { useFileUpload } from './useFileUpload'
+import { sourceList } from 'src/constants/projects'
 
 const AdditonalBookingDetails = ({
   source,
   title,
+  customerInfo,
+  setCustomerInfo,
   additionalInfo,
   setAdditonalInfo,
   leadDetailsObj2,
@@ -59,22 +62,11 @@ const AdditonalBookingDetails = ({
   const d = new window.Date()
   const { user } = useAuth()
   const { orgId } = user
-  const [uploadedFileLink, handleFileUpload] = useFileUpload()
-  const [fetchedUsersList, setfetchedUsersList] = useState([])
   const [usersList, setusersList] = useState([])
-  const [projectList, setprojectList] = useState([])
-  const [progress, setProgress] = useState(0)
-  const [panCard1, setPanCard1] = useState('')
-  const [panCard2, setPanCard2] = useState('')
-  const [aadhrUrl1, setAadharUrl1] = useState('')
-  const [aadhrUrl2, setAadharUrl2] = useState('')
 
   useEffect(() => {
     console.log('yo yo ', selUnitDetails, leadDetailsObj2)
-
   }, [])
-
-
 
   useEffect(() => {
     const unsubscribe = steamUsersListByRole(
@@ -83,7 +75,7 @@ const AdditonalBookingDetails = ({
         const usersListA = querySnapshot.docs.map((docSnapshot) =>
           docSnapshot.data()
         )
-        setfetchedUsersList(usersListA)
+
         usersListA.map((user) => {
           user.label = user.displayName || user.name
           user.value = user.uid
@@ -92,7 +84,7 @@ const AdditonalBookingDetails = ({
 
         setusersList(usersListA)
       },
-      (error) => setfetchedUsersList([])
+      (error) => setusersList([])
     )
 
     return unsubscribe
@@ -101,54 +93,26 @@ const AdditonalBookingDetails = ({
     console.log('new customer object', leadDetailsObj2)
   }, [leadDetailsObj2])
 
-  useEffect(() => {
-    const unsubscribe = getAllProjects(
-      orgId,
-      (querySnapshot) => {
-        const projectsListA = querySnapshot.docs.map((docSnapshot) =>
-          docSnapshot.data()
-        )
-        setfetchedUsersList(projectsListA)
-        projectsListA.map((user) => {
-          user.label = user.projectName
-          user.value = user.projectName
-        })
-        console.log('fetched users list is', projectsListA)
-        setprojectList(projectsListA)
-      },
-      (error) => setfetchedUsersList([])
-    )
-
-    return unsubscribe
-  }, [])
-
-
-
-
 
 
   const { enqueueSnackbar } = useSnackbar()
   const [loading, setLoading] = useState(false)
 
-
-
-
-
-
-
   // const { uid } = selUnitDetails
   const uid = selUnitDetails?.uid || selUnitDetails?.id
   const datee = new Date().getTime()
   const initialState = {
-
     aggrementAddress:
-      leadDetailsObj2?.aggrementDetailsObj?.aggrementAddress || additionalInfo?.aggrementDetailsObj?.aggrementAddress||  '',
+      leadDetailsObj2?.aggrementDetailsObj?.aggrementAddress ||
+      additionalInfo?.aggrementDetailsObj?.aggrementAddress ||
+      additionalInfo?.aggrementAddress ||
+      '',
     industry: leadDetailsObj2?.industry || additionalInfo?.industry || '',
 
     leadSource:
       leadDetailsObj2?.Status === 'booked'
         ? leadDetailsObj2[`${uid}_otherInfo`]?.leadSource
-        :  additionalInfo?.leadSource || '',
+        : additionalInfo?.leadSource || '',
     sourceOfPay:
       leadDetailsObj2?.Status === 'booked'
         ? leadDetailsObj2[`${uid}_otherInfo`]?.sourceOfPay
@@ -157,22 +121,24 @@ const AdditonalBookingDetails = ({
       leadDetailsObj2?.Status === 'booked'
         ? leadDetailsObj2[`${uid}_otherInfo`]?.purpose
         : additionalInfo?.purpose || '',
+    bookedOn: additionalInfo?.bookedOn || d,
+
+    purchasePurpose: leadDetailsObj2?.purchasePurpose || '',
     // leadSource: "",
     // sourceOfPay: "",
     // purpose: "",
     bookingSource: leadDetailsObj2?.bookingSource || '',
     bookedBy:
-      leadDetailsObj2?.bookedBy || leadDetailsObj2?.assignedToObj?.label || '',
-    purchasePurpose: leadDetailsObj2?.purchasePurpose || '',
+      leadDetailsObj2?.bookedBy ||
+      leadDetailsObj2?.assignedToObj?.label ||
+      additionalInfo?.bookedBy ||
+      '',
   }
   // Custom PAN card validation function
-
-
 
   const onSubmit = async (data, resetForm) => {
     console.log('customer details form', data)
     const {
-
       aggrementAddress,
       industry,
       designation,
@@ -183,6 +149,7 @@ const AdditonalBookingDetails = ({
       bookingSource,
       bookedBy,
       purchasePurpose,
+      bookedOn,
     } = data
     const { uid } = selUnitDetails
 
@@ -201,7 +168,7 @@ const AdditonalBookingDetails = ({
       designation,
       annualIncome,
     }
-    setAdditonalInfo(updateDoc)
+    setAdditonalInfo(data)
     const { id } = leadDetailsObj2
     console.log('did you find my id', id, leadDetailsObj2)
 
@@ -225,12 +192,7 @@ const AdditonalBookingDetails = ({
       )
     }
 
-    if (currentMode == 'unitBookingMode') {
-      setOnStep('booksheet')
-    } else if (currentMode == 'unitBlockMode') {
-      setOnStep('blocksheet')
-    }
-
+    setOnStep('costsheet')
   }
 
   return (
@@ -247,7 +209,6 @@ const AdditonalBookingDetails = ({
               <Formik
                 enableReinitialize={true}
                 initialValues={initialState}
-
                 onSubmit={(values, { resetForm }) => {
                   onSubmit(values, resetForm)
                 }}
@@ -262,8 +223,6 @@ const AdditonalBookingDetails = ({
                           <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-[#F9FBFB] border-0">
                             <div className="flex-auto">
                               <section className=" lg:px-2 ">
-
-
                                 {/* <hr className="mt-6 border-b-1 border-blueGray-300" /> */}
                                 <section
                                   className="rounded-md  p-4 mt-2 bg-[#fff]"
@@ -324,8 +283,8 @@ const AdditonalBookingDetails = ({
                                   </div>
                                 </section>
 
-                                  {/* <hr className="mt-6 border-b-1 border-blueGray-300" /> */}
-                                  <section
+                                {/* <hr className="mt-6 border-b-1 border-blueGray-300" /> */}
+                                <section
                                   className="rounded-md  p-4 mt-2 bg-[#fff]"
                                   style={{ boxShadow: '0 1px 12px #f2f2f2' }}
                                 >
@@ -335,29 +294,80 @@ const AdditonalBookingDetails = ({
                                   <div className="flex flex-wrap">
                                     <div className="w-full lg:w-4/12 px-4">
                                       <div className="relative w-full mb-3">
-                                        <TextField2
+                                        {/* <TextField2
                                           label="Booked By"
                                           name="industry"
                                           type="text"
+                                        /> */}
+                                        <CustomSelect
+                                          name="bookedBy"
+                                          label="Booking By"
+                                          className="input"
+                                          onChange={(value) => {
+                                            formik.setFieldValue(
+                                              'bookedBy',
+                                              value.value
+                                            )
+                                          }}
+                                          value={formik.values.bookedBy}
+                                          options={usersList}
                                         />
                                       </div>
                                     </div>
                                     <div className="w-full lg:w-4/12 px-4">
                                       <div className="relative w-full mb-3">
-                                        <TextField2
-                                          label="Booking Date"
-                                          name="designation"
-                                          type="text"
-                                        />
+                                              <label className="text-gray-500 text-[12px]">
+                                                Booked On
+                                              </label>
+                                              <span className="inline">
+                                                <DatePicker
+                                                  className="h-8 outline-none border-radius rounded-md  px-2 border-[#cccccc] border-gray-500 text-sm mt-[-4px] pb-1  w-[90%] inline  w-full flex bg-grey-lighter text-grey-darker border border-gray-500 "
+                                                  label="Dated"
+                                                  name="bookedOn"
+                                                  selected={formik.values.bookedOn}
+                                                  onChange={(date) => {
+                                                    formik.setFieldValue(
+                                                      'bookedOn',
+                                                      date
+                                                    )
+                                                    // setStartDate(date)
+                                                    // console.log(startDate)
+                                                  }}
+                                                  timeFormat="HH:mm"
+                                                  injectTimes={[
+                                                    setHours(
+                                                      setMinutes(d, 1),
+                                                      0
+                                                    ),
+                                                    setHours(
+                                                      setMinutes(d, 5),
+                                                      12
+                                                    ),
+                                                    setHours(
+                                                      setMinutes(d, 59),
+                                                      23
+                                                    ),
+                                                  ]}
+                                                  dateFormat="MMMM d, yyyy"
+                                                />
+                                              </span>
+
                                       </div>
                                     </div>
                                     <div className="w-full lg:w-4/12 px-4">
-                                      <div className="relative w-full mb-3">
-                                        <TextField2
-                                          label="Lead Source"
-                                          name="annualIncome"
-                                          type="text"
-                                        />
+                                      <div className="relative w-full">
+                                      <div className="w-full flex flex-col mb-3">
+                            <CustomSelect
+                              name="leadSource"
+                              label="Lead Source"
+                              className="input"
+                              onChange={(value) => {
+                                formik.setFieldValue('leadSource', value.value)
+                              }}
+                              value={formik.values.leadSource}
+                              options={sourceList}
+                            />
+                          </div>
                                       </div>
                                     </div>
                                   </div>
@@ -381,40 +391,37 @@ const AdditonalBookingDetails = ({
                         </button>
                       )}
 
-
                       <button
-className="mb-2  md:mb-0  hover:scale-110 focus:outline-none              hover:bg-[#5671fc]
+                        className="mb-2  md:mb-0  hover:scale-110 focus:outline-none              hover:bg-[#5671fc]
 bg-gradient-to-r from-violet-300 to-indigo-300
 text-black
 
 border duration-200 ease-in-out
 transition
  px-5 py-1 pb-[5px] text-sm shadow-sm font-medium tracking-wider text-white rounded-md hover:shadow-lg hover:bg-green-500"
-type="submit"
-disabled={loading}
-// onClick={() => submitFormFun(formik)}
->
-{/* {loading && <Loader />} */}
-<span>  {'Save'}</span>
-</button>
+                        type="submit"
+                        disabled={loading}
+                        // onClick={() => submitFormFun(formik)}
+                      >
+                        {/* {loading && <Loader />} */}
+                        <span> {'Save'}</span>
+                      </button>
                       {setShowApplicantEdit == undefined && (
-
-
-<button
-className="mb-2 mr-0 md:mb-0  hover:scale-110 focus:outline-none              hover:bg-[#5671fc]
+                        <button
+                          className="mb-2 mr-0 md:mb-0  hover:scale-110 focus:outline-none              hover:bg-[#5671fc]
 bg-gradient-to-r from-violet-300 to-indigo-300
 text-black
 
 border duration-200 ease-in-out
 transition
  px-5 py-1 pb-[5px] text-sm shadow-sm font-medium tracking-wider text-white rounded-md hover:shadow-lg hover:bg-green-500"
-type="submit"
-disabled={loading}
-// onClick={() => submitFormFun(formik)}
->
-{/* {loading && <Loader />} */}
-<span>  {'Save & Next'}</span>
-</button>
+                          type="submit"
+                          disabled={loading}
+                          // onClick={() => submitFormFun(formik)}
+                        >
+                          {/* {loading && <Loader />} */}
+                          <span> {'Save & Next'}</span>
+                        </button>
                       )}
                     </div>
                   </Form>

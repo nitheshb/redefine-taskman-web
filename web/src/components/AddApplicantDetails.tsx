@@ -332,6 +332,16 @@ const AddApplicantDetails = ({
         label: 'Married',
         value: 'Married',
       },
+      address1:
+      leadPayload?.customerDetailsObj?.address1 ||
+      selUnitDetails?.customerDetailsObj?.address1 ||
+      customerInfo?.customerDetailsObj?.address1 ||
+      '',
+      address2:
+      leadPayload?.secondaryCustomerDetailsObj?.address2 ||
+      selUnitDetails?.secondaryCustomerDetailsObj?.address2 ||
+      customerInfo?.secondaryCustomerDetailsObj?.address2 ||
+      '',
     city1:
       leadPayload?.customerDetailsObj?.city1 ||
       selUnitDetails?.customerDetailsObj?.city1 ||
@@ -401,6 +411,11 @@ const AddApplicantDetails = ({
       selUnitDetails?.customerDetailsObj?.occupation1 ||
       customerInfo?.customerDetailsObj?.occupation1 ||
       '',
+    occupation2:
+      leadPayload?.secondaryCustomerDetailsObj?.occupation2 ||
+      selUnitDetails?.secondaryCustomerDetailsObj?.occupation2 ||
+      customerInfo?.secondaryCustomerDetailsObj?.occupation2 ||
+      '',
     companyName1:
       leadPayload?.customerDetailsObj?.companyName1 ||
       selUnitDetails?.customerDetailsObj?.companyName1 ||
@@ -424,14 +439,10 @@ const AddApplicantDetails = ({
     annualIncome2:
       leadPayload?.secondaryCustomerDetailsObj?.annualIncome2 ||
       selUnitDetails?.secondaryCustomerDetailsObj?.annualIncome2 ||
-      customerInfo?.customerDetailsObj?.annualIncome2 ||
+      customerInfo?.secondaryCustomerDetailsObj?.annualIncome2 ||
       '',
 
-    occupation2:
-      leadPayload?.secondaryCustomerDetailsObj?.occupation2 ||
-      selUnitDetails?.secondaryCustomerDetailsObj?.occupation2 ||
-      customerInfo?.customerDetailsObj?.occupation2 ||
-      '',
+
     companyName2:
       leadPayload?.secondaryCustomerDetailsObj?.companyName2 ||
       selUnitDetails?.secondaryCustomerDetailsObj?.companyName2 ||
@@ -452,7 +463,7 @@ const AddApplicantDetails = ({
     sourceOfPay:
       leadPayload?.Status === 'booked'
         ? leadPayload[`${uid}_otherInfo`]?.sourceOfPay
-        : '',
+        :  customerInfo?.customerDetailsObj?.aggrementAddress || '',
     purpose:
       leadPayload?.Status === 'booked'
         ? leadPayload[`${uid}_otherInfo`]?.purpose
@@ -549,6 +560,10 @@ const AddApplicantDetails = ({
       address1,
       city2,
       address2,
+      state1,
+      state2,
+      annualIncome1,
+      annualIncome2
     } = data
     const { uid } = selUnitDetails
     const customerDetailsObj = {
@@ -566,7 +581,9 @@ const AddApplicantDetails = ({
       occupation1,
       companyName1,
       city1,
+      state1,
       address1,
+      annualIncome1
     }
     const secondaryCustomerDetailsObj = {
       customerName2,
@@ -582,8 +599,10 @@ const AddApplicantDetails = ({
       aadharUrl2: aadhrUrl2 || '',
       occupation2,
       companyName2,
+      state2,
       city2,
       address2,
+      annualIncome2
     }
     const aggrementDetailsObj = {
       aggrementAddress,
