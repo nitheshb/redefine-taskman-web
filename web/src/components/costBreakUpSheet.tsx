@@ -136,28 +136,93 @@ const CostBreakUpSheet = ({
         },
       ])
       setOnStep('costsheet')
-    } else if (actionMode === 'unitBlockMode') {
+    }
+    //  else if (actionMode === 'unitBlockMode') {
+    //   setStatusListA([
+    //     {
+    //       label: 'Cost sheet',
+    //       value: 'costsheet',
+    //       logo: 'RefreshIcon',
+    //       color: ' bg-violet-500',
+    //     },
+    //     {
+    //       label: 'Customer details',
+    //       value: 'customerDetails',
+    //       logo: 'FireIcon',
+    //       color: ' bg-violet-500',
+    //     },
+    //     {
+    //       label: 'Block Unit',
+    //       value: 'blocksheet',
+    //       logo: 'DuplicateInactiveIcon',
+    //       color: ' bg-violet-500',
+    //     },
+    //   ])
+    //   setOnStep('blocksheet')
+    // }
+    else if (actionMode === 'unitBlockMode') {
       setStatusListA([
+        {
+          label: 'Customer info',
+          value: 'customerDetails',
+          logo: 'FireIcon',
+          color: ' bg-violet-500',
+        },
+        {
+          label: 'Additonal info',
+          value: 'additonalInfo',
+          logo: 'FireIcon',
+          color: ' bg-violet-500',
+        },
         {
           label: 'Cost sheet',
           value: 'costsheet',
           logo: 'RefreshIcon',
           color: ' bg-violet-500',
         },
+
         {
-          label: 'Customer details',
-          value: 'customerDetails',
+          label: 'Payment schedule',
+          value: 'payment_schedule',
           logo: 'FireIcon',
           color: ' bg-violet-500',
         },
         {
-          label: 'Block Unit',
+          label: 'Booking summary',
+          value: 'booking_summary',
+          logo: 'FireIcon',
+          color: ' bg-violet-500',
+        },
+        {
+          label: 'Confirm Blocking',
           value: 'blocksheet',
-          logo: 'DuplicateInactiveIcon',
+          logo: 'FireIcon',
           color: ' bg-violet-500',
         },
       ])
-      setOnStep('blocksheet')
+      setReviewLinks([
+        {
+          headerTitle: 'Section 1',
+          headerRef: section1Ref,
+          headerID: 'section1',
+        },
+        {
+          headerTitle: 'Section 2',
+          headerRef: section2Ref,
+          headerID: 'section2',
+        },
+        {
+          headerTitle: 'Section 3',
+          headerRef: section3Ref,
+          headerID: 'section3',
+        },
+        {
+          headerTitle: 'Section 4',
+          headerRef: section4Ref,
+          headerID: 'section4',
+        },
+      ])
+      setOnStep('customerDetails')
     } else if (actionMode === 'unitBookingMode') {
       setStatusListA([
         {
@@ -237,9 +302,7 @@ const CostBreakUpSheet = ({
 
   useEffect(() => {
     console.log('phase details are ', selPhaseObj)
-    const {
-      additonalChargesObj,
-    } = selPhaseObj
+    const { additonalChargesObj } = selPhaseObj
     console.log('unit details', selUnitDetails)
     const { uid } = selUnitDetails
     const y = leadDetailsObj1[`${uid}_cs`]?.newSqftPrice || ''
@@ -301,11 +364,8 @@ const CostBreakUpSheet = ({
   //   console.log('value os costsheet', costSheetA)
   // }, [costSheetA])
 
-
   const [loading, setLoading] = useState(false)
   const [isImportLeadsOpen, setisImportLeadsOpen] = useState(false)
-
-
 
   const initialState = initialValuesA
   const validate = Yup.object({
@@ -698,7 +758,7 @@ const CostBreakUpSheet = ({
 
                   {/* </div> */}
                 </div>
-                {actionMode === 'unitBookingMode' && (
+                {['unitBookingMode', 'unitBlockMode'].includes(actionMode) && (
                   <div className="flex flex-col  w-[250px] pt-4 px-2 bg-violet-100 h-screen">
                     {StatusListA.map((statusFlowObj, i) => (
                       <span

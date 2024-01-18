@@ -29,7 +29,7 @@ import {
 import { useAuth } from 'src/context/firebase-auth-context'
 import SkeletonLoaderPage from 'src/pages/SkeletonLoader/skeletonLoaderPage'
 import CSVDownloader from 'src/util/csvDownload'
-import { prettyDate } from 'src/util/dateConverter'
+import { prettyDate, prettyDateTime } from 'src/util/dateConverter'
 import { CustomRadioGroup } from 'src/util/formFields/CustomRadioGroup'
 import { CustomSelect } from 'src/util/formFields/selectBoxField'
 import { MultiSelectMultiLineField } from 'src/util/formFields/selectBoxMultiLineField'
@@ -184,8 +184,10 @@ const SideVisitLeadsBody = ({
                       { label: 'From', id: 'all' },
                       { label: 'To', id: 'all' },
                       { label: 'Source', id: 'new' },
-                      { label: 'Date', id: 'new' },
+                      { label: 'Visited On', id: 'new' },
                       { label: 'Executive', id: 'all' },
+                        { label: 'Created on', id: 'all' },
+                        { label: 'By', id: 'all' },
                     ].map((d, i) => (
                       <th
                         key={i}
@@ -245,6 +247,14 @@ const SideVisitLeadsBody = ({
                         </td>
                         <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
                           {data?.assignedToObj?.name}
+                        </td>
+                        <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
+                          {prettyDateTime(data?.Date)}
+                          ||         {prettyDateTime(data?.assignT)}
+                        </td>
+                        <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
+
+                          {data?.by}
                         </td>
                       </tr>
                     )

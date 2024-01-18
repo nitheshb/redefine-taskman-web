@@ -28,7 +28,7 @@ const LeadsCoversionGraphs = ({
   })
 
   useEffect(() => {
-    console.log('full data for projects with raw is =>', projectFilList)
+    console.log('full data for projects with raw is =>', projectFilList, sourceRawFilData)
   }, [projectFilList])
 
   useEffect(() => {

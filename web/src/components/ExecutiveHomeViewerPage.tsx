@@ -257,6 +257,7 @@ const ExecutiveHomeViewerPage = ({ leadsTyper, isClicked, setIsClicked }) => {
           //   y.coveredA = { a: data.coveredA }
           //   addLeadSupabase(data)
           // })
+          console.log('my valus are ', usersListA )
           await setLeadsFetchedRawData(usersListA)
           await serealizeData(usersListA)
         },
@@ -337,6 +338,7 @@ const ExecutiveHomeViewerPage = ({ leadsTyper, isClicked, setIsClicked }) => {
           return x
         })
         // setBoardData
+        console.log('my valus are ', usersListA)
         await setLeadsFetchedRawData(usersListA)
         await serealizeData(usersListA)
         // filter_Leads_Projects_Users_Fun()
@@ -494,7 +496,7 @@ const ExecutiveHomeViewerPage = ({ leadsTyper, isClicked, setIsClicked }) => {
   const filter_Leads_Projects_Users_Fun = () => {
     setFetchLeadsLoader(true)
     const x = leadsFetchedRawData
-    console.log('raw max is ==>  ', x.length)
+    console.log('raw max is ==>  ', x.length, x)
     if (selProjectIs?.value != 'allprojects') {
       const z = x
         .filter((d1) => d1.Project === selProjectIs?.value)

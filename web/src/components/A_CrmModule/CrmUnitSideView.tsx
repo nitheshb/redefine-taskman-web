@@ -107,30 +107,49 @@ const people = [
   { name: 'Priority 4' },
 ]
 
+
+
 const StatusListA = [
   {
     label: 'Booking Review',
     value: 'booked',
     logo: 'FireIcon',
     color: 'bg-violet-500',
+    allowed: [ 'cancel_booking', 'swapUnit', 'agreement_pipeline']
   },
   {
     label: 'Agreement Pipeline',
     value: 'agreement_pipeline',
     logo: 'RefreshIcon',
     color: 'bg-violet-500',
+    allowed: ['agreement_pipeline', 'sd_pipeline',]
   },
   {
     label: 'SD/Registration Pipleline',
     value: 'sd_pipeline',
     logo: 'FireIcon',
     color: 'bg-violet-500',
+    allowed: ['sd_pipeline']
   },
   {
     label: 'Registered',
     value: 'registered',
     logo: 'DuplicateInactiveIcon',
     color: 'bg-violet-500',
+    allowed: []
+  },  {
+    label: 'Cancel Booking',
+    value: 'cancel_booking',
+    logo: 'DuplicateInactiveIcon',
+    color: 'bg-violet-500',
+    allowed: ['']
+  },
+  {
+    label: 'Swap Unit',
+    value: 'swapUnit',
+    logo: 'DuplicateInactiveIcon',
+    color: 'bg-violet-500',
+    allowed: ['']
   },
 ]
 
@@ -574,6 +593,21 @@ export default function UnitSideViewCRM({
   }
 
   const setStatusFun = async (leadDocId, newStatus) => {
+    const x = StatusListA.filter((d) => d.value === status)
+    let allowedList = [{ allowed: [] }]
+    if (x.length > 0) {
+      allowedList = x[0].allowed
+    }
+console.log('value is', x, newStatus)
+    if(!allowedList?.includes(newStatus?.value)){
+      enqueueSnackbar(`${status} unit cannot be ${newStatus?.label}`, {
+        variant: 'warning',
+      })
+
+    }else{
+
+
+
     setLoader(true)
 
     // if newStatus  make check list
@@ -650,8 +684,13 @@ export default function UnitSideViewCRM({
         errorList = errorList + 'Manger or Customer Costsheet Approval,'
       }
 
-      errorList = errorList + 'is mandatory to proceed'
+      errorList = errorList + 'is mandatory steps are missing'
       setNewStatusErrorList(errorList)
+      enqueueSnackbar(`${errorList}`, {
+        variant: 'warning',
+      }
+
+      )}
     }
 
     return
@@ -670,7 +709,8 @@ export default function UnitSideViewCRM({
     //
     // updateLeadStatus(leadDocId, newStatus)
     // toast.success('status Updated Successfully')
-  }
+
+}
 
   const downloadFile = (url) => {
     window.location.href = url

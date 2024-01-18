@@ -38,7 +38,7 @@ const BlockingUnitForm = ({
     const { uid } = selUnitDetails
 
     const unitUpdate = {
-      blocked_leadId: id,
+      blocked_leadId: id || '',
       status: 'customer_blocked',
       blocked_by: customerDetailsObj?.Name || '',
       blockedOn: Timestamp.now().toMillis(),

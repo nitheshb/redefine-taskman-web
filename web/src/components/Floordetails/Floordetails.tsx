@@ -988,7 +988,7 @@ const Floordetails = ({
                                                     leadDetailsObj:
                                                       leadDetailsObj,
                                                   },
-                                                  widthClass: 'max-w-2xl',
+                                                  widthClass: 'max-w-4xl',
                                                 })
                                               }}
                                             >
@@ -1325,6 +1325,7 @@ const Floordetails = ({
         transactionData={selUnitDetails}
         unitsViewMode={false}
         selCustomerPayload={selUnitDetails}
+        setSelUnitDetails={setSelUnitDetails}
         selSubMenu={selSubMenu}
         selSubMenu2={selSubMenu1}
       />

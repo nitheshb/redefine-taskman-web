@@ -595,7 +595,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
         cutoffDate: sourceDateRange,
         dateRange: dateRange
       })
-      console.log('my Array data is delayer 1 ', unsubscribe)
+     await console.log('my Array data is delayer 1 ccc', await unsubscribe)
       await setLeadsFetchedRawData(await unsubscribe)
       await getProjectsListFun()
       await getUsersDataFun()
