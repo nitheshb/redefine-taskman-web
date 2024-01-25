@@ -184,7 +184,7 @@ const CrmUnitSummary = ({
                   />
                 </div>
               </div>
-              <PdfUnitSummaryFile
+              {/* <PdfUnitSummaryFile
                 user={user}
                 selUnitDetails={selUnitPayload}
                 myObj={newPlotCostSheetA}
@@ -197,7 +197,7 @@ const CrmUnitSummary = ({
                 setPartBTotal={setPartBTotal}
                 projectDetails={[]}
                 leadDetailsObj1={[]}
-              />
+              /> */}
             </div>
 
             {/* <CrmUnitHeader projectDetails={selUnitPayload} /> */}
