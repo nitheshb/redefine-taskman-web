@@ -76,6 +76,8 @@ import LoanApplyFlowHome from '../A_LoanModule/LoanApplyFlowHome'
 import { supabase } from 'src/context/supabase'
 
 import ShowCustomerDetails from './CrmShowCustomerDetails'
+import CancelUnitForm from './A_UnitCancel.tsx/CancelUnitForm'
+
 
 // interface iToastInfo {
 //   open: boolean
@@ -141,6 +143,7 @@ export default function UnitFullSummary({
   selCustomerPayload,
   selSubMenu,
   selSubMenu2,
+  source
 }) {
   const { user } = useAuth()
   const { enqueueSnackbar } = useSnackbar()
@@ -245,6 +248,7 @@ export default function UnitFullSummary({
       selProjectIs
     )
   }, [projectList])
+
 
   useEffect(() => {
     const unsubscribe = steamUsersListByRole(
@@ -751,60 +755,11 @@ export default function UnitFullSummary({
     <div
       className={`bg-white   h-screen    ${openUserProfile ? 'hidden' : ''} `}
     >
+<section className="flex flex-row">
+    <div className='w-full'>
       <div className="rounded-t bg-[#F1F5F9] mb-0 px-3">
         <>
-          <div className="">
-            <div className="">
-              {/* <div className="font-md font-medium text-xs  text-gray-800">
-                          Notes
-                        </div> */}
 
-              <div className=" border-gray-900  bg-[#F1F5F9] rounded-t-lg ">
-                <ul
-                  className="flex   rounded-t-lg"
-                  id="myTab"
-                  data-tabs-toggle="#myTabContent"
-                  role="tablist"
-                >
-                  {[
-                    { lab: 'Summary', val: 'summary' },
-                    { lab: 'Applicant details', val: 'applicant_info' },
-                    { lab: 'Unit details', val: 'unit_information' },
-                    { lab: 'Cost & Payments', val: 'finance_info' },
-                    { lab: 'Loan details', val: 'loan_info' },
-                    { lab: 'Agreement  details', val: 'agreement_info' },
-                    { lab: 'Brokerage  details', val: 'brokerage_info' },
-                    // { lab: 'Docs', val: 'docs_info' },
-                    { lab: 'Tasks', val: 'tasks' },
-                    { lab: 'Timeline', val: 'timeline' },
-                  ].map((d, i) => {
-                    return (
-                      <li
-                        key={i}
-                        className="mr-2 ml-2 text-sm font-bodyLato"
-                        role="presentation"
-                      >
-                        <button
-                          className={`inline-block py-3 mr-3 px-1 text-sm font-medium text-center text-black rounded-t-lg border-b-2  hover:text-black hover:border-gray-300   ${
-                            selFeature === d.val
-                              ? 'border-black text-black'
-                              : 'border-transparent'
-                          }`}
-                          type="button"
-                          role="tab"
-                          onClick={() => setFeature(d.val)}
-                        >
-                          {`${d.lab} `}
-                          {/* <span className="bg-gray-100 px-2 py-1 rounded-full">
-                          {/* {rowsCounter(leadsFetchedData, d.val).length} */}
-                        </button>
-                      </li>
-                    )
-                  })}
-                </ul>
-              </div>
-            </div>
-          </div>
           {selFeature === 'attachments' && (
             <div className="border px-4 bg-[#F6F7FF]">
               {docsList.length === 0 && (
@@ -1487,6 +1442,66 @@ export default function UnitFullSummary({
       )}
 
       {selFeature === 'legal_info' && <></>}
+      {selFeature === 'cancel_booking' && <>
+
+      <CancelUnitForm selUnitDetails={selCustomerPayload} /> </>}
+      </div>
+
+      <div className="w-[250px] min-w-[250px] overflow-auto no-scrollbar  h-[100%] overflow-y-scroll">
+            <div className="">
+              {/* <div className="font-md font-medium text-xs  text-gray-800">
+                          Notes
+                        </div> */}
+
+              <div className=" border-gray-900  bg-[#F1F5F9] rounded-t-lg ">
+                <ul
+                  className="flex flex-col  rounded-t-lg"
+                  id="myTab"
+                  data-tabs-toggle="#myTabContent"
+                  role="tablist"
+                >
+                  {[
+
+                     { lab: 'Summary', val: 'summary' },
+                    { lab: 'Applicant details', val: 'applicant_info' },
+                    { lab: 'Unit details', val: 'unit_information' },
+                    { lab: 'Cost & Payments', val: 'finance_info' },
+                    { lab: 'Loan details', val: 'loan_info' },
+                    { lab: 'Agreement  details', val: 'agreement_info' },
+                    { lab: 'Brokerage  details', val: 'brokerage_info' },
+                    // { lab: 'Docs', val: 'docs_info' },
+                    { lab: 'Tasks', val: 'tasks' },
+                    { lab: 'Timeline', val: 'timeline' },
+                    { lab: 'Cancel Booking', val: 'cancel_booking' },
+                  ].map((d, i) => {
+                    return (
+                      <li
+                        key={i}
+                        className="mr-2 ml-2 text-sm font-bodyLato"
+                        role="presentation"
+                      >
+                        <button
+                          className={`inline-block py-3 mr-3 px-1 text-sm font-medium text-center text-black rounded-t-lg border-b-2  hover:text-black hover:border-gray-300   ${
+                            selFeature === d.val
+                              ? 'border-black text-black'
+                              : 'border-transparent'
+                          }`}
+                          type="button"
+                          role="tab"
+                          onClick={() => setFeature(d.val)}
+                        >
+                          {`${d.lab} `}
+                          {/* <span className="bg-gray-100 px-2 py-1 rounded-full">
+                          {/* {rowsCounter(leadsFetchedData, d.val).length} */}
+                        </button>
+                      </li>
+                    )
+                  })}
+                </ul>
+              </div>
+            </div>
+          </div>
+      </section>
       <SiderForm
         open={openCapturePayment}
         setOpen={setOpenCapturePayment}

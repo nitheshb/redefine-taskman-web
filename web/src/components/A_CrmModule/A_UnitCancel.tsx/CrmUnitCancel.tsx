@@ -2,48 +2,21 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { Fragment, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
-import { Menu } from '@headlessui/react'
-import { Listbox, Transition } from '@headlessui/react'
-import { AdjustmentsIcon, ArrowRightIcon } from '@heroicons/react/outline'
-import CalendarIcon from '@heroicons/react/outline/CalendarIcon'
-import {
-  BadgeCheckIcon,
-  DocumentIcon,
-  EyeIcon,
-  MailIcon,
-  DeviceMobileIcon,
-  ViewBoardsIcon,
-  ViewGridIcon,
-  XIcon,
-} from '@heroicons/react/solid'
-import { CheckIcon, SelectorIcon, DownloadIcon } from '@heroicons/react/solid'
-import ClockIcon from '@heroicons/react/solid/ClockIcon'
-import PlusCircleIcon from '@heroicons/react/solid/PlusCircleIcon'
-import { VerticalAlignBottom } from '@mui/icons-material'
-import { DateTimePicker } from '@mui/lab'
-import DesktopDatePicker from '@mui/lab/DesktopDatePicker'
-import TimePicker from '@mui/lab/TimePicker'
-import { LinearProgress, TextField } from '@mui/material'
-import { LocalizationProvider } from '@mui/x-date-pickers'
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import { XIcon } from '@heroicons/react/solid'
+import { setHours, setMinutes } from 'date-fns'
+import { Timestamp } from 'firebase/firestore'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
-import DatePicker from 'react-datepicker'
-import { useDropzone } from 'react-dropzone'
-import toast from 'react-hot-toast'
+import { useSnackbar } from 'notistack'
 import { v4 as uuidv4 } from 'uuid'
 
+import { USER_ROLES } from 'src/constants/userRoles'
 import {
   addLeadScheduler,
-  addSchedulerLog,
   deleteSchLog,
   steamLeadActivityLog,
-  steamLeadPhoneLog,
   steamLeadScheduleLog,
-  steamUsersListByRole,
-  updateLeadAssigTo,
-  updateLeadStatus,
   updateSchLog,
   addLeadNotes,
   steamLeadNotes,
@@ -60,39 +33,21 @@ import {
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import { storage } from 'src/context/firebaseConfig'
-import {
-  getDifferenceInHours,
-  getDifferenceInMinutes,
-  prettyDate,
-  prettyDateTime,
-  timeConv,
-} from 'src/util/dateConverter'
-import { CustomSelect } from 'src/util/formFields/selectBoxField'
-
-import SortComp from './sortComp'
+import { prettyDate, prettyDateTime } from 'src/util/dateConverter'
 
 import 'react-datepicker/dist/react-datepicker.css'
-import { setHours, setMinutes } from 'date-fns'
-import { Timestamp } from 'firebase/firestore'
-
-import Loader from './Loader/Loader'
-import AddBookingForm from './bookingForm'
-
-import { useSnackbar } from 'notistack'
-
-import SiderForm from '../SiderForm/SiderForm'
-
-import CrmUnitSummary from './A_CrmUnitSummary'
-
-import AssigedToDropComp from '../assignedToDropComp'
-
-import { USER_ROLES } from 'src/constants/userRoles'
-
-import CrmPaymentSummary from './CrmPaymentSummary'
-import UnitFullSummary from './CrmUnitFullSummary'
 
 import { getWhatsAppTemplates } from 'src/util/TuneWhatsappMsg'
+
+// import AssigedToDropComp from '../assignedToDropComp'
+// import SiderForm from '../SiderForm/SiderForm'
+
+// import UnitFullSummary from './CrmUnitFullSummary'
+
 import { supabase } from 'src/context/supabase'
+import AssigedToDropComp from 'src/components/assignedToDropComp'
+import SiderForm from 'src/components/SiderForm/SiderForm'
+import UnitFullSummary from '../CrmUnitFullSummary'
 
 // interface iToastInfo {
 //   open: boolean
@@ -106,78 +61,52 @@ const people = [
   { name: 'Priority 4' },
 ]
 
-
-
 const StatusListA = [
   {
     label: 'Booking Review',
     value: 'booked',
     logo: 'FireIcon',
     color: 'bg-violet-500',
-    allowed: [ 'cancel_booking', 'swapUnit', 'agreement_pipeline']
+    allowed: ['cancel_booking', 'swapUnit', 'agreement_pipeline'],
   },
   {
     label: 'Agreement Pipeline',
     value: 'agreement_pipeline',
     logo: 'RefreshIcon',
     color: 'bg-violet-500',
-    allowed: ['agreement_pipeline', 'sd_pipeline',]
+    allowed: ['agreement_pipeline', 'sd_pipeline'],
   },
   {
     label: 'SD/Registration Pipleline',
     value: 'sd_pipeline',
     logo: 'FireIcon',
     color: 'bg-violet-500',
-    allowed: ['sd_pipeline']
+    allowed: ['sd_pipeline'],
   },
   {
     label: 'Registered',
     value: 'registered',
     logo: 'DuplicateInactiveIcon',
     color: 'bg-violet-500',
-    allowed: []
-  },  {
+    allowed: [],
+  },
+  {
     label: 'Cancel Booking',
     value: 'cancel_booking',
     logo: 'DuplicateInactiveIcon',
     color: 'bg-violet-500',
-    allowed: ['']
+    allowed: [''],
   },
   {
     label: 'Swap Unit',
     value: 'swapUnit',
     logo: 'DuplicateInactiveIcon',
     color: 'bg-violet-500',
-    allowed: ['']
+    allowed: [''],
   },
 ]
 
-const attachTypes = [
-  { label: 'Select Document', value: '' },
-  { label: 'Bank Cheque', value: 'bank_cheque' },
-  { label: 'Booking Form', value: 'booking_form' },
-  { label: 'Customer Aadhar', value: 'customer_aadhar' },
-  { label: 'Co-Applicant Aadhar', value: 'co-applicant_Aadhar' },
-  { label: 'Cancellation Form', value: 'cancellation_form' },
-  { label: 'Cost Sheet', value: 'cost_sheet' },
-  { label: 'Estimation Sheet', value: 'estimation_sheet' },
-  { label: 'Payment Screenshot (IMPS/RTGS/NEFT)', value: 'payment_screenshot' },
-  { label: 'Payment Receipt', value: 'payment_receipt' },
-  { label: 'Others', value: 'others' },
-]
-
-const notInterestOptions = [
-  { label: 'Select Document', value: '' },
-  { label: 'Budget Issue', value: 'budget_issue' },
-  { label: 'Looking for Different Property', value: 'differeent_options' },
-
-  { label: 'Others', value: 'others' },
-
-  // { label: 'Follow Up', value: 'followup' },
-  // { label: 'RNR', value: 'rnr' },
-  // { label: 'Dead', value: 'Dead' },
-]
-export default function UnitSideViewCRM({
+export default function UnitBookingCancelCRM({
   openUserProfile,
   rustomerDetails,
   unitViewerrr,
@@ -257,10 +186,9 @@ export default function UnitSideViewCRM({
   useEffect(() => {
     console.log('hello', customerDetails)
     streamUnitDataFun()
-
   }, [])
 
-  useEffect(()=> {
+  useEffect(() => {
     setSelUnitDetails(unitPayload)
   }, [unitPayload])
 
@@ -528,20 +456,20 @@ export default function UnitSideViewCRM({
     //   (d) => d?.sts === 'pending' && d?.schTime < torrowDate
     // ).length
 
-    const { data: data4, error: error4 } =  supabase
-    .from(`${orgId}_unit_logs`)
-    .insert([
-      {
-        type: 'assign_change',
-        subtype: 'crm_owner',
-        T: Timestamp.now().toMillis(),
-        Uuid: selCustomerPayload?.id,
-        by,
-        payload: {  },
-        from: '',
-        to: value.name,
-      },
-    ])
+    const { data: data4, error: error4 } = supabase
+      .from(`${orgId}_unit_logs`)
+      .insert([
+        {
+          type: 'assign_change',
+          subtype: 'crm_owner',
+          T: Timestamp.now().toMillis(),
+          Uuid: selCustomerPayload?.id,
+          by,
+          payload: {},
+          from: '',
+          to: value.name,
+        },
+      ])
     const txt = `A New Customer is assigned to ${value.name}`
     updateUnitCrmOwner(
       orgId,
@@ -597,99 +525,94 @@ export default function UnitSideViewCRM({
     if (x.length > 0) {
       allowedList = x[0].allowed
     }
-console.log('value is', x, newStatus)
-    if(!allowedList?.includes(newStatus?.value)){
+    console.log('value is', x, newStatus)
+    if (!allowedList?.includes(newStatus?.value)) {
       enqueueSnackbar(`${status} unit cannot be ${newStatus?.label}`, {
         variant: 'warning',
       })
-
-    }else{
-
-
-
-    setLoader(true)
-
-    // if newStatus  make check list
-    const dataObj = { status: newStatus?.value }
-    console.log('payment stuff is ', selCustomerPayload)
-    const { fullPs } = selCustomerPayload
-
-    if (
-      newStatus?.value === 'agreement_pipeline' &&
-      selCustomerPayload?.kyc_status &&
-      selCustomerPayload?.man_cs_approval
-    ) {
-      setUnitStatus(newStatus)
-      const sum = fullPs.reduce((accumulator, currentValue) => {
-        if (currentValue.order === 2) {
-          return accumulator + currentValue.value
-        }
-        return accumulator
-      }, 0)
-      dataObj.T_elgible_new = sum
-      updateUnitStatus(
-        orgId,
-        selCustomerPayload?.id,
-        dataObj,
-        user.email,
-        enqueueSnackbar
-      )
-    } else if (
-      newStatus?.value === 'ats_pipeline' &&
-      selCustomerPayload?.T_balance <= 0 &&
-      selCustomerPayload?.ats_creation &&
-      selCustomerPayload?.both_ats_approval
-    ) {
-      setUnitStatus(newStatus)
-      updateUnitStatus(
-        orgId,
-        selCustomerPayload?.id,
-        dataObj,
-        user.email,
-        enqueueSnackbar
-      )
     } else {
-      setStatusValidError(true)
-      console.log('is this in statusvalidat or ')
-      let errorList = ''
+      setLoader(true)
+
+      // if newStatus  make check list
+      const dataObj = { status: newStatus?.value }
+      console.log('payment stuff is ', selCustomerPayload)
+      const { fullPs } = selCustomerPayload
+
       if (
         newStatus?.value === 'agreement_pipeline' &&
-        !selCustomerPayload?.kyc_status
+        selCustomerPayload?.kyc_status &&
+        selCustomerPayload?.man_cs_approval
       ) {
-        errorList = errorList + 'KYC,'
-      }
-      if (
-        newStatus?.value === 'agreement_pipeline' &&
-        !selCustomerPayload?.man_cs_approval
-      ) {
-        errorList = errorList + 'Manger Costsheet Approval,'
-      }
-      if (
+        setUnitStatus(newStatus)
+        const sum = fullPs.reduce((accumulator, currentValue) => {
+          if (currentValue.order === 2) {
+            return accumulator + currentValue.value
+          }
+          return accumulator
+        }, 0)
+        dataObj.T_elgible_new = sum
+        updateUnitStatus(
+          orgId,
+          selCustomerPayload?.id,
+          dataObj,
+          user.email,
+          enqueueSnackbar
+        )
+      } else if (
         newStatus?.value === 'ats_pipeline' &&
-        selCustomerPayload?.T_balance <= 0
+        selCustomerPayload?.T_balance <= 0 &&
+        selCustomerPayload?.ats_creation &&
+        selCustomerPayload?.both_ats_approval
       ) {
-        errorList = errorList + 'Due Payment,'
-      }
-      if (
-        newStatus?.value === 'ats_pipeline' &&
-        !selCustomerPayload?.ats_creation
-      ) {
-        errorList = errorList + 'ATS Creation,'
-      }
-      if (
-        newStatus?.value === 'ats_pipeline' &&
-        !selCustomerPayload?.both_ats_approval
-      ) {
-        errorList = errorList + 'Manger or Customer Costsheet Approval,'
-      }
+        setUnitStatus(newStatus)
+        updateUnitStatus(
+          orgId,
+          selCustomerPayload?.id,
+          dataObj,
+          user.email,
+          enqueueSnackbar
+        )
+      } else {
+        setStatusValidError(true)
+        console.log('is this in statusvalidat or ')
+        let errorList = ''
+        if (
+          newStatus?.value === 'agreement_pipeline' &&
+          !selCustomerPayload?.kyc_status
+        ) {
+          errorList = errorList + 'KYC,'
+        }
+        if (
+          newStatus?.value === 'agreement_pipeline' &&
+          !selCustomerPayload?.man_cs_approval
+        ) {
+          errorList = errorList + 'Manger Costsheet Approval,'
+        }
+        if (
+          newStatus?.value === 'ats_pipeline' &&
+          selCustomerPayload?.T_balance <= 0
+        ) {
+          errorList = errorList + 'Due Payment,'
+        }
+        if (
+          newStatus?.value === 'ats_pipeline' &&
+          !selCustomerPayload?.ats_creation
+        ) {
+          errorList = errorList + 'ATS Creation,'
+        }
+        if (
+          newStatus?.value === 'ats_pipeline' &&
+          !selCustomerPayload?.both_ats_approval
+        ) {
+          errorList = errorList + 'Manger or Customer Costsheet Approval,'
+        }
 
-      errorList = errorList + 'is mandatory steps are missing'
-      setNewStatusErrorList(errorList)
-      enqueueSnackbar(`${errorList}`, {
-        variant: 'warning',
+        errorList = errorList + 'is mandatory steps are missing'
+        setNewStatusErrorList(errorList)
+        enqueueSnackbar(`${errorList}`, {
+          variant: 'warning',
+        })
       }
-
-      )}
     }
 
     return
@@ -708,8 +631,7 @@ console.log('value is', x, newStatus)
     //
     // updateLeadStatus(leadDocId, newStatus)
     // toast.success('status Updated Successfully')
-
-}
+  }
 
   const downloadFile = (url) => {
     window.location.href = url
@@ -953,15 +875,14 @@ console.log('value is', x, newStatus)
       customerDetailsObj,
     } = selCustomerPayload
     const customLeadObj = { Name: customerDetailsObj?.customerName1 }
-    data.attchUrl = data?.fileUploader?.url || "";
+    data.attchUrl = data?.fileUploader?.url || ''
     data.category = 'Payment'
     const y = {}
     y.m = data?.fileUploader
 
     console.log('unit log ', data, y, y.m, y['m']['url'])
 
-
-        const x = await capturePaymentS(
+    const x = await capturePaymentS(
       orgId,
       projectId,
       unitId,
@@ -1014,9 +935,8 @@ console.log('value is', x, newStatus)
                       </span>
 
                       <span className=" ml-1 text-[12px] h-[20px] text-[#823d00] font-bodyLato font-[600] mt-[2px] bg-[#ffeccf] px-[6px] py-[2px] rounded-xl mr-1 ">
-                                          Booked:{' '}
-                                          {prettyDate(selCustomerPayload?.booked_on || 0)}
-                                        </span>
+                        Booked: {prettyDate(selCustomerPayload?.booked_on || 0)}
+                      </span>
                     </p>
                   </section>
 
@@ -1100,22 +1020,6 @@ console.log('value is', x, newStatus)
                       )}
                     </div>
                   </section>
-                  <section
-                    className="text-center px-[10px] py-[2px] pt-[3px] h-[24px] bg-gradient-to-r from-violet-200 to-pink-200 text-black rounded-3xl items-center align-middle text-xs cursor-pointer hover:underline"
-                    onClickCapture={() => {
-                      openPaymentFun()
-                    }}
-                  >
-                    CAPTURE PAYMENT
-                  </section>
-                  <section
-                    className="text-center px-[10px] py-[2px]  pt-[3px] h-[24px] ml-2 bg-gradient-to-r from-violet-200 to-pink-200 text-black rounded-3xl items-center align-middle text-xs cursor-pointer hover:underline"
-                    onClickCapture={() => {
-                      openPaymentFun()
-                    }}
-                  >
-                    RAISE NEW DEMAND
-                  </section>
                 </section>
               </section>
             </div>
@@ -1138,73 +1042,6 @@ console.log('value is', x, newStatus)
             </div>
           </div>
         )}
-        {/* <div className="flex flex-row justify-between">
-          <div className="px-1 py-2 flex flex-row  text-xs  border-t border-[#ebebeb] font-thin   font-bodyLato text-[12px]  py-[6px] ">
-            Recent Comments:{' '}
-            <span className="text-[#867777] ml-1 ">
-              {' '}
-              {leadDetailsObj?.Remarks || 'NA'}
-            </span>
-          </div>
-          <div
-            className="relative flex flex-col  group"
-
-          >
-            <div
-              className="absolute bottom-0 right-0 flex-col items-center hidden mb-6 group-hover:flex"
-
-              style={{ zIndex: '9999' }}
-            >
-              <span
-                className="rounded italian relative mr-2 z-100000 p-2 text-xs leading-none text-white whitespace-no-wrap bg-black shadow-lg"
-                style={{
-                  color: 'black',
-                  background: '#e2c062',
-                  maxWidth: '300px',
-                }}
-              >
-                <div className="italic flex flex-col">
-                  <div className="font-bodyLato">
-                    {Source?.toString() || 'NA'}
-                  </div>
-                </div>
-              </span>
-              <div
-                className="w-3 h-3  -mt-2 rotate-45 bg-black"
-                style={{ background: '#e2c062', marginRight: '12px' }}
-              ></div>
-            </div>
-            <div className=" flex flex-row ">
-              <span className="font-bodyLato text-[#867777] text-xs mt-2">
-
-
-                {Source?.toString() || 'NA'}
-              </span>
-              <div
-                className=" cursor-pointer hover:underline"
-                onClickCapture={() => {
-                  setTimeHide(!timeHide)
-                }}
-              >
-                {selProjectIs?.uid?.length > 4 &&
-                  (timeHide ? (
-                    <XIcon
-                      className="h-4 w-4  inline text-green"
-                      aria-hidden="true"
-                    />
-                  ) : (
-                    <span className="px-[3px]  ml-1  text-[#318896]  text-[10px] text-[#] font-semibold">
-                      {' '}
-                      <AdjustmentsIcon
-                        className="h-4 w-4  inline text-[#318896] "
-                        aria-hidden="true"
-                      />
-                    </span>
-                  ))}
-              </div>
-            </div>
-          </div>
-        </div> */}
         {timeHide && (
           <>
             <div className="w-full border-b border-[#ebebeb]"></div>
@@ -1245,10 +1082,11 @@ console.log('value is', x, newStatus)
         )}
       </div>
 
-
       <UnitFullSummary
         customerDetails={customerDetails}
         selCustomerPayload={selCustomerPayload}
+        source={"cancelBooking"}
+        selSubMenu={"cancel_booking"}
       />
 
       {selFeature === 'legal_info' && <></>}

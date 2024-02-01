@@ -410,12 +410,12 @@ export const updateTransactionStatus = async (
     .insert([
       {
         type: 'accounts',
-        subtype: 'pay_reviewer',
+        subtype: data1?.subtype || 'pay_reviewer',
         T: Timestamp.now().toMillis(),
         Uuid: Uuid,
         by,
         payload: { comments: '' },
-        from: 'review',
+        from: data1?.oldStatus ||  'review',
         to: status,
         projectId: projectId || '',
       },
@@ -4152,16 +4152,16 @@ export const updateUnitAsBooked = async (
     const { data1, error1 } = await supabase.from(`${orgId}_unit_logs`).insert([
       {
         type: 'sts_change',
-        subtype: 'booked',
+        subtype: data?.status || 'booked',
         T: Timestamp.now().toMillis(),
         Uuid: unitId,
         by,
         payload: { bookedBy: by },
-        from: 'lead',
-        to: 'booked',
+        from: data?.oldStatus || 'lead',
+        to: data?.status || 'booked',
       },
     ])
-    enqueueSnackbar('Cost Sheet Updated for Customer', {
+    enqueueSnackbar(`Cost Seet and Unit ${data?.status}`, {
       variant: 'success',
     })
   } catch (error) {
@@ -4431,6 +4431,41 @@ export const updateProjectCounts = async (
       t_collect: increment(t_collect),
 
       t_bal: soldVal - t_collect,
+      // t_refund: increment(1)
+    })
+
+    console.log('chek if ther is any erro in supa', data)
+    enqueueSnackbar(`Project Status Updated`, {
+      variant: 'success',
+    })
+  } catch (e) {
+    enqueueSnackbar(e.message, {
+      variant: 'error',
+    })
+  }
+}
+export const updateCancelProjectCounts = async (
+  orgId,
+  pId,
+  data,
+  by,
+  enqueueSnackbar
+) => {
+  try {
+    const { soldVal, t_collect } = data
+    await updateDoc(doc(db, `${orgId}_projects`, pId), {
+      bookUnitCount: increment(-1),
+      availableCount: increment(1),
+      soldUnitCount: increment(-1),
+      // s_agreeCount: increment(1),
+      // s_registerCount: increment(1),
+      // s_constCount: increment(1),
+      // s_possCount: increment(1),
+      // t_mtd: increment(1),
+      // soldValue: increment(soldVal),
+      t_collect: increment(t_collect),
+
+      // t_bal: soldVal - t_collect,
       // t_refund: increment(1)
     })
 

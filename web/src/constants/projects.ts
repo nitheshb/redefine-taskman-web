@@ -435,6 +435,29 @@ export const costSheetAdditionalChargesA = [
     label: 'GST',
   },
 ]
+export const costSheetPartcChargesA = [
+
+  {
+    value: 'legal_incidental_charges',
+    label: 'Legal & Incidental Charges',
+  },
+  {
+    value: 'Stamp_duty_registration',
+    label: 'Stamp Duty and Registration',
+  },
+  {
+    value: 'legalcharges',
+    label: 'Legal charges',
+  },
+  {
+    value: 'legalCharges_onsale',
+    label: 'Legal Charges on sale Deed',
+  },
+  {
+    value: 'gst',
+    label: 'GST',
+  },
+]
 export const csConstruAdditionalChargesA = [
   {
     value: 'bescom_bwssb',

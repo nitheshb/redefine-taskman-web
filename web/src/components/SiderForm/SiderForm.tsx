@@ -39,6 +39,7 @@ import PaymentScheduleForm from '../PaymentScheduleForm/PaymentScheduleForm'
 import ProjPhaseHome from '../ProjPhaseHome/ProjPhaseHome'
 import TransactionUpdateSideView from '../transactionUpdateSideView'
 import ViewUnitDetails from '../ViewUnitDetails'
+import UnitBookingCancelCRM from '../A_CrmModule/A_UnitCancel.tsx/CrmUnitCancel'
 
 const SiderForm = ({
   BlockFeed,
@@ -430,6 +431,20 @@ const SiderForm = ({
                 )}
                 {title === 'unitDetails_crm_view' && (
                   <UnitSideViewCRM
+                    openUserProfile={false}
+                    customerDetails={customerDetails}
+                    unitViewerrr={unitViewerrr}
+                    unitsViewMode={unitsViewMode}
+                    setUnitsViewMode={setUnitsViewMode}
+                    transactionData={transactionData}
+                    selCustomerPayload={selCustomerPayload}
+                    setSelUnitDetails={setSelUnitDetails}
+                    selSubMenu={selSubMenu}
+                    selSubMenu2={selSubMenu2}
+                  />
+                )}
+                 {title === 'Cancel_Unit' && (
+                  <UnitBookingCancelCRM
                     openUserProfile={false}
                     customerDetails={customerDetails}
                     unitViewerrr={unitViewerrr}

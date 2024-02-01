@@ -224,10 +224,10 @@ const AddPaymentDetailsForm = ({
     }
     await capturePayment_log(data, txId, resetForm)
     const s1 = await  bookCompSteps;
-  await  s1.push('payment_captured')
-await setBookCompSteps(s1)
+    await  s1.push('payment_captured')
+    await setBookCompSteps(s1)
 
-await setBookCurentStep(['CS_updated', 'customer_created'])
+    await setBookCurentStep(['CS_updated', 'customer_created'])
     // get booking details, leadId, unitDetails,
     //  from existing object send values of
     //  booking
@@ -477,6 +477,7 @@ const {id} = leadData
     }
     console.log('submit data i s', updatedData)
   }
+
 
   const initialState = {
     amount: bankData?.amount || '',

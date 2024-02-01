@@ -76,7 +76,6 @@ import { useSnackbar } from 'notistack'
 import SiderForm from '../SiderForm/SiderForm'
 
 import CrmUnitSummary from './A_CrmUnitSummary'
-import CrmUnitPsHome from './CustomerFinanceStatement'
 import CrmPaymentSummary from './CrmPaymentSummary'
 
 import AssigedToDropComp from '../assignedToDropComp'

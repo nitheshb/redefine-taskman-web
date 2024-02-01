@@ -129,6 +129,8 @@ const Floordetails = ({
   const [selStatus, setFilSelStatus] = useState('all')
   const [isUnitDetailsOpen, setisUnitDetailsOpen] = useState(false)
   const [isUnitQuoteBookBlock, setisUnitQuoteBookBlock] = useState(false)
+  const [isCancelUnit, setIsCancelUnit] = useState(false)
+  const [isSwapUnit, setIsSwapUnit] = useState(false)
   const [isUnitAddOpen, setisUnitAddOpen] = useState(false)
   const [selUnitDetails, setSelUnitDetails1] = useState({})
   const [transactionData, setTransactionData] = useState({})
@@ -1043,7 +1045,18 @@ const Floordetails = ({
                                             <h3
                                               className="m-0 ml-2 mt-4 text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200"
                                               onClick={() => {
-                                                setisUnitDetailsOpen(true)
+                                                setIsCancelUnit(true)
+                                                setSliderInfo({
+                                                  open: true,
+                                                  title: 'Cancel_Unit',
+                                                  sliderData: {
+                                                    unitDetail: data,
+                                                    phaseDetail: phaseFeed,
+                                                    leadDetailsObj:
+                                                      leadDetailsObj,
+                                                  },
+                                                  widthClass: 'max-w-4xl',
+                                                })
                                               }}
                                             >
                                               Cancel
@@ -1328,6 +1341,34 @@ const Floordetails = ({
         setSelUnitDetails={setSelUnitDetails}
         selSubMenu={selSubMenu}
         selSubMenu2={selSubMenu1}
+      />
+      <SiderForm
+        open={isCancelUnit}
+        setOpen={setIsCancelUnit}
+        title={sliderInfo.title}
+        customerDetails={selUnitDetails}
+        widthClass={sliderInfo.widthClass}
+        transactionData={selUnitDetails}
+        unitsViewMode={false}
+        selCustomerPayload={selUnitDetails}
+        setSelUnitDetails={setSelUnitDetails}
+        selSubMenu={selSubMenu}
+        selSubMenu2={selSubMenu1}
+      />
+      <SiderForm
+        open={isSwapUnit}
+        setOpen={setIsSwapUnit}
+        title={sliderInfo.title}
+        data={sliderInfo.sliderData}
+        widthClass={sliderInfo.widthClass}
+        myBlock={selBlock}
+        pId={pId}
+        phaseFeed={phaseFeed}
+        BlockFeed={BlockFeed}
+        projectDetails={projectDetails}
+        phaseDetails={phaseDetails}
+        blockDetails={selBlock}
+        unitViewActionType={actionType}
       />
       <SiderForm
         open={isUnitQuoteBookBlock}

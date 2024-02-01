@@ -224,7 +224,7 @@ const CrmUnitSummary = ({
               />
             </div>
           </div>
-          <div className="rounded w-[500px] ml-2 bg-[#fff] mt-1 px-4 py-3">
+          <div className="rounded w-[300px] ml-2 bg-[#fff] mt-1 px-4 py-3">
             <span className="text-[20px] text-[#10153e] font-bold">
               Activity
             </span>
@@ -254,23 +254,23 @@ const CrmUnitSummary = ({
                       className="flex flex-col sm:relative sm:before:absolute sm:before:top-2 sm:before:w-4 sm:before:h-4 sm:before:rounded-full sm:before:left-[-35px] sm:before:z-[1] before:dark:bg-violet-200"
                     >
                       <section>
-                        <span className="text-md font-bold text-[#151F2B]">
+                        <span className="text-sm font-bold text-[#151F2B]">
                           {/* {data?.type?.toUpperCase()} */}
                           {data?.by}
                         </span>
 
-                        <span className="text-xs text-red-900 ml-2 ">
+                        <span className="text-[9px] text-red-900 ml-2 ">
                           {data?.subtype?.toUpperCase()} {'  '}
                         </span>
                       </section>
                       <section className="my-2">
-                        <span className="text-xs text-[#8E5100] font-bold bg-[#FDEED6] px-2 py-1 rounded-md ">
+                        <span className="text-xs text-[#8E5100] font-bold text-[9px] bg-[#FDEED6] px-[4px] py-[2px] rounded-lg ">
                           {data?.from?.toUpperCase()} {'  '}
                         </span>
                         <span className="text-gray-400 mx-1 font-bold">
                           {'->'}
                         </span>
-                        <span className="text-xs text-[#398A58] font-bold bg-[#D6F4E4] px-2 py-1 rounded-md  ">
+                        <span className="text-xs text-[#398A58] font-bold text-[9px] bg-[#D6F4E4] px-[4px] py-[2px] rounded-lg   ">
                           {data?.to?.toUpperCase()} {'  '}
                         </span>
                       </section>
