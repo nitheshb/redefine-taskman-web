@@ -380,6 +380,9 @@ export const csPartATax = [
 ]
 export const costSheetAdditionalChargesA = [
   {
+    value: 'bescom_sanitary_deposits',
+    label: 'BESCOM & Sanitary deposits',
+  },  {
     value: 'carparking',
     label: 'Car Parking',
   },
@@ -416,6 +419,10 @@ export const costSheetAdditionalChargesA = [
   {
     value: 'power_backup_charges',
     label: 'Power Back-up Charges',
+  },
+  {
+    value: 'dg_backup',
+    label: 'DG Backup ',
   },
   {
     value: 'plc',
