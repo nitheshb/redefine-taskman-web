@@ -342,6 +342,8 @@ const EnhancedTableToolbar = (props) => {
 
     if (title === 'Import Plot Units') {
       insertPlotToDb(records)
+    } else if (title === 'Import Apartment Units') {
+      insertPlotToDb(records)
     }
     return
     const mappedArry = await Promise.all(

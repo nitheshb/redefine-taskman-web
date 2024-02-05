@@ -38,6 +38,7 @@ import PaymentScheduleForm from '../PaymentScheduleForm/PaymentScheduleForm'
 import PaymentLeadAccess from '../PaymentScheduleForm/ProjectLeadAccess'
 import PaymentScheduleSetup from '../paymentScheduleSetup'
 import PlanDiagramView from '../planDiagramView'
+import ProjectAuditHome from '../A_ProjModule/ProjectAuditHome'
 
 const ProjPhaseHome = ({
   projectDetails,
@@ -305,6 +306,10 @@ const ProjPhaseHome = ({
                                 // { lab: 'Report', val: 'Report' },
 
                                 { lab: 'Templates', val: 'Templates' },
+                                {
+                                  lab: 'Audit',
+                                  val: 'audit',
+                                },
                               ].map((d, i) => {
                                 return (
                                   <li
@@ -704,6 +709,15 @@ const ProjPhaseHome = ({
                       {phaseViewFeature === 'More Details' && (
                         <MoreDetailsPhaseForm
                           title={'More Details'}
+                          dialogOpen={'false'}
+                          data={{ phase: phase }}
+                          source={source}
+                        />
+                      )}
+                       {phaseViewFeature === 'audit' && (
+                        <ProjectAuditHome
+                          title={'Templates'}
+                          projectDetails ={projectDetails}
                           dialogOpen={'false'}
                           data={{ phase: phase }}
                           source={source}

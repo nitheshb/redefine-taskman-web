@@ -23,6 +23,7 @@ const ProjectEditPage = ({
 }) => {
   const [isAddPhaseOpen, setIsAddPhaseOpen] = useState(false)
   const [isEditProjectOpen, setIsEditProjectOpen] = useState(false)
+  
   const [project, setProject] = useState({
     projectName: '',
   })

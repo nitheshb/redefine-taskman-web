@@ -968,6 +968,23 @@ export const getBookedUnitsByProject = (orgId, snapshot, data, error) => {
   console.log('hello ', status, data?.projectId, itemsQuery)
   return onSnapshot(itemsQuery, snapshot, error)
 }
+
+export const getAllUnitsByProject = (orgId, snapshot, data, error) => {
+  const { status } = data
+  console.log('hello ', status, data?.projectId)
+  let itemsQuery = query(
+    collection(db, `${orgId}_units`),
+  )
+  if (data?.projectId) {
+    itemsQuery = query(
+      collection(db, `${orgId}_units`),
+      where('pId', '==', data?.projectId)
+    )
+  }
+
+  console.log('hello ', status, data?.projectId, itemsQuery)
+  return onSnapshot(itemsQuery, snapshot, error)
+}
 export const getUnassignedCRMunits = (orgId, snapshot, data, error) => {
   const { status } = data
   console.log('hello ', status)
@@ -1297,8 +1314,8 @@ export const checkIfUnitAlreadyExists = async (
   const q = await query(
     collection(db, cName),
     where('unit_no', '==', unitId),
-    where('phaseId', '==', phaseId),
-    where('blockId', '==', blockId),
+    where('phaseId', '==', phaseId || 1),
+    where('blockId', '==', blockId || 1),
     where('pId', '==', pId)
   )
 
@@ -1885,7 +1902,7 @@ export const addPlotUnit = async (orgId, data, by, msg) => {
   // get the cost sheet charges obj & successully create total unit cost
   const assetVal = area * sqft_rate + (area * plc_per_sqft || 0)
 
-  data.status = status?.toLowerCase() || ''
+  data.status = status?.toLowerCase() || 'available'
   const statusVal = status?.toLowerCase() || ''
   console.log('status is ==> ', status)
   const yo = {
@@ -1922,7 +1939,7 @@ export const addPlotUnit = async (orgId, data, by, msg) => {
   }
 console.log('yo', yo, statusVal === 'available' )
 
-  // const x = await addDoc(collection(db, `${orgId}_units`), data)
+  const x = await addDoc(collection(db, `${orgId}_units`), data)
   const y = await updateProjectComputedData(orgId, pId, yo)
 
 
@@ -2150,6 +2167,34 @@ export const editPlotUnit = async (
   )
 
   return
+}
+export const editPlotStatusAuditUnit = async (
+  orgId,
+  uid,
+  data,
+  by,
+  msg,
+  enqueueSnackbar
+) => {
+
+  try {
+    await updateDoc(doc(db, `${orgId}_units`, uid), {
+      ...data,
+    })
+    enqueueSnackbar(`${msg}`, {
+      variant: 'success',
+    })
+  } catch (error) {
+    enqueueSnackbar('Plot details Updation Failed', {
+      variant: 'success',
+    })
+  }
+  return
+
+
+
+
+
 }
 export const addUnit = async (orgId, data, by, msg) => {
   const {
