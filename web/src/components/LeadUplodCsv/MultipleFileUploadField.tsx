@@ -371,7 +371,7 @@ export function MultipleFileUploadField({
                 mode: await makeMode(foundLength),
                 pId,
                 phaseId: dRow[''] || 1,
-                blockId: dRow[''] || 1,
+                blockId: myBlock?.uid || 1,
                 Date: Timestamp.now().toMillis(),
                 unit_no: dRow['Plot No.*'] || dRow['Unit No.*'],
                 survey_no: dRow['Survey No'] || '',

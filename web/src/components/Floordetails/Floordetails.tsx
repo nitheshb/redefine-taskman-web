@@ -442,6 +442,7 @@ const Floordetails = ({
           y.push(x)
         })
         y.sort((a, b) => a.unit_no - b.unit_no)
+        console.log('unit details are ',pId, selBlock?.uid || 0, y)
         setUnitsFeed(y)
       },
       { pId: pId, blockId: selBlock?.uid || 0, type: 'today' },

@@ -171,8 +171,8 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
       },
       render: (rowData) =>
         rowData?.units?.value === 'percentage'
-          ? `${rowData.charges} %`
-          : `₹ ${rowData.charges}`,
+          ? `${rowData?.charges} %`
+          : `₹ ${rowData?.charges?.toLocaleString('en-IN')}`,
       editComponent: ({ value, onChange, rowData }) => {
         return (
           <input
@@ -396,7 +396,7 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
       render: (rowData) =>
         rowData?.units?.value === 'percentage'
           ? `${rowData.charges} %`
-          : `₹ ${rowData.charges}`,
+          : `₹ ${rowData?.charges?.toLocaleString('en-IN')}`,
       editComponent: ({ value, onChange, rowData }) => {
         return (
           <input
