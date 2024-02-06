@@ -312,7 +312,8 @@ export function MultipleFileUploadField({
                 Date: Timestamp.now().toMillis(),
                 unit_no: dRow['Plot No.*'] || dRow['Unit No.*'],
                 survey_no: dRow['Survey No'] || '',
-                BMRDA_STRR_Aproval_status: dRow['BMRDA/STRR Aproval status'] || '',
+                BMRDA_STRR_Aproval_status:
+                  dRow['BMRDA/STRR Aproval status'] || '',
                 Katha_no: dRow['Katha No'],
                 PID_no: dRow['PID No'],
                 area: dRow['Plot area *(Sq.Ft)'],
@@ -320,7 +321,8 @@ export function MultipleFileUploadField({
                 sqft_rate: dRow['Rate Per Sqft'],
                 plc_per_sqft: dRow['PLC Per Sqft'],
                 size: dRow['Plot Size*'],
-                facing: dRow['Plot Type*'] || dRow['Unit Type*'] || dRow['Facing'] ,
+                facing:
+                  dRow['Plot Type*'] || dRow['Unit Type*'] || dRow['Facing'],
                 unit_d: dRow['Unit Dimension*(m)'],
                 east_d: dRow['East Dimension*(m)'],
                 west_d: dRow['West Dimension*(m)'] || 0,
@@ -364,41 +366,57 @@ export function MultipleFileUploadField({
                 pId,
                 myPhase?.uid || '',
                 myBlock?.uid || '',
-                dRow['Plot No.*'] || dRow['Unit No.*']
+                dRow['Unit No.*'] || dRow['Flat No.*'] || dRow['Plot No.*']
               )
-              // Plot Type*
+              // Apartment Type*
+              console.log('my data value is ', dRow)
               const computPlotObj = {
                 mode: await makeMode(foundLength),
                 pId,
                 phaseId: dRow[''] || 1,
                 blockId: myBlock?.uid || 1,
                 Date: Timestamp.now().toMillis(),
-                unit_no: dRow['Plot No.*'] || dRow['Unit No.*'],
+                unit_no:
+                  dRow['Unit No.*'] || dRow['Flat No.*'] || dRow['Plot No.*'],
+                floor_no: dRow['Floor'] || '',
                 survey_no: dRow['Survey No'] || '',
-                Katha_no: dRow['Katha No'],
-                PID_no: dRow['PID No'],
-                area: dRow['Plot area *(Sq.Ft)'],
-                area_sqm: dRow['Plot Area*(Sq.m)'],
-                sqft_rate: dRow['Rate Per Sqft'],
-                plc_per_sqft: dRow['PLC Per Sqft'],
-                size: dRow['Plot Size*'],
-                facing: dRow['Plot Type*'] || dRow['Unit Type*'],
-                unit_d: dRow['Unit Dimension*(m)'],
-                east_d: dRow['East Dimension*(m)'],
+                Katha_no: dRow['Katha No'] || '',
+                PID_no: dRow['PID No'] || '',
+                area: dRow['Flat area *(Sq.Ft)'] || dRow['Plot area *(Sq.Ft)'] || 0,
+                super_built_up_area: dRow[''] || 0,
+                area_sqm: dRow['FlatArea*(Sq.m)'] || dRow['Plot Area*(Sq.m)'] || 0,
+                uds_sqm: dRow['SQM(UDS)'] || '',
+                uds_sqft: dRow['SFT(UDS)'] || '',
+                sqft_rate: dRow['Rate Per Sqft'] || dRow['Rate Per Sqft'] || 0,
+                plc_per_sqft: dRow['PLC Per Sqft'] || 0,
+                construct_price: dRow['Construction price'] || 0,
+                size:
+                  dRow['Flat Size'] ||
+                  dRow['Flat Size*'] ||
+                  dRow['Plot Size'] ||
+                  dRow['Plot Size*'] || '',
+                share: dRow['Share'] || '',
+                facing:
+                  dRow['Flat Type*'] ||
+                  dRow['Plot Type*'] ||
+                  dRow['Unit Type*'] || '',
+                cartpet_area_uom: dRow['CARPET SFT'] || 0,
+                unit_d: dRow['Unit Dimension*(m)'] || 0,
+                east_d: dRow['East Dimension*(m)'] || 0,
                 west_d: dRow['West Dimension*(m)'] || 0,
-                north_d: dRow['North Dimension*(m)'],
-                south_d: dRow['South Dimension*(m)'],
+                north_d: dRow['North Dimension*(m)'] || 0,
+                south_d: dRow['South Dimension*(m)'] || 0,
                 east_west_d: dRow[''] || 0,
                 north_south_d: dRow[''] || 0,
-                north_sch_by: dRow['North Schedule Dimension*'],
-                south_sch_by: dRow['South Schedule Dimension*'],
-                east_sch_by: dRow['East Schedule Dimension*'],
-                west_sch_by: dRow['West Schedule Dimension*'],
-                status: dRow['Status'],
-                release_status: dRow['Release Status'],
-                mortgage_type: dRow['Mortgage Type'],
+                north_sch_by: dRow['North Schedule Dimension*'] || 0,
+                south_sch_by: dRow['South Schedule Dimension*'] || 0,
+                east_sch_by: dRow['East Schedule Dimension*'] || 0,
+                west_sch_by: dRow['West Schedule Dimension*'] || 0,
+                status: dRow['Status'] || 'available',
+                release_status: dRow['Release Status'] || '',
+                mortgage_type: dRow['Mortgage Type'] || '',
                 intype: 'bulk',
-                unit_type: 'plot',
+                unit_type: 'Apartment',
                 by: user?.email,
               }
               return await computPlotObj

@@ -705,11 +705,19 @@ export default function LfileuploadTableTemplate({
     } else if (title === 'Import Apartment Units') {
       columns = [
         { id: 'unit_no', label: 'unit_no', minWidth: 80 },
+        { id: 'floor_no', label: 'Floor', minWidth: 80 },
         {
           id: 'status',
           label: 'status',
           minWidth: 10,
           align: 'left',
+          format: (value) => value.toLocaleString('en-US'),
+        },
+        {
+          id: 'release_status',
+          label: 'Release Status',
+          minWidth: 10,
+          align: 'center',
           format: (value) => value.toLocaleString('en-US'),
         },
         {
@@ -755,7 +763,7 @@ export default function LfileuploadTableTemplate({
           format: (value) => value.toFixed(2),
         },
         {
-          id: 'price',
+          id: 'sqft_rate',
           label: 'price',
           minWidth: 10,
           align: 'left',
@@ -775,6 +783,78 @@ export default function LfileuploadTableTemplate({
           align: 'left',
           format: (value) => value.toFixed(2),
         },
+        {
+          id: 'east_d',
+          label: 'East Dimension*(m)',
+          minWidth: 10,
+          align: 'left',
+          format: (value) => value.toFixed(2),
+        },
+        {
+          id: 'west_d',
+          label: 'West Dimension*(m)',
+          minWidth: 10,
+          align: 'left',
+          format: (value) => value.toFixed(2),
+        },
+        {
+          id: 'north_d',
+          label: 'North Dimension*(m)',
+          minWidth: 10,
+          align: 'left',
+          format: (value) => value.toFixed(2),
+        },
+        {
+          id: 'south_d',
+          label: 'South Dimension*(m)"',
+          minWidth: 10,
+          align: 'left',
+          format: (value) => value.toFixed(2),
+        },
+
+        {
+          id: 'north_sch_by',
+          label: 'North Schedule Dimension*',
+          minWidth: 10,
+          align: 'left',
+          format: (value) => value.toFixed(2),
+        },
+        {
+          id: 'south_sch_by',
+          label: 'South Schedule Dimension*',
+          minWidth: 10,
+          align: 'left',
+          format: (value) => value.toFixed(2),
+        },
+        {
+          id: 'east_sch_by',
+          label: 'East Schedule Dimension*',
+          minWidth: 10,
+          align: 'left',
+          format: (value) => value.toFixed(2),
+        },
+        {
+          id: 'west_sch_by',
+          label: 'West Schedule Dimension*',
+          minWidth: 10,
+          align: 'left',
+          format: (value) => value.toFixed(2),
+        },
+        {
+          id: 'mortgage_type',
+          label: 'Mortgage Type',
+          minWidth: 10,
+          align: 'center',
+          format: (value) => value.toLocaleString('en-US'),
+        },
+        {
+          id: 'share',
+          label: 'Share',
+          minWidth: 10,
+          align: 'center',
+          format: (value) => value.toLocaleString('en-US'),
+        },
+
       ]
     } else if (title === 'Import Units') {
       columns = [

@@ -24,10 +24,9 @@ export const validate_AddUnit = Yup.object({
     .required('Rate per Sqft is required')
     .typeError('Rate per sqft must be a valid number')
     .positive('Rate per sqft must be a positive number'),
-  plc_per_sqft: Yup.number()
+  plc_per_sqft: Yup.number().moreThan(-1,  'Value must be greater than or equal to 0')
     .required('Plc per sqft is required')
-    .typeError('Plc per sqft must be a valid number')
-    .positive('Plc per sqft must be a positive number'),
+    .typeError('Plc per sqft must be a valid number'),
   size: Yup.string().required('Size is required'),
   facing: Yup.string().required('Facing is required field'),
   status: Yup.string().required('Status is required field'),
