@@ -833,9 +833,9 @@ const Floordetails = ({
                   return (
                     <li className="py-4" key={i}>
                       <section>
-                        <section className="px-8 bg-red-100 w-[130px] rounded-r-2xl">
+                        {/* <section className="px-8 bg-red-100 w-[130px] rounded-r-2xl">
                           Fl-{floorDat}
-                        </section>
+                        </section> */}
                         <div className=" px-8 mt-6">
                           {filteredUnits
                             ?.filter((da) => da?.floor != i)
