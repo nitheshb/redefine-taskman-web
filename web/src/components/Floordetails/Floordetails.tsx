@@ -826,7 +826,7 @@ const Floordetails = ({
                 </section>
               </section>
             </section>
-            {['Apartment'].includes(projectDetails?.projectType?.name) && (
+            {['Apartment', 'Villas'].includes(projectDetails?.projectType?.name) && (
               <ul className="">
                 {/* {selBlock?.floorA?.map((floorDat, i) => { */}
                 {[1].map((floorDat, i) => {
