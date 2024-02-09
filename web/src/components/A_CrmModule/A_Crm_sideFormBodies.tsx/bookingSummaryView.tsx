@@ -138,7 +138,7 @@ const BookingSummaryView = ({
             : data?.gst?.value
         total = isChargedPerSqft
           ? Number(
-              selUnitDetails?.super_built_up_area || selUnitDetails?.area
+              selUnitDetails?.super_built_up_area || selUnitDetails?.area.replace(',', '')
             ) * Number(data?.charges)
           : Number(data?.charges)
 
@@ -372,7 +372,7 @@ const BookingSummaryView = ({
         Number(
           computeTotal(
             obj,
-            selUnitDetails?.super_built_up_area || selUnitDetails?.area
+            selUnitDetails?.super_built_up_area || selUnitDetails?.area.replace(',', '')
           )
         ),
       0
@@ -448,7 +448,7 @@ const BookingSummaryView = ({
       (d) => d?.component.value === 'plc_tax'
     )
     if (csMode === 'plot_cs') {
-      total = Math.round(selUnitDetails?.area * newValue)
+      total = Math.round(selUnitDetails?.area.replace(',', '') * newValue)
       gstTotal = Math.round(total * gstTaxIs)
     } else {
       total = Math.round(selUnitDetails?.super_built_up_area * newValue)
@@ -928,7 +928,7 @@ const BookingSummaryView = ({
                                             {Number(
                                               computeTotal(
                                                 d1,
-                                                selUnitDetails?.area
+                                                selUnitDetails?.area.replace(',', '')
                                               )
                                             )?.toLocaleString('en-IN')}
                                           </td>

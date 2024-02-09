@@ -459,6 +459,7 @@ const SiderForm = ({
                 )}
                 {title === 'capturePayment' && (
                   <CaptureUnitPayment
+                    title={title}
                     selUnitDetails={selUnitDetails}
                     onSubmitFun={paymentCaptureFun}
                   />

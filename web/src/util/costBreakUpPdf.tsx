@@ -90,21 +90,31 @@ const CostBreakUpPdf = ({
     const z =
       leadDetailsObj1[`${uid}_cs`]?.newPLC || selUnitDetails?.plc_per_sqft
 
-    const plotSaleValue =
-      costSheetA.length > 0
-        ? selUnitDetails?.area * Number(costSheetA[0]['charges'])
-        : Number.isFinite(y)
-        ? Number(selUnitDetails?.selUnitDetails?.area * y)
-        : Number(
-            selUnitDetails?.area *
-              (selUnitDetails?.rate_per_sqft || selUnitDetails?.sqft_rate)
-          )
+    // const plotSaleValue =
+    //   costSheetA.length > 0
+    //     ? Number(selUnitDetails?.area) * Number(costSheetA[0]['charges'])
+    //     : Number.isFinite(y)
+    //     ? Number(selUnitDetails?.selUnitDetails?.area * y)
+    //     : Number(
+    //         Number(selUnitDetails?.area) *
+    //           (selUnitDetails?.rate_per_sqft || selUnitDetails?.sqft_rate)
+    //       )
+
+          const plotSaleValue =
+          costSheetA.length > 0
+            ? Number(selUnitDetails?.area.replace(',', '')) * Number(costSheetA[0]['charges'])
+            : Number.isFinite(y)
+            ? Number(selUnitDetails?.selUnitDetails?.area * y)
+            : Number(
+                Number(selUnitDetails?.area.replace(',', '')) *
+                  (selUnitDetails?.rate_per_sqft || selUnitDetails?.sqft_rate)
+              )
     const plcSaleValue =
       costSheetA.length > 1
-        ? selUnitDetails?.area * Number(costSheetA[1]['charges'])
+        ? selUnitDetails?.area.replace(',', '') * Number(costSheetA[1]['charges'])
         : Math.round(
             selUnitDetails?.super_built_up_area ||
-              selUnitDetails?.area *
+              selUnitDetails?.area.replace(',', '') *
                 (selUnitDetails?.plc || selUnitDetails?.plc_per_sqft)
           )
     const gstTaxForProjA = selPhaseObj?.partATaxObj?.filter(
@@ -141,7 +151,7 @@ const CostBreakUpPdf = ({
             : data?.gst?.value
         total = isChargedPerSqft
           ? Number(
-              selUnitDetails?.super_built_up_area || selUnitDetails?.area
+              selUnitDetails?.super_built_up_area || selUnitDetails?.area.replace(',', '')
             ) * Number(data?.charges)
           : Number(data?.charges)
 
@@ -381,7 +391,7 @@ const CostBreakUpPdf = ({
         Number(
           computeTotal(
             obj,
-            selUnitDetails?.super_built_up_area || selUnitDetails?.area
+            selUnitDetails?.super_built_up_area || selUnitDetails?.area.replace(',', '')
           )
         ),
       0
@@ -459,7 +469,7 @@ const CostBreakUpPdf = ({
       (d) => d?.component.value === 'plc_tax'
     )
     if (csMode === 'plot_cs') {
-      total = Math.round(selUnitDetails?.area * newValue)
+      total = Math.round(selUnitDetails?.area.replace(',', '') * newValue)
       gstTotal = Math.round(total * gstTaxIs)
     } else {
       total = Math.round(selUnitDetails?.super_built_up_area * newValue)
@@ -788,7 +798,7 @@ const CostBreakUpPdf = ({
                                       {/* {Number(d1?.charges)?.toLocaleString('en-IN')} */}
                                       ₹
                                       {Number(
-                                        computeTotal(d1, selUnitDetails?.area)
+                                        computeTotal(d1, selUnitDetails?.area.replace(',', ''))
                                       )?.toLocaleString('en-IN')}
                                     </td>
                                   </tr>

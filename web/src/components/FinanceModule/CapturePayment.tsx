@@ -331,7 +331,7 @@ const CaptureUnitPayment = ({
                                           <div className="inline">
                                             <div className="mt-[7px]">
                                               <label className="text-[22px] font-semibold text-[#053219]  text-sm  mb-1  ">
-                                                Booking Confirmation
+                                              {title==='capturePayment' ? 'Capture Payment' : 'Booking Confirmation'}
                                                 <abbr title="required"></abbr>
                                               </label>
                                             </div>
@@ -554,7 +554,7 @@ const CaptureUnitPayment = ({
                                         </div>
                                       </section>
                                     )}
-                                    {bookingProgress && (
+                                    {(title !='capturePayment' && bookingProgress) && (
                                       <section className="mb-3">
                                         <div className="mx-auto flex mt-6 flex-row  ">
                                           <section className="ml-3 w-[300px]">
@@ -744,7 +744,7 @@ const CaptureUnitPayment = ({
                                             clipRule="evenodd"
                                           />
                                         </svg>
-                                        &nbsp; &nbsp;<span> Book Unit </span>
+                                        &nbsp; &nbsp;<span>    {title==='capturePayment' ? 'Confirm Payment' : 'Book Unit '} </span>
                                       </button>
                                     </div>
 
