@@ -3,6 +3,7 @@
 
 import { Fragment, useState, useEffect } from 'react'
 
+import DatePicker from 'react-datepicker'
 import {
   PhoneIcon,
   PuzzleIcon,
@@ -17,6 +18,7 @@ import {
   UserGroupIcon,
   ScaleIcon,
 } from '@heroicons/react/solid'
+import CalendarMonthTwoToneIcon from '@mui/icons-material/CalendarMonthTwoTone'
 import {} from '@heroicons/react/solid'
 import { Box, LinearProgress, useTheme } from '@mui/material'
 import { startOfDay } from 'date-fns'
@@ -37,6 +39,7 @@ import { prettyDate, prettyDateTime, timeConv } from 'src/util/dateConverter'
 import {
   SlimDateSelectBox,
   SlimSelectBox,
+  VerySlimSelectBox,
 } from 'src/util/formFields/slimSelectBoxField'
 
 import CrmSiderForm from '../SiderForm/CRM_SideForm'
@@ -128,7 +131,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
   const d = new window.Date()
   const { t } = useTranslation()
   const { user } = useAuth()
-  const { orgId } = user
+  const { orgId, access, projAccessA } = user
   const [isUnitDetailsOpen, setisUnitDetailsOpen] = useState(false)
   const [isSubTopicOpen, setIsSubTopicOpen] = useState(false)
   const [isSubTopic, setIsSubTopic] = useState('')
@@ -204,8 +207,15 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
   const [unassignedCo, setUnAssignedCo] = useState([])
   const [queryResult, setQueryResult] = useState([])
   const [filteredData, setFilteredData] = useState([])
-
+  const [isOpened, setIsOpened] = React.useState(false)
   const [selCategory, setSelCategory] = useState('booked')
+  const [dateRange, setDateRange] = React.useState([null, null])
+  const [startDate, endDate] = dateRange
+  const [usersList, setusersList] = useState([])
+  const [selLeadsOf, setSelLeadsOf] = useState({
+    label: 'My Units',
+    value: 'myunits',
+  })
   useEffect(() => {
     console.log(' crm units data is ', crmCustomersDBData)
   }, [crmCustomersDBData])
@@ -233,7 +243,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
     getLeadsDataFun(projectList, 'sd_pipeline')
     getLeadsDataFun(projectList, 'registered')
     getLeadsDataFun(projectList, 'unassigned')
-  }, [projectList])
+  }, [projectList, selLeadsOf])
 
   useEffect(() => {
     filter_Leads_Projects_Users_Fun()
@@ -358,105 +368,69 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
   const getLeadsDataFun = async (projectList, statusFil) => {
     console.log('login role detials', user)
     const { access, uid } = user
-
-    if (access?.includes('manage_leads')) {
-      const unsubscribe = getBookedUnitsByProject(
-        orgId,
-        async (querySnapshot) => {
-          const usersListA = querySnapshot.docs.map((docSnapshot) => {
-            const x = docSnapshot.data()
-            x.id = docSnapshot.id
-            const y = projectList.filter((proj) => proj?.uid == x?.pId)
-            console.log(',my prject sel is  ===> ', projectList)
-            if (y.length > 0) {
-              console.log(',my prject sel is ', y)
-              x.projName = y[0].projectName
-            }
-            return x
-          })
-          // setBoardData
-          console.log('my Array data is ', usersListA, crmCustomersDBData)
-          // await serealizeData(usersListA)
-          usersListA.sort((a, b) => {
-            return b?.booked_on || 0 - b?.booked_on || 0
-          })
-          await setCrmCustomerDBData(usersListA)
-
-          await console.log(
-            'my Array data is =====>',
-            usersListA.length,
-            queryResult.length,
-            crmCustomersDBData
-          )
-          if (statusFil === 'booked') {
-            await console.log(
-              'my Array data is ',
-              usersListA.length,
-              queryResult.length
-            )
-            await setBookingReviewA(usersListA)
-            await setBookingReviewCo(usersListA.length)
-            await   usersListA.sort((a, b) => {
-              return a.unit_no - b.unit_no
-            })
-            await setQueryResult(usersListA)
-          } else if (statusFil === 'agreement_pipeline') {
-            await setAgreePipeA(usersListA)
-            await setAgreePipeCo(usersListA.length)
-          } else if (statusFil === 'sd_pipeline') {
-            await setSdPipeA(usersListA)
-            await setSdPipeCo(usersListA.length)
-          } else if (statusFil === 'registered') {
-            await setRegisteredA(usersListA)
-            await setRegisteredCo(usersListA.length)
-          } else if (statusFil === 'unassigned') {
-            await setUnAssignedA(usersListA)
-            await setUnAssignedCo(usersListA.length)
+    const unsubscribe = getBookedUnitsByProject(
+      orgId,
+      async (querySnapshot) => {
+        const usersListA = querySnapshot.docs.map((docSnapshot) => {
+          const x = docSnapshot.data()
+          x.id = docSnapshot.id
+          const y = projectList.filter((proj) => proj?.uid == x?.pId)
+          console.log(',my prject sel is  ===> ', projectList)
+          if (y.length > 0) {
+            console.log(',my prject sel is ', y)
+            x.projName = y[0].projectName
           }
-          await console.log('my Array data is set it', crmCustomersDBData)
-        },
-        {
-          status: [statusFil],
-          projectId: selProjectIs?.uid,
-        },
-        () => setCrmCustomerDBData([])
-      )
-      return unsubscribe
-    } else {
-      const unsubscribe = getCRMCustomerByProject(
-        orgId,
-        async (querySnapshot) => {
-          const usersListA = querySnapshot.docs.map((docSnapshot) => {
-            const x = docSnapshot.data()
-            x.id = docSnapshot.id
-            const y = projectList.filter((proj) => proj?.id == x?.pId)
-            if (y.length > 0) {
-              x.projName = y[0].projectName
-            }
+          return x
+        })
+        // setBoardData
+        console.log('my Array data is ', usersListA, crmCustomersDBData)
+        // await serealizeData(usersListA)
+        usersListA.sort((a, b) => {
+          return b?.booked_on || 0 - b?.booked_on || 0
+        })
+        await setCrmCustomerDBData(usersListA)
 
-            return x
+        await console.log(
+          'my Array data is =====>',
+          usersListA.length,
+          queryResult.length,
+          crmCustomersDBData
+        )
+        if (statusFil === 'booked') {
+          await console.log(
+            'my Array data is ',
+            usersListA.length,
+            queryResult.length
+          )
+          await setBookingReviewA(usersListA)
+          await setBookingReviewCo(usersListA.length)
+          await usersListA.sort((a, b) => {
+            return a.unit_no - b.unit_no
           })
-          // setBoardData
-          console.log('my Array data is ', usersListA)
-          await serealizeData(usersListA)
-          await setCrmCustomerDBData(usersListA)
-        },
-        {
-          uid: uid,
-          status: [
-            'new',
-            'reviewing',
-            'review',
-            'cleared',
-            'rejected',
-            '',
-            // 'booked',
-          ],
-        },
-        () => setCrmCustomerDBData([])
-      )
-      return unsubscribe
-    }
+          await setQueryResult(usersListA)
+        } else if (statusFil === 'agreement_pipeline') {
+          await setAgreePipeA(usersListA)
+          await setAgreePipeCo(usersListA.length)
+        } else if (statusFil === 'sd_pipeline') {
+          await setSdPipeA(usersListA)
+          await setSdPipeCo(usersListA.length)
+        } else if (statusFil === 'registered') {
+          await setRegisteredA(usersListA)
+          await setRegisteredCo(usersListA.length)
+        } else if (statusFil === 'unassigned') {
+          await setUnAssignedA(usersListA)
+          await setUnAssignedCo(usersListA.length)
+        }
+        await console.log('my Array data is set it', crmCustomersDBData)
+      },
+      {
+        status: [statusFil],
+        projectId: selProjectIs?.uid,
+        assignedTo: selLeadsOf?.value === 'myunits' ? uid : undefined,
+      },
+      () => setCrmCustomerDBData([])
+    )
+    return unsubscribe
 
     // await console.log('leadsData', leadsData)
   }
@@ -500,12 +474,63 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
             className="
             "
           >
+            <div className="flex items-center flex-row flex-wrap justify-between py-1 pb-5  px-3 py-3 bg-gray-50 rounded-t-md ">
+              <h2 className="text-md font-semibold text-black leading-light font-Playfair">
+                CRM
+              </h2>
+
+              <div className="flex">
+                <div className=" flex flex-col mr-5  w-40">
+                  <VerySlimSelectBox
+                    name="project"
+                    label=""
+                    className="input "
+                    onChange={(value) => {
+                      console.log('changed value is ', value.value)
+                      setSelProject(value)
+                      // formik.setFieldValue('project', value.value)
+                    }}
+                    value={selProjectIs?.value}
+                    // options={aquaticCreatures}
+                    options={[
+                      ...[{ label: 'All Projects', value: 'allprojects' }],
+                      ...projectList,
+                    ]}
+                  />
+                </div>
+                {access?.includes('manage_leads') && (
+                  <div className=" flex flex-col   w-40">
+                    <VerySlimSelectBox
+                      name="project"
+                      label=""
+                      placeholder="My Leads"
+                      className="input "
+                      onChange={(value) => {
+                        console.log('changed value is ', value.value)
+                        setSelLeadsOf(value)
+                        // formik.setFieldValue('project', value.value)
+                      }}
+                      value={selLeadsOf?.value}
+                      // options={aquaticCreatures}
+                      options={[
+                        ...[
+                          { label: 'Team Units', value: 'teamunits' },
+                          { label: 'My Units', value: 'myunits' },
+                        ],
+                        ...usersList,
+                      ]}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
             <div className="items-center justify-between  my-1 bg-white rounded-lg  ">
               {/* <div>
                 <h2 className="text-lg font-semibold text-gray-900 leading-light py-2 ">
                   Accounts Transactions Space
                 </h2>
               </div> */}
+
               <div className=" border-gray-900  bg-[#F1F5F9] rounded-t-lg flex flex-row justify-between">
                 <ul
                   className="flex   rounded-t-lg "
@@ -1074,24 +1099,21 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                             <div className="font text-[12px] text-gray-500 tracking-wide overflow-ellipsis overflow-hidden ">
                                               {projName}
                                             </div>
-                                            <section>
-                                              <span className="  text-[10px] h-[20px]  text-[#005E36] font-bodyLato font-[600] mt-[2px] border border-[#ECFDF5] px-[6px] py-[2px] rounded-xl mr-1 ">
-                                                {finData?.area?.toLocaleString(
+                                            <section className="flex flex-row justify-between">
+                                              <span className="  text-[10px] h-[20px]  text-[#005E36] font-bodyLato font-[600] mt-[2px] border border-[#ECFDF5]  py-[2px] rounded-xl mr-1 ">
+                                                {finData?.customerDetailsObj?.phoneNo1?.toLocaleString(
                                                   'en-IN'
                                                 )}{' '}
-                                                sqft
                                               </span>
 
                                               <span className="  text-[10px] h-[20px] text-[#005E36] font-bodyLato font-[600] mt-[2px] border border-[#ECFDF5] px-[6px] py-[2px] rounded-xl mr-1 ">
-                                                {finData?.facing}
+                                                Booked:{' '}
+                                                {prettyDate(
+                                                  finData?.booked_on ||
+                                                    finData?.ct ||
+                                                    0
+                                                )}
                                               </span>
-                                              {/* <span className=" text-[10px] h-[20px] text-[#823d00] font-bodyLato font-[600] mt-[2px] bg-[#ffeccf] px-[6px] py-[2px] rounded-xl mr-1 ">
-                                        ₹{' '}
-                                        {finData?.sqft_rate?.toLocaleString(
-                                          'en-IN'
-                                        )}
-                                        /sqft
-                                      </span> */}
                                             </section>
                                           </div>
                                         </div>
@@ -1125,13 +1147,9 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                             /sqft
                                           </span>
                                         </section>
-                                        <span className=" text-[10px] h-[20px] text-[#823d00] font-bodyLato font-[600] mt-[2px] bg-[#ffeccf] px-[6px] py-[2px] rounded-xl mr-1 ">
-                                          Booked:{' '}
-                                          {prettyDate(
-                                            finData?.booked_on ||
-                                              finData?.ct ||
-                                              0
-                                          )}
+                                        <span className=" truncate text-[10px] h-[18px] text-[#823d00] font-bodyLato font-[600] mt-[5px] bg-[#ffeccf] px-[6px] py-[2px] rounded-xl mr-1 ">
+                                          {finData?.assignedToObj?.name ||
+                                            'Not Assigned'}
                                         </span>
                                         {/* <span className=" text-[8px] h-[18px] text-black font-bodyLato font-[600] mt-[2px] bg-[#ffeccf] px-[6px] py-[2px] rounded-xl mr-1 ">
                                         Status:{' '}
@@ -1179,7 +1197,6 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                             0
                                           ) || 0
                                       )?.toLocaleString('en-IN')}
-
                                     </div>
                                   </section>
                                   <section className="flex flex-col mt-3 w-full">
@@ -1273,26 +1290,24 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                 <div className="flex flex-row justify-between mx- mb-2">
                                   <section className="font-bodyLato font-semibold text-xs m-1 w-full">
                                     <div className="mb-[2px] text-zinc-500 text-sm font-medium font-['Lato'] tracking-wide">
-                                      Stage Cost
+                                      Eligible Amount
                                     </div>
                                     <div className="text-zinc-800 text-[20px] font-bold font-['Lato'] tracking-wide">
                                       ₹
                                       {/* {finData?.T_elgible_balance?.toLocaleString(
                                           'en-IN'
                                         )} */}
-                                         {finData?.T_elgible?.toLocaleString(
-                                          'en-IN'
-                                        )}
+                                      {finData?.T_elgible?.toLocaleString(
+                                        'en-IN'
+                                      )}
                                     </div>
                                   </section>
                                   <section className="flex flex-col mt-3 w-full">
                                     <div className="flex flex-row justify-end text-zinc-500 text-[11px] font-normal font-['Lato'] tracking-wide">
-                                    🔥 Balance: ₹
-                                    {finData?.T_elgible_balance?.toLocaleString(
+                                      🔥 Balance: ₹
+                                      {finData?.T_elgible_balance?.toLocaleString(
                                         'en-IN'
                                       )}
-
-
                                     </div>
                                     <div className="text-zinc-500 flex flex-row justify-end text-[11px] font-normal font-['Lato'] tracking-wide">
                                       Paid: ₹
@@ -1372,7 +1387,6 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                 </div>
                               </div>
                             </div>
-
 
                             <div className="w-2/4 bg-[#f2f3f8] px-1">
                               <div className="flex flex-col bg-white shadow rounded-md my-1   py-1">

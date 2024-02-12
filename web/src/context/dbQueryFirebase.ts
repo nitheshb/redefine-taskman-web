@@ -968,10 +968,40 @@ export const getBookedUnitsByProject = (orgId, snapshot, data, error) => {
       where('status', 'in', status),
       where('pId', '==', data?.projectId)
     )
+  } else if (data?.assignedTo) {
+    console.log('inside value si ',  data?.assignedTo)
+    itemsQuery = query(
+      collection(db, `${orgId}_units`),
+      where('status', 'in', status),
+      where('assignedTo', '==', 'bxLExkQcFkfzOD5pXjBtf5uKKS82')
+    )
+  }
+
+  let q = collection(db, `${orgId}_units`);
+  const conditions = [];
+
+  // Append 'status' condition if it's not undefined
+  if (status !== undefined) {
+      conditions.push(where('status', 'in', status));
+  }
+
+  // Append 'projectId' condition if it's not undefined
+  if (data?.projectId !== undefined) {
+      conditions.push(where('pId', '==', data?.projectId));
+  }
+
+  // Append 'assignedTo' condition if it's not undefined
+  if (data?.assignedTo !== undefined) {
+      conditions.push(where('assignedTo', '==', data?.assignedTo));
+  }
+
+  // If all conditions are defined, append them to the query
+  if (conditions.length > 0) {
+      q = query(q, ...conditions);
   }
 
   console.log('hello ', status, data?.projectId, itemsQuery)
-  return onSnapshot(itemsQuery, snapshot, error)
+  return onSnapshot(q, snapshot, error)
 }
 
 export const getAllUnitsByProject = (orgId, snapshot, data, error) => {

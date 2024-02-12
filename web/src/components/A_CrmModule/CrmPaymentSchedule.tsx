@@ -5,6 +5,7 @@ import { CountUp } from '@eeacms/countup'
 
 import { useAuth } from 'src/context/firebase-auth-context'
 import { computeTotal } from 'src/util/computeCsTotals'
+import { Switch } from '@headlessui/react'
 
 const CrmUnitPaymentSchedule = ({ selCustomerPayload, assets, totalIs }) => {
   const { user } = useAuth()
@@ -50,6 +51,11 @@ const CrmUnitPaymentSchedule = ({ selCustomerPayload, assets, totalIs }) => {
     })
     setPSa(z)
   }, [selCustomerPayload])
+
+  const triggerPaymentScheudlefun = (item)=> {
+    // PSa.map((d1))
+    return true
+  }
 
   return (
     <>
@@ -120,11 +126,27 @@ const CrmUnitPaymentSchedule = ({ selCustomerPayload, assets, totalIs }) => {
 
                         <td className="text-[10px] text-center text-gray-800 font-bold bg-[#fffaee]">
                           <span
-                            className={`text-[10px] px-2 py-[2px] rounded-2xl  ${
-                              !d1?.elgible ? '' : 'bg-[#98ebc9]  '
-                            } `}
+                            // className={`text-[10px] px-2 py-[2px] rounded-2xl  ${
+                            //   !d1?.elgible ? '' : 'bg-[#98ebc9]  '
+                            // } `}
                           >
-                            {d1?.elgible ? 'Yes' : 'No'}
+
+                            <div className="">
+                  {/* <span className="text-[10px] mt-1 mr-1">Yes</span> */}
+                  <Switch
+                    checked={d1?.elgible }
+                    onChange={triggerPaymentScheudlefun(d1)}
+                    className={`${
+                      d1?.elgible  ? 'bg-blue-600' : 'bg-gray-200'
+                    } relative inline-flex h-6 w-11 items-center rounded-full`}
+                  >
+                    <span
+                      className={`${
+                        d1?.elgible  ? 'translate-x-6' : 'translate-x-1'
+                      } inline-block h-4 w-4 transform rounded-full bg-white transition`}
+                    />
+                  </Switch>
+                </div>
                           </span>
                         </td>
                         <td className="text-[12px] text-right text-gray-800 bg-[#F3FFFA] px-2 font-bold ">
