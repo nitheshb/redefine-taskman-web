@@ -1,3 +1,4 @@
+import { IdentificationIcon } from '@heroicons/react/outline'
 import { WhereToVote } from '@mui/icons-material'
 import {
   setDoc,
@@ -28,7 +29,6 @@ import { prettyDateTime } from 'src/util/dateConverter'
 
 import { db } from './firebaseConfig'
 import { supabase } from './supabase'
-import { IdentificationIcon } from '@heroicons/react/outline'
 
 // import { userAccessRoles } from 'src/constants/userAccess'
 
@@ -137,7 +137,7 @@ export const steamAllLeadsActivity = async (orgId, snapshot, data, error) => {
   const { uid, cutoffDate, dateRange } = data
   console.log('logs range data is', dateRange, cutoffDate)
   // return onSnapshot(doc(db, `${orgId}_leads_log`, uid), snapshot, error)
-  if(dateRange?.[0] == null){
+  if (dateRange?.[0] == null) {
     const { data: lead_logs, error1 } = await supabase
       .from(`${orgId}_lead_logs`)
       .select('projectId, type,subtype,T, by, from, to, uid, Luid, payload')
@@ -145,27 +145,6 @@ export const steamAllLeadsActivity = async (orgId, snapshot, data, error) => {
       .eq('type', 'sts_change')
       .eq('from', 'visitfixed')
       .gte('T', cutoffDate)
-      const result = Object.values(
-        lead_logs.reduce((obj, item) => {
-          if (!obj[item.Luid]) {
-            obj[item.Luid] = { ...item, coverA: [item.to] }
-          } else {
-            obj[item.Luid].coverA.push(item.to)
-          }
-          return obj
-        }, {})
-      )
-      return result
-    }
-else if(dateRange?.[1] != null){
-  const { data: lead_logs, error1 } = await supabase
-    .from(`${orgId}_lead_logs`)
-    .select('projectId, type,subtype,T, by, from, to, uid, Luid, payload')
-    //.eq('Luid', uid)
-    .eq('type', 'sts_change')
-    .eq('from', 'visitfixed')
-    .gte('T', cutoffDate)
-    .lte('T', dateRange?.[1]?.getTime() + 86400000)
     const result = Object.values(
       lead_logs.reduce((obj, item) => {
         if (!obj[item.Luid]) {
@@ -177,15 +156,35 @@ else if(dateRange?.[1] != null){
       }, {})
     )
     return result
-  }else{
+  } else if (dateRange?.[1] != null) {
     const { data: lead_logs, error1 } = await supabase
-    .from(`${orgId}_lead_logs`)
-    .select('projectId, type,subtype,T, by, from, to, uid, Luid, payload')
-    //.eq('Luid', uid)
-    .eq('type', 'sts_change')
-    .eq('from', 'visitfixed')
-    .gte('T', cutoffDate)
-    .lte('T', cutoffDate + 86400000)
+      .from(`${orgId}_lead_logs`)
+      .select('projectId, type,subtype,T, by, from, to, uid, Luid, payload')
+      //.eq('Luid', uid)
+      .eq('type', 'sts_change')
+      .eq('from', 'visitfixed')
+      .gte('T', cutoffDate)
+      .lte('T', dateRange?.[1]?.getTime() + 86400000)
+    const result = Object.values(
+      lead_logs.reduce((obj, item) => {
+        if (!obj[item.Luid]) {
+          obj[item.Luid] = { ...item, coverA: [item.to] }
+        } else {
+          obj[item.Luid].coverA.push(item.to)
+        }
+        return obj
+      }, {})
+    )
+    return result
+  } else {
+    const { data: lead_logs, error1 } = await supabase
+      .from(`${orgId}_lead_logs`)
+      .select('projectId, type,subtype,T, by, from, to, uid, Luid, payload')
+      //.eq('Luid', uid)
+      .eq('type', 'sts_change')
+      .eq('from', 'visitfixed')
+      .gte('T', cutoffDate)
+      .lte('T', cutoffDate + 86400000)
     const result = Object.values(
       lead_logs.reduce((obj, item) => {
         if (!obj[item.Luid]) {
@@ -265,7 +264,7 @@ export const streamGetAllUnitTransactions = async (
 ) => {
   // const itemsQuery = query(doc(db, `${orgId}_leads_log', 'W6sFKhgyihlsKmmqDG0r'))
   const { uid, cutoffDate, unit_id } = data
-  console.log('unit_id is ', uid)
+  console.log('unit_id is ', uid, unit_id)
   // return onSnapshot(doc(db, `${orgId}_leads_log`, uid), snapshot, error)
   const { data: lead_logs, error: countError } = await supabase
     .from(`${orgId}_accounts`)
@@ -415,7 +414,7 @@ export const updateTransactionStatus = async (
         Uuid: Uuid,
         by,
         payload: { comments: '' },
-        from: data1?.oldStatus ||  'review',
+        from: data1?.oldStatus || 'review',
         to: status,
         projectId: projectId || '',
       },
@@ -859,20 +858,21 @@ export const getMyLeadsByDate = async (orgId, data) => {
 }
 export const getLeadsByDate = async (orgId, data) => {
   const { cutoffDate, dateRange } = data
-  let itemsQuery;
-  if(dateRange?.[0] == null){
+  let itemsQuery
+  if (dateRange?.[0] == null) {
     console.log('my Array data is delayer 1 inside two ranges', dateRange)
- itemsQuery = query(
-    collection(db, `${orgId}_leads`),
-    where('Date', '>=', cutoffDate),
-  )}
-  else if(dateRange?.[1] != null){
+    itemsQuery = query(
+      collection(db, `${orgId}_leads`),
+      where('Date', '>=', cutoffDate)
+    )
+  } else if (dateRange?.[1] != null) {
     console.log('my Array data is delayer 1 inside two ranges', dateRange)
- itemsQuery = query(
-    collection(db, `${orgId}_leads`),
-    where('Date', '>=', cutoffDate),
-    where('Date', '<=', dateRange?.[1]?.getTime() + 86400000)
-  )}
+    itemsQuery = query(
+      collection(db, `${orgId}_leads`),
+      where('Date', '>=', cutoffDate),
+      where('Date', '<=', dateRange?.[1]?.getTime() + 86400000)
+    )
+  }
   // else if(dateRange?.[1] == null) {
   //   console.log('my Array data is delayer 1 inside same', dateRange, cutoffDate, cutoffDate)
   //   itemsQuery = query(
@@ -881,11 +881,16 @@ export const getLeadsByDate = async (orgId, data) => {
   //     where('Date', '<=', (cutoffDate + 86400000) ))
   // }
   else {
-    console.log('my Array data is delayer 1 inside normal', dateRange, cutoffDate)
+    console.log(
+      'my Array data is delayer 1 inside normal',
+      dateRange,
+      cutoffDate
+    )
     itemsQuery = query(
       collection(db, `${orgId}_leads`),
       where('Date', '>=', cutoffDate),
-      where('Date', '<=', (cutoffDate + 86400000)))
+      where('Date', '<=', cutoffDate + 86400000)
+    )
   }
 
   //  const itemsQuery = query(
@@ -972,9 +977,7 @@ export const getBookedUnitsByProject = (orgId, snapshot, data, error) => {
 export const getAllUnitsByProject = (orgId, snapshot, data, error) => {
   const { status } = data
   console.log('hello ', status, data?.projectId)
-  let itemsQuery = query(
-    collection(db, `${orgId}_units`),
-  )
+  let itemsQuery = query(collection(db, `${orgId}_units`))
   if (data?.projectId) {
     itemsQuery = query(
       collection(db, `${orgId}_units`),
@@ -1897,8 +1900,6 @@ export const addPlotUnit = async (orgId, data, by, msg) => {
     mortgage_type,
   } = data
 
-
-
   // get the cost sheet charges obj & successully create total unit cost
   const assetVal = area * sqft_rate + (area * plc_per_sqft || 0)
 
@@ -1908,40 +1909,73 @@ export const addPlotUnit = async (orgId, data, by, msg) => {
   const yo = {
     totalUnitCount: increment(1),
     bookUnitCount: ['booked'].includes(statusVal) ? increment(1) : increment(0),
-    atsCount: ['ats_pipeline'].includes(statusVal) ? increment(1) : increment(0),
-    s_agreeCount: ['agreement_pipeline'].includes(statusVal) ? increment(1) : increment(0),
-    s_regisCount: ['registered_pipeline'].includes(statusVal) ? increment(1) : increment(0),
+    atsCount: ['ats_pipeline'].includes(statusVal)
+      ? increment(1)
+      : increment(0),
+    s_agreeCount: ['agreement_pipeline'].includes(statusVal)
+      ? increment(1)
+      : increment(0),
+    s_regisCount: ['registered_pipeline'].includes(statusVal)
+      ? increment(1)
+      : increment(0),
     availableCount: statusVal === 'available' ? increment(1) : increment(0),
-    custBlockCount: statusVal === 'customer_blocked' ? increment(1) : increment(0),
-    mangBlockCount: statusVal === 'management_blocked' ? increment(1) : increment(0),
-    soldUnitCount: ['sold', 'ats_pipeline', 'agreement_pipeline', 'booked'].includes(statusVal) ? increment(1) : increment(0),
+    custBlockCount:
+      statusVal === 'customer_blocked' ? increment(1) : increment(0),
+    mangBlockCount:
+      statusVal === 'management_blocked' ? increment(1) : increment(0),
+    soldUnitCount: [
+      'sold',
+      'ats_pipeline',
+      'agreement_pipeline',
+      'booked',
+    ].includes(statusVal)
+      ? increment(1)
+      : increment(0),
     blockedUnitCount: ['customer_blocked', 'management_blocked'].includes(
       statusVal
     )
       ? increment(1)
       : increment(0),
     // totalValue: increment(assetVal),
-    soldValue: ['sold', 'ats_pipeline', 'agreement_pipeline', 'booked'].includes(statusVal) ? increment(assetVal) : increment(0),
-    custBlockValue: ['customer_blocked'].includes(statusVal) ? increment(assetVal) : increment(0),
-    mangBlockValue: ['management_blocked'].includes(statusVal) ? increment(assetVal) : increment(0),
+    soldValue: [
+      'sold',
+      'ats_pipeline',
+      'agreement_pipeline',
+      'booked',
+    ].includes(statusVal)
+      ? increment(assetVal)
+      : increment(0),
+    custBlockValue: ['customer_blocked'].includes(statusVal)
+      ? increment(assetVal)
+      : increment(0),
+    mangBlockValue: ['management_blocked'].includes(statusVal)
+      ? increment(assetVal)
+      : increment(0),
     blockedValue: ['customer_blocked', 'management_blocked'].includes(statusVal)
       ? increment(assetVal)
       : increment(0),
     // totalEstPlotVal: increment(assetVal),
     // totalArea: increment(area),
-    soldArea: ['sold', 'ats_pipeline', 'agreement_pipeline', 'booked'].includes(statusVal) ? increment(area) : increment(0),
-    custBlockArea: ['customer_blocked'].includes(statusVal) ? increment(area) : increment(0),
-    mangBlockArea: ['management_blocked'].includes(statusVal) ? increment(area) : increment(0),
+    soldArea: ['sold', 'ats_pipeline', 'agreement_pipeline', 'booked'].includes(
+      statusVal
+    )
+      ? increment(area)
+      : increment(0),
+    custBlockArea: ['customer_blocked'].includes(statusVal)
+      ? increment(area)
+      : increment(0),
+    mangBlockArea: ['management_blocked'].includes(statusVal)
+      ? increment(area)
+      : increment(0),
     blockedArea: ['customer_blocked', 'management_blocked'].includes(statusVal)
       ? increment(area)
       : increment(0),
     // totalPlotArea: increment(area),
   }
-console.log('yo', yo, statusVal === 'available' )
+  console.log('yo', yo, statusVal === 'available')
 
   const x = await addDoc(collection(db, `${orgId}_units`), data)
   const y = await updateProjectComputedData(orgId, pId, yo)
-
 
   return
   // await addLeadLog(x.id, {
@@ -2176,7 +2210,6 @@ export const editPlotStatusAuditUnit = async (
   msg,
   enqueueSnackbar
 ) => {
-
   try {
     await updateDoc(doc(db, `${orgId}_units`, uid), {
       ...data,
@@ -2190,11 +2223,6 @@ export const editPlotStatusAuditUnit = async (
     })
   }
   return
-
-
-
-
-
 }
 export const addUnit = async (orgId, data, by, msg) => {
   const {
@@ -2356,7 +2384,6 @@ export const addLeadNotes = async (orgId, id, data) => {
 }
 export const updateProjectComputedData = async (orgId, id, data) => {
   try {
-
     const washingtonRef = doc(db, `${orgId}_projects`, id)
     console.log('check add LeadLog', washingtonRef, id)
     await updateDoc(washingtonRef, data)
@@ -3137,10 +3164,7 @@ export const updatePaymentScheduleCharges = async (
       variant: 'success',
     })
   } catch (e) {
-    console.log(' error is here', e,  orgId,
-    uid,
-    chargePayloadA,
-    type,)
+    console.log(' error is here', e, orgId, uid, chargePayloadA, type)
     enqueueSnackbar(e.message, {
       variant: 'error',
     })
@@ -3480,14 +3504,15 @@ export const createNewCustomerS = async (
   enqueueSnackbar
 ) => {
   try {
-    const leadDocId = leadDetailsObj2.id || ""
+    const leadDocId = leadDetailsObj2.id || ''
     const { Name } = leadDetailsObj2
 
     console.log('wow it should be here', leadDocId, newStatus, Name)
 
     const { data, error } = await supabase.from(`${orgId}_customers`).insert([
       {
-        Name: leadDetailsObj2?.Name || customerInfo?.customerDetailsObj?.co_Name1,
+        Name:
+          leadDetailsObj2?.Name || customerInfo?.customerDetailsObj?.co_Name1,
         // id: leadDocId,
         my_assets: [unitId],
         T: Timestamp.now().toMillis(),
@@ -3496,7 +3521,7 @@ export const createNewCustomerS = async (
         projects: [projectId],
       },
     ])
-    await console.log('customer data is ', data, error, customerInfo,{
+    await console.log('customer data is ', data, error, customerInfo, {
       Name: Name,
       // id: leadDocId,
       my_assets: [unitId],
@@ -3587,6 +3612,28 @@ export const insertPSS = async (
     })
   }
 }
+export const unitAuditDbFun = async (
+  orgId,
+  projectId,
+  unitId,
+  totalUnitCost,
+  totalElgible,
+  totalReceivedAmount,
+  InReviewAmount,
+  totalApprovedAmount,
+  totalCancelledAmount
+) => {
+  await updateDoc(doc(db, `${orgId}_units`, unitId), {
+    T_total: totalUnitCost,
+    T_elgible: totalElgible,
+    T_elgible_balance: totalElgible- (InReviewAmount || 0  + totalApprovedAmount || 0),
+    T_received: totalReceivedAmount,
+    T_review: InReviewAmount,
+    T_approved: (totalApprovedAmount || 0),
+    T_cancelled: (totalCancelledAmount || 0),
+    T_balance: totalUnitCost - (InReviewAmount || 0  + totalApprovedAmount || 0)
+  })
+}
 export const capturePaymentS = async (
   orgId,
   projectId,
@@ -3622,7 +3669,7 @@ export const capturePaymentS = async (
         towards_id: towardsBankDocId,
         mode,
         custId: custNo,
-        customerName: Name || "",
+        customerName: Name || '',
         receive_by: payload?.bookedBy,
         txt_dated: dated, // modify this to dated time entred by user
         status: payload?.status || 'review',
@@ -3660,9 +3707,12 @@ export const capturePaymentS = async (
       t_collect: increment(amount),
     })
     await updateDoc(doc(db, `${orgId}_units`, unitId), {
+      T_received: increment(amount),
       T_review: increment(amount),
       T_balance: increment(-amount),
+      T_elgible_balance: increment(-amount)
     })
+
     const { data: data3, error: error3 } = await supabase
       .from(`${orgId}_lead_logs`)
       .insert([
@@ -4176,7 +4226,6 @@ export const updateUnitsCostSheetDetailsTo = async (
   }
 
   return
-
 }
 export const updateUnitAsBooked = async (
   orgId,
@@ -4889,21 +4938,13 @@ export const addUnitBankComputed = async (
   return
 }
 
-
-export const addAgreegatedSalesValues = async (
-  orgId,
-  docId,
-data
-) => {
-
+export const addAgreegatedSalesValues = async (orgId, docId, data) => {
   try {
-
     const washingtonRef = doc(db, `${orgId}_sales_reports`, docId)
     await updateDoc(washingtonRef, data)
   } catch (error) {
     console.log('error at addUnitBankComputed', error, data)
-      await setDoc(doc(db, `${orgId}_sales_reports`, docId), data)
-
+    await setDoc(doc(db, `${orgId}_sales_reports`, docId), data)
   }
   return
 }

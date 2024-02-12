@@ -77,6 +77,7 @@ import { supabase } from 'src/context/supabase'
 
 import ShowCustomerDetails from './CrmShowCustomerDetails'
 import CancelUnitForm from './A_UnitCancel.tsx/CancelUnitForm'
+import UnitAudit from './A_Crm_UnitAudit/UnitAudit'
 
 
 // interface iToastInfo {
@@ -1445,6 +1446,10 @@ export default function UnitFullSummary({
       {selFeature === 'cancel_booking' && <>
 
       <CancelUnitForm selUnitDetails={selCustomerPayload} /> </>}
+
+      {selFeature === 'unit_audit' && <>
+
+<UnitAudit selUnitDetails={selCustomerPayload} /> </>}
       </div>
 
       <div className="w-[250px] min-w-[250px] overflow-auto no-scrollbar  h-[100%] overflow-y-scroll">
@@ -1473,6 +1478,8 @@ export default function UnitFullSummary({
                     { lab: 'Tasks', val: 'tasks' },
                     { lab: 'Timeline', val: 'timeline' },
                     { lab: 'Cancel Booking', val: 'cancel_booking' },
+                    { lab: 'Unit Audit', val: 'unit_audit' },
+
                   ].map((d, i) => {
                     return (
                       <li

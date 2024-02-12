@@ -1001,6 +1001,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                         phoneNo1,
                         unit_no,
                         T_balance,
+                        T_elgible_balance,
                         T_elgible,
                         T_review,
                         T_captured,
@@ -1287,7 +1288,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                   <section className="flex flex-col mt-3 w-full">
                                     <div className="flex flex-row justify-end text-zinc-500 text-[11px] font-normal font-['Lato'] tracking-wide">
                                     🔥 Balance: ₹
-                                    {finData?.T_balance?.toLocaleString(
+                                    {finData?.T_elgible_balance?.toLocaleString(
                                         'en-IN'
                                       )}
 
@@ -1378,7 +1379,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                                 <div className="flex flex-row justify-between px-1">
                                   <div
                                     className={`w-full cursor-pointer  h-[80px] ${
-                                      T_balance <= 0
+                                      T_elgible_balance <= 0
                                         ? 'bg-green-100'
                                         : 'bg-[#F1F5F9] '
                                     }  p-3 rounded-md mx-1`}
