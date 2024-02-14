@@ -3892,9 +3892,10 @@ export const updateUnitStatus = async (
   try {
     console.log('data is===>', unitId, data)
     await updateDoc(doc(db, `${orgId}_units`, unitId), {
+      fullPs: data?.fullPs,
       status: data?.status,
-      T_elgible: increment(data?.T_elgible_new),
-      T_balance: increment(data?.T_elgible_new),
+      T_elgible: (data?.T_elgible_new),
+      T_elgible_balance: (data?.T_elgible_balance),
     })
     enqueueSnackbar('Unit Status Updated', {
       variant: 'success',

@@ -2,20 +2,22 @@ import { useState, useEffect, useRef } from 'react'
 
 // import CountUp, { useCountUp } from 'react-countup'
 import { CountUp } from '@eeacms/countup'
+import { Switch } from '@headlessui/react'
+import { useSnackbar } from 'notistack'
 
+import { updateUnitStatus } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import { computeTotal } from 'src/util/computeCsTotals'
-import { Switch } from '@headlessui/react'
 
 const CrmUnitPaymentSchedule = ({ selCustomerPayload, assets, totalIs }) => {
   const { user } = useAuth()
   const { orgId } = user
+  const { enqueueSnackbar } = useSnackbar()
   const [partATotal, setPartA] = useState(0)
   const [partBTotal, setPartB] = useState(0)
   const [unitTotal, setUnitTotal] = useState(0)
   const [unitReceivedTotal, setReceivedTotal] = useState(0)
   const [PSa, setPSa] = useState([])
-
 
   console.log('payload is ', selCustomerPayload)
   useEffect(() => {
@@ -41,10 +43,10 @@ const CrmUnitPaymentSchedule = ({ selCustomerPayload, assets, totalIs }) => {
     const paidAmount = selCustomerPayload?.T_review
     let bal = 0
     let leftOver = paidAmount
-    let outStanding = 0;
-    let z = selCustomerPayload?.fullPs?.map((d1, inx) => {
-      bal = leftOver >= d1?.value  ? d1?.value : leftOver
-      leftOver = paidAmount - d1?.value > 0 ?paidAmount - d1?.value : 0
+    let outStanding = 0
+    const z = selCustomerPayload?.fullPs?.map((d1, inx) => {
+      bal = leftOver >= d1?.value ? d1?.value : leftOver
+      leftOver = paidAmount - d1?.value > 0 ? paidAmount - d1?.value : 0
 
       outStanding = bal - d1?.value
       return { ...d1, amt: bal, leftOver, outStanding }
@@ -52,8 +54,38 @@ const CrmUnitPaymentSchedule = ({ selCustomerPayload, assets, totalIs }) => {
     setPSa(z)
   }, [selCustomerPayload])
 
-  const triggerPaymentScheudlefun = (item)=> {
+  const triggerPaymentScheudlefun = (selItem) => {
     // PSa.map((d1))
+    console.log('d1 is ', selItem)
+    const updatedArray = PSa.map((item) => {
+      if (item.myId === selItem?.myId) {
+        return { ...item, elgible: true }
+      } else {
+        return item
+      }
+    })
+    setPSa(updatedArray)
+
+    const sum = updatedArray.reduce((total, item) => {
+      if (item.elgible) {
+        return total + item.value
+      } else {
+        return total
+      }
+    }, 0)
+    const dataObj = {
+      fullPs: updatedArray,
+      status: selCustomerPayload?.status,
+      T_elgible_new: sum,
+      T_elgible_balance: selCustomerPayload?.T_elgible_balance || 0  + selItem?.value
+    }
+    updateUnitStatus(
+      orgId,
+      selCustomerPayload?.id,
+      dataObj,
+      user.email,
+      enqueueSnackbar
+    )
     return true
   }
 
@@ -92,7 +124,7 @@ const CrmUnitPaymentSchedule = ({ selCustomerPayload, assets, totalIs }) => {
                       Amount Received
                     </th>
                     <th className="w-[15%] text-[10px]  px-2 text-right text-gray-400 text-[#823d00]  tracking-wide uppercase ">
-                     Balance
+                      Balance
                     </th>
                     {/* <th className="w-[15%] text-[10px] text-right text-gray-400 text-[#823d00]  tracking-wide uppercase ">
                       Status
@@ -126,27 +158,28 @@ const CrmUnitPaymentSchedule = ({ selCustomerPayload, assets, totalIs }) => {
 
                         <td className="text-[10px] text-center text-gray-800 font-bold bg-[#fffaee]">
                           <span
-                            // className={`text-[10px] px-2 py-[2px] rounded-2xl  ${
-                            //   !d1?.elgible ? '' : 'bg-[#98ebc9]  '
-                            // } `}
+                          // className={`text-[10px] px-2 py-[2px] rounded-2xl  ${
+                          //   !d1?.elgible ? '' : 'bg-[#98ebc9]  '
+                          // } `}
                           >
-
                             <div className="">
-                  {/* <span className="text-[10px] mt-1 mr-1">Yes</span> */}
-                  <Switch
-                    checked={d1?.elgible }
-                    onChange={triggerPaymentScheudlefun(d1)}
-                    className={`${
-                      d1?.elgible  ? 'bg-blue-600' : 'bg-gray-200'
-                    } relative inline-flex h-6 w-11 items-center rounded-full`}
-                  >
-                    <span
-                      className={`${
-                        d1?.elgible  ? 'translate-x-6' : 'translate-x-1'
-                      } inline-block h-4 w-4 transform rounded-full bg-white transition`}
-                    />
-                  </Switch>
-                </div>
+                              {/* <span className="text-[10px] mt-1 mr-1">Yes</span> */}
+                              <Switch
+                                checked={d1?.elgible}
+                                onChange={() => triggerPaymentScheudlefun(d1)}
+                                className={`${
+                                  d1?.elgible ? 'bg-blue-600' : 'bg-gray-200'
+                                } relative inline-flex h-6 w-11 items-center rounded-full`}
+                              >
+                                <span
+                                  className={`${
+                                    d1?.elgible
+                                      ? 'translate-x-6'
+                                      : 'translate-x-1'
+                                  } inline-block h-4 w-4 transform rounded-full bg-white transition`}
+                                />
+                              </Switch>
+                            </div>
                           </span>
                         </td>
                         <td className="text-[12px] text-right text-gray-800 bg-[#F3FFFA] px-2 font-bold ">
@@ -159,15 +192,11 @@ const CrmUnitPaymentSchedule = ({ selCustomerPayload, assets, totalIs }) => {
                           : 0} */}
                           {/* ₹{d1?.elgible ? totalIs?.toLocaleString('en-IN') : 0} */}
                           ₹{d1?.amt?.toLocaleString('en-IN')}
-
                         </td>
                         <td className="text-[12px] text-right text-gray-800 bg-[#FFF6F4] px-2 font-bold">
-
-                          {/* ₹{d1?.leftOver?.toLocaleString('en-IN')} */}
-                          ₹{d1?.outStanding?.toLocaleString('en-IN')}
-
+                          {/* ₹{d1?.leftOver?.toLocaleString('en-IN')} */}₹
+                          {d1?.outStanding?.toLocaleString('en-IN')}
                         </td>
-
                       </tr>
                     )
                   })}

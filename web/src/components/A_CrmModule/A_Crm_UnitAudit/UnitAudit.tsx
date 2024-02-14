@@ -231,16 +231,25 @@ const UnitAudit = ({ title, dialogOpen, data, selUnitDetails }) => {
         totalApprovedAmount =
           totalApprovedAmount + (Number(d?.totalAmount) || Number(d?.amount))
       }
+      const elgibleAmount = selUnitDetails?.fullPs.reduce((total, item) => {
+        if (item.elgible) {
+          return total + item.value
+        } else {
+          return total
+        }
+      }, 0)
+      console.log('elgible amount is ', elgibleAmount)
       unitAuditDbFun(
         orgId,
         selUnitDetails?.pId,
         selUnitDetails?.id,
         totalUnitCost,
-        selUnitDetails?.totalElgible,
+        elgibleAmount,
         totalReceivedAmount,
         InReviewAmount,
         totalApprovedAmount,
         totalCancelledAmount
+
       )
       console.log(
         'valueare a',

@@ -46,7 +46,7 @@ const CrmUnitPaymentGraph = ({ selCustomerPayload }) => {
           <div className="flex flex-row justify-between mx-">
             <h6 className="font-bodyLato font-semibold text-xs m-1">
             <span className="text-[#637381] tracking-wide font-thin">Paid:</span> ₹
-              {selCustomerPayload?.T_review?.toLocaleString('en-IN') || 0}
+              {(selCustomerPayload?.T_review || 0 + selCustomerPayload?.T_approved || 0 )?.toLocaleString('en-IN') || 0}
             </h6>
             <h6 className="font-bodyLato font-semibold text-xs m-1">
             <span className="text-[#637381] tracking-wide font-thin">Left:</span> ₹

@@ -15,7 +15,7 @@ const CrmPaymentSummary = ({ selCustomerPayload }) => {
         <div className="flex flex-col bg-white shadow rounded-md my-1  px-2  pt-2 min-w-[260px]">
           <div className="flex flex-row justify-between tracking-wide mx-">
             <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
-            <span className="text-[#637381] tracking-wide font-thin">Paid</span> {' '} ₹{selCustomerPayload?.T_review?.toLocaleString('en-IN')}
+            <span className="text-[#637381] tracking-wide font-thin">Paid</span> {' '} ₹{(selCustomerPayload?.T_review || 0 + selCustomerPayload?.T_approved || 0 )?.toLocaleString('en-IN')}
             </h6>
             <section className="flex flex-row">
               {/* <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">

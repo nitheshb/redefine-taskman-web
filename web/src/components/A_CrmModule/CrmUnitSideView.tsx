@@ -620,13 +620,23 @@ console.log('value is', x, newStatus)
       selCustomerPayload?.man_cs_approval
     ) {
       setUnitStatus(newStatus)
-      const sum = fullPs.reduce((accumulator, currentValue) => {
-        if (currentValue.order === 2) {
-          return accumulator + currentValue.value
+      const updatedPs = fullPs.map((item) => {
+        if (item.order === 2) {
+          return { ...item, elgible: true }
+        } else {
+          return item
         }
-        return accumulator
+      })
+      const t_elgible = updatedPs.reduce((total, item) => {
+        if (item.elgible) {
+          return total + item.value
+        } else {
+          return total
+        }
       }, 0)
-      dataObj.T_elgible_new = sum
+      dataObj.fullPs = updatedPs
+      dataObj.T_elgible_new = t_elgible
+      dataObj.T_elgible_balance =  t_elgible - (selCustomerPayload?.T_review || 0+ selCustomerPayload?.T_approved || 0)
       updateUnitStatus(
         orgId,
         selCustomerPayload?.id,
@@ -640,6 +650,24 @@ console.log('value is', x, newStatus)
       selCustomerPayload?.ats_creation &&
       selCustomerPayload?.both_ats_approval
     ) {
+      const updatedPs = fullPs.map((item) => {
+        if (item.order === 3) {
+          return { ...item, elgible: true }
+        } else {
+          return item
+        }
+      })
+      const t_elgible = updatedPs.reduce((total, item) => {
+        if (item.elgible) {
+          return total + item.value
+        } else {
+          return total
+        }
+      }, 0)
+      dataObj.fullPs = updatedPs
+      dataObj.T_elgible_new = t_elgible
+      dataObj.T_elgible_balance =  t_elgible - (selCustomerPayload?.T_review || 0+ selCustomerPayload?.T_approved || 0)
+
       setUnitStatus(newStatus)
       updateUnitStatus(
         orgId,
