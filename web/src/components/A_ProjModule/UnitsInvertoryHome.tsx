@@ -184,8 +184,8 @@ const UnitsInventoryHome = ({ project }) => {
                     <input
                       type="search"
                       id="search-dropdown"
-                      className="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-100 "
-                      placeholder={` Search Unit No, Customer name, Phone no, Dues, Review...`}
+                      className="block p-2.5 w-full z-2 text-sm text-gray-900 bg-gray-100 "
+                      placeholder={` Search Unit No, Customer name, Phone no, Dues, Review......... the`}
                       required
                     />
                     <button
