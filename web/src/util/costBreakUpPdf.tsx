@@ -385,13 +385,13 @@ const CostBreakUpPdf = ({
   })
 
   const setTotalFun = async () => {
-    const partBTotal = selPhaseObj?.additonalChargesObj.reduce(
+    const partBTotal = selPhaseObj?.additonalChargesObj?.reduce(
       (partialSum, obj) =>
         partialSum +
         Number(
           computeTotal(
             obj,
-            selUnitDetails?.super_built_up_area || selUnitDetails?.area.replace(',', '')
+            selUnitDetails?.super_built_up_area || selUnitDetails?.area?.replace(',', '')
           )
         ),
       0
@@ -404,7 +404,7 @@ const CostBreakUpPdf = ({
     setPartBTotal(partBTotal)
     setPartATotal(partATotal)
     setNetTotal(partATotal + partBTotal)
-    selPhaseObj?.paymentScheduleObj.map((data) => {
+    selPhaseObj?.paymentScheduleObj?.map((data) => {
       if (data.stage?.value === 'on_booking') {
         setPlotBookingAdv(data?.percentage)
       }

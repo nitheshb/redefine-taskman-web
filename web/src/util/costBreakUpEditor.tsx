@@ -531,6 +531,25 @@ const CostBreakUpEditor = ({
                                   />
                                 </td>
                               </tr>
+                              <tr className=" h-[32px] ">
+                                <td className="w-[40%] text-[12px]  px-2 text-right text-gray-400 "></td>
+                                <td className="w-[15%] text-[12px] px-2 text-right text-gray-400 "></td>
+                                <td className="w-[15%] text-[12px] px-2 text-right text-gray-400 "></td>
+                                <th className="w-[15%] text-[12px] px-2 text-right text-[#B76E00] ">
+                                  Credit Note
+                                </th>
+                                <td className="w-[15%] text-[12px] px-2 text-right text-[#118D57] font-bold ">
+                                  <TextFieldFlat
+                                    label=""
+                                    className="text-[12px] max-w-[76px] text-right font-bold border-b  border-[#B76E00]  border-dashed pr-1 py-[4px] text-[#B76E00]"
+                                    name="credit_note_value"
+                                    onChange={(e) => {
+                                      // handlePriceChangePartB(inx, e.target.value)
+                                    }}
+                                    value={'0'}
+                                  />
+                                </td>
+                              </tr>
                             </tbody>
                           </table>
 
