@@ -1948,7 +1948,7 @@ export default function LeadProfileSideView({
                     >
                       {[
                         { lab: 'Tasks', val: 'appointments' },
-                        { lab: 'Quotations', val: 'notes' },
+                        { lab: 'Notes', val: 'notes' },
                         // { lab: 'Notes', val: 'notes' },
                         // { lab: 'Documents', val: 'documents' },
                         // { lab: 'Phone', val: 'phone' },
