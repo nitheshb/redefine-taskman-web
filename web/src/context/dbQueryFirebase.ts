@@ -81,6 +81,21 @@ export const steamBankDetailsList = (orgId, snapshot, error) => {
   const itemsQuery = query(collection(db, `${orgId}_BankDetails`))
   return onSnapshot(itemsQuery, snapshot, error)
 }
+
+export const steamUsersProjAccessList = (orgId,snapshot,data,  error) => {
+  const itemsQuery = query(collection(db, `users`),
+  where('orgId', '==', orgId),
+  where('userStatus', '==', 'active'),
+  where('creditNoteIssuersA', 'array-contains-any', data?.pId))
+  return onSnapshot(itemsQuery, snapshot, error)
+}
+export const steamUsersCreditNotesList = (orgId,snapshot,data,  error) => {
+  const itemsQuery = query(collection(db, `users`),
+  where('orgId', '==', orgId),
+  where('T_credit_note_units', '>', 0)
+  )
+  return onSnapshot(itemsQuery, snapshot, error)
+}
 // get matched rows details
 export const getWbNotifyTemplate = async (payload) => {
   const { event, target, type, scope } = payload
@@ -1003,6 +1018,8 @@ export const getBookedUnitsByProject = (orgId, snapshot, data, error) => {
   console.log('hello ', status, data?.projectId, itemsQuery)
   return onSnapshot(q, snapshot, error)
 }
+
+
 
 export const getAllUnitsByProject = (orgId, snapshot, data, error) => {
   const { status } = data
@@ -2959,16 +2976,20 @@ export const updateUserRole = async (
 export const updateUserAccessProject = async (
   orgId,
   uid,
-  projAccessA,
+  data,
   projectName,
   email,
   by,
   enqueueSnackbar
 ) => {
+
+  try {
+
+
   await updateDoc(doc(db, 'users', uid), {
-    projAccessA: projAccessA,
+    ...data
   })
-  enqueueSnackbar(`Lead Access Provided to ${email}`, {
+  enqueueSnackbar(`Access Provided to ${email}`, {
     variant: 'success',
   })
   return await addUserLog(orgId, {
@@ -2978,7 +2999,15 @@ export const updateUserAccessProject = async (
     txt: `${email} is updated with project ${projectName}`,
     by,
   })
+} catch (error) {
+  console.log('error at ', error, data)
+  enqueueSnackbar(`Failed ${error}`, {
+    variant: 'warning',
+  })
 }
+}
+
+
 
 export const updateAccessRoles = async (
   orgId,
@@ -3740,9 +3769,22 @@ export const capturePaymentS = async (
       T_received: increment(amount),
       T_review: increment(amount),
       T_balance: increment(-amount),
-      T_elgible_balance: increment(-amount)
+      T_elgible_balance: increment(-amount),
     })
 
+
+    if(mode=== "credit_note"){
+      await updateDoc(doc(db, `users`, towardsBankDocId
+      ), {
+        T_credit_note_review: increment(amount),
+        T_credit_note_units: increment(1)
+      })
+
+      await updateDoc(doc(db, `${orgId}_units`, unitId), {
+        T_credit_note_amount: increment(amount),
+        creditNotesFromA: arrayUnion(towardsBankDocId)
+      })
+    }
     const { data: data3, error: error3 } = await supabase
       .from(`${orgId}_lead_logs`)
       .insert([

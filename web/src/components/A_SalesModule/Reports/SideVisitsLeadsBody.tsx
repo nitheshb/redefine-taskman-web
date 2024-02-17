@@ -98,7 +98,7 @@ const SideVisitLeadsBody = ({
           logData.ProjectId = ProjectId
           logData.Status = Status
           logData.Source = Source
-          logData.by = by
+          logData.leadOwner = by
           logData.Mobile = Mobile
           logData.Date = Date
           logData.Email = Email
@@ -184,7 +184,9 @@ const SideVisitLeadsBody = ({
                       { label: 'From', id: 'all' },
                       { label: 'To', id: 'all' },
                       { label: 'Source', id: 'new' },
+                      { label: 'Visited Fixed On', id: 'new' },
                       { label: 'Visited On', id: 'new' },
+                      { label: 'Visited Fixed By', id: 'new' },
                       { label: 'Executive', id: 'all' },
                         { label: 'Created on', id: 'all' },
                         { label: 'By', id: 'all' },
@@ -239,22 +241,30 @@ const SideVisitLeadsBody = ({
                             ? 'visitdone'
                             : data?.to}
                         </td>
+
                         <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
                           {data?.Source}
                         </td>
                         <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
+                          {prettyDateTime(data?.assignT || data?.Date)}
+                        </td>
+                        <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
                           {data?.Time}
+                        </td>
+                        <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
+
+                        {data?.by}
                         </td>
                         <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
                           {data?.assignedToObj?.name}
                         </td>
                         <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
                           {prettyDateTime(data?.Date)}
-                          ||         {prettyDateTime(data?.assignT)}
+
                         </td>
                         <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
 
-                          {data?.by}
+                          {data?.leadOwner}
                         </td>
                       </tr>
                     )

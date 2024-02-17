@@ -28,13 +28,15 @@ import {
   getLeadsByStatusUser,
   getLeadsByUnassigned,
   getMyProjects,
+  steamUsersCreditNotesList,
   steamUsersListByRole,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import { SlimSelectBox } from 'src/util/formFields/slimSelectBoxField'
 import UnitBookingSummaryTableLayout from './UnitBookingSummary.tsx/bookingSummaryTableLayout'
+import CreditNoteSummaryTableLayout from './CreditNoteSummary/CreditNoteSummaryTableLayout'
 
-const UnitBookingSummaryHomePage = ({
+const CreditNoteSummaryHomePage = ({
   leadsTyper,
   isClicked,
   setIsClicked,
@@ -71,9 +73,7 @@ const UnitBookingSummaryHomePage = ({
   const [uuidKey, setUuidKey] = useState(uuidv4())
   const [tableData, setTableData] = useState([])
   const [unitsFetchData, setUnitsFetchData] = useState([])
-  const [selSubMenu, setSelSubMenu] = useState('summary')
 
-  const [selSubMenu1, setSelSubMenu1] = useState('summary')
   const [searchValue, setSearchValue] = useState('')
   const [selProjectIs, setSelProject] = useState({
     label: 'All Projects',
@@ -101,15 +101,15 @@ const UnitBookingSummaryHomePage = ({
 
 
 
-  useEffect(() => {
-    setSearchValue(searchVal)
-  }, [searchVal])
-  const searchData = useSelector((state: RootStateOrAny) => state.searchData)
-  useEffect(() => {
-    Object.keys(searchData).length &&
-      isClicked &&
-      selUserProfileF('User Profile', searchData)
-  }, [searchData, isClicked])
+//   useEffect(() => {
+//     setSearchValue(searchVal)
+//   }, [searchVal])
+//   const searchData = useSelector((state: RootStateOrAny) => state.searchData)
+//   useEffect(() => {
+//     Object.keys(searchData).length &&
+//       isClicked &&
+//       selUserProfileF('User Profile', searchData)
+//   }, [searchData, isClicked])
 
 
 
@@ -124,9 +124,10 @@ const UnitBookingSummaryHomePage = ({
 
   const boot = async () => {
     await getProjectsListFun()
-    const unsubscribe = await getBookedUnitsByProject(
+    const unsubscribe = await steamUsersCreditNotesList(
       orgId,
       async (querySnapshot) => {
+        console.log(',my prject sel is  ===> ', querySnapshot.docs)
         const usersListA = querySnapshot.docs.map((docSnapshot) => {
           const x = docSnapshot.data()
           x.id = docSnapshot.id
@@ -148,18 +149,18 @@ const UnitBookingSummaryHomePage = ({
       {
         status: ['booked', 'agreement_pipeline', 'sd_pipeline', 'registered'],
       },
-      () => setTableData([])
+      () => setUnitsFetchData([])
     )
     return unsubscribe
   }
   useEffect(() => {
 // unitsFetchData
-console.log('values are', unitsFetchData.length, selProjectIs.uid)
-switch (selProjectIs.value) {
+console.log('values are', unitsFetchData.length, selProjectIs?.uid)
+switch (selProjectIs?.value) {
   case 'allprojects':
     return setTableData(unitsFetchData)
   default :
-    return setTableData(unitsFetchData.filter((dat) => dat?.pId === selProjectIs.uid))
+    return setTableData(unitsFetchData.filter((dat) => dat?.pId === selProjectIs?.uid))
 
 }
   }, [unitsFetchData,selProjectIs])
@@ -176,44 +177,44 @@ switch (selProjectIs.value) {
           user.value = user.projectName
         })
         console.log('fetched proejcts list is', projectsListA)
-        let z = [{'label': 'All Projects', value: 'allprojects'}, ...projectsListA]
+        let z = [ ...projectsListA]
         setprojectList(z)
       },
       (error) => setprojectList([])
     )
     return unsubscribe
   }
-  useEffect(() => {
-    const unsubscribe = getMyProjects(
-      orgId,
-      { projAccessA: projAccessA },
-      (querySnapshot) => {
-        const projectsListA = querySnapshot.docs.map((docSnapshot) =>
-          docSnapshot.data()
-        )
+//   useEffect(() => {
+//     const unsubscribe = getMyProjects(
+//       orgId,
+//       { projAccessA: projAccessA },
+//       (querySnapshot) => {
+//         const projectsListA = querySnapshot.docs.map((docSnapshot) =>
+//           docSnapshot.data()
+//         )
 
-        projectsListA.map((user) => {
-          user.label = user.projectName
-          user.value = user.projectName
-        })
-        if (user?.role?.includes(USER_ROLES.ADMIN)) {
-          setprojectList(projectsListA)
-        } else {
-          setprojectList(
-            projectsListA.filter((d) => projAccessA.includes(d.uid))
-          )
-        }
-      },
-      (error) => {
-        console.log('error at bro', error)
-        setprojectList([])
-      }
-    )
+//         projectsListA.map((user) => {
+//           user.label = user.projectName
+//           user.value = user.projectName
+//         })
+//         if (user?.role?.includes(USER_ROLES.ADMIN)) {
+//           setprojectList(projectsListA)
+//         } else {
+//           setprojectList(
+//             projectsListA.filter((d) => projAccessA.includes(d.uid))
+//           )
+//         }
+//       },
+//       (error) => {
+//         console.log('error at bro', error)
+//         setprojectList([])
+//       }
+//     )
 
-    return unsubscribe
+//     return unsubscribe
 
 
-  }, [])
+//   }, [])
 
   return (
     <>
@@ -225,7 +226,7 @@ switch (selProjectIs.value) {
           >
             <div className="flex items-center flex-row flex-wrap py-1 pb-5 justify-between">
               <h2 className="text-md font-semibold text-black leading-light font-Playfair">
-                Booked Unit Summary
+                Credit Note Summary
               </h2>
 
               <div className="flex">
@@ -254,7 +255,7 @@ switch (selProjectIs.value) {
 
             <MetaTags title="ExecutiveHome" description="ExecutiveHome page" />
             {!ready && (
-              <UnitBookingSummaryTableLayout
+              <CreditNoteSummaryTableLayout
                 setFetchLeadsLoader={setFetchLeadsLoader}
                 fetchLeadsLoader={fetchLeadsLoader}
                 leadsFetchedData={tableData}
@@ -263,11 +264,21 @@ switch (selProjectIs.value) {
                 leadsTyper={leadsTyper}
                 searchVal={searchValue}
               />
+
             )}
           </div>
         </div>
       </div>
-
+      <SiderForm
+        open={isImportLeadsOpen}
+        setOpen={setisImportLeadsOpen}
+        title={addLeadsTypes}
+        widthClass="max-w-4xl"
+        customerDetails={selUserProfile}
+        unitsViewMode={unitsViewMode}
+        setUnitsViewMode={setUnitsViewMode}
+        setIsClicked={setIsClicked}
+      />
        <SiderForm
         open={isImportLeadsOpen}
         setOpen={setisImportLeadsOpen}
@@ -277,12 +288,11 @@ switch (selProjectIs.value) {
         transactionData={selUserProfile}
         unitsViewMode={false}
         selCustomerPayload={selUserProfile}
-        selSubMenu={selSubMenu}
-        selSubMenu2={selSubMenu1}
-        setSelUnitDetails={setSelUserProfile}
+        selSubMenu={'unit_information'}
+        selSubMenu2={'unit_information'}
       />
     </>
   )
 }
 
-export default UnitBookingSummaryHomePage
+export default CreditNoteSummaryHomePage

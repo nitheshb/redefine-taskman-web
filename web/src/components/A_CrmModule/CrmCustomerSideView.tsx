@@ -47,7 +47,6 @@ import {
   steamLeadNotes,
   createAttach,
   getCustomerDocs,
-  getAllProjects,
   updateLeadProject,
   getFinanceForUnit,
 } from 'src/context/dbQueryFirebase'

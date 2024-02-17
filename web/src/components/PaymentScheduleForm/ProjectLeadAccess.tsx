@@ -20,10 +20,11 @@ import {
   steamUsersListByRole,
   updateUserAccessProject,
   steamUsersList,
+  updateProjectDepartmentPermissions,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 
-const PaymentLeadAccess = ({ title, data,dept,  source }) => {
+const PaymentLeadAccess = ({ title, data, dept, source, }) => {
   const { user } = useAuth()
   const { orgId, email } = user
   const [tableData, setTableData] = useState([])
@@ -34,10 +35,18 @@ const PaymentLeadAccess = ({ title, data,dept,  source }) => {
   const [salesPeopleList, setsalesPeopleList] = useState([])
   const [leadsProjectAccessA, setLeadsProjectAccessA] = useState([])
   const [selProjId, setProjId] = useState('')
+  const [selKeyName, setSelKeyName] = useState('')
+
 
   useEffect(() => {
     const { project } = data
     setProjId(project?.uid)
+    if(dept === 'admin'){
+      setSelKeyName('creditNoteIssuersA')
+    } else if(dept === 'sales'){
+      setSelKeyName('projAccessA')
+    }
+
   }, [data])
 
   useEffect(() => {
@@ -61,7 +70,7 @@ const PaymentLeadAccess = ({ title, data,dept,  source }) => {
     return unsubscribe
   }, [])
 
-  const addRemoveProjectAccessFun = (value) => {
+  const addRemoveProjectAccessFun = async(value) => {
     console.log('value is', value, data, source)
     const { uid, email: empEmailId, projAccessA } = value
     const { project } = data
@@ -70,20 +79,20 @@ const PaymentLeadAccess = ({ title, data,dept,  source }) => {
     //  projId
     // add projectId to users doc
     // const { uid, projAccessA, , email } = value
-    let newProjAccessA = projAccessA || []
+
+    let newAccessA = value?.[`${selKeyName}`] || []
     console.log('new porj is', projAccessA)
-    if (projAccessA?.includes(projiD)) {
-      newProjAccessA = projAccessA?.filter((d) => d != projiD)
-      console.log('new project Access is', newProjAccessA)
+    if (value?.[`${selKeyName}`]?.includes(projiD)) {
+      newAccessA = value?.[`${selKeyName}`]?.filter((d) => d != projiD)
+      console.log('new project Access is', newAccessA)
     } else {
-      newProjAccessA = [...(projAccessA || []), ...[projiD]]
+      newAccessA = [...(value?.[`${selKeyName}`]  || []), ...[projiD]]
     }
     // projectName
-
-    updateUserAccessProject(
+   await  updateUserAccessProject(
       orgId,
       uid,
-      newProjAccessA,
+      { [`${selKeyName}`]: newAccessA },
       projectName,
       empEmailId,
       email,
@@ -117,25 +126,26 @@ const PaymentLeadAccess = ({ title, data,dept,  source }) => {
           </div>
         </div>
         <div className="bg-white p-4">
-          {salesPeopleList.filter((d) => (d.department == dept && d?.roles[0] != 'cp-agent'))
-                ?.map((salesPerson, i) => {
-            return (
-              <div key={i}>
-                <Checkbox
-                  color="primary"
-                  checked={salesPerson?.projAccessA?.includes(selProjId)}
-                  onChange={(e) => {
-                    console.log('earnet')
-                    addRemoveProjectAccessFun(salesPerson)
-                  }}
-                  inputProps={{
-                    'aria-label': 'select all desserts',
-                  }}
-                />
-                {salesPerson.label}
-              </div>
-            )
-          })}
+          {salesPeopleList
+            .filter((d) => d.department == dept && d?.roles[0] != 'cp-agent')
+            ?.map((salesPerson, i) => {
+              return (
+                <div key={i}>
+                  <Checkbox
+                    color="primary"
+                    checked={salesPerson?.[`${selKeyName}`]?.includes(selProjId)}
+                    onChange={(e) => {
+                      console.log('earnet')
+                      addRemoveProjectAccessFun(salesPerson)
+                    }}
+                    inputProps={{
+                      'aria-label': 'select all desserts',
+                    }}
+                  />
+                  {salesPerson.label}
+                </div>
+              )
+            })}
         </div>
       </div>
     </>

@@ -22,7 +22,7 @@ import { useTranslation } from 'react-i18next'
 import { Link } from '@redwoodjs/router'
 
 import SiderForm from 'src/components/SiderForm/SiderForm'
-import { getAllProjects } from 'src/context/dbQueryFirebase'
+import { getAllProjects, steamUsersCreditNotesList } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 
 import 'flowbite'
@@ -42,6 +42,7 @@ import ReportBars from './Reports/ReportBars'
 import TransactionCard from './Reports/TransactionCard'
 import UnitStatusCardReport from './Reports/UnitStatusCardReport'
 import UnitBookingSummaryHomePage from './Reports/bookingSummaryHome1'
+import CreditNoteSummaryHomePage from './Reports/creditNoteSummaryHome'
 
 const CrmAnalyticsHome = ({ project }) => {
   const theme = useTheme()
@@ -55,6 +56,7 @@ const CrmAnalyticsHome = ({ project }) => {
 
   useEffect(() => {
     getProjects()
+
   }, [])
   const getProjects = async () => {
     const unsubscribe = getAllProjects(
@@ -91,6 +93,7 @@ const CrmAnalyticsHome = ({ project }) => {
           { label: 'Project Summary', value: 'proj_summary' },
           { label: 'Booking Summary', value: 'booking_summary' },
           { label: 'Collections', value: 'collections-summary' },
+          { label: 'Credit Note', value: 'creditnote_summary' },
 
           // { label: 'Source Report', value: 'source_report' },
           // { label: 'Employee Report', value: 'emp_status_report' },
@@ -218,6 +221,16 @@ const CrmAnalyticsHome = ({ project }) => {
             {projects.length === 0 && <DummyBodyLayout />}
           </div>
         )}
+
+      {selCat === 'creditnote_summary' && (
+          <div className="">
+            {/* <AdvancedDataTableTest /> */}
+            <CreditNoteSummaryHomePage/>
+
+            {projects.length === 0 && <DummyBodyLayout />}
+          </div>
+        )}
+
     </div>
   )
 }

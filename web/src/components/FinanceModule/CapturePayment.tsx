@@ -24,6 +24,7 @@ import {
   createBookedCustomer,
   createNewCustomerS,
   steamBankDetailsList,
+  steamUsersProjAccessList,
   updateLeadStatus,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
@@ -61,6 +62,7 @@ const CaptureUnitPayment = ({
   const [openAreaFields, setOpenAreaFields] = useState(false)
   const [bookingProgress, setBookingProgress] = useState(false)
   const [bankDetailsA, setBankDetailsA] = useState([])
+  const [creditNotersA, setCreditNoters] = useState([])
 
   const [startDate, setStartDate] = useState(d)
 
@@ -101,6 +103,29 @@ const CaptureUnitPayment = ({
         setBankDetailsA([...bankA])
       },
       (error) => setBankDetailsA([])
+    )
+
+    return unsubscribe
+  }, [])
+
+  useEffect(() => {
+    const unsubscribe = steamUsersProjAccessList(
+      orgId,
+      (querySnapshot) => {
+        const bankA = querySnapshot.docs.map((docSnapshot) => {
+          const x = docSnapshot.data()
+          x.id = docSnapshot.id
+          return x
+        })
+        bankA.map((user) => {
+          user.label = user?.name
+          user.value = user?.email
+        })
+        console.log('fetched users list is', bankA)
+        setCreditNoters([...bankA])
+      },
+      {pId:  [selUnitDetails?.pId]},
+      (error) => setCreditNoters([])
     )
 
     return unsubscribe
@@ -359,7 +384,7 @@ const CaptureUnitPayment = ({
                                             {paymentMode.map((dat, i) => {
                                               return (
                                                 <span
-                                                  className={`my-2 mr-2 border rounded-xl px-4 py-3 cursor-pointer hover:bg-violet-400 hover:text-white ${
+                                                  className={` mr-2 border rounded-xl px-2 py-2 cursor-pointer hover:bg-violet-400 hover:text-white text-sm ${
                                                     paymentModex == dat.value
                                                       ? 'bg-violet-400 text-white'
                                                       : ''
@@ -379,7 +404,7 @@ const CaptureUnitPayment = ({
                                             })}
                                           </div>
 
-                                          <div className="w-full  px-4 mt-3">
+                                       {paymentModex !="credit_note" && (<div className="w-full  px-4 mt-3">
                                             <div className=" mb-4 w-full">
                                               <MultiSelectMultiLineField
                                                 label="Paid Towards Account"
@@ -414,7 +439,46 @@ const CaptureUnitPayment = ({
                                                 options={bankDetailsA}
                                               />
                                             </div>
-                                          </div>
+                                          </div>)}
+
+                                          {paymentModex ==="credit_note" && (<div className="w-full  px-4 mt-3">
+                                            <div className=" mb-4 w-full">
+                                              <MultiSelectMultiLineField
+                                                label="Credit Note Issuer"
+                                                name="creditNoteIssuer"
+                                                onChange={(payload) => {
+                                                  console.log(
+                                                    'changed value is ',
+                                                    payload
+                                                  )
+                                                  const {
+                                                    value,
+                                                    id,
+                                                    name,
+                                                    uid,
+                                                    accountName,
+                                                  } = payload
+                                                  formik.setFieldValue(
+                                                    'builderName',
+                                                    name
+                                                  )
+                                                  formik.setFieldValue(
+                                                    'landlordBankDocId',
+                                                    uid
+                                                  )
+
+                                                  formik.setFieldValue(
+                                                    'towardsBankDocId',
+                                                    uid
+                                                  )
+                                                }}
+                                                value={
+                                                  formik.values.towardsBankDocId
+                                                }
+                                                options={creditNotersA}
+                                              />
+                                            </div>
+                                          </div>)}
                                           <div className="w-full lg:w-4/12 px-3">
                                             <div className="relative w-full mb-5">
                                               <TextField2

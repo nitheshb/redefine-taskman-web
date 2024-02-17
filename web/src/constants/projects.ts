@@ -259,17 +259,18 @@ export const paymentMode = [
     value: 'cheque',
     label: 'Cheque',
   },
-  {
-    value: 'imps',
-    label: 'Imps',
-  },
+
   {
     value: 'Neft',
     label: 'Neft/Rtgs',
   },
   {
     value: 'online',
-    label: 'Online',
+    label: 'Imps/UPI',
+  },
+  {
+    value: 'credit_note',
+    label: 'Credit Note',
   },
 ]
 export const areaConversions = [

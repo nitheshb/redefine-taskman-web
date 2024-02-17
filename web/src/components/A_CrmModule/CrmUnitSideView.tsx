@@ -137,7 +137,7 @@ const StatusListA = [
     color: 'bg-violet-500',
     allowed: []
   },  {
-    label: 'Cancel Booking',
+    label: 'Cancel Booking 1',
     value: 'cancel_booking',
     logo: 'DuplicateInactiveIcon',
     color: 'bg-violet-500',
@@ -989,7 +989,7 @@ console.log('value is', x, newStatus)
     console.log('unit log ', data, y, y.m, y['m']['url'])
 
 
-        const x = await capturePaymentS(
+    const x = await capturePaymentS(
       orgId,
       projectId,
       unitId,
