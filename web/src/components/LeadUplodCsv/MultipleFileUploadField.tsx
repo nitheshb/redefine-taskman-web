@@ -427,7 +427,56 @@ export function MultipleFileUploadField({
           // let x =   await getLedsData()
 
           await console.log('Finished: records', serialData, fileRecords)
-        } else if (['Plan Diagram', 'Brouchers', 'Approvals'].includes(title)) {
+        } else if (['ImportAssets'].includes(title)) {
+          console.log('import stuff is ', records)
+          const clean1 = records.filter((row) => {
+            return (
+              (row['Assets_Type'] != '' && row['Assets_Type'] != undefined) ||
+              (row['Model'] != '' && row['Model'] != undefined)
+            )
+          })
+          // set duplicate & valid records
+          // check in db if record exists with matched phone Number & email
+          const serialData = await Promise.all(
+            clean1.map(async (dRow) => {
+              // const foundLength = await checkIfUnitAlreadyExists(
+              //   `${orgId}_assets`,
+              //   pId,
+              //   myPhase?.uid || '',
+              //   myBlock?.uid || '',
+              //   dRow['Unit No.*'] || dRow['Flat No.*'] || dRow['Plot No.*']
+              // )
+              // Apartment Type*
+              console.log('my data value is ', dRow)
+             const foundLength =0;
+              const computPlotObj = {
+                mode: await makeMode(foundLength),
+                pId,
+                phaseId: dRow[''] || 1,
+                blockId: myBlock?.uid || 1,
+                Date: Timestamp.now().toMillis(),
+                Assets_Type:
+                  dRow['Assets_Type'],
+                  Model: dRow['Model'] || '',
+                  Asset_Description: dRow['Asset_Description'] || '',
+                  Serial_No: dRow['Serial_No'] || '',
+                  Date_of_Allocation: dRow['Date_of_Allocation'] || '',
+                  Return_Date: dRow['Return_Date'] || '',
+
+
+                intype: 'bulk',
+                unit_type: 'Apartment',
+                by: user?.email,
+              }
+              return await computPlotObj
+            })
+          )
+
+          await setfileRecords(serialData)
+          // let x =   await getLedsData()
+
+          await console.log('Finished: records', serialData, fileRecords)
+        }else if (['Plan Diagram', 'Brouchers', 'Approvals'].includes(title)) {
           console.log('data os jere', records)
           // uploadFile(file)
           // upload pdf to cloud
@@ -620,6 +669,22 @@ export function MultipleFileUploadField({
                 <span className="text-xs text-blue-500">
                   <DownloadIcon className="h-3 w-3 mr-1 mb-1 inline-block" />
                   Sample Plot Template
+                </span>
+              </a>
+            </div>
+          )}
+
+{title === 'ImportAssets' && (
+            <div className="w-full flex flex-row justify-between ">
+              <span></span>
+              <a
+                download="unitTemplate.csv"
+                target="_blank"
+                href="/assetsTemplate.csv"
+              >
+                <span className="text-xs text-blue-500">
+                  <DownloadIcon className="h-3 w-3 mr-1 mb-1 inline-block" />
+                  Sample Assets Template
                 </span>
               </a>
             </div>

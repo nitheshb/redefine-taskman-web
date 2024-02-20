@@ -97,7 +97,7 @@ const UnitBookingSummaryHomePage = ({
   const searchVal = useSelector((state: RootStateOrAny) => state.search)
   useEffect(() => {
     boot()
-  }, [])
+  }, [projectList])
 
 
 

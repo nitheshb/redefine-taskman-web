@@ -52,7 +52,7 @@ const CrmAnalyticsHome = ({ project }) => {
 
   const { orgId } = user
   const [projects, setProjects] = useState([])
-  const [selCat, setSelCat] = useState('proj_summary')
+  const [selCat, setSelCat] = useState('booking_summary')
 
   useEffect(() => {
     getProjects()
@@ -90,10 +90,10 @@ const CrmAnalyticsHome = ({ project }) => {
           {/* </Link> */}
         </div>
         {[
-          { label: 'Project Summary', value: 'proj_summary' },
           { label: 'Booking Summary', value: 'booking_summary' },
-          { label: 'Collections', value: 'collections-summary' },
           { label: 'Credit Note', value: 'creditnote_summary' },
+          { label: 'Project Summary', value: 'proj_summary' },
+          { label: 'Collections', value: 'collections-summary' },
 
           // { label: 'Source Report', value: 'source_report' },
           // { label: 'Employee Report', value: 'emp_status_report' },

@@ -331,8 +331,8 @@ const CostBreakUpSheet = ({
     // const x = costSheetA
     let merged = []
     try {
-      if (leadDetailsObj1) {
-        if (leadDetailsObj1[`${uid}_cs`]['costSheetA']) {
+      if (leadDetailsObj1 && uid) {
+        if (leadDetailsObj1?.[`${uid}_cs`]?.['costSheetA']) {
           const removeFulCostFieldA = leadDetailsObj1[`${uid}_cs`][
             'costSheetA'
           ].filter((dat) => dat?.component?.value != 'unit_cost_charges')
@@ -344,7 +344,8 @@ const CostBreakUpSheet = ({
       }
     } catch (error) {
       console.log('error at feching the leadDetails Obj')
-      merged = [...x, ...additonalChargesObj]
+      // merged = [...x, ...additonalChargesObj]
+
     }
 
     const initformValues = {}
@@ -414,13 +415,13 @@ const CostBreakUpSheet = ({
     // newCostSheetA.push(x)
     // i need unit_uID & unit details
     const xData = {}
-
+if(uid) {
     xData[`${uid}${'_cs'}`] = {
       oldUnitDetailsObj: selUnitDetails,
       newSqftPrice: Number(newSqftPrice),
       soldPrice: Number(soldPrice),
       costSheetA: costSheetA,
-    }
+    }}
     setCostSheet(newCostSheetA)
     console.log('gen costSheetA', newCostSheetA)
     if (leadDetailsObj1?.id) {

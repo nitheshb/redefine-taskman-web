@@ -332,7 +332,7 @@ const CostBreakUpPdf = ({
     } catch (error) {
       console.log('error at feching the leadDetails Obj')
       console.log('gen costSheetA', x)
-      merged = [...x, ...additonalChargesObj]
+      // merged = [...x, ...additonalChargesObj]
     }
 
     const initformValues = {}

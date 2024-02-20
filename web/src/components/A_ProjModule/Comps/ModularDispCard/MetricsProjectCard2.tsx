@@ -46,7 +46,7 @@ const ProjectMetrics2 = ({ project }) => {
               {'Values'}
             </h6>
             <h6 className="font-bodyLato  text-xs m-1 mb-2">
-              ₹{totalValue || 0}
+              ₹{totalValue?.toLocaleString('en-IN') || 0}
             </h6>
           </div>
           <div className="w-[241.03px] h-[0px] border border-stone-300 mb-2"></div>
@@ -84,7 +84,7 @@ const ProjectMetrics2 = ({ project }) => {
                 >
                   <div className="flex flex-col  justify-center mr-1  mb-1 mt[2px]">
                     <h6 className="font-bodyLato font-semibold text-xs mt-1">
-                      ₹{data?.value?.toLocaleString('en-IN')}
+                      ₹{Number(data?.value)?.toLocaleString('en-IN')}
                     </h6>
                     <h6 className="font-bodyLato text-[#828d9e] text-xs mt-1">
                       {data.item}
@@ -118,7 +118,7 @@ const ProjectMetrics2 = ({ project }) => {
         </section>
 
         {/* section 2 */}
-        <section className="flex flex-col mt-4">
+        <section className="flex flex-col mt-[34px] mb-[14px]">
           <div className="flex flex-row justify-between">
             <h6 className="font-bodyLato font-semibold text-xs m-1 mb-2">
               {'CRM Pipeline'}
