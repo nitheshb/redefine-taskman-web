@@ -296,7 +296,7 @@ const LeadsDisplayTable = ({
                           </div>
                         </td>
 
-                        <td className="max-w-[150px] min-w-[150px] w-[150px]">
+                        <td className="max-w-[250px] min-w-[250px] w-[250px]">
                           <div className="flex flex-col">
                             <p className="text-[12px] leading-none text-gray-600  mt-2">
                               {projectName || 'NA'}

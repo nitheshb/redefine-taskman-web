@@ -458,6 +458,10 @@ export const costSheetPartcChargesA = [
     label: 'Legal charges',
   },
   {
+    value: 'maintenancecharges',
+    label: 'Maintenance Charges',
+  },
+  {
     value: 'legalCharges_onsale',
     label: 'Legal Charges on sale Deed',
   },
