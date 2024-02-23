@@ -59,7 +59,7 @@ const EachProjectDashboard = ({ project, onSliderOpen = () => {}, isEdit }) => {
             <div className="">
               <section className="flex flex-row">
                 <section className="flex flex-col mt-1">
-                  <div className="w-[317px] h-[178px] relative bg-indigo-600 rounded-md border border-slate-200 mx-1">
+                  <div className="w-[317px] h-[210px] relative bg-indigo-600 rounded-md border border-slate-200 mx-1">
                     {/* <div className="w-[130px] h-[130px] left-[197px] top-[31px] absolute opacity-50 bg-gradient-to-b from-white to-white rounded-full" /> */}
                     <div className="w-[220px] left-[32px] top-[31px] absolute justify-start items-center gap-3 inline-flex">
                       <div className="w-11 h-11 relative rounded-[25px] mr-1">
@@ -103,8 +103,8 @@ const EachProjectDashboard = ({ project, onSliderOpen = () => {}, isEdit }) => {
                           { item: 'Total', value: totalUnitCount || 0 },
                           { item: 'Available', value: availableCount || 0 },
                           { item: 'Sold', value: soldUnitCount || 0 },
-                          { item: 'C_Blocked', value: blockedUnitCount || 0 },
-                          { item: 'M_Blocked', value: blockedUnitCount || 0 },
+                          { item: 'Blocked', value: blockedUnitCount || 0 },
+                          // { item: 'M_Blocked', value: blockedUnitCount || 0 },
                         ].map((data, i) => (
                           <div
                             className=" w-1/4  mx-1"

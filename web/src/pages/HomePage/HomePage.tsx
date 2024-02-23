@@ -1192,7 +1192,8 @@ const HomePage = () => {
                                       <div className="px-4">
                                         <div className="flex items-center justify-between py-2 pb-4  ">
                                           <span className="relative  flex items-center w-auto text-md font-bold leading-none pl-0 font-Playfair">
-                                            Projects {viewable}
+                                          ONGOING PROJECTS
+                                            {/* {viewable} */}
                                           </span>
                                           <button
                                             onClick={() =>

@@ -372,11 +372,11 @@ export const gstValesPartA = [
 export const csPartATax = [
   {
     value: 'sqft_cost_tax',
-    label: 'sqft_cost_Gst',
+    label: 'Sqft cost * Unit Area',
   },
   {
     value: 'plc_tax',
-    label: 'PLC Gst',
+    label: 'PLC Cost * Unit Area',
   },
 ]
 export const costSheetAdditionalChargesA = [

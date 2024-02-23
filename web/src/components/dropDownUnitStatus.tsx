@@ -264,9 +264,7 @@ export default function DropCompUnitStatus({
                 <>
                   {[
                     'Phone No',
-                    'Email Id',
                     'Cost Split',
-                    'Avg sqft Cost',
                     'CRM Executive',
                     'Sales Executive',
                     'Remarks'

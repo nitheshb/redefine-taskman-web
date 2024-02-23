@@ -147,7 +147,7 @@ const CostBreakUpPdfAll = ({
         },
       ]
     } else {
-      setPartBPayload([...additonalChargesObj, ...ConstructOtherChargesObj])
+      setPartBPayload([...additonalChargesObj || [], ...ConstructOtherChargesObj || []])
       setPSPayload(ConstructPayScheduleObj)
       x = [
         {
@@ -332,7 +332,7 @@ const CostBreakUpPdfAll = ({
       }
     } catch (error) {
       console.log('error at feching the leadDetails Obj')
-      merged = [...x, ...additonalChargesObj]
+      // merged = [...x, ...additonalChargesObj]
     }
 
     const initformValues = {}
@@ -353,20 +353,20 @@ const CostBreakUpPdfAll = ({
   }, [netTotal, plotBookingAdv, csMode])
 
   const CreateNewPsFun = (netTotal, plotBookingAdv, csMode) => {
-    const newPs = psPayload.map((d1) => {
+    const newPs = psPayload?.map((d1) => {
       const z = d1
       if (csMode === 'plot_cs') {
-        z.value = ['on_booking'].includes(d1?.stage?.value)
+        z.value = ['on_booking']?.includes(d1?.stage?.value)
           ? Number(d1?.percentage)
           : Math.round((netTotal - plotBookingAdv) * (d1?.percentage / 100))
-        if (['on_booking'].includes(d1?.stage?.value)) {
+        if (['on_booking']?.includes(d1?.stage?.value)) {
           z.elgible = true
           z.elgFrom = Timestamp.now().toMillis()
           return z
         }
         return z
       } else {
-        z.value = ['Total_Other_Charges_Amenities:\t'].includes(
+        z.value = ['Total_Other_Charges_Amenities:\t']?.includes(
           d1?.stage?.value
         )
           ? Number(partBTotal)
@@ -398,8 +398,8 @@ const CostBreakUpPdfAll = ({
     setPartBTotal(partBTotal)
     setPartATotal(partATotal)
     setNetTotal(partATotal + partBTotal)
-    selPhaseObj?.paymentScheduleObj.map((data) => {
-      if (data.stage?.value === 'on_booking') {
+    selPhaseObj?.paymentScheduleObj?.map((data) => {
+      if (data?.stage?.value === 'on_booking') {
         setPlotBookingAdv(data?.percentage)
       }
     })

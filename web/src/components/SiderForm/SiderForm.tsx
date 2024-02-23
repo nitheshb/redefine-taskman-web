@@ -204,7 +204,16 @@ const SiderForm = ({
                     myBlock={myBlock}
                   />
                 )}
-
+ {
+                  (title === 'ImportAssets' && (
+                    <LeadsDropHomes
+                      title={title}
+                      dialogOpen={setOpen}
+                      pId={pId}
+                      myPhase={phaseDetails}
+                      myBlock={myBlock}
+                    />
+                  ))}
                 {title === 'Add Unit' && (
                   <AddUnit
                     title={title}

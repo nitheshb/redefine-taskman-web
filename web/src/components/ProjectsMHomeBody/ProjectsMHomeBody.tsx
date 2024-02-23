@@ -384,7 +384,7 @@ const ProjectsMHomeBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                   >
                     <div className="flex flex-col  justify-center mr-1  mb-1 mt[2px]">
                       <h6 className="font-bodyLato font-semibold text-xs mt-1">
-                        ₹{t(data.value)}
+                        ₹{t(data?.value?.toLocaleString('en-IN'))}
                       </h6>
                       <h6 className="font-bodyLato text-[#828d9e] text-xs mt-1">
                         {t(data.item)}
@@ -407,7 +407,7 @@ const ProjectsMHomeBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                   >
                     <div className="flex flex-col  justify-center mr-1  mb-1 mt[2px]">
                       <h6 className="font-bodyLato font-semibold text-xs mt-1">
-                        ₹{t(data.value)}
+                        ₹{t(data?.value?.toLocaleString('en-IN'))}
                       </h6>
                       <h6 className="font-bodyLato text-[#828d9e] text-xs mt-1">
                         {t(data.item)}

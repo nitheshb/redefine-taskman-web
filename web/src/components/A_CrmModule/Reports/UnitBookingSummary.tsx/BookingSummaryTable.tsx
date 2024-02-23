@@ -585,7 +585,8 @@ export default function UnitSummaryTableBody({
   leadsFetchedData,
   mySelRows,
   searchVal,
-  viewUnitStatusA
+  viewUnitStatusA,
+
 }) {
   const { user } = useAuth()
   const [order, setOrder] = React.useState('desc')

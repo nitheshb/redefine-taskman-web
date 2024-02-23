@@ -4,7 +4,7 @@ import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import { useCSVDownloader } from 'react-papaparse'
 
-import { prettyDateTime } from './dateConverter'
+import { prettyDate, prettyDateTime } from './dateConverter'
 
 export default function CSVDownloader({
   downloadRows,
@@ -35,6 +35,11 @@ export default function CSVDownloader({
         Source: item?.Source,
         Assigned_to: item?.assignedToObj?.name,
         Date: item.Time,
+        Visit_Fixed_On: prettyDate(item?.assignT || item?.Date),
+        Visited_On: item.Time,
+        Visit_Fixed_By:  item?.by,
+        Executive: item?.leadOwner
+
       }
     })
   }

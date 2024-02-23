@@ -11,37 +11,12 @@ import { MultipleFileUploadField } from './MultipleFileUploadField'
 
 export default function LeadsDropHomes({
   title,
-  dialogOpen,
   pId,
   myPhase,
   myBlock,
 }) {
   const [existingCols, setexistingCols] = useState([])
 
-  const parseExcel = async (values) => {
-    if (values.files) {
-      let x
-      try {
-        x = values.files[0].file
-      } catch (error) {
-        console.log('error ', error)
-      }
-
-      parse(x, {
-        header: true,
-        // download: true,
-        complete: async function (input) {
-          // const records = input.data
-          await setexistingCols((existing) => [...existing, ...input.data])
-          // let x =   await getLedsData()
-
-          console.log('Finished:', existingCols)
-        },
-      })
-    } else {
-      ;('hello')
-    }
-  }
   return (
     <div className="h-full flex flex-col py-6 bg-white shadow-xl overflow-y-scroll">
       <div className="px-4 sm:px-6  z-10">
@@ -90,7 +65,6 @@ export default function LeadsDropHomes({
                   header: true,
                   // download: true,
                   complete: async function (input) {
-                    const records = input.data
                     await setexistingCols((existing) => [
                       ...existing,
                       ...input.data,
@@ -137,7 +111,7 @@ export default function LeadsDropHomes({
               return new Promise((res) => setTimeout(res, 2000))
             }}
           >
-            {({ values, errors, isValid, isSubmitting, validateOnChange }) => (
+            {() => (
               // {parseExcel(values)}
               <Form>
                 <Grid container spacing={2} direction="column">

@@ -61,13 +61,13 @@ const Blockdetails = ({
       <div className="lg:col-span-2 px-2 ">
         <section className="flex flex-row justify-between bg-[#203129] text-white py-3 px-4">
           <h2 className="text-sm font-semibold">Blocks</h2>
-          <DropCompUnitStatus
+          {/* <DropCompUnitStatus
             type={'View'}
             id={'id'}
             setStatusFun={setSelBlock}
             viewUnitStatusA={viewUnitStatusA}
             pickCustomViewer={pickCustomViewer}
-          />
+          /> */}
         </section>
         <ul>
           {openAddBlock && (

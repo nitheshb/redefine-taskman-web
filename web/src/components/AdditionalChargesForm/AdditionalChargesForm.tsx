@@ -56,7 +56,7 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
       })
     }
   }, [source, data, tableData, partCData])
-    useEffect(() => {
+  useEffect(() => {
     if (source === 'projectManagement') {
       setEditOptionsPartA({
         onRowAdd: async (newData) => await handleRowAddPartA(newData),
@@ -238,7 +238,6 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
     },
   ]
 
-
   // partA columns
   const partAcolumns = [
     {
@@ -309,10 +308,7 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
         )
       },
     },
-
   ]
-
-
 
   // partC columns
   const partCcolumns = [
@@ -518,13 +514,19 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
         : 'additonalChargesObj',
       enqueueSnackbar
     )
-  }  //function for updating the existing row details
+  } //function for updating the existing row details
   const handleRowUpdatePartA = async (newData, oldData) => {
     const { uid, additonalChargesObj } = data?.phase || {}
 
     console.log('check this stuff', partAData, additonalChargesObj)
     const c = await partAData.map((e) => {
-      console.log('check this stuff',e.myId, oldData.myId, e.myId === oldData.myId, newData)
+      console.log(
+        'check this stuff',
+        e.myId,
+        oldData.myId,
+        e.myId === oldData.myId,
+        newData
+      )
       if (e.myId === oldData.myId) {
         return newData
       }
@@ -535,7 +537,7 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
       orgId,
       uid,
       c,
-    'partATaxObj',
+      'partATaxObj',
       enqueueSnackbar
     )
   }
@@ -546,7 +548,13 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
 
     console.log('check this stuff', partAData, additonalChargesObj)
     const c = await partAData.map((e) => {
-      console.log('check this stuff',e.myId, oldData.myId, e.myId === oldData.myId, newData)
+      console.log(
+        'check this stuff',
+        e.myId,
+        oldData.myId,
+        e.myId === oldData.myId,
+        newData
+      )
       if (e.myId === oldData.myId) {
         return newData
       }
@@ -557,7 +565,7 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
       orgId,
       uid,
       c,
-    'partCTaxObj',
+      'partCTaxObj',
       enqueueSnackbar
     )
   }
@@ -577,7 +585,7 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
       enqueueSnackbar
     )
     // await deleteAdditionalCharge(oldData?.uid, enqueueSnackbar)
-  }  //function for deleting a row
+  } //function for deleting a row
   const handleRowDeletePartA = async (oldData) => {
     const { uid } = data?.phase || {}
     const c = partAData.filter((e) => e.myId != oldData.myId)
@@ -586,11 +594,11 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
       orgId,
       uid,
       c,
-     'partATaxObj',
+      'partATaxObj',
       enqueueSnackbar
     )
     // await deleteAdditionalCharge(oldData?.uid, enqueueSnackbar)
-  }//function for deleting a row
+  } //function for deleting a row
   const handleRowDeletePartC = async (oldData) => {
     const { uid } = data?.phase || {}
     const c = partAData.filter((e) => e.myId != oldData.myId)
@@ -599,7 +607,7 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
       orgId,
       uid,
       c,
-     'partCTaxObj',
+      'partCTaxObj',
       enqueueSnackbar
     )
     // await deleteAdditionalCharge(oldData?.uid, enqueueSnackbar)
@@ -658,140 +666,149 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
     }
   }
 
+  //function for adding a new row to the table
+  const handleRowAddPartC = async (newData) => {
+    setIserror(false)
+    setErrorMessages([])
+    const errorList = errors(newData)
+    if (errorList.length < 1) {
+      const { projectId, uid } = data?.phase || {}
 
-    //function for adding a new row to the table
-    const handleRowAddPartC = async (newData) => {
-      setIserror(false)
-      setErrorMessages([])
-      const errorList = errors(newData)
-      if (errorList.length < 1) {
-        const { projectId, uid } = data?.phase || {}
-
-        const additonalChargesObj = {
-          ...newData,
-        }
-        // await createAdditonalCharges(additonalChargesObj, enqueueSnackbar)
-        await addPhaseAdditionalCharges(
-          orgId,
-          uid,
-          additonalChargesObj,
-       'partCTaxObj',
-          enqueueSnackbar
-        )
-      } else {
-        setErrorMessages(errorList)
-        setIserror(true)
+      const additonalChargesObj = {
+        ...newData,
       }
+      // await createAdditonalCharges(additonalChargesObj, enqueueSnackbar)
+      await addPhaseAdditionalCharges(
+        orgId,
+        uid,
+        additonalChargesObj,
+        'partCTaxObj',
+        enqueueSnackbar
+      )
+    } else {
+      setErrorMessages(errorList)
+      setIserror(true)
     }
+  }
   return (
-
     <section>
+      <div className=" min border border-radius-4">
+        <MaterialCRUDTable
+          title=""
+          columns={partAcolumns}
+          data={partAData}
+          options={{
+            headerStyle: {
+              borderTopLeftRadius: '12px',
+              borderTopRightRadius: '12px',
+              borderBottomWidth: '2px',
+              background: '#f8fafd',
+              fontWeight: '600px',
+              padding: '13px',
+            },
+            actionsColumnIndex: -1,
+            paging: false,
+            doubleHorizontalScroll: true,
+            position: 'absolute',
+          }}
+          style={{
+            padding: '0px 20px',
+            borderRadius: '0px',
+            boxShadow: 'none',
+            fontSize: '12px',
+          }}
+          actionsCellStyle={{
+            width: 'auto',
+            justifyCenter: 'center',
+          }}
+          source={source}
+          editable={editOpitionsObjPartA}
+        />
+      </div>
 
-<div className=" min">
-          <MaterialCRUDTable
-            title=""
-            columns={partAcolumns}
-            data={partAData}
-            options={{
-              headerStyle: {
-                borderRadius: 0,
-                borderBottomWidth: '2px',
-              },
-              actionsColumnIndex: -1,
-              paging: false,
-              doubleHorizontalScroll: true,
-              position: 'absolute'
-            }}
-            style={{
-              padding: '0px 30px',
-              borderRadius: '0px',
-              boxShadow: 'none',
-
-            }}
-            actionsCellStyle={{
-              width: 'auto',
-              justifyCenter: 'center',
-            }}
-            source={source}
-            editable={editOpitionsObjPartA}
-          />
-        </div>
-
-           {/* part b */}
-    <div className="h-full shadow-xl flex flex-col  mb-6 bg-[#F1F5F9] rounded-t overflow-y-scroll">
-      <div className="z-10">
-        {/* <Dialog.Title className="font-semibold text-xl mr-auto ml-3 text-[#053219]">
+      {/* part b */}
+      <div className="h-full shadow-xl flex flex-col  mb-6 bg-[#F1F5F9] rounded-t overflow-y-scroll">
+        <div className="z-10">
+          {/* <Dialog.Title className="font-semibold text-xl mr-auto ml-3 text-[#053219]">
           {title}
         </Dialog.Title> */}
-        {/* <span className="mr-auto ml-3  text-md font-extrabold tracking-tight uppercase font-body ">
+          {/* <span className="mr-auto ml-3  text-md font-extrabold tracking-tight uppercase font-body ">
           {blocksViewFeature === 'Construction_Other_Charges'
             ? 'Construction Other Charges (section B)'
             : 'Plot Other Charges (section B)'}
         </span> */}
 
+          <div className=" min">
+            <MaterialCRUDTable
+              title=""
+              columns={columns}
+              data={tableData}
+              options={{
+                headerStyle: {
+                  borderTopLeftRadius: '12px',
+                  borderTopRightRadius: '12px',
+                  borderBottomWidth: '2px',
+                  background: '#f8fafd',
+                  fontWeight: '600px',
+                  padding: '13px',
+                },
+                actionsColumnIndex: -1,
+                paging: false,
+
+                doubleHorizontalScroll: true,
+                position: 'absolute',
+              }}
+              style={{
+                padding: '0px 20px',
+                borderRadius: '0px',
+                boxShadow: 'none',
+                fontSize: '12px',
+              }}
+              actionsCellStyle={{
+                width: 'auto',
+                justifyCenter: 'center',
+              }}
+              source={source}
+              editable={editOpitionsObj}
+            />
+          </div>
+          <div>
+            {iserror && (
+              <Alert severity="error">
+                <AlertTitle>ERROR</AlertTitle>
+                {errorMessages.map((msg, i) => {
+                  return <div key={i}>{msg}</div>
+                })}
+              </Alert>
+            )}
+          </div>
+        </div>
+
         <div className=" min">
           <MaterialCRUDTable
-            title=""
-            columns={columns}
-            data={tableData}
-            options={{
-              headerStyle: {
-                borderRadius: 0,
-                borderBottomWidth: '2px',
-              },
-              actionsColumnIndex: -1,
-              paging: false,
-
-              doubleHorizontalScroll: true,
-              position: 'absolute'
-            }}
-            style={{
-              padding: '0px 30px',
-              borderRadius: '0px',
-              boxShadow: 'none',
-
-            }}
-            actionsCellStyle={{
-              width: 'auto',
-              justifyCenter: 'center',
-            }}
-            source={source}
-            editable={editOpitionsObj}
-          />
-        </div>
-        <div>
-          {iserror && (
-            <Alert severity="error">
-              <AlertTitle>ERROR</AlertTitle>
-              {errorMessages.map((msg, i) => {
-                return <div key={i}>{msg}</div>
-              })}
-            </Alert>
-          )}
-        </div>
-      </div>
-
-      <div className=" min">
-      <MaterialCRUDTable
             title=""
             columns={partCcolumns}
             data={partCData}
             options={{
               headerStyle: {
-                borderRadius: 0,
+                borderTopLeftRadius: '12px',
+                borderTopRightRadius: '12px',
                 borderBottomWidth: '2px',
+                background: '#f8fafd',
+                fontWeight: '600px',
+                padding: '13px',
               },
               actionsColumnIndex: -1,
               paging: false,
 
               doubleHorizontalScroll: true,
-              position: 'absolute'
+              position: 'absolute',
             }}
             style={{
               padding: '0px 30px',
               borderRadius: '0px',
               boxShadow: 'none',
-
+              fontSize: '12px',
             }}
             actionsCellStyle={{
               width: 'auto',
@@ -801,10 +818,7 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
             editable={editOpitionsObjPartC}
           />
         </div>
-    </div>
-
-
-
+      </div>
     </section>
   )
 }
