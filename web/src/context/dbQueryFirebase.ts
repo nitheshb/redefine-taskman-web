@@ -82,17 +82,20 @@ export const steamBankDetailsList = (orgId, snapshot, error) => {
   return onSnapshot(itemsQuery, snapshot, error)
 }
 
-export const steamUsersProjAccessList = (orgId,snapshot,data,  error) => {
-  const itemsQuery = query(collection(db, `users`),
-  where('orgId', '==', orgId),
-  where('userStatus', '==', 'active'),
-  where('creditNoteIssuersA', 'array-contains-any', data?.pId))
+export const steamUsersProjAccessList = (orgId, snapshot, data, error) => {
+  const itemsQuery = query(
+    collection(db, `users`),
+    where('orgId', '==', orgId),
+    where('userStatus', '==', 'active'),
+    where('creditNoteIssuersA', 'array-contains-any', data?.pId)
+  )
   return onSnapshot(itemsQuery, snapshot, error)
 }
-export const steamUsersCreditNotesList = (orgId,snapshot,data,  error) => {
-  const itemsQuery = query(collection(db, `users`),
-  where('orgId', '==', orgId),
-  where('T_credit_note_units', '>', 0)
+export const steamUsersCreditNotesList = (orgId, snapshot, data, error) => {
+  const itemsQuery = query(
+    collection(db, `users`),
+    where('orgId', '==', orgId),
+    where('T_credit_note_units', '>', 0)
   )
   return onSnapshot(itemsQuery, snapshot, error)
 }
@@ -160,16 +163,37 @@ export const steamAllLeadsActivity = async (orgId, snapshot, data, error) => {
       .eq('type', 'sts_change')
       .eq('from', 'visitfixed')
       .gte('T', cutoffDate)
+
+    const { data: lead_logs_visit_fixed, error2 } = await supabase
+      .from(`${orgId}_lead_logs`)
+      .select('projectId, type,subtype,T, by, from, to, uid, Luid, payload')
+      //.eq('Luid', uid)
+      .eq('type', 'sts_change')
+      .eq('to', 'visitfixed')
+      // .gte('T', cutoffDate)
+    console.log('value is', lead_logs)
     const result = Object.values(
       lead_logs.reduce((obj, item) => {
+        const vistFixedObj = lead_logs_visit_fixed.filter(
+          (d) => d.Luid === item.Luid
+        )
+        const z = vistFixedObj?.[0]?.by || ''
+        //
+        console.log('value is 0', obj, item)
         if (!obj[item.Luid]) {
-          obj[item.Luid] = { ...item, coverA: [item.to] }
+          console.log('value is 1', obj, item)
+
+          obj[item.Luid] = { ...item, coverA: [item.to], visitFixedBy: z }
         } else {
+          console.log('value is 2', obj, item)
+
           obj[item.Luid].coverA.push(item.to)
+          obj[item.Luid].visitFixedBy = z
         }
         return obj
       }, {})
     )
+    console.log('value is result', result)
     return result
   } else if (dateRange?.[1] != null) {
     const { data: lead_logs, error1 } = await supabase
@@ -984,7 +1008,7 @@ export const getBookedUnitsByProject = (orgId, snapshot, data, error) => {
       where('pId', '==', data?.projectId)
     )
   } else if (data?.assignedTo) {
-    console.log('inside value si ',  data?.assignedTo)
+    console.log('inside value si ', data?.assignedTo)
     itemsQuery = query(
       collection(db, `${orgId}_units`),
       where('status', 'in', status),
@@ -992,34 +1016,32 @@ export const getBookedUnitsByProject = (orgId, snapshot, data, error) => {
     )
   }
 
-  let q = collection(db, `${orgId}_units`);
-  const conditions = [];
+  let q = collection(db, `${orgId}_units`)
+  const conditions = []
 
   // Append 'status' condition if it's not undefined
   if (status !== undefined) {
-      conditions.push(where('status', 'in', status));
+    conditions.push(where('status', 'in', status))
   }
 
   // Append 'projectId' condition if it's not undefined
   if (data?.projectId !== undefined) {
-      conditions.push(where('pId', '==', data?.projectId));
+    conditions.push(where('pId', '==', data?.projectId))
   }
 
   // Append 'assignedTo' condition if it's not undefined
   if (data?.assignedTo !== undefined) {
-      conditions.push(where('assignedTo', '==', data?.assignedTo));
+    conditions.push(where('assignedTo', '==', data?.assignedTo))
   }
 
   // If all conditions are defined, append them to the query
   if (conditions.length > 0) {
-      q = query(q, ...conditions);
+    q = query(q, ...conditions)
   }
 
   console.log('hello ', status, data?.projectId, itemsQuery)
   return onSnapshot(q, snapshot, error)
 }
-
-
 
 export const getAllUnitsByProject = (orgId, snapshot, data, error) => {
   const { status } = data
@@ -2982,32 +3004,27 @@ export const updateUserAccessProject = async (
   by,
   enqueueSnackbar
 ) => {
-
   try {
-
-
-  await updateDoc(doc(db, 'users', uid), {
-    ...data
-  })
-  enqueueSnackbar(`Access Provided to ${email}`, {
-    variant: 'success',
-  })
-  return await addUserLog(orgId, {
-    s: 's',
-    type: 'updateRole',
-    subtype: 'updateRole',
-    txt: `${email} is updated with project ${projectName}`,
-    by,
-  })
-} catch (error) {
-  console.log('error at ', error, data)
-  enqueueSnackbar(`Failed ${error}`, {
-    variant: 'warning',
-  })
+    await updateDoc(doc(db, 'users', uid), {
+      ...data,
+    })
+    enqueueSnackbar(`Access Provided to ${email}`, {
+      variant: 'success',
+    })
+    return await addUserLog(orgId, {
+      s: 's',
+      type: 'updateRole',
+      subtype: 'updateRole',
+      txt: `${email} is updated with project ${projectName}`,
+      by,
+    })
+  } catch (error) {
+    console.log('error at ', error, data)
+    enqueueSnackbar(`Failed ${error}`, {
+      variant: 'warning',
+    })
+  }
 }
-}
-
-
 
 export const updateAccessRoles = async (
   orgId,
@@ -3685,12 +3702,13 @@ export const unitAuditDbFun = async (
   await updateDoc(doc(db, `${orgId}_units`, unitId), {
     T_total: totalUnitCost,
     T_elgible: totalElgible,
-    T_elgible_balance: totalElgible- (InReviewAmount || 0  + totalApprovedAmount || 0),
+    T_elgible_balance:
+      totalElgible - (InReviewAmount || 0 + totalApprovedAmount || 0),
     T_received: totalReceivedAmount,
     T_review: InReviewAmount,
-    T_approved: (totalApprovedAmount || 0),
-    T_cancelled: (totalCancelledAmount || 0),
-    T_balance: totalUnitCost - (InReviewAmount || 0  + totalApprovedAmount || 0)
+    T_approved: totalApprovedAmount || 0,
+    T_cancelled: totalCancelledAmount || 0,
+    T_balance: totalUnitCost - (InReviewAmount || 0 + totalApprovedAmount || 0),
   })
 }
 export const capturePaymentS = async (
@@ -3772,17 +3790,15 @@ export const capturePaymentS = async (
       T_elgible_balance: increment(-amount),
     })
 
-
-    if(mode=== "credit_note"){
-      await updateDoc(doc(db, `users`, towardsBankDocId
-      ), {
+    if (mode === 'credit_note') {
+      await updateDoc(doc(db, `users`, towardsBankDocId), {
         T_credit_note_review: increment(amount),
-        T_credit_note_units: increment(1)
+        T_credit_note_units: increment(1),
       })
 
       await updateDoc(doc(db, `${orgId}_units`, unitId), {
         T_credit_note_amount: increment(amount),
-        creditNotesFromA: arrayUnion(towardsBankDocId)
+        creditNotesFromA: arrayUnion(towardsBankDocId),
       })
     }
     const { data: data3, error: error3 } = await supabase
@@ -3936,8 +3952,8 @@ export const updateUnitStatus = async (
     await updateDoc(doc(db, `${orgId}_units`, unitId), {
       fullPs: data?.fullPs,
       status: data?.status,
-      T_elgible: (data?.T_elgible_new),
-      T_elgible_balance: (data?.T_elgible_balance),
+      T_elgible: data?.T_elgible_new,
+      T_elgible_balance: data?.T_elgible_balance,
     })
     enqueueSnackbar('Unit Status Updated', {
       variant: 'success',

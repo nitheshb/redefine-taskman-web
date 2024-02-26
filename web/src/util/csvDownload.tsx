@@ -36,8 +36,9 @@ export default function CSVDownloader({
         Assigned_to: item?.assignedToObj?.name,
         Date: item.Time,
         Visit_Fixed_On: prettyDate(item?.assignT || item?.Date),
+        Visit_Fixed_By: item?.visitFixedBy,
         Visited_On: item.Time,
-        Visit_Fixed_By:  item?.by,
+        Visit_Done_By:  item?.by,
         Executive: item?.leadOwner
 
       }

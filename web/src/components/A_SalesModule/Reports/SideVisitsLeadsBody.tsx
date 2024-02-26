@@ -185,8 +185,9 @@ const SideVisitLeadsBody = ({
                       { label: 'To', id: 'all' },
                       { label: 'Source', id: 'new' },
                       { label: 'Visit Fixed On', id: 'new' },
-                      { label: 'Visited On', id: 'new' },
                       { label: 'Visit Fixed By', id: 'new' },
+                      { label: 'Visited On', id: 'new' },
+                      { label: 'Visit Done By', id: 'new' },
                       { label: 'Executive', id: 'all' },
                         { label: 'Created on', id: 'all' },
                         { label: 'By', id: 'all' },
@@ -248,6 +249,10 @@ const SideVisitLeadsBody = ({
                         <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
                           {prettyDateTime(data?.assignT || data?.Date)}
                         </td>
+                        <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
+
+{data?.visitFixedBy}
+</td>
                         <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
                           {data?.Time}
                         </td>
