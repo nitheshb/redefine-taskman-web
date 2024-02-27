@@ -154,6 +154,13 @@ export const steamAllLeadsActivity = async (orgId, snapshot, data, error) => {
   // const itemsQuery = query(doc(db, `${orgId}_leads_log', 'W6sFKhgyihlsKmmqDG0r'))
   const { uid, cutoffDate, dateRange } = data
   console.log('logs range data is', dateRange, cutoffDate)
+
+  const { data: lead_logs_visit_fixed, error2 } = await supabase
+  .from(`${orgId}_lead_logs`)
+  .select('projectId, type,subtype,T, by, from, to, uid, Luid, payload')
+  //.eq('Luid', uid)
+  .eq('type', 'sts_change')
+  .eq('to', 'visitfixed')
   // return onSnapshot(doc(db, `${orgId}_leads_log`, uid), snapshot, error)
   if (dateRange?.[0] == null) {
     const { data: lead_logs, error1 } = await supabase
@@ -164,12 +171,6 @@ export const steamAllLeadsActivity = async (orgId, snapshot, data, error) => {
       .eq('from', 'visitfixed')
       .gte('T', cutoffDate)
 
-    const { data: lead_logs_visit_fixed, error2 } = await supabase
-      .from(`${orgId}_lead_logs`)
-      .select('projectId, type,subtype,T, by, from, to, uid, Luid, payload')
-      //.eq('Luid', uid)
-      .eq('type', 'sts_change')
-      .eq('to', 'visitfixed')
       // .gte('T', cutoffDate)
     console.log('value is', lead_logs)
     const result = Object.values(
@@ -206,10 +207,21 @@ export const steamAllLeadsActivity = async (orgId, snapshot, data, error) => {
       .lte('T', dateRange?.[1]?.getTime() + 86400000)
     const result = Object.values(
       lead_logs.reduce((obj, item) => {
+        const vistFixedObj = lead_logs_visit_fixed.filter(
+          (d) => d.Luid === item.Luid
+        )
+        const z = vistFixedObj?.[0]?.by || ''
+        //
+        console.log('value is 0', obj, item)
         if (!obj[item.Luid]) {
-          obj[item.Luid] = { ...item, coverA: [item.to] }
+          console.log('value is 1', obj, item)
+
+          obj[item.Luid] = { ...item, coverA: [item.to], visitFixedBy: z }
         } else {
+          console.log('value is 2', obj, item)
+
           obj[item.Luid].coverA.push(item.to)
+          obj[item.Luid].visitFixedBy = z
         }
         return obj
       }, {})
@@ -226,10 +238,21 @@ export const steamAllLeadsActivity = async (orgId, snapshot, data, error) => {
       .lte('T', cutoffDate + 86400000)
     const result = Object.values(
       lead_logs.reduce((obj, item) => {
+        const vistFixedObj = lead_logs_visit_fixed.filter(
+          (d) => d.Luid === item.Luid
+        )
+        const z = vistFixedObj?.[0]?.by || ''
+        //
+        console.log('value is 0', obj, item)
         if (!obj[item.Luid]) {
-          obj[item.Luid] = { ...item, coverA: [item.to] }
+          console.log('value is 1', obj, item)
+
+          obj[item.Luid] = { ...item, coverA: [item.to], visitFixedBy: z }
         } else {
+          console.log('value is 2', obj, item)
+
           obj[item.Luid].coverA.push(item.to)
+          obj[item.Luid].visitFixedBy = z
         }
         return obj
       }, {})
