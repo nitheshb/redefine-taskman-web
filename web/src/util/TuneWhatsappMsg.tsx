@@ -105,10 +105,10 @@ export const whatsAppTesting = (editorState, receiverDetails, msgPayload) => {
 
     sendWhatAppTextSms1(`${receiverPhNo}`, `${plainText}`)
 
-    sendWhatAppTextSms1(`${'7760959579'}`, `${plainText}`)
+    // sendWhatAppTextSms1(`${'7760959579'}`, `${plainText}`)
 
     sendWhatAppTextSms1(`${'8123826341'}`, `${plainText}`)
-    sendWhatAppTextSms1(`${'9849000525'}`, `${plainText}`)
+    // sendWhatAppTextSms1(`${'9849000525'}`, `${plainText}`)
 
 }
 

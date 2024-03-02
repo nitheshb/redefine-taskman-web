@@ -1,4 +1,5 @@
 export function serialProjecVisitFixedData(projectListA, fullData) {
+  console.log('inside visit fixed full data ',)
   let z = []
   return projectListA?.map((souceObj) => {
     const x = souceObj

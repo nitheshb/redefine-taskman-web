@@ -21,6 +21,7 @@ import {
 } from 'src/constants/projects'
 import {
   createProject,
+  getAllProjects,
   getLeadbyId1,
   steamBankDetailsList,
   updateLeadsLogWithProject,
@@ -33,6 +34,10 @@ import { prettyDate, prettyDateTime } from 'src/util/dateConverter'
 import { CustomRadioGroup } from 'src/util/formFields/CustomRadioGroup'
 import { CustomSelect } from 'src/util/formFields/selectBoxField'
 import { MultiSelectMultiLineField } from 'src/util/formFields/selectBoxMultiLineField'
+import {
+  SlimDateSelectBox,
+  SlimSelectBox,
+} from 'src/util/formFields/slimSelectBoxField'
 import { TextAreaField } from 'src/util/formFields/TextAreaField'
 import { TextField } from 'src/util/formFields/TextField'
 
@@ -51,11 +56,64 @@ const SideVisitLeadsBody = ({
 
   const [leadsData, setLeadsData] = useState([])
   const [loadingIcon, setLoadingIcon] = useState(false)
+  const [projectList, setprojectList] = useState([])
+  const [leadsFilA, setLeadsFilA] = useState([])
+  const [selProjectIs, setSelProject] = useState({
+    label: 'All Projects',
+    value: 'allprojects',
+  })
+
+  const [selProjectEmpIs, setSelProjectEmp] = useState({
+    label: 'All Projects',
+    value: 'allprojects',
+  })
 
   useEffect(() => {
     console.log('use effect stuff', leadsLogsPayload)
-    leadsSerialDatafun()
+    getProjectsListFun()
+
   }, [leadsLogsPayload])
+
+  const getProjectsListFun = async () => {
+    const unsubscribe = getAllProjects(
+      orgId,
+      (querySnapshot) => {
+        const projectsListA = querySnapshot.docs.map((docSnapshot) =>
+          docSnapshot.data()
+        )
+        // setprojectList(projectsListA)
+        projectsListA.map((user) => {
+          user.label = user.projectName
+          user.value = user.uid
+        })
+        console.log('fetched users list is', projectsListA)
+
+        setprojectList([
+          ...projectsListA,
+          ...[{ label: 'others', value: 'others' }],
+        ])
+      },
+      (error) => setprojectList([])
+    )
+
+    return unsubscribe
+  }
+  useEffect(() => {
+    if (selProjectIs?.value == 'allprojects') {
+      console.log('project list i s', projectList)
+      // setFiltProjectListTuned(projectList)
+      setLeadsFilA(leadsLogsPayload)
+      leadsSerialDatafun()
+    } else {
+      const z = projectList.filter((da) => {
+        return da.value == selProjectIs?.value
+      })
+      setLeadsFilA(leadsLogsPayload.filter((d)=> d.projectId === selProjectIs?.value))
+      leadsSerialDatafun()
+      // setFiltProjectListTuned(z)
+      // viewSource
+    }
+  }, [projectList, selProjectIs])
 
   const leadsSerialDatafun = async () => {
     const streamedTodo = []
@@ -142,21 +200,44 @@ const SideVisitLeadsBody = ({
     <div className="h-full flex flex-col py-6 bg-white shadow-xl overflow-y-scroll">
       <div className="px-4 sm:px-6  z-10 flex flex-row justify-between">
         <Dialog.Title className=" font-semibold text-xl mr-auto ml-3  font-Playfair tracking-wider">
-          {subtitle || title} ({leadsLogsPayload.length || 0})
+          {subtitle || title} ({leadsFilA.length || 0})
         </Dialog.Title>
-        <Tooltip title={`Download ${leadsLogsPayload?.length} Row`}>
+        <section className="flex flex-row">
+        <SlimSelectBox
+            name="project"
+            label=""
+            className="input min-w-[164px] ml-4"
+            onChange={(value) => {
+              console.log('zoro condition changed one  is', value)
+              setSelProject(value)
+              // formik.setFieldValue('project', value.value)
+            }}
+            value={selProjectIs?.value}
+            // options={aquaticCreatures}
+            options={[
+              ...[{ label: 'All Projects', value: 'allprojects' }],
+              ...projectList,
+            ]}
+            placeholder={undefined}
+          />
+
+        <Tooltip title={`Download ${leadsFilA?.length} Row`}>
           {/* <IconButton>
             <FileDownloadIcon />
             <CSVDownloader />
           </IconButton> */}
 
+
+
           <CSVDownloader
             className="mr-6 h-[20px] w-[20px]"
-            downloadRows={leadsLogsPayload}
+            downloadRows={leadsFilA}
             sourceTab="visitsReport"
             style={{ height: '20px', width: '20px' }}
           />
         </Tooltip>
+
+        </section>
       </div>
 
       <div className="grid  gap-8 grid-cols-1">
@@ -189,8 +270,8 @@ const SideVisitLeadsBody = ({
                       { label: 'Visited On', id: 'new' },
                       { label: 'Visit Done By', id: 'new' },
                       { label: 'Executive', id: 'all' },
-                        { label: 'Created on', id: 'all' },
-                        { label: 'By', id: 'all' },
+                      { label: 'Created on', id: 'all' },
+                      { label: 'By', id: 'all' },
                     ].map((d, i) => (
                       <th
                         key={i}
@@ -208,7 +289,7 @@ const SideVisitLeadsBody = ({
                 </thead>
 
                 <tbody>
-                  {leadsLogsPayload?.map((data, i) => {
+                  {leadsFilA?.map((data, i) => {
                     return (
                       <tr
                         className={`  ${
@@ -250,25 +331,21 @@ const SideVisitLeadsBody = ({
                           {prettyDateTime(data?.assignT || data?.Date)}
                         </td>
                         <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
-
-{data?.visitFixedBy}
-</td>
+                          {data?.visitFixedBy}
+                        </td>
                         <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
                           {data?.Time}
                         </td>
                         <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
-
-                        {data?.by}
+                          {data?.by}
                         </td>
                         <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
                           {data?.assignedToObj?.name}
                         </td>
                         <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
                           {prettyDateTime(data?.Date)}
-
                         </td>
                         <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
-
                           {data?.leadOwner}
                         </td>
                       </tr>

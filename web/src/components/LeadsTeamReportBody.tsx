@@ -159,6 +159,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
   const { orgId, access } = user
   const [leadsFetchedRawData, setLeadsFetchedRawData] = useState([])
   const [leadLogsRawData, setLeadLogsRawData] = useState([])
+  const [leadLogsFetchedRawData, setLeadLogsFetchRawData] = useState([])
   const [empPerDayTasksCountsA, setEmpPerDayTasksCountsA] = useState([])
 
   const [sourceListTuned, setSourceListTuned] = useState([])
@@ -327,8 +328,26 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
     setProjectListTuned(serialProjectLeadData(projectList, leadsFetchedRawData))
   }, [projectList, leadsFetchedRawData])
   useEffect(() => {
+console.log('selected project is ', selProjectIs?.value)
+    if (selProjectIs?.value === 'allprojects') {
     setLeadsLogFilData(serialProjecVisitFixedData(projectList, leadLogsRawData))
-  }, [projectList, leadLogsRawData])
+    }else {
+      const projectWideA = leadLogsRawData.filter(
+        (d) => d?.ProjectId === selProjectEmpIs?.value
+      )
+      console.log('selected project is ', selProjectIs?.value)
+      const x = leadLogsRawData?.filter((datObj) => {
+        return datObj?.ProjectId === selProjectIs?.value
+      });
+
+      console.log('selected project is ',leadLogsRawData, x)
+
+      setLeadsLogFilData(serialProjecVisitFixedData(projectList, leadLogsRawData?.filter((datObj) => {
+        return datObj?.ProjectId === selProjectIs?.value
+      })))
+      console.log('selected project is ',leadsLogFilData)
+    }
+  }, [projectList, leadLogsRawData, selProjectIs])
 
   useEffect(() => {
     if (selProjectEmpIs?.value === 'allprojects') {
@@ -359,7 +378,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
   const updateAgreegatedValues = async (projectFilList) => {
     projectFilList.map((data) => {
       const payload = {
-        Total: data?.TotalNew?.length || 0 ,
+        Total: data?.TotalNew?.length || 0,
         inprogress: data?.inprogress_new?.length || 0,
         new: data?.new?.length || 0,
         followup: data?.followup?.length || 0,
@@ -383,7 +402,6 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
       const payload = {
         visitfixed: data?.visitfixed?.length || 0,
         visitdone: data?.visitdone?.length || 0,
-
       }
       console.log('payload is', payload, data)
       addAgreegatedSalesValues(orgId, data?.uid, payload)
@@ -593,9 +611,9 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
     if (access?.includes('manage_leads')) {
       const unsubscribe = getLeadsByDate(orgId, {
         cutoffDate: sourceDateRange,
-        dateRange: dateRange
+        dateRange: dateRange,
       })
-     await console.log('my Array data is delayer 1 ccc', await unsubscribe)
+      await console.log('my Array data is delayer 1 ccc', await unsubscribe)
       await setLeadsFetchedRawData(await unsubscribe)
       await getProjectsListFun()
       await getUsersDataFun()
@@ -615,7 +633,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
   }, [])
   useEffect(() => {
     fetchLogsData()
-  }, [sourceDateRange,dateRange])
+  }, [sourceDateRange, dateRange])
 
   const fetchLogsData = async () => {
     const steamLeadLogs = await steamAllLeadsActivity(
@@ -624,7 +642,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
       {
         uid: 'VIzMzz5rl0NAywdnpHpb',
         cutoffDate: sourceDateRange,
-        dateRange: dateRange
+        dateRange: dateRange,
       },
       (error) => setLeadLogsRawData([])
     )
@@ -1556,7 +1574,6 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                                   : 'bg-gray-100'
                               }`}
                               key={i}
-
                             >
                               <td className="text-sm text-gray-900 font-medium px-6 py-2 whitespace-nowrap text-left">
                                 {i + 1}
@@ -1694,9 +1711,35 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                     style={{ backgroundColor: '#ebfafa' }}
                   >
                     <div className="overflow-hidden">
-                      <div className=" text-md font-bold leading-none pl-0 mt-4 border-b pb-4 mb-4 ">
-                        {`Site Visit's Overview`}
-                      </div>
+                      <section className="flex flex-row justify-between border-b mt-4 pb-2">
+                        <div className=" text-md font-bold leading-none pl-0 mt-2  mb-4  ">
+                          {`Site Visit's Overview`}
+                        </div>
+                        <div className=" ">
+                          <SlimSelectBox
+                            name="project"
+                            label=""
+                            className="input min-w-[164px] ml-4"
+                            onChange={(value) => {
+                              console.log(
+                                'zoro condition changed one  is',
+                                value
+                              )
+                              setSelProject(value)
+                              // formik.setFieldValue('project', value.value)
+                            }}
+                            value={selProjectIs?.value}
+                            // options={aquaticCreatures}
+                            options={[
+                              ...[
+                                { label: 'All Projects', value: 'allprojects' },
+                              ],
+                              ...projectList,
+                            ]}
+                            placeholder={undefined}
+                          />
+                        </div>
+                      </section>
 
                       <section className="flex flex-row justify-between mt-[18px]">
                         <section className="flex mb-2">
@@ -1852,7 +1895,13 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                             </label>
                           </span>
 
-                          <button onClick={()=> updateAgreegatedSiteVisitsValues(leadsLogFilData)}>Save DB</button>
+                          <button
+                            onClick={() =>
+                              updateAgreegatedSiteVisitsValues(leadsLogFilData)
+                            }
+                          >
+                            Save DB
+                          </button>
                         </section>
                         {/* <div className=" flex flex-row   ">
                           <SlimSelectBox
