@@ -12,6 +12,7 @@ import { useSnackbar } from 'notistack'
 import * as Yup from 'yup'
 
 import { AreaConverter } from 'src/components/AreaConverter'
+import AssigedToDropComp from 'src/components/assignedToDropComp'
 import Loader from 'src/components/Loader/Loader'
 import LogSkelton from 'src/components/shimmerLoaders/logSkelton'
 import {
@@ -24,6 +25,7 @@ import {
   getAllProjects,
   getLeadbyId1,
   steamBankDetailsList,
+  steamUsersListByRole,
   updateLeadsLogWithProject,
   updateProject,
 } from 'src/context/dbQueryFirebase'
@@ -53,6 +55,7 @@ const SideVisitLeadsBody = ({
   const { orgId } = user
 
   const { enqueueSnackbar } = useSnackbar()
+  const [usersList, setusersList] = useState([])
 
   const [leadsData, setLeadsData] = useState([])
   const [loadingIcon, setLoadingIcon] = useState(false)
@@ -61,6 +64,14 @@ const SideVisitLeadsBody = ({
   const [selProjectIs, setSelProject] = useState({
     label: 'All Projects',
     value: 'allprojects',
+  })
+  const [selVisitDoneBy, setVisitDoneBy] = useState({
+    label: 'All Executives',
+    value: 'allexecutives',
+  })
+  const [selVisitFixedBy, setVisitFixedBy] = useState({
+    label: 'All Executives',
+    value: 'allexecutives',
   })
 
   const [selProjectEmpIs, setSelProjectEmp] = useState({
@@ -71,7 +82,6 @@ const SideVisitLeadsBody = ({
   useEffect(() => {
     console.log('use effect stuff', leadsLogsPayload)
     getProjectsListFun()
-
   }, [leadsLogsPayload])
 
   const getProjectsListFun = async () => {
@@ -99,21 +109,48 @@ const SideVisitLeadsBody = ({
     return unsubscribe
   }
   useEffect(() => {
+    let projectFilAarray = [...leadsLogsPayload]
     if (selProjectIs?.value == 'allprojects') {
       console.log('project list i s', projectList)
       // setFiltProjectListTuned(projectList)
-      setLeadsFilA(leadsLogsPayload)
+
       leadsSerialDatafun()
     } else {
-      const z = projectList.filter((da) => {
-        return da.value == selProjectIs?.value
-      })
-      setLeadsFilA(leadsLogsPayload.filter((d)=> d.projectId === selProjectIs?.value))
+      projectFilAarray = projectFilAarray.filter((d) => d.projectId === selProjectIs?.value)
+
       leadsSerialDatafun()
       // setFiltProjectListTuned(z)
       // viewSource
     }
-  }, [projectList, selProjectIs])
+
+    if (selVisitFixedBy?.value == 'allexecutives') {
+      console.log('project list i s', projectList)
+      // setFiltProjectListTuned(projectList)
+
+      leadsSerialDatafun()
+    } else {
+      projectFilAarray = projectFilAarray.filter((d) => d.visitFixedBy === selVisitFixedBy?.value)
+
+      leadsSerialDatafun()
+      // setFiltProjectListTuned(z)
+      // viewSource
+    }    if (selVisitDoneBy?.value == 'allexecutives') {
+      console.log('project list i s', projectList)
+      // setFiltProjectListTuned(projectList)
+
+      leadsSerialDatafun()
+    } else {
+      projectFilAarray = projectFilAarray.filter((d) => d.by === selVisitDoneBy?.value)
+
+      leadsSerialDatafun()
+      // setFiltProjectListTuned(z)
+      // viewSource
+    }
+
+    setLeadsFilA(
+      projectFilAarray
+    )
+  }, [projectList, selProjectIs, selVisitDoneBy, selVisitFixedBy])
 
   const leadsSerialDatafun = async () => {
     const streamedTodo = []
@@ -189,13 +226,40 @@ const SideVisitLeadsBody = ({
     console.log('what matters', streamedTodo)
     await setLeadsData(streamedTodo)
   }
+  useEffect(() => {
+    const unsubscribe = steamUsersListByRole(
+      orgId,
+      (querySnapshot) => {
+        const usersListA = querySnapshot.docs.map((docSnapshot) =>
+          docSnapshot.data()
+        )
+
+        usersListA.map((user) => {
+          user.label = user.displayName || user.name
+          user.value = user.email
+        })
+        setusersList(usersListA)
+      },
+      (error) => setusersList([])
+    )
+
+    return unsubscribe
+  }, [])
 
   const selLeadFun = (data) => {
     console.log('data is ', data)
     setisImportLeadsOpen(true)
     setCustomerDetails(data)
   }
-
+  const setNewProject = (leadDocId, value) => {
+    setSelProject(value)
+  }
+  const setVisitDoneByFun = (leadDocId, value) => {
+    setVisitDoneBy(value)
+  }
+  const setVisitFixedByFun = (leadDocId, value) => {
+    setVisitFixedBy(value)
+  }
   return (
     <div className="h-full flex flex-col py-6 bg-white shadow-xl overflow-y-scroll">
       <div className="px-4 sm:px-6  z-10 flex flex-row justify-between">
@@ -203,40 +267,66 @@ const SideVisitLeadsBody = ({
           {subtitle || title} ({leadsFilA.length || 0})
         </Dialog.Title>
         <section className="flex flex-row">
-        <SlimSelectBox
-            name="project"
-            label=""
-            className="input min-w-[164px] ml-4"
-            onChange={(value) => {
-              console.log('zoro condition changed one  is', value)
-              setSelProject(value)
-              // formik.setFieldValue('project', value.value)
-            }}
-            value={selProjectIs?.value}
-            // options={aquaticCreatures}
-            options={[
-              ...[{ label: 'All Projects', value: 'allprojects' }],
-              ...projectList,
-            ]}
-            placeholder={undefined}
-          />
+          <section className="flex flex-col border ml-2 py-1  px-4 text-xs  rounded-full">
+            <AssigedToDropComp
+              assignerName={selProjectIs?.label}
+              id={'id'}
+              align="right"
+              setAssigner={setNewProject}
+              usersList={[
+                ...[{ label: 'All Projects', value: 'allprojects' }],
+                ...projectList,
+              ]}
+            />
+            <div className="font-md text-xs text-gray-500 mb-[px] tracking-wide mr-4">
+              Project {}
+            </div>
+          </section>
+          <section className="flex flex-col ml-2 py-1  border px-4 text-xs  rounded-full">
+            <AssigedToDropComp
+              assignerName={selVisitFixedBy?.label}
+              id={'id'}
+              align="right"
+              setAssigner={setVisitFixedByFun}
+              usersList={[
+                ...[{ label: 'All Executives', value: 'allexecutives' }],
+                ...usersList,
+              ]}
+            />
+            <div className="font-md text-xs text-gray-500 mb-[px] tracking-wide mr-4">
+              Visit Fixed By {}
+            </div>
+          </section>
 
-        <Tooltip title={`Download ${leadsFilA?.length} Row`}>
-          {/* <IconButton>
+          <section className="flex flex-col ml-2 py-1 border px-4 text-xs  rounded-full">
+            <AssigedToDropComp
+              assignerName={selVisitDoneBy?.label}
+              id={'id'}
+              align="right"
+              setAssigner={setVisitDoneByFun}
+              usersList={[
+                ...[{ label: 'All Executives', value: 'allexecutives' }],
+                ...usersList,
+              ]}
+            />
+            <div className="font-md text-xs text-gray-500 mb-[px] tracking-wide mr-4">
+              Visit Done By {}
+            </div>
+          </section>
+
+          <Tooltip title={`Download ${leadsFilA?.length} Row`}>
+            {/* <IconButton>
             <FileDownloadIcon />
             <CSVDownloader />
           </IconButton> */}
 
-
-
-          <CSVDownloader
-            className="mr-6 h-[20px] w-[20px]"
-            downloadRows={leadsFilA}
-            sourceTab="visitsReport"
-            style={{ height: '20px', width: '20px' }}
-          />
-        </Tooltip>
-
+            <CSVDownloader
+              className="mr-6 h-[20px] w-[20px]"
+              downloadRows={leadsFilA}
+              sourceTab="visitsReport"
+              style={{ height: '20px', width: '20px' }}
+            />
+          </Tooltip>
         </section>
       </div>
 
