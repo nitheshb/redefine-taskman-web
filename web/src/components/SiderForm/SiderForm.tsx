@@ -13,6 +13,7 @@ import {
 import CostBreakUpPdfPreview from 'src/util/costBreakUpPdfPreview'
 
 import CrmCustomerSummary from '../A_CrmModule/A_CrmCustomerSummary'
+import UnitBookingCancelCRM from '../A_CrmModule/A_UnitCancel.tsx/CrmUnitCancel'
 import CustomerSideViewCRM from '../A_CrmModule/CrmCustomerSideView'
 import UnitSideViewCRM from '../A_CrmModule/CrmUnitSideView'
 import ViewDocxFile from '../A_LegalModule/viewDocxFile'
@@ -39,7 +40,6 @@ import PaymentScheduleForm from '../PaymentScheduleForm/PaymentScheduleForm'
 import ProjPhaseHome from '../ProjPhaseHome/ProjPhaseHome'
 import TransactionUpdateSideView from '../transactionUpdateSideView'
 import ViewUnitDetails from '../ViewUnitDetails'
-import UnitBookingCancelCRM from '../A_CrmModule/A_UnitCancel.tsx/CrmUnitCancel'
 
 const SiderForm = ({
   BlockFeed,
@@ -204,16 +204,15 @@ const SiderForm = ({
                     myBlock={myBlock}
                   />
                 )}
- {
-                  (title === 'ImportAssets' && (
-                    <LeadsDropHomes
-                      title={title}
-                      dialogOpen={setOpen}
-                      pId={pId}
-                      myPhase={phaseDetails}
-                      myBlock={myBlock}
-                    />
-                  ))}
+                {title === 'ImportAssets' && (
+                  <LeadsDropHomes
+                    title={title}
+                    dialogOpen={setOpen}
+                    pId={pId}
+                    myPhase={phaseDetails}
+                    myBlock={myBlock}
+                  />
+                )}
                 {title === 'Add Unit' && (
                   <AddUnit
                     title={title}
@@ -452,7 +451,7 @@ const SiderForm = ({
                     selSubMenu2={selSubMenu2}
                   />
                 )}
-                 {title === 'Cancel_Unit' && (
+                {title === 'Cancel_Unit' && (
                   <UnitBookingCancelCRM
                     openUserProfile={false}
                     customerDetails={customerDetails}

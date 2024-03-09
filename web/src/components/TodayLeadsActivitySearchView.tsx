@@ -720,7 +720,7 @@ export default function TodayLeadsActivitySearchView({
   else if (hrs >= 17 && hrs <= 24) greet = 'Good Evening'
   return (
     <>
-      <div>
+      <div className="mt-1">
         {/* <Header /> */}
         <div className="flex justify-center items-center text-gray-900"></div>
         <div className=" justify-center items-center text-gray-900">

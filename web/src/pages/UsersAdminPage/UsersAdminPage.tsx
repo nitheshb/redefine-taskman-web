@@ -15,10 +15,13 @@ import AssetsManageTable from 'src/components/A_HrModule/AssetsManagementTable'
 import SiderForm from 'src/components/SiderForm/SiderForm'
 
 const UsersAdminPage = () => {
-  const [isOpen, setIsOpen] = useState(false)
-  const handleOnClose = () => setIsOpen(false)
+  const [isEmpDetailsOpen, setIsEmpDetailsOpen] = useState(false)
+  const [isAssetViewer, setAssetViewerOpen] = useState(false)
+  const handleEmployeeOnClose = () => setIsEmpDetailsOpen(false)
+  const handleAssetOnClose = () => setAssetViewerOpen(false)
   const [viewable, setViewable] = useState('User Management')
   const [empData, setEmpData] = useState({})
+  const [assetData, setAssetData] = useState({})
   const [selModule, setSelModule] = useState('HR')
   const [showCompletedTasks, setShowCompletedTasks] = useState(false)
 
@@ -27,7 +30,11 @@ const UsersAdminPage = () => {
   }
   const editEmployeeFun = (empData) => {
     setEmpData(empData)
-    setIsOpen(true)
+    setIsEmpDetailsOpen(true)
+  }
+  const addEditAsset = (assetPayload) => {
+    setAssetData(assetPayload)
+    setAssetViewerOpen(true)
   }
   return (
     <>
@@ -113,7 +120,7 @@ const UsersAdminPage = () => {
                   </div>
 
                   <button
-                    onClick={() => editEmployeeFun({})}
+                    onClick={() => addEditAsset({})}
                     className="flex items-center justify-center h-10 px-4  bg-gray-200 ml-auto text-sm font-medium rounded hover:bg-gray-300"
                   >
                     <svg
@@ -167,16 +174,16 @@ const UsersAdminPage = () => {
             )}
 
             <SUserSignup
-              open={isOpen}
-              setOpen={handleOnClose}
+              open={isEmpDetailsOpen}
+              setOpen={handleEmployeeOnClose}
               title="User"
               empData={empData}
             />
             {/* Import Assets */}
 
             <SiderForm
-        open={isOpen}
-        setOpen={handleOnClose}
+        open={isAssetViewer}
+        setOpen={handleAssetOnClose}
         title="ImportAssets"
         widthClass="max-w-4xl"
       />

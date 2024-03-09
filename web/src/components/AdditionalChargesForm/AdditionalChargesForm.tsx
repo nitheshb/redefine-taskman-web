@@ -692,6 +692,7 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
   }
   return (
     <section>
+      <section className="ml-4 text-md font-[500]">Part-A</section>
       <div className=" min border border-radius-4">
         <MaterialCRUDTable
           title=""
@@ -737,7 +738,7 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
             ? 'Construction Other Charges (section B)'
             : 'Plot Other Charges (section B)'}
         </span> */}
-
+          <section className="ml-4 text-md font-[500]">Part-B</section>
           <div className=" min">
             <MaterialCRUDTable
               title=""
@@ -785,6 +786,7 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
         </div>
 
         <div className=" min">
+          <section className="ml-4 text-md font-[500]">Part-C</section>
           <MaterialCRUDTable
             title=""
             columns={partCcolumns}

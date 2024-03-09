@@ -857,7 +857,7 @@ export default function UnitSummaryTableBody({
                           id={labelId}
                           scope="row"
                           padding="none"
-                          sx={{ whiteSpace: 'nowrap',  paddingRight: '6px' , paddingLeft: '6px', background: "#c3c3f1",  }}
+                          sx={{ whiteSpace: 'nowrap',  paddingRight: '6px' , paddingLeft: '6px',  }}
 
                         >
                           <section>
