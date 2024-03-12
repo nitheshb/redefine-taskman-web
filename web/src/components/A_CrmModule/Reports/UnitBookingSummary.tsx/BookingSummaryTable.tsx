@@ -847,7 +847,7 @@ export default function UnitSummaryTableBody({
                           scope="row"
                           padding="none"
                           size="small"
-                          sx={{ whiteSpace: 'nowrap',  background: "#d1d1fb",  }}
+                          sx={{ whiteSpace: 'nowrap',    }}
                         >
                           {index + 1}
                         </TableCell>
@@ -878,7 +878,7 @@ export default function UnitSummaryTableBody({
                           scope="row"
                           padding="none"
                           align="center"
-                          sx={{background: '#d1d1fb', paddingTop: '4px', paddingBottom:'4px', }}
+                          sx={{background: '#fff', paddingTop: '4px', paddingBottom:'4px', }}
 
                         >
                           <section>
@@ -889,13 +889,13 @@ export default function UnitSummaryTableBody({
                         </TableCell>
                           <TableCell
                           align="left"
-                          style={{ maxWidth:'80px', maxHeight: '40px', textOverflow: 'ellipsis',  whiteSpace: 'nowrap', overflow: 'hidden', paddingRight: '8px' , paddingLeft: '8px', paddingTop: '4px', paddingBottom:'4px', background: "#d1d1fb",}}
+                          style={{ maxWidth:'80px', maxHeight: '40px', textOverflow: 'ellipsis',  whiteSpace: 'nowrap', overflow: 'hidden', paddingRight: '8px' , paddingLeft: '8px', paddingTop: '4px', paddingBottom:'4px', background: "#fff",}}
                           padding='none'
                         >
 
                           <span className="font-bodyLato" style={{maxHeight: '40px', textOverflow: 'ellipsis', fontSize: '12px' }}>{row.projName}</span>
                         </TableCell>
-                        <TableCell align="center" sx={{background: "#c3c3f1"}} padding="none">
+                        <TableCell align="center" sx={{background: "#FFFF"}} padding="none">
                         <span className="px-2 uppercase inline-flex text-[10px] leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                           <HighlighterStyle
                             searchKey={searchKey}
@@ -904,7 +904,7 @@ export default function UnitSummaryTableBody({
                         </span>
                         </TableCell>
 
-                        <TableCell align="center" sx={{ whiteSpace: 'nowrap', background: "#d1d1fb",  }} padding="none">
+                        <TableCell align="center" sx={{ whiteSpace: 'nowrap', background: "#fff",  }} padding="none">
           {prettyDate(row?.Date)}
         </TableCell>
         {viewUnitStatusA.includes('Cost Split') && (  <TableCell align="right" sx={{ whiteSpace: 'nowrap', background: "#d1d1fb", paddingRight: '6px' }} padding="none">
