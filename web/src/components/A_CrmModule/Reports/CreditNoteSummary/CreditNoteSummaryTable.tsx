@@ -657,7 +657,7 @@ export default function CreditNoteSummaryTableBody({
                           scope="row"
                           padding="none"
                           size="small"
-                          sx={{ whiteSpace: 'nowrap',  background: "#d1d1fb",  }}
+                          sx={{ whiteSpace: 'nowrap',  background: "#fff",  }}
                         >
                           {index + 1}
                         </TableCell>
@@ -667,7 +667,7 @@ export default function CreditNoteSummaryTableBody({
                           id={labelId}
                           scope="row"
                           padding="none"
-                          sx={{ whiteSpace: 'nowrap',  paddingRight: '6px' , paddingLeft: '6px', background: "#c3c3f1",  }}
+                          sx={{ whiteSpace: 'nowrap',  paddingRight: '6px' , paddingLeft: '6px', background: "#fff",  }}
 
                         >
                           <section>
@@ -688,7 +688,7 @@ export default function CreditNoteSummaryTableBody({
                           scope="row"
                           padding="none"
                           align="center"
-                          sx={{background: '#d1d1fb', paddingTop: '4px', paddingBottom:'4px', }}
+                          sx={{background: '#fff', paddingTop: '4px', paddingBottom:'4px', }}
 
                         >
                           <section>
@@ -698,17 +698,17 @@ export default function CreditNoteSummaryTableBody({
                           </section>
                         </TableCell>
 
-                        <TableCell align="right" sx={{ whiteSpace: 'nowrap', background: "#f6cdca", paddingRight: '6px' }} padding="none">
+                        <TableCell align="right" sx={{ whiteSpace: 'nowrap', background: "#fff", paddingRight: '6px' }} padding="none">
         ₹{row?.T_credit_note_review?.toLocaleString('en-IN')}
         </TableCell>
 
 
-       <TableCell align="right" sx={{ whiteSpace: 'nowrap', background: "#c3c3f1", paddingRight: '6px' }} padding="none" >
+       <TableCell align="right" sx={{ whiteSpace: 'nowrap', background: "#fff", paddingRight: '6px' }} padding="none" >
         ₹{(row?.T_credit_note_approved?.toLocaleString('en-IN')) || 0}
         </TableCell>
 
 
-        <TableCell align="center" sx={{background: "#d1d1fb"}} padding="none">
+        <TableCell align="center" sx={{background: "#fff"}} padding="none">
                         <span className="px-2 uppercase inline-flex text-[10px] leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                           <HighlighterStyle
                             searchKey={searchKey}
