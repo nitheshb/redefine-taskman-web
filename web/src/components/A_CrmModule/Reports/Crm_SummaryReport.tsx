@@ -46,7 +46,7 @@ const CrmSummaryReport = () => {
     <div className="mx-auto m-2 max-w-screen-2xl">
       <div>
         <div className='grid grid-cols-3 gap-x-2 gap-y-3 grid-flow-row-dense'>
-          <div className='bg-red-500 rounded-lg shadow-xl min-h-[350px] min-w-[200px] col-span-2'>
+          <div className='bg-[#fff] rounded-lg shadow-xl min-h-[350px] min-w-[200px] col-span-2'>
             {/* Block 1 */}
 
             <div className="flex flex-col h-full">
@@ -86,10 +86,10 @@ const CrmSummaryReport = () => {
 {/* box end */}
 
           </div>
-          <div className='bg-green-500 rounded-lg shadow-xl min-h-[350px] min-w-[200px]'>
+          <div className='bg-[#fff] rounded-lg shadow-xl min-h-[350px] min-w-[200px]'>
             {/* Block 2 */}
             <div className='grid grid-cols-2 gap-x-2 gap-y-2  grid-rows-1  grid-flow-row-dense'>
-              <div className='bg-blue-500 rounded-lg shadow-xl min-h-[175px] min-w-[100px] row-span-1'>
+              <div className='bg-[#fff] rounded-lg shadow-xl min-h-[175px] min-w-[100px] row-span-1'>
                 {/* Block Blue 1 */}
                 <p className='crnsr-text pl-2 py-4' style={{ fontWeight:"600", fontSize: '1.1rem' }}>Token allocation</p>
                 <div className='grid grid-cols-2 gap-x-2 gap-y-2 grid-rows-1 grid-flow-row-dense'>
@@ -97,11 +97,11 @@ const CrmSummaryReport = () => {
                   <div className='grid grid-cols-1 gap-x-2 gap-y-2 grid-rows-1 grid-flow-row-dense'>
 
 
-                  <div className='bg-purple-500 rounded-lg shadow-xl min-h-[150px] min-w-[100px]'>
+                  <div className='bg-[#ffe0bb] rounded-lg shadow-xl min-h-[150px] min-w-[100px]'>
   {data1.map((item, index) => (
     <div key={index} className="relative flex flex-col justify-between h-full">
       <div className='flex justify-between p-2'>
-        <p className="text-white">{item}</p>
+        <p className="text-black">{item}</p>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 absolute right-2 top-2" style={{backgroundColor:'white', borderRadius:'50%' }}>
           <path fillRule="evenodd" d="M8 2a.75.75 0 0 1 .75.75v8.69l1.22-1.22a.75.75 0 1 1 1.06 1.06l-2.5 2.5a.75.75 0 0 1-1.06 0l-2.5-2.5a.75.75 0 1 1 1.06-1.06l1.22 1.22V2.75A.75.75 0 0 1 8 2Z" clipRule="evenodd" />
         </svg>
@@ -114,11 +114,11 @@ const CrmSummaryReport = () => {
 </div>
 
 
-                    <div className='bg-teal-500 rounded-lg shadow-xl min-h-[130px] min-w-[100px]'>
+                    <div className='bg-[#cfe5eb] rounded-lg shadow-xl min-h-[130px] min-w-[100px]'>
                     {data2.map((item, index) => (
     <div key={index} className="relative flex flex-col justify-between h-full">
       <div className='flex justify-between p-2'>
-        <p className="text-white">{item}</p>
+        <p className="text-black">{item}</p>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 absolute right-2 top-2" style={{backgroundColor:'white', borderRadius:'50%' }}>
           <path fillRule="evenodd" d="M8 2a.75.75 0 0 1 .75.75v8.69l1.22-1.22a.75.75 0 1 1 1.06 1.06l-2.5 2.5a.75.75 0 0 1-1.06 0l-2.5-2.5a.75.75 0 1 1 1.06-1.06l1.22 1.22V2.75A.75.75 0 0 1 8 2Z" clipRule="evenodd" />
         </svg>
@@ -132,11 +132,11 @@ const CrmSummaryReport = () => {
                   </div>
                   {/* inner block2 */}
                   <div className='grid gap-x-2 gap-y-2'>
-                    <div className='bg-cyan-500 rounded-lg shadow-xl min-h-[80px] min-w-[100px]'>
+                    <div className='bg-[#e2d9f7] rounded-lg shadow-xl min-h-[80px] min-w-[100px]'>
                     {data3.map((item, index) => (
     <div key={index} className="relative flex flex-col justify-between h-full">
       <div className='flex justify-between p-2'>
-        <p className="text-white">{item}</p>
+        <p className="text-black">{item}</p>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 absolute right-2 top-2" style={{backgroundColor:'white', borderRadius:'50%' }}>
           <path fillRule="evenodd" d="M8 2a.75.75 0 0 1 .75.75v8.69l1.22-1.22a.75.75 0 1 1 1.06 1.06l-2.5 2.5a.75.75 0 0 1-1.06 0l-2.5-2.5a.75.75 0 1 1 1.06-1.06l1.22 1.22V2.75A.75.75 0 0 1 8 2Z" clipRule="evenodd" />
         </svg>
@@ -147,11 +147,11 @@ const CrmSummaryReport = () => {
     </div>
   ))}
                     </div>
-                    <div className='bg-gray-500 rounded-lg shadow-xl min-h-[80px] min-w-[100px]'>
+                    <div className='bg-[#d2f2fa] rounded-lg shadow-xl min-h-[80px] min-w-[100px]'>
                     {data4.map((item, index) => (
     <div key={index} className="relative flex flex-col justify-between h-full">
       <div className='flex justify-between p-2'>
-        <p className="text-white">{item}</p>
+        <p className="text-black">{item}</p>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 absolute right-2 top-2" style={{backgroundColor:'white', borderRadius:'50%' }}>
           <path fillRule="evenodd" d="M8 2a.75.75 0 0 1 .75.75v8.69l1.22-1.22a.75.75 0 1 1 1.06 1.06l-2.5 2.5a.75.75 0 0 1-1.06 0l-2.5-2.5a.75.75 0 1 1 1.06-1.06l1.22 1.22V2.75A.75.75 0 0 1 8 2Z" clipRule="evenodd" />
         </svg>
@@ -162,11 +162,11 @@ const CrmSummaryReport = () => {
     </div>
   ))}
                     </div>
-                    <div className='bg-yellow-500 rounded-lg shadow-xl min-h-[80px] min-w-[100px]'>
+                    <div className='bg-[#f7f6b9] rounded-lg shadow-xl min-h-[80px] min-w-[100px]'>
                     {data5.map((item, index) => (
     <div key={index} className="relative flex flex-col justify-between h-full">
       <div className='flex justify-between p-2'>
-        <p className="text-white">{item}</p>
+        <p className="text-black">{item}</p>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 absolute right-2 top-2" style={{backgroundColor:'white', borderRadius:'50%' }}>
           <path fillRule="evenodd" d="M8 2a.75.75 0 0 1 .75.75v8.69l1.22-1.22a.75.75 0 1 1 1.06 1.06l-2.5 2.5a.75.75 0 0 1-1.06 0l-2.5-2.5a.75.75 0 1 1 1.06-1.06l1.22 1.22V2.75A.75.75 0 0 1 8 2Z" clipRule="evenodd" />
         </svg>
@@ -181,11 +181,11 @@ const CrmSummaryReport = () => {
                 </div>
               </div>
               <div>
-              <div className='bg-yellow-500 rounded-lg shadow-xl min-h-[170px] min-w-[100px]'>
+              <div className='bg-[#fff] rounded-lg shadow-xl min-h-[170px] min-w-[100px]'>
   {data6.map((item, index) => (
     <div key={index} className="relative flex flex-col justify-between h-full">
       <div className='flex justify-between p-2'>
-        <p className="text-white " style={{fontSize:'1.2rem'}}>{item}</p>
+        <p className="text-black" style={{fontSize:'1.2rem'}}>{item}</p>
       </div>
 
     </div>
@@ -196,7 +196,7 @@ const CrmSummaryReport = () => {
 </div>
 
                 <div className="mt-2"></div>
-                <div className='bg-indigo-500 rounded-lg shadow-xl min-h-[170px] min-w-[100px]'>
+                <div className='bg-[#fff] rounded-lg shadow-xl min-h-[170px] min-w-[100px]'>
 
                     <div>
                         <p>Performance <br /> <span>comparison</span> </p>
@@ -210,7 +210,7 @@ const CrmSummaryReport = () => {
         <div className="mt-4"></div>
         <div className='grid grid-cols-3 gap-x-2 gap-y-3 grid-flow-row-dense'>
           {/*Table*/}
-          <div className='bg-pink-500 rounded-lg shadow-xl min-h-[350px] min-w-[200px] col-span-2'>
+          <div className='bg-[#fff] rounded-lg shadow-xl min-h-[350px] min-w-[200px] col-span-2'>
             <div className='box-crm-summary p-5' style={{fontWeight:"bold"}}>
               <h5>My Portfolio</h5>
               <Paper className="w-full mt-6 overflow-x-auto">
@@ -243,7 +243,7 @@ const CrmSummaryReport = () => {
               </Paper>
             </div>
           </div>
-          <div className='bg-slate-500 rounded-lg shadow-xl min-h-[350px] min-w-[200px]' />
+          <div className='bg-[#fff] rounded-lg shadow-xl min-h-[350px] min-w-[200px]' />
         </div>
       </div>
     </div>
