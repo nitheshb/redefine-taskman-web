@@ -349,10 +349,11 @@ const CrmHomePage = () => {
 
   return (
     <>
-      <div className="flex w-screen h-screen text-gray-700">
-        <div className="flex flex-col flex-grow">
+     
+      <div className="flex w-screen h-screen  text-gray-700">
+        <div className="flex  flex-col flex-grow">
           {/* <HeadNavBar /> */}
-          <div className="flex flex-row overflow-auto  text-gray-700 bg-gradient-to-tr from-blue-200 via-indigo-200 to-pink-200">
+          <div className="flex flex-row overflow-auto   text-gray-700 bg-gradient-to-tr from-blue-200 via-indigo-200 to-pink-200">
             <SlimSideMenuBar
               pgName={'crmModule'}
               sourceLink={'crmModule'}
@@ -369,8 +370,8 @@ const CrmHomePage = () => {
               viewable={viewable}
             /> */}
             <div className="flex-grow  items-center overflow-y-auto  h-[98%]  px-300  py-300">
-              <HeadNavBar2 selModule={selModule} setSelModule={setSelModule} />
-              <div className="px-1">
+              <HeadNavBar2 selModule={selModule} setSelModule={setSelModule}  />
+              <div className="p-0 px-1">
                 {/* {viewable === 'crmDashboard' && (
                   <CrmDashboardHome
                     project={{
@@ -699,6 +700,7 @@ const CrmHomePage = () => {
           <MetaTags title="ExecutiveHome" description="ExecutiveHome page" />
         </div>
       </div>
+      
     </>
   )
 }

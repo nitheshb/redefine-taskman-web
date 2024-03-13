@@ -380,7 +380,7 @@ const HomePage = () => {
       <div className="flex w-screen h-screen text-gray-700">
         <div className="flex flex-col flex-grow">
           {/* <HeadNavBar /> */}
-          <div className="flex overflow-y-hidden flex-row overflow-auto h-[100vh]  text-gray-700 bg-gradient-to-tr from-blue-200 via-indigo-200 to-pink-200">
+          <div className="flex overflow-y-hidden flex-row overflow-auto h-[100vh]   text-gray-700 bg-gradient-to-tr from-blue-200 via-indigo-200 to-pink-200">
             {/* <HeadSideBar pgName={'home'} /> */}
             <SlimSideMenuBar
               pgName={'projectModule'}
@@ -394,7 +394,8 @@ const HomePage = () => {
               <HeadNavBar2 selModule={selModule} setSelModule={setSelModule} />
               {viewable === 'Marketing' && (
                 <>
-                  <div className="mt-2 mx-1">
+                {/*Sales Executive Notifications border */}
+                  <div className="mt-1 mx-1">
                     <section className="w-full py-4  leading-7 text-gray-900 bg-white  rounded-md">
                       <div className="box-border px-4 mx-auto border-solid sm:px-6 md:px-6 lg:px-8 max-w-full ">
                         <div className="flex flex-col  leading-7  text-gray-900 border-0 border-gray-200 ">
@@ -409,7 +410,7 @@ const HomePage = () => {
               )}
               {viewable === 'projectReports' && (
                 <>
-                  <div className="mt-2 mx-1">
+                  <div className="mt-1 mx-1">
                     <section className="w-full py-4  leading-7 text-gray-900 bg-white  rounded-md">
                       <div className="box-border px-2 mx-auto border-solid  max-w-full ">
                         <div className="flex flex-col  leading-7  text-gray-900 border-0 border-gray-200 ">

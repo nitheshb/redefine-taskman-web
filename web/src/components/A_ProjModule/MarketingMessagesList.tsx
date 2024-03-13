@@ -60,7 +60,7 @@ const MarkeingMessagesList = ({ title, pId, data }) => {
 
   return (
     <>
-      <div className="flex overflow-x-auto ml-2 border-b pb-2">
+      <div className="flex overflow-x-auto ml-2  border-b pb-2">
         <section className="mt-4">Templates</section>
         {[
           { label: 'Enquiry Journey Status', value: 'enquiry_journey_status' },

@@ -73,7 +73,7 @@ const CrmSummaryReport = () => {
       </div>
     </div>
 
-    {/* Move card-block2 here */}
+    {/*  card-block2 */}
     <div className="card-block2 flex flex-wrap">
       {avgGrowingData.map((data, index) => (
         <div key={index} className={`flex-1 p-4 ${index !== avgGrowingData.length - 1 ? 'border-r border-gray-300' : ''}`}>
