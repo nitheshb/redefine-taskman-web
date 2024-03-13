@@ -484,7 +484,7 @@ const HomePage = () => {
                 viewable != 'projectReports' && (
                   <>
                     <div className="">
-                      <div className="flex items-center justify-between py-2 pb-8 ">
+                      <div className="flex items-center justify-between mt-1   pb-8 ">
                         <div className="w-full flex-grow   items-center  bg-blue h-[98%]  py-300 ">
                           <div className="px-1">
                             {viewable != 'inProgress' &&

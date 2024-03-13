@@ -468,7 +468,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
   }
   return (
     <>
-      <div className=" font-rubikF bg-white rounded-t-lg ">
+      <div className=" font-rubikF mt-2 bg-white rounded-t-lg ">
         <div className="">
           <div
             className="
