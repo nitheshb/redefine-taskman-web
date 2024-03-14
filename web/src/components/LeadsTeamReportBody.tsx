@@ -54,6 +54,7 @@ import { serialProjecVisitFixedData } from './LeadsTeamReport/serialProjectVisit
 import { serialMyData } from './LeadsTeamReport/SourceLeads'
 import ReportSideWindow from './SiderForm/ReportSideView'
 import SiderForm from './SiderForm/SiderForm'
+import SalesSummaryReport from './A_SalesModule/Reports/salesSummaryReport'
 
 const valueFeedData = [
   { k: 'Total', v: 300, pic: '' },
@@ -1183,6 +1184,7 @@ console.log('selected project is ', selProjectIs?.value)
                 { label: 'Source Performance', value: 'source_perf' },
                 { label: 'Site Visits', value: 'site_visits' },
                 { label: 'Employee Performance', value: 'emp_tasks' },
+                { label: 'Home', value: 'sale_report_home' },
 
                 // { label: 'Source Report', value: 'source_report' },
                 // { label: 'Employee Report', value: 'emp_status_report' },
@@ -1700,7 +1702,9 @@ console.log('selected project is ', selProjectIs?.value)
               </div>
             </div>
           )}
-
+          {selCat === 'sale_report_home' && (
+            <SalesSummaryReport />
+          )}
           {selCat === 'site_visits' && (
             <>
               {/* old comp */}

@@ -217,7 +217,7 @@ const LegalDocsHome = ({ project }) => {
 
   return (
     <div>
-      <section className=" mt-2 mb-8 leading-7 text-gray-900 bg-white sm:py-12 md:py-16 lg:py-18 mx-1 pr-10 rounded-lg px-6  w-[1430px]">
+      <section className=" mt-1 mb-8 leading-7 text-gray-900 bg-white sm:py-12 md:py-16 lg:py-18 mx-1 pr-10 rounded-lg px-6  w-[1430px]">
         <div className="  mx-auto border-solid sm:px-6 md:px-6 px-6  ">
           {/* <div className="flex flex-col  leading-7  text-gray-900 border-0 border-gray-200 ">
             <div className="flex items-center flex-shrink-0  px-0  pl-0   mb-2">

@@ -212,7 +212,7 @@ const LegalHome = ({ setisImportLeadsOpen, selUserProfileF, taskType }) => {
   return (
     <div className="flex  flex-row  text-gray-700">
       <div className="flex-1 overflow-auto">
-        <div className="p-1 ">
+        <div className="p-0 px-1 ">
           <TodayLeadsActivitySearchView
             moduleName={"Legal"}
             data={filterTable}

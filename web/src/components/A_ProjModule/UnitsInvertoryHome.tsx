@@ -124,7 +124,7 @@ const UnitsInventoryHome = ({ project }) => {
   }
 
   return (
-    <div>
+    
       <section className=" mt-2 mx-2 py-6 mb-8 leading-7 text-gray-900 bg-white  rounded-lg  ">
         <div className="box-border px-4 mx-auto border-solid sm:px-6 md:px-6 lg:px-8 max-w-full ">
           <div className="flex flex-col  leading-7  text-gray-900 border-0 border-gray-200 ">
@@ -185,7 +185,7 @@ const UnitsInventoryHome = ({ project }) => {
                       type="search"
                       id="search-dropdown"
                       className="block p-2.5 w-full z-2 text-sm text-gray-900 bg-gray-100 "
-                      placeholder={` Search Unit No, Customer name, Phone no, Dues, Review......... the`}
+                      placeholder={` Search Unit No, Customer name, Phone no, Dues, Review.....`}
                       required
                     />
                     <button
@@ -242,7 +242,7 @@ const UnitsInventoryHome = ({ project }) => {
           </div>
         </div>
       </section>
-    </div>
+    
   )
 }
 
