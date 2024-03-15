@@ -4,7 +4,9 @@ import Paper from '@material-ui/core/Paper'
 import TableCell from '@material-ui/core/TableCell'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
+
 import '../../../styles/myStyles.css'
+import StackedLeadsChart from './charts/salesStackedChart'
 
 const rows = [
   {
@@ -59,11 +61,11 @@ const rows = [
   },
 ]
 
-const data1 = ['Leads']
-const data2 = ['Progress']
+const data1 = ['Inprogress']
+const data2 = ['Not Interested']
 const data3 = ['Site Visits ']
-const data4 = ['Booking']
-const data5 = ['Not Interested']
+const data4 = ['Followup']
+const data5 = ['Booking']
 const data6 = ['Highest volume(24h)']
 
 const totalProfit = '98,6543.53'
@@ -122,7 +124,7 @@ const avgGrowingData = [
   },
   {
     percentage: '1.98%',
-    text: 'Le5ad Sources',
+    text: 'LeadSources',
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -176,344 +178,283 @@ const avgGrowingData = [
 
 const SalesSummaryReport = () => {
   return (
-    <div className="mx-auto m-2 max-w-screen-2xl">
-      <div>
-        <div className="grid grid-cols-3 gap-x-2 gap-y-3 grid-flow-row-dense">
-          <div className="bg-[#fff] rounded-lg shadow-xl min-h-[340px] min-w-[200px] col-span-2">
-            {/* Block 1 */}
-            <div className="flex flex-col h-full">
-              <div className="card-block1 flex justify-between mb-8">
-                <div className="flex-1 mr-4  p-4">
-                  <div>
-                    <h5 className="text-black text-xl font-medium mt-1 mb-2">
-                      Total Leads
-                    </h5>
+    <div className="flex flex-col  mt-4 drop-shadow-md rounded-lg  px-4">
+      <div className="flex flex-col  mt-4 drop-shadow-md rounded-lg  px-4">
+        <div className="m-2">
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-row flex-wrap">
+              <div className="bg-[#fff] rounded-lg shadow-xl  ">
+                {/* Block 1 */}
+                <div className="flex flex-col h-full">
+                  <div className="card-block1 flex justify-between mb-8">
+                    <div className="flex-1 mr-4  p-4">
+                      <div>
+                        <section className="text-black  font-weight-[600] mt-1 mb-2">
+                          Total Leads
+                        </section>
 
-                    <span>12 January 2023 - 12 January 2024</span>
-                  </div>
-                  <div className="inline-flex mt-8">
-                    <p className="text-3xl font-bold">₹{totalProfit}</p>
-                    <span className="p-3 pl-4 font-medium">
-                      {profitPercentage}
-                    </span>
-                  </div>
-                  <p className="p-0 cursor-pointer">
-                    <span className="border p-1 border-gray-300 text-black m-1 rounded-tl-2xl rounded-br-2xl rounded-tr-2xl font-medium text-sm">
-                      {performanceText}
-                    </span>
-                  </p>
-                </div>
-                <div className="flex-1 bg-green-200 rounded-lg p-4">
-                  <p>Graph</p>
-                </div>
-              </div>
-
-              {/*  card-block2 */}
-              <div className="card-block2 flex flex-wrap">
-                {avgGrowingData.map((data, index) => (
-                  <div
-                    key={index}
-                    className={`flex-1 p-4 ${
-                      index !== avgGrowingData.length - 1
-                        ? 'border-r border-gray-300'
-                        : ''
-                    }`}
-                  >
-                    <div className="flex items-center mb-2">
-                      {data.icon}
-                      <p className="ml-2">{data.text}</p>
+                        <span>12 January 2023 - 12 January 2024</span>
+                      </div>
+                      <div className="inline-flex mt-8">
+                        <p className="text-3xl font-bold">₹{totalProfit}</p>
+                        <span className="p-3 pl-4 font-medium">
+                          {profitPercentage}
+                        </span>
+                      </div>
+                      <p className="p-0 cursor-pointer">
+                        <span className="border p-1 border-gray-300 text-black m-1 rounded-tl-2xl rounded-br-2xl rounded-tr-2xl font-medium text-sm">
+                          {performanceText}
+                        </span>
+                      </p>
                     </div>
-                    <p className="font-bold text-xl">{data.percentage}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-[#fff] rounded-lg shadow-xl min-h-[340px] min-w-[200px]">
-            {/* Block 2 */}
-            <div className="grid grid-cols-2 gap-x-2 gap-y-2  grid-rows-1  grid-flow-row-dense">
-              <div className="bg-[#fff] rounded-lg shadow-xl min-h-[175px] min-w-[100px] row-span-1">
-                {/* Block Blue 1 */}
-                <p
-                  className="crnsr-text pl-2 py-4"
-                  style={{ fontWeight: '600', fontSize: '1.1rem' }}
-                >
-                  Token allocation
-                </p>
-                <div className="grid grid-cols-2 gap-x-2 gap-y-2 grid-rows-1 grid-flow-row-dense p-2">
-                  {/* inner block1 */}
-                  <div className="grid grid-cols-1 gap-x-2 gap-y-2 grid-rows-1 grid-flow-row-dense">
-                    <div className="bg-[#ffe0bb] rounded-lg shadow-xl min-h-[150px] min-w-[100px]">
-                      {data1.map((item, index) => (
-                        <div
-                          key={index}
-                          className="relative flex flex-col justify-between h-full"
-                        >
-                          <div className="flex justify-between p-2">
-                            <p className="text-black">{item}</p>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 16 16"
-                              fill="currentColor"
-                              className="w-4 h-4 absolute right-2 top-2"
-                              style={{
-                                backgroundColor: 'white',
-                                borderRadius: '50%',
-                              }}
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M8 2a.75.75 0 0 1 .75.75v8.69l1.22-1.22a.75.75 0 1 1 1.06 1.06l-2.5 2.5a.75.75 0 0 1-1.06 0l-2.5-2.5a.75.75 0 1 1 1.06-1.06l1.22 1.22V2.75A.75.75 0 0 1 8 2Z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                          </div>
-                          <div className="flex justify-start p-2">
-                            <p>$16,987</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="bg-[#cfe5eb] rounded-lg shadow-xl min-h-[130px] min-w-[100px]">
-                      {data2.map((item, index) => (
-                        <div
-                          key={index}
-                          className="relative flex flex-col justify-between h-full"
-                        >
-                          <div className="flex justify-between p-2">
-                            <p className="text-black">{item}</p>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 16 16"
-                              fill="currentColor"
-                              className="w-4 h-4 absolute right-2 top-2"
-                              style={{
-                                backgroundColor: 'white',
-                                borderRadius: '50%',
-                              }}
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M8 2a.75.75 0 0 1 .75.75v8.69l1.22-1.22a.75.75 0 1 1 1.06 1.06l-2.5 2.5a.75.75 0 0 1-1.06 0l-2.5-2.5a.75.75 0 1 1 1.06-1.06l1.22 1.22V2.75A.75.75 0 0 1 8 2Z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                          </div>
-                          <div className="flex justify-start p-2">
-                            <p>$6,000</p>
-                          </div>
-                        </div>
-                      ))}
+                    <div className="flex-1 bg-green-200 rounded-lg p-4">
+                      <p>Graph</p>
                     </div>
                   </div>
-                  {/* inner block2 */}
-                  <div className="grid gap-x-2 gap-y-2">
-                    <div className="bg-[#e2d9f7] rounded-lg shadow-xl min-h-[80px] min-w-[100px]">
-                      {data3.map((item, index) => (
-                        <div
-                          key={index}
-                          className="relative flex flex-col justify-between h-full"
-                        >
-                          <div className="flex justify-between p-2">
-                            <p className="text-black">{item}</p>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 16 16"
-                              fill="currentColor"
-                              className="w-4 h-4 absolute right-2 top-2"
-                              style={{
-                                backgroundColor: 'white',
-                                borderRadius: '50%',
-                              }}
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M8 2a.75.75 0 0 1 .75.75v8.69l1.22-1.22a.75.75 0 1 1 1.06 1.06l-2.5 2.5a.75.75 0 0 1-1.06 0l-2.5-2.5a.75.75 0 1 1 1.06-1.06l1.22 1.22V2.75A.75.75 0 0 1 8 2Z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                          </div>
-                          <div className="flex justify-start p-2">
-                            <p>$11,000</p>
-                          </div>
+
+                  {/*  card-block2 */}
+                  <div className=" flex flex-wrap">
+                    {avgGrowingData.map((data, index) => (
+                      <div
+                        key={index}
+                        className={`flex-1 p-4 ${
+                          index !== avgGrowingData.length - 1
+                            ? 'border-r border-gray-300'
+                            : ''
+                        }`}
+                      >
+                        <div className="flex items-center mb-2">
+                          {data.icon}
+                          <p className="ml-2">{data.text}</p>
                         </div>
-                      ))}
-                    </div>
-                    <div className="bg-[#d2f2fa] rounded-lg shadow-xl min-h-[80px] min-w-[100px]">
-                      {data4.map((item, index) => (
-                        <div
-                          key={index}
-                          className="relative flex flex-col justify-between h-full"
-                        >
-                          <div className="flex justify-between p-2">
-                            <p className="text-black">{item}</p>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 16 16"
-                              fill="currentColor"
-                              className="w-4 h-4 absolute right-2 top-2"
-                              style={{
-                                backgroundColor: 'white',
-                                borderRadius: '50%',
-                              }}
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M8 2a.75.75 0 0 1 .75.75v8.69l1.22-1.22a.75.75 0 1 1 1.06 1.06l-2.5 2.5a.75.75 0 0 1-1.06 0l-2.5-2.5a.75.75 0 1 1 1.06-1.06l1.22 1.22V2.75A.75.75 0 0 1 8 2Z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                          </div>
-                          <div className="flex justify-start p-2">
-                            <p>$3,765</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="bg-[#f7f6b9] rounded-lg shadow-xl min-h-[80px] min-w-[100px]">
-                      {data5.map((item, index) => (
-                        <div
-                          key={index}
-                          className="relative flex flex-col justify-between h-full"
-                        >
-                          <div className="flex justify-between p-2">
-                            <p className="text-black">{item}</p>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 16 16"
-                              fill="currentColor"
-                              className="w-4 h-4 absolute right-2 top-2"
-                              style={{
-                                backgroundColor: 'white',
-                                borderRadius: '50%',
-                              }}
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M8 2a.75.75 0 0 1 .75.75v8.69l1.22-1.22a.75.75 0 1 1 1.06 1.06l-2.5 2.5a.75.75 0 0 1-1.06 0l-2.5-2.5a.75.75 0 1 1 1.06-1.06l1.22 1.22V2.75A.75.75 0 0 1 8 2Z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                          </div>
-                          <div className="flex justify-start p-2">
-                            <p>$2,567</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+                        <p className="font-bold text-xl">{data.percentage}</p>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
-              <div>
-                <div className=" p-2 pt-2 bg-[#fff] rounded-lg shadow-xl min-h-[170px] min-w-[100px]">
-                  {data6.map((item, index) => (
-                    <div
-                      key={index}
-                      className="relative flex flex-col justify-between h-full"
+              {/* section 2 */}
+              <div className="bg-[#fff]  rounded-lg shadow-xl min-h-[340px] min-w-[200px] ml-2">
+                {/* Block 2 */}
+                <div className="w-full flex">
+                  <div className="bg-[#fff] rounded-lg  min-h-[175px] min-w-[100px] row-span-1">
+                    {/* Block Blue 1 */}
+                    <p
+                      className="crnsr-text pl-2 py-2"
+                      style={{ fontWeight: '600', fontSize: '1.1rem' }}
                     >
-                      <div className="flex justify-between p-2">
-                        <p
-                          className="text-black"
-                          style={{ fontSize: '1.2rem' }}
-                        >
-                          {item}
-                        </p>
+                      Leads
+                    </p>
+                    <div className="flex flex-row gap-3 p-4 pt-2">
+                      {/* inner block1 */}
+                      <div className="bg-[#ffe0bb] rounded-lg shadow-xl min-h-[150px] min-w-[100px]">
+                        {data1.map((item, index) => (
+                          <div
+                            key={index}
+                            className="relative flex flex-col justify-between h-full"
+                          >
+                            <div className="flex justify-between p-2">
+                              <p className="text-black">Leads</p>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 16 16"
+                                fill="currentColor"
+                                className="w-4 h-4 absolute right-2 top-2"
+                                style={{
+                                  backgroundColor: 'white',
+                                  borderRadius: '50%',
+                                }}
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M8 2a.75.75 0 0 1 .75.75v8.69l1.22-1.22a.75.75 0 1 1 1.06 1.06l-2.5 2.5a.75.75 0 0 1-1.06 0l-2.5-2.5a.75.75 0 1 1 1.06-1.06l1.22 1.22V2.75A.75.75 0 0 1 8 2Z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                            </div>
+                            <div className="flex justify-start p-2">
+                              <p>$16,987 6</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      {/* Row 2 */}
+                      <div className="grid grid-cols-1 gap-x-2 gap-y-2 grid-rows-1 grid-flow-row-dense">
+                        <div className="bg-[#ffe0bb] rounded-lg shadow-xl min-h-[150px] min-w-[100px]">
+                          {data1.map((item, index) => (
+                            <div
+                              key={index}
+                              className="relative flex flex-col justify-between h-full"
+                            >
+                              <div className="flex justify-between p-2">
+                                <p className="text-black">{item}</p>
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 16 16"
+                                  fill="currentColor"
+                                  className="w-4 h-4 absolute right-2 top-2"
+                                  style={{
+                                    backgroundColor: 'white',
+                                    borderRadius: '50%',
+                                  }}
+                                >
+                                  <path
+                                    fillRule="evenodd"
+                                    d="M8 2a.75.75 0 0 1 .75.75v8.69l1.22-1.22a.75.75 0 1 1 1.06 1.06l-2.5 2.5a.75.75 0 0 1-1.06 0l-2.5-2.5a.75.75 0 1 1 1.06-1.06l1.22 1.22V2.75A.75.75 0 0 1 8 2Z"
+                                    clipRule="evenodd"
+                                  />
+                                </svg>
+                              </div>
+                              <div className="flex justify-start p-2">
+                                <p>$16,987 6</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className="bg-[#cfe5eb] rounded-lg shadow-xl min-h-[130px] min-w-[100px]">
+                          {data2.map((item, index) => (
+                            <div
+                              key={index}
+                              className=" flex flex-col justify-between h-full"
+                            >
+                              <div className="flex justify-between p-2">
+                                <p className="text-black">{item}</p>
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 16 16"
+                                  fill="currentColor"
+                                  className="w-4 h-4 mt-1 ml-2 right-2 top-2"
+                                  style={{
+                                    backgroundColor: 'white',
+                                    borderRadius: '50%',
+                                  }}
+                                >
+                                  <path
+                                    fillRule="evenodd"
+                                    d="M8 2a.75.75 0 0 1 .75.75v8.69l1.22-1.22a.75.75 0 1 1 1.06 1.06l-2.5 2.5a.75.75 0 0 1-1.06 0l-2.5-2.5a.75.75 0 1 1 1.06-1.06l1.22 1.22V2.75A.75.75 0 0 1 8 2Z"
+                                    clipRule="evenodd"
+                                  />
+                                </svg>
+                              </div>
+                              <div className="flex justify-start p-2">
+                                <p>$6,000</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      {/* inner block2 */}
+                      <div className="grid gap-x-2 gap-y-2">
+                        <div className="bg-[#e2d9f7] rounded-lg shadow-xl min-h-[80px] min-w-[100px]">
+                          {data3.map((item, index) => (
+                            <div
+                              key={index}
+                              className="relative flex flex-col justify-between h-full"
+                            >
+                              <div className="flex justify-between p-2">
+                                <p className="text-black">{item}</p>
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 16 16"
+                                  fill="currentColor"
+                                  className="w-4 h-4 absolute right-2 top-2"
+                                  style={{
+                                    backgroundColor: 'white',
+                                    borderRadius: '50%',
+                                  }}
+                                >
+                                  <path
+                                    fillRule="evenodd"
+                                    d="M8 2a.75.75 0 0 1 .75.75v8.69l1.22-1.22a.75.75 0 1 1 1.06 1.06l-2.5 2.5a.75.75 0 0 1-1.06 0l-2.5-2.5a.75.75 0 1 1 1.06-1.06l1.22 1.22V2.75A.75.75 0 0 1 8 2Z"
+                                    clipRule="evenodd"
+                                  />
+                                </svg>
+                              </div>
+                              <div className="flex justify-start p-2">
+                                <p>$11,000</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="bg-[#d2f2fa] rounded-lg shadow-xl min-h-[80px] min-w-[100px]">
+                          {data4.map((item, index) => (
+                            <div
+                              key={index}
+                              className=" flex flex-col justify-between h-full"
+                            >
+                              <div className="flex justify-between p-2">
+                                <p className="text-black">{item}</p>
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 16 16"
+                                  fill="currentColor"
+                                  className="w-4 h-4 absolute right-2 top-2"
+                                  style={{
+                                    backgroundColor: 'white',
+                                    borderRadius: '50%',
+                                  }}
+                                >
+                                  <path
+                                    fillRule="evenodd"
+                                    d="M8 2a.75.75 0 0 1 .75.75v8.69l1.22-1.22a.75.75 0 1 1 1.06 1.06l-2.5 2.5a.75.75 0 0 1-1.06 0l-2.5-2.5a.75.75 0 1 1 1.06-1.06l1.22 1.22V2.75A.75.75 0 0 1 8 2Z"
+                                    clipRule="evenodd"
+                                  />
+                                </svg>
+                              </div>
+                              <div className="flex justify-start p-2">
+                                <p>$3,765</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="bg-[#f7f6b9] rounded-lg shadow-xl min-h-[80px] min-w-[100px]">
+                          {data5.map((item, index) => (
+                            <div
+                              key={index}
+                              className="relative flex flex-col justify-between h-full"
+                            >
+                              <div className="flex justify-between p-2">
+                                <p className="text-black">{item}</p>
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 16 16"
+                                  fill="currentColor"
+                                  className="w-4 h-4 absolute right-2 top-2"
+                                  style={{
+                                    backgroundColor: 'white',
+                                    borderRadius: '50%',
+                                  }}
+                                >
+                                  <path
+                                    fillRule="evenodd"
+                                    d="M8 2a.75.75 0 0 1 .75.75v8.69l1.22-1.22a.75.75 0 1 1 1.06 1.06l-2.5 2.5a.75.75 0 0 1-1.06 0l-2.5-2.5a.75.75 0 1 1 1.06-1.06l1.22 1.22V2.75A.75.75 0 0 1 8 2Z"
+                                    clipRule="evenodd"
+                                  />
+                                </svg>
+                              </div>
+                              <div className="flex justify-start p-2">
+                                <p>$2,567</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </div>
-                  ))}
-                  <div
-                    className="flex  justify-start  p-2"
-                    style={{ paddingTop: '0.5rem' }}
-                  >
-                    <p className="p-0" style={{ fontSize: '2.3rem' }}>
-                      <span style={{ fontSize: '1.1rem' }}>ETH</span> <br />{' '}
-                      ₹82,567
-                    </p>
-                  </div>
-                </div>
-
-                <div className="mt-2"></div>
-                <div className="p-2 pt-4 bg-[#fff] rounded-lg shadow-xl min-h-[170px] min-w-[100px]">
-                  <div>
-                    <p>
-                      Performance <br /> <span>comparison</span>{' '}
-                    </p>
                   </div>
                 </div>
               </div>
             </div>
+
+            {/* section - 2 */}
+            <section className="w-full border-[#e7e5eb] bg-white rounded-lg p-4">
+              <div className="flex flex-col"></div>
+              <div>Revenue</div>
+              <div className="w-full h-[400px]">
+                <StackedLeadsChart />
+              </div>
+            </section>
           </div>
-        </div>
-        <div className="mt-4"></div>
-        <div className="grid grid-cols-3 gap-x-2 gap-y-3 grid-flow-row-dense">
-          {/*Table*/}
-          <div className="bg-[#fff] rounded-lg shadow-xl min-h-[350px] min-w-[200px] col-span-2">
-            <div className="box-crm-summary p-5" style={{ fontWeight: 'bold' }}>
-              <h5>My Portfolio</h5>
-              <Paper className="w-full mt-6 overflow-x-auto">
-                <table
-                  className="w-full"
-                  style={{ borderCollapse: 'collapse', border: 'none' }}
-                >
-                  <TableHead>
-                    <TableRow>
-                      <TableCell align="left" className="text-left">
-                        Name
-                      </TableCell>
-                      <TableCell align="left" className="text-left">
-                        Mobile
-                      </TableCell>
-                      <TableCell align="left" className="text-left">
-                        Email
-                      </TableCell>
-                      <TableCell align="left" className="text-left">
-                        Project
-                      </TableCell>
-                      <TableCell align="left" className="text-left">
-                        Date
-                      </TableCell>
-                      <TableCell align="left" className="text-left">
-                        Status
-                      </TableCell>
-                      <TableCell align="left" className="text-left">
-                        Source
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <tbody>
-                    {rows.map((row) => (
-                      <TableRow key={row.id}>
-                        <TableCell align="left" className="text-left">
-                          {row.name}
-                        </TableCell>
-                        <TableCell align="left" className="text-left">
-                          {row.mobile}
-                        </TableCell>
-                        <TableCell align="left" className="text-left">
-                          {row.email}
-                        </TableCell>
-                        <TableCell align="left" className="text-left">
-                          {row.project}
-                        </TableCell>
-                        <TableCell align="left" className="text-left">
-                          {row.date}
-                        </TableCell>
-                        <TableCell align="left" className="text-left">
-                          {row.status}
-                        </TableCell>
-                        <TableCell align="left" className="text-left">
-                          {row.source}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </tbody>
-                </table>
-              </Paper>
-            </div>
-          </div>
-          <div className="bg-[#fff] rounded-lg shadow-xl min-h-[350px] min-w-[200px]" />
         </div>
       </div>
     </div>
