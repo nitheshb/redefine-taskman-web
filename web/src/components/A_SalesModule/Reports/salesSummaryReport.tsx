@@ -449,8 +449,29 @@ const SalesSummaryReport = () => {
             {/* section - 2 */}
             <section className="w-full border-[#e7e5eb] bg-white rounded-lg p-4">
               <div className="flex flex-col"></div>
-              <div>Revenue</div>
-              <div className="w-full h-[400px]">
+              <section className="flex flex-row justify-between">
+                 <article className='flex flex-col'>
+                  <div className="text-[#1f2937]">Revenue</div>
+                  <div className="text-[#1f2937] font-[700] text-2xl mt-2">₹62,820.59</div>
+                  <div className="text-[#EF4444] text-xs mt-1">0.2% less than the previous 30 days</div>
+                  </article>
+                 <article>date</article>
+              </section>
+
+              <div className="w-full h-[400px] mt-4">
+              <section className="flex flex-row justify-between">
+              <article></article>
+                 <article className='flex flex-row mr-2 mb-3'>
+                  <section className="flex flex-row">
+                  <div className="text-[#1f2937] w-3 h-3 mt-1 mx-2 rounded-sm bg-[#9333ea]"></div>
+                  <div className="text-[#4b5563] text-xs"> This month</div>
+                  </section>
+                  <section className="flex flex-row">
+                  <div className="text-[#2563eb] w-3 h-3 mt-1 mx-2 rounded-sm bg-[#2563eb]"></div>
+                  <div className="text-[#4b5563] text-xs" > Last month</div>
+                  </section>
+                  </article>
+              </section>
                 <StackedLeadsChart />
               </div>
             </section>
