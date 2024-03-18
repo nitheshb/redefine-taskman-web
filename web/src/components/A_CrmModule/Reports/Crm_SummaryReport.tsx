@@ -270,7 +270,7 @@ const CrmSummaryReport = () => {
                             </svg>
                           </div>
                           <div className="flex justify-start p-2">
-                            <p>$16,987</p>
+                            <p>$16,987 6</p>
                           </div>
                         </div>
                       ))}
