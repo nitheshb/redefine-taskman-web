@@ -110,6 +110,8 @@ const StackedLeadsChart = () => {
           stackId="1"
           stroke="#2563eb"
           fill="#b9ccf7"
+          // stroke="#22D3EE"
+          // fill="#a5f3ff"
           strokeWidth={2}
 
         />
