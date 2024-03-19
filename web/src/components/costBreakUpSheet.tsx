@@ -98,6 +98,7 @@ const CostBreakUpSheet = ({
   const [netTotal, setNetTotal] = useState(0)
   const [partATotal, setPartATotal] = useState(0)
   const [partBTotal, setPartBTotal] = useState(0)
+  const [partCTotal, setPartCTotal] = useState(0)
 
   const [customerInfo, setCustomerInfo] = useState({})
   const [additionalInfo, setAdditonalInfo] = useState({})
@@ -534,8 +535,10 @@ if(uid) {
                                       setNetTotal={setNetTotal}
                                       partATotal={partATotal}
                                       partBTotal={partBTotal}
+                                      partCTotal={partCTotal}
                                       setPartATotal={setPartATotal}
                                       setPartBTotal={setPartBTotal}
+                                      setPartCTotal={setPartCTotal}
                                       showOnly={onStep}
                                     />
                                   )}
