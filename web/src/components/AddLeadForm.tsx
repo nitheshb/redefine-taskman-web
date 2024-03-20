@@ -357,6 +357,13 @@ const AddLeadForm = ({ title, dialogOpen, customerDetails }) => {
     name: Yup.string()
       .max(45, 'Must be 45 characters or less')
       .required('Name is Required'),
+
+      project: Yup.string()
+      .min(3, 'Project Selection is required')
+      .required('Project is Required'),
+      assignedTo: Yup.string()
+      .min(3, 'Project Selection is required')
+      .required('Assigner is Required'),
     // lastName: Yup.string()
     //   .max(20, 'Must be 20 characters or less')
     //   .required('Required'),
