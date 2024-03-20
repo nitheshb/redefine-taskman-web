@@ -1881,6 +1881,7 @@ const SlimSideMenuBar = (props) => {
                   display: 'block',
                   marginLeft: 'auto',
                   marginRight: 'auto',
+                  
                 }}
               >
                 <span className="flex items-center flex-col pt-[8px]">

@@ -21,6 +21,7 @@ import HeadNavBar from '../../components/HeadNavBar/HeadNavBar'
 import ReportMain from '../../components/Reports/ReportMainCom'
 import UnitsInventoryHome from 'src/components/A_ProjModule/UnitsInvertoryHome'
 import AdminSupportHome from 'src/components/A_AdminSupportModule/AdminSupportHome'
+import AdminSummaryReport from 'src/components/A_AdminSupportModule/AdminSummaryReport'
 
 const AdministrationTeamPage = (props) => {
   const { user } = useAuth()
@@ -87,7 +88,7 @@ const AdministrationTeamPage = (props) => {
               )}
                        {viewable === 'Team Lead Report' && (
                 <>
-                ccc
+                <AdminSummaryReport/>
                   {/* <ReportMain /> */}
                   {/* <LeadsTeamReportBody
                     project={{

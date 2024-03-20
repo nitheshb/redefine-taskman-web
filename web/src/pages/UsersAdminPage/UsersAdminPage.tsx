@@ -12,7 +12,9 @@ import SUserSignup from 'src/components/SUserSignup/SUserSignup'
 import UserAccessTable from 'src/components/UserAccessTable/UserAccessTable'
 import UserManageTable from 'src/components/UserManageTable/UserManageTable'
 import AssetsManageTable from 'src/components/A_HrModule/AssetsManagementTable'
+import HrSummaryReport from 'src/components/A_HrModule/HrSummaryReport'
 import SiderForm from 'src/components/SiderForm/SiderForm'
+
 
 const UsersAdminPage = () => {
   const [isEmpDetailsOpen, setIsEmpDetailsOpen] = useState(false)
@@ -172,6 +174,18 @@ const UsersAdminPage = () => {
                 <MyActivityHome source={'team'} />
               </>
             )}
+
+
+            {viewable === 'projectReports' && (
+              <>
+              <HrSummaryReport/>
+              </>
+            )}
+
+
+            
+
+
 
             <SUserSignup
               open={isEmpDetailsOpen}
