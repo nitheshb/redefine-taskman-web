@@ -209,7 +209,7 @@ const AddApplicantDetails = ({
       bookedBy,
       purchasePurpose,
     } = data
-    const foundLength = await checkIfLeadAlreadyExists('spark_leads', phoneNo1)
+    const foundLength = await checkIfLeadAlreadyExists(`${orgId}_leads`, phoneNo1)
     const leadData = {
       Date: Timestamp.now().toMillis(),
       Email: email1 || '',
@@ -225,7 +225,19 @@ const AddApplicantDetails = ({
     }
     console.log('user is ', user)
     if (foundLength?.length > 0) {
-      console.log('foundLENGTH IS ', foundLength)
+      console.log('foundLENGTH IS ', foundLength, leadPayload)
+      await updateLeadCustomerDetailsTo(
+        orgId,
+        leadPayload?.id,
+        updateDoc,
+        'nitheshreddy.email@gmail.com',
+        enqueueSnackbar,
+        resetForm
+      )
+      await setLeadPayload(leadData)
+      await console.log('lead data is ', leadData, leadPayload)
+      setFormMessage('Saved Successfully..!')
+      setLoading(false)
       setFormMessage('User Already Exists with Ph No')
       setLoading(false)
     } else {
@@ -913,9 +925,11 @@ const AddApplicantDetails = ({
                                                   name="dob1"
                                                   selected={formik.values.dob1}
                                                   onChange={(date) => {
+                                                    const milliseconds = Date.parse(date);
+                                                    console.log('data is ==>' ,milliseconds)
                                                     formik.setFieldValue(
                                                       'dob1',
-                                                      date
+                                                      milliseconds
                                                     )
                                                     // setStartDate(date)
                                                     // console.log(startDate)

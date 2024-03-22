@@ -106,19 +106,19 @@ const CostBreakUpPdf = ({
 
           const plotSaleValue =
           costSheetA.length > 0
-            ? Number(selUnitDetails?.area.replace(',', '')) * Number(costSheetA[0]['charges'])
+            ? Number(selUnitDetails?.area?.replace(',', '')) * Number(costSheetA[0]['charges'])
             : Number.isFinite(y)
             ? Number(selUnitDetails?.selUnitDetails?.area * y)
             : Number(
-                Number(selUnitDetails?.area.replace(',', '')) *
+                Number(selUnitDetails?.area?.replace(',', '')) *
                   (selUnitDetails?.rate_per_sqft || selUnitDetails?.sqft_rate)
               )
     const plcSaleValue =
       costSheetA.length > 1
-        ? selUnitDetails?.area.replace(',', '') * Number(costSheetA[1]['charges'])
+        ? selUnitDetails?.area?.replace(',', '') * Number(costSheetA[1]['charges'])
         : Math.round(
             selUnitDetails?.super_built_up_area ||
-              selUnitDetails?.area.replace(',', '') *
+              selUnitDetails?.area?.replace(',', '') *
                 (selUnitDetails?.plc || selUnitDetails?.plc_per_sqft)
           )
     const gstTaxForProjA = selPhaseObj?.partATaxObj?.filter(
