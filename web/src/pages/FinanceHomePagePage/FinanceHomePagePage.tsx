@@ -25,6 +25,9 @@ import ProjectsMHomeBody from '../../components/ProjectsMHomeBody/ProjectsMHomeB
 import SiderForm from '../../components/SiderForm/SiderForm'
 import HeadNavBarAccounts from 'src/components/HeadNavBar/HeadNavBarAccounts'
 
+import FinanceSummaryReport from 'src/components/A_FinanceModule/FinanceSummaryReport'
+
+
 const FinanceHomePagePage = () => {
   const { user } = useAuth()
 
@@ -376,13 +379,16 @@ const FinanceHomePagePage = () => {
                 <FinanceHome leadsTyper={undefined} />
               )}
 
+
+
+              {/* 
               {viewable === 'Dashboard' && (
                 <div className="flex flex-row h-full">
                   <div className="flex flex-col w-full mx-16 ">
                     <div className="flex flex-col bg-[#F5F4F4] px-10 rounded-bl-3xl rounded-br-3xl">
                       <div className="flex flex-row items-center py-6">
                         <span className="app-color-blue font-bold text-xs mr-2">
-                          Finance Dashboard
+                          Finance Dashboard box
                         </span>
                         <span className="mr-2"></span>
                         <span className="mr-auto font-bold text-xs app-color-black"></span>
@@ -589,6 +595,15 @@ const FinanceHomePagePage = () => {
                     </div>
                   </div>
                 </div>
+              )}
+
+                            */}
+
+
+              {viewable === 'Dashboard' && (
+                <>
+                <FinanceSummaryReport/>
+                </>
               )}
 
 

@@ -43,6 +43,9 @@ import SiderForm from '../SiderForm/SiderForm'
 
 import SourceAddTemplate from './SourceAddTemplate'
 
+import ProjectSummaryReport from './ProjectSummaryReport'
+
+
 const ProjectReportsBody = ({ title, pId, data }) => {
   const d = new window.Date()
   const { user } = useAuth()
@@ -565,6 +568,7 @@ ${x?.length > 0 ? `${personalFinalText}` : ''}\n \n
           { label: 'Task Man', value: 'enquiry_journey_status' },
           { label: 'Project Finance', value: 'CRM_status' },
           { label: 'Sale Projections', value: 'Legal_status' },
+          { label: 'Home', value: 'project_home' },
         ].map((data, i) => {
           return (
             <section
@@ -1026,6 +1030,15 @@ ${x?.length > 0 ? `${personalFinalText}` : ''}\n \n
           </section>
         </div>
       )}
+
+
+{selCat === 'project_home' && (
+            <ProjectSummaryReport/>
+          )}
+
+
+
+
 
       <SiderForm
         open={isOpenSideView}
