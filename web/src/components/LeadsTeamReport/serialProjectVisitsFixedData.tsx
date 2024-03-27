@@ -1,13 +1,13 @@
 export function serialProjecVisitFixedData(projectListA, fullData) {
-  console.log('inside visit fixed full data ',)
+  console.log('inside visit fixed full data ',fullData)
   let z = []
   return projectListA?.map((souceObj) => {
     const x = souceObj
     console.log('project is ', souceObj)
-    z = [...z, souceObj?.value]
+    z = [...z, souceObj?.label]
     if (x.label == 'others') {
       x.Total = fullData?.filter((datObj) => {
-        return !z.includes(datObj?.projectId)
+        return !z.includes(datObj?.Project)
       })
 
       x.inprogress = fullData?.filter(
@@ -39,7 +39,7 @@ export function serialProjecVisitFixedData(projectListA, fullData) {
         (datObj) => !z.includes(datObj?.projectId) && datObj?.to == 'visitfixed'
       )
       x.visitdone = fullData?.filter(
-        (datObj) => !z.includes(datObj?.projectId) && datObj?.to == 'visitdone'
+        (datObj) => !z.includes(datObj?.projectId) && datObj?.coverA.includes('visitdone')
       )
       x.negotiation = fullData?.filter(
         (datObj) =>
@@ -74,7 +74,7 @@ export function serialProjecVisitFixedData(projectListA, fullData) {
       )
 
       x.others = fullData?.filter(
-        (datObj) => !z.includes(datObj?.projectId) && datObj?.to == ''
+        (datObj) => !z.includes(datObj?.Project) && datObj?.to == ''
       )
     } else {
       x.Total = fullData?.filter(
@@ -113,7 +113,7 @@ export function serialProjecVisitFixedData(projectListA, fullData) {
       )
       x.visitdone = fullData?.filter(
         (datObj) =>
-          datObj?.projectId == souceObj?.value && datObj?.to == 'visitdone'
+          datObj?.Project == souceObj?.label && datObj?.to == 'visitdone'
       )
       x.negotiation = fullData?.filter(
         (datObj) =>

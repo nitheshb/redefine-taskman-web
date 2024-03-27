@@ -2235,14 +2235,14 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                                   showDrillDownFun(
                                     'Total Visits Fixed',
                                     leadLogsRawData?.filter(
-                                      (datObj) => datObj?.to == 'visitdone'
+                                      (datObj) =>      datObj?.coverA.includes('visitdone')
                                     )
                                   )
                                 }
                               >
                                 {
                                   leadLogsRawData?.filter(
-                                    (datObj) => datObj?.to == 'visitdone'
+                                    (datObj) =>      datObj?.coverA.includes('visitdone')
                                   ).length
                                 }
                               </td>
