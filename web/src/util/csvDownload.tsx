@@ -22,7 +22,20 @@ export default function CSVDownloader({
       }
     })
   }
+  if (sourceTab == 'leadsList') {
 
+    downloadRows = downloadRows.map((item) => {
+      return {
+        ...item,
+        Date: prettyDate(item?.Date),
+        assignT: prettyDate(item.assignT),
+        leadUpT: prettyDate(item.leadUpT),
+        schTime: prettyDate(item.schTime),
+        stsUpT: prettyDate(item.stsUpT),
+        assignedTo: item?.assignedToObj?.name
+      }
+    })
+  }
   if (sourceTab == 'visitsReport') {
     downloadRows = downloadRows.map((item) => {
       return {
@@ -52,7 +65,7 @@ export default function CSVDownloader({
       bom={true}
       data={fromLeadsBank ? downloadData : downloadRows}
     >
-      <Tooltip title={`Download ${downloadRows?.length} Rows`}>
+      <Tooltip title={`Download ${sourceTab} ${downloadRows?.length} Rows`}>
         <IconButton>
           {/* style={{ background: '#f9f9f9' }} */}
           <DownloadTwoToneIcon style={{ height: '20px', width: '20px' }} />
