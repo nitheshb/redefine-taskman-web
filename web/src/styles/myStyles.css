@@ -125,6 +125,9 @@
   border-left-style: solid;
 }
 
+
+
+
 /* Ui stuff */
 .h1MainText{
     font-family: 'Montserrat', sans-serif;
@@ -762,6 +765,8 @@ img
   height: 46px;
   max-width: 200px;
 }
+
+
 .file-card .file-inputs button {
   position: absolute;
   top: 0px;

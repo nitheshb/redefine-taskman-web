@@ -57,6 +57,8 @@ import SiderForm from './SiderForm/SiderForm'
 
 import SalesSummaryReport from './A_SalesModule/Reports/salesSummaryReport'
 import ProfileSummary from './A_SalesModule/Reports/profileSummary'
+import Chat from './A_SalesModule/Reports/chatSummary'
+
 
 
 const valueFeedData = [
@@ -1191,6 +1193,8 @@ console.log('selected project is ', selProjectIs?.value)
 
                   { label: 'Top Bar', value: 'bar_tasks' },  
                   { label: 'Profile', value: 'profile_tasks' },  
+                  { label: 'chat', value: 'chat_tasks' },  
+
 
 
               
@@ -1722,7 +1726,15 @@ console.log('selected project is ', selProjectIs?.value)
 
 {selCat === 'profile_tasks' && (
             <ProfileSummary/>
+            
           )}
+
+
+
+{selCat === 'chat_tasks' && (
+            <Chat/>
+          )}
+
 
 
 
