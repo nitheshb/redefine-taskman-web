@@ -246,7 +246,7 @@ const AddPaymentDetailsForm = ({
     // I) createNewCustoreSupa
     // const foundLength = await checkIfLeadAlreadyExists('spark_leads', phoneNo1)
     const foundLength = []
-    let leadData = {
+    const leadData = {
       Date: Timestamp.now().toMillis(),
       Email: customerInfo?.customerDetailsObj?.email1 || '',
       Mobile: customerInfo?.customerDetailsObj?.email1 || '',

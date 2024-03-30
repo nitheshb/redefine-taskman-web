@@ -116,7 +116,8 @@ const SideVisitLeadsBody = ({
 
       leadsSerialDatafun()
     } else {
-      projectFilAarray = projectFilAarray.filter((d) => d.projectId === selProjectIs?.value)
+      // projectFilAarray = projectFilAarray.filter((d) => d.projectId === selProjectIs?.value)
+      projectFilAarray = projectFilAarray.filter((d) => d.Project === selProjectIs?.label)
 
       leadsSerialDatafun()
       // setFiltProjectListTuned(z)
@@ -349,7 +350,6 @@ const SideVisitLeadsBody = ({
                     {[
                       { label: 'sNo', id: 'no' },
                       { label: 'Project', id: 'label' },
-                      { label: 'Lead Name', id: 'all' },
                       { label: 'Lead Ph', id: 'all' },
                       { label: 'Status', id: 'new' },
                       { label: 'From', id: 'all' },
@@ -395,9 +395,6 @@ const SideVisitLeadsBody = ({
                         </td>
                         <td className="text-sm text-gray-900 font-medium px-6 py-2 whitespace-nowrap text-left">
                           {data?.Project}
-                        </td>
-                        <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap text-left">
-                          {data?.Name}
                         </td>
                         <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap text-left">
                           {data?.Mobile}

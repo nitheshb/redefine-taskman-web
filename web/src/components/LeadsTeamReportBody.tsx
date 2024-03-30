@@ -33,6 +33,7 @@ import {
   streamLeadLogdWithNullProj,
   updateLeadLastUpdateTime,
   updateLeadsLogWithProject,
+  updateTodaySourceStatsDB,
   updateTodayTasksTotal,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
@@ -44,8 +45,12 @@ import {
   SlimSelectBox,
 } from 'src/util/formFields/slimSelectBoxField'
 
+import MarketingAnalyticsHome from './A_MarketingModule/MarketinAnalyticsHome'
+import CampaingsTopBarsComponent from './A_MarketingModule/Reports/Charts/marketingTopBars'
 import EmpTasksReportM from './A_SalesModule/Reports/EmpTasks/empTasksReportM'
 import LeadsCoversionGraphs from './A_SalesModule/Reports/leadsConversionRatio/LeadsCoversionGraphs'
+import ProfileSummary from './A_SalesModule/Reports/profileSummary'
+import SalesSummaryReport from './A_SalesModule/Reports/salesSummaryReport'
 import SiteVisitM from './A_SalesModule/Reports/SiteVisitM'
 import { serialEmployeeLeadData } from './LeadsTeamReport/serialEmployeeLeadData'
 import { serialEmployeeTaskLeadData } from './LeadsTeamReport/serialEmployeeTaskLeadData'
@@ -55,12 +60,15 @@ import { serialMyData } from './LeadsTeamReport/SourceLeads'
 import ReportSideWindow from './SiderForm/ReportSideView'
 import SiderForm from './SiderForm/SiderForm'
 
+<<<<<<< HEAD
 import SalesSummaryReport from './A_SalesModule/Reports/salesSummaryReport'
 import ProfileSummary from './A_SalesModule/Reports/profileSummary'
 import Chat from './A_SalesModule/Reports/chatSummary'
 
 
 
+=======
+>>>>>>> c6bc66951b3d3593efb288b157022776b5697540
 const valueFeedData = [
   { k: 'Total', v: 300, pic: '' },
   { k: 'Progress', v: 100, pic: '' },
@@ -334,24 +342,31 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
     setProjectListTuned(serialProjectLeadData(projectList, leadsFetchedRawData))
   }, [projectList, leadsFetchedRawData])
   useEffect(() => {
-console.log('selected project is ', selProjectIs?.value)
+    console.log('selected project is ', selProjectIs?.value)
     if (selProjectIs?.value === 'allprojects') {
-    setLeadsLogFilData(serialProjecVisitFixedData(projectList, leadLogsRawData))
-    }else {
+      setLeadsLogFilData(
+        serialProjecVisitFixedData(projectList, leadLogsRawData)
+      )
+    } else {
       const projectWideA = leadLogsRawData.filter(
         (d) => d?.ProjectId === selProjectEmpIs?.value
       )
       console.log('selected project is ', selProjectIs?.value)
       const x = leadLogsRawData?.filter((datObj) => {
         return datObj?.ProjectId === selProjectIs?.value
-      });
+      })
 
-      console.log('selected project is ',leadLogsRawData, x)
+      console.log('selected project is ', leadLogsRawData, x)
 
-      setLeadsLogFilData(serialProjecVisitFixedData(projectList, leadLogsRawData?.filter((datObj) => {
-        return datObj?.ProjectId === selProjectIs?.value
-      })))
-      console.log('selected project is ',leadsLogFilData)
+      setLeadsLogFilData(
+        serialProjecVisitFixedData(
+          projectList,
+          leadLogsRawData?.filter((datObj) => {
+            return datObj?.ProjectId === selProjectIs?.value
+          })
+        )
+      )
+      console.log('selected project is ', leadsLogFilData)
     }
   }, [projectList, leadLogsRawData, selProjectIs])
 
@@ -380,6 +395,15 @@ console.log('selected project is ', selProjectIs?.value)
       setEmpRawFilData(projectWideA)
     }
   }, [usersList, leadsFetchedRawData, selProjectEmpIs])
+  const insertTodaySourcePerformance = () => {
+    console.log('insertTodaySourcePerformance');
+    // get leads from bank and get cT (dd-mm-yy)=>milliseconds,  source
+    // Check status
+    //
+
+
+     updateTodaySourceStatsDB(orgId, 'snap', {},(error) => [])
+   }
 
   const updateAgreegatedValues = async (projectFilList) => {
     projectFilList.map((data) => {
@@ -1190,7 +1214,9 @@ console.log('selected project is ', selProjectIs?.value)
                 { label: 'Site Visits', value: 'site_visits' },
                 { label: 'Employee Performance', value: 'emp_tasks' },
                 { label: 'Home', value: 'sale_report_home' },
+                { label: 'Marketing', value: 'marketing_Dashboard' },
 
+<<<<<<< HEAD
                   { label: 'Top Bar', value: 'bar_tasks' },  
                   { label: 'Profile', value: 'profile_tasks' },  
                   { label: 'chat', value: 'chat_tasks' },  
@@ -1201,6 +1227,10 @@ console.log('selected project is ', selProjectIs?.value)
 
               
              
+=======
+                { label: 'Top Bar', value: 'bar_tasks' },
+                { label: 'Profile', value: 'profile_tasks' },
+>>>>>>> c6bc66951b3d3593efb288b157022776b5697540
 
                 // { label: 'Source Report', value: 'source_report' },
                 // { label: 'Employee Report', value: 'emp_status_report' },
@@ -1719,17 +1749,22 @@ console.log('selected project is ', selProjectIs?.value)
             </div>
           )}
 
-{selCat === 'sale_report_home' && (
-            <SalesSummaryReport />
-          )}
+          {selCat === 'sale_report_home' && <SalesSummaryReport />}
 
+          {selCat === 'marketing_Dashboard' && <MarketingAnalyticsHome />}
 
+<<<<<<< HEAD
 {selCat === 'profile_tasks' && (
             <ProfileSummary/>
             
           )}
+=======
+          {selCat === 'profile_tasks' && <ProfileSummary />}
+>>>>>>> c6bc66951b3d3593efb288b157022776b5697540
 
+          {/* Graph Bar start */}
 
+<<<<<<< HEAD
 
 {selCat === 'chat_tasks' && (
             <Chat/>
@@ -1915,19 +1950,11 @@ console.log('selected project is ', selProjectIs?.value)
             </div>
           )}
 
+=======
+          {selCat === 'bar_tasks' && <CampaingsTopBarsComponent />}
+>>>>>>> c6bc66951b3d3593efb288b157022776b5697540
 
           {/* Graph Bar end */}
-
-
-
-
-
-
-
-
-
-
-
 
           {selCat === 'site_visits' && (
             <>
@@ -2425,14 +2452,14 @@ console.log('selected project is ', selProjectIs?.value)
                                   showDrillDownFun(
                                     'Total Visits Fixed',
                                     leadLogsRawData?.filter(
-                                      (datObj) => datObj?.to == 'visitdone'
+                                      (datObj) =>      datObj?.coverA.includes('visitdone')
                                     )
                                   )
                                 }
                               >
                                 {
                                   leadLogsRawData?.filter(
-                                    (datObj) => datObj?.to == 'visitdone'
+                                    (datObj) =>      datObj?.coverA.includes('visitdone')
                                   ).length
                                 }
                               </td>
@@ -2697,6 +2724,9 @@ console.log('selected project is ', selProjectIs?.value)
                       <div className=" text-md font-bold leading-none pl-0 mt-2  mb-4 ">
                         {`Source Performance `}
                       </div>
+                      <div onClick={()=>{
+                        insertTodaySourcePerformance();
+                      }}>admin</div>
                       <div className=" flex flex-row   ">
                         <span className="mr-4">
                           <SlimSelectBox
