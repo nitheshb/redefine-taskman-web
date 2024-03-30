@@ -59,6 +59,8 @@ import { serialProjecVisitFixedData } from './LeadsTeamReport/serialProjectVisit
 import { serialMyData } from './LeadsTeamReport/SourceLeads'
 import ReportSideWindow from './SiderForm/ReportSideView'
 import SiderForm from './SiderForm/SiderForm'
+import StackedLeadsChart from './A_SalesModule/Reports/charts/salesStackedChart'
+import StackedBarChart from './A_MarketingModule/Reports/Charts/marketingStackedBarChart'
 
 const valueFeedData = [
   { k: 'Total', v: 300, pic: '' },
@@ -2496,6 +2498,103 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
             </>
           )}
           {selCat === 'source_perf' && (
+            <section>
+                    <section className="flex flex-row flex-wrap gap-2">
+              <section className="w-[99%] border-[#e7e5eb] bg-white rounded-lg p-4">
+                <div className="flex flex-col"></div>
+                <section className="flex flex-row justify-between">
+                  <article className="flex flex-col">
+                    <div className="text-[#1f2937]">Leads</div>
+                    <div className="text-[#1f2937] font-[700] text-2xl mt-2">
+                      ₹62,820.59
+                    </div>
+                    <div className="text-[#EF4444] text-xs mt-1">
+                      0.2% less than the previous 30 days
+                    </div>
+                  </article>
+                  <article>date</article>
+                </section>
+
+                <div className="w-full h-[400px] mt-4">
+                  <section className="flex flex-row justify-between">
+                    <article></article>
+                    <article className="flex flex-row mr-2 mb-3">
+                      <section className="flex flex-row">
+                        <div className="text-[#1f2937] w-3 h-3 mt-1 mx-2 rounded-sm bg-[#9333ea]"></div>
+                        <div className="text-[#4b5563] text-xs">
+                          {' '}
+                          This month
+                        </div>
+                      </section>
+                      <section className="flex flex-row">
+                        <div className="text-[#2563eb] w-3 h-3 mt-1 mx-2 rounded-sm bg-[#2563eb]"></div>
+                        <div className="text-[#4b5563] text-xs">
+                          {' '}
+                          Last month
+                        </div>
+                      </section>
+                    </article>
+                  </section>
+                  <StackedBarChart />
+                </div>
+                {/* bottom sheet */}
+                <section className="mt-3 ml-4">
+                  <div className="text-[#1f2937] font-[600] text-xl">
+                    Conversion funnel
+                  </div>
+                  <div className="flex flex-row border-b border-gray-200">
+                    <ul
+                      className="flex flex-wrap -mb-px mt-1"
+                      id="myTab"
+                      data-tabs-toggle="#myTabContent"
+                      role="tablist"
+                    >
+                      {[
+                        {
+                          lab: 'First-Time',
+                          val: 'business_tasks',
+                          color: '#4F46E5',
+                        },
+                        {
+                          lab: 'Returning',
+                          val: 'personal_tasks',
+                          color: '#9333EA',
+                        },
+                      ].map((d, i) => {
+                        return (
+                          <li key={i} className="mr-4">
+                            {' '}
+                            <button
+                              className={`inline-block pb-[6px] mr-3 text-sm  text-center text-black rounded-t-lg border-b-2  hover:text-black hover:border-gray-300   ${
+                                // isClicked === d.val
+                                1==1  ? 'border-black'
+                                  : 'border-transparent'
+                              }`}
+                              type="button"
+                              role="tab"
+                              // onClick={() => setisClicked(d.val)}
+                            >
+                              <section className="flex flex-row text-[15px] mb-1ss ">
+                                <div
+                                  className={`w-3 h-3 bg-[${d.color}] mt-1 mr-1 rounded-sm`}
+                                ></div>
+                                {d.lab}
+                              </section>
+                            </button>
+                          </li>
+                        )
+                      })}
+                    </ul>
+                  </div>
+                </section>
+                <article className="text-[#4f46e5] text-center font-[500] text-[13px]">
+                  View full Report
+                </article>
+              </section>
+
+            </section>
+            <div className="flex flex-row">
+
             <div className="flex flex-col  mt-4 drop-shadow-md rounded-lg  px-4">
               <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div
@@ -3014,6 +3113,8 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                 </div>
               </div>
             </div>
+            </div>
+            </section>
           )}
 
           {selCat === 'emp_status_report' && (

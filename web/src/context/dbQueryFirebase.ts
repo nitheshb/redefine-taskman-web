@@ -527,16 +527,19 @@ export const updateTodaySourceStatsDB = async (
   const records = []
   const getAllProjectsQuery = await query(
     collection(db, `${'maahomes'}_leads_lake`),
-    where('cT', '>=', 1679682600000)
+    where('cT', '>=')
   )
   const counter = 0
+
   const querySnapshot = await getDocs(getAllProjectsQuery)
   const docs = querySnapshot.docs.slice() // Create a copy of the documents array
+  console.log('docs length', docs.length)
   await processDocuments(docs, orgId)
   return
   // return onSnapshot(itemsQuery, snapshot, error)
 }
 async function processDocuments(docs, orgId) {
+  console.log('docs length', docs.length)
   if (docs.length === 0) {
     console.log('All documents processed.')
     return
@@ -554,122 +557,71 @@ async function processDocuments(docs, orgId) {
 
   const projName = projectName === '' ? 'NA' : projectName
   let customerMobile = ''
-  if(responderPhone) {customerMobile =responderPhone?.slice(-10)} else {
+  if (responderPhone) {
+    customerMobile = responderPhone?.slice(-10)
+  } else {
     customerMobile = ''
   }
   const startOfDay = new Date(cT)
   startOfDay.setHours(0, 0, 0, 0)
   const day = startOfDay.getTime()
-  let counter = 0
+  const counter = 0
 
+  const foundLength = await checkIfLeadAlreadyExists(
+    `${'maahomes'}_leads`,
+    customerMobile
+  )
+  let leadDetails = {}
+  let coveredA = []
+  let Status = 'unassigned'
 
-    const foundLength = await checkIfLeadAlreadyExists(
-      `${'maahomes'}_leads`,
-      customerMobile
-    )
-    let leadDetails = {}
-    let coveredA = []
-    let Status = 'unassigned'
+  if (foundLength?.length > 0) {
+    leadDetails = foundLength[0]
+    coveredA = leadDetails['coveredA'] || []
+    Status = leadDetails['Status']
+  }
 
-    if (foundLength?.length > 0) {
-      leadDetails = foundLength[0]
-      coveredA = leadDetails['coveredA'] || []
-      Status = leadDetails['Status']
-    }
+  const { data: lead_logs, error: countError } = await supabase
+    .from(`${orgId}_sales_leads_source_daily_logs`)
+    .select('*')
+    .eq('day', day)
+    .eq('sourceId', sourceId)
+    .eq('projectName', projName)
 
-    const { data: lead_logs, error: countError } = await supabase
-      .from(`${orgId}_sales_leads_source_daily_logs`)
-      .select('*')
-      .eq('day', day)
-      .eq('sourceId', sourceId)
-      .eq('projectName', projName)
+  if (lead_logs.length > 0) {
+    // Update existing record
+    const leadsTotal = lead_logs[0]['totalLeads']
+    const usedLead = lead_logs[0]['usedLead']
+    const revisited = lead_logs[0]['revisited']
+    const InProgress = lead_logs[0]['InProgress']
+    const InBooked = lead_logs[0]['InBooked']
+    const InJunk = lead_logs[0]['InJunk']
+    const InFollowup = lead_logs[0]['InFollowup']
+    const InNew = lead_logs[0]['InNew']
+    const InVisitfixed = lead_logs[0]['InVisitfixed']
+    const InNegotiation = lead_logs[0]['InNegotiation']
+    const InVisitdone = lead_logs[0]['InVisitdone']
 
-    if (lead_logs.length > 0) {
-      // Update existing record
-      const leadsTotal = lead_logs[0]['totalLeads']
-      const usedLead = lead_logs[0]['usedLead']
-      const revisited = lead_logs[0]['revisited']
-      const InProgress = lead_logs[0]['InProgress']
-      const InBooked = lead_logs[0]['InBooked']
-      const InJunk = lead_logs[0]['InJunk']
-      const InFollowup = lead_logs[0]['InFollowup']
-      const InNew = lead_logs[0]['InNew']
-      const InVisitfixed = lead_logs[0]['InVisitfixed']
-      const InNegotiation = lead_logs[0]['InNegotiation']
-      const InVisitdone = lead_logs[0]['InVisitdone']
+    const InNotInterested = lead_logs[0]['InNotInterested']
 
-      const InNotInterested = lead_logs[0]['InNotInterested']
-
-      const junk = lead_logs[0]['junk']
-      const booked = lead_logs[0]['booked']
-      const notinterested = lead_logs[0]['notinterested']
-      const visitsfixed = lead_logs[0]['visitsfixed']
-      const visitdone = lead_logs[0]['visitdone']
-      const followup = lead_logs[0]['followup']
-      const new1 = lead_logs[0]['new1']
-      const negotiation = lead_logs[0]['negotiation']
-      // More properties...
-      if (currentStatus === 'added') {
-        await supabase
-          .from(`${orgId}_sales_leads_source_daily_logs`)
-          .update({
-            totalLeads: leadsTotal + 1,
-            usedLead: usedLead + (currentStatus === 'added' ? 1 : 0),
-            InProgress:
-              InProgress +
-              ([
-                'new',
-                'followup',
-                'visitfixed',
-                'visitdone',
-                'negotiation',
-              ].includes(Status)
-                ? 1
-                : 0),
-
-            InFollowup: InFollowup + (['followup'].includes(Status) ? 1 : 0),
-            InNew: InNew + (['new'].includes(Status) ? 1 : 0),
-            InVisitfixed:
-              InVisitfixed + (['visitfixed'].includes(Status) ? 1 : 0),
-            InNegotiation:
-              InNegotiation + (['negotiation'].includes(Status) ? 1 : 0),
-            InVisitdone: InVisitdone + (['visitdone'].includes(Status) ? 1 : 0),
-            InBooked: InBooked + (['booked'].includes(Status) ? 1 : 0),
-            InJunk: InJunk + (['junk'].includes(Status) ? 1 : 0),
-            InNotInterested:
-              InNotInterested + (['notinterested'].includes(Status) ? 1 : 0),
-            junk: junk + coveredA.includes('junk'),
-            booked: booked + coveredA.includes('booked'),
-            notinterested: notinterested + coveredA.includes('notinterested'),
-            visitsfixed: visitsfixed + coveredA.includes('visitfixed'),
-            visitdone: visitdone + coveredA.includes('visitdone'),
-            followup: followup + coveredA.includes('followup'),
-            new1: new1 + coveredA.includes('new'),
-            negotiation: negotiation + coveredA.includes('negotiation') ? 1 : 0,
-          })
-          .eq('day', day)
-          .eq('sourceId', sourceId)
-          .eq('projectName', projName)
-      } else {
-        await supabase
-          .from(`${orgId}_sales_leads_source_daily_logs`)
-          .update({
-            totalLeads: leadsTotal + 1,
-            revisited: revisited + 1,
-          })
-          .eq('day', day)
-          .eq('sourceId', sourceId)
-          .eq('projectName', projName)
-      }
-    } else {
-      // Insert new record
-      if (currentStatus === 'added') {
-        await supabase
-          .from(`${orgId}_sales_leads_source_daily_logs`)
-          .insert({
-            totalLeads: 1,
-            usedLead: currentStatus === 'added' ? 1 : 0,
-            InProgress: [
+    const junk = lead_logs[0]['junk']
+    const booked = lead_logs[0]['booked']
+    const notinterested = lead_logs[0]['notinterested']
+    const visitsfixed = lead_logs[0]['visitsfixed']
+    const visitdone = lead_logs[0]['visitdone']
+    const followup = lead_logs[0]['followup']
+    const new1 = lead_logs[0]['new1']
+    const negotiation = lead_logs[0]['negotiation']
+    // More properties...
+    if (currentStatus === 'added') {
+      await supabase
+        .from(`${orgId}_sales_leads_source_daily_logs`)
+        .update({
+          totalLeads: leadsTotal + 1,
+          usedLead: usedLead + (currentStatus === 'added' ? 1 : 0),
+          InProgress:
+            InProgress +
+            ([
               'new',
               'followup',
               'visitfixed',
@@ -677,56 +629,98 @@ async function processDocuments(docs, orgId) {
               'negotiation',
             ].includes(Status)
               ? 1
-              : 0,
-            InNew: ['new'].includes(Status) ? 1 : 0,
-            InVisitfixed: ['visitfixed'].includes(Status) ? 1 : 0,
-            InNegotiation: ['negotiation'].includes(Status) ? 1 : 0,
-            InVisitdone: ['visitdone'].includes(Status) ? 1 : 0,
-            InBooked: ['booked'].includes(Status) ? 1 : 0,
-            InJunk: ['junk'].includes(Status) ? 1 : 0,
-            InFollowup: ['followup'].includes(Status) ? 1 : 0,
-            InNotInterested: ['notinterested'].includes(Status) ? 1 : 0,
+              : 0),
 
-            junk: coveredA.includes('junk')  ? 1 : 0,
-            booked: coveredA.includes('booked') ? 1 : 0,
-            notinterested:
-              coveredA.includes('notinterested')
-                ? 1
-                : 0,
-            visitsfixed:
-              coveredA.includes('visitfixed')  ? 1 : 0,
-            visitdone:
-              coveredA.includes('visitdone') ? 1 : 0,
-            followup:
-              coveredA.includes('followup')  ? 1 : 0,
-            new1: coveredA.includes('new')  ? 1 : 0,
-            negotiation:
-              coveredA.includes('negotiation')
-                ? 1
-                : 0,
-            day: day,
-            sourceId: sourceId,
-            projectName: projName,
-          })
-          .eq('day', day)
-          .eq('sourceId', sourceId)
-          .eq('projectName', projName)
-      } else {
-        await supabase
-          .from(`${orgId}_sales_leads_source_daily_logs`)
-          .insert({
-            totalLeads: 1,
-            revisited: currentStatus === 'DUPLICAE_ENTRY' ? 1 : 0,
-            day: day,
-            sourceId: sourceId,
-            projectName: projName,
-          })
-          .eq('day', day)
-          .eq('sourceId', sourceId)
-          .eq('projectName', projName)
-      }
+          InFollowup: InFollowup + (['followup'].includes(Status) ? 1 : 0),
+          InNew: InNew + (['new'].includes(Status) ? 1 : 0),
+          InVisitfixed:
+            InVisitfixed + (['visitfixed'].includes(Status) ? 1 : 0),
+          InNegotiation:
+            InNegotiation + (['negotiation'].includes(Status) ? 1 : 0),
+          InVisitdone: InVisitdone + (['visitdone'].includes(Status) ? 1 : 0),
+          InBooked: InBooked + (['booked'].includes(Status) ? 1 : 0),
+          InJunk: InJunk + (['junk'].includes(Status) ? 1 : 0),
+          InNotInterested:
+            InNotInterested + (['notinterested'].includes(Status) ? 1 : 0),
+          junk: junk + coveredA.includes('junk'),
+          booked: booked + coveredA.includes('booked'),
+          notinterested: notinterested + coveredA.includes('notinterested'),
+          visitsfixed: visitsfixed + coveredA.includes('visitfixed'),
+          visitdone: visitdone + coveredA.includes('visitdone'),
+          followup: followup + coveredA.includes('followup'),
+          new1: new1 + coveredA.includes('new'),
+          negotiation: negotiation + coveredA.includes('negotiation') ? 1 : 0,
+        })
+        .eq('day', day)
+        .eq('sourceId', sourceId)
+        .eq('projectName', projName)
+    } else {
+      await supabase
+        .from(`${orgId}_sales_leads_source_daily_logs`)
+        .update({
+          totalLeads: leadsTotal + 1,
+          revisited: revisited + 1,
+        })
+        .eq('day', day)
+        .eq('sourceId', sourceId)
+        .eq('projectName', projName)
     }
+  } else {
+    // Insert new record
+    if (currentStatus === 'added') {
+      await supabase
+        .from(`${orgId}_sales_leads_source_daily_logs`)
+        .insert({
+          totalLeads: 1,
+          usedLead: currentStatus === 'added' ? 1 : 0,
+          InProgress: [
+            'new',
+            'followup',
+            'visitfixed',
+            'visitdone',
+            'negotiation',
+          ].includes(Status)
+            ? 1
+            : 0,
+          InNew: ['new'].includes(Status) ? 1 : 0,
+          InVisitfixed: ['visitfixed'].includes(Status) ? 1 : 0,
+          InNegotiation: ['negotiation'].includes(Status) ? 1 : 0,
+          InVisitdone: ['visitdone'].includes(Status) ? 1 : 0,
+          InBooked: ['booked'].includes(Status) ? 1 : 0,
+          InJunk: ['junk'].includes(Status) ? 1 : 0,
+          InFollowup: ['followup'].includes(Status) ? 1 : 0,
+          InNotInterested: ['notinterested'].includes(Status) ? 1 : 0,
 
+          junk: coveredA.includes('junk') ? 1 : 0,
+          booked: coveredA.includes('booked') ? 1 : 0,
+          notinterested: coveredA.includes('notinterested') ? 1 : 0,
+          visitsfixed: coveredA.includes('visitfixed') ? 1 : 0,
+          visitdone: coveredA.includes('visitdone') ? 1 : 0,
+          followup: coveredA.includes('followup') ? 1 : 0,
+          new1: coveredA.includes('new') ? 1 : 0,
+          negotiation: coveredA.includes('negotiation') ? 1 : 0,
+          day: day,
+          sourceId: sourceId,
+          projectName: projName,
+        })
+        .eq('day', day)
+        .eq('sourceId', sourceId)
+        .eq('projectName', projName)
+    } else {
+      await supabase
+        .from(`${orgId}_sales_leads_source_daily_logs`)
+        .insert({
+          totalLeads: 1,
+          revisited: currentStatus === 'DUPLICAE_ENTRY' ? 1 : 0,
+          day: day,
+          sourceId: sourceId,
+          projectName: projName,
+        })
+        .eq('day', day)
+        .eq('sourceId', sourceId)
+        .eq('projectName', projName)
+    }
+  }
 
   // Process next document
   await processDocuments(docs, orgId)
@@ -5274,4 +5268,24 @@ export const addAgreegatedSalesValues = async (orgId, docId, data) => {
     await setDoc(doc(db, `${orgId}_sales_reports`, docId), data)
   }
   return
+}
+
+// reports
+
+//  get leads count vs sources
+export const steamLeadsVsSources = async (orgId, snapshot, data, error) => {
+  // const itemsQuery = query(doc(db, `${orgId}_leads_log', 'W6sFKhgyihlsKmmqDG0r'))
+  const { uid } = data
+  console.log('is uid g', data, uid)
+  // return onSnapshot(doc(db, `${orgId}_leads_log`, uid), snapshot, error)
+  const { data: lead_logs, error1 } = await supabase
+    .from(`spark_sales_leads_source_daily_logs`)
+    .select('*')
+
+
+
+  // .order('T', { ascending: false })
+  console.log('my total fetched list is 3', lead_logs)
+  return lead_logs
+  // return onSnapshot(itemsQuery, snapshot, error)
 }
