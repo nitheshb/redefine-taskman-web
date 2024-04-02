@@ -127,7 +127,7 @@ const modifyItems = [
     status: 'pending',
   },
 ]
-const CrmRegisterModeHome = ({ leadsTyper }) => {
+const CrmConstuctionModeHome = ({ leadsTyper }) => {
   const d = new window.Date()
   const { t } = useTranslation()
   const { user } = useAuth()
@@ -276,8 +276,17 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
           user.label = user.projectName
           user.value = user.projectName
         })
-        console.log('fetched proejcts list is', projectsListA)
-        setprojectList(projectsListA)
+        projectsListA.filter((data)=> {
+          console.log('fetched proejcts list is kk',data.label, data?.projectType?.name , data?.projectType?.name == 'Plots')
+         return data?.projectType?.name == 'Plots'
+        })
+
+
+        console.log('fetched proejcts list is kk', projectsListA)
+        setprojectList(projectsListA.filter((data)=> {
+          console.log('fetched proejcts list is kk',data.label, data?.projectType?.name , data?.projectType?.name == 'Plots')
+         return data?.projectType?.name != 'Plots'
+        }))
       },
       (error) => setprojectList([])
     )
@@ -476,7 +485,7 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
           >
             <div className="flex items-center flex-row flex-wrap justify-between py-1 pb-5  px-3 py-3 bg-gray-50 rounded-t-md ">
               <h2 className="text-md font-semibold text-black leading-light font-Playfair">
-                CRM
+                Construction
               </h2>
 
               <div className="flex">
@@ -539,13 +548,14 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
                   role="tablist"
                 >
                   {[
-                    { lab: 'Booked', val: 'booked' },
-                    { lab: 'Allotment', val: 'agreement_pipeline' },
-                    { lab: 'Agreement', val: 'sd_pipeline' },
-                    { lab: 'Construction', val: 'sd_pipeline' },
+                    { lab: 'Booking Review', val: 'booked' },
+                    { lab: 'Agreement Pipeline', val: 'agreement_pipeline' },
+
+                    { lab: 'SD/Registration Pipeline', val: 'sd_pipeline' },
+
                     { lab: 'Registered', val: 'registered' },
-                    { lab: 'Possession', val: 'registered' },
                     { lab: 'Unassigned', val: 'unAssigned_crm' },
+
                     { lab: 'Queries', val: 'queries' },
                   ].map((d, b) => {
                     return (
@@ -3209,4 +3219,4 @@ const CrmRegisterModeHome = ({ leadsTyper }) => {
   )
 }
 
-export default CrmRegisterModeHome
+export default CrmConstuctionModeHome

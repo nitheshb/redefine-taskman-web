@@ -24,6 +24,7 @@ import { useAuth } from 'src/context/firebase-auth-context'
 import SiderForm from '../../components/SiderForm/SiderForm'
 import UnitsInventoryHome from 'src/components/A_ProjModule/UnitsInvertoryHome'
 import CrmAnalyticsHome from 'src/components/A_CrmModule/CrmAnalyticsHome'
+import CrmConstuctionModeHome from 'src/components/A_CrmModule/CrmConstructionHome'
 
 const CrmHomePage = () => {
   const { user } = useAuth()
@@ -349,7 +350,7 @@ const CrmHomePage = () => {
 
   return (
     <>
-     
+
       <div className="flex w-screen h-screen  text-gray-700">
         <div className="flex  flex-col flex-grow">
           {/* <HeadNavBar /> */}
@@ -413,6 +414,7 @@ const CrmHomePage = () => {
                 )}
                 {viewable === 'crmSpace-II' && <CrmTaskList />}
                 {viewable === 'crmSpace-I' && <CrmRegisterModeHome />}
+                {viewable === 'constuction_view' && <CrmConstuctionModeHome />}
                 {viewable === 'MyCustomers' && (
                   <CustomersEventsHome
                     project={{
@@ -700,7 +702,7 @@ const CrmHomePage = () => {
           <MetaTags title="ExecutiveHome" description="ExecutiveHome page" />
         </div>
       </div>
-      
+
     </>
   )
 }

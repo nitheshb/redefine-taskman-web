@@ -7,6 +7,7 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
+  Rectangle,
   Tooltip,
   Legend,
   LabelList,
@@ -55,6 +56,11 @@ const data1 = [
     amt: 2500,
   },
 ]
+const RoundedBar = (props) => {
+  const { x, y, width, height, fill } = props;
+
+  return <Rectangle x={x} y={y} width={width} height={height} fill={fill} radius={[10, 10, 0, 0]} />;
+};
 const CustomBarLabel = ({ x, y, value }) => (
   <text x={x} y={y} fill="#666" textAnchor="right" dy={-6} dx={10}>
     {/* {value} */}
@@ -67,7 +73,6 @@ const StackedBarChart = () => {
   const demoUrl = 'https://codesandbox.io/s/mixed-bar-chart-q4hgc'
   const [sourceLeads, setSourceLeads] = useState([])
   useEffect(() => {
-
     getLeadsSourcesDb()
   }, [])
 
@@ -91,12 +96,55 @@ const StackedBarChart = () => {
       (error) => setSourceLeads([])
     )
     const timestamp = 1710873000000
-    const lastFourMonths = getLastFourMonths(data,timestamp)
+    const lastFourMonths = getLastFourMonths(data, timestamp)
     console.log(lastFourMonths)
     setSourceLeads(lastFourMonths)
     console.log('mydata is', data)
   }
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active) {
+      return (
+        <div className="custom-tooltip bg-[#fff] py-[4px] shadow  rounded-lg border-[#90a4ae] text-[#373d3f] w-full  flex flex-col">
+          <div className="label border-b border-[#90a4ae] ">
+            <div className="px-[10px] flex flex-row justify-between ">
+              <div>Month:</div>
+              <div>{` ${label}`}</div>
+            </div>
+          </div>
 
+          <section className="px-[10px] py-2">
+            <div className="flex flex-row">
+                <div className="w-3 h-3 mt-2 mr-3 rounded-full bg-[#8884d8]"> </div>{' '}
+                <div>{`Total Leads: ${payload[5].value}`}</div>
+            </div>
+            <div className="flex flex-row">
+              <div className="w-3 h-3 mt-2 mr-3 rounded-full bg-[#2562EB]"> </div>{' '}
+              <div>{`Booked: ${payload[1].value}`}</div>
+            </div>{' '}
+            <div className="flex flex-row">
+              <div className="w-3 h-3 mt-2 mr-3 rounded-full bg-[#E1D9F7]"> </div>{' '}
+              <div>{`InProgress: ${payload[0].value}`}</div>
+            </div>
+            <div className="flex flex-row">
+              <div className="w-3 h-3 mt-2 mr-3 rounded-full bg-[#8884d8]"> </div>{' '}
+              <div>{`Junk: ${payload[2].value}`}</div>
+            </div>
+            <div className="flex flex-row">
+              <div className="w-3 h-3 mt-2 mr-3 rounded-full bg-[#D2F2FA]"> </div>{' '}
+              <div>{`NotInterested: ${payload[3].value}`}</div>
+            </div>
+            <div className="flex flex-row">
+              <div className="w-3 h-3 mt-2 mr-3 rounded-full bg-[#F7F6B9]"> </div>{' '}
+              <div>{`Revisited: ${payload[4].value}`}</div>
+            </div>
+
+          </section>
+        </div>
+      )
+    }
+
+    return null
+  }
   return (
     <ResponsiveContainer width="100%" height="100%">
       <BarChart
@@ -111,29 +159,39 @@ const StackedBarChart = () => {
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Bar dataKey="InBooked" stackId="a" fill="#2562EB">
+        <XAxis
+          dataKey="name"
+          axisLine={{ stroke: 'transparent' }}
+          tickLine={false}
+          tick={{ fill: '#9ca3af' }}
+        />
+        <YAxis
+          axisLine={{ stroke: 'transparent' }}
+          tickLine={false}
+          tick={{ fill: '#9ca3af' }}
+        />
+        <Tooltip content={<CustomTooltip />}/>
+        {/* <Legend icon={null} /> */}
+        <Bar dataKey="counts" fill="#DCE0FE" shape={<RoundedBar /> } >
+          <LabelList dataKey="counts" content={<CustomBarLabel />} />
+        </Bar>
+        <Bar dataKey="InBooked" stackId="a" fill="#2562EB" shape={<RoundedBar />}>
           <LabelList dataKey="InBooked" content={<CustomBarLabel />} />
         </Bar>
-        <Bar dataKey="InProgress" stackId="a" fill="#8884d8">
+        <Bar dataKey="InProgress" stackId="a" fill="#E1D9F7">
           <LabelList dataKey="InProgress" content={<CustomBarLabel />} />
         </Bar>
-        <Bar dataKey="InJunk" stackId="a" fill="#82ca9d">
+        <Bar dataKey="InJunk" stackId="a" fill="#E1D9F7">
           <LabelList dataKey="InJunk" content={<CustomBarLabel />} />
         </Bar>
-        <Bar dataKey="InNotInterested" stackId="a" fill="#4EDEF1">
+        <Bar dataKey="InNotInterested" stackId="a" fill="#D2F2FA">
           <LabelList dataKey="InNotInterested" content={<CustomBarLabel />} />
         </Bar>
-        <Bar dataKey="revisited" stackId="a" fill="#9332EA">
+        <Bar dataKey="revisited" stackId="a" fill="#F7F6B9" shape={<RoundedBar />}>
           <LabelList dataKey="revisited" content={<CustomBarLabel />} />
         </Bar>
 
-        <Bar dataKey="counts" fill="#616BF2">
-          <LabelList dataKey="counts" content={<CustomBarLabel />} />
-        </Bar>
+
       </BarChart>
     </ResponsiveContainer>
   )

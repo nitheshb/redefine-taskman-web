@@ -238,7 +238,7 @@ const AddApplicantDetails = ({
       await console.log('lead data is ', leadData, leadPayload)
       setFormMessage('Saved Successfully..!')
       setLoading(false)
-      setFormMessage('User Already Exists with Ph No')
+      setFormMessage('Lead Already Exists with Ph No')
       setLoading(false)
     } else {
       console.log('foundLENGTH IS empty ', foundLength)

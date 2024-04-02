@@ -289,7 +289,7 @@ const AddLeadForm = ({ title, dialogOpen, customerDetails }) => {
     if (foundLength?.length > 0) {
       console.log('foundLENGTH IS ', foundLength)
       setFoundDocs(foundLength)
-      setFormMessage('User Already Exists with Ph No')
+      setFormMessage('Lead Already Exists with Ph No')
       setLoading(false)
     } else {
       console.log('foundLENGTH IS empty ', foundLength)
@@ -358,10 +358,10 @@ const AddLeadForm = ({ title, dialogOpen, customerDetails }) => {
       .max(45, 'Must be 45 characters or less')
       .required('Name is Required'),
 
-      project: Yup.string()
+    project: Yup.string()
       .min(3, 'Project Selection is required')
       .required('Project is Required'),
-      assignedTo: Yup.string()
+    assignedTo: Yup.string()
       .min(3, 'Project Selection is required')
       .required('Assigner is Required'),
     // lastName: Yup.string()
@@ -828,7 +828,7 @@ const AddLeadForm = ({ title, dialogOpen, customerDetails }) => {
                               <span className="mt-2">{formMessage}</span>
                             </p>
                           )}
-                          {formMessage === 'User Already Exists with Ph No' && (
+                          {formMessage === 'Lead Already Exists with Ph No' && (
                             <p className=" flex  flex-col text-md text-pink-800  my-3">
                               <img
                                 className="w-[40px] h-[40px] inline mr-2"
