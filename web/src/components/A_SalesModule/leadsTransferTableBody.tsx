@@ -43,7 +43,7 @@ import {
 import { TextAreaField } from 'src/util/formFields/TextAreaField'
 import { TextField } from 'src/util/formFields/TextField'
 
-const SideVisitLeadsBody = ({
+const LeadsTransferTableBody = ({
   title,
   subtitle,
   leadsLogsPayload,
@@ -450,4 +450,4 @@ const SideVisitLeadsBody = ({
   )
 }
 
-export default SideVisitLeadsBody
+export default LeadsTransferTableBody

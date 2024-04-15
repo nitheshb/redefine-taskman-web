@@ -25,6 +25,7 @@ import {
   getEmployeesTaskProgressDept,
   getLeadbyId1,
   getLeadsByDate,
+  getLeadsTransfer,
   getTodayTodoLeadsData,
   getTodayTodoLeadsDataByUser,
   steamAllLeadsActivity,
@@ -63,6 +64,8 @@ import { serialMyData } from '../../components/LeadsTeamReport/SourceLeads'
 import ReportSideWindow from '../../components/SiderForm/ReportSideView'
 import SiderForm from '../../components/SiderForm/SiderForm'
 
+import LeadsTransferTableBody from './leadsTransferTableBody'
+
 const valueFeedData = [
   { k: 'Total', v: 300, pic: '' },
   { k: 'Progress', v: 100, pic: '' },
@@ -95,7 +98,14 @@ const MycalculatePercentage = (total, count) => {
   const per = total / count
   return Math.ceil(isNaN(per) ? 0 * 100 : per * 100)
 }
-const LeadsTransferBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
+const LeadsTransferBody = ({
+  project,
+  leadAssignedTo,
+  coveredStatus,
+  currentStatus,
+  onSliderOpen = () => {},
+  isEdit,
+}) => {
   // const [unitsView, setUnitsView] = useState(false)
   // const [areaView, setAreaView] = useState(false)
   // const [valueView, setValueView] = useState(false)
@@ -213,6 +223,7 @@ const LeadsTransferBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
     value: 'allprojects',
   })
   const [sourceRawFilData, setSourceRawFilData] = useState([])
+  const [leadsSearchRawDB, setLeadsSearchRawDB] = useState([])
   const [sourceDownloadRows, setSourceDownloadRows] = React.useState([])
 
   const [projDownloadRows, setProjDownloadRows] = React.useState([])
@@ -250,8 +261,13 @@ const LeadsTransferBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
     }
   }, [dateRange])
   useEffect(() => {
+    getTransferLeadsDB()
     getLeadsDataFun()
   }, [])
+
+  useEffect(() => {
+    getTransferLeadsDB()
+  }, [leadAssignedTo, coveredStatus, currentStatus])
   useEffect(() => {
     getLeadsDataFun()
   }, [sourceDateRange, dateRange])
@@ -618,6 +634,69 @@ const LeadsTransferBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
       (error) => setprojectList([])
     )
 
+    return unsubscribe
+  }
+
+  const getTransferLeadsDB = async () => {
+    // const z = getLeadsTransfer(
+    //   orgId,
+    //   (querySnapshot) => {
+    //     const SnapData = querySnapshot.data()
+    //     // SnapData.id = id
+    //     console.log('hello is ', SnapData)
+    //     setLeadsSearchRawDB(SnapData)
+    //   },
+    //   {
+    //     uid: 'VIzMzz5rl0NAywdnpHpb',
+    //     projectId: 'projectId',
+    //     cutoffDate: sourceDateRange,
+    //     dateRange: dateRange,
+    //     leadAssignedTo: leadAssignedTo,
+    //   },
+    //   () => {
+    //     console.log('error')
+    //   }
+    // )
+
+    const unsubscribe = getLeadsTransfer(
+      orgId,
+      async (querySnapshot) => {
+        const usersListA = querySnapshot.docs.map((docSnapshot) => {
+          const x = docSnapshot.data()
+          x.id = docSnapshot.id
+          if(coveredStatus.includes('visitfixed')){
+            console.log('hello inside it ', coveredStatus.includes('visitfixed'), x.coveredA.any((elementA) => coveredStatus.contains(elementA)))
+if(x.coveredA.any((elementA) => coveredStatus.contains(elementA))){
+          return x
+}else { return}
+          }else{
+            return x
+
+          }
+
+})
+
+
+       await setLeadsSearchRawDB(usersListA)
+        await console.log('hello valure are ', usersListA)
+
+        // usersListA.sort((a, b) => {
+        //   return b?.booked_on || 0 - b?.booked_on || 0
+        // })
+
+        // setLoading(false)
+      },
+      {
+        uid: 'VIzMzz5rl0NAywdnpHpb',
+        projectId: 'projectId',
+        cutoffDate: sourceDateRange,
+        dateRange: dateRange,
+        leadAssignedTo: leadAssignedTo,
+        coveredStatus: coveredStatus,
+        currentStatus: currentStatus
+      },
+      () => {}
+    )
     return unsubscribe
   }
 
@@ -1415,6 +1494,28 @@ const LeadsTransferBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
             </div> */}
           </div>
           {selCat === 'lead_perf' && (
+            <LeadsTransferTableBody
+              title={'Site Visit Leads'}
+              // subtitle={'subTitle'}
+              // dialogOpen={setOpen}
+              // leadsLogsPayload={drillDownPayload}
+              leadsLogsPayload={leadsSearchRawDB}
+              setCustomerDetails={setCustomerDetails}
+              setisImportLeadsOpen={setisImportLeadsOpen}
+            />
+          )}
+          {selCat === 'lead_perf' && (
+            <LeadsTransferTableBody
+              title={'Site Visit Leads'}
+              // subtitle={'subTitle'}
+              // dialogOpen={setOpen}
+              // leadsLogsPayload={drillDownPayload}
+              leadsLogsPayload={sourceRawFilData}
+              setCustomerDetails={setCustomerDetails}
+              setisImportLeadsOpen={setisImportLeadsOpen}
+            />
+          )}
+          {selCat === 'lead_perf' && (
             <div className="flex flex-col  mt-2 drop-shadow-md rounded-lg  px-4">
               <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div
@@ -1753,11 +1854,12 @@ const LeadsTransferBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
           {/* Graph Bar end */}
 
           {selCat === 'site_visits' && (
-            <SideVisitLeadsBody
+            <LeadsTransferTableBody
               title={'Site Visit Leads'}
-              subtitle={'subTitle'}
+              // subtitle={'subTitle'}
               // dialogOpen={setOpen}
-              leadsLogsPayload={drillDownPayload}
+              // leadsLogsPayload={drillDownPayload}
+              leadsLogsPayload={leadLogsRawData}
               setCustomerDetails={setCustomerDetails}
               setisImportLeadsOpen={setisImportLeadsOpen}
             />

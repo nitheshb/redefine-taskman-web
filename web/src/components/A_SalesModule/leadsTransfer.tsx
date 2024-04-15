@@ -3,9 +3,12 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { useState, useEffect } from 'react'
 
-import { Link } from '@redwoodjs/router'
 import { startOfWeek, startOfDay, startOfMonth, subMonths } from 'date-fns'
+import DatePicker from 'react-datepicker'
 
+import { Link } from '@redwoodjs/router'
+
+import { USER_ROLES } from 'src/constants/userRoles'
 import {
   getAllProjects,
   getLeadsByDate,
@@ -21,10 +24,8 @@ import DropDownSearchBar from '../dropDownSearchBar'
 import LLeadsTableView from '../LLeadsTableView/LLeadsTableView'
 import ProjPhaseHome from '../ProjPhaseHome/ProjPhaseHome'
 
-import { USER_ROLES } from 'src/constants/userRoles'
-
 import { Checkbox } from '@mui/material'
-import DatePicker from 'react-datepicker'
+
 import LeadsTransferBody from './leadsTransferBody'
 
 const LeadsTransferHome = ({ project }) => {
@@ -64,9 +65,9 @@ const LeadsTransferHome = ({ project }) => {
   )
   const [dateRange, setDateRange] = React.useState([null, null])
 
-
   const [leadsTyper, setLeadsTyper] = useState('inProgress')
   const [searchKey, setSearchKey] = useState(['new'])
+  const [currentStatus, setCurrentStatus] = useState(['new'])
   const archieveFields = ['Dead', 'RNR', 'blocked', 'notinterested', 'junk']
   const statusFields = [
     'new',
@@ -226,8 +227,6 @@ const LeadsTransferHome = ({ project }) => {
     return unsubscribe
   }
 
-
-
   const selProjctFun = (project) => {
     setIsOpenSideView(!isOpenSideView)
     console.log('check it', project)
@@ -282,10 +281,8 @@ const LeadsTransferHome = ({ project }) => {
                         ...usersList,
                       ]}
                     />
-
-                    <section className="flex flex-row mt-4">
-                      <div className=" rounded px-1 mb-3">
-                        <div>Covered</div>
+ <div className=" rounded px-1 mb-3 mt-3">
+                        <div>Current Status</div>
                         <div className="sm:flex items-center justify-between rounded">
                           <div className="flex items-center">
                             {[
@@ -300,6 +297,11 @@ const LeadsTransferHome = ({ project }) => {
                                 match: ['new'],
                               },
                               {
+                                lab: 'Followup',
+                                val: 'followup',
+                                match: ['followup'],
+                              },
+                              {
                                 lab: 'Visit Fixed',
                                 val: 'visitfixed',
                                 match: ['visitfixed'],
@@ -310,9 +312,73 @@ const LeadsTransferHome = ({ project }) => {
                                 match: ['visitdone'],
                               },
                               {
+                                lab: 'Booked',
+                                val: 'booked',
+                                match: ['booked'],
+                              },
+                              {
+                                lab: 'Not Interested',
+                                val: 'notinterested',
+                                match: ['notinterested'],
+                              },
+                            ].map((d, i) => {
+                              return (
+                                <a
+                                  key={i}
+                                  className="rounded-full focus:outline-none mr-2"
+                                  href="javascript:void(0)"
+                                  onClick={() => setCurrentStatus(d.match)}
+                                >
+                                  <div
+                                    className={`px-3 rounded-full pt-[2px] pb-[4px] text-[14px]  ${
+                                      currentStatus.includes(d.val)
+                                        ? 'bg-gradient-to-r from-violet-200 to-pink-200 scale-105  font-normal'
+                                        : 'hover:text-[#027576] hover:bg-[#E7DDFF] bg-[#F2F7FA] text-gray-800  hover:scale-95 font-light'
+                                    }`}
+                                  >
+                                    {d.lab}
+                                  </div>
+                                </a>
+                              )
+                            })}
+                          </div>
+                        </div>
+                      </div>
+                    <section className="flex flex-row mt-4">
+                      <div className=" rounded px-1 mb-3">
+                        <div>Covered Status</div>
+                        <div className="sm:flex items-center justify-between rounded">
+                          <div className="flex items-center">
+                            {[
+                              {
+                                lab: 'All',
+                                val: 'dept_tasks',
+                                match: ['completed', 'pending'],
+                              },
+                              {
+                                lab: 'New',
+                                val: 'new',
+                                match: ['new'],
+                              },
+                              {
+                                lab: 'Followup',
+                                val: 'followup',
+                                match: ['followup'],
+                              },
+                              {
                                 lab: 'Visit Fixed',
+                                val: 'visitfixed',
+                                match: ['visitfixed'],
+                              },
+                              {
+                                lab: 'Visit Done',
                                 val: 'visitdone',
                                 match: ['visitdone'],
+                              },
+                              {
+                                lab: 'Booked',
+                                val: 'booked',
+                                match: ['booked'],
                               },
                               {
                                 lab: 'Not Interested',
@@ -421,7 +487,11 @@ const LeadsTransferHome = ({ project }) => {
             </form>
           </div>
 
-          <LeadsTransferBody />
+          <LeadsTransferBody
+            leadAssignedTo={selLeadsOf?.value}
+            coveredStatus={searchKey}
+            currentStatus={currentStatus}
+          />
           {selLeadsOf == undefined && (
             <div className="py-8 px-8 mt-10 flex flex-col items-center bg-red-100 rounded">
               <div className="font-md font-medium text-xs mb-4 text-gray-800 items-center">
