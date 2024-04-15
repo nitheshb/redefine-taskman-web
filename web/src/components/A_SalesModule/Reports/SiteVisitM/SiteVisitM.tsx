@@ -110,7 +110,7 @@ const SiteVisitM = ({ leadLogsRawData, showDrillDownFun }) => {
             >
               {[
                 {
-                  stausTitle: "Visit's Fixed",
+                  stausTitle: "Visit's Scheduled",
                   count: `${leadLogsRawData?.length}`,
                   value: 'visitsfixed',
                 },

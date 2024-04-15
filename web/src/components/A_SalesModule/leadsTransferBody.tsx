@@ -25,6 +25,7 @@ import {
   getEmployeesTaskProgressDept,
   getLeadbyId1,
   getLeadsByDate,
+  getLeadsTransfer,
   getTodayTodoLeadsData,
   getTodayTodoLeadsDataByUser,
   steamAllLeadsActivity,
@@ -45,32 +46,26 @@ import {
   SlimSelectBox,
 } from 'src/util/formFields/slimSelectBoxField'
 
-import MarketingAnalyticsHome from './A_MarketingModule/MarketinAnalyticsHome'
-import StackedBarChart from './A_MarketingModule/Reports/Charts/marketingStackedBarChart'
-import CampaingsTopBarsComponent from './A_MarketingModule/Reports/Charts/marketingTopBars'
-import StackedLeadsChart from './A_SalesModule/Reports/charts/salesStackedChart'
-import EmpTasksReportM from './A_SalesModule/Reports/EmpTasks/empTasksReportM'
-import LeadsCoversionGraphs from './A_SalesModule/Reports/leadsConversionRatio/LeadsCoversionGraphs'
-import ProfileSummary from './A_SalesModule/Reports/profileSummary'
-import SalesSummaryReport from './A_SalesModule/Reports/salesSummaryReport'
-import SiteVisitM from './A_SalesModule/Reports/SiteVisitM'
-import { serialEmployeeLeadData } from './LeadsTeamReport/serialEmployeeLeadData'
-import { serialEmployeeTaskLeadData } from './LeadsTeamReport/serialEmployeeTaskLeadData'
-import { serialProjectLeadData } from './LeadsTeamReport/serialProjectLeadData'
-import { serialProjecVisitFixedData } from './LeadsTeamReport/serialProjectVisitsFixedData'
-import { serialMyData } from './LeadsTeamReport/SourceLeads'
-import ReportSideWindow from './SiderForm/ReportSideView'
-import SiderForm from './SiderForm/SiderForm'
+import MarketingAnalyticsHome from '../../components/A_MarketingModule/MarketinAnalyticsHome'
+import StackedBarChart from '../../components/A_MarketingModule/Reports/Charts/marketingStackedBarChart'
+import CampaingsTopBarsComponent from '../../components/A_MarketingModule/Reports/Charts/marketingTopBars'
+import StackedLeadsChart from '../../components/A_SalesModule/Reports/charts/salesStackedChart'
+import EmpTasksReportM from '../../components/A_SalesModule/Reports/EmpTasks/empTasksReportM'
+import LeadsCoversionGraphs from '../../components/A_SalesModule/Reports/leadsConversionRatio/LeadsCoversionGraphs'
+import ProfileSummary from '../../components/A_SalesModule/Reports/profileSummary'
+import SalesSummaryReport from '../../components/A_SalesModule/Reports/salesSummaryReport'
+import SideVisitLeadsBody from '../../components/A_SalesModule/Reports/SideVisitsLeadsBody'
+import SiteVisitM from '../../components/A_SalesModule/Reports/SiteVisitM'
+import { serialEmployeeLeadData } from '../../components/LeadsTeamReport/serialEmployeeLeadData'
+import { serialEmployeeTaskLeadData } from '../../components/LeadsTeamReport/serialEmployeeTaskLeadData'
+import { serialProjectLeadData } from '../../components/LeadsTeamReport/serialProjectLeadData'
+import { serialProjecVisitFixedData } from '../../components/LeadsTeamReport/serialProjectVisitsFixedData'
+import { serialMyData } from '../../components/LeadsTeamReport/SourceLeads'
+import ReportSideWindow from '../../components/SiderForm/ReportSideView'
+import SiderForm from '../../components/SiderForm/SiderForm'
 
-<<<<<<< HEAD
-import SalesSummaryReport from './A_SalesModule/Reports/salesSummaryReport'
-import ProfileSummary from './A_SalesModule/Reports/profileSummary'
-import Chat from './A_SalesModule/Reports/chatSummary'
+import LeadsTransferTableBody from './leadsTransferTableBody'
 
-
-
-=======
->>>>>>> c6bc66951b3d3593efb288b157022776b5697540
 const valueFeedData = [
   { k: 'Total', v: 300, pic: '' },
   { k: 'Progress', v: 100, pic: '' },
@@ -103,7 +98,14 @@ const MycalculatePercentage = (total, count) => {
   const per = total / count
   return Math.ceil(isNaN(per) ? 0 * 100 : per * 100)
 }
-const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
+const LeadsTransferBody = ({
+  project,
+  leadAssignedTo,
+  coveredStatus,
+  currentStatus,
+  onSliderOpen = () => {},
+  isEdit,
+}) => {
   // const [unitsView, setUnitsView] = useState(false)
   // const [areaView, setAreaView] = useState(false)
   // const [valueView, setValueView] = useState(false)
@@ -221,6 +223,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
     value: 'allprojects',
   })
   const [sourceRawFilData, setSourceRawFilData] = useState([])
+  const [leadsSearchRawDB, setLeadsSearchRawDB] = useState([])
   const [sourceDownloadRows, setSourceDownloadRows] = React.useState([])
 
   const [projDownloadRows, setProjDownloadRows] = React.useState([])
@@ -258,8 +261,13 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
     }
   }, [dateRange])
   useEffect(() => {
+    getTransferLeadsDB()
     getLeadsDataFun()
   }, [])
+
+  useEffect(() => {
+    getTransferLeadsDB()
+  }, [leadAssignedTo, coveredStatus, currentStatus])
   useEffect(() => {
     getLeadsDataFun()
   }, [sourceDateRange, dateRange])
@@ -626,6 +634,69 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
       (error) => setprojectList([])
     )
 
+    return unsubscribe
+  }
+
+  const getTransferLeadsDB = async () => {
+    // const z = getLeadsTransfer(
+    //   orgId,
+    //   (querySnapshot) => {
+    //     const SnapData = querySnapshot.data()
+    //     // SnapData.id = id
+    //     console.log('hello is ', SnapData)
+    //     setLeadsSearchRawDB(SnapData)
+    //   },
+    //   {
+    //     uid: 'VIzMzz5rl0NAywdnpHpb',
+    //     projectId: 'projectId',
+    //     cutoffDate: sourceDateRange,
+    //     dateRange: dateRange,
+    //     leadAssignedTo: leadAssignedTo,
+    //   },
+    //   () => {
+    //     console.log('error')
+    //   }
+    // )
+
+    const unsubscribe = getLeadsTransfer(
+      orgId,
+      async (querySnapshot) => {
+        const usersListA = querySnapshot.docs.map((docSnapshot) => {
+          const x = docSnapshot.data()
+          x.id = docSnapshot.id
+          if(coveredStatus.includes('visitfixed')){
+            console.log('hello inside it ', coveredStatus.includes('visitfixed'), x.coveredA.any((elementA) => coveredStatus.contains(elementA)))
+if(x.coveredA.any((elementA) => coveredStatus.contains(elementA))){
+          return x
+}else { return}
+          }else{
+            return x
+
+          }
+
+})
+
+
+       await setLeadsSearchRawDB(usersListA)
+        await console.log('hello valure are ', usersListA)
+
+        // usersListA.sort((a, b) => {
+        //   return b?.booked_on || 0 - b?.booked_on || 0
+        // })
+
+        // setLoading(false)
+      },
+      {
+        uid: 'VIzMzz5rl0NAywdnpHpb',
+        projectId: 'projectId',
+        cutoffDate: sourceDateRange,
+        dateRange: dateRange,
+        leadAssignedTo: leadAssignedTo,
+        coveredStatus: coveredStatus,
+        currentStatus: currentStatus
+      },
+      () => {}
+    )
     return unsubscribe
   }
 
@@ -1217,29 +1288,22 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                 { label: 'Home', value: 'sale_report_home' },
                 { label: 'Marketing', value: 'marketing_Dashboard' },
 
-<<<<<<< HEAD
-                  { label: 'Top Bar', value: 'bar_tasks' },  
-                  { label: 'Profile', value: 'profile_tasks' },  
-                  { label: 'chat', value: 'chat_tasks' },  
-
-
-
-              
-
-              
-             
-=======
                 { label: 'Top Bar', value: 'bar_tasks' },
                 { label: 'Profile', value: 'profile_tasks' },
->>>>>>> c6bc66951b3d3593efb288b157022776b5697540
 
                 // { label: 'Source Report', value: 'source_report' },
                 // { label: 'Employee Report', value: 'emp_status_report' },
                 // { label: 'Project Leads Report', value: 'proj_leads_report' },
                 //  { label: 'Employee Leads Aging', value: 'emp_leads_report' },
               ].map((data, i) => {
-              return !(['sale_report_home', 'marketing_Dashboard', 'bar_tasks', 'profile_tasks' ].includes(data.value) &&
-                  orgId != 'spark') ? (
+                return !(
+                  [
+                    'sale_report_home',
+                    'marketing_Dashboard',
+                    'bar_tasks',
+                    'profile_tasks',
+                  ].includes(data.value) && orgId != 'spark'
+                ) ? (
                   <section
                     key={i}
                     className="flex  mt-[18px]"
@@ -1430,6 +1494,28 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
             </div> */}
           </div>
           {selCat === 'lead_perf' && (
+            <LeadsTransferTableBody
+              title={'Site Visit Leads'}
+              // subtitle={'subTitle'}
+              // dialogOpen={setOpen}
+              // leadsLogsPayload={drillDownPayload}
+              leadsLogsPayload={leadsSearchRawDB}
+              setCustomerDetails={setCustomerDetails}
+              setisImportLeadsOpen={setisImportLeadsOpen}
+            />
+          )}
+          {selCat === 'lead_perf' && (
+            <LeadsTransferTableBody
+              title={'Site Visit Leads'}
+              // subtitle={'subTitle'}
+              // dialogOpen={setOpen}
+              // leadsLogsPayload={drillDownPayload}
+              leadsLogsPayload={sourceRawFilData}
+              setCustomerDetails={setCustomerDetails}
+              setisImportLeadsOpen={setisImportLeadsOpen}
+            />
+          )}
+          {selCat === 'lead_perf' && (
             <div className="flex flex-col  mt-2 drop-shadow-md rounded-lg  px-4">
               <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div
@@ -1447,12 +1533,16 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                     >
                       <div>Performance by Lead Created Date</div>
                       <div className="flex flex-row">
-                        {orgId =='spark' && <div
-                          className="mt-3 mr-2 cursor-pointer"
-                          onClick={() => updateAgreegatedValues(projectFilList)}
-                        >
-                          Calculate
-                        </div>}
+                        {orgId == 'spark' && (
+                          <div
+                            className="mt-3 mr-2 cursor-pointer"
+                            onClick={() =>
+                              updateAgreegatedValues(projectFilList)
+                            }
+                          >
+                            Calculate
+                          </div>
+                        )}
                         <div className="mr-3">
                           <SlimDateSelectBox
                             onChange={async (value) => {
@@ -1755,208 +1845,25 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
 
           {selCat === 'marketing_Dashboard' && <MarketingAnalyticsHome />}
 
-<<<<<<< HEAD
-{selCat === 'profile_tasks' && (
-            <ProfileSummary/>
-            
-          )}
-=======
           {selCat === 'profile_tasks' && <ProfileSummary />}
->>>>>>> c6bc66951b3d3593efb288b157022776b5697540
 
           {/* Graph Bar start */}
 
-<<<<<<< HEAD
-
-{selCat === 'chat_tasks' && (
-            <Chat/>
-          )}
-
-
-
-
-
-                   {/* Graph Bar start */}
-
-
-                   {selCat === 'bar_tasks' && (
-            <div className='bg-[#fff] rounded-lg shadow-xl min-h-[390px] max-w-[490px]'>
-
-              <div className="flex justify-between px-4 py-4">
-                <p className='text-black'>Top countries</p>
-                <p className='text-[#16A34A] font-bold'>Reports</p>
-              </div>
-
-               <div className="flex justify-between items-end  px-4 py-4">
-
-               <div className="bar-1 text-center justify-center items-center">
-
-                <div className='py-4'>
-                <svg className="justify-center items-center   mx-auto" xmlns="http://www.w3.org/2000/svg" id="flag-icon-css-us" viewBox="0 0 512 512"     style={{
-        width: '30px',
-        height: '30px',
-      
-        borderRadius: '50%',
-     
-      }}>
-                      <g fill-rule="evenodd">
-                        <g stroke-width="1pt">
-                          <path fill="#bd3d44" d="M0 0h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0z" transform="scale(3.9385)"></path>
-                          <path fill="#fff" d="M0 10h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0z" transform="scale(3.9385)"></path>
-                        </g>
-                        <path fill="#192f5d" d="M0 0h98.8v70H0z" transform="scale(3.9385)"></path>
-                        <path fill="#fff" d="M8.2 3l1 2.8H12L9.7 7.5l.9 2.7-2.4-1.7L6 10.2l.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8H45l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.4 1.7 1 2.7L74 8.5l-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9L92 7.5l1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm-74.1 7l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7H65zm16.4 0l1 2.8H86l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm-74 7l.8 2.8h3l-2.4 1.7.9 2.7-2.4-1.7L6 24.2l.9-2.7-2.4-1.7h3zm16.4 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8H45l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9L92 21.5l1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm-74.1 7l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7H65zm16.4 0l1 2.8H86l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm-74 7l.8 2.8h3l-2.4 1.7.9 2.7-2.4-1.7L6 38.2l.9-2.7-2.4-1.7h3zm16.4 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8H45l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9L92 35.5l1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm-74.1 7l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7H65zm16.4 0l1 2.8H86l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm-74 7l.8 2.8h3l-2.4 1.7.9 2.7-2.4-1.7L6 52.2l.9-2.7-2.4-1.7h3zm16.4 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8H45l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9L92 49.5l1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm-74.1 7l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7H65zm16.4 0l1 2.8H86l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm-74 7l.8 2.8h3l-2.4 1.7.9 2.7-2.4-1.7L6 66.2l.9-2.7-2.4-1.7h3zm16.4 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8H45l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9L92 63.5l1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9z" transform="scale(3.9385)"></path>
-                      </g>
-                    </svg>
-                </div>
-
-    
-
-                <div className='bg-[#F5F5F4] rounded-lg  min-h-[220px] min-w-[140px]'>
-                <div className="text-center px-5 py-5" >
-                <p>1st</p>
-                <p className="bg-white rounded-2xl border-gray-300  p-1">1,265</p>
-                </div>
-                </div>
-
-                <div className='text-bar'>
-                  <p>united states</p>
-                </div>
-              </div>
-
-              <div className="bar-2  text-center ">
-
-
-
-
-              <div className='py-4'>
-                <svg className="justify-center items-center   mx-auto" xmlns="http://www.w3.org/2000/svg" id="flag-icon-css-us" viewBox="0 0 512 512"     style={{
-        width: '30px',
-        height: '30px',
-        
-        borderRadius: '50%',
-     
-      }}>
-                      <g fill-rule="evenodd">
-                        <g stroke-width="1pt">
-                          <path fill="#bd3d44" d="M0 0h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0z" transform="scale(3.9385)"></path>
-                          <path fill="#fff" d="M0 10h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0z" transform="scale(3.9385)"></path>
-                        </g>
-                        <path fill="#192f5d" d="M0 0h98.8v70H0z" transform="scale(3.9385)"></path>
-                        <path fill="#fff" d="M8.2 3l1 2.8H12L9.7 7.5l.9 2.7-2.4-1.7L6 10.2l.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8H45l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.4 1.7 1 2.7L74 8.5l-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9L92 7.5l1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm-74.1 7l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7H65zm16.4 0l1 2.8H86l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm-74 7l.8 2.8h3l-2.4 1.7.9 2.7-2.4-1.7L6 24.2l.9-2.7-2.4-1.7h3zm16.4 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8H45l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9L92 21.5l1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm-74.1 7l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7H65zm16.4 0l1 2.8H86l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm-74 7l.8 2.8h3l-2.4 1.7.9 2.7-2.4-1.7L6 38.2l.9-2.7-2.4-1.7h3zm16.4 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8H45l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9L92 35.5l1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm-74.1 7l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7H65zm16.4 0l1 2.8H86l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm-74 7l.8 2.8h3l-2.4 1.7.9 2.7-2.4-1.7L6 52.2l.9-2.7-2.4-1.7h3zm16.4 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8H45l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9L92 49.5l1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm-74.1 7l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7H65zm16.4 0l1 2.8H86l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm-74 7l.8 2.8h3l-2.4 1.7.9 2.7-2.4-1.7L6 66.2l.9-2.7-2.4-1.7h3zm16.4 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8H45l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9L92 63.5l1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9z" transform="scale(3.9385)"></path>
-                      </g>
-                    </svg>
-                </div>
-
-
-                
-
-
-
-                <div className='bg-[#F5F5F4] rounded-lg  min-h-[170px] min-w-[140px]'>
-                <div className="text-center px-5 py-5" >
-                <p>2st</p>
-                <p className="bg-white rounded-2xl border-gray-300  p-1">1,009</p>
-                </div>
-                </div>
-
-                <div className='text-bar'>
-                  <p>united states</p>
-                </div>
-              </div>
-
-
-              <div className="bar-3 text-center">
-
-
-
-              <div className='py-4'>
-                <svg className="justify-center items-center   mx-auto" xmlns="http://www.w3.org/2000/svg" id="flag-icon-css-us" viewBox="0 0 512 512"     style={{
-        width: '30px',
-        height: '30px',
-        
-        borderRadius: '50%',
-     
-      }}>
-                      <g fill-rule="evenodd">
-                        <g stroke-width="1pt">
-                          <path fill="#bd3d44" d="M0 0h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0z" transform="scale(3.9385)"></path>
-                          <path fill="#fff" d="M0 10h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0z" transform="scale(3.9385)"></path>
-                        </g>
-                        <path fill="#192f5d" d="M0 0h98.8v70H0z" transform="scale(3.9385)"></path>
-                        <path fill="#fff" d="M8.2 3l1 2.8H12L9.7 7.5l.9 2.7-2.4-1.7L6 10.2l.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8H45l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.4 1.7 1 2.7L74 8.5l-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9L92 7.5l1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm-74.1 7l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7H65zm16.4 0l1 2.8H86l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm-74 7l.8 2.8h3l-2.4 1.7.9 2.7-2.4-1.7L6 24.2l.9-2.7-2.4-1.7h3zm16.4 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8H45l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9L92 21.5l1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm-74.1 7l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7H65zm16.4 0l1 2.8H86l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm-74 7l.8 2.8h3l-2.4 1.7.9 2.7-2.4-1.7L6 38.2l.9-2.7-2.4-1.7h3zm16.4 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8H45l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9L92 35.5l1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm-74.1 7l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7H65zm16.4 0l1 2.8H86l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm-74 7l.8 2.8h3l-2.4 1.7.9 2.7-2.4-1.7L6 52.2l.9-2.7-2.4-1.7h3zm16.4 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8H45l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9L92 49.5l1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm-74.1 7l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7H65zm16.4 0l1 2.8H86l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm-74 7l.8 2.8h3l-2.4 1.7.9 2.7-2.4-1.7L6 66.2l.9-2.7-2.4-1.7h3zm16.4 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8H45l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.4 0l1 2.8h2.8l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.3 1.7.9 2.7-2.4-1.7-2.3 1.7.9-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8h2.9L92 63.5l1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9z" transform="scale(3.9385)"></path>
-                      </g>
-                    </svg>
-                </div>
-
-
-
-
-
-
-                <div className='bg-[#F5F5F4] rounded-lg  min-h-[120px] min-w-[140px]'>
-                <div className="text-center px-5 py-5" >
-                <p>3st</p>
-                <p className="bg-white rounded-2xl border-gray-300  p-1">922</p>
-                </div>
-                </div>
-
-                <div className='text-bar'>
-                  <p>united states</p>
-                </div>
-              </div>
-
-               </div>
-
-
-
-
-{/* 
-
-<div className="text-center relative">
-    <div className="relative box-line-btn inline-flex text-center items-center mx-2 border-r border-l">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4">
-            <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14Zm3.844-8.791a.75.75 0 0 0-1.188-.918l-3.7 4.79-1.649-1.833a.75.75 0 1 0-1.114 1.004l2.25 2.5a.75.75 0 0 0 1.15-.043l4.25-5.5Z" clip-rule="evenodd" />
-        </svg>
-        <p className="p-1">Good</p>
-    </div>
-</div>
-
-*/}
-
-
-<div className="flex justify-center items-center">
-  <h1 className="font-sans text-center text-1xl max-w-xs relative">
-  <span className="bg-[#CCFBF1] p-1 rounded-lg">Good</span>
-
-    
-    <div className="absolute w-24 h-0.5 bg-[#F5F5F4] top-1/2 left-10 translate-x-6 "></div>
-    
-    <div className="absolute w-24 h-0.5 bg-[#F5F5F4] top-1/2 right-20 translate-x-6 "></div>
-  </h1>
-</div>
-
-
-
-
-
-
-               <div className="p-4 text-center">Your overall performance is 98% higher than average.</div>
-
-
-               {/* line bar */}
-
-
-
-
-            </div>
-          )}
-
-=======
           {selCat === 'bar_tasks' && <CampaingsTopBarsComponent />}
->>>>>>> c6bc66951b3d3593efb288b157022776b5697540
 
           {/* Graph Bar end */}
+
+          {selCat === 'site_visits' && (
+            <LeadsTransferTableBody
+              title={'Site Visit Leads'}
+              // subtitle={'subTitle'}
+              // dialogOpen={setOpen}
+              // leadsLogsPayload={drillDownPayload}
+              leadsLogsPayload={leadLogsRawData}
+              setCustomerDetails={setCustomerDetails}
+              setisImportLeadsOpen={setisImportLeadsOpen}
+            />
+          )}
 
           {selCat === 'site_visits' && (
             <>
@@ -4593,4 +4500,4 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
   )
 }
 
-export default LeadsTeamReportBody
+export default LeadsTransferBody

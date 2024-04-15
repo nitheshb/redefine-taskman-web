@@ -268,7 +268,7 @@ const ShowCustomerDetails = ({
     console.log('user is ', user)
     if (foundLength?.length > 0) {
       console.log('foundLENGTH IS ', foundLength)
-      setFormMessage('User Already Exists with Ph No')
+      setFormMessage('Lead Already Exists with Ph No')
       setLoading(false)
     } else {
       console.log('foundLENGTH IS empty ', foundLength)
@@ -686,10 +686,12 @@ const ShowCustomerDetails = ({
             <div className="flex flex-row w-full justify-between">
               <div className="flex flex-col">
                 <span className="font-semibold text-[14px]">
-                  {leadDetailsObj2?.secondaryCustomerDetailsObj?.customerName2 || '?'}
+                  {leadDetailsObj2?.secondaryCustomerDetailsObj
+                    ?.customerName2 || '?'}
                 </span>
                 <span className="font-semibold text-[12px] px-2 bg-[#E6E7E8] rounded-md mt-[2px]">
-                  {leadDetailsObj2?.secondaryCustomerDetailsObj?.phoneNo2 || '?'}
+                  {leadDetailsObj2?.secondaryCustomerDetailsObj?.phoneNo2 ||
+                    '?'}
                 </span>
               </div>
               <div className="flex flex-col">
