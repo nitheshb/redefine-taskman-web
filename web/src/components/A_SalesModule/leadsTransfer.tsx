@@ -24,7 +24,7 @@ import DropDownSearchBar from '../dropDownSearchBar'
 import LLeadsTableView from '../LLeadsTableView/LLeadsTableView'
 import ProjPhaseHome from '../ProjPhaseHome/ProjPhaseHome'
 
-import { Checkbox } from '@mui/material'
+import { Button, Checkbox } from '@mui/material'
 
 import LeadsTransferBody from './leadsTransferBody'
 
@@ -457,8 +457,21 @@ const LeadsTransferHome = ({ project }) => {
                           ]}
                         />
                       </div>
+
+                      
                     </section>
-                    {'Transfer To'}
+
+                    <div className="flex justify-between">
+
+  {'Transfer Too'}
+
+  <Button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Apply</Button>
+
+
+</div>
+
+
+
 
                     <VerySlimSelectBox
                       name="project"
