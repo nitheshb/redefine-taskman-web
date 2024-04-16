@@ -14,6 +14,7 @@ import {
   getLeadsByDate,
   getLeadsByStatusUser,
   steamUsersListByRole,
+  updateLeadAssigTo,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 
@@ -64,6 +65,8 @@ const LeadsTransferHome = ({ project }) => {
     startOfDay(d).getTime()
   )
   const [dateRange, setDateRange] = React.useState([null, null])
+
+  const [selectedIds, setSelectedIds] = useState([])
 
   const [leadsTyper, setLeadsTyper] = useState('inProgress')
   const [searchKey, setSearchKey] = useState(['new'])
@@ -237,6 +240,29 @@ const LeadsTransferHome = ({ project }) => {
     setAvailType(project)
   }
 
+  const tranferLeads = () => {
+    console.log('hello it', selectedIds, selLeadTransferTo, user)
+    selectedIds.map((data)=>{
+      const projId = data?.ProjectId
+      const {id:leadDocId, assignedTo, Status} = data;
+      const txt = `A New Lead is assigned to ${selLeadTransferTo?.name}`
+      updateLeadAssigTo(
+        orgId,
+        projId,
+        leadDocId,
+        selLeadTransferTo,
+        assignedTo?.uid,
+        Status,
+        data,
+        1,
+        txt,
+        user?.email
+      )
+    })
+    setSelectedIds([])
+
+  }
+
   return (
     <>
       <section className=" mt-2 mx-2 py-6 mb-8 leading-7 text-gray-900 bg-white  rounded-lg  ">
@@ -281,69 +307,69 @@ const LeadsTransferHome = ({ project }) => {
                         ...usersList,
                       ]}
                     />
- <div className=" rounded px-1 mb-3 mt-3">
-                        <div>Current Status</div>
-                        <div className="sm:flex items-center justify-between rounded">
-                          <div className="flex items-center">
-                            {[
-                              {
-                                lab: 'All',
-                                val: 'dept_tasks',
-                                match: ['completed', 'pending'],
-                              },
-                              {
-                                lab: 'New',
-                                val: 'new',
-                                match: ['new'],
-                              },
-                              {
-                                lab: 'Followup',
-                                val: 'followup',
-                                match: ['followup'],
-                              },
-                              {
-                                lab: 'Visit Fixed',
-                                val: 'visitfixed',
-                                match: ['visitfixed'],
-                              },
-                              {
-                                lab: 'Visit Done',
-                                val: 'visitdone',
-                                match: ['visitdone'],
-                              },
-                              {
-                                lab: 'Booked',
-                                val: 'booked',
-                                match: ['booked'],
-                              },
-                              {
-                                lab: 'Not Interested',
-                                val: 'notinterested',
-                                match: ['notinterested'],
-                              },
-                            ].map((d, i) => {
-                              return (
-                                <a
-                                  key={i}
-                                  className="rounded-full focus:outline-none mr-2"
-                                  href="javascript:void(0)"
-                                  onClick={() => setCurrentStatus(d.match)}
+                    <div className=" rounded px-1 mb-3 mt-3">
+                      <div>Current Status</div>
+                      <div className="sm:flex items-center justify-between rounded">
+                        <div className="flex items-center">
+                          {[
+                            {
+                              lab: 'All',
+                              val: 'dept_tasks',
+                              match: ['completed', 'pending'],
+                            },
+                            {
+                              lab: 'New',
+                              val: 'new',
+                              match: ['new'],
+                            },
+                            {
+                              lab: 'Followup',
+                              val: 'followup',
+                              match: ['followup'],
+                            },
+                            {
+                              lab: 'Visit Fixed',
+                              val: 'visitfixed',
+                              match: ['visitfixed'],
+                            },
+                            {
+                              lab: 'Visit Done',
+                              val: 'visitdone',
+                              match: ['visitdone'],
+                            },
+                            {
+                              lab: 'Booked',
+                              val: 'booked',
+                              match: ['booked'],
+                            },
+                            {
+                              lab: 'Not Interested',
+                              val: 'notinterested',
+                              match: ['notinterested'],
+                            },
+                          ].map((d, i) => {
+                            return (
+                              <a
+                                key={i}
+                                className="rounded-full focus:outline-none mr-2"
+                                href="javascript:void(0)"
+                                onClick={() => setCurrentStatus(d.match)}
+                              >
+                                <div
+                                  className={`px-3 rounded-full pt-[2px] pb-[4px] text-[14px]  ${
+                                    currentStatus.includes(d.val)
+                                      ? 'bg-gradient-to-r from-violet-200 to-pink-200 scale-105  font-normal'
+                                      : 'hover:text-[#027576] hover:bg-[#E7DDFF] bg-[#F2F7FA] text-gray-800  hover:scale-95 font-light'
+                                  }`}
                                 >
-                                  <div
-                                    className={`px-3 rounded-full pt-[2px] pb-[4px] text-[14px]  ${
-                                      currentStatus.includes(d.val)
-                                        ? 'bg-gradient-to-r from-violet-200 to-pink-200 scale-105  font-normal'
-                                        : 'hover:text-[#027576] hover:bg-[#E7DDFF] bg-[#F2F7FA] text-gray-800  hover:scale-95 font-light'
-                                    }`}
-                                  >
-                                    {d.lab}
-                                  </div>
-                                </a>
-                              )
-                            })}
-                          </div>
+                                  {d.lab}
+                                </div>
+                              </a>
+                            )
+                          })}
                         </div>
                       </div>
+                    </div>
                     <section className="flex flex-row mt-4">
                       <div className=" rounded px-1 mb-3">
                         <div>Covered Status</div>
@@ -457,18 +483,12 @@ const LeadsTransferHome = ({ project }) => {
                           ]}
                         />
                       </div>
-
-                      
                     </section>
 
+
                     <div className="flex justify-between">
-
-  {'Transfer Too'}
-
-  <Button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Apply</Button>
-
-
-</div>
+                      <section>
+                      {'Transfer To'}
 
 
 
@@ -494,17 +514,21 @@ const LeadsTransferHome = ({ project }) => {
                         ...usersList,
                       ]}
                     />
+                    </section>
+                    <section
+                        className="bg-transparent hover:bg-blue-700 text-blue font-bold py-2 px-4 rounded"
+                        onClick={() => tranferLeads()}
+                      >
+                        Apply
+                      </section>
+                    </div>
                   </section>
                 </div>
               </div>
             </form>
           </div>
 
-          <LeadsTransferBody
-            leadAssignedTo={selLeadsOf?.value}
-            coveredStatus={searchKey}
-            currentStatus={currentStatus}
-          />
+
           {selLeadsOf == undefined && (
             <div className="py-8 px-8 mt-10 flex flex-col items-center bg-red-100 rounded">
               <div className="font-md font-medium text-xs mb-4 text-gray-800 items-center">
@@ -523,17 +547,15 @@ const LeadsTransferHome = ({ project }) => {
             </div>
           )}
 
-          <div className="mt-4">
+          <div className="">
             {!false && (
-              <LLeadsTableView
-                setFetchLeadsLoader={setFetchLeadsLoader}
-                fetchLeadsLoader={fetchLeadsLoader}
-                leadsFetchedData={leadsFetchedData}
-                setisImportLeadsOpen={setisImportLeadsOpen}
-                // selUserProfileF={selUserProfileF}
-                leadsTyper={leadsTyper}
-                // searchVal={searchValue}
-              />
+              <LeadsTransferBody
+            leadAssignedTo={selLeadsOf?.value}
+            coveredStatus={searchKey}
+            currentStatus={currentStatus}
+            setSelectedIds={setSelectedIds}
+            selectedIds={selectedIds}
+          />
             )}
           </div>
         </div>

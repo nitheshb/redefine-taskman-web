@@ -50,6 +50,8 @@ const LeadsTransferTableBody = ({
   dialogOpen,
   setCustomerDetails,
   setisImportLeadsOpen,
+  setSelectedIds,
+  selectedIds
 }) => {
   const { user } = useAuth();
   const { orgId } = user;
@@ -267,13 +269,14 @@ const LeadsTransferTableBody = ({
     setVisitFixedBy(value);
   };
 
-  const [selectedIds, setSelectedIds] = useState([]);
 
-  const handleCheckboxChange = (id) => {
-    if (selectedIds.includes(id)) {
-      setSelectedIds(selectedIds.filter((selectedId) => selectedId !== id));
+  const idExists = (arr, targetId) => arr.some(({ id }) => id === targetId);
+  const handleCheckboxChange = (data) => {
+
+    if (idExists(selectedIds, data?.id)) {
+      setSelectedIds(selectedIds.filter((selectedId) => selectedId.id !== data?.id));
     } else {
-      setSelectedIds([...selectedIds, id]);
+      setSelectedIds([...selectedIds, data]);
     }
   };
 
@@ -281,7 +284,7 @@ const LeadsTransferTableBody = ({
     if (checkboxCount === leadsFilA.length) {
       setSelectedIds([]);
     } else {
-      setSelectedIds(leadsFilA.map((data) => data.id));
+      setSelectedIds(leadsFilA);
     }
   };
 
@@ -293,8 +296,11 @@ const LeadsTransferTableBody = ({
         {/* <Dialog.Title className=" font-semibold text-xl mr-auto ml-3  font-Playfair tracking-wider">
           {subtitle || title} ({leadsFilA.length || 0})
         </Dialog.Title> */}
-        {subtitle || title} ({leadsFilA.length || 0})
+        {'Leads'} ({leadsFilA.length || 0})
         <section className="flex flex-row">
+        <button className="ml-2 px-3 py-1 rounded-lg bg-transparent text-blue-800 font-bold text-sm">
+            {checkboxCount} Selected
+          </button>
           <section className="flex flex-col border ml-2 py-1  px-4 text-xs  rounded-full">
             <AssigedToDropComp
               assignerName={selProjectIs?.label}
@@ -355,9 +361,7 @@ const LeadsTransferTableBody = ({
               style={{ height: '20px', width: '20px' }}
             />
           </Tooltip>
-          <button className="ml-2 px-3 py-1 rounded-lg bg-blue-500 text-white font-bold text-sm">
-            {checkboxCount} Selected
-          </button>
+
         </section>
       </div>
 
@@ -379,7 +383,7 @@ const LeadsTransferTableBody = ({
                   <th
   scope="col"
   className={`text-sm font-medium text-gray-900 px-6 py-4`}
-  style={{ display: 'flex', alignItems: 'center' }}
+  // style={{ display: 'flex', alignItems: 'center' }}
 >
   <label htmlFor="selectAllCheckbox" style={{ marginRight: '8px' }}>
     <input
@@ -391,7 +395,6 @@ const LeadsTransferTableBody = ({
       }
       onChange={handleSelectAllChange}
     />
-    Select All
   </label>
 </th>
 
@@ -422,7 +425,7 @@ const LeadsTransferTableBody = ({
                             : ''
                         }`}
                       >
-                        {d.label}
+                        {d?.label?.toUpperCase()}
                       </th>
                     ))}
                   </tr>
@@ -441,11 +444,15 @@ const LeadsTransferTableBody = ({
                         onClick={() => selLeadFun(data)}
                       >
                         <td className="text-sm text-gray-900 font-medium px-6 py-2 whitespace-nowrap text-left">
+                        <label>
                           <input
                             type="checkbox"
-                            checked={selectedIds.includes(data.id)}
-                            onChange={() => handleCheckboxChange(data.id)}
+                            checked={idExists(selectedIds,data.id)}
+                            onChange={(e) => {
+                              e.stopPropagation();
+                              handleCheckboxChange(data)}}
                           />
+                        </label>
                         </td>
                         <td className="text-sm text-gray-900 font-medium px-6 py-2 whitespace-nowrap text-left">
                           {i + 1}
@@ -492,6 +499,7 @@ const LeadsTransferTableBody = ({
                         <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
                           {data?.leadOwner}
                         </td>
+
                       </tr>
                     );
                   })}

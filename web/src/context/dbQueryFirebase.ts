@@ -3722,6 +3722,12 @@ export const updateLeadAssigTo = async (
     assignedToObj: assignedTo,
     AssignedBy: by,
     assignT: Timestamp.now().toMillis(),
+  },{
+    assignedTo: value,
+    assignedToObj: assignedTo,
+    AssignedBy: by,
+    assignT: Timestamp.now().toMillis(),
+    Status: newSt,
   })
 
   await updateDoc(doc(db, `${orgId}_leads`, leadDocId), {
