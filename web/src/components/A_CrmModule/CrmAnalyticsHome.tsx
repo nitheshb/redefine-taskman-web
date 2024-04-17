@@ -44,6 +44,8 @@ import UnitStatusCardReport from './Reports/UnitStatusCardReport'
 import UnitBookingSummaryHomePage from './Reports/bookingSummaryHome1'
 import CreditNoteSummaryHomePage from './Reports/creditNoteSummaryHome'
 import CrmSummaryReport from './Reports/Crm_SummaryReport'
+import CrmSummaryTable from './Reports/CrmSummaryTable'
+
 
 const CrmAnalyticsHome = ({ project }) => {
   const theme = useTheme()
@@ -96,6 +98,7 @@ const CrmAnalyticsHome = ({ project }) => {
           { label: 'Project Summary', value: 'proj_summary' },
           { label: 'Collections', value: 'collections-summary' },
           { label: 'Home', value: 'crm_summary' },
+          { label: 'CRM Inventory Report', value: 'crm_table' },
 
           // { label: 'Source Report', value: 'source_report' },
           // { label: 'Employee Report', value: 'emp_status_report' },
@@ -233,6 +236,24 @@ const CrmAnalyticsHome = ({ project }) => {
             {projects.length === 0 && <DummyBodyLayout />}
           </div>
         )}
+
+
+{selCat === 'crm_table' && (
+          <div className="">
+            {/* <AdvancedDataTableTest /> */}
+            <CrmSummaryTable/>
+
+            {projects.length === 0 && <DummyBodyLayout />}
+          </div>
+        )}
+
+
+
+
+
+
+
+
 
       {selCat === 'creditnote_summary' && (
           <div className="">
