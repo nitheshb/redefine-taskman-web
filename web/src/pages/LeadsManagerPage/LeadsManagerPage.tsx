@@ -20,6 +20,7 @@ import { useAuth } from 'src/context/firebase-auth-context'
 import HeadNavBar from '../../components/HeadNavBar/HeadNavBar'
 import ReportMain from '../../components/Reports/ReportMainCom'
 import UnitsInventoryHome from 'src/components/A_ProjModule/UnitsInvertoryHome'
+import LeadsTransferHome from 'src/components/A_SalesModule/leadsTransfer'
 
 const LeadsManagerPage = (props) => {
   const { user } = useAuth()
@@ -105,6 +106,14 @@ const LeadsManagerPage = (props) => {
               )}
               {viewable === 'leadslake' && (
                 <LeadsLakeHomePage taskType={viewable} />
+              )}
+              {viewable === 'leadsController' && (
+                 <LeadsTransferHome
+                 project={{
+                   projectName: 'Projects',
+                 }}
+                 isEdit={undefined}
+               />
               )}
               {viewable === 'units_inventory' && (
                  <UnitsInventoryHome

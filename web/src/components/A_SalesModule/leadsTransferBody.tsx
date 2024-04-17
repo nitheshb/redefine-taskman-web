@@ -25,6 +25,7 @@ import {
   getEmployeesTaskProgressDept,
   getLeadbyId1,
   getLeadsByDate,
+  getLeadsTransfer,
   getTodayTodoLeadsData,
   getTodayTodoLeadsDataByUser,
   steamAllLeadsActivity,
@@ -45,28 +46,25 @@ import {
   SlimSelectBox,
 } from 'src/util/formFields/slimSelectBoxField'
 
-import MarketingAnalyticsHome from './A_MarketingModule/MarketinAnalyticsHome'
-import StackedBarChart from './A_MarketingModule/Reports/Charts/marketingStackedBarChart'
-import CampaingsTopBarsComponent from './A_MarketingModule/Reports/Charts/marketingTopBars'
-import StackedLeadsChart from './A_SalesModule/Reports/charts/salesStackedChart'
-import EmpTasksReportM from './A_SalesModule/Reports/EmpTasks/empTasksReportM'
-import LeadsCoversionGraphs from './A_SalesModule/Reports/leadsConversionRatio/LeadsCoversionGraphs'
-import ProfileSummary from './A_SalesModule/Reports/profileSummary'
-import SalesSummaryReport from './A_SalesModule/Reports/salesSummaryReport'
-import SiteVisitM from './A_SalesModule/Reports/SiteVisitM'
-import { serialEmployeeLeadData } from './LeadsTeamReport/serialEmployeeLeadData'
-import { serialEmployeeTaskLeadData } from './LeadsTeamReport/serialEmployeeTaskLeadData'
-import { serialProjectLeadData } from './LeadsTeamReport/serialProjectLeadData'
-import { serialProjecVisitFixedData } from './LeadsTeamReport/serialProjectVisitsFixedData'
-import { serialMyData } from './LeadsTeamReport/SourceLeads'
-import ReportSideWindow from './SiderForm/ReportSideView'
-import SiderForm from './SiderForm/SiderForm'
+import MarketingAnalyticsHome from '../../components/A_MarketingModule/MarketinAnalyticsHome'
+import StackedBarChart from '../../components/A_MarketingModule/Reports/Charts/marketingStackedBarChart'
+import CampaingsTopBarsComponent from '../../components/A_MarketingModule/Reports/Charts/marketingTopBars'
+import StackedLeadsChart from '../../components/A_SalesModule/Reports/charts/salesStackedChart'
+import EmpTasksReportM from '../../components/A_SalesModule/Reports/EmpTasks/empTasksReportM'
+import LeadsCoversionGraphs from '../../components/A_SalesModule/Reports/leadsConversionRatio/LeadsCoversionGraphs'
+import ProfileSummary from '../../components/A_SalesModule/Reports/profileSummary'
+import SalesSummaryReport from '../../components/A_SalesModule/Reports/salesSummaryReport'
+import SideVisitLeadsBody from '../../components/A_SalesModule/Reports/SideVisitsLeadsBody'
+import SiteVisitM from '../../components/A_SalesModule/Reports/SiteVisitM'
+import { serialEmployeeLeadData } from '../../components/LeadsTeamReport/serialEmployeeLeadData'
+import { serialEmployeeTaskLeadData } from '../../components/LeadsTeamReport/serialEmployeeTaskLeadData'
+import { serialProjectLeadData } from '../../components/LeadsTeamReport/serialProjectLeadData'
+import { serialProjecVisitFixedData } from '../../components/LeadsTeamReport/serialProjectVisitsFixedData'
+import { serialMyData } from '../../components/LeadsTeamReport/SourceLeads'
+import ReportSideWindow from '../../components/SiderForm/ReportSideView'
+import SiderForm from '../../components/SiderForm/SiderForm'
 
-//import SalesSummaryReport from './A_SalesModule/Reports/salesSummaryReport'
-//import ProfileSummary from './A_SalesModule/Reports/profileSummary'
-import Chat from './A_SalesModule/Reports/chatSummary'
-
-
+import LeadsTransferTableBody from './leadsTransferTableBody'
 
 const valueFeedData = [
   { k: 'Total', v: 300, pic: '' },
@@ -100,7 +98,16 @@ const MycalculatePercentage = (total, count) => {
   const per = total / count
   return Math.ceil(isNaN(per) ? 0 * 100 : per * 100)
 }
-const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
+const LeadsTransferBody = ({
+  project,
+  leadAssignedTo,
+  coveredStatus,
+  currentStatus,
+  setSelectedIds,
+  selectedIds,
+  onSliderOpen = () => {},
+  isEdit,
+}) => {
   // const [unitsView, setUnitsView] = useState(false)
   // const [areaView, setAreaView] = useState(false)
   // const [valueView, setValueView] = useState(false)
@@ -218,6 +225,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
     value: 'allprojects',
   })
   const [sourceRawFilData, setSourceRawFilData] = useState([])
+  const [leadsSearchRawDB, setLeadsSearchRawDB] = useState([])
   const [sourceDownloadRows, setSourceDownloadRows] = React.useState([])
 
   const [projDownloadRows, setProjDownloadRows] = React.useState([])
@@ -255,8 +263,13 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
     }
   }, [dateRange])
   useEffect(() => {
+    getTransferLeadsDB()
     getLeadsDataFun()
   }, [])
+
+  useEffect(() => {
+    getTransferLeadsDB()
+  }, [leadAssignedTo, coveredStatus, currentStatus])
   useEffect(() => {
     getLeadsDataFun()
   }, [sourceDateRange, dateRange])
@@ -623,6 +636,69 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
       (error) => setprojectList([])
     )
 
+    return unsubscribe
+  }
+
+  const getTransferLeadsDB = async () => {
+    // const z = getLeadsTransfer(
+    //   orgId,
+    //   (querySnapshot) => {
+    //     const SnapData = querySnapshot.data()
+    //     // SnapData.id = id
+    //     console.log('hello is ', SnapData)
+    //     setLeadsSearchRawDB(SnapData)
+    //   },
+    //   {
+    //     uid: 'VIzMzz5rl0NAywdnpHpb',
+    //     projectId: 'projectId',
+    //     cutoffDate: sourceDateRange,
+    //     dateRange: dateRange,
+    //     leadAssignedTo: leadAssignedTo,
+    //   },
+    //   () => {
+    //     console.log('error')
+    //   }
+    // )
+
+    const unsubscribe = getLeadsTransfer(
+      orgId,
+      async (querySnapshot) => {
+        const usersListA = querySnapshot.docs.map((docSnapshot) => {
+          const x = docSnapshot.data()
+          x.id = docSnapshot.id
+          if(coveredStatus.includes('visitfixed')){
+            console.log('hello inside it ', coveredStatus.includes('visitfixed'), x.coveredA.any((elementA) => coveredStatus.contains(elementA)))
+if(x.coveredA.any((elementA) => coveredStatus.contains(elementA))){
+          return x
+}else { return}
+          }else{
+            return x
+
+          }
+
+})
+
+
+       await setLeadsSearchRawDB(usersListA)
+        await console.log('hello valure are ', usersListA)
+
+        // usersListA.sort((a, b) => {
+        //   return b?.booked_on || 0 - b?.booked_on || 0
+        // })
+
+        // setLoading(false)
+      },
+      {
+        uid: 'VIzMzz5rl0NAywdnpHpb',
+        projectId: 'projectId',
+        cutoffDate: sourceDateRange,
+        dateRange: dateRange,
+        leadAssignedTo: leadAssignedTo,
+        coveredStatus: coveredStatus,
+        currentStatus: currentStatus
+      },
+      () => {}
+    )
     return unsubscribe
   }
 
@@ -1192,67 +1268,9 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
   return (
     <div>
       <section className="pb-8 pt-1 mb-8 leading-7 text-gray-900 bg-white ">
-        <div className="box-border px-4 mx-auto border-solid sm:px-6 md:px-6 lg:px-8 max-w-full ">
+        <div className="box-border  border-solid  ">
           <div className="flex flex-col  leading-7  text-gray-900 border-0 border-gray-200 ">
-            <div className="flex overflow-x-auto ml-2 border-b pb-2">
-              <div className="flex items-center flex-shrink-0   border-grey maahome">
-                {/* <Link
-                className="flex items-center"
-               // to={routes.projectEdit({ uid })}
-              > */}
 
-                <span className="relative  flex items-center w-auto text-xl font-bold leading-none pl-0 mt-[18px]">
-                  Sales Reports
-                </span>
-                {/* </Link> */}
-              </div>
-              {[
-                { label: 'Leads Performance', value: 'lead_perf' },
-                { label: 'Source Performance', value: 'source_perf' },
-                { label: 'Site Visits', value: 'site_visits' },
-                { label: 'Employee Performance', value: 'emp_tasks' },
-                { label: 'Home', value: 'sale_report_home' },
-                { label: 'Marketing', value: 'marketing_Dashboard' },
-
-                { label: 'Top Bar', value: 'bar_tasks' },
-                { label: 'Profile', value: 'profile_tasks' },
-
-                // { label: 'Source Report', value: 'source_report' },
-                // { label: 'Employee Report', value: 'emp_status_report' },
-                // { label: 'Project Leads Report', value: 'proj_leads_report' },
-                //  { label: 'Employee Leads Aging', value: 'emp_leads_report' },
-              ].map((data, i) => {
-              return !(['sale_report_home', 'marketing_Dashboard', 'bar_tasks', 'profile_tasks' ].includes(data.value) &&
-                  orgId != 'spark') ? (
-                  <section
-                    key={i}
-                    className="flex  mt-[18px]"
-                    onClick={() => {
-                      console.log('am i clicked', data.value)
-                      setSelCat(data.value)
-                    }}
-                  >
-                    <button>
-                      <span
-                        className={`flex ml-2 items-center py-3 px-3 text-xs flex flex-col  min-w-[120px] ${
-                          selCat === data.value
-                            ? 'font-normal text-green-800 bg-[#FFEDEA]'
-                            : 'font-normal text-black-100 bg-[#f0f8ff]'
-                        }  rounded`}
-                      >
-                        {/* <PencilIcon className="h-3 w-3 mr-1" aria-hidden="true" /> */}
-                        <img
-                          alt=""
-                          src="/temp2.png"
-                          className="h-5 w-5 mr-1 mb-1"
-                        />
-                        {data?.label}
-                      </span>
-                    </button>
-                  </section>
-                ) : null
-              })}
-            </div>
             {/* <div className=" mt-10 grid grid-cols-1 gap-7">
               <span className="min-w-100 ">
                 <span>
@@ -1414,6 +1432,32 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
             </div> */}
           </div>
           {selCat === 'lead_perf' && (
+            <LeadsTransferTableBody
+              title={'Site Visit Leads'}
+              // subtitle={'subTitle'}
+              // dialogOpen={setOpen}
+              // leadsLogsPayload={drillDownPayload}
+              leadsLogsPayload={leadsSearchRawDB}
+              setCustomerDetails={setCustomerDetails}
+              setisImportLeadsOpen={setisImportLeadsOpen}
+              setSelectedIds={setSelectedIds}
+              selectedIds={selectedIds}
+            />
+          )}
+          {/* {selCat === 'lead_perf' && (
+            <LeadsTransferTableBody
+              title={'Site Visit Leads'}
+              // subtitle={'subTitle'}
+              // dialogOpen={setOpen}
+              // leadsLogsPayload={drillDownPayload}
+              leadsLogsPayload={sourceRawFilData}
+              setCustomerDetails={setCustomerDetails}
+              setisImportLeadsOpen={setisImportLeadsOpen}
+              setSelectedIds={setSelectedIds}
+              selectedIds={selectedIds}
+            />
+          )} */}
+          {/* {selCat === 'lead_perf' && (
             <div className="flex flex-col  mt-2 drop-shadow-md rounded-lg  px-4">
               <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div
@@ -1431,12 +1475,16 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                     >
                       <div>Performance by Lead Created Date</div>
                       <div className="flex flex-row">
-                        {orgId =='spark' && <div
-                          className="mt-3 mr-2 cursor-pointer"
-                          onClick={() => updateAgreegatedValues(projectFilList)}
-                        >
-                          Calculate
-                        </div>}
+                        {orgId == 'spark' && (
+                          <div
+                            className="mt-3 mr-2 cursor-pointer"
+                            onClick={() =>
+                              updateAgreegatedValues(projectFilList)
+                            }
+                          >
+                            Calculate
+                          </div>
+                        )}
                         <div className="mr-3">
                           <SlimDateSelectBox
                             onChange={async (value) => {
@@ -1448,22 +1496,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                             placeholder={undefined}
                           />
                         </div>
-                        {/* <div style={{ width: '13rem' }} className="ml-2 mt-1">
-                          <SlimSelectBox
-                            name="project"
-                            label=""
-                            className="input min-w-[164px] "
-                            onChange={(value) => {
-                              selProjs(value)
-                            } }
-                            value={viewProjs?.value}
-                            options={[
-                              ...[
-                                { label: 'All Projects', value: 'allprojects' },
-                              ],
-                              ...projectList,
-                            ]} placeholder={undefined}                          />
-                        </div> */}
+
                         <span style={{ display: '' }}>
                           <CSVDownloader
                             className="mr-6 h-[20px] w-[20px]"
@@ -1483,7 +1516,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                 </div>
               </div>
             </div>
-          )}
+          )} */}
           {selCat === 'emp_tasks' && (
             <div className="flex flex-col  mt-4 drop-shadow-md rounded-lg  px-4">
               <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -1746,6 +1779,18 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
           {selCat === 'bar_tasks' && <CampaingsTopBarsComponent />}
 
           {/* Graph Bar end */}
+
+          {selCat === 'site_visits' && (
+            <LeadsTransferTableBody
+              title={'Site Visit Leads'}
+              // subtitle={'subTitle'}
+              // dialogOpen={setOpen}
+              // leadsLogsPayload={drillDownPayload}
+              leadsLogsPayload={leadLogsRawData}
+              setCustomerDetails={setCustomerDetails}
+              setisImportLeadsOpen={setisImportLeadsOpen}
+            />
+          )}
 
           {selCat === 'site_visits' && (
             <>
@@ -4382,4 +4427,4 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
   )
 }
 
-export default LeadsTeamReportBody
+export default LeadsTransferBody

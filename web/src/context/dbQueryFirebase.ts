@@ -1274,6 +1274,58 @@ export const getBookedUnitsByProject = (orgId, snapshot, data, error) => {
   console.log('hello ', status, data?.projectId, itemsQuery)
   return onSnapshot(q, snapshot, error)
 }
+// get crmCustomers list
+
+export const getLeadsTransfer = (orgId, snapshot, data, error) => {
+  const { status } = data
+  console.log('hello ', status, data?.projectId , data)
+  const itemsQuery = query(
+        collection(db, `${orgId}_leads`),
+        where('Status', 'in', data?.currentStatus),
+        // where('coveredA', 'array-contains-any', data?.coveredStatus),
+        where('assignedTo', '==', data?.leadAssignedTo)
+      )
+  // if (data?.projectId) {
+  //   itemsQuery = query(
+  //     collection(db, `${orgId}_units`),
+  //     where('status', 'in', status),
+  //     where('pId', '==', data?.projectId)
+  //   )
+  // } else if (data?.assignedTo) {
+  //   console.log('inside value si ', data?.assignedTo)
+  //   itemsQuery = query(
+  //     collection(db, `${orgId}_units`),
+  //     where('status', 'in', status),
+  //     where('assignedTo', '==', 'bxLExkQcFkfzOD5pXjBtf5uKKS82')
+  //   )
+  // }
+
+  let q = collection(db, `${orgId}_units`)
+  const conditions = []
+
+  // Append 'status' condition if it's not undefined
+  if (status !== undefined) {
+    conditions.push(where('status', 'in', status))
+  }
+
+  // Append 'projectId' condition if it's not undefined
+  if (data?.projectId !== undefined) {
+    conditions.push(where('pId', '==', data?.projectId))
+  }
+
+  // Append 'assignedTo' condition if it's not undefined
+  if (data?.assignedTo !== undefined) {
+    conditions.push(where('assignedTo', '==', data?.assignedTo))
+  }
+
+  // If all conditions are defined, append them to the query
+  if (conditions.length > 0) {
+    q = query(q, ...conditions)
+  }
+
+  console.log('hello ', status, data?.projectId, itemsQuery)
+  return onSnapshot(itemsQuery, snapshot, error)
+}
 
 export const getAllUnitsByProject = (orgId, snapshot, data, error) => {
   const { status } = data
@@ -3670,6 +3722,12 @@ export const updateLeadAssigTo = async (
     assignedToObj: assignedTo,
     AssignedBy: by,
     assignT: Timestamp.now().toMillis(),
+  },{
+    assignedTo: value,
+    assignedToObj: assignedTo,
+    AssignedBy: by,
+    assignT: Timestamp.now().toMillis(),
+    Status: newSt,
   })
 
   await updateDoc(doc(db, `${orgId}_leads`, leadDocId), {
