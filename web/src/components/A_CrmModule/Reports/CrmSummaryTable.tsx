@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const CrmSummaryTable = () => {
+  const [selectedOption, setSelectedOption] = useState('All');
 
   const summaryReportData = [
     { projectName: 'Nirvana', totalUnits: 50, available: 25, sold: 20, blocked: 3, mortgaged: 2 },
@@ -75,117 +76,156 @@ const CrmSummaryTable = () => {
   const totalBlockedSummary = calculateTotal(summaryReportData, 'blocked');
   const totalMortgagedSummary = calculateTotal(summaryReportData, 'mortgaged');
 
+  const handleOptionChange = event => {
+    setSelectedOption(event.target.value);
+  };
 
+  const getDropdownOptions = () => {
+    switch (selectedOption) {
+      case 'Unit Type':
+        return [...new Set(inventoryListData.map(item => item.unitType))];
+      case 'Unit Facing':
+        return [...new Set(inventoryListData.map(item => item.unitFacing))];
+      case 'Unit Status':
+        return [...new Set(inventoryListData.map(item => item.unitStatus))];
+      case 'Unit Area':
+        return [...new Set(inventoryListData.map(item => item.unitArea))];
+      default:
+        return [];
+    }
+  };
 
+  const filteredInventoryList = inventoryListData.filter(item => {
+    switch (selectedOption) {
+      case 'Unit Type':
+        return item.unitType === selectedOption;
+      case 'Unit Facing':
+        return item.unitFacing === selectedOption;
+      case 'Unit Status':
+        return item.unitStatus === selectedOption;
+      case 'Unit Area':
+        return item.unitArea === selectedOption;
+      default:
+        return true;
+    }
+  });
 
   return (
-    <div className="bg-white flex justify-start  rounded-lg">
+    <div className="bg-white flex justify-start rounded-lg">
       <div className="overflow-x-auto mx-4">
         <div className="">
-          <div className="w-full lg:w-5/6">
-            <div className="rounded my-3 overflow-x-auto">
-            <p className="font-bold text-black p-1 m-1">CRM Inventory Report</p>
-
-              <table className=" border-collapse">
-                <thead>
-
-                <tr className="bg-blue-200 text-gray-900 uppercase text-sm leading-normal"> 
-                    <th className="py-3 px-2 text-center border border-black"  colSpan="6">Inventory Summary Report By Project</th>
-                  </tr>
-           
-                  <tr className="bg-white text-gray-900 uppercase text-sm leading-normal"> 
-                    <th className="py-3 px-3 text-left border border-black">Project Name</th>
-                    <th className="py-3 px-3 text-left border border-black" colSpan="1">Total Units</th>
-                    <th className="py-3 px-3 text-center border border-black" colSpan="1">Available</th>
-                    <th className="py-3 px-3 text-center border border-black" colSpan="1">Sold</th>
-                    <th className="py-3 px-3 text-center border border-black" colSpan="1">Blocked</th>
-                    <th className="py-3 px-3 text-center border border-black" colSpan="1">Mortgaged</th>
-                  </tr>
-                </thead>
-                <tbody className="text-gray-900 text-sm font-light"> 
-                  {summaryReportData.map((item, index) => (
-                    <tr key={index} className="hover:bg-gray-100">
-                      <td className="py-3 px-6 text-left border border-black">{item.projectName}</td>
-                      <td className="py-3 px-6 text-left border border-black">{item.totalUnits}</td>
-                      <td className="py-3 px-6 text-center border border-black">{item.available}</td>
-                      <td className="py-3 px-6 text-center border border-black">{item.sold}</td>
-                      <td className="py-3 px-6 text-center border border-black">{item.blocked}</td>
-                      <td className="py-3 px-6 text-center border border-black">{item.mortgaged}</td>
-                    </tr>
-                  ))}
-                  <tr className="bg-blue-200 text-gray-900 uppercase text-sm leading-normal"> 
-                    <td className="py-3 px-6 text-left border border-black">Total</td>
-                    <td className="py-3 px-6 text-left border border-black">{totalUnitsSummary}</td>
-                    <td className="py-3 px-6 text-center border border-black">{totalAvailableSummary}</td>
-                    <td className="py-3 px-6 text-center border border-black">{totalSoldSummary}</td>
-                    <td className="py-3 px-6 text-center border border-black">{totalBlockedSummary}</td>
-                    <td className="py-3 px-6 text-center border border-black">{totalMortgagedSummary}</td>
-                  </tr>
-                </tbody>
-              </table>
+          <div className="flex justify-between mb-4">
+            <div>
+              <p className="font-bold text-black p-1 m-1">CRM Inventory Report</p>
             </div>
+            <select className="mr-2" value={selectedOption} onChange={handleOptionChange}>
+              <option value="All">Project Name</option>
+              <option value="Unit Type">Unit Type</option>
+              <option value="Unit Facing">Unit Facing</option>
+              <option value="Unit Status">Unit Status</option>
+              <option value="Unit Area">Unit Area</option>
+            </select>
+          </div>
 
-            <div className="bg-white shadow-md rounded my-6 overflow-x-auto">
-              <table className="min-w-max w-full table-auto border-collapse">
-                <thead>
-                  <tr className="bg-blue-200 text-gray-900 uppercase text-sm leading-normal"> 
-                    <th className="py-3 px-6 text-center border border-black" colSpan="9">Inventory List By Project</th>
-                    <th className="py-3 px-6 text-center border border-black  bg-white" colSpan="4">Dimensions</th>
-                    <th className="py-3 px-6 text-center border border-black bg-white" colSpan="4">Schedule</th>
-                    <th className="py-3 px-6 text-center border border-black bg-white" colSpan="1"></th>
-                    <th className="py-3 px-6 text-center border border-black bg-white" colSpan="1"></th>
-                    <th className="py-3 px-6 text-center border border-black bg-white" colSpan="1"></th>
+          <div className="rounded my-3 overflow-x-auto">
+            <table className=" border-collapse">
+              <thead>
+                <tr className="bg-blue-200 text-gray-900  text-sm leading-normal">
+                  <th className="py-3 px-2 text-center border border-black" colSpan="6">Inventory Summary Report By Project</th>
+                </tr>
+                <tr className="bg-white text-gray-900  text-sm leading-normal">
+                  <th className="py-3 px-3 text-left border border-black">Project Name</th>
+                  <th className="py-3 px-3 text-left border border-black" colSpan="1">Total Units</th>
+                  <th className="py-3 px-3 text-center border border-black" colSpan="1">Available</th>
+                  <th className="py-3 px-3 text-center border border-black" colSpan="1">Sold</th>
+                  <th className="py-3 px-3 text-center border border-black" colSpan="1">Blocked</th>
+                  <th className="py-3 px-3 text-center border border-black" colSpan="1">Mortgaged</th>
+                </tr>
+              </thead>
+              <tbody className="text-gray-900 text-sm font-light">
+                {summaryReportData.map((item, index) => (
+                  <tr key={index} className="hover:bg-gray-100">
+                    <td className="py-3 px-6 text-left border border-black">{item.projectName}</td>
+                    <td className="py-3 px-6 text-left border border-black">{item.totalUnits}</td>
+                    <td className="py-3 px-6 text-center border border-black">{item.available}</td>
+                    <td className="py-3 px-6 text-center border border-black">{item.sold}</td>
+                    <td className="py-3 px-6 text-center border border-black">{item.blocked}</td>
+                    <td className="py-3 px-6 text-center border border-black">{item.mortgaged}</td>
                   </tr>
-                  <tr className="bg-blue-100 text-gray-900 uppercase text-sm leading-normal"> 
-                    <th className="py-3 px-6 text-left border border-black">Unit No.</th>
-                    <th className="py-3 px-6 text-left border border-black">Unit Type</th>
-                    <th className="py-3 px-6 text-center border border-black">Unit Facing</th>
-                    <th className="py-3 px-6 text-center border border-black">Unit Area</th>
-                    <th className="py-3 px-6 text-center border border-black">Release Status</th>
-                    <th className="py-3 px-6 text-center border border-black">Price Per Sft</th>
-                    <th className="py-3 px-6 text-center border border-black">PLC</th>
-                    <th className="py-3 px-6 text-center border border-black">Unit Cost</th>
-                    <th className="py-3 px-6 text-center border border-black">Unit Status</th>
-                    <th className="py-2 px-3 text-center border border-black">North</th>
-                    <th className="py-2 px-3 text-center border border-black">South</th>
-                    <th className="py-2 px-3 text-center border border-black">East</th>
-                    <th className="py-2 px-3 text-center border border-black">West</th>
-                    <th className="py-2 px-3 text-center border border-black">North</th>
-                    <th className="py-2 px-3 text-center border border-black">South</th>
-                    <th className="py-2 px-3 text-center border border-black">East</th>
-                    <th className="py-2 px-3 text-center border border-black">West</th>
-                    <th className="py-3 px-6 text-center border border-black">S No.</th>
-                    <th className="py-3 px-6 text-center border border-black">Khataha</th>
-                    <th className="py-3 px-6 text-center border border-black">PID</th>
+                ))}
+                <tr className="bg-blue-200 text-gray-900  text-sm leading-normal">
+                  <td className="py-3 px-6 text-left border border-black">Totals:</td>
+                  <td className="py-3 px-6 text-left border border-black">{totalUnitsSummary}</td>
+                  <td className="py-3 px-6 text-center border border-black">{totalAvailableSummary}</td>
+                  <td className="py-3 px-6 text-center border border-black">{totalSoldSummary}</td>
+                  <td className="py-3 px-6 text-center border border-black">{totalBlockedSummary}</td>
+                  <td className="py-3 px-6 text-center border border-black">{totalMortgagedSummary}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div className="bg-white shadow-md rounded my-6 overflow-x-auto">
+            <table className="min-w-max w-full table-auto border-collapse">
+              <thead>
+                <tr className="bg-blue-200 text-gray-900  text-sm leading-normal">
+                  <th className="py-3 px-6 text-center border border-black" colSpan="9">Inventory List By Project</th>
+                  <th className="py-3 px-6 text-center border border-black  bg-white" colSpan="4">Dimensions *(m)</th>
+                  <th className="py-3 px-6 text-center border border-black bg-white" colSpan="4">Schedule</th>
+                  <th className="py-3 px-6 text-center border border-black bg-white" colSpan="1"></th>
+                  <th className="py-3 px-6 text-center border border-black bg-white" colSpan="1"></th>
+                  <th className="py-3 px-6 text-center border border-black bg-white" colSpan="1"></th>
+                </tr>
+                <tr className="bg-blue-100 text-gray-900  text-sm leading-normal">
+                  <th className="py-3 px-6 text-left border border-black">Unit No.</th>
+                  <th className="py-3 px-6 text-left border border-black">Unit Type</th>
+                  <th className="py-3 px-6 text-center border border-black">Unit Facing</th>
+                  <th className="py-3 px-6 text-center border border-black">Unit Area</th>
+                  <th className="py-3 px-6 text-center border border-black">Release Status</th>
+                  <th className="py-3 px-6 text-center border border-black">Price Per Sft</th>
+                  <th className="py-3 px-6 text-center border border-black">PLC</th>
+                  <th className="py-3 px-6 text-center border border-black">Unit Cost</th>
+                  <th className="py-3 px-6 text-center border border-black">Unit Status</th>
+                  <th className="py-2 px-3 text-center border border-black">North</th>
+                  <th className="py-2 px-3 text-center border border-black">South</th>
+                  <th className="py-2 px-3 text-center border border-black">East</th>
+                  <th className="py-2 px-3 text-center border border-black">West</th>
+                  <th className="py-2 px-3 text-center border border-black">North</th>
+                  <th className="py-2 px-3 text-center border border-black">South</th>
+                  <th className="py-2 px-3 text-center border border-black">East</th>
+                  <th className="py-2 px-3 text-center border border-black">West</th>
+                  <th className="py-3 px-6 text-center border border-black">S No.</th>
+                  <th className="py-3 px-6 text-center border border-black">Khataha</th>
+                  <th className="py-3 px-6 text-center border border-black">PID</th>
+                </tr>
+              </thead>
+              <tbody className="text-gray-900 text-sm font-light">
+                {filteredInventoryList.map((item, index) => (
+                  <tr key={index} className="hover:bg-gray-100">
+                    <td className="py-3 px-6 text-left border border-black">{item.unitNo}</td>
+                    <td className="py-3 px-6 text-left border border-black">{item.unitType}</td>
+                    <td className="py-3 px-6 text-center border border-black">{item.unitFacing}</td>
+                    <td className="py-3 px-6 text-center border border-black">{item.unitArea}</td>
+                    <td className="py-3 px-6 text-center border border-black">{item.releaseStatus}</td>
+                    <td className="py-3 px-6 text-center border border-black">{item.pricePerSft}</td>
+                    <td className="py-3 px-6 text-center border border-black">{item.plc}</td>
+                    <td className="py-3 px-6 text-center border border-black">{item.unitCost}</td>
+                    <td className="py-3 px-6 text-center border border-black">{item.unitStatus}</td>
+                    <td className="py-3 px-6 text-center border border-black">{item.dimensions.north}</td>
+                    <td className="py-3 px-6 text-center border border-black">{item.dimensions.south}</td>
+                    <td className="py-3 px-6 text-center border border-black">{item.dimensions.east}</td>
+                    <td className="py-3 px-6 text-center border border-black">{item.dimensions.west}</td>
+                    <td className="py-3 px-6 text-center border border-black">{item.schedule.north}</td>
+                    <td className="py-3 px-6 text-center border border-black">{item.schedule.south}</td>
+                    <td className="py-3 px-6 text-center border border-black">{item.schedule.east}</td>
+                    <td className="py-3 px-6 text-center border border-black">{item.schedule.west}</td>
+                    <td className="py-3 px-6 text-center border border-black">{item.sNo}</td>
+                    <td className="py-3 px-6 text-center border border-black">{item.khataha}</td>
+                    <td className="py-3 px-6 text-center border border-black">{item.pid}</td>
                   </tr>
-                </thead>
-                <tbody className="text-gray-900 text-sm font-light"> 
-                  {inventoryListData.map((item, index) => (
-                    <tr key={index} className="hover:bg-gray-100">
-                      <td className="py-3 px-6 text-left border border-black">{item.unitNo}</td>
-                      <td className="py-3 px-6 text-left border border-black">{item.unitType}</td>
-                      <td className="py-3 px-6 text-center border border-black">{item.unitFacing}</td>
-                      <td className="py-3 px-6 text-center border border-black">{item.unitArea}</td>
-                      <td className="py-3 px-6 text-center border border-black">{item.releaseStatus}</td>
-                      <td className="py-3 px-6 text-center border border-black">{item.pricePerSft}</td>
-                      <td className="py-3 px-6 text-center border border-black">{item.plc}</td>
-                      <td className="py-3 px-6 text-center border border-black">{item.unitCost}</td>
-                      <td className="py-3 px-6 text-center border border-black">{item.unitStatus}</td>
-                      <td className="py-3 px-6 text-center border border-black">{item.dimensions.north}</td>
-                      <td className="py-3 px-6 text-center border border-black">{item.dimensions.south}</td>
-                      <td className="py-3 px-6 text-center border border-black">{item.dimensions.east}</td>
-                      <td className="py-3 px-6 text-center border border-black">{item.dimensions.west}</td>
-                      <td className="py-3 px-6 text-center border border-black">{item.schedule.north}</td>
-                      <td className="py-3 px-6 text-center border border-black">{item.schedule.south}</td>
-                      <td className="py-3 px-6 text-center border border-black">{item.schedule.east}</td>
-                      <td className="py-3 px-6 text-center border border-black">{item.schedule.west}</td>
-                      <td className="py-3 px-6 text-center border border-black">{item.sNo}</td>
-                      <td className="py-3 px-6 text-center border border-black">{item.khataha}</td>
-                      <td className="py-3 px-6 text-center border border-black">{item.pid}</td>
-                    </tr>
-                  ))}
-                  <tr className="bg-blue-200 text-gray-900 uppercase text-sm leading-normal"> 
-                    <td className="py-3 px-6 text-left border border-black">Total</td>
+                ))}
+                             <tr className="bg-blue-200 text-gray-900  text-sm leading-normal"> 
+                    <td className="py-3 px-6 text-left border border-black">Totals:</td>
                     <td className="py-3 px-6 text-left border border-black"></td>
                     <td className="py-3 px-6 text-center border border-black"></td>
                     <td className="py-3 px-6 text-center border border-black"></td>
@@ -206,10 +246,8 @@ const CrmSummaryTable = () => {
                     <td className="py-3 px-6 text-center border border-black"></td>
                     <td className="py-3 px-6 text-center border border-black"></td>
                   </tr>
-                </tbody>
-              </table>
-            </div>
-
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
