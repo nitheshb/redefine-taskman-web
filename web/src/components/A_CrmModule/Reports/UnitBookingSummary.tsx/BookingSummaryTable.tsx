@@ -1,8 +1,9 @@
+
+
 /* eslint-disable prettier/prettier */
 /* eslint-disable react/prop-types */
-import * as React from 'react'
 
-// import '../../styles/myStyles.css'
+import * as React from 'react'
 import {
   Rating,
 } from '@mui/material'
@@ -316,6 +317,9 @@ function EnhancedTableHead(props) {
               'aria-label': 'select all desserts',
             }}
           /> */}
+
+
+          
           <TableSortLabel>S.No</TableSortLabel>
         </TableCell>
         {headCells.map((headCell) => (
@@ -599,6 +603,29 @@ export default function UnitSummaryTableBody({
   const [searchKey, setSearchKey] = React.useState(searchVal?searchVal:'')
   const [dateRange, setDateRange] = React.useState([null, null])
   const [startDate, endDate] = dateRange
+
+
+
+  const [totalSaleValue, setTotalSaleValue] = React.useState(0);
+  const [totalReceived, setTotalReceived] = React.useState(0); 
+
+
+  React.useEffect(() => {
+    
+    const totalSale = leadsFetchedData.reduce((total, row) => total + row.sale, 0);
+    setTotalSaleValue(totalSale);
+  
+    
+    const totalReceived = leadsFetchedData.reduce((total, row) => total + row.received, 0);
+    setTotalReceived(totalReceived);
+  }, [leadsFetchedData]);
+  
+
+
+
+
+
+
   React.useEffect(() => {
   }, [selStatus, rowsParent])
   console.log(searchKey, "cdsvfeg", leadsFetchedData)
@@ -744,6 +771,13 @@ export default function UnitSummaryTableBody({
         style={{ borderTop: '1px solid #efefef', background: '#fefafb' }}
       >
         <TableContainer sx={{ maxHeight: 640 }}>
+
+
+
+
+
+
+
           <Table
             sx={{ minWidth: 750, minHeight: 260 }}
             aria-labelledby="tableTitle"
@@ -1049,6 +1083,40 @@ export default function UnitSummaryTableBody({
                   <TableCell colSpan={6} />
                 </TableRow>
               )}
+
+
+
+
+
+
+
+             
+    {/* total start */}
+
+  <TableRow selected={true}>
+    
+    <TableCell
+      align="right"
+      padding="none"
+      size="small"
+      style={{ backgroundColor: '#F7F9FB', color: '#1a91eb', maxHeight: '10px', height: '10px', lineHeight: '10px', maxWidth: '52px', minWidth: '25px', paddingLeft: '14px', paddingRight: '29px', marginRight: '10px' }}
+    >
+      Total Sale Value: ₹{totalSaleValue.toLocaleString('en-IN')}
+    </TableCell>
+    <TableCell
+      align="right"
+      padding="none"
+      size="small"
+      style={{ backgroundColor: '#F7F9FB', color: '#1a91eb', maxHeight: '10px', height: '10px', lineHeight: '10px', maxWidth: '52px', minWidth: '25px', paddingLeft: '14px', paddingRight: '29px', marginRight: '10px' }}
+    >
+      Total Received: ₹{totalReceived.toLocaleString('en-IN')}
+    </TableCell>
+  </TableRow>
+
+
+  {/* total end */}
+
+
             </TableBody>
           </Table>
         </TableContainer>
