@@ -6,7 +6,7 @@ export const CustomRadioGroup = ({ label, value, onChange, options }) => {
     <>
       <label className="font-semibold text-[#053219] py-2 text-sm mb-2 mt-0">
         {label}
-        <abbr title="required">*</abbr>
+        <abbr title="required"></abbr>
       </label>
       <RadioGroup value={value} onChange={onChange}>
         <div className="grid grid-cols-8 gap-4">
