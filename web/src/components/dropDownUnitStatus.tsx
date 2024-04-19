@@ -10,6 +10,7 @@ import {
   DocumentTextIcon,
   EyeIcon,
 } from '@heroicons/react/solid'
+import { uniTypes } from 'src/constants/projects'
 
 export default function DropCompUnitStatus({
   type,
@@ -17,6 +18,7 @@ export default function DropCompUnitStatus({
   setStatusFun,
   viewUnitStatusA,
   pickCustomViewer,
+  totalunits: totalUnits,
   filteredUnits,
   pickedValue,
 }) {
@@ -420,6 +422,72 @@ export default function DropCompUnitStatus({
                               : filteredUnits.filter(
                                   (dat) =>
                                     dat['facing']?.toLocaleLowerCase() ===
+                                    viewData?.toLocaleLowerCase()
+                                ).length}/
+                                 {viewData === 'Any'
+                              ? totalUnits.length
+                              : totalUnits.filter(
+                                  (dat) =>
+                                    dat['facing']?.toLocaleLowerCase() ===
+                                    viewData?.toLocaleLowerCase()
+                                ).length}
+                          </div>
+                        </button>
+                      )}
+                    </Menu.Item>
+                  ))}
+                </>
+              )}
+              {type === 'Type' && (
+                <>
+                  {uniTypes.map((viewData, i) => (
+                    <Menu.Item key={i}>
+                      {({ active }) => (
+                        <button
+                          className={`${
+                            active ||
+                            (pickedValue.length != 8 &&
+                              pickedValue.includes(
+                                viewData?.toLocaleLowerCase()
+                              )) ||
+                            (pickedValue.length === 8 && viewData === 'Any')
+                              ? 'bg-violet-500 text-white'
+                              : 'text-gray-900'
+                          } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                          onClick={() =>
+                            setStatusFun(id, viewData?.toLocaleLowerCase())
+                          }
+                        >
+                          {active ||
+                          (pickedValue.length != 8 &&
+                            pickedValue.includes(
+                              viewData?.toLocaleLowerCase()
+                            )) ||
+                          (pickedValue.length === 8 && viewData === 'Any') ? (
+                            <FireIcon
+                              className="w-5 h-5 mr-2"
+                              aria-hidden="true"
+                            />
+                          ) : (
+                            <FireIcon
+                              className="w-5 h-5 mr-2 text-violet-500"
+                              aria-hidden="true"
+                            />
+                          )}{' '}
+                          {viewData}
+                          <div className="absolute right-0 pr-4">
+                            {viewData === 'Any'
+                              ? filteredUnits.length
+                              : filteredUnits.filter(
+                                  (dat) =>
+                                    dat['size']?.toLocaleLowerCase() ===
+                                    viewData?.toLocaleLowerCase()
+                                ).length}/
+                                 {viewData === 'Any'
+                              ? totalUnits.length
+                              : totalUnits.filter(
+                                  (dat) =>
+                                    dat['size']?.toLocaleLowerCase() ===
                                     viewData?.toLocaleLowerCase()
                                 ).length}
                           </div>

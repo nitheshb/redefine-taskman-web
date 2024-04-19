@@ -38,6 +38,7 @@ import PieChartProject from '../comps/pieChartProject'
 import DropCompUnitStatus from '../dropDownUnitStatus'
 import SiderForm from '../SiderForm/SiderForm'
 import UnitsSmallViewCard from '../unitsSmallView'
+import { uniTypes } from 'src/constants/projects'
 
 const Floordetails = ({
   block = 'A',
@@ -126,14 +127,16 @@ const Floordetails = ({
   const [filStatus, setFilStatus] = useState(['available', 'booked', 'blocked'])
   const [filBedRooms, setFilBedRooms] = useState([1, 2, 3, 4])
   const [filBathrooms, setFilBathrooms] = useState([1, 2, 3, 4])
-  const [selStatus, setFilSelStatus] = useState('all')
+  const [selStatus, setFilSelStatus] = useState(['all'])
   const [isUnitDetailsOpen, setisUnitDetailsOpen] = useState(false)
   const [isUnitQuoteBookBlock, setisUnitQuoteBookBlock] = useState(false)
   const [isCancelUnit, setIsCancelUnit] = useState(false)
   const [isSwapUnit, setIsSwapUnit] = useState(false)
   const [isUnitAddOpen, setisUnitAddOpen] = useState(false)
   const [selUnitDetails, setSelUnitDetails1] = useState({})
-  const [transactionData, setTransactionData] = useState({})
+  const [filterFacingResults, setFilterFacingResults] = useState([])
+  const [filterTypeResults, setFilterTypeResults] = useState([])
+
   const [selSubMenu, setSelSubMenu] = useState('summary')
 
   const [selSubMenu1, setSelSubMenu1] = useState('summary')
@@ -150,6 +153,8 @@ const Floordetails = ({
     'north-east',
     'north-west',
   ])
+
+  const [filType, setFilType] = useState(uniTypes)
 
   const [sliderInfo, setSliderInfo] = useState({
     open: false,
@@ -173,6 +178,9 @@ const Floordetails = ({
   }
   useEffect(() => {
     console.log('source ', source)
+    setFilteredUnits(unitsFeed)
+    setFilterFacingResults(unitsFeed)
+    setFilterTypeResults(unitsFeed)
     getUnitsFun()
   }, [])
   useEffect(() => {
@@ -182,8 +190,19 @@ const Floordetails = ({
 
   useEffect(() => {
     setFilteredUnits(unitsFeed)
+    setFilterFacingResults(unitsFeed)
+    setFilterTypeResults(unitsFeed)
   }, [unitsFeed])
+  useEffect(() => {
+    filterFun()
+  }, [selStatus])
 
+  const filterFun = async () => {
+    const z = unitsFeed?.filter((da) => selStatus.includes(da?.status));
+    setFilterFacingResults(z)
+    setFilterTypeResults(z)
+    setFilteredUnits(z)
+  }
   const valueFeedData = [
     {
       id: 'Total',
@@ -266,7 +285,7 @@ const Floordetails = ({
   }
   const makeFilterFun = async (id, value) => {
     // unitsFeed, setUnitsFeed
-
+console.log('nw one', id, filFacing)
     if (id === 'Status') {
       let x = []
       if (value === 'Any') {
@@ -302,7 +321,12 @@ const Floordetails = ({
       } else {
         await x.push(value?.toLocaleLowerCase())
       }
-      await setFilFacing(x)
+      // setFilteredUnits(
+      //   unitsFeed?.filter((da) => x.includes(da?.facing?.toLocaleLowerCase()))
+      // )
+
+      // return
+      await setFilFacing([value])
       await allmakeOverFun(
         filStatus,
         filBedRooms,
@@ -324,6 +348,23 @@ const Floordetails = ({
         filStatus,
         x,
         filBathrooms,
+        filSuperBuildUpArea,
+        filRatePerSqft,
+        filFacing
+      )
+    }
+    if (id === 'Type'|| id === 'type' ) {
+      let x = []
+      if (value === 'Any') {
+        x = [1, 2, 3, 4]
+      } else {
+        await x.push(value)
+      }
+      await setFilBathrooms(x)
+      await allmakeOverFun(
+        filStatus,
+        filBedRooms,
+        x,
         filSuperBuildUpArea,
         filRatePerSqft,
         filFacing
@@ -406,6 +447,9 @@ const Floordetails = ({
     const y = await unitsFeed?.filter((da) => {
       console.log(
         'what is this',
+        filFacing,
+        da?.facing,
+        filType,
         Status,
         Status.includes(da?.Status),
         bed_rooms.includes(da?.bed_rooms),
@@ -413,12 +457,70 @@ const Floordetails = ({
         da?.bed_rooms
       )
       return (
-        facing.includes(da?.facing.toLocaleLowerCase()) &&
-        Status.includes(da?.Status) &&
-        bed_rooms.includes(da?.bed_rooms) &&
-        // bath_rooms.includes(da?.bath_rooms) &&
-        // super_built_up_area.includes(da?.super_built_up_area) &&
-        da?.rate_per_sqft < rate_per_sqft
+        // (!selStatus.includes('any') ? selStatus.includes(da?.status) : true)
+        // &&
+        filFacing.includes(da?.facing.toLocaleLowerCase())
+        // &&
+        // filType.includes(da?.size)
+      )
+      // &&
+      // Status.includes(da?.Status)&&
+
+      //  &&
+      // bed_rooms.includes(da?.bed_rooms) &&
+      // // bath_rooms.includes(da?.bath_rooms) &&
+      // // super_built_up_area.includes(da?.super_built_up_area) &&
+      // da?.rate_per_sqft < rate_per_sqft
+    })
+    const z = await unitsFeed?.filter((da) => {
+
+      return (
+        (!selStatus.includes('any') ? selStatus.includes(da?.status) : true) &&
+        filType.includes(da?.size.toLocaleLowerCase())
+      )
+
+    })
+
+    const x = await unitsFeed?.filter((da) => {
+
+      return (
+        (!selStatus.includes('any') ? selStatus.includes(da?.status) : true) &&
+        filFacing.includes(da?.facing.toLocaleLowerCase())
+      )
+
+    })
+    console.log('my values are', y, facing)
+    await setFilteredUnits(y)
+    // await setFilterFacingResults(z)
+    // await setFilterTypeResults(x)
+  }
+
+  const filterByStatus = async (
+    Status,
+    bed_rooms,
+    bath_rooms,
+    super_built_up_area,
+    rate_per_sqft,
+    facing
+  ) => {
+    const y = await unitsFeed?.filter((da) => {
+      console.log(
+        'what is this',
+        Status,
+        Status.includes(da?.Status),
+        bed_rooms.includes(da?.bed_rooms),
+        bed_rooms,
+        da?.bed_rooms
+      )
+      return (
+        // facing.includes(da?.facing.toLocaleLowerCase())
+        // // &&
+        Status.includes(da?.Status)
+        //  &&
+        // bed_rooms.includes(da?.bed_rooms) &&
+        // // bath_rooms.includes(da?.bath_rooms) &&
+        // // super_built_up_area.includes(da?.super_built_up_area) &&
+        // da?.rate_per_sqft < rate_per_sqft
       )
     })
     await setFilteredUnits(y)
@@ -442,7 +544,7 @@ const Floordetails = ({
           y.push(x)
         })
         y.sort((a, b) => a.unit_no - b.unit_no)
-        console.log('unit details are ',pId, selBlock?.uid || 0, y)
+        console.log('unit details are ', pId, selBlock?.uid || 0, y)
         setUnitsFeed(y)
       },
       { pId: pId, blockId: selBlock?.uid || 0, type: 'today' },
@@ -681,16 +783,15 @@ const Floordetails = ({
 
             <section className="flex flex-row px-6 py-1 justify-between">
               <section className="text-sm mt-1 pr-2 font-blue text-[13px] italic flex flex-row ">
-                <span className="relative  flex flex-row items-center w-auto text-sm font-bold leading-none pl-0 mt-[px]">
-                  {/* {phase?.phaseName} */}
-                  {/* selPhaseIs, setSelPhaseIs */}
+                {/* <span className="relative  flex flex-row items-center w-auto text-sm font-bold leading-none pl-0 mt-[px]">
+
                   <AssigedToDropComp
                     assignerName={selPhaseName}
                     id={'id'}
                     setAssigner={setPhaseFun}
                     usersList={phaseFeed}
                   />
-                </span>
+                </span> */}
                 <span className="font-blue text-[13px] italic">showing </span>
                 {'   '}
                 <span className="font-semibold font-blue mx-1">
@@ -706,43 +807,52 @@ const Floordetails = ({
                 <section className="text-sm mt-[2px]  rounded flex flex-row border">
                   <section
                     className={`flex flex-row pr-2 ${
-                      selStatus === 'available' ? 'bg-[#c6fff0]' : ''
+                      selStatus.includes('available') ? 'bg-[#c6fff0]' : ''
                     }`}
                     onClick={() => {
-                      setFilSelStatus('available')
+                      setFilSelStatus(['available'])
                     }}
                   >
                     <span className="ml-2 w-3 h-3 mt-[4px] rounded-md mr-1 bg-[#E8A190] inline-block"></span>{' '}
                     <span className="mr-1 text-[10px] ">Available</span>
-                    {unitsFeed?.filter((d) => d?.status === 'available').length}
+                    {unitsFeed?.filter((d) => d?.status == 'available').length}
                   </section>
                   <section
                     className={`flex flex-row border-x ${
-                      selStatus === 'booked' ? 'bg-[#c6fff0]' : ''
+                      selStatus.includes('booked') ? 'bg-[#c6fff0]' : ''
                     }`}
                     onClick={() => {
-                      setFilSelStatus('booked')
+                      setFilSelStatus(['booked'])
                     }}
                   >
                     <span className="w-3 h-3 ml-1 mt-[4px] rounded-md mr-1 bg-[#D3F6E3]"></span>{' '}
                     <span className="mr-1 text-[10px] ">Booked</span>
                     <section className="mr-1">
-                      {unitsFeed?.filter((d) => d?.status === 'booked').length}
+                      {unitsFeed?.filter((d) => d?.status == 'booked').length}
                     </section>
                   </section>
                   <section
                     className={`flex flex-row mr-2 ${
-                      selStatus === 'blocked' ? 'bg-[#c6fff0]' : ''
+                      selStatus.includes('blocked') ? 'bg-[#c6fff0]' : ''
                     }`}
                     onClick={() => {
-                      setFilSelStatus('blocked')
+                      setFilSelStatus([
+                        'customer_blocked',
+                        'management_blocked',
+                        'blocked',
+                      ])
                     }}
                   >
                     <span className="w-3 h-3 ml-2 mr-2 mt-[4px] rounded-md mr-1 bg-[#E9E9E9]"></span>{' '}
                     <span className="mr-1 text-[10px]"> Blocked</span>
                     {
-                      unitsFeed?.filter((d) => ['customer_blocked', 'management_blocked'].includes(d?.status))
-                        .length
+                      unitsFeed?.filter((d) =>
+                        [
+                          'customer_blocked',
+                          'management_blocked',
+                          'blocked',
+                        ].includes(d?.status)
+                      ).length
                     }
                   </section>
                 </section>
@@ -761,7 +871,7 @@ const Floordetails = ({
                       type={'bedrooms'}
                       id={'bed_rooms'}
                       setStatusFun={makeFilterFun}
-                      filteredUnits={filteredUnits}
+                      filteredUnits={unitsFeed}
                       pickedValue={filBedRooms}
                     />
                     {/* <DropCompUnitStatus
@@ -775,7 +885,7 @@ const Floordetails = ({
                       type={'Size'}
                       id={'super_built_up_area'}
                       setStatusFun={makeFilterFun}
-                      filteredUnits={filteredUnits}
+                      filteredUnits={unitsFeed}
                       pickedValue={filSuperBuildUpArea}
                     />
                     {/* <DropCompUnitStatus
@@ -785,11 +895,20 @@ const Floordetails = ({
                   filteredUnits={filteredUnits}
                   pickedValue={filRatePerSqft}
                 /> */}
+                  <DropCompUnitStatus
+                      type={'Type'}
+                      id={'type'}
+                      setStatusFun={makeFilterFun}
+                      totalunits={unitsFeed}
+                      filteredUnits={filterTypeResults}
+                      pickedValue={filFacing}
+                    />
                     <DropCompUnitStatus
                       type={'Facing'}
                       id={'facing'}
                       setStatusFun={makeFilterFun}
-                      filteredUnits={filteredUnits}
+                      totalunits={unitsFeed}
+                      filteredUnits={filterFacingResults}
                       pickedValue={filFacing}
                     />
                   </div>
@@ -826,7 +945,9 @@ const Floordetails = ({
                 </section>
               </section>
             </section>
-            {['Apartment', 'Villas'].includes(projectDetails?.projectType?.name) && (
+            {['Apartment', 'Villas'].includes(
+              projectDetails?.projectType?.name
+            ) && (
               <ul className="">
                 {/* {selBlock?.floorA?.map((floorDat, i) => { */}
                 {[1].map((floorDat, i) => {
@@ -842,122 +963,62 @@ const Floordetails = ({
                             .map((data, index) => {
                               return unitShrink ? (
                                 <div
-                                className=" mb-1  mx-1 inline-block"
-                                key={index}
-                                // onClick={() => handleDetailView_Close(data)}
-                                onClick={() => {
-                                  console.log('check is ', leadDetailsObj)
-                                  if (source === 'projectManagement') {
-                                    setSelUnitDetails1(data)
-                                    setSliderInfo({
-                                      open: true,
-                                      title: 'Edit Plot',
-                                      sliderData: {
-                                        unitDetail: data,
-                                        phaseDetail: phaseFeed,
-                                        leadDetailsObj: leadDetailsObj,
-                                      },
-                                      widthClass: 'max-w-4xl',
-                                    })
-                                  } else {
-                                    console.log('customer Detailsare', data)
-                                    setSelUnitDetails1(data)
+                                  className=" mb-1  mx-1 inline-block"
+                                  key={index}
+                                  // onClick={() => handleDetailView_Close(data)}
+                                  onClick={() => {
+                                    console.log('check is ', leadDetailsObj)
+                                    if (source === 'projectManagement') {
+                                      setSelUnitDetails1(data)
+                                      setSliderInfo({
+                                        open: true,
+                                        title: 'Edit Plot',
+                                        sliderData: {
+                                          unitDetail: data,
+                                          phaseDetail: phaseFeed,
+                                          leadDetailsObj: leadDetailsObj,
+                                        },
+                                        widthClass: 'max-w-4xl',
+                                      })
+                                    } else {
+                                      console.log('customer Detailsare', data)
+                                      setSelUnitDetails1(data)
 
-                                    return
-                                    // setSliderInfo({
-                                    //   open: true,
-                                    //   title: 'unit_view',
-                                    //   sliderData: {
-                                    //     unitDetail: data,
-                                    //     phaseDetail: phaseFeed,
-                                    //     leadDetailsObj: leadDetailsObj,
-                                    //   },
-                                    //   widthClass: 'max-w-7xl',
-                                    // })
-                                  }
-                                }}
-                              >
-                                <div>
-                                  <div className="maincontainer">
-                                    <div className="back">
-                                      <div
-                                        className={` min-w-[125px] min-h-[64px] max-h-[68px] z-10 flex flex-col  max-w-md p-1 mx-auto my-0 rounded-sm cursor-pointer border  rounded-2xl`}
-                                      >
-                                        {data?.status === 'available' && (
-                                          <div className="flex flex-col items-right justify-between">
-                                            <div className="flex flex-row justify-between items-right">
-                                              <h3
-                                                className="m-0 ml-2 text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200 h-[16px] hover:border-b hover:border-blue-800"
-                                                onClick={() => {
-                                                  setActionType('unitBookingMode')
-                                                  setisUnitQuoteBookBlock(true)
-                                                  setSliderInfo({
-                                                    open: true,
-                                                    title: 'View Unit',
-                                                    sliderData: {
-                                                      unitDetail: data,
-                                                      phaseDetail: phaseFeed,
-                                                      leadDetailsObj:
-                                                        leadDetailsObj,
-                                                    },
-                                                    widthClass: 'max-w-4xl',
-                                                  })
-                                                }}
-                                              >
-                                                Book
-                                              </h3>
-                                              <h3
-                                                className="m-0 mr-2 text-sm  leading-tight tracking-tight text-blue-800 border-0 border-blue-800 h-[16px] hover:border-b hover:border-blue-800"
-                                                onClick={() => {
-                                                  setActionType('costSheetMode')
-                                                  setisUnitQuoteBookBlock(true)
-                                                  setSliderInfo({
-                                                    open: true,
-                                                    title: 'View Unit',
-                                                    sliderData: {
-                                                      unitDetail: data,
-                                                      phaseDetail: phaseFeed,
-                                                      leadDetailsObj:
-                                                        leadDetailsObj,
-                                                    },
-                                                    widthClass: 'max-w-2xl',
-                                                  })
-                                                }}
-                                              >
-                                                Quote
-                                              </h3>
-                                            </div>
-
-                                            <div className="flex flex-row justify-between items-right">
-                                              <h3
-                                                className="m-0 ml-2 mt-3 text-sm  leading-tight tracking-tight text-blue-800 text-black border-0 border-blue-200 h-[16px] hover:border-b hover:border-blue-800  "
-                                                onClick={() => {
-                                                  setActionType('unitBlockMode')
-                                                  setisUnitQuoteBookBlock(true)
-                                                  setSliderInfo({
-                                                    open: true,
-                                                    title: 'View Unit',
-                                                    sliderData: {
-                                                      unitDetail: data,
-                                                      phaseDetail: phaseFeed,
-                                                      leadDetailsObj:
-                                                        leadDetailsObj,
-                                                    },
-                                                    widthClass: 'max-w-4xl',
-                                                  })
-                                                }}
-                                              >
-                                                Block
-                                              </h3>
-                                              {source === 'projectManagement' && (
+                                      return
+                                      // setSliderInfo({
+                                      //   open: true,
+                                      //   title: 'unit_view',
+                                      //   sliderData: {
+                                      //     unitDetail: data,
+                                      //     phaseDetail: phaseFeed,
+                                      //     leadDetailsObj: leadDetailsObj,
+                                      //   },
+                                      //   widthClass: 'max-w-7xl',
+                                      // })
+                                    }
+                                  }}
+                                >
+                                  <div>
+                                    <div className="maincontainer">
+                                      <div className="back">
+                                        <div
+                                          className={` min-w-[125px] min-h-[64px] max-h-[68px] z-10 flex flex-col  max-w-md p-1 mx-auto my-0 rounded-sm cursor-pointer border  rounded-2xl`}
+                                        >
+                                          {data?.status === 'available' && (
+                                            <div className="flex flex-col items-right justify-between">
+                                              <div className="flex flex-row justify-between items-right">
                                                 <h3
-                                                  className="m-0 mr-2 mt-2 mr-[21px] text-sm  leading-tight tracking-tight text-blue-800 border-0 border-blue-800 h-[16px]  hover:border-b hover:border-blue-800"
+                                                  className="m-0 ml-2 text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200 h-[16px] hover:border-b hover:border-blue-800"
                                                   onClick={() => {
-                                                    setisUnitQuoteBookBlock(true)
-
+                                                    setActionType(
+                                                      'unitBookingMode'
+                                                    )
+                                                    setisUnitQuoteBookBlock(
+                                                      true
+                                                    )
                                                     setSliderInfo({
                                                       open: true,
-                                                      title: 'Edit Plot',
+                                                      title: 'View Unit',
                                                       sliderData: {
                                                         unitDetail: data,
                                                         phaseDetail: phaseFeed,
@@ -968,92 +1029,171 @@ const Floordetails = ({
                                                     })
                                                   }}
                                                 >
-                                                  Edit
+                                                  Book
                                                 </h3>
-                                              )}
-                                            </div>
-                                          </div>
-                                        )}
-                                        {data?.status === 'booked' && (
-                                          <div className="flex flex-col items-right justify-between">
-                                            <div className="flex flex-row justify-between items-right">
-                                              <h3
-                                                className="m-0 ml-2 mt- text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200"
-                                                onClick={() => {
-                                                  setisUnitDetailsOpen(true)
-                                                }}
-                                              >
-                                                Details
-                                              </h3>
-                                              <h3
-                                                className="m-0 mr-2 ml-2 mt- text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200"
-                                                onClick={() => {
-                                                  setisUnitDetailsOpen(true)
-                                                }}
-                                              >
-                                                Payment
-                                              </h3>
-                                            </div>
-                                            <div className="flex flex-row justify-between items-right">
-                                              <h3
-                                                className="m-0 ml-2 mt-4 text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200"
-                                                onClick={() => {
-                                                  setIsCancelUnit(true)
-                                                  setSliderInfo({
-                                                    open: true,
-                                                    title: 'Cancel_Unit',
-                                                    sliderData: {
-                                                      unitDetail: data,
-                                                      phaseDetail: phaseFeed,
-                                                      leadDetailsObj:
-                                                        leadDetailsObj,
-                                                    },
-                                                    widthClass: 'max-w-4xl',
-                                                  })
-                                                }}
-                                              >
-                                                Cancel
-                                              </h3>
-                                              <h3
-                                                className="m-0 ml-2 mr-2 mt-4 text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200"
-                                                onClick={() => {
-                                                  setisUnitDetailsOpen(true)
-                                                }}
-                                              >
-                                                Swap
-                                              </h3>
-                                            </div>
-                                          </div>
-                                        )}
+                                                <h3
+                                                  className="m-0 mr-2 text-sm  leading-tight tracking-tight text-blue-800 border-0 border-blue-800 h-[16px] hover:border-b hover:border-blue-800"
+                                                  onClick={() => {
+                                                    setActionType(
+                                                      'costSheetMode'
+                                                    )
+                                                    setisUnitQuoteBookBlock(
+                                                      true
+                                                    )
+                                                    setSliderInfo({
+                                                      open: true,
+                                                      title: 'View Unit',
+                                                      sliderData: {
+                                                        unitDetail: data,
+                                                        phaseDetail: phaseFeed,
+                                                        leadDetailsObj:
+                                                          leadDetailsObj,
+                                                      },
+                                                      widthClass: 'max-w-2xl',
+                                                    })
+                                                  }}
+                                                >
+                                                  Quote
+                                                </h3>
+                                              </div>
 
-                                        {data?.status === 'customer_blocked' && (
-                                          <div className="flex flex-col items-right justify-between">
-                                            <div className="flex flex-row justify-between items-right">
-                                              <h3 className="m-0 ml-2 mt-4 text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200">
-                                                Blocked Details
-                                              </h3>
+                                              <div className="flex flex-row justify-between items-right">
+                                                <h3
+                                                  className="m-0 ml-2 mt-3 text-sm  leading-tight tracking-tight text-blue-800 text-black border-0 border-blue-200 h-[16px] hover:border-b hover:border-blue-800  "
+                                                  onClick={() => {
+                                                    setActionType(
+                                                      'unitBlockMode'
+                                                    )
+                                                    setisUnitQuoteBookBlock(
+                                                      true
+                                                    )
+                                                    setSliderInfo({
+                                                      open: true,
+                                                      title: 'View Unit',
+                                                      sliderData: {
+                                                        unitDetail: data,
+                                                        phaseDetail: phaseFeed,
+                                                        leadDetailsObj:
+                                                          leadDetailsObj,
+                                                      },
+                                                      widthClass: 'max-w-4xl',
+                                                    })
+                                                  }}
+                                                >
+                                                  Block
+                                                </h3>
+                                                {source ===
+                                                  'projectManagement' && (
+                                                  <h3
+                                                    className="m-0 mr-2 mt-2 mr-[21px] text-sm  leading-tight tracking-tight text-blue-800 border-0 border-blue-800 h-[16px]  hover:border-b hover:border-blue-800"
+                                                    onClick={() => {
+                                                      setisUnitQuoteBookBlock(
+                                                        true
+                                                      )
+
+                                                      setSliderInfo({
+                                                        open: true,
+                                                        title: 'Edit Plot',
+                                                        sliderData: {
+                                                          unitDetail: data,
+                                                          phaseDetail:
+                                                            phaseFeed,
+                                                          leadDetailsObj:
+                                                            leadDetailsObj,
+                                                        },
+                                                        widthClass: 'max-w-4xl',
+                                                      })
+                                                    }}
+                                                  >
+                                                    Edit
+                                                  </h3>
+                                                )}
+                                              </div>
                                             </div>
-                                          </div>
-                                        )}
+                                          )}
+                                          {data?.status === 'booked' && (
+                                            <div className="flex flex-col items-right justify-between">
+                                              <div className="flex flex-row justify-between items-right">
+                                                <h3
+                                                  className="m-0 ml-2 mt- text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200"
+                                                  onClick={() => {
+                                                    setisUnitDetailsOpen(true)
+                                                  }}
+                                                >
+                                                  Details
+                                                </h3>
+                                                <h3
+                                                  className="m-0 mr-2 ml-2 mt- text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200"
+                                                  onClick={() => {
+                                                    setisUnitDetailsOpen(true)
+                                                  }}
+                                                >
+                                                  Payment
+                                                </h3>
+                                              </div>
+                                              <div className="flex flex-row justify-between items-right">
+                                                <h3
+                                                  className="m-0 ml-2 mt-4 text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200"
+                                                  onClick={() => {
+                                                    setIsCancelUnit(true)
+                                                    setSliderInfo({
+                                                      open: true,
+                                                      title: 'Cancel_Unit',
+                                                      sliderData: {
+                                                        unitDetail: data,
+                                                        phaseDetail: phaseFeed,
+                                                        leadDetailsObj:
+                                                          leadDetailsObj,
+                                                      },
+                                                      widthClass: 'max-w-4xl',
+                                                    })
+                                                  }}
+                                                >
+                                                  Cancel
+                                                </h3>
+                                                <h3
+                                                  className="m-0 ml-2 mr-2 mt-4 text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200"
+                                                  onClick={() => {
+                                                    setisUnitDetailsOpen(true)
+                                                  }}
+                                                >
+                                                  Swap
+                                                </h3>
+                                              </div>
+                                            </div>
+                                          )}
+
+                                          {data?.status ===
+                                            'customer_blocked' && (
+                                            <div className="flex flex-col items-right justify-between">
+                                              <div className="flex flex-row justify-between items-right">
+                                                <h3 className="m-0 ml-2 mt-4 text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200">
+                                                  Blocked Details
+                                                </h3>
+                                              </div>
+                                            </div>
+                                          )}
+                                        </div>
                                       </div>
-                                    </div>
-                                    <div className="front">
-                                      <div className="image">
-                                        <UnitsSmallViewCard
-                                          kind={data}
-                                          feedData={unitFeedData}
-                                          bg="#CCFBF1"
-                                          setShowCostSheetWindow={
-                                            setShowCostSheetWindow
-                                          }
-                                          setSelUnitDetails={setSelUnitDetails}
-                                          setSelMode={setSelMode}
-                                        />{' '}
+                                      <div className="front">
+                                        <div className="image">
+                                          <UnitsSmallViewCard
+                                            kind={data}
+                                            feedData={unitFeedData}
+                                            bg="#CCFBF1"
+                                            setShowCostSheetWindow={
+                                              setShowCostSheetWindow
+                                            }
+                                            setSelUnitDetails={
+                                              setSelUnitDetails
+                                            }
+                                            setSelMode={setSelMode}
+                                          />{' '}
+                                        </div>
                                       </div>
                                     </div>
                                   </div>
                                 </div>
-                              </div>
                               ) : (
                                 <div
                                   className="p-2 mb-1  mx-1 inline-block cursor-pointer"
@@ -1319,7 +1459,7 @@ const Floordetails = ({
                 </li>
               </ul>
             )}
-            {!['Apartment', 'Plots'].includes(
+            {!['Apartment', 'Plots', 'Villas'].includes(
               projectDetails?.projectType?.name
             ) && (
               <ul className="">
