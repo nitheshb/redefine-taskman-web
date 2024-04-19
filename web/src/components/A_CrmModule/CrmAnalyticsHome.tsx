@@ -22,7 +22,10 @@ import { useTranslation } from 'react-i18next'
 import { Link } from '@redwoodjs/router'
 
 import SiderForm from 'src/components/SiderForm/SiderForm'
-import { getAllProjects, steamUsersCreditNotesList } from 'src/context/dbQueryFirebase'
+import {
+  getAllProjects,
+  steamUsersCreditNotesList,
+} from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 
 import 'flowbite'
@@ -36,16 +39,15 @@ import RadarChart from '../Apex_chart/RadarChart'
 import DummyBodyLayout from '../DummyBodyLayout/DummyBodyLayout'
 
 import AdvancedDataTableTest from './Reports/bookingSummaryHome'
+import UnitBookingSummaryHomePage from './Reports/bookingSummaryHome1'
 import CircleBar from './Reports/CircleBar'
+import CreditNoteSummaryHomePage from './Reports/creditNoteSummaryHome'
+import CrmSummaryReport from './Reports/Crm_SummaryReport'
 import CrmAnalyticsUnitHome from './Reports/CrmAnalyticsUnitHome'
+import CrmInventorySummaryTable from './Reports/CrmSummaryTable'
 import ReportBars from './Reports/ReportBars'
 import TransactionCard from './Reports/TransactionCard'
 import UnitStatusCardReport from './Reports/UnitStatusCardReport'
-import UnitBookingSummaryHomePage from './Reports/bookingSummaryHome1'
-import CreditNoteSummaryHomePage from './Reports/creditNoteSummaryHome'
-import CrmSummaryReport from './Reports/Crm_SummaryReport'
-import CrmSummaryTable from './Reports/CrmSummaryTable'
-
 
 const CrmAnalyticsHome = ({ project }) => {
   const theme = useTheme()
@@ -59,7 +61,6 @@ const CrmAnalyticsHome = ({ project }) => {
 
   useEffect(() => {
     getProjects()
-
   }, [])
   const getProjects = async () => {
     const unsubscribe = getAllProjects(
@@ -82,7 +83,7 @@ const CrmAnalyticsHome = ({ project }) => {
 
   return (
     <div>
-      <div className="flex overflow-x-auto ml-2 border-b pb-2">
+      <div className="flex overflow-x-auto ml border-b pb-2">
         <div className="flex items-center flex-shrink-0   border-grey maahome">
           {/* <Link
                 className="flex items-center"
@@ -94,12 +95,11 @@ const CrmAnalyticsHome = ({ project }) => {
         </div>
         {[
           { label: 'Booking Summary', value: 'booking_summary' },
-          { label: 'Credit Note', value: 'creditnote_summary' },
+          { label: 'CRM Inventory Report', value: 'crm_table' },
           { label: 'Project Summary', value: 'proj_summary' },
+          { label: 'Credit Note', value: 'creditnote_summary' },
           { label: 'Collections', value: 'collections-summary' },
           { label: 'Home', value: 'crm_summary' },
-          { label: 'CRM Inventory Report', value: 'crm_table' },
-
           // { label: 'Source Report', value: 'source_report' },
           // { label: 'Employee Report', value: 'emp_status_report' },
           // { label: 'Project Leads Report', value: 'proj_leads_report' },
@@ -132,8 +132,8 @@ const CrmAnalyticsHome = ({ project }) => {
         })}
       </div>
       {selCat === 'proj_summary' && (
-      <section className=" mt-1 mr-1 py-8 mb-2 leading-7 text-gray-900 bg-white  rounded-lg  ">
-        {/* <div className="box-border px-4 mx-auto border-solid sm:px-6 md:px-6 lg:px-8 max-w-full ">
+        <section className=" mt-1 mr-1 py-8 mb-2 leading-7 text-gray-900 bg-white  rounded-lg  ">
+          {/* <div className="box-border px-4 mx-auto border-solid sm:px-6 md:px-6 lg:px-8 max-w-full ">
           <section className="flex flex-row justify-between">
             <div className="">
               <h3 className="h1MainText">Congratulations Nithesh! 🎉</h3>
@@ -215,55 +215,43 @@ const CrmAnalyticsHome = ({ project }) => {
             ))}
             {projects.length === 0 && <DummyBodyLayout />}
           </div>
+        </section>
+      )}
+      {selCat === 'booking_summary' && (
+        <div className="">
+          {/* <AdvancedDataTableTest /> */}
+          <UnitBookingSummaryHomePage />
 
+          {projects.length === 0 && <DummyBodyLayout />}
+        </div>
+      )}
 
-      </section> )}
-            {selCat === 'booking_summary' && (
-          <div className="">
-            {/* <AdvancedDataTableTest /> */}
-            <UnitBookingSummaryHomePage/>
+      {selCat === 'crm_summary' && (
+        <div className="">
+          {/* <AdvancedDataTableTest /> */}
+          <CrmSummaryReport />
 
-            {projects.length === 0 && <DummyBodyLayout />}
-          </div>
-        )}
+          {projects.length === 0 && <DummyBodyLayout />}
+        </div>
+      )}
 
-   
-{selCat === 'crm_summary' && (
-          <div className="">
-            {/* <AdvancedDataTableTest /> */}
-            <CrmSummaryReport/>
+      {selCat === 'crm_table' && (
+        <div className="">
+          {/* <AdvancedDataTableTest /> */}
+          <CrmInventorySummaryTable projects={projects} />
 
-            {projects.length === 0 && <DummyBodyLayout />}
-          </div>
-        )}
-
-
-{selCat === 'crm_table' && (
-          <div className="">
-            {/* <AdvancedDataTableTest /> */}
-            <CrmSummaryTable/>
-
-            {projects.length === 0 && <DummyBodyLayout />}
-          </div>
-        )}
-
-
-
-
-
-
-
-
+          {projects.length === 0 && <DummyBodyLayout />}
+        </div>
+      )}
 
       {selCat === 'creditnote_summary' && (
-          <div className="">
-            {/* <AdvancedDataTableTest /> */}
-            <CreditNoteSummaryHomePage/>
+        <div className="">
+          {/* <AdvancedDataTableTest /> */}
+          <CreditNoteSummaryHomePage />
 
-            {projects.length === 0 && <DummyBodyLayout />}
-          </div>
-        )}
-
+          {projects.length === 0 && <DummyBodyLayout />}
+        </div>
+      )}
     </div>
   )
 }

@@ -12,6 +12,7 @@ import {
 
 import SideVisitLeadsBody from '../A_SalesModule/Reports/SideVisitsLeadsBody'
 import AddTaskForm from '../A_TaskMan/AddTaskForm'
+import ProjectInventorySummaryReport from '../A_CrmModule/Reports/InventorySummary.tsx/ProjectInventorySummaryReport'
 
 const ReportSideWindow = ({
   open,
@@ -98,6 +99,18 @@ const ReportSideWindow = ({
 
                 {title === 'Site Visit Leads' && (
                   <SideVisitLeadsBody
+                    title={title}
+                    subtitle={subtitle}
+                    dialogOpen={setOpen}
+                    leadsLogsPayload={leadsLogsPayload}
+                    setCustomerDetails= {setCustomerDetails}
+                    setisImportLeadsOpen={setisImportLeadsOpen}
+
+                  />
+                )}
+
+                {title === 'Unit Inventory' && (
+                  <ProjectInventorySummaryReport
                     title={title}
                     subtitle={subtitle}
                     dialogOpen={setOpen}
