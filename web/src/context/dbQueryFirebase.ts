@@ -1575,6 +1575,20 @@ export const getUnits = (orgId, snapshot, data, error) => {
   return onSnapshot(itemsQuery, snapshot, error)
 }
 
+export const getUnitsAllBlocks = (orgId, snapshot, data, error) => {
+  const { status, pId, blockId, selUnitStatus } = data
+
+  const itemsQuery = query(
+    collection(db, `${orgId}_units`),
+    where('pId', '==', pId),
+    where('status', 'in', selUnitStatus),
+    // orderBy('unit_no', 'asc')
+  )
+
+  console.log('hello ', status, itemsQuery, data)
+  return onSnapshot(itemsQuery, snapshot, error)
+}
+
 export const getCustomerDocs = async (orgId, uid: string, snapshot, error) => {
   try {
     const getAllProjectByIdQuery = await query(

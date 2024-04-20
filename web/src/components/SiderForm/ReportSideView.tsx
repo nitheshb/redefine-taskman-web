@@ -25,7 +25,8 @@ const ReportSideWindow = ({
   unitsViewMode,
   setIsClicked,
   setCustomerDetails,
-  setisImportLeadsOpen
+  setisImportLeadsOpen,
+  selUnitStatus
 }) => {
   // dont write too many here
   //  this is for customerProfileSideView
@@ -117,6 +118,7 @@ const ReportSideWindow = ({
                     leadsLogsPayload={leadsLogsPayload}
                     setCustomerDetails= {setCustomerDetails}
                     setisImportLeadsOpen={setisImportLeadsOpen}
+                    selUnitStatus={selUnitStatus}
 
                   />
                 )}
