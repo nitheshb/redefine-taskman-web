@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import { Dialog } from '@headlessui/react'
+import { Select as SelectMAT, MenuItem } from '@material-ui/core'
 import { Alert, AlertTitle } from '@mui/lab'
 import { useSnackbar } from 'notistack'
 import Select from 'react-select'
@@ -57,6 +58,7 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
     }
   }, [source, data, tableData, partCData])
   useEffect(() => {
+    console.log('partAData', partAData)
     if (source === 'projectManagement') {
       setEditOptionsPartA({
         onRowAdd: async (newData) => await handleRowAddPartA(newData),
@@ -84,12 +86,21 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
 
   const { enqueueSnackbar } = useSnackbar()
   const defaultValue = (options, value) => {
+    console.log('vale is', value)
     return (
       (options
         ? options.find((option) => option.value === value?.value)
         : '') || ''
     )
   }
+
+  const defaultValueNew = (options, value) => {
+    console.log('vale is', value)
+    return (
+      (options ? options.find((option) => option.value === value) : value) || ''
+    )
+  }
+
   // paymentScheduleA
   const columns = [
     {
@@ -106,24 +117,81 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
       },
       editComponent: ({ value, onChange, rowData }) => {
         return (
-          <Select
-            name="component"
-            onChange={(value_x) => {
-              onChange(value_x)
+          // <select
+          //   value={defaultValue(
+          //     blocksViewFeature === 'Construction_Other_Charges'
+          //       ? csConstruAdditionalChargesA
+          //       : costSheetAdditionalChargesA,
+          //     value
+          //   )}
+          //   onChange={(value_x) => {
+          //     console.log('onchane ', value_x)
+          //     onChange(value_x)
+          //   }}
+          //   // onChange={(e) => handleEdit(row?.id, 'sex', e.target.value)}>
+          // >
+          //   {blocksViewFeature === 'Construction_Other_Charges'
+          //     ? csConstruAdditionalChargesA
+          //     : costSheetAdditionalChargesA.map((data, i) => (
+          //         <option key={i} value={data?.value}>
+          //           {data?.label}
+          //         </option>
+          //       ))}
+          // </select>
+          <SelectMAT
+            defaultValue={'Car Parking'}
+            // value={'Car Parking'}
+            onChange={(e) => {
+              const selectedOptionObject =
+                blocksViewFeature === 'Construction_Other_Charges'
+                  ? csConstruAdditionalChargesA
+                  : costSheetAdditionalChargesA.find(
+                      (option) => option.value === e.target.value
+                    )
+              console.log(
+                'value is ',
+                selectedOptionObject,
+                e.target,
+                e.target.value,
+                value,
+                rowData
+              )
+
+              onChange(selectedOptionObject)
             }}
-            options={
-              blocksViewFeature === 'Construction_Other_Charges'
-                ? csConstruAdditionalChargesA
-                : costSheetAdditionalChargesA
-            }
-            value={defaultValue(
-              blocksViewFeature === 'Construction_Other_Charges'
-                ? csConstruAdditionalChargesA
-                : costSheetAdditionalChargesA,
-              value
-            )}
-            className="text-md mr-2"
-          />
+          >
+            {blocksViewFeature === 'Construction_Other_Charges'
+              ? csConstruAdditionalChargesA
+              : costSheetAdditionalChargesA.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+          </SelectMAT>
+          // <Select
+          //   name="component"
+          //   onChange={(value_x) => {
+          //     onChange(value_x)
+          //   }}
+          //   options={
+          //     blocksViewFeature === 'Construction_Other_Charges'
+          //       ? csConstruAdditionalChargesA
+          //       : costSheetAdditionalChargesA
+          //   }
+          //   value={defaultValue(
+          //     blocksViewFeature === 'Construction_Other_Charges'
+          //       ? csConstruAdditionalChargesA
+          //       : costSheetAdditionalChargesA,
+          //     value
+          //   )}
+          //   className="text-md mr-2"
+          //   styles={{
+          //     menu: (provided) => ({
+          //       ...provided,
+          //       zIndex: 9999, // Adjust the z-index value as needed
+          //     }),
+          //   }}
+          // />
         )
       },
       // editComponent: ({ value, onChange }) => (
@@ -151,11 +219,19 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
           <Select
             name="Chargesdropdown"
             onChange={(value) => {
+              console.log('onchane ', value)
               onChange(value)
             }}
             options={unitsCancellation}
             value={defaultValue(unitsCancellation, value)}
             className="text-md mr-2"
+            styles={{
+              menu: (provided) => ({
+                ...provided,
+                zIndex: 9,
+                position: 'absolute', // Adjust the z-index value as needed
+              }),
+            }}
           />
         )
       },
@@ -665,7 +741,18 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
       setIserror(true)
     }
   }
+  const [data1, setData] = useState([
+    { id: 1, name: 'John Doe', sex: 'Male', class: '10th' },
+    { id: 2, name: 'Jane Smith', sex: 'Female', class: '12th' },
+  ])
 
+  const handleEdit = (id, field, value) => {
+    setData(
+      data.map((row) => (row.id === id ? { ...row, [field]: value } : row))
+    )
+  }
+
+  const genders = ['Male', 'Female', 'Other']
   //function for adding a new row to the table
   const handleRowAddPartC = async (newData) => {
     setIserror(false)
@@ -690,8 +777,50 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
       setIserror(true)
     }
   }
+
   return (
     <section>
+      <table>
+        <thead>
+          {partAcolumns?.map((rowDa, i) => (
+            <tr key={i}>
+              <th>{rowDa?.title}</th>
+            </tr>
+          ))}
+        </thead>
+        <tbody>
+          {partAData.map((row) => (
+            <tr key={row?.id}>
+              <td>
+                <input
+                  type="text"
+                  value={row?.component?.label}
+                  onChange={(e) => handleEdit(row?.id, 'name', e.target.value)}
+                />
+              </td>
+              <td>
+                <select
+                  value={row?.gst?.label}
+                  onChange={(e) => handleEdit(row?.id, 'sex', e.target.value)}
+                >
+                  {gstValesA.map((data, i) => (
+                    <option key={i} value={data?.value}>
+                      {data?.label}
+                    </option>
+                  ))}
+                </select>
+              </td>
+              <td>
+                <input
+                  type="text"
+                  value={row?.class}
+                  onChange={(e) => handleEdit(row.id, 'class', e.target.value)}
+                />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
       <section className="ml-4 text-md font-[500]">Part-A</section>
       <div className=" min border border-radius-4">
         <MaterialCRUDTable
@@ -708,6 +837,7 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
               padding: '13px',
             },
             actionsColumnIndex: -1,
+            search: false,
             paging: false,
             doubleHorizontalScroll: true,
             position: 'absolute',
@@ -755,7 +885,7 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
                 },
                 actionsColumnIndex: -1,
                 paging: false,
-
+                search: false,
                 doubleHorizontalScroll: true,
                 position: 'absolute',
               }}
@@ -769,6 +899,7 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
                 width: 'auto',
                 justifyCenter: 'center',
               }}
+
               source={source}
               editable={editOpitionsObj}
             />
@@ -802,7 +933,7 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
               },
               actionsColumnIndex: -1,
               paging: false,
-
+              search: false,
               doubleHorizontalScroll: true,
               position: 'absolute',
             }}

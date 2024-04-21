@@ -16,9 +16,9 @@ const CostSheetSetup = ({ phase, source }) => {
     useState('Plot_Other_Charges')
 
   const [otherChargesA, setOtherChargesA] = useState([
-    { lab: 'Plot Other Charges', val: 'Plot_Other_Charges' },
+    { lab: 'Cost Sheet Setup', val: 'Plot_Other_Charges' },
     {
-      lab: 'Construction Other Charges',
+      lab: 'Construction Charges',
       val: 'Construction_Other_Charges',
     },
   ])

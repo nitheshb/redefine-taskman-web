@@ -286,12 +286,13 @@ const ProjPhaseHome = ({
                               role="tablist"
                             >
                               {[
+                                  {
+                                    lab: 'Cost Sheet & More...',
+                                    val: 'CostDetails',
+                                    subval: 'costSheet',
+                                  },
                                 { lab: 'Units', val: 'Blocks' },
-                                {
-                                  lab: 'Cost Details',
-                                  val: 'CostDetails',
-                                  subval: 'costSheet',
-                                },
+
 
                                 {
                                   lab: 'Documents',
@@ -343,16 +344,15 @@ const ProjPhaseHome = ({
                               alt=""
                               src="/m3.png"
                             ></img>
-                            <span className="relative z-10 flex items-center w-auto text-md font-bold leading-none pl-0 mt-[px]">
-                              {/* {phase?.phaseName} */}
-                              {/* selPhaseIs, setSelPhaseIs */}
+                            {/* <span className="relative z-10 flex items-center w-auto text-md font-bold leading-none pl-0 mt-[px]">
+
                               <AssigedToDropComp
                                 assignerName={selPhaseName}
                                 id={'id'}
                                 setAssigner={setPhaseFun}
                                 usersList={phasesList}
                               />
-                            </span>
+                            </span> */}
 
                             {/* <section className="flex ml-auto mt-[18px] mb-3">
                     <button
