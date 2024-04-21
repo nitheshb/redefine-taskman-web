@@ -254,6 +254,17 @@ export const developmentTypes = [
     img: '/apart1.svg',
   },
 ]
+export const ChooseOptions = [
+  {
+    name: 'Yes',
+    img: '/apart.svg',
+  },
+  {
+    name: 'No',
+    img: '/apart1.svg',
+  },
+
+]
 export const paymentMode = [
   {
     value: 'cheque',
@@ -295,7 +306,8 @@ export const areaConversions = [
     label: 'Gunta',
   },
 ]
-
+export const uniTypes = ['9.14X15.24','12.19X18.29','12.19X16.25','30X40','30X50','35X45','40X40', '40X60', 'ODD'
+]
 export const unitsCancellation = [
   {
     value: 'fixedcost',

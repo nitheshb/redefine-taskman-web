@@ -54,7 +54,7 @@ const UnitsSmallViewCard = ({ kind, feedData, bg,  setSelUnitDetails,
 
   return (
     <div
-      className={` min-w-[125px] z-10 flex flex-col  max-w-md p-2 mx-auto my-0 rounded-lg cursor-pointer border border-black-600 shadow-radius shadow-xl`}
+      className={` min-w-[185px] z-10 flex flex-col  max-w-md p-2 mx-auto my-0 rounded-lg cursor-pointer border border-black-600 shadow-radius shadow-xl`}
       style={{ backgroundColor: bgColor, color: fontColor}}
     >
       <div className="flex flex-row items-center justify-between">
@@ -62,6 +62,12 @@ const UnitsSmallViewCard = ({ kind, feedData, bg,  setSelUnitDetails,
           {kind?.unit_no}
 
         </h3>
+        <span className="flex flex-row items-center justify-between mr-2">
+          <span className="text-[10px] font-">
+            {kind?.facing || ''}
+
+          </span>
+        </span>
         {/* <DropCompUnitStatus
             type={'unitMode'}
             id={'id'}
@@ -72,6 +78,12 @@ const UnitsSmallViewCard = ({ kind, feedData, bg,  setSelUnitDetails,
         <span className="flex flex-row items-center justify-between mr-2">
           <span className="text-[10px] font-">
             {kind?.super_built_up_area || kind?.area || 0} sqft
+
+          </span>
+        </span>
+        <span className="flex flex-row items-center justify-between ">
+          <span className="text-[10px] font-">
+            {kind?.size || kind?.size || 0}
 
           </span>
         </span>

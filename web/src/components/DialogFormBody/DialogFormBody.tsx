@@ -10,6 +10,7 @@ import * as Yup from 'yup'
 import { AreaConverter } from 'src/components/AreaConverter'
 import Loader from 'src/components/Loader/Loader'
 import {
+  ChooseOptions,
   developmentTypes,
   projectPlans,
   statesList,
@@ -146,6 +147,15 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
 
   const initialState = {
     projectName: project?.projectName || '',
+    bmrdaApproval: project?.bmrdaApproval || '',
+    bmrdaNo: project?.bmrdaNo || '',
+    bmrdaStartDate: project?.bmrdaStartDate || '',
+    bmrdaEndDate: project?.bmrdaEndDate || '',
+    hdmaApproval: project?.hdmaApproval || '',
+    hdmaNo: project?.hdmaNo || '',
+    hdmaStartDate: project?.hdmaStartDate || '',
+    hdmaEndDate: project?.hdmaEndDate || '',
+
     builderName: project?.builderName || '',
     builder_bank_details: project?.builder_bank_details || '',
     builderGSTno: project?.builderGSTno || '',
@@ -181,12 +191,12 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
       .length(6, 'Must be 6 digits'),
     city: Yup.string().required('Required'),
     state: Yup.string().required('Required'),
-    landlordShare:
-      devType.name === 'Joint'
-        ? Yup.number().required('Required')
-        : Yup.string().notRequired(),
-    builderShare: Yup.number().required('Required'),
-    builderBankDocId: Yup.string().required('Required'),
+    // landlordShare:
+    //   devType.name === 'Joint'
+    //     ? Yup.number().required('Required')
+    //     : Yup.string().notRequired(),
+    // builderShare: Yup.number().required('Required'),
+    // builderBankDocId: Yup.string().required('Required'),
     landlordBankDocId:
       devType.name === 'Joint'
         ? Yup.string().required('Required')
@@ -227,6 +237,120 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                         name="projectName"
                         type="text"
                       />
+                      <div className="mb-3">
+                        <label
+                          htmlFor="area"
+                          className="label font-regular text-sm"
+                        >
+                          Area*
+                        </label>
+                        <MuiTextField
+                          id="area"
+                          className={`w-full bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 mt-1 p-0`}
+                          size="small"
+                          InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                sqft
+                              </InputAdornment>
+                            ),
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <button
+                                  type="button"
+                                  style={{ marginRight: '-13px' }}
+                                  onClick={onAreaClick}
+                                  className="border border-green-400 font-semibold text-3xl px-2 bg-green-400 shadow-sm font-medium tracking-wider text-white hover:shadow-lg hover:bg-green-500"
+                                >
+                                  {openAreaFields ? <Remove /> : <Add />}
+                                </button>
+                              </InputAdornment>
+                            ),
+                          }}
+                          label=""
+                          name="area"
+                          type="text"
+                          value={formik.values.area}
+                          onChange={formik.handleChange}
+                        />
+                        {formik.errors.area ? (
+                          <div className="error-message text-red-700 text-xs p-2">
+                            {formik.errors.area}
+                            {formik.values.area}
+                          </div>
+                        ) : null}
+                        {openAreaFields && (
+                          <AreaConverter
+                            formik={formik}
+                            hideField={setOpenAreaFields}
+                            fieldName="area"
+                          />
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex flex-col mt-2 rounded-lg bg-white border border-gray-100 p-4 ">
+                      <CustomRadioGroup
+                        label="BMRDA APPROVAL"
+                        value={devType}
+                        options={ChooseOptions}
+                        onChange={setdevType}
+                      />
+                      <div className="md:flex md:flex-row md:space-x-4 w-full text-xs">
+                        <div className="mt-2 w-full">
+                          <TextField
+                            label="BMRDA No*"
+                            name="bmrdaNo"
+                            type="text"
+                          />
+                        </div>
+                        <div className="mt-2 w-full">
+                          <TextField
+                            label="Start Date*"
+                            name="bmrdaStartDate"
+                            type="text"
+                          />
+                        </div>
+                        <div className="mt-2 w-full">
+                          <TextField
+                            label="End Date*"
+                            name="bmrdaEndDate"
+                            type="text"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col mt-2 rounded-lg bg-white border border-gray-100 p-4 ">
+                      <CustomRadioGroup
+                        label="RERA APPROVAL"
+                        value={devType}
+                        options={ChooseOptions}
+                        onChange={setdevType}
+                      />
+                      <div className="md:flex md:flex-row md:space-x-4 w-full text-xs">
+                        <div className="mt-2 w-full">
+                          <TextField
+                            label="RERA No*"
+                            name="hdmaNo"
+                            type="text"
+                          />
+                        </div>
+                        <div className="mt-2 w-full">
+                          <TextField
+                            label="Start Date*"
+                            name="hdmaStartDate"
+                            type="text"
+                          />
+                        </div>
+                        <div className="mt-2 w-full">
+                          <TextField
+                            label="End Date*"
+                            name="hdmaEndDate"
+                            type="text"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col mt-2 rounded-lg bg-white border border-gray-100 p-4 ">
                       <CustomRadioGroup
                         label="Development Type"
                         value={devType}
@@ -253,12 +377,12 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                             options={bankDetailsA}
                             setAddNewBankStuff={setAddNewBankStuff}
                           />
-                          {formik.errors.builderBankDocId ? (
-                            <div className="error-message text-red-700 text-xs p-2">
-                              {formik.errors.builderBankDocId}
-                              {formik.values.builderBankDocId}
-                            </div>
-                          ) : null}
+                          {/* {formik.errors.builderBankDocId ? (
+        <div className="error-message text-red-700 text-xs p-2">
+          {formik.errors.builderBankDocId}
+          {formik.values.builderBankDocId}
+        </div>
+      ) : null} */}
                         </div>
                         {devType.name === 'Joint' && (
                           <div className="mt-2 mr-3 w-full">
@@ -328,56 +452,6 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                       )}
                     </div>
                     <div className="flex flex-col mt-2 rounded-lg bg-white border border-gray-100 p-4 ">
-                      <div className="mb-3">
-                        <label
-                          htmlFor="area"
-                          className="label font-regular text-sm"
-                        >
-                          Area*
-                        </label>
-                        <MuiTextField
-                          id="area"
-                          className={`w-full bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 mt-1 p-0`}
-                          size="small"
-                          InputProps={{
-                            startAdornment: (
-                              <InputAdornment position="start">
-                                sqft
-                              </InputAdornment>
-                            ),
-                            endAdornment: (
-                              <InputAdornment position="end">
-                                <button
-                                  type="button"
-                                  style={{ marginRight: '-13px' }}
-                                  onClick={onAreaClick}
-                                  className="border border-green-400 font-semibold text-3xl px-2 bg-green-400 shadow-sm font-medium tracking-wider text-white hover:shadow-lg hover:bg-green-500"
-                                >
-                                  {openAreaFields ? <Remove /> : <Add />}
-                                </button>
-                              </InputAdornment>
-                            ),
-                          }}
-                          label=""
-                          name="area"
-                          type="text"
-                          value={formik.values.area}
-                          onChange={formik.handleChange}
-                        />
-                        {formik.errors.area ? (
-                          <div className="error-message text-red-700 text-xs p-2">
-                            {formik.errors.area}
-                            {formik.values.area}
-                          </div>
-                        ) : null}
-                        {openAreaFields && (
-                          <AreaConverter
-                            formik={formik}
-                            hideField={setOpenAreaFields}
-                            fieldName="area"
-                          />
-                        )}
-                      </div>
                       <div className="md:flex md:flex-row md:space-x-4 w-full text-xs">
                         <TextField
                           label="Location*"
@@ -405,12 +479,12 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                             value={formik.values.state}
                             options={statesList}
                           />
-                          {formik.errors.state ? (
+                          {/* {formik.errors.state ? (
                             <div className="error-message text-red-700 text-xs p-2">
                               {formik.errors.state}
                               {formik.values.state}
                             </div>
-                          ) : null}
+                          ) : null} */}
                         </div>
                       </div>
                       <div className="mt-2 w-full">
