@@ -354,7 +354,7 @@ React.useEffect(()=>{
 
 
 
-  
+
   return (
     <section className="flex flex-row justify-between pb pt-1 px-3 ">
       {/* <span className="flex flex-row">
@@ -479,16 +479,35 @@ export default function UnitSummaryTableBody({
   const [startDate, endDate] = dateRange
 
 
-  
+
 const [totalSaleValue, setTotalSaleValue] = React.useState(0);
 const [totalReceived, setTotalReceived] = React.useState(0);
+const [selTotalBalance, setTotalBalance] = React.useState(0);
 
 React.useEffect(() => {
-  const totalSale = leadsFetchedData.reduce((total, row) => total + parseFloat(row.sale || 0), 0);
+
+  // const partACost =
+  // row?.plotCS?.reduce(function (_this, val) {
+  //     return _this + val.TotalNetSaleValueGsT
+  //   }, 0) || 0
+
+  // const partBCost =
+  // row?.addChargesCS?.reduce(
+  //     (partialSum, obj) =>
+  //       partialSum +
+  //       Number(
+  //         computeTotal(obj, row?.super_built_up_area || row?.area)
+  //       ),
+  //     0
+  //   ) || 0
+  console.log('valure are', leadsFetchedData)
+  const totalSale = leadsFetchedData.reduce((total, row) => total + Number(row?.plotCS?.TotalNetSaleValueGsT || 0), 0);
   setTotalSaleValue(totalSale);
 
-  const totalReceived = leadsFetchedData.reduce((total, row) => total + parseFloat(row.received || 0), 0);
+  const totalReceived = leadsFetchedData.reduce((total, row) => total + Number(row.T_review || 0), 0);
   setTotalReceived(totalReceived);
+  const totalBalance = leadsFetchedData.reduce((total, row) => total + Number(row.T_balance || 0), 0);
+  setTotalBalance(totalBalance);
 }, [leadsFetchedData]);
 
 
@@ -703,7 +722,7 @@ function EnhancedTableHead(props) {
           /> */}
 
 
-          
+
           <TableSortLabel>S.No</TableSortLabel>
         </TableCell>
         {headCells.map((headCell) => (
@@ -746,32 +765,38 @@ function EnhancedTableHead(props) {
 
 
 
-              {headCell.id === 'sale' && ( 
+              {headCell.id === 'sale' && (
 
-
-<div style={{ backgroundColor: '#cceeff', borderRadius: '8px', display: 'flex', alignItems: 'center', padding: '8px' }}>
-<ArrowUpwardIcon style={{ fontSize: '20px', display: 'inline-block', verticalAlign: 'middle',color: 'black' }}/>
-<span style={{ fontWeight: 'bold', display: 'inline-block', verticalAlign: 'middle',color: 'black' }}>{/* text */}</span>
-<span style={{ display: 'inline-block', verticalAlign: 'middle', fontSize: '17px',paddingRight: '28px',color: 'black' }}>₹{totalSaleValue.toLocaleString('en-IN')}</span>
+<div className="bg-[#C3C3F1] rounded-lg flex items-center justify-end p-2">
+  <span className="text-black text-[14px] ">₹{totalSaleValue.toLocaleString('en-IN')}</span>
 </div>
 
-          
-    
+
+
   )}
 
 
             {headCell.id === 'received' && (
 
 <div style={{  }}>
-<div style={{ backgroundColor: '#ffcccc', borderRadius: '8px', display: 'flex', alignItems: 'center', padding: '8px' }}>
-  <ArrowUpwardIcon style={{ fontSize: '20px', display: 'inline-block', verticalAlign: 'middle',color: 'black' }}/>
-  <span style={{ fontWeight: 'bold', display: 'inline-block', verticalAlign: 'middle',color: 'black'}}>{/* text */}</span>
-  <span style={{ display: 'inline-block', verticalAlign: 'middle', fontSize: '17px', paddingRight: '28px',color: 'black' }}>₹{totalReceived.toLocaleString('en-IN')}</span>
-
+<div className="bg-[#DAECE5] rounded-lg flex items-center justify-end p-2">
+  <span className="text-black text-[14px] ">₹{totalReceived.toLocaleString('en-IN')}</span>
 </div>
 </div>
 
-             
+
+
+              )}
+
+{headCell.id === 'balance' && (
+
+<div style={{  }}>
+<div className="bg-[#FECACA] rounded-lg flex items-center justify-end p-2">
+  <span className="text-black text-[14px] ">₹{selTotalBalance.toLocaleString('en-IN')}</span>
+</div>
+</div>
+
+
 
               )}
 
