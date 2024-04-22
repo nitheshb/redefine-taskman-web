@@ -11,12 +11,14 @@ const CrmInventorySummaryTable = ({ projects }) => {
   const [customerDetails, setCustomerDetails] = React.useState({})
   const [drillDownPayload, setDrillDownPayload] = React.useState([])
   const [subTitle, setSubTitle] = React.useState('false')
+  const [selUnitStatus, seTUnitStatus] = React.useState('false')
 
-  const showDrillDownFun = async (text, data) => {
+  const showDrillDownFun = async (text, data, typeA) => {
     // Display sideForm
     setReportSideForm(true)
     setDrillDownPayload(data)
     setSubTitle(text)
+    seTUnitStatus(typeA)
   }
 
   const inventoryListData = [
@@ -89,8 +91,6 @@ const CrmInventorySummaryTable = ({ projects }) => {
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value)
   }
-
-
 
   return (
     <div className="bg-white flex justify-start rounded-lg">
@@ -166,31 +166,72 @@ const CrmInventorySummaryTable = ({ projects }) => {
                 {projects.map((item, index) => (
                   <tr key={index} className="hover:bg-gray-100">
                     <td
-                      className="py-3 px-3 text-left border border-black"
+                      className="py-3 px-3 text-left border border-black text-blue-800 cursor-pointer font-semibold"
                       onClick={() => {
-                        showDrillDownFun(
-                          `Total ${item?.stausTitle}`,
-                          item
-                        )
+                        showDrillDownFun(`Total ${item?.stausTitle}`, item, [
+                          'available',
+                          'booked',
+                          'blockedUnitCount',
+                          'blocked',
+                          'management_blocked',
+                        ])
                       }}
                     >
                       {item.projectName}
                     </td>
-                    <td className="py-3 px-6 text-right border border-black">
+                    <td
+                      className="py-3 px-6 text-right border border-black text-blue-800 cursor-pointer font-semibold"
+                      onClick={() => {
+                        showDrillDownFun(`Total ${item?.stausTitle}`, item, [
+                          'available',
+                          'booked',
+                          'blockedUnitCount',
+                          'blocked',
+                          'management_blocked',
+                        ])
+                      }}
+                    >
                       {item.totalUnitCount}
                     </td>
-                    <td className="py-3 px-6 text-right border border-black">
+                    <td
+                      className="py-3 px-6 text-right border border-black text-blue-800 cursor-pointer font-semibold"
+                      onClick={() => {
+                        showDrillDownFun(`Total ${item?.stausTitle}`, item, [
+                          'available',
+
+                        ])
+                      }}
+                    >
                       {item.availableCount}
                     </td>
-                    <td className="py-3 px-6 text-right border border-black">
+                    <td
+                      className="py-3 px-6 text-right border border-black text-blue-800 cursor-pointer font-semibold"
+                      onClick={() => {
+                        showDrillDownFun(`Total ${item?.stausTitle}`, item, [
+
+                          'booked',
+
+                        ])
+                      }}
+                    >
                       {item.soldUnitCount}
                     </td>
-                    <td className="py-3 px-6 text-right border border-black">
+                    <td
+                      className="py-3 px-6 text-right border border-black text-blue-800 cursor-pointer font-semibold hover:underline-offset-4"
+                      onClick={() => {
+                        showDrillDownFun(`Total ${item?.stausTitle}`, item, [
+
+                          'blockedUnitCount',
+                          'blocked',
+                          'management_blocked',
+                        ])
+                      }}
+                    >
                       {item?.blockedUnitCount ||
                         0 + item.management_blocked ||
                         0}
                     </td>
-                    <td className="py-3 px-6 text-right border border-black">
+                    <td className="py-3 px-6 text-right border border-black font-semibold">
                       {item.mortgaged}
                     </td>
                   </tr>
@@ -218,7 +259,6 @@ const CrmInventorySummaryTable = ({ projects }) => {
               </tbody>
             </table>
           </div>
-
         </div>
       </div>
       <ReportSideWindow
@@ -232,6 +272,7 @@ const CrmInventorySummaryTable = ({ projects }) => {
         widthClass="max-w-7xl"
         unitsViewMode={undefined}
         setIsClicked={undefined}
+        selUnitStatus={selUnitStatus}
       />
     </div>
   )

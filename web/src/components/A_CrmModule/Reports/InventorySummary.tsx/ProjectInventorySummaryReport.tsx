@@ -24,6 +24,8 @@ import {
   createProject,
   getAllProjects,
   getLeadbyId1,
+  getUnits,
+  getUnitsAllBlocks,
   steamBankDetailsList,
   steamUsersListByRole,
   updateLeadsLogWithProject,
@@ -50,6 +52,7 @@ const ProjectInventorySummaryReport = ({
   dialogOpen,
   setCustomerDetails,
   setisImportLeadsOpen,
+  selUnitStatus
 }) => {
   const { user } = useAuth()
   const { orgId } = user
@@ -62,6 +65,7 @@ const ProjectInventorySummaryReport = ({
   const [loadingIcon, setLoadingIcon] = useState(false)
   const [projectList, setprojectList] = useState([])
   const [leadsFilA, setLeadsFilA] = useState([])
+  const [unitsFeed, setUnitsFeed] = useState([])
   const [selProjectIs, setSelProject] = useState({
     label: 'All Projects',
     value: 'allprojects',
@@ -82,9 +86,35 @@ const ProjectInventorySummaryReport = ({
 
   useEffect(() => {
     console.log('use effect stuff', leadsLogsPayload)
+    getUnitsFun()
     getProjectsListFun()
   }, [leadsLogsPayload])
+  const getUnitsFun = async () => {
 
+    const todoData = await getUnitsAllBlocks(
+      orgId,
+      (querySnapshot) => {
+        let pro
+        const y = []
+        setUnitsFeed([])
+        const projects = querySnapshot.docs.map(async (docSnapshot) => {
+          const x = docSnapshot.data()
+          x.uid = docSnapshot.id
+          x.id = docSnapshot.id
+          const { staDA } = x
+          y.push(x)
+        })
+        y.sort((a, b) => a.unit_no - b.unit_no)
+console.log('units feed is ', y);
+        setUnitsFeed(y)
+      },
+      { pId: leadsLogsPayload?.uid, blockId:  1, type: 'today', selUnitStatus },
+      (error) => {
+        console.log('error', error)
+      }
+    )
+    await console.log('what are we', todoData)
+  }
   const getProjectsListFun = async () => {
     const unsubscribe = getAllProjects(
       orgId,
@@ -109,7 +139,7 @@ const ProjectInventorySummaryReport = ({
 
     return unsubscribe
   }
-  
+
 
 
   useEffect(() => {
@@ -220,7 +250,7 @@ const ProjectInventorySummaryReport = ({
         {/* <Dialog.Title className=" font-semibold text-xl mr-auto ml-3  font-Playfair tracking-wider">
           {subtitle || title} ({leadsFilA.length || 0})
         </Dialog.Title> */}
-         {subtitle || title} ({leadsFilA.length || 0})
+         {leadsLogsPayload?.projectName || title} Units-({unitsFeed.length})
         <section className="flex flex-row">
           <section className="flex flex-col border ml-2 py-1  px-4 text-xs  rounded-full">
             <AssigedToDropComp
@@ -239,7 +269,7 @@ const ProjectInventorySummaryReport = ({
           </section>
 
 
-          <Tooltip title={`Download ${leadsFilA?.length} Row`}>
+          <Tooltip title={`Download ${unitsFeed?.length} Row`}>
             {/* <IconButton>
             <FileDownloadIcon />
             <CSVDownloader />
@@ -247,13 +277,14 @@ const ProjectInventorySummaryReport = ({
 
             <CSVDownloader
               className="mr-6 h-[20px] w-[20px]"
-              downloadRows={leadsFilA}
+              downloadRows={unitsFeed}
               sourceTab="visitsReport"
               style={{ height: '20px', width: '20px' }}
             />
           </Tooltip>
         </section>
       </div>
+
       <div className="bg-white shadow-md rounded my-6 overflow-x-auto">
             <table className="min-w-max w-full table-auto border-collapse">
               <thead>
@@ -262,7 +293,7 @@ const ProjectInventorySummaryReport = ({
                     className="py-3 px-6 text-center border border-black"
                     colSpan="9"
                   >
-                    Inventory List By Project
+                    Inventory List of {leadsLogsPayload?.projectName}
                   </th>
                   <th
                     className="py-3 px-6 text-center border border-black  bg-white"
@@ -353,67 +384,67 @@ const ProjectInventorySummaryReport = ({
                 </tr>
               </thead>
               <tbody className="text-gray-900 text-sm font-light">
-                {filteredInventoryList.map((item, index) => (
+                {unitsFeed.map((item, index) => (
                   <tr key={index} className="hover:bg-gray-100">
                     <td className="py-3 px-6 text-left border border-black">
-                      {item.unitNo}
+                      {item?.unit_no}
                     </td>
                     <td className="py-3 px-6 text-left border border-black">
-                      {item.unitType}
+                      {item?.size}
                     </td>
                     <td className="py-3 px-6 text-center border border-black">
-                      {item.unitFacing}
+                      {item?.facing}
                     </td>
                     <td className="py-3 px-6 text-center border border-black">
-                      {item.unitArea}
+                      {item?.area}
                     </td>
                     <td className="py-3 px-6 text-center border border-black">
-                      {item.releaseStatus}
+                      {item?.release_status}
                     </td>
                     <td className="py-3 px-6 text-center border border-black">
-                      {item.pricePerSft}
+                      {item?.sqft_rate}
                     </td>
                     <td className="py-3 px-6 text-center border border-black">
-                      {item.plc}
+                      {item?.plc_per_sqft}
                     </td>
                     <td className="py-3 px-6 text-center border border-black">
-                      {item.unitCost}
+                      {item?.unitCost || 'NA'}
                     </td>
                     <td className="py-3 px-6 text-center border border-black">
-                      {item.unitStatus}
+                      {item?.status}
                     </td>
                     <td className="py-3 px-6 text-center border border-black">
-                      {item.dimensions.north}
+                      {item?.north_d}
                     </td>
                     <td className="py-3 px-6 text-center border border-black">
-                      {item.dimensions.south}
+                      {item?.south_d}
                     </td>
                     <td className="py-3 px-6 text-center border border-black">
-                      {item.dimensions.east}
+                      {item?.east_d}
                     </td>
                     <td className="py-3 px-6 text-center border border-black">
-                      {item.dimensions.west}
+                      {item?.west_d}
                     </td>
                     <td className="py-3 px-6 text-center border border-black">
-                      {item.schedule.north}
+                      {item?.north_sch_by}
                     </td>
                     <td className="py-3 px-6 text-center border border-black">
-                      {item.schedule.south}
+                      {item?.south_sch_by}
                     </td>
                     <td className="py-3 px-6 text-center border border-black">
-                      {item.schedule.east}
+                      {item?.east_sch_by}
                     </td>
                     <td className="py-3 px-6 text-center border border-black">
-                      {item.schedule.west}
+                      {item?.west_sch_by}
                     </td>
                     <td className="py-3 px-6 text-center border border-black">
-                      {item.sNo}
+                      {item?.sNo || 'na'}
                     </td>
                     <td className="py-3 px-6 text-center border border-black">
-                      {item.khataha}
+                      {item?.Katha_no}
                     </td>
                     <td className="py-3 px-6 text-center border border-black">
-                      {item.pid}
+                      {item?.PID_no}
                     </td>
                   </tr>
                 ))}
@@ -444,120 +475,7 @@ const ProjectInventorySummaryReport = ({
               </tbody>
             </table>
           </div>
-      <div className="grid  gap-8 grid-cols-1">
-        <div className="flex flex-col m-4">
-          <div className="flex flex-col mt-2 rounded-lg bg-white border border-gray-100 p-4 ">
-            {/* <CustomRadioGroup
-              label="Type"
-              value={selected}
-              options={projectPlans}
-              onChange={setSelected}
-            /> */}
-            {loadingIcon ? (
-              <LogSkelton />
-            ) : (
-              <table className="min-w-full text-center mt-6">
-                <thead className="border-b">
-                  <tr>
-                    {' '}
-                    {[
-                      { label: 'sNo', id: 'no' },
-                      { label: 'Project', id: 'label' },
-                      { label: 'Lead Ph', id: 'all' },
-                      { label: 'Status', id: 'new' },
-                      { label: 'From', id: 'all' },
-                      { label: 'To', id: 'all' },
-                      { label: 'Source', id: 'new' },
-                      { label: 'Visit Fixed On', id: 'new' },
-                      { label: 'Visit Fixed By', id: 'new' },
-                      { label: 'Visited On', id: 'new' },
-                      { label: 'Visit Done By', id: 'new' },
-                      { label: 'Executive', id: 'all' },
-                      { label: 'Created on', id: 'all' },
-                      { label: 'By', id: 'all' },
-                    ].map((d, i) => (
-                      <th
-                        key={i}
-                        scope="col"
-                        className={`text-sm font-medium text-gray-900 px-6 py-4 ${
-                          ['Project', 'Lead Name'].includes(d.label)
-                            ? 'text-left'
-                            : ''
-                        }`}
-                      >
-                        {d.label}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
 
-                <tbody>
-                  {leadsFilA?.map((data, i) => {
-                    return (
-                      <tr
-                        className={`  ${
-                          i % 2 === 0
-                            ? 'bg-white border-blue-200'
-                            : 'bg-gray-100'
-                        }`}
-                        key={i}
-                        onClick={() => selLeadFun(data)}
-                      >
-                        <td className="text-sm text-gray-900 font-medium px-6 py-2 whitespace-nowrap text-left">
-                          {i + 1}
-                        </td>
-                        <td className="text-sm text-gray-900 font-medium px-6 py-2 whitespace-nowrap text-left">
-                          {data?.Project}
-                        </td>
-                        <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap text-left">
-                          {data?.Mobile}
-                        </td>
-                        <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
-                          {data?.Status}
-                        </td>
-                        <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
-                          {data?.from}
-                        </td>
-                        <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
-                          {data?.coverA?.includes('visitdone')
-                            ? 'visitdone'
-                            : data?.to}
-                        </td>
-
-                        <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
-                          {data?.Source}
-                        </td>
-                        <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
-                          {prettyDateTime(data?.assignT || data?.Date)}
-                        </td>
-                        <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
-                          {data?.visitFixedBy}
-                        </td>
-                        <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
-                          {data?.Time}
-                        </td>
-                        <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
-                          {data?.by}
-                        </td>
-                        <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
-                          {data?.assignedToObj?.name}
-                        </td>
-                        <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
-                          {prettyDateTime(data?.Date)}
-                        </td>
-                        <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
-                          {data?.leadOwner}
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
-            )}
-          </div>
-          <div className="mt-0"></div>
-        </div>
-      </div>
     </div>
   )
 }
