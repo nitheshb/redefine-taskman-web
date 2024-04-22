@@ -19,11 +19,14 @@ import axios from 'axios'
 import Loader from '../Loader/Loader'
 import { DEPARTMENT_LIST, ROLES_LIST } from 'src/constants/userRoles'
 import { PhoneNoField } from 'src/util/formFields/phNoField'
+import DatePicker from 'react-datepicker'
+import { setHours, setMinutes } from 'date-fns'
 
 // import Select from 'react-select'
 // import SelectSearch from 'react-select-search'
 
 const SUserSignupBody = ({ title, dialogOpen, empData }) => {
+  const d = new window.Date()
   const { register, user } = useAuth()
   const { orgId, orgName } = user
 
@@ -34,6 +37,7 @@ const SUserSignupBody = ({ title, dialogOpen, empData }) => {
   })
   const [roles, setroles] = useState([])
   const [editMode, seteditMode] = useState(false)
+  const [startDate, setStartDate] = useState(d)
   const [deptIs, setdeptIs] = useState('')
   const [isdeptEmpty, setisdeptEmpty] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -399,13 +403,50 @@ console.log('rolws are ', filRoles)
                     />
                   </div>
                   <div className="w-full flex flex-col mb-3">
-                    <TextField
+
+                         {/* <TextField
                       label="Date of Birth"
                       name="dob"
                       type="text"
                       disabled={editMode}
-                    />
+                     />*/}
+
+
+
+<span className="">
+  <label className="label font-regular block mb-1">
+    Date of Birth
+  </label>
+  <DatePicker
+    className="pl- px-1 h-8 rounded-md min-w-[200px] inline text-[#0091ae] flex bg-grey-lighter text-grey-darker border border-[#cccccc] px-2"
+    selected={startDate}
+    onChange={(date) => {
+      formik.setFieldValue('dob', date.getTime());
+      setStartDate(date);
+    }}
+    timeFormat="HH:mm"
+    injectTimes={[
+      setHours(setMinutes(d, 1), 0),
+      setHours(setMinutes(d, 5), 12),
+      setHours(setMinutes(d, 59), 23),
+    ]}
+    dateFormat="MMMM d, yyyy"
+    name="dob"
+  />
+</span>
+
+
+
+                  
                   </div>
+
+                  
+
+                  
+
+                  
+
+                    
                 </div>
 
                 <p className="text-xs text-red-500 text-right my-3">

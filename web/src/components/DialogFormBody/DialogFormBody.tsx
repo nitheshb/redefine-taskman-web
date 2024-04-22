@@ -29,7 +29,11 @@ import { TextField } from 'src/util/formFields/TextField'
 
 import AddBankDetailsForm from '../addBankDetailsForm'
 
+import DatePicker from 'react-datepicker'
+import { setHours, setMinutes } from 'date-fns'
+
 const DialogFormBody = ({ title, dialogOpen, project }) => {
+  const d = new window.Date()
   const { user } = useAuth()
   const { orgId } = user
   const [selected, setSelected] = useState(
@@ -42,11 +46,14 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
   const [loading, setLoading] = useState(false)
   const [openAreaFields, setOpenAreaFields] = useState(false)
   const [bankDetailsA, setBankDetailsA] = useState([])
+   const [startDate, setStartDate] = useState(d)
   const [existingBuildBankId, setNowBuilderBankDocId] = useState('')
   const [existingLandBankId, setNowLandLordBankDocId] = useState('')
   const [builerShare, setBuilderShare] = useState(100)
   const [landLordShare, setLandLordShare] = useState(0)
+  const [endDate, setEndDate] = useState(d);
   const { enqueueSnackbar } = useSnackbar()
+
 
   useEffect(() => {
     setNowBuilderBankDocId(project?.builderBankDocId)
@@ -304,18 +311,65 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                           />
                         </div>
                         <div className="mt-2 w-full">
-                          <TextField
+                          {/*  <TextField
                             label="Start Date*"
                             name="bmrdaStartDate"
                             type="text"
-                          />
+                          />*/}
+
+<label  className="label font-regular block mb-1">
+  Start Date *
+</label>
+<DatePicker
+  id="bmrdaStartDate"
+  name="bmrdaStartDate"
+  className="pl- px-1 h-8 rounded-md min-w-[200px] inline text-[#0091ae] flex bg-grey-lighter text-grey-darker border border-[#cccccc] px-2"
+  selected={startDate}
+  onChange={(date) => {
+    formik.setFieldValue('bmrdaStartDate', date.getTime());
+    setStartDate(date);
+  }}
+  timeFormat="HH:mm"
+  injectTimes={[
+    setHours(setMinutes(d, 1), 0),
+    setHours(setMinutes(d, 5), 12),
+    setHours(setMinutes(d, 59), 23),
+  ]}
+  dateFormat="MMMM d, yyyy"
+/>
+
+
+
+
                         </div>
                         <div className="mt-2 w-full">
-                          <TextField
+                          {/*<TextField
                             label="End Date*"
                             name="bmrdaEndDate"
                             type="text"
-                          />
+                            />*/}
+
+<label  className="label font-regular block mb-1">
+  End Date*
+</label>
+<DatePicker
+  id="bmrdaEndDate"
+  name="bmrdaEndDate"
+  className="pl- px-1 h-8 rounded-md min-w-[200px] inline text-[#0091ae] flex bg-grey-lighter text-grey-darker border border-[#cccccc] px-2"
+  selected={endDate}
+  onChange={(date) => {
+    formik.setFieldValue('bmrdaEndDate', date.getTime());
+    setEndDate(date);
+  }}
+  timeFormat="HH:mm"
+  injectTimes={[
+    setHours(setMinutes(d, 1), 0),
+    setHours(setMinutes(d, 5), 12),
+    setHours(setMinutes(d, 59), 23),
+  ]}
+  dateFormat="MMMM d, yyyy"
+/>
+
                         </div>
                       </div>
                     </div>
@@ -335,18 +389,75 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                           />
                         </div>
                         <div className="mt-2 w-full">
-                          <TextField
+                          {/*<TextField
                             label="Start Date*"
                             name="hdmaStartDate"
                             type="text"
-                          />
+                           />*/}
+
+
+
+  <label  className="label font-regular block mb-1">
+    Start Date *
+  </label>
+  <DatePicker
+    id="hdmaStartDate"
+    name="hdmaStartDate"
+    className="pl- px-1 h-8 rounded-md min-w-[200px] inline text-[#0091ae] flex bg-grey-lighter text-grey-darker border border-[#cccccc] px-2"
+    selected={startDate}
+    onChange={(date) => {
+      formik.setFieldValue('hdmaStartDate', date.getTime());
+      setStartDate(date);
+    }}
+    timeFormat="HH:mm"
+    injectTimes={[
+      setHours(setMinutes(new Date(), 1), 0),
+      setHours(setMinutes(new Date(), 5), 12),
+      setHours(setMinutes(new Date(), 59), 23),
+    ]}
+    dateFormat="MMMM d, yyyy"
+  />
+
+
+
+
+
+
+
+
                         </div>
                         <div className="mt-2 w-full">
-                          <TextField
+                           {/*  <TextField
                             label="End Date*"
                             name="hdmaEndDate"
                             type="text"
-                          />
+                          />*/}
+
+
+
+<label  className="label font-regular block mb-1">
+    End Date*
+  </label>
+  <DatePicker
+    id="hdmaEndDate"
+    name="hdmaEndDate"
+    className="pl- px-1 h-8 rounded-md min-w-[200px] inline text-[#0091ae] flex bg-grey-lighter text-grey-darker border border-[#cccccc] px-2"
+    selected={endDate}
+    onChange={(date) => {
+      formik.setFieldValue('hdmaEndDate', date.getTime());
+      setEndDate(date);
+    }}
+    timeFormat="HH:mm"
+    injectTimes={[
+      setHours(setMinutes(d, 1), 0),
+      setHours(setMinutes(d, 5), 12),
+      setHours(setMinutes(d, 59), 23),
+    ]}
+    dateFormat="MMMM d, yyyy"
+  />
+
+
+
                         </div>
                       </div>
                     </div>
