@@ -1,13 +1,25 @@
-import React, { useState } from 'react';
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+import React, { useState } from 'react'
 
-const CrmSummaryTable = () => {
-  const [selectedOption, setSelectedOption] = useState('All');
+import ReportSideWindow from 'src/components/SiderForm/ReportSideView'
 
-  const summaryReportData = [
-    { projectName: 'Nirvana', totalUnits: 50, available: 25, sold: 20, blocked: 3, mortgaged: 2 },
-    { projectName: 'Ecotone', totalUnits: 70, available: 40, sold: 25, blocked: 3, mortgaged: 2 },
-    { projectName: 'Ecocity', totalUnits: 60, available: 35, sold: 18, blocked: 4, mortgaged: 3 },
-  ];
+const CrmInventorySummaryTable = ({ projects }) => {
+  const [selectedOption, setSelectedOption] = useState('All')
+  const [isOpenSideForm, setReportSideForm] = React.useState(false)
+  const [isImportLeadsOpen, setisImportLeadsOpen] = React.useState(false)
+  const [customerDetails, setCustomerDetails] = React.useState({})
+  const [drillDownPayload, setDrillDownPayload] = React.useState([])
+  const [subTitle, setSubTitle] = React.useState('false')
+  const [selUnitStatus, seTUnitStatus] = React.useState('false')
+
+  const showDrillDownFun = async (text, data, typeA) => {
+    // Display sideForm
+    setReportSideForm(true)
+    setDrillDownPayload(data)
+    setSubTitle(text)
+    seTUnitStatus(typeA)
+  }
 
   const inventoryListData = [
     {
@@ -22,19 +34,19 @@ const CrmSummaryTable = () => {
         north: '10m',
         south: '10m',
         east: '8m',
-        west: '8m'
+        west: '8m',
       },
       schedule: {
         north: '2m',
         south: '4m',
         east: '7m',
-        west: '8m'
+        west: '8m',
       },
       sNo: '001',
       khataha: 'XX123',
       pid: 'PID001',
       unitCost: '5250000',
-      unitStatus: 'Ready'
+      unitStatus: 'Ready',
     },
     {
       unitNo: 'B202',
@@ -48,77 +60,53 @@ const CrmSummaryTable = () => {
         north: '12m',
         south: '12m',
         east: '10m',
-        west: '10m'
+        west: '10m',
       },
       schedule: {
         north: '25m',
         south: '25m',
         east: '25m',
-        west: '5m'
+        west: '5m',
       },
       sNo: '002',
       khataha: 'YY456',
       pid: 'PID002',
       unitCost: '6300000',
-      unitStatus: 'Occupied'
+      unitStatus: 'Occupied',
     },
-  ];
+  ]
 
   const calculateTotal = (data, key) => {
     return data.reduce((acc, item) => {
-      return acc + (item[key] || 0);
-    }, 0);
-  };
+      return acc + (item[key] || 0)
+    }, 0)
+  }
 
-  const totalUnitsSummary = calculateTotal(summaryReportData, 'totalUnits');
-  const totalAvailableSummary = calculateTotal(summaryReportData, 'available');
-  const totalSoldSummary = calculateTotal(summaryReportData, 'sold');
-  const totalBlockedSummary = calculateTotal(summaryReportData, 'blocked');
-  const totalMortgagedSummary = calculateTotal(summaryReportData, 'mortgaged');
+  const totalUnitsSummary = calculateTotal(projects, 'totalUnitCount')
+  const totalAvailableSummary = calculateTotal(projects, 'availableCount')
+  const totalSoldSummary = calculateTotal(projects, 'soldUnitCount')
+  const totalBlockedSummary = calculateTotal(projects, 'blockedUnitCount')
+  const totalMortgagedSummary = calculateTotal(projects, 'mortgaged')
 
-  const handleOptionChange = event => {
-    setSelectedOption(event.target.value);
-  };
-
-  const getDropdownOptions = () => {
-    switch (selectedOption) {
-      case 'Unit Type':
-        return [...new Set(inventoryListData.map(item => item.unitType))];
-      case 'Unit Facing':
-        return [...new Set(inventoryListData.map(item => item.unitFacing))];
-      case 'Unit Status':
-        return [...new Set(inventoryListData.map(item => item.unitStatus))];
-      case 'Unit Area':
-        return [...new Set(inventoryListData.map(item => item.unitArea))];
-      default:
-        return [];
-    }
-  };
-
-  const filteredInventoryList = inventoryListData.filter(item => {
-    switch (selectedOption) {
-      case 'Unit Type':
-        return item.unitType === selectedOption;
-      case 'Unit Facing':
-        return item.unitFacing === selectedOption;
-      case 'Unit Status':
-        return item.unitStatus === selectedOption;
-      case 'Unit Area':
-        return item.unitArea === selectedOption;
-      default:
-        return true;
-    }
-  });
+  const handleOptionChange = (event) => {
+    setSelectedOption(event.target.value)
+  }
 
   return (
     <div className="bg-white flex justify-start rounded-lg">
       <div className="overflow-x-auto mx-4">
         <div className="">
-          <div className="flex justify-between mb-4">
+          <div className="flex justify-between mb-4 mt-2">
             <div>
-              <p className="font-bold text-black p-1 m-1">CRM Inventory Report</p>
+              <p className="font-bold text-black p-1 m-1">
+                CRM Inventory Report
+              </p>
             </div>
-            <select className="mr-2" value={selectedOption} onChange={handleOptionChange}>
+            <select
+              className="mr-2"
+              value={selectedOption}
+              onChange={handleOptionChange}
+            >
               <option value="All">Project Name</option>
               <option value="Unit Type">Unit Type</option>
               <option value="Unit Facing">Unit Facing</option>
@@ -131,128 +119,163 @@ const CrmSummaryTable = () => {
             <table className=" border-collapse">
               <thead>
                 <tr className="bg-blue-200 text-gray-900  text-sm leading-normal">
-                  <th className="py-3 px-2 text-center border border-black" colSpan="6">Inventory Summary Report By Project</th>
+                  <th
+                    className="py-3 px-2 text-center border border-black"
+                    colSpan="6"
+                  >
+                    Inventory Summary Report By Project
+                  </th>
                 </tr>
                 <tr className="bg-white text-gray-900  text-sm leading-normal">
-                  <th className="py-3 px-3 text-left border border-black">Project Name</th>
-                  <th className="py-3 px-3 text-left border border-black" colSpan="1">Total Units</th>
-                  <th className="py-3 px-3 text-center border border-black" colSpan="1">Available</th>
-                  <th className="py-3 px-3 text-center border border-black" colSpan="1">Sold</th>
-                  <th className="py-3 px-3 text-center border border-black" colSpan="1">Blocked</th>
-                  <th className="py-3 px-3 text-center border border-black" colSpan="1">Mortgaged</th>
+                  <th className="py-3 px-3 text-left border border-black">
+                    Project Name
+                  </th>
+                  <th
+                    className="py-3 px-3 text-left border border-black"
+                    colSpan="1"
+                  >
+                    Total Units
+                  </th>
+                  <th
+                    className="py-3 px-3 text-center border border-black"
+                    colSpan="1"
+                  >
+                    Available
+                  </th>
+                  <th
+                    className="py-3 px-3 text-center border border-black"
+                    colSpan="1"
+                  >
+                    Sold
+                  </th>
+                  <th
+                    className="py-3 px-3 text-center border border-black"
+                    colSpan="1"
+                  >
+                    Blocked
+                  </th>
+                  <th
+                    className="py-3 px-3 text-center border border-black"
+                    colSpan="1"
+                  >
+                    Mortgaged
+                  </th>
                 </tr>
               </thead>
               <tbody className="text-gray-900 text-sm font-light">
-                {summaryReportData.map((item, index) => (
+                {projects.map((item, index) => (
                   <tr key={index} className="hover:bg-gray-100">
-                    <td className="py-3 px-6 text-left border border-black">{item.projectName}</td>
-                    <td className="py-3 px-6 text-left border border-black">{item.totalUnits}</td>
-                    <td className="py-3 px-6 text-center border border-black">{item.available}</td>
-                    <td className="py-3 px-6 text-center border border-black">{item.sold}</td>
-                    <td className="py-3 px-6 text-center border border-black">{item.blocked}</td>
-                    <td className="py-3 px-6 text-center border border-black">{item.mortgaged}</td>
-                  </tr>
-                ))}
-                <tr className="bg-blue-200 text-gray-900  text-sm leading-normal">
-                  <td className="py-3 px-6 text-left border border-black">Totals:</td>
-                  <td className="py-3 px-6 text-left border border-black">{totalUnitsSummary}</td>
-                  <td className="py-3 px-6 text-center border border-black">{totalAvailableSummary}</td>
-                  <td className="py-3 px-6 text-center border border-black">{totalSoldSummary}</td>
-                  <td className="py-3 px-6 text-center border border-black">{totalBlockedSummary}</td>
-                  <td className="py-3 px-6 text-center border border-black">{totalMortgagedSummary}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+                    <td
+                      className="py-3 px-3 text-left border border-black text-blue-800 cursor-pointer font-semibold"
+                      onClick={() => {
+                        showDrillDownFun(`Total ${item?.stausTitle}`, item, [
+                          'available',
+                          'booked',
+                          'blockedUnitCount',
+                          'blocked',
+                          'management_blocked',
+                        ])
+                      }}
+                    >
+                      {item.projectName}
+                    </td>
+                    <td
+                      className="py-3 px-6 text-right border border-black text-blue-800 cursor-pointer font-semibold"
+                      onClick={() => {
+                        showDrillDownFun(`Total ${item?.stausTitle}`, item, [
+                          'available',
+                          'booked',
+                          'blockedUnitCount',
+                          'blocked',
+                          'management_blocked',
+                        ])
+                      }}
+                    >
+                      {item.totalUnitCount}
+                    </td>
+                    <td
+                      className="py-3 px-6 text-right border border-black text-blue-800 cursor-pointer font-semibold"
+                      onClick={() => {
+                        showDrillDownFun(`Total ${item?.stausTitle}`, item, [
+                          'available',
 
-          <div className="bg-white shadow-md rounded my-6 overflow-x-auto">
-            <table className="min-w-max w-full table-auto border-collapse">
-              <thead>
-                <tr className="bg-blue-200 text-gray-900  text-sm leading-normal">
-                  <th className="py-3 px-6 text-center border border-black" colSpan="9">Inventory List By Project</th>
-                  <th className="py-3 px-6 text-center border border-black  bg-white" colSpan="4">Dimensions *(m)</th>
-                  <th className="py-3 px-6 text-center border border-black bg-white" colSpan="4">Schedule</th>
-                  <th className="py-3 px-6 text-center border border-black bg-white" colSpan="1"></th>
-                  <th className="py-3 px-6 text-center border border-black bg-white" colSpan="1"></th>
-                  <th className="py-3 px-6 text-center border border-black bg-white" colSpan="1"></th>
-                </tr>
-                <tr className="bg-blue-100 text-gray-900  text-sm leading-normal">
-                  <th className="py-3 px-6 text-left border border-black">Unit No.</th>
-                  <th className="py-3 px-6 text-left border border-black">Unit Type</th>
-                  <th className="py-3 px-6 text-center border border-black">Unit Facing</th>
-                  <th className="py-3 px-6 text-center border border-black">Unit Area</th>
-                  <th className="py-3 px-6 text-center border border-black">Release Status</th>
-                  <th className="py-3 px-6 text-center border border-black">Price Per Sft</th>
-                  <th className="py-3 px-6 text-center border border-black">PLC</th>
-                  <th className="py-3 px-6 text-center border border-black">Unit Cost</th>
-                  <th className="py-3 px-6 text-center border border-black">Unit Status</th>
-                  <th className="py-2 px-3 text-center border border-black">North</th>
-                  <th className="py-2 px-3 text-center border border-black">South</th>
-                  <th className="py-2 px-3 text-center border border-black">East</th>
-                  <th className="py-2 px-3 text-center border border-black">West</th>
-                  <th className="py-2 px-3 text-center border border-black">North</th>
-                  <th className="py-2 px-3 text-center border border-black">South</th>
-                  <th className="py-2 px-3 text-center border border-black">East</th>
-                  <th className="py-2 px-3 text-center border border-black">West</th>
-                  <th className="py-3 px-6 text-center border border-black">S No.</th>
-                  <th className="py-3 px-6 text-center border border-black">Khataha</th>
-                  <th className="py-3 px-6 text-center border border-black">PID</th>
-                </tr>
-              </thead>
-              <tbody className="text-gray-900 text-sm font-light">
-                {filteredInventoryList.map((item, index) => (
-                  <tr key={index} className="hover:bg-gray-100">
-                    <td className="py-3 px-6 text-left border border-black">{item.unitNo}</td>
-                    <td className="py-3 px-6 text-left border border-black">{item.unitType}</td>
-                    <td className="py-3 px-6 text-center border border-black">{item.unitFacing}</td>
-                    <td className="py-3 px-6 text-center border border-black">{item.unitArea}</td>
-                    <td className="py-3 px-6 text-center border border-black">{item.releaseStatus}</td>
-                    <td className="py-3 px-6 text-center border border-black">{item.pricePerSft}</td>
-                    <td className="py-3 px-6 text-center border border-black">{item.plc}</td>
-                    <td className="py-3 px-6 text-center border border-black">{item.unitCost}</td>
-                    <td className="py-3 px-6 text-center border border-black">{item.unitStatus}</td>
-                    <td className="py-3 px-6 text-center border border-black">{item.dimensions.north}</td>
-                    <td className="py-3 px-6 text-center border border-black">{item.dimensions.south}</td>
-                    <td className="py-3 px-6 text-center border border-black">{item.dimensions.east}</td>
-                    <td className="py-3 px-6 text-center border border-black">{item.dimensions.west}</td>
-                    <td className="py-3 px-6 text-center border border-black">{item.schedule.north}</td>
-                    <td className="py-3 px-6 text-center border border-black">{item.schedule.south}</td>
-                    <td className="py-3 px-6 text-center border border-black">{item.schedule.east}</td>
-                    <td className="py-3 px-6 text-center border border-black">{item.schedule.west}</td>
-                    <td className="py-3 px-6 text-center border border-black">{item.sNo}</td>
-                    <td className="py-3 px-6 text-center border border-black">{item.khataha}</td>
-                    <td className="py-3 px-6 text-center border border-black">{item.pid}</td>
+                        ])
+                      }}
+                    >
+                      {item.availableCount}
+                    </td>
+                    <td
+                      className="py-3 px-6 text-right border border-black text-blue-800 cursor-pointer font-semibold"
+                      onClick={() => {
+                        showDrillDownFun(`Total ${item?.stausTitle}`, item, [
+
+                          'booked',
+
+                        ])
+                      }}
+                    >
+                      {item.soldUnitCount}
+                    </td>
+                    <td
+                      className="py-3 px-6 text-right border border-black text-blue-800 cursor-pointer font-semibold hover:underline-offset-4"
+                      onClick={() => {
+                        showDrillDownFun(`Total ${item?.stausTitle}`, item, [
+
+                          'blockedUnitCount',
+                          'blocked',
+                          'management_blocked',
+                        ])
+                      }}
+                    >
+                      {item?.blockedUnitCount ||
+                        0 + item.management_blocked ||
+                        0}
+                    </td>
+                    <td className="py-3 px-6 text-right border border-black font-semibold">
+                      {item.mortgaged}
+                    </td>
                   </tr>
                 ))}
-                             <tr className="bg-blue-200 text-gray-900  text-sm leading-normal"> 
-                    <td className="py-3 px-6 text-left border border-black">Totals:</td>
-                    <td className="py-3 px-6 text-left border border-black"></td>
-                    <td className="py-3 px-6 text-center border border-black"></td>
-                    <td className="py-3 px-6 text-center border border-black"></td>
-                    <td className="py-3 px-6 text-center border border-black"></td>
-                    <td className="py-3 px-6 text-center border border-black"></td>
-                    <td className="py-3 px-6 text-center border border-black"></td>
-                    <td className="py-3 px-6 text-center border border-black"></td>
-                    <td className="py-3 px-6 text-center border border-black"></td>
-                    <td className="py-3 px-6 text-center border border-black"></td>
-                    <td className="py-3 px-6 text-center border border-black"></td>
-                    <td className="py-3 px-6 text-center border border-black"></td>
-                    <td className="py-3 px-6 text-center border border-black"></td>
-                    <td className="py-3 px-6 text-center border border-black"></td>
-                    <td className="py-3 px-6 text-center border border-black"></td>
-                    <td className="py-3 px-6 text-center border border-black"></td>
-                    <td className="py-3 px-6 text-center border border-black"></td>
-                    <td className="py-3 px-6 text-center border border-black"></td>
-                    <td className="py-3 px-6 text-center border border-black"></td>
-                    <td className="py-3 px-6 text-center border border-black"></td>
-                  </tr>
+                <tr className="bg-blue-200 text-gray-900  text-sm leading-normal">
+                  <td className="py-3 px-6 text-left border border-black">
+                    Totals:
+                  </td>
+                  <td className="py-3 px-6 text-right border border-black">
+                    {totalUnitsSummary}
+                  </td>
+                  <td className="py-3 px-6 text-right border border-black">
+                    {totalAvailableSummary}
+                  </td>
+                  <td className="py-3 px-6 text-right border border-black">
+                    {totalSoldSummary}
+                  </td>
+                  <td className="py-3 px-6 text-right border border-black">
+                    {totalBlockedSummary}
+                  </td>
+                  <td className="py-3 px-6 text-right border border-black">
+                    {totalMortgagedSummary}
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
         </div>
       </div>
+      <ReportSideWindow
+        open={isOpenSideForm}
+        setOpen={setReportSideForm}
+        title="Unit Inventory"
+        subtitle={subTitle}
+        setCustomerDetails={setCustomerDetails}
+        setisImportLeadsOpen={setisImportLeadsOpen}
+        leadsLogsPayload={drillDownPayload}
+        widthClass="max-w-7xl"
+        unitsViewMode={undefined}
+        setIsClicked={undefined}
+        selUnitStatus={selUnitStatus}
+      />
     </div>
-  );
-};
+  )
+}
 
-export default CrmSummaryTable;
+export default CrmInventorySummaryTable
