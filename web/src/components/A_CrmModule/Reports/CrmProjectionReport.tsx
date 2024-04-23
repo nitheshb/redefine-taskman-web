@@ -122,30 +122,30 @@ const CrmProjectionReport = () => {
           <tr className='bg-blue-200 text-gray-600 text-sm leading-normal'>
             <th className='py-3 px-3 text-left border border-black'>Project Name</th>
             <th className='py-3 px-6 text-left border border-black'>Sold Units</th>
-            <th className='py-3 px-6 text-center border border-black'>Total Amount</th>
+            <th className='py-3 px-6 text-right border border-black'>Total Amount</th>
             {dataView === 'monthly' ? (
               <>
-                <th className='py-3 px-6 text-center border border-black'>June</th>
-                <th className='py-3 px-6 text-center border border-black'>May</th>
-                <th className='py-3 px-6 text-center border border-black'>April</th>
+                <th className='py-3 px-6 text-right border border-black'>June</th>
+                <th className='py-3 px-6 text-right border border-black'>May</th>
+                <th className='py-3 px-6 text-right border border-black'>April</th>
               </>
             ) : (
               <>
-                <th className='py-3 px-6 text-center border border-black'>
+                <th className='py-3 px-6 text-right border border-black'>
                   Week 1 <br /> ({getDateForWeek(1)})
                 </th>
-                <th className='py-3 px-6 text-center border border-black'>
+                <th className='py-3 px-6 text-right border border-black'>
                   Week 2 <br /> ({getDateForWeek(2)})
                 </th>
-                <th className='py-3 px-6 text-center border border-black'>
+                <th className='py-3 px-6 text-right border border-black'>
                   Week 3 <br /> ({getDateForWeek(3)})
                 </th>
-                <th className='py-3 px-6 text-center border border-black'>
+                <th className='py-3 px-6 text-right border border-black'>
                   Week 4 <br /> ({getDateForWeek(4)})
                 </th>
               </>
             )}
-            <th className='py-3 px-6 text-center border border-black'>Old Due</th>
+            <th className='py-3 px-6 text-right border border-black'>Old Due</th>
           </tr>
         </thead>
         <tbody className='text-gray-600 text-sm font-light'>
@@ -164,22 +164,22 @@ const CrmProjectionReport = () => {
               <tr key={index} className='border-b border-gray-200 hover:bg-gray-100'>
                 <td className='py-3 px-6 text-left whitespace-nowrap border border-black'>{capitalizeFirstLetter(data.projectName)}</td>
                 <td className='py-3 px-6 text-left border border-black'>{data.soldUnits}</td>
-                <td className='py-3 px-6 text-center border border-black'>{totalAmount}</td>
+                <td className='py-3 px-6  border text-right border-black'>{totalAmount.toLocaleString('en-IN')}</td>
                 {dataView === 'monthly' ? (
                   <>
-                    <td className='py-3 px-6 text-center border border-black'>{data.monthly.june}</td>
-                    <td className='py-3 px-6 text-center border border-black'>{data.monthly.may}</td>
-                    <td className='py-3 px-6 text-center border border-black'>{data.monthly.april}</td>
+                    <td className='py-3 px-6 text-right border border-black'>{data.monthly.june.toLocaleString('en-IN')}</td>
+                    <td className='py-3 px-6 text-right border border-black'>{data.monthly.may.toLocaleString('en-IN')}</td>
+                    <td className='py-3 px-6 text-right border border-black'>{data.monthly.april.toLocaleString('en-IN')}</td>
                   </>
                 ) : (
                   <>
-                    <td className='py-3 px-6 text-center border border-black'>{data.weekly.week1}</td>
-                    <td className='py-3 px-6 text-center border border-black'>{data.weekly.week2}</td>
-                    <td className='py-3 px-6 text-center border border-black'>{data.weekly.week3}</td>
-                    <td className='py-3 px-6 text-center border border-black'>{data.weekly.week4}</td>
+                    <td className='py-3 px-6 text-right border border-black'>{data.weekly.week1.toLocaleString('en-IN')}</td>
+                    <td className='py-3 px-6 text-right border border-black'>{data.weekly.week2.toLocaleString('en-IN')}</td>
+                    <td className='py-3 px-6 text-right border border-black'>{data.weekly.week3.toLocaleString('en-IN')}</td>
+                    <td className='py-3 px-6 text-right border border-black'>{data.weekly.week4.toLocaleString('en-IN')}</td>
                   </>
                 )}
-                <td className='py-3 px-6 text-center border border-black'>{oldDue}</td>
+                <td className='py-3 px-6 text-right border border-black'>{oldDue.toLocaleString('en-IN')}</td>
               </tr>
             );
           })}
