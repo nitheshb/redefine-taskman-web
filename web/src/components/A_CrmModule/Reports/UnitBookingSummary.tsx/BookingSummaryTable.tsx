@@ -1,8 +1,9 @@
+
+
 /* eslint-disable prettier/prettier */
 /* eslint-disable react/prop-types */
-import * as React from 'react'
 
-// import '../../styles/myStyles.css'
+import * as React from 'react'
 import {
   Rating,
 } from '@mui/material'
@@ -16,6 +17,9 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import PropTypes from 'prop-types'
 
+
+
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import { useAuth } from 'src/context/firebase-auth-context'
 import {
   prettyDate,
@@ -241,137 +245,7 @@ const headCells = [
   },
 ]
 
-function EnhancedTableHead(props) {
-  const {
-    onSelectAllClick,
-    order,
-    orderBy,
-    numSelected,
-    rowCount,
-    onRequestSort,
-    searchKey,
-    viewUnitStatusA,
-  } = props
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property)
-  }
 
-  const displayHeadersFun = (headCell) => {
-
-    if(['partA', 'legal', 'maintenance', 'club', 'infra'].includes(headCell)){
-      return viewUnitStatusA.includes('Cost Split') ? '' : 'none'
-    }  else if(['avgsft', 'sv_sft', 'bmrda_strr'].includes(headCell)){
-      return viewUnitStatusA.includes('Avg sqft Cost') ? '' : 'none'
-    } else if(['crm_executive'].includes(headCell)){
-      return viewUnitStatusA.includes('CRM Executive') ? '' : 'none'
-    }else if(['sale_executive'].includes(headCell)){
-      return viewUnitStatusA.includes('Sales Executive') ? '' : 'none'
-    }else if(['Notes'].includes(headCell)){
-      return viewUnitStatusA.includes('Remarks') ? '' : 'none'
-    }
-    else {
-      return ''
-    }
-
-    //   if(viewUnitStatusA.includes('Assigned To') &&
-    //   headCell === 'Assigned'){
-    //   return ''
-    //   }else{
-    //     return 'none'
-    //   }
-    // }else {
-    //   return ''
-    // }
-
-
-  }
-  return (
-    <TableHead style={{ height: '10px' }}>
-      <TableRow selected={true}>
-        <TableCell
-          align="center"
-          component="th"
-          scope="row"
-          padding="none"
-          size="small"
-          style={{
-            backgroundColor: '#F7F9FB',
-            color: '#1a91eb',
-            maxHeight: '10px',
-            height: '10px',
-            lineHeight: '10px',
-            maxWidth: '52px',
-            minWidth: '25px',
-            paddingLeft: '14px',
-            paddingRight: '29px',
-            marginRight: '10px',
-          }}
-        >
-          {/* <Checkbox
-            color="primary"
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{
-              'aria-label': 'select all desserts',
-            }}
-          /> */}
-          <TableSortLabel>S.No</TableSortLabel>
-        </TableCell>
-        {headCells.map((headCell) => (
-          <>
-            <TableCell
-              key={headCell.id}
-              align={headCell?.align ||  'left'}
-              padding={headCell.disablePadding ? 'none' : 'normal'}
-              sortDirection={orderBy === headCell.id ? order : false}
-              style={{
-                backgroundColor: '#F7F9FB',
-                color: '#1a91eb',
-                height: '10px',
-                maxHeight: '10px',
-                lineHeight: '7px',
-                display: displayHeadersFun(headCell.id)
-              }}
-            >
-              <TableSortLabel
-                active={orderBy === headCell.id}
-                direction={orderBy === headCell.id ? order : 'asc'}
-                onClick={createSortHandler(headCell.id)}
-                style={{
-                  backgroundColor: '#F7F9FB',
-                  color: '#1a91eb',
-                  fontFamily: 'inherit',
-                }}
-              >
-                <span className="text-black font-bodyLato whitespace-nowrap">
-                  {headCell.label}
-                </span>
-                {orderBy === headCell.id ? (
-                  <Section component="span" sx={visuallyHidden}>
-                    {order === 'desc'
-                      ? 'sorted descending'
-                      : 'sorted ascending'}
-                  </Section>
-                ) : null}
-              </TableSortLabel>
-            </TableCell>
-          </>
-        ))}
-      </TableRow>
-    </TableHead>
-  )
-}
-
-EnhancedTableHead.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
-  searchkey: PropTypes.number.isRequired || PropTypes.string.isRequired,
-}
 
 const EnhancedTableToolbar = (props) => {
   const {
@@ -477,6 +351,10 @@ React.useEffect(()=>{
     setRowsAfterSearchKey(rowsR)
     // setRows(rowsR)
   }
+
+
+
+
   return (
     <section className="flex flex-row justify-between pb pt-1 px-3 ">
       {/* <span className="flex flex-row">
@@ -599,6 +477,48 @@ export default function UnitSummaryTableBody({
   const [searchKey, setSearchKey] = React.useState(searchVal?searchVal:'')
   const [dateRange, setDateRange] = React.useState([null, null])
   const [startDate, endDate] = dateRange
+
+
+
+const [totalSaleValue, setTotalSaleValue] = React.useState(0);
+const [totalReceived, setTotalReceived] = React.useState(0);
+const [selTotalBalance, setTotalBalance] = React.useState(0);
+
+React.useEffect(() => {
+
+  // const partACost =
+  // row?.plotCS?.reduce(function (_this, val) {
+  //     return _this + val.TotalNetSaleValueGsT
+  //   }, 0) || 0
+
+  // const partBCost =
+  // row?.addChargesCS?.reduce(
+  //     (partialSum, obj) =>
+  //       partialSum +
+  //       Number(
+  //         computeTotal(obj, row?.super_built_up_area || row?.area)
+  //       ),
+  //     0
+  //   ) || 0
+  console.log('valure are', leadsFetchedData)
+  const totalSale = leadsFetchedData.reduce((total, row) => total + Number(row?.plotCS?.TotalNetSaleValueGsT || 0), 0);
+  setTotalSaleValue(totalSale);
+
+  const totalReceived = leadsFetchedData.reduce((total, row) => total + Number(row.T_review || 0), 0);
+  setTotalReceived(totalReceived);
+  const totalBalance = leadsFetchedData.reduce((total, row) => total + Number(row.T_balance || 0), 0);
+  setTotalBalance(totalBalance);
+}, [leadsFetchedData]);
+
+
+
+
+
+
+
+
+
+
   React.useEffect(() => {
   }, [selStatus, rowsParent])
   console.log(searchKey, "cdsvfeg", leadsFetchedData)
@@ -719,6 +639,202 @@ export default function UnitSummaryTableBody({
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0
 
   const [selBlock, setSelBlock] = React.useState({})
+
+
+
+  {/* today */}
+
+
+function EnhancedTableHead(props) {
+  const {
+    onSelectAllClick,
+    order,
+    orderBy,
+    numSelected,
+    rowCount,
+    onRequestSort,
+    searchKey,
+    viewUnitStatusA,
+  } = props
+  const createSortHandler = (property) => (event) => {
+    onRequestSort(event, property)
+  }
+
+  const displayHeadersFun = (headCell) => {
+
+    if(['partA', 'legal', 'maintenance', 'club', 'infra'].includes(headCell)){
+      return viewUnitStatusA.includes('Cost Split') ? '' : 'none'
+    }  else if(['avgsft', 'sv_sft', 'bmrda_strr'].includes(headCell)){
+      return viewUnitStatusA.includes('Avg sqft Cost') ? '' : 'none'
+    } else if(['crm_executive'].includes(headCell)){
+      return viewUnitStatusA.includes('CRM Executive') ? '' : 'none'
+    }else if(['sale_executive'].includes(headCell)){
+      return viewUnitStatusA.includes('Sales Executive') ? '' : 'none'
+    }else if(['Notes'].includes(headCell)){
+      return viewUnitStatusA.includes('Remarks') ? '' : 'none'
+    }
+    else {
+      return ''
+    }
+
+    //   if(viewUnitStatusA.includes('Assigned To') &&
+    //   headCell === 'Assigned'){
+    //   return ''
+    //   }else{
+    //     return 'none'
+    //   }
+    // }else {
+    //   return ''
+    // }
+
+
+  }
+  return (
+    <TableHead style={{ height: '10px' }}>
+      <TableRow selected={true}>
+        <TableCell
+          align="center"
+          component="th"
+          scope="row"
+          padding="none"
+          size="small"
+          style={{
+            backgroundColor: '#F7F9FB',
+            color: '#1a91eb',
+            maxHeight: '10px',
+            height: '10px',
+            lineHeight: '10px',
+            maxWidth: '52px',
+            minWidth: '25px',
+            paddingLeft: '14px',
+            paddingRight: '29px',
+            marginRight: '10px',
+          }}
+        >
+          {/* <Checkbox
+            color="primary"
+            indeterminate={numSelected > 0 && numSelected < rowCount}
+            checked={rowCount > 0 && numSelected === rowCount}
+            onChange={onSelectAllClick}
+            inputProps={{
+              'aria-label': 'select all desserts',
+            }}
+          /> */}
+
+
+
+          <TableSortLabel>S.No</TableSortLabel>
+        </TableCell>
+        {headCells.map((headCell) => (
+          <>
+            <TableCell
+              key={headCell.id}
+              align={headCell?.align ||  'left'}
+              padding={headCell.disablePadding ? 'none' : 'normal'}
+              sortDirection={orderBy === headCell.id ? order : false}
+              style={{
+                backgroundColor: '#F7F9FB',
+                color: '#1a91eb',
+                height: '10px',
+                maxHeight: '10px',
+                lineHeight: '7px',
+                display: displayHeadersFun(headCell.id)
+              }}
+            >
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : 'asc'}
+                onClick={createSortHandler(headCell.id)}
+                style={{
+                  backgroundColor: '#F7F9FB',
+                  color: '#1a91eb',
+                  fontFamily: 'inherit',
+                }}
+              >
+                <span className="text-black font-bodyLato whitespace-nowrap">
+                  {headCell.label}
+                </span>
+                {orderBy === headCell.id ? (
+                  <Section component="span" sx={visuallyHidden}>
+                    {order === 'desc'
+                      ? 'sorted descending'
+                      : 'sorted ascending'}
+                  </Section>
+                ) : null}
+              </TableSortLabel>
+
+
+
+              {headCell.id === 'sale' && (
+
+<div className="bg-[#C3C3F1] rounded-lg flex items-center justify-end p-2">
+  <span className="text-black text-[14px] ">₹{totalSaleValue.toLocaleString('en-IN')}</span>
+</div>
+
+
+
+  )}
+
+
+            {headCell.id === 'received' && (
+
+<div style={{  }}>
+<div className="bg-[#DAECE5] rounded-lg flex items-center justify-end p-2">
+  <span className="text-black text-[14px] ">₹{totalReceived.toLocaleString('en-IN')}</span>
+</div>
+</div>
+
+
+
+              )}
+
+{headCell.id === 'balance' && (
+
+<div style={{  }}>
+<div className="bg-[#FECACA] rounded-lg flex items-center justify-end p-2">
+  <span className="text-black text-[14px] ">₹{selTotalBalance.toLocaleString('en-IN')}</span>
+</div>
+</div>
+
+
+
+              )}
+
+
+
+
+
+
+
+
+
+            </TableCell>
+          </>
+        ))}
+      </TableRow>
+    </TableHead>
+  )
+}
+
+EnhancedTableHead.propTypes = {
+  numSelected: PropTypes.number.isRequired,
+  onRequestSort: PropTypes.func.isRequired,
+  onSelectAllClick: PropTypes.func.isRequired,
+  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
+  orderBy: PropTypes.string.isRequired,
+  rowCount: PropTypes.number.isRequired,
+  searchkey: PropTypes.number.isRequired || PropTypes.string.isRequired,
+}
+
+{ /* today */}
+
+
+
+
+
+
+
+
 
 
 

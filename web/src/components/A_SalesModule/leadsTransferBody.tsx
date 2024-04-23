@@ -108,71 +108,6 @@ const LeadsTransferBody = ({
   onSliderOpen = () => {},
   isEdit,
 }) => {
-  // const [unitsView, setUnitsView] = useState(false)
-  // const [areaView, setAreaView] = useState(false)
-  // const [valueView, setValueView] = useState(false)
-
-  // const [selbg, setSelbg] = useState('')
-  // const [seldata, setSeldata] = useState('')
-  // const [selkind, setSelkind] = useState('')
-  // const [selcurrency, setSelcurrency] = useState('')
-
-  // const [areabg, setAreabg] = useState('')
-  // const [areaData, setAreaData] = useState('')
-  // const [areakind, setAreakind] = useState('')
-  // const [areaCurrency, setareaCurrency] = useState('')
-
-  // const [valuebg, setValuebg] = useState('')
-  // const [valuedata, setValuedata] = useState('')
-  // const [valueKind, setValueKind] = useState('')
-  // const [valueCurrency, setValueCurrency] = useState('')
-  // const displayDetailView = (state, bgColor, data, kind, currency) => {
-  //   // console.log('am i clicked')
-  //   console.log('check')
-  //   setUnitsView(!unitsView)
-  //   setSelbg(bgColor)
-  //   setSeldata(data)
-  //   setSelkind(kind)
-  //   setSelcurrency(currency)
-  // }
-  // const areaDetailView = (state, bgColor, data, kind, currency) => {
-  //   // console.log('am i clicked')
-  //   console.log('check')
-  //   setAreaView(state)
-  //   setAreabg(bgColor)
-  //   setAreaData(data)
-  //   setAreakind(kind)
-  //   setareaCurrency(currency)
-  // }
-  // const valueDetailView = (state, bgColor, data, kind, currency) => {
-  //   // console.log('am i clicked')
-  //   console.log('check')
-  //   setValueView(state)
-  //   setValuebg(bgColor)
-  //   setValuedata(data)
-  //   setValueKind(kind)
-  //   setValueCurrency(currency)
-  const sourceDropDown = () => {
-    return (
-      <SlimSelectBox
-        name="project"
-        label=""
-        className="input min-w-[164px]"
-        onChange={(value) => {
-          console.log('zoro condition changed one  is', value)
-          selViewSource(value)
-          // formik.setFieldValue('project', value.value)
-        }}
-        value={viewSource?.value}
-        // options={aquaticCreatures}
-        options={[
-          ...[{ label: 'All Sources', value: 'allsources' }],
-          ...sourceListTuned,
-        ]}
-        placeholder={undefined}
-      />
-    )
-  }
   // }
   const d = new window.Date()
   const { user } = useAuth()
@@ -695,7 +630,7 @@ if(x.coveredA.any((elementA) => coveredStatus.contains(elementA))){
         dateRange: dateRange,
         leadAssignedTo: leadAssignedTo,
         coveredStatus: coveredStatus,
-        currentStatus: currentStatus
+        currentStatus: currentStatus.includes('all') ? ['new', 'followup', 'visitfixed', 'visitdone',  'notinterested'] : currentStatus
       },
       () => {}
     )
@@ -1432,7 +1367,7 @@ if(x.coveredA.any((elementA) => coveredStatus.contains(elementA))){
             </div> */}
           </div>
           {selCat === 'lead_perf' && (
-            <LeadsTransferTableBody
+           leadsSearchRawDB.length>0 ? <LeadsTransferTableBody
               title={'Site Visit Leads'}
               // subtitle={'subTitle'}
               // dialogOpen={setOpen}
@@ -1443,6 +1378,22 @@ if(x.coveredA.any((elementA) => coveredStatus.contains(elementA))){
               setSelectedIds={setSelectedIds}
               selectedIds={selectedIds}
             />
+
+            :        <div className="py-8 px-8 mt-2 flex flex-col items-center bg-red-50 rounded">
+            <div className="font-md font-medium text-xs mb-4 text-gray-800 items-center">
+              <img
+                className="w-[180px] h-[180px] inline"
+                alt=""
+                src="/templates.svg"
+              />
+            </div>
+            <h3 className="mb-1 text-sm font-semibold text-gray-900">
+              No Leads found with above selection
+            </h3>
+            <time className="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
+              <span className="text-blue-600"></span>
+            </time>
+          </div>
           )}
           {/* {selCat === 'lead_perf' && (
             <LeadsTransferTableBody
