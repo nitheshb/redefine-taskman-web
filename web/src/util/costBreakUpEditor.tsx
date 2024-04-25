@@ -6,7 +6,10 @@ import { PDFExport } from '@progress/kendo-react-pdf'
 import { Timestamp } from 'firebase/firestore'
 import { Field, Form, Formik } from 'formik'
 import { useSnackbar } from 'notistack'
+import DatePicker from 'react-datepicker'
+
 import * as Yup from 'yup'
+import { setHours, setMinutes } from 'date-fns'
 
 import CrmUnitHeader from 'src/components/A_CrmModule/CrmUnitHeader'
 import {
@@ -39,6 +42,8 @@ const CostBreakUpEditor = ({
   setNewPlotCostSheetA,
   setNewPlotPS,
 }) => {
+  const d = new window.Date()
+
   const { user } = useAuth()
   const { orgId } = user
 
@@ -58,6 +63,7 @@ const CostBreakUpEditor = ({
   const [psPayload, setPSPayload] = useState([])
   const [pdfPreview, setpdfPreview] = useState(false)
   const [showGstCol, setShowGstCol] = useState(true)
+  const [startDate, setStartDate] = useState(d)
 
   useEffect(() => {
     boot()
@@ -234,6 +240,11 @@ const CostBreakUpEditor = ({
       enqueueSnackbar
     )
   }
+  const handlePSdateChange = (index, newDate)=> {
+    const updatedRows = [...newPlotPS]
+    updatedRows[index].schDate = newDate
+    setNewPS(updatedRows);
+  }
   return (
     <div>
       {!pdfPreview && (
@@ -322,10 +333,10 @@ const CostBreakUpEditor = ({
                                   <th className="w-[40%] px-2 text-[11px] text-left text-gray-700  ">
                                     {d1?.component?.label}
                                   </th>
-                                  <td className="w-[15%]  px-2 text-[12px] text-right text-gray-700 ">
+                                  <td className="w-[15%]  px-2 text-[12px] text-right text-gray-700 border">
                                     <TextFieldFlat
                                       label=""
-                                      className="w-[100%] text-[12px] text-right font-bold border-b  border-[#B76E00] border-dashed pr-1 py-[4px] text-[#B76E00]"
+                                      className="w-[100%] text-[12px] text-right font-bold border-b  border-[#B76E00] border-dashed pr-1 py-[4px] text-[#B76E00] "
                                       name="ratePerSqft"
                                       onChange={(e) => {
                                         // setNewSqftPrice(e.target.value)
@@ -353,7 +364,7 @@ const CostBreakUpEditor = ({
                                   <td
                                     className={`${
                                       !showGstCol ? 'hidden' : ''
-                                    } w-[15%] px-2 text-[12px] text-right text-slate-500 text-sm `}
+                                    } w-[15%] px-2 text-[12px] text-right text-slate-500 text-sm border `}
                                   >
                                     ₹
                                     {d1?.TotalSaleValue?.toLocaleString(
@@ -363,11 +374,11 @@ const CostBreakUpEditor = ({
                                   <td
                                     className={`${
                                       !showGstCol ? 'hidden' : ''
-                                    } w-[15%] px-2 text-[12px] text-right text-slate-500 text-sm  `}
+                                    } w-[15%] px-2 text-[12px] text-right text-slate-500 text-sm border `}
                                   >
                                     ₹{d1?.gst?.value?.toLocaleString('en-IN')}
                                   </td>
-                                  <td className="w-[15%] px-2 text-[12px] text-right text-slate-900 ">
+                                  <td className="w-[15%] px-2 text-[12px] text-right text-slate-900 border ">
                                     ₹
                                     {d1?.TotalNetSaleValueGsT?.toLocaleString(
                                       'en-IN'
@@ -375,15 +386,15 @@ const CostBreakUpEditor = ({
                                   </td>
                                 </tr>
                               ))}
-                              <tr className=" border-[#fab56c]   h-[32px]">
-                                <th className="w-[40%] text-[12px] text-left text-[#118D57] pl-2 ">
+                              <tr className="  border  h-[32px]">
+                                <th className="w-[40%] text-[12px] text-left text-[#118D57] pl-2 border-0 border">
                                   Total (A)
                                 </th>
-                                <td className="w-[15%] px-2 font-bold text-[12px] text-right text-gray-600 pr-3"></td>
+                                <td className="w-[15%] px-2 font-bold text-[12px] text-right text-gray-600 pr-3 "></td>
                                 <td
                                   className={`${
                                     !showGstCol ? 'hidden' : ''
-                                  } w-[15%] px-2 font-bold  text-[12px] text-right text-gray-800 `}
+                                  } w-[15%] px-2 font-bold  text-[12px] text-right text-gray-800  `}
                                 >
                                   ₹
                                   {costSheetA
@@ -398,7 +409,7 @@ const CostBreakUpEditor = ({
                                 <td
                                   className={`${
                                     !showGstCol ? 'hidden' : ''
-                                  } w-[15%] px-2 font-bold  text-[12px] text-right text-gray-800 `}
+                                  } w-[15%] px-2 font-bold  text-[12px] text-right text-gray-800  `}
                                 >
                                   ₹
                                   {costSheetA
@@ -409,7 +420,7 @@ const CostBreakUpEditor = ({
                                     )
                                     ?.toLocaleString('en-IN')}
                                 </td>
-                                <td className="w-[15%] px-2 font-bold  text-[12px] text-right  text-[#118D57] ">
+                                <td className="w-[15%] px-2 font-bold  text-[12px] text-right  text-[#118D57]  ">
                                   ₹{partATotal?.toLocaleString('en-IN')}
                                 </td>
                               </tr>
@@ -419,10 +430,10 @@ const CostBreakUpEditor = ({
                             <tbody>
                               {partBPayload?.map((d1, inx) => (
                                 <tr key={inx} className="py-1 my-2 h-[32px]  ">
-                                  <th className="w-[40%] px-2 text-[11px] text-left text-gray-700  ">
+                                  <th className="w-[40%] px-2 text-[11px] text-left text-gray-700   ">
                                     {d1?.component?.label}
                                   </th>
-                                  <td className="w-[15%]  px-2 text-[12px] text-right text-gray-700 ">
+                                  <td className="w-[15%]  px-2 text-[12px] text-right text-gray-700 border ">
                                     <TextFieldFlat
                                       label=""
                                       className="w-[100%] text-[12px] text-right font-bold border-b  border-[#B76E00] border-dashed pr-1 py-[4px] text-[#B76E00]"
@@ -453,7 +464,7 @@ const CostBreakUpEditor = ({
                                   <td
                                     className={`${
                                       !showGstCol ? 'hidden' : ''
-                                    } w-[15%] px-2 text-[12px] text-right text-slate-500 text-sm `}
+                                    } w-[15%] px-2 text-[12px] text-right text-slate-500 text-sm border `}
                                   >
                                     ₹
                                     {d1?.TotalSaleValue?.toLocaleString(
@@ -463,29 +474,29 @@ const CostBreakUpEditor = ({
                                   <td
                                     className={`${
                                       !showGstCol ? 'hidden' : ''
-                                    } w-[15%] px-2 text-[12px] text-right text-slate-500 text-sm  `}
+                                    } w-[15%] px-2 text-[12px] text-right text-slate-500 text-sm border  `}
                                   >
                                     ₹{d1?.gstValue?.toLocaleString('en-IN')}
                                   </td>
-                                  <td className="w-[15%] px-2 text-[12px] text-right text-slate-900 ">
+                                  <td className="w-[15%] px-2 text-[12px] text-right text-slate-900 border ">
                                     ₹
                                     {Number(
                                       computeTotal(d1, selUnitDetails?.area)
                                     )?.toLocaleString('en-IN')}
                                   </td>
                                 </tr>
+
                               ))}
-                            </tbody>
-                          </table>
-                          <table className="w-full mt-1">
-                            <tbody>
-                              <tr className=" h-[32px] ">
-                                <th className=" w-[40%] text-[12px] px-2 text-left  text-[#118D57] ">
+                                 <tr className="   h-[32px] border">
+                                <th className="w-[40%] text-[12px] text-left text-[#118D57] pl-2 border ">
                                   Total (B)
                                 </th>
-                                <td className="w-[15%] text-[12px] px-2 text-right text-gray-400 "></td>
-                                <td className=" w-[15%] text-[12px] font-bold  px-2 text-right text-gray-800 ">
-                                  {' '}
+                                <td className="w-[15%] px-2 font-bold text-[12px] text-right text-gray-600 pr-3"></td>
+                                <td
+                                  className={`${
+                                    !showGstCol ? 'hidden' : ''
+                                  } w-[15%] px-2 font-bold  text-[12px] text-right text-gray-800 `}
+                                >
                                   ₹
                                   {partBPayload
                                     ?.reduce(
@@ -496,8 +507,11 @@ const CostBreakUpEditor = ({
                                     )
                                     ?.toLocaleString('en-IN')}
                                 </td>
-                                <td className="w-[15%] text-[12px] font-bold  px-2 text-right text-gray-800 ">
-                                  {' '}
+                                <td
+                                  className={`${
+                                    !showGstCol ? 'hidden' : ''
+                                  } w-[15%] px-2 font-bold  text-[12px] text-right text-gray-800 `}
+                                >
                                   ₹
                                   {partBPayload
                                     ?.reduce(
@@ -507,55 +521,16 @@ const CostBreakUpEditor = ({
                                     )
                                     ?.toLocaleString('en-IN')}
                                 </td>
-                                <td className=" w-[15%] text-[12px] px-2 text-right text-[#118D57] font-bold ">
+                                <td className="w-[15%] px-2 font-bold  text-[12px] text-right  text-[#118D57]  ">
                                   ₹{partBTotal?.toLocaleString('en-IN')}
-                                </td>
-                              </tr>
-
-                              <tr className=" h-[32px] ">
-                                <td className="w-[40%] text-[12px]  px-2 text-right text-gray-400 "></td>
-                                <td className="w-[15%] text-[12px] px-2 text-right text-gray-400 "></td>
-                                <td className="w-[15%] text-[12px] px-2 text-right text-gray-400 "></td>
-                                <th className="w-[15%] text-[12px] px-2 text-right text-[#B76E00] ">
-                                  Discount
-                                </th>
-                                <td className="w-[15%] text-[12px] px-2 text-right text-[#118D57] font-bold ">
-                                  <TextFieldFlat
-                                    label=""
-                                    className="text-[12px] max-w-[76px] text-right font-bold border-b  border-[#B76E00]  border-dashed pr-1 py-[4px] text-[#B76E00]"
-                                    name="rate_by"
-                                    onChange={(e) => {
-                                      // handlePriceChangePartB(inx, e.target.value)
-                                    }}
-                                    value={'0'}
-                                  />
-                                </td>
-                              </tr>
-                              <tr className=" h-[32px] ">
-                                <td className="w-[40%] text-[12px]  px-2 text-right text-gray-400 "></td>
-                                <td className="w-[15%] text-[12px] px-2 text-right text-gray-400 "></td>
-                                <td className="w-[15%] text-[12px] px-2 text-right text-gray-400 "></td>
-                                <th className="w-[15%] text-[12px] px-2 text-right text-[#B76E00] ">
-                                  Credit Note
-                                </th>
-                                <td className="w-[15%] text-[12px] px-2 text-right text-[#118D57] font-bold ">
-                                  <TextFieldFlat
-                                    label=""
-                                    className="text-[12px] max-w-[76px] text-right font-bold border-b  border-[#B76E00]  border-dashed pr-1 py-[4px] text-[#B76E00]"
-                                    name="credit_note_value"
-                                    onChange={(e) => {
-                                      // handlePriceChangePartB(inx, e.target.value)
-                                    }}
-                                    value={'0'}
-                                  />
                                 </td>
                               </tr>
                             </tbody>
                           </table>
 
-                          <section className="flex flex-row justify-between  bg-[#dff6dd]  h-[34px] py-[7px] ">
+                          <section className="flex flex-row justify-between  bg-[#dff6dd]  h-[34px] py-[7px] mt-2 ">
                             <h1 className="px-2 text-[12px] text-left  text-[12px] font-bold ">
-                              Total Plot Sale Value(A+B)
+                              Total Unit Cost (A+B)
                             </h1>
                             <section className="flex flex-row">
                               <section className="px-2 d-md font-bold text-[12px] text-[#0000008c] ">
@@ -608,8 +583,33 @@ const CostBreakUpEditor = ({
                                   <th className=" px-2  text-[12px] text-left text-gray-700 ">
                                     {d1?.stage?.label}
                                   </th>
-                                  <td className="text-[12px] px-2  text-left text-gray-700 ">
-                                    {d1?.description}
+                                  <td className="text-[12px] px-2 py-2  text-right text-gray-700 ">
+                                  <DatePicker
+                            id="bmrdaStartDate"
+                            name="bmrdaStartDate"
+                            className="pl- px-1 h-8 rounded-md mt-1 min-w-[200px] inline text-[#0091ae] flex bg-grey-lighter text-grey-darker border border-[#cccccc] px-2"
+                            selected={d1?.schDate}
+                            onChange={(date) => {
+                              // formik.setFieldValue(
+                              //   'bmrdaStartDate',
+                              //   date.getTime()
+                              // )
+                              console.log('data', date.getTime())
+                              setStartDate(date)
+                              handlePSdateChange(
+                                inx,
+                                date.getTime()
+                              )
+                            }}
+                            timeFormat="HH:mm"
+                            injectTimes={[
+                              setHours(setMinutes(d, 1), 0),
+                              setHours(setMinutes(d, 5), 12),
+                              setHours(setMinutes(d, 59), 23),
+                            ]}
+                            dateFormat="MMMM d, yyyy"
+                          />
+                                   <span className='text-right'>{d1?.description}</span>
                                   </td>
 
                                   <td className="text-[12px] px-2  text-right text-gray-800 ">
@@ -620,7 +620,7 @@ const CostBreakUpEditor = ({
 
                               <tr className="h-[32px]">
                                 <th className="text-[12px] px-2  text-left text-gray-800 ">
-                                  Plot Value Total Rs.:
+                                  Total Unit Value Rs.:
                                 </th>
                                 <td className="text-[12px] px-2  text-right text-gray-400 "></td>
                                 <th className="text-[12px] px-2  text-right text-gray-800 ">
