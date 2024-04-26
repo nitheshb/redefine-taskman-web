@@ -21,61 +21,7 @@ const CrmInventorySummaryTable = ({ projects }) => {
     seTUnitStatus(typeA)
   }
 
-  const inventoryListData = [
-    {
-      unitNo: 'A101',
-      unitType: '2BHK',
-      unitFacing: 'North',
-      unitArea: '950',
-      releaseStatus: 'Available',
-      pricePerSft: '5000',
-      plc: '200',
-      dimensions: {
-        north: '10m',
-        south: '10m',
-        east: '8m',
-        west: '8m',
-      },
-      schedule: {
-        north: '2m',
-        south: '4m',
-        east: '7m',
-        west: '8m',
-      },
-      sNo: '001',
-      khataha: 'XX123',
-      pid: 'PID001',
-      unitCost: '5250000',
-      unitStatus: 'Ready',
-    },
-    {
-      unitNo: 'B202',
-      unitType: '3BHK',
-      unitFacing: 'South',
-      unitArea: '1200',
-      releaseStatus: 'Sold',
-      pricePerSft: '6000',
-      plc: '250',
-      dimensions: {
-        north: '12m',
-        south: '12m',
-        east: '10m',
-        west: '10m',
-      },
-      schedule: {
-        north: '25m',
-        south: '25m',
-        east: '25m',
-        west: '5m',
-      },
-      sNo: '002',
-      khataha: 'YY456',
-      pid: 'PID002',
-      unitCost: '6300000',
-      unitStatus: 'Occupied',
-    },
-  ]
-
+  
   const calculateTotal = (data, key) => {
     return data.reduce((acc, item) => {
       return acc + (item[key] || 0)

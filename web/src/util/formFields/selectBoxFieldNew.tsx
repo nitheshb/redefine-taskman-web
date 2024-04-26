@@ -81,7 +81,7 @@ export const CustomSelectNew = ({
       // components={{ Option: CustomOption }}
       // getOptionLabel={(option) => `${option.label} - ${option.dept}`}
       formatOptionLabel={formatOptionLabel}
-      className={`text-sm  ${label != '' ? 'mt-' : ''} border-transparent`}
+      className={`text-sm  w-full ${label != '' ? 'mt-' : ''} border-transparent`}
       styles={customStyles}
     />
   )

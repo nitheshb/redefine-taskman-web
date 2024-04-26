@@ -48,6 +48,7 @@ import CrmInventorySummaryTable from './Reports/CrmSummaryTable'
 import ReportBars from './Reports/ReportBars'
 import TransactionCard from './Reports/TransactionCard'
 import UnitStatusCardReport from './Reports/UnitStatusCardReport'
+import CrmProjectionReport from './Reports/CrmProjectionReport'
 
 const CrmAnalyticsHome = ({ project }) => {
   const theme = useTheme()
@@ -96,6 +97,8 @@ const CrmAnalyticsHome = ({ project }) => {
         {[
           { label: 'Booking Summary', value: 'booking_summary' },
           { label: 'CRM Inventory Report', value: 'crm_table' },
+          { label: 'Collection Projection Report', value: 'crm_projection_report' },
+
           { label: 'Project Summary', value: 'proj_summary' },
           { label: 'Credit Note', value: 'creditnote_summary' },
           { label: 'Collections', value: 'collections-summary' },
@@ -239,6 +242,15 @@ const CrmAnalyticsHome = ({ project }) => {
         <div className="">
           {/* <AdvancedDataTableTest /> */}
           <CrmInventorySummaryTable projects={projects} />
+
+          {projects.length === 0 && <DummyBodyLayout />}
+        </div>
+      )}
+
+{selCat === 'crm_projection_report' && (
+        <div className="">
+          {/* <AdvancedDataTableTest /> */}
+          <CrmProjectionReport projects={projects}/>
 
           {projects.length === 0 && <DummyBodyLayout />}
         </div>

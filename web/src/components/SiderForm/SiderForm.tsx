@@ -40,6 +40,7 @@ import PaymentScheduleForm from '../PaymentScheduleForm/PaymentScheduleForm'
 import ProjPhaseHome from '../ProjPhaseHome/ProjPhaseHome'
 import TransactionUpdateSideView from '../transactionUpdateSideView'
 import ViewUnitDetails from '../ViewUnitDetails'
+import AddCampaignForm from '../A_MarketingModule/AddCampaign'
 
 const SiderForm = ({
   BlockFeed,
@@ -156,6 +157,9 @@ const SiderForm = ({
                 </Transition.Child>
                 {title === 'Add Task' && (
                   <AddTaskForm title={title} dialogOpen={setOpen} />
+                )}
+                                {title === 'Add Campaign' && (
+                  <AddCampaignForm title={title} dialogOpen={setOpen} />
                 )}
                 {title === 'view_task_man' && (
                   <ViewEditTaskManForm

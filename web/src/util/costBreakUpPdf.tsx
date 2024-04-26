@@ -3,9 +3,11 @@ import { useState, useEffect, createRef, useRef } from 'react'
 import { InformationCircleIcon } from '@heroicons/react/outline'
 import { Checkbox } from '@mui/material'
 import { PDFExport } from '@progress/kendo-react-pdf'
+import { setHours, setMinutes } from 'date-fns'
 import { Timestamp } from 'firebase/firestore'
 import { Field, Form, Formik } from 'formik'
 import { useSnackbar } from 'notistack'
+import DatePicker from 'react-datepicker'
 import * as Yup from 'yup'
 
 import CrmUnitHeader from 'src/components/A_CrmModule/CrmUnitHeader'
@@ -48,13 +50,15 @@ const CostBreakUpPdf = ({
   setPartCTotal,
   showOnly,
 }) => {
+  const d = new window.Date()
+
   const { user } = useAuth()
   const { orgId } = user
   const { enqueueSnackbar } = useSnackbar()
   const ref = createRef()
 
   useEffect(() => {
-    console.log('sel unti detials ', selUnitDetails)
+    console.log('sel unti detials ', selUnitDetails, newPlotPS)
   }, [])
   const [initialValuesA, setInitialValuesA] = useState({})
 
@@ -66,6 +70,14 @@ const CostBreakUpPdf = ({
   const [psPayload, setPSPayload] = useState([])
   const [pdfPreview, setpdfPreview] = useState(false)
   const [showGstCol, setShowGstCol] = useState(true)
+
+  const handlePSdateChange = (index, newDate) => {
+    const updatedRows = [...newPlotPS]
+    updatedRows[index].schDate = newDate
+    setNewPS(updatedRows)
+  }
+
+
 
   useEffect(() => {
     console.log('gen costSheetA', costSheetA, costSheet)
@@ -82,7 +94,6 @@ const CostBreakUpPdf = ({
 
   useEffect(() => {
     const {
-
       additonalChargesObj,
       ConstructOtherChargesObj,
       ConstructPayScheduleObj,
@@ -104,21 +115,23 @@ const CostBreakUpPdf = ({
     //           (selUnitDetails?.rate_per_sqft || selUnitDetails?.sqft_rate)
     //       )
 
-          const plotSaleValue =
-          costSheetA.length > 0
-            ? Number(selUnitDetails?.area?.replace(',', '')) * Number(costSheetA[0]['charges'])
-            : Number.isFinite(y)
-            ? Number(selUnitDetails?.selUnitDetails?.area * y)
-            : Number(
-                Number(selUnitDetails?.area?.replace(',', '')) *
-                  (selUnitDetails?.rate_per_sqft || selUnitDetails?.sqft_rate)
-              )
+    const plotSaleValue =
+      costSheetA.length > 0
+        ? Number(selUnitDetails?.area?.toString()?.replace(',', '')) *
+          Number(costSheetA[0]['charges'])
+        : Number.isFinite(y)
+        ? Number(selUnitDetails?.selUnitDetails?.area * y)
+        : Number(
+            Number(selUnitDetails?.area?.toString()?.replace(',', '')) *
+              (selUnitDetails?.rate_per_sqft || selUnitDetails?.sqft_rate)
+          )
     const plcSaleValue =
       costSheetA.length > 1
-        ? selUnitDetails?.area?.replace(',', '') * Number(costSheetA[1]['charges'])
+        ? selUnitDetails?.area?.toString()?.replace(',', '') *
+          Number(costSheetA[1]['charges'])
         : Math.round(
             selUnitDetails?.super_built_up_area ||
-              selUnitDetails?.area?.replace(',', '') *
+              selUnitDetails?.area?.toString()?.replace(',', '') *
                 (selUnitDetails?.plc || selUnitDetails?.plc_per_sqft)
           )
     const gstTaxForProjA = selPhaseObj?.partATaxObj?.filter(
@@ -155,7 +168,8 @@ const CostBreakUpPdf = ({
             : data?.gst?.value
         total = isChargedPerSqft
           ? Number(
-              selUnitDetails?.super_built_up_area || selUnitDetails?.area.replace(',', '')
+              selUnitDetails?.super_built_up_area ||
+                selUnitDetails?.area?.toString()?.replace(',', '')
             ) * Number(data?.charges)
           : Number(data?.charges)
 
@@ -396,7 +410,8 @@ const CostBreakUpPdf = ({
         Number(
           computeTotal(
             obj,
-            selUnitDetails?.super_built_up_area || selUnitDetails?.area?.replace(',', '')
+            selUnitDetails?.super_built_up_area ||
+              selUnitDetails?.area?.toString()?.replace(',', '')
           )
         ),
       0
@@ -407,7 +422,8 @@ const CostBreakUpPdf = ({
         Number(
           computeTotal(
             obj,
-            selUnitDetails?.super_built_up_area || selUnitDetails?.area?.replace(',', '')
+            selUnitDetails?.super_built_up_area ||
+              selUnitDetails?.area?.toString()?.replace(',', '')
           )
         ),
       0
@@ -486,7 +502,9 @@ const CostBreakUpPdf = ({
       (d) => d?.component.value === 'plc_tax'
     )
     if (csMode === 'plot_cs') {
-      total = Math.round(selUnitDetails?.area.replace(',', '') * newValue)
+      total = Math.round(
+        selUnitDetails?.area?.toString()?.replace(',', '') * newValue
+      )
       gstTotal = Math.round(total * gstTaxIs)
     } else {
       total = Math.round(selUnitDetails?.super_built_up_area * newValue)
@@ -791,8 +809,8 @@ const CostBreakUpPdf = ({
                                     </th>
                                     <td className="w-[15%]  px-2 text-[12px] text-right   ">
                                       {Number(d1?.charges)?.toLocaleString(
-                                              'en-IN'
-                                            )}
+                                        'en-IN'
+                                      )}
                                     </td>
                                     <td
                                       className={`${
@@ -815,7 +833,12 @@ const CostBreakUpPdf = ({
                                       {/* {Number(d1?.charges)?.toLocaleString('en-IN')} */}
                                       ₹
                                       {Number(
-                                        computeTotal(d1, selUnitDetails?.area.replace(',', ''))
+                                        computeTotal(
+                                          d1,
+                                          selUnitDetails?.area
+                                            ?.toString()
+                                            ?.replace(',', '')
+                                        )
                                       )?.toLocaleString('en-IN')}
                                     </td>
                                   </tr>
@@ -916,8 +939,8 @@ const CostBreakUpPdf = ({
                                     </th>
                                     <td className="w-[15%]  px-2 text-[12px] text-right   ">
                                       {Number(d1?.charges)?.toLocaleString(
-                                              'en-IN'
-                                            )}
+                                        'en-IN'
+                                      )}
                                     </td>
                                     <td
                                       className={`${
@@ -940,7 +963,12 @@ const CostBreakUpPdf = ({
                                       {/* {Number(d1?.charges)?.toLocaleString('en-IN')} */}
                                       ₹
                                       {Number(
-                                        computeTotal(d1, selUnitDetails?.area.replace(',', ''))
+                                        computeTotal(
+                                          d1,
+                                          selUnitDetails?.area
+                                            ?.toString()
+                                            ?.replace(',', '')
+                                        )
                                       )?.toLocaleString('en-IN')}
                                     </td>
                                   </tr>
@@ -959,8 +987,7 @@ const CostBreakUpPdf = ({
                                     {partCPayload
                                       .reduce(
                                         (partialSum, obj) =>
-                                          partialSum +
-                                          Number(obj?.charges),
+                                          partialSum + Number(obj?.charges),
                                         0
                                       )
                                       ?.toLocaleString('en-IN')}
@@ -1052,9 +1079,31 @@ const CostBreakUpPdf = ({
                                   className="border-b-[0.05px] border-gray-300 py-1 my-2 h-[32px]  py-[24px]"
                                 >
                                   <th className=" px-2  text-[11px] text-left  font-normal tracking-wide uppercase ">
-                                    {d1?.stage?.label}
+                                   {d1?.stage?.label}
                                   </th>
                                   <td className="text-[11px] px-2  text-left font-normal tracking-wide uppercase ">
+                                    <DatePicker
+                                      id="bmrdaStartDate"
+                                      name="bmrdaStartDate"
+                                      className={`pl- px-1 h-8 rounded-md mt-1 min-w-[100px] inline text-[#0091ae] flex bg-grey-lighter text-grey-darker border border-[#cccccc] ${ d1?.schDate < newPlotPS[inx-1]?.schData ? 'border-red-600' : 'border-[#cccccc]' } px-2`}
+                                      selected={d1.schDate = d1?.schDate || d.getTime() + Number(d1?.zeroDay || 0) * 86400000}
+                                      onChange={(date) => {
+                                        // formik.setFieldValue(
+                                        //   'bmrdaStartDate',
+                                        //   date.getTime()
+                                        // )
+                                        console.log('data', date.getTime())
+                                        // setStartDate(date)
+                                        handlePSdateChange(inx, date.getTime())
+                                      }}
+                                      timeFormat="HH:mm"
+                                      injectTimes={[
+                                        setHours(setMinutes(d, 1), 0),
+                                        setHours(setMinutes(d, 5), 12),
+                                        setHours(setMinutes(d, 59), 23),
+                                      ]}
+                                      dateFormat="MMMM d, yyyy"
+                                    />
                                     {d1?.description}
                                   </td>
                                   <td className="text-[12px] px-2  text-right tracking-wide uppercase ">

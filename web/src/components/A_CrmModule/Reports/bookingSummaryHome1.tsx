@@ -224,7 +224,7 @@ switch (selProjectIs.value) {
              py-2"
           >
             <div className="flex items-center flex-row flex-wrap py-1 pb-2 px-2 justify-between">
-              <h2 className="text-md font-semibold text-black leading-light">
+              <h2 className="text-lg font-semibold text-black leading-light">
                 Booked Units Summary
               </h2>
 
