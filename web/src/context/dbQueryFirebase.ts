@@ -25,7 +25,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { getDirectiveName } from '@redwoodjs/testing/api'
 
 import { sendWhatAppTextSms1 } from 'src/util/axiosWhatAppApi'
-import { prettyDateTime } from 'src/util/dateConverter'
+import { getWeekMonthNo, prettyDateTime } from 'src/util/dateConverter'
 
 import { db } from './firebaseConfig'
 import { supabase } from './supabase'
@@ -1278,13 +1278,13 @@ export const getBookedUnitsByProject = (orgId, snapshot, data, error) => {
 
 export const getLeadsTransfer = (orgId, snapshot, data, error) => {
   const { status } = data
-  console.log('hello ', status, data?.projectId , data)
+  console.log('hello ', status, data?.projectId, data)
   const itemsQuery = query(
-        collection(db, `${orgId}_leads`),
-        where('Status', 'in', data?.currentStatus),
-        // where('coveredA', 'array-contains-any', data?.coveredStatus),
-        where('assignedTo', '==', data?.leadAssignedTo)
-      )
+    collection(db, `${orgId}_leads`),
+    where('Status', 'in', data?.currentStatus),
+    // where('coveredA', 'array-contains-any', data?.coveredStatus),
+    where('assignedTo', '==', data?.leadAssignedTo)
+  )
   // if (data?.projectId) {
   //   itemsQuery = query(
   //     collection(db, `${orgId}_units`),
@@ -1581,7 +1581,7 @@ export const getUnitsAllBlocks = (orgId, snapshot, data, error) => {
   const itemsQuery = query(
     collection(db, `${orgId}_units`),
     where('pId', '==', pId),
-    where('status', 'in', selUnitStatus),
+    where('status', 'in', selUnitStatus)
     // orderBy('unit_no', 'asc')
   )
 
@@ -2568,6 +2568,33 @@ export const editPlotUnit = async (
   )
 
   return
+}
+export const gretProjectionSum = async (orgId, data) => {
+  // db.collection(`${orgId}_leads`).doc().set(data)
+  // db.collection('')
+  const { pId, monthNo, currentYear } = data
+  console.log('pushed values are', pId)
+  const q = await query(
+    collection(db, `${orgId}_payment_projections`),
+    where('pId', '==', pId),
+    // where('pId', '==', '02dce2f6-f056-4dcb-9819-01b9710781e1'), //
+
+    where('month', '==', monthNo),
+    // where('year', '==', currentYear)
+  )
+  const parentDocs = []
+  const querySnapshot = await getDocs(q)
+  await console.log('foundLength @@', querySnapshot.docs.length)
+  let receivable = 0;
+  querySnapshot.forEach((doc) => {
+
+    const x = doc.data()
+    console.log('dc', doc.id, ' => ', doc.data())
+  receivable = receivable + x.receivable
+    parentDocs.push(doc.data())
+  })
+  console.log('total is ', receivable, )
+  return receivable
 }
 export const editPlotStatusAuditUnit = async (
   orgId,
@@ -3730,19 +3757,24 @@ export const updateLeadAssigTo = async (
   const { value, offPh } = assignedTo
   const { Name, Email, Mobile, Status } = leadDetailsObj
   const newSt = newStatus == 'unassigned' || newStatus == '' ? 'new' : newStatus
-  console.log('inside updater ', assignedTo, {
-    leadDocId,
-    assignedTo: value,
-    assignedToObj: assignedTo,
-    AssignedBy: by,
-    assignT: Timestamp.now().toMillis(),
-  },{
-    assignedTo: value,
-    assignedToObj: assignedTo,
-    AssignedBy: by,
-    assignT: Timestamp.now().toMillis(),
-    Status: newSt,
-  })
+  console.log(
+    'inside updater ',
+    assignedTo,
+    {
+      leadDocId,
+      assignedTo: value,
+      assignedToObj: assignedTo,
+      AssignedBy: by,
+      assignT: Timestamp.now().toMillis(),
+    },
+    {
+      assignedTo: value,
+      assignedToObj: assignedTo,
+      AssignedBy: by,
+      assignT: Timestamp.now().toMillis(),
+      Status: newSt,
+    }
+  )
 
   await updateDoc(doc(db, `${orgId}_leads`, leadDocId), {
     assignedTo: value,
@@ -4267,6 +4299,58 @@ export const updateUnitStatus = async (
       ...data,
     })
     enqueueSnackbar('Unit Status updation failed BBB', {
+      variant: 'error',
+    })
+  }
+  return
+}
+
+export const updateProjectionsAgreegations = async (
+  orgId,
+  data,
+  by,
+  enqueueSnackbar
+) => {
+  console.log('data is===>', data)
+  const { oldDate, schDate, pId, newPrice } = data
+  if (oldDate === schDate) {
+  }
+  const x = getWeekMonthNo(schDate)
+  const y = getWeekMonthNo(oldDate)
+  console.log('value of schDate', x)
+  const docId_d = `${pId}W${x.weekNumberOfYear}M${x.month}Y${x.year}s${data.stageId}`
+  const old_doc_Id = `${pId}W${y.weekNumberOfYear}M${y.month}Y${y.year}s${data.stageId}`
+
+  const payload = {
+    pId: pId,
+    block: 1,
+    week: x.weekNumberOfYear,
+    month: x.month,
+    year: x.year,
+    receivable: increment(newPrice),
+  }
+  const oldPayload = {
+    pId: pId,
+    block: 1,
+    week: y.weekNumberOfYear,
+    month: y.month,
+    year: y.year,
+    receivable: increment(-newPrice),
+  }
+
+  try {
+    await updateDoc(
+      doc(db, `${orgId}_payment_projections`, old_doc_Id),
+      oldPayload
+    )
+
+    await updateDoc(doc(db, `${orgId}_payment_projections`, docId_d), payload)
+  } catch (error) {
+    console.log('Projection  updation failed', error, {
+      ...data,
+    })
+    await setDoc(doc(db, `${orgId}_payment_projections`, docId_d), payload)
+    enqueueSnackbar('Projection updation failed BBB', {
       variant: 'error',
     })
   }
@@ -5353,8 +5437,6 @@ export const steamLeadsVsSources = async (orgId, snapshot, data, error) => {
   const { data: lead_logs, error1 } = await supabase
     .from(`spark_sales_leads_source_daily_logs`)
     .select('*')
-
-
 
   // .order('T', { ascending: false })
   console.log('my total fetched list is 3', lead_logs)

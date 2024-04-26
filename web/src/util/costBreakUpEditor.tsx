@@ -3,17 +3,17 @@ import { useState, useEffect, createRef, useRef } from 'react'
 import { InformationCircleIcon } from '@heroicons/react/outline'
 import { Checkbox } from '@mui/material'
 import { PDFExport } from '@progress/kendo-react-pdf'
+import { setHours, setMinutes } from 'date-fns'
 import { Timestamp } from 'firebase/firestore'
 import { Field, Form, Formik } from 'formik'
 import { useSnackbar } from 'notistack'
 import DatePicker from 'react-datepicker'
-
 import * as Yup from 'yup'
-import { setHours, setMinutes } from 'date-fns'
 
 import CrmUnitHeader from 'src/components/A_CrmModule/CrmUnitHeader'
 import {
   updateManagerApproval,
+  updateProjectionsAgreegations,
   updateUnitStatus,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
@@ -23,6 +23,7 @@ import CostBreakUpPdfPreview from './costBreakUpPdfPreview'
 import { TextFieldFlat } from './formFields/TextFieldFlatType'
 
 import '../styles/myStyles.css'
+import { getWeekMonthNo } from './dateConverter'
 
 const CostBreakUpEditor = ({
   projectDetails,
@@ -221,7 +222,8 @@ const CostBreakUpEditor = ({
       fullPs: newPlotPS,
       addChargesCS: partBPayload,
       T_balance:
-        netTotal - (selUnitDetails?.T_review + (selUnitDetails?.T_cleared || 0)),
+        netTotal -
+        (selUnitDetails?.T_review + (selUnitDetails?.T_cleared || 0)),
       T_Total: netTotal,
       T_review: selUnitDetails?.T_review,
       T_cleared: selUnitDetails?.T_cleared || 0,
@@ -232,6 +234,28 @@ const CostBreakUpEditor = ({
         (selUnitDetails?.T_review + (selUnitDetails?.T_cleared || 0)),
       // T_elgible: selUnitDetails?.T_elgible || 0,
     }
+    // project1WweeknoMmonthnoYyearno
+
+    newPlotPS.map((d) => {
+      // pId d.stage.value
+      // schDate
+      console.log('da', d)
+      const dataPayload = {
+        pId: selUnitDetails?.pId,
+        oldDate: d?.oldDate,
+        schDate: d?.schDate,
+        stageId: d?.stage.value,
+        newPrice: d?.value,
+        used: d?.used
+      }
+      updateProjectionsAgreegations(
+        orgId,
+        dataPayload,
+        user.email,
+        enqueueSnackbar
+      )
+    })
+
     updateManagerApproval(
       orgId,
       selUnitDetails?.id,
@@ -240,10 +264,11 @@ const CostBreakUpEditor = ({
       enqueueSnackbar
     )
   }
-  const handlePSdateChange = (index, newDate)=> {
+  const handlePSdateChange = (index, newDate) => {
     const updatedRows = [...newPlotPS]
+    updatedRows[index].oldDate = updatedRows[index].schDate
     updatedRows[index].schDate = newDate
-    setNewPS(updatedRows);
+    setNewPS(updatedRows)
   }
   return (
     <div>
@@ -485,9 +510,8 @@ const CostBreakUpEditor = ({
                                     )?.toLocaleString('en-IN')}
                                   </td>
                                 </tr>
-
                               ))}
-                                 <tr className="   h-[32px] border">
+                              <tr className="   h-[32px] border">
                                 <th className="w-[40%] text-[12px] text-left text-[#118D57] pl-2 border ">
                                   Total (B)
                                 </th>
@@ -584,32 +608,31 @@ const CostBreakUpEditor = ({
                                     {d1?.stage?.label}
                                   </th>
                                   <td className="text-[12px] px-2 py-2  text-right text-gray-700 ">
-                                  <DatePicker
-                            id="bmrdaStartDate"
-                            name="bmrdaStartDate"
-                            className="pl- px-1 h-8 rounded-md mt-1 min-w-[200px] inline text-[#0091ae] flex bg-grey-lighter text-grey-darker border border-[#cccccc] px-2"
-                            selected={d1?.schDate}
-                            onChange={(date) => {
-                              // formik.setFieldValue(
-                              //   'bmrdaStartDate',
-                              //   date.getTime()
-                              // )
-                              console.log('data', date.getTime())
-                              setStartDate(date)
-                              handlePSdateChange(
-                                inx,
-                                date.getTime()
-                              )
-                            }}
-                            timeFormat="HH:mm"
-                            injectTimes={[
-                              setHours(setMinutes(d, 1), 0),
-                              setHours(setMinutes(d, 5), 12),
-                              setHours(setMinutes(d, 59), 23),
-                            ]}
-                            dateFormat="MMMM d, yyyy"
-                          />
-                                   <span className='text-right'>{d1?.description}</span>
+                                    <DatePicker
+                                      id="bmrdaStartDate"
+                                      name="bmrdaStartDate"
+                                      className="pl- px-1 h-8 rounded-md mt-1 min-w-[200px] inline text-[#0091ae] flex bg-grey-lighter text-grey-darker border border-[#cccccc] px-2"
+                                      selected={d1?.schDate}
+                                      onChange={(date) => {
+                                        // formik.setFieldValue(
+                                        //   'bmrdaStartDate',
+                                        //   date.getTime()
+                                        // )
+                                        console.log('data', date.getTime())
+                                        setStartDate(date)
+                                        handlePSdateChange(inx, date.getTime())
+                                      }}
+                                      timeFormat="HH:mm"
+                                      injectTimes={[
+                                        setHours(setMinutes(d, 1), 0),
+                                        setHours(setMinutes(d, 5), 12),
+                                        setHours(setMinutes(d, 59), 23),
+                                      ]}
+                                      dateFormat="MMMM d, yyyy"
+                                    />
+                                    <span className="text-right">
+                                      {d1?.description}
+                                    </span>
                                   </td>
 
                                   <td className="text-[12px] px-2  text-right text-gray-800 ">

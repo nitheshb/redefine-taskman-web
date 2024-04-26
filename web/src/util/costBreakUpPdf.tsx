@@ -77,14 +77,7 @@ const CostBreakUpPdf = ({
     setNewPS(updatedRows)
   }
 
-  useEffect(() => {
-    return () => {
-      const x = newPlotPS?.map((d1) => {
-        return d1.schDate = d1?.schDate || d.getTime() + Number(d1?.zeroDay || 0) * 86400000
-      })
-      setNewPS(x)
-    }
-  }, [])
+
 
   useEffect(() => {
     console.log('gen costSheetA', costSheetA, costSheet)
@@ -1093,7 +1086,7 @@ const CostBreakUpPdf = ({
                                       id="bmrdaStartDate"
                                       name="bmrdaStartDate"
                                       className={`pl- px-1 h-8 rounded-md mt-1 min-w-[100px] inline text-[#0091ae] flex bg-grey-lighter text-grey-darker border border-[#cccccc] ${ d1?.schDate < newPlotPS[inx-1]?.schData ? 'border-red-600' : 'border-[#cccccc]' } px-2`}
-                                      selected={d1?.schDate}
+                                      selected={d1.schDate = d1?.schDate || d.getTime() + Number(d1?.zeroDay || 0) * 86400000}
                                       onChange={(date) => {
                                         // formik.setFieldValue(
                                         //   'bmrdaStartDate',
