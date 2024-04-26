@@ -1792,6 +1792,15 @@ export const getAllProjects = async (orgId, snapshot, error) => {
   console.log(getAllProjectsQuery, 'dcavlvblasfjv')
   return onSnapshot(getAllProjectsQuery, snapshot, error)
 }
+export const getAllCampaigns = async (orgId, snapshot, error) => {
+  console.log('org is ', orgId)
+  const getAllProjectsQuery = await query(
+    collection(db, `${orgId}_campaigns`),
+    orderBy('start_date', 'desc')
+  )
+  console.log(getAllProjectsQuery, 'dcavlvblasfjv')
+  return onSnapshot(getAllProjectsQuery, snapshot, error)
+}
 export const getSalesReportsData = async (orgId, snapshot, error) => {
   console.log('org is ', orgId)
   const getAllProjectsQuery = await query(
@@ -2092,6 +2101,26 @@ export const addLegalClarificationTicket = async (orgId, dta, user) => {
     )
   })
   await console.log('data is ', data, error)
+}
+export const addCampaign = async (orgId, data, by, msg) => {
+  try {
+
+    const x = await addDoc(collection(db, `${orgId}_campaigns`), data)
+return x
+    // await addLeadLog(orgId, x.id, {
+    //   s: 's',
+    //   type: 'status',
+    //   subtype: 'added',
+    //   T: Timestamp.now().toMillis(),
+    //   txt: msg,
+    //   by,
+    // })
+
+    // add task to scheduler to Intro call in 3 hrs
+
+  } catch (error) {
+    console.log('error in uploading file with data', data, error)
+  }
 }
 export const addLead = async (orgId, data, by, msg) => {
   try {
