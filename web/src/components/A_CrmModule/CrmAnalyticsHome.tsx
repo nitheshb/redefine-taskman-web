@@ -258,7 +258,7 @@ const CrmAnalyticsHome = ({ project }) => {
       )}
 
 
-{selCat === 'crm_Employe' && (
+{selCat === 'crm_analytics' && (
         <div className="">
           {/* <AdvancedDataTableTest /> */}
           <CrmEmployeeAnalytics/>
