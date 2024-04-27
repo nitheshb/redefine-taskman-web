@@ -49,6 +49,7 @@ import ReportBars from './Reports/ReportBars'
 import TransactionCard from './Reports/TransactionCard'
 import UnitStatusCardReport from './Reports/UnitStatusCardReport'
 import CrmProjectionReport from './Reports/CrmProjectionReport'
+import CrmAnalytics from './Reports/CrmAnalytics'
 
 const CrmAnalyticsHome = ({ project }) => {
   const theme = useTheme()
@@ -102,6 +103,7 @@ const CrmAnalyticsHome = ({ project }) => {
           { label: 'Collections', value: 'collections-summary' },
           { label: 'Home', value: 'crm_summary' },
           { label: 'Collection Projection Report', value: 'crm_projection_report' },
+          { label: 'Collection Employee', value: 'crm_analytics' },
           // { label: 'Source Report', value: 'source_report' },
           // { label: 'Employee Report', value: 'emp_status_report' },
           // { label: 'Project Leads Report', value: 'proj_leads_report' },
@@ -254,6 +256,21 @@ const CrmAnalyticsHome = ({ project }) => {
           {projects.length === 0 && <DummyBodyLayout />}
         </div>
       )}
+
+
+{selCat === 'crm_analytics' && (
+        <div className="">
+          {/* <AdvancedDataTableTest /> */}
+          <CrmAnalytics/>
+
+          {projects.length === 0 && <DummyBodyLayout />}
+        </div>
+      )}
+
+
+
+
+
 
       {selCat === 'creditnote_summary' && (
         <div className="">
