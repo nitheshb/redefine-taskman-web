@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const CrmAnalytics = () => {
+const CrmEmployeeAnalytics = () => {
   const dummyData = [
     {
       id: 1,
@@ -104,7 +104,7 @@ const CrmAnalytics = () => {
   return (
     <div className="container bg-white rounded-lg p-2">
       <div className="mb-6">
-        <h2 className="text-xl font-bold mb-2">Top Performing Employees</h2>
+        <h2 className="text-xl font-bold mb-2">Top Performing Employee</h2>
         <div className="flex justify-center items-end space-x-2 bg-[#fff] shadow-sm rounded-lg p-4" style={{ maxHeight: `${maxHeight}px`, width: '27%' }}>
           {top3Employees.map((employee, index) => (
             <div key={employee.id} className="flex flex-col items-center">
@@ -206,4 +206,6 @@ const CrmAnalytics = () => {
   );
 };
 
-export default CrmAnalytics;
+
+
+export default CrmEmployeeAnalytics

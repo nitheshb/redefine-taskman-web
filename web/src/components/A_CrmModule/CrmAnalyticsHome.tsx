@@ -49,7 +49,7 @@ import ReportBars from './Reports/ReportBars'
 import TransactionCard from './Reports/TransactionCard'
 import UnitStatusCardReport from './Reports/UnitStatusCardReport'
 import CrmProjectionReport from './Reports/CrmProjectionReport'
-import CrmAnalytics from './Reports/CrmAnalytics'
+import CrmEmployeeAnalytics from './Reports/CrmEmployeeAnalytics'
 
 const CrmAnalyticsHome = ({ project }) => {
   const theme = useTheme()
@@ -258,10 +258,10 @@ const CrmAnalyticsHome = ({ project }) => {
       )}
 
 
-{selCat === 'crm_analytics' && (
+{selCat === 'crm_Employe' && (
         <div className="">
           {/* <AdvancedDataTableTest /> */}
-          <CrmAnalytics/>
+          <CrmEmployeeAnalytics/>
 
           {projects.length === 0 && <DummyBodyLayout />}
         </div>
