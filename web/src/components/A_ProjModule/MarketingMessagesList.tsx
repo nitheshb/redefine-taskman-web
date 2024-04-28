@@ -1085,7 +1085,7 @@ const MarkeingMessagesList = ({ title, pId, data }) => {
         open={isOpenSideView}
         setOpen={setIsOpenSideView}
         title={'Notification Setup'}
-        widthClass="max-w-md"
+        widthClass="max-w-2xl"
         wbPayload={wbSelPayload}
       />
     </>

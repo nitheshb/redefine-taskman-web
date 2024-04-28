@@ -1163,8 +1163,8 @@ console.log('nw one', id, filFacing)
                                             </div>
                                           )}
 
-                                          {data?.status ===
-                                            'customer_blocked' && (
+                                          {["blocked", 'customer_blocked', 'management_blocked'].includes(data?.status)
+                                             && (
                                             <div className="flex flex-col items-right justify-between">
                                               <div className="flex flex-row justify-between items-right">
                                                 <h3 className="m-0 ml-2 mt-4 text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200">
@@ -1412,7 +1412,7 @@ console.log('nw one', id, filFacing)
                                         </div>
                                       )}
 
-                                      {data?.status === 'customer_blocked' && (
+                                      {["blocked", 'customer_blocked', 'management_blocked'].includes(data?.status) && (
                                         <div className="flex flex-col items-right justify-between">
                                           <div className="flex flex-row justify-between items-right">
                                             <h3 className="m-0 ml-2 mt-4 text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200">
