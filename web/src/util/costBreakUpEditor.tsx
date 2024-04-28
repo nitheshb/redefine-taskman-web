@@ -12,6 +12,7 @@ import * as Yup from 'yup'
 
 import CrmUnitHeader from 'src/components/A_CrmModule/CrmUnitHeader'
 import {
+  updateCrmExecutiveAgreegations,
   updateManagerApproval,
   updateProjectionsAgreegations,
   updateUnitStatus,
@@ -229,7 +230,7 @@ const CostBreakUpEditor = ({
     setNewPS(newPs)
   }
   const submitManagerApproval = (status) => {
-    console.log('data max is', selUnitDetails?.fullPs[0])
+    console.log('data max is', selUnitDetails)
 
 
 
@@ -256,9 +257,17 @@ const CostBreakUpEditor = ({
           stageId: d?.stage.value,
           newPrice: d?.value,
           used: d?.used,
+          assignedTo: selUnitDetails?.assignedTo || 'unassigned'
         }
 
         updateProjectionsAgreegations(
+          orgId,
+          dataPayload,
+          user.email,
+          enqueueSnackbar
+        )
+
+        updateCrmExecutiveAgreegations(
           orgId,
           dataPayload,
           user.email,

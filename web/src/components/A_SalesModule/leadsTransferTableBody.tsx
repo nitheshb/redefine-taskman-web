@@ -293,7 +293,7 @@ const LeadsTransferTableBody = ({
 
   return (
     <div className="h-full flex flex-col py-6 bg-white shadow-xl overflow-y-scroll">
-    
+
       <div className="px-4 sm:px-6  z-10 flex flex-row justify-between">
         {/* <Dialog.Title className=" font-semibold text-xl mr-auto ml-3  font-Playfair tracking-wider">
           {subtitle || title} ({leadsFilA.length || 0})
@@ -318,37 +318,8 @@ const LeadsTransferTableBody = ({
               Project {}
             </div>
           </section>
-          <section className="flex flex-col ml-2 py-1  border px-4 text-xs  rounded-full">
-            <AssigedToDropComp
-              assignerName={selVisitFixedBy?.label}
-              id={'id'}
-              align="right"
-              setAssigner={setVisitFixedByFun}
-              usersList={[
-                ...[{ label: 'All Executives', value: 'allexecutives' }],
-                ...usersList,
-              ]}
-            />
-            <div className="font-md text-xs text-gray-500 mb-[px] tracking-wide mr-4">
-              Visit Fixed By {}
-            </div>
-          </section>
+ 
 
-          <section className="flex flex-col ml-2 py-1 border px-4 text-xs  rounded-full">
-            <AssigedToDropComp
-              assignerName={selVisitDoneBy?.label}
-              id={'id'}
-              align="right"
-              setAssigner={setVisitDoneByFun}
-              usersList={[
-                ...[{ label: 'All Executives', value: 'allexecutives' }],
-                ...usersList,
-              ]}
-            />
-            <div className="font-md text-xs text-gray-500 mb-[px] tracking-wide mr-4">
-              Visit Done By {}
-            </div>
-          </section>
 
           <Tooltip title={`Download ${selectedIds.length} Row`}>
             {/* <IconButton>
@@ -407,16 +378,12 @@ const LeadsTransferTableBody = ({
                       { label: 'Project', id: 'label' },
                       { label: 'Lead Ph', id: 'all' },
                       { label: 'Status', id: 'new' },
-                      { label: 'From', id: 'all' },
-                      { label: 'To', id: 'all' },
+
                       { label: 'Source', id: 'new' },
-                      { label: 'Visit Fixed On', id: 'new' },
-                      { label: 'Visit Fixed By', id: 'new' },
-                      { label: 'Visited On', id: 'new' },
-                      { label: 'Visit Done By', id: 'new' },
+
                       { label: 'Executive', id: 'all' },
                       { label: 'Created on', id: 'all' },
-                      { label: 'By', id: 'all' },
+
                     ].map((d, i) => (
                       <th
                         key={i}
@@ -469,39 +436,20 @@ const LeadsTransferTableBody = ({
                         <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
                           {data?.Status}
                         </td>
-                        <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
-                          {data?.from}
-                        </td>
-                        <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
-                          {data?.coverA?.includes('visitdone')
-                            ? 'visitdone'
-                            : data?.to}
-                        </td>
+
 
                         <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
                           {data?.Source}
                         </td>
-                        <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
-                          {prettyDateTime(data?.assignT || data?.Date)}
-                        </td>
-                        <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
-                          {data?.visitFixedBy}
-                        </td>
-                        <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
-                          {data?.Time}
-                        </td>
-                        <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
-                          {data?.by}
-                        </td>
+
+
                         <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
                           {data?.assignedToObj?.name}
                         </td>
                         <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
                           {prettyDateTime(data?.Date)}
                         </td>
-                        <td className="text-sm text-gray-900  px-6 py-2 whitespace-nowrap">
-                          {data?.leadOwner}
-                        </td>
+
                       </tr>
                     )
                   })}

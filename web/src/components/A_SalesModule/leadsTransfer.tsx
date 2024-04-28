@@ -13,6 +13,7 @@ import {
   getAllProjects,
   getLeadsByDate,
   getLeadsByStatusUser,
+  steamUsersListByDeptWithInactive,
   steamUsersListByRole,
   updateLeadAssigTo,
 } from 'src/context/dbQueryFirebase'
@@ -51,6 +52,7 @@ const LeadsTransferHome = ({ project }) => {
 
   const [isImportLeadsOpen, setisImportLeadsOpen] = useState(false)
 
+  const [usersAllList, setUsersAllList] = useState([])
   const [usersList, setusersList] = useState([])
 
   const [leadsFetchedRawData, setLeadsFetchedRawData] = useState([])
@@ -116,6 +118,30 @@ const LeadsTransferHome = ({ project }) => {
       value: 'rejected',
     },
   ]
+
+
+  useEffect(() => {
+    const unsubscribe = steamUsersListByDeptWithInactive(
+      orgId,
+      ['sales-manager', 'sales-executive'],
+      (querySnapshot) => {
+        const usersListA = querySnapshot.docs.map((docSnapshot) =>
+          docSnapshot.data()
+        )
+
+        usersListA.map((user) => {
+          user.label = user.displayName || user.name
+          user.value = user.uid
+        })
+
+        setUsersAllList(usersListA)
+      },
+      (error) => setUsersAllList([])
+    )
+
+    return unsubscribe
+  }, [])
+
   useEffect(() => {
     const unsubscribe = steamUsersListByRole(
       orgId,
@@ -305,7 +331,7 @@ const LeadsTransferHome = ({ project }) => {
                         //   { label: 'My Leads', value: 'myleads' },
                         //   { label: 'Cp Leads', value: 'cpleads' },
                         // ],
-                        ...usersList,
+                        ...usersAllList,
                       ]}
                     />
                     </article>
