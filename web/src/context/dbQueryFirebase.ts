@@ -4374,6 +4374,7 @@ export const updateProjectionsAgreegations = async (
 ) => {
   console.log('data is===>', data)
   const { oldDate, schDate, pId, newPrice } = data
+  console.log('data is===>', oldDate,schDate)
   if (oldDate != schDate) {
 
   const x = getWeekMonthNo(schDate)
@@ -4398,7 +4399,7 @@ export const updateProjectionsAgreegations = async (
     year: y.year,
     receivable: increment(-newPrice),
   }
-
+  console.log('Projection  updation failed', docId_d, payload)
   try {
     await updateDoc(
       doc(db, `${orgId}_payment_projections`, old_doc_Id),
