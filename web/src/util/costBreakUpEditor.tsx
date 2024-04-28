@@ -23,7 +23,7 @@ import CostBreakUpPdfPreview from './costBreakUpPdfPreview'
 import { TextFieldFlat } from './formFields/TextFieldFlatType'
 
 import '../styles/myStyles.css'
-import { getWeekMonthNo } from './dateConverter'
+import { getWeekMonthNo, prettyDate } from './dateConverter'
 
 const CostBreakUpEditor = ({
   projectDetails,
@@ -65,6 +65,7 @@ const CostBreakUpEditor = ({
   const [pdfPreview, setpdfPreview] = useState(false)
   const [showGstCol, setShowGstCol] = useState(true)
   const [startDate, setStartDate] = useState(d)
+  const [bootedPs, setBootedPs] = useState([])
 
   useEffect(() => {
     boot()
@@ -151,6 +152,11 @@ const CostBreakUpEditor = ({
     updatedRows[inx].charges = newValue
     setCostSheetA(y)
     setTotalFun(costSheetA, partBPayload)
+    const bootedPs = newPlotPS.map((d) => {
+      const newObj = d
+      newObj.oldSchDate = d?.schDate
+    })
+    setBootedPs(bootedPs)
   }
   const setTotalFun = async (costSheetA, partBPayload) => {
     console.log('ami here', partBPayload, costSheetA, selUnitDetails)
@@ -236,17 +242,20 @@ const CostBreakUpEditor = ({
     }
     // project1WweeknoMmonthnoYyearno
 
-    newPlotPS.map((d) => {
+    newPlotPS.map((d, i) => {
       // pId d.stage.value
       // schDate
-      console.log('da', d)
+      console.log('node aa is ', bootedPs[i]['oldSchDate'] , d.stageId,prettyDate(d?.schDate))
+
+      return
+      if(bootedPs[i]['oldSchDate']  != d?.schDate) {
       const dataPayload = {
         pId: selUnitDetails?.pId,
-        oldDate: d?.oldDate,
+        oldDate: bootedPs[i]['oldSchDate'] ,
         schDate: d?.schDate,
         stageId: d?.stage.value,
         newPrice: d?.value,
-        used: d?.used
+        used: d?.used,
       }
       updateProjectionsAgreegations(
         orgId,
@@ -254,6 +263,7 @@ const CostBreakUpEditor = ({
         user.email,
         enqueueSnackbar
       )
+      }
     })
 
     updateManagerApproval(
@@ -266,7 +276,7 @@ const CostBreakUpEditor = ({
   }
   const handlePSdateChange = (index, newDate) => {
     const updatedRows = [...newPlotPS]
-    updatedRows[index].oldDate = updatedRows[index].schDate
+    // updatedRows[index].oldDate = updatedRows[index].schDate
     updatedRows[index].schDate = newDate
     setNewPS(updatedRows)
   }

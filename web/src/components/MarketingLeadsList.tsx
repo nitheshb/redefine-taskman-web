@@ -36,13 +36,18 @@ const CampaignTable = ({ campaigns }) => {
   const [fetchedCampaignsList, setfetchedCampaignsList] = useState([])
 
 
+  const [campaignPaylaod, setCampaignPaylaod] = useState({})
+  const [mode, setMode] = useState('add')
+
+
+
   const [isImportLeadsOpen1, setisImportLeadsOpen1] = React.useState(false)
   useEffect(() => {
     const unsubscribe = getAllCampaigns(
       orgId,
       (querySnapshot) => {
         const projectsListA = querySnapshot.docs.map((docSnapshot) =>
-          docSnapshot.data()
+         {return { ...docSnapshot.data(), ...{ docId: docSnapshot.id } } }
         )
         setfetchedCampaignsList(projectsListA)
         projectsListA.map((user) => {
@@ -69,7 +74,10 @@ const CampaignTable = ({ campaigns }) => {
           </h2>
           <button
             className="flex items-center bg-[#C2D7FE] text-black  py-2 px-4 rounded-full z-10"
-            onClick={() => setisImportLeadsOpen1(true)}
+            onClick={() => {
+              setMode('add')
+              setisImportLeadsOpen1(true)}
+            }
           >
             <svg
               className="h-6 w-6 mr-2"
@@ -181,6 +189,10 @@ const CampaignTable = ({ campaigns }) => {
                   key={i}
                   className="hover:bg-gray-100"
                   style={{ height: '40px' }}
+                  onClick={()=> {
+                    setMode('edit')
+                    setisImportLeadsOpen1(true)
+                    setCampaignPaylaod(campaign)}}
                 >
                   <td
                     className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border border-gray-200"
@@ -224,6 +236,42 @@ const CampaignTable = ({ campaigns }) => {
                   >
                     {prettyDate(campaign?.end_date)}
                   </td>
+                  <td
+                    className="px-3 py-4 whitespace-nowrap text-center text-sm text-gray-700 border border-gray-200"
+                    style={{ width: '100px' }}
+                  >
+                    {'NA'}
+                  </td>
+                  <td
+                    className="px-3 py-4 whitespace-nowrap text-center text-sm text-gray-700 border border-gray-200"
+                    style={{ width: '100px' }}
+                  >
+                    {'NA'}
+                  </td>
+                  <td
+                    className="px-3 py-4 whitespace-nowrap text-center text-sm text-gray-700 border border-gray-200"
+                    style={{ width: '100px' }}
+                  >
+                    {'NA'}
+                  </td>
+                  <td
+                    className="px-3 py-4 whitespace-nowrap text-center text-sm text-gray-700 border border-gray-200"
+                    style={{ width: '100px' }}
+                  >
+                    {'NA'}
+                  </td>
+                  <td
+                    className="px-3 py-4 whitespace-nowrap text-center text-sm text-gray-700 border border-gray-200"
+                    style={{ width: '100px' }}
+                  >
+                    {'NA'}
+                  </td>
+                  <td
+                    className="px-3 py-4 whitespace-nowrap text-center text-sm text-gray-700 border border-gray-200"
+                    style={{ width: '100px' }}
+                  >
+                    {'NA'}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -241,7 +289,9 @@ const CampaignTable = ({ campaigns }) => {
         open={isImportLeadsOpen1}
         setOpen={setisImportLeadsOpen1}
         title={'Add Campaign'}
+        mode={mode}
         // customerDetails={selUserProfile}
+        campaignPaylaod={campaignPaylaod}
         widthClass="max-w-xl"
       />
     </>
