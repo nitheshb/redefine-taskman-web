@@ -76,6 +76,15 @@ export const steamUsersListByDept = (orgId, dept, snapshot, error) => {
   )
   return onSnapshot(itemsQuery, snapshot, error)
 }
+// get users list by Dept
+export const steamUsersListByDeptWithInactive = (orgId, dept, snapshot, error) => {
+  const itemsQuery = query(
+    collection(db, 'users'),
+    where('orgId', '==', orgId),
+    where('department', 'array-contains-any', dept)
+  )
+  return onSnapshot(itemsQuery, snapshot, error)
+}
 // get all bank detials list
 export const steamBankDetailsList = (orgId, snapshot, error) => {
   const itemsQuery = query(collection(db, `${orgId}_BankDetails`))
