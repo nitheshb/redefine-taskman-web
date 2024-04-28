@@ -13,6 +13,7 @@ import MyPayHomeBody from 'src/components/myPayHomeBody'
 import LeadsLakeHomePage from 'src/components/PreSaleModule/LeadsManagement/LeadsLakeHomePage'
 import ProjectsUnitInventory from 'src/components/projectUnitsInventory'
 import TodayLeadsHomePage from 'src/components/TodayLeadsHomePage'
+import MarketingLeadsList from 'src/components/MarketingLeadsList'
 import { useFileUpload } from 'src/components/useFileUpload'
 import { USER_ROLES } from 'src/constants/userRoles'
 import { useAuth } from 'src/context/firebase-auth-context'
@@ -94,7 +95,14 @@ const MarketingModulePage = (props) => {
               {viewable === 'Today1' && (
                 <TodayLeadsHomePage taskType={viewable} />
               )}
-                       {viewable === 'Team Lead Report' && (
+
+              {viewable === 'MarketingSocial' && (
+                <MarketingLeadsList taskType={viewable} />
+              )}
+
+
+
+                {viewable === 'Team Lead Report' && (
                 <>
                   {/* <ReportMain /> */}
                   <LeadsTeamReportBody
@@ -115,6 +123,8 @@ const MarketingModulePage = (props) => {
                   /> */}
                 </>
               )}
+
+
             </div>
 
           </div>
