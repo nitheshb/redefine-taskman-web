@@ -87,7 +87,7 @@ const CrmCollectionReport = ({ projects }) => {
   const [monthsA, setMonthsA] = useState(getNextThreeMonths())
   const [projectAValues, setProjectWithValues] = useState([])
   const [loader, setLoaderIcon] = useState(false)
-  const [selCat, setSelCat] = useState('project_collections')
+  const [selCat, setSelCat] = useState('employee_collections')
   const [crmEmployeesA, setCRMEmployees] = useState([])
   useEffect(() => {
     getCRMemployees()
