@@ -43,6 +43,7 @@ import ViewUnitDetails from '../ViewUnitDetails'
 import AddCampaignForm from '../A_MarketingModule/AddCampaign'
 
 const SiderForm = ({
+  mode,
   BlockFeed,
   blockDetails,
   customerDetails = {},
@@ -83,6 +84,7 @@ const SiderForm = ({
   viewUnitConstData,
   wbPayload,
   widthClass,
+  campaignPaylaod
 }) => {
   // dont write too many here
   //  this is for customerProfileSideView
@@ -158,8 +160,8 @@ const SiderForm = ({
                 {title === 'Add Task' && (
                   <AddTaskForm title={title} dialogOpen={setOpen} />
                 )}
-                                {title === 'Add Campaign' && (
-                  <AddCampaignForm title={title} dialogOpen={setOpen} />
+                {title === 'Add Campaign' && (
+                  <AddCampaignForm mode={mode} title={title} campaignPaylaod ={campaignPaylaod} dialogOpen={setOpen} />
                 )}
                 {title === 'view_task_man' && (
                   <ViewEditTaskManForm

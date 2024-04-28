@@ -15,22 +15,26 @@ import DatePicker from 'react-datepicker'
 import NumberFormat from 'react-number-format'
 import Select from 'react-select'
 import * as Yup from 'yup'
+import { useSnackbar } from 'notistack'
+
+import { Label, InputField, TextAreaField, FieldError } from '@redwoodjs/forms'
+import { useRouterStateSetter } from '@redwoodjs/router/dist/router-context'
+
 import {
   leadBinReasonList,
   sourceList,
   sourceListItems,
 } from 'src/constants/projects'
-import { Label, InputField, TextAreaField, FieldError } from '@redwoodjs/forms'
-import { useRouterStateSetter } from '@redwoodjs/router/dist/router-context'
-
 import {
   addCampaign,
   addLead,
   addTaskBusiness,
+  checkIfCampaignAlreadyExists,
   checkIfLeadAlreadyExists,
   getAllProjects,
   steamUsersList,
   steamUsersListByRole,
+  updateCampaign,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import {
@@ -39,16 +43,12 @@ import {
 } from 'src/util/axiosWhatAppApi'
 import { PhoneNoField } from 'src/util/formFields/phNoField'
 import { CustomSelect } from 'src/util/formFields/selectBoxField'
+import { CustomSelectNew } from 'src/util/formFields/selectBoxFieldNew'
 import { SlimSelectBox } from 'src/util/formFields/slimSelectBoxField'
 import { TextField } from 'src/util/formFields/TextField'
 import { TextField2 } from 'src/util/formFields/TextField2'
 
 import Loader from '../Loader/Loader'
-
-import { CustomSelectNew } from 'src/util/formFields/selectBoxFieldNew'
-
-
-
 
 const people = [
   { name: 'Priority 1' },
@@ -57,7 +57,7 @@ const people = [
   { name: 'Priority 4' },
 ]
 
-const AddCampaignForm = ({ dialogOpen }) => {
+const AddCampaignForm = ({ mode, dialogOpen, campaignPaylaod }) => {
   const { user } = useAuth()
   const { orgId } = user
   const d = new window.Date()
@@ -123,8 +123,6 @@ const AddCampaignForm = ({ dialogOpen }) => {
   //   { label: 'User3', value: 'User3' },
   // ]
 
-
-
   const devTypeA = [
     {
       name: 'Outright',
@@ -142,26 +140,50 @@ const AddCampaignForm = ({ dialogOpen }) => {
   const [selected, setSelected] = useState({})
   const [devType, setdevType] = useState(devTypeA[0])
   const [files, setFiles] = useState([])
-
-
+  const { enqueueSnackbar } = useSnackbar()
 
   const onSubmitFun = async (data, resetForm) => {
     // todo: check if campaign exists
     // const foundLength = await checkIfLeadAlreadyExists('spark_leads', mobileNo)
+    if(mode === 'add'){
 
+    const { campaignTitle } = data
+    const foundLength = await checkIfCampaignAlreadyExists(orgId, campaignTitle)
+    if (foundLength?.length > 0) {
+      console.log('foundLENGTH IS ', foundLength)
+      // setFoundDocs(foundLength)
+      setFormMessage('Campaign name already Exists')
+      setLoading(false)
+    } else {
+      data.start_date = startDate.getTime()
+      data.end_date = endDate.getTime()
+
+      data.priorities = prior ? 'high' : 'medium'
+      setLoading(true)
+      await addCampaign(orgId, data, user.email, 'msg')
+
+
+      await resetForm()
+      await setFormMessage('Campaign Created..!')
+      await setLoading(false)
+      await dialogOpen(false)
+      return
+    }
+  }else {
     data.start_date = startDate.getTime()
-    data.end_date = endDate.getTime()
+      data.end_date = endDate.getTime()
 
-    data.priorities = prior ? 'high' : 'medium'
-    setLoading(true)
-    await addCampaign(orgId,data, user.email, 'msg')
-    // await addTaskBusiness(orgId, data, user)
+      data.priorities = prior ? 'high' : 'medium'
+      setLoading(true)
+      await updateCampaign(orgId, campaignPaylaod?.docId, data, enqueueSnackbar)
 
-    await resetForm()
-    await setFormMessage('Campaign Created..!')
-    await setLoading(false)
-    return
 
+      await resetForm()
+      await setFormMessage('Campaign Created..!')
+      await setLoading(false)
+      await dialogOpen(false)
+      return
+  }
   }
 
   const validate = Yup.object({
@@ -201,29 +223,44 @@ const AddCampaignForm = ({ dialogOpen }) => {
         <section className="flex flex-row justify-between mx-4 pt-2 pb-2">
           <span className="ml-1 mt-[1px] ">
             <label className="font-semibold text-[#053219]  text-[18px]  mb-1  ">
-              {'Add New Campaign'} 🍉
+              {mode === 'add' ? 'Add New Campaign' : 'Edit Campaign'} 🍉
               <abbr title="required"></abbr>
             </label>
           </span>
         </section>
       </div>
-
+      {formMessage === 'Saved Successfully..!' && (
+        <p className=" flex text-md text-slate-800  my-3">
+          <img className="w-[40px] h-[40px] inline mr-2" alt="" src="/ok.gif" />
+          <span className="mt-2">{formMessage}</span>
+        </p>
+      )}
+      {formMessage === 'Campaign name already Exists' && (
+        <p className=" flex text-md text-pink-800  my-3">
+          <img
+            className="w-[40px] h-[40px] inline mr-2"
+            alt=""
+            src="/error.gif"
+          />
+          <span className="mt-2">{formMessage}</span>
+        </p>
+      )}
       <div className="grid  gap-8 grid-cols-1 ">
         <div className="flex flex-col  ">
           <div className="mt-0">
             {/* new one */}
 
             <Formik
-                enableReinitialize={true}
+              enableReinitialize={true}
               initialValues={{
-                campaignTitle: '',
-                campaignDesc: '',
-                assignedTo: userIs.value,
-                assignedToObj: userIs,
-                source: '',
-                project: '',
-                projectId: '',
-                budget: 0,
+                campaignTitle: campaignPaylaod?.campaignTitle || '',
+                campaignDesc: campaignPaylaod?.campaignDesc || '',
+                assignedTo: campaignPaylaod?.assignedTo || userIs.value,
+                assignedToObj: campaignPaylaod?.assignedToObj || userIs,
+                source: campaignPaylaod?.source || '',
+                project: campaignPaylaod?.project || '',
+                projectId: campaignPaylaod?.projectId || '',
+                budget: campaignPaylaod?.budget || 0,
               }}
               validationSchema={validate}
               onSubmit={(values, { resetForm }) => {
@@ -281,9 +318,9 @@ const AddCampaignForm = ({ dialogOpen }) => {
                                 console.log('is this checked ', priorTxt)
                               }}
                             />
-                          <div className="w-[85px] ml-1 mt-[8px] text-sm text-[#00000080]">
-                            High Priority
-                          </div>
+                            <div className="w-[85px] ml-1 mt-[8px] text-sm text-[#00000080]">
+                              High Priority
+                            </div>
                             <FireIcon
                               className={`w-4 h-4 mt-[11px] ${
                                 prior ? 'text-[#f36b00]' : 'text-[#00000080] '
@@ -316,42 +353,42 @@ const AddCampaignForm = ({ dialogOpen }) => {
                           ></textarea>
                         </div>
                         <section className="mt-1 px-4 rounded-lg bg-[#f8f9fa] border border-gray-100 ">
-                        <div className="md:flex md:flex-row md:space-x-4 w-full text-xs ">
-                          <div className="w-full flex flex-col mb-3 mt-2">
-                            <CustomSelect
-                              name="source"
-                              label="Lead Source*"
-                              className="input mt-3"
-                              onChange={(value) => {
-                                formik.setFieldValue('source', value.value)
-                              }}
-                              value={formik.values.source}
-                              options={sourceList}
-                            />
-                          </div>
+                          <div className="md:flex md:flex-row md:space-x-4 w-full text-xs ">
+                            <div className="w-full flex flex-col mb-3 mt-2">
+                              <CustomSelect
+                                name="source"
+                                label="Lead Source*"
+                                className="input mt-3"
+                                onChange={(value) => {
+                                  formik.setFieldValue('source', value.value)
+                                }}
+                                value={formik.values.source}
+                                options={sourceList}
+                              />
+                            </div>
 
-                          <div className="w-full flex flex-col mb-3 mt-2">
-                            <CustomSelect
-                              name="project"
-                              label="Select Project"
-                              className="input mt-3"
-                              onChange={(value) => {
-                                console.log('value of project is ', value)
-                                formik.setFieldValue('projectId', value.uid)
-                                formik.setFieldValue('project', value.value)
-                              }}
-                              value={formik.values.project}
-                              // options={aquaticCreatures}
-                              options={projectList}
-                            />
+                            <div className="w-full flex flex-col mb-3 mt-2">
+                              <CustomSelect
+                                name="project"
+                                label="Select Project"
+                                className="input mt-3"
+                                onChange={(value) => {
+                                  console.log('value of project is ', value)
+                                  formik.setFieldValue('projectId', value.uid)
+                                  formik.setFieldValue('project', value.value)
+                                }}
+                                value={formik.values.project}
+                                // options={aquaticCreatures}
+                                options={projectList}
+                              />
+                            </div>
                           </div>
-                        </div>
-                        <div className="md:flex md:flex-row md:space-x-4 w-full text-xs ">
-                        <div className="w-full flex flex-col mb-3 mt-2">
-                          <label className="label mt-3 font-regular text-[12px] block mb-1 text-gray-700">
-                              {'Start Date'}
-                            </label>
-                          <div className="bg-green border  pl-2 rounded flex flex-row h-[32px]  ">
+                          <div className="md:flex md:flex-row md:space-x-4 w-full text-xs ">
+                            <div className="w-full flex flex-col mb-3 mt-2">
+                              <label className="label mt-3 font-regular text-[12px] block mb-1 text-gray-700">
+                                {'Start Date'}
+                              </label>
+                              <div className="bg-green border  pl-2 rounded flex flex-row h-[32px]  ">
                                 <CalendarIcon className="w-4  inline text-[#058527]" />
                                 <span className="inline">
                                   <DatePicker
@@ -369,13 +406,13 @@ const AddCampaignForm = ({ dialogOpen }) => {
                                   />
                                 </span>
                               </div>
-                          </div>
+                            </div>
 
-                          <div className="w-full flex flex-col mb-3 mt-2">
-                          <label className="label mt-3 font-regular text-[12px] block mb-1 text-gray-700">
-                              {'End Date*'}
-                            </label>
-                          <div className="bg-green border  pl-2 rounded flex flex-row h-[32px]  ">
+                            <div className="w-full flex flex-col mb-3 mt-2">
+                              <label className="label mt-3 font-regular text-[12px] block mb-1 text-gray-700">
+                                {'End Date*'}
+                              </label>
+                              <div className="bg-green border  pl-2 rounded flex flex-row h-[32px]  ">
                                 <CalendarIcon className="w-4  inline text-[#058527]" />
                                 <span className="inline">
                                   <DatePicker
@@ -393,50 +430,46 @@ const AddCampaignForm = ({ dialogOpen }) => {
                                   />
                                 </span>
                               </div>
+                            </div>
                           </div>
-                        </div>
-                        <div className="md:flex md:flex-row md:space-x-4 w-full text-xs ">
-                        <div className="w-full flex flex-col mb-3 mt-2">
-                        <div className="mb-3 mt-3 space-y-2 w-full text-xs">
-                        <TextField
-                          label="Campaign Budget"
-                          name="budget"
-                          type="text"
-                        />
-                      </div>
-                          </div>
-
-                          <div className="w-full flex flex-col mb-3 mt-2">
-                          <label className="label mt-3 font-regular text-[12px] block mb-1 text-gray-700">
-                              {'Responsible person*'}
-                            </label>
-                          <div className=" w-full min-w-full rounded flex flex-row h-[32px]  ">
-                          <CustomSelectNew
-                                name="assignedTo"
-                                label="Assigned To"
-                                showLabel={false}
-                                placeholder="Name"
-                                className="input mt-[3px] w-full"
-                                onChange={(value) => {
-                                  formik.setFieldValue(
-                                    'assignedTo',
-                                    value.value
-                                  )
-                                  formik.setFieldValue('assignedToObj', value)
-                                }}
-                                value={formik.values.assignedTo}
-                                // options={aquaticCreatures}
-                                options={usersList}
-                              />
+                          <div className="md:flex md:flex-row md:space-x-4 w-full text-xs ">
+                            <div className="w-full flex flex-col mb-3 mt-2">
+                              <div className="mb-3 mt-3 space-y-2 w-full text-xs">
+                                <TextField
+                                  label="Campaign Budget"
+                                  name="budget"
+                                  type="text"
+                                />
                               </div>
+                            </div>
+
+                            <div className="w-full flex flex-col mb-3 mt-2">
+                              <label className="label mt-3 font-regular text-[12px] block mb-1 text-gray-700">
+                                {'Responsible person*'}
+                              </label>
+                              <div className=" w-full min-w-full rounded flex flex-row h-[32px]  ">
+                                <CustomSelectNew
+                                  name="assignedTo"
+                                  label="Assigned To"
+                                  showLabel={false}
+                                  placeholder="Name"
+                                  className="input mt-[3px] w-full"
+                                  onChange={(value) => {
+                                    formik.setFieldValue(
+                                      'assignedTo',
+                                      value.value
+                                    )
+                                    formik.setFieldValue('assignedToObj', value)
+                                  }}
+                                  value={formik.values.assignedTo}
+                                  // options={aquaticCreatures}
+                                  options={usersList}
+                                />
+                              </div>
+                            </div>
                           </div>
-                        </div>
 
-
-
-                          <div className=" mt-3">
-
-                          </div>
+                          <div className=" mt-3"></div>
                         </section>
                         {/* <div className="w-full flex flex-col  ">
                           <CustomSelect

@@ -1670,7 +1670,21 @@ export const checkIfLeadAlreadyExists = async (cName, matchVal) => {
 
   // db.collection(`${orgId}_leads`).add(data)
 }
+export const checkIfCampaignAlreadyExists = async (orgId, unitId) => {
+  const q = await query(
+    collection(db, `${orgId}_campaigns`),
+    where('campaignTitle', '==', unitId)
+  )
+  const querySnapshot = await getDocs(q)
+  await console.log('foundLength @@', querySnapshot.docs.length)
+  const parentDocs = []
+  querySnapshot.forEach((doc) => {
+    console.log('dc', doc.id, ' => ', doc.data())
+    parentDocs.push(doc.data())
+  })
 
+  return parentDocs
+}
 export const checkIfUnitAlreadyExists = async (
   cName,
   pId,
@@ -2104,9 +2118,8 @@ export const addLegalClarificationTicket = async (orgId, dta, user) => {
 }
 export const addCampaign = async (orgId, data, by, msg) => {
   try {
-
     const x = await addDoc(collection(db, `${orgId}_campaigns`), data)
-return x
+    return x
     // await addLeadLog(orgId, x.id, {
     //   s: 's',
     //   type: 'status',
@@ -2117,7 +2130,6 @@ return x
     // })
 
     // add task to scheduler to Intro call in 3 hrs
-
   } catch (error) {
     console.log('error in uploading file with data', data, error)
   }
@@ -2608,21 +2620,20 @@ export const gretProjectionSum = async (orgId, data) => {
     where('pId', '==', pId),
     // where('pId', '==', '02dce2f6-f056-4dcb-9819-01b9710781e1'), //
 
-    where('month', '==', monthNo),
+    where('month', '==', monthNo)
     // where('year', '==', currentYear)
   )
   const parentDocs = []
   const querySnapshot = await getDocs(q)
   await console.log('foundLength @@', querySnapshot.docs.length)
-  let receivable = 0;
+  let receivable = 0
   querySnapshot.forEach((doc) => {
-
     const x = doc.data()
     console.log('dc', doc.id, ' => ', doc.data())
-  receivable = receivable + x.receivable
+    receivable = receivable + x.receivable
     parentDocs.push(doc.data())
   })
-  console.log('total is ', receivable, )
+  console.log('total is ', receivable)
   return receivable
 }
 export const editPlotStatusAuditUnit = async (
@@ -3486,6 +3497,27 @@ export const addPhasePartAtax = async (
     })
   }
 }
+export const updateCampaign = async (
+  orgId,
+  uid,
+  payload,
+  enqueueSnackbar
+) => {
+  try {
+    await updateDoc(doc(db, `${orgId}_campaigns`, uid), {
+      ...payload,
+    })
+
+    enqueueSnackbar('Campaign Edited successfully', {
+      variant: 'success',
+    })
+  } catch (e) {
+    console.log(' error is here', e, payload, uid)
+    enqueueSnackbar(e.message, {
+      variant: 'error',
+    })
+  }
+}
 export const updateLeadSourcesItem = async (
   orgId,
   uid,
@@ -4342,8 +4374,9 @@ export const updateProjectionsAgreegations = async (
 ) => {
   console.log('data is===>', data)
   const { oldDate, schDate, pId, newPrice } = data
-  if (oldDate === schDate) {
-  }
+  console.log('data is===>', oldDate,schDate)
+  if (oldDate != schDate) {
+
   const x = getWeekMonthNo(schDate)
   const y = getWeekMonthNo(oldDate)
   console.log('value of schDate', x)
@@ -4366,7 +4399,7 @@ export const updateProjectionsAgreegations = async (
     year: y.year,
     receivable: increment(-newPrice),
   }
-
+  console.log('Projection  updation failed', docId_d, payload)
   try {
     await updateDoc(
       doc(db, `${orgId}_payment_projections`, old_doc_Id),
@@ -4383,6 +4416,9 @@ export const updateProjectionsAgreegations = async (
       variant: 'error',
     })
   }
+}else{
+  return
+}
   return
 }
 export const updateManagerApproval = async (

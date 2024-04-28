@@ -23,7 +23,7 @@ import CostBreakUpPdfPreview from './costBreakUpPdfPreview'
 import { TextFieldFlat } from './formFields/TextFieldFlatType'
 
 import '../styles/myStyles.css'
-import { getWeekMonthNo } from './dateConverter'
+import { getWeekMonthNo, prettyDate } from './dateConverter'
 
 const CostBreakUpEditor = ({
   projectDetails,
@@ -42,6 +42,7 @@ const CostBreakUpEditor = ({
   newPlotCostSheetA,
   setNewPlotCostSheetA,
   setNewPlotPS,
+  bootedPs,
 }) => {
   const d = new window.Date()
 
@@ -69,6 +70,18 @@ const CostBreakUpEditor = ({
   useEffect(() => {
     boot()
   }, [selUnitDetails])
+
+  useEffect(() => {
+    console.log('data is===> 0', selUnitDetails?.fullPs)
+    newPlotPS.map((d) => {
+      console.log('data max is', d)
+      const newObj = d
+      newObj.oldSchDate = d?.schDate
+      return newObj
+    })
+    const z = selUnitDetails?.fullPs
+  }, [])
+
   // useEffect(() => {
   //   CreateNewPsFun(netTotal, plotBookingAdv, csMode)
   // }, [netTotal, plotBookingAdv, csMode])
@@ -216,10 +229,53 @@ const CostBreakUpEditor = ({
     setNewPS(newPs)
   }
   const submitManagerApproval = (status) => {
+    console.log('data max is', selUnitDetails?.fullPs[0])
+
+
+
+    // project1WweeknoMmonthnoYyearno
+
+    newPlotPS.map((d, i) => {
+      console.log(
+        'data is===>',
+        prettyDate(newPlotPS[i]['schDate']),
+        prettyDate(d['oldDate']),
+        d?.stage.value,
+        prettyDate(bootedPs[i]['schDate']),
+        prettyDate(d?.schDate),
+        bootedPs[i]['schDate'] == d?.schDate
+      )
+      //
+     // this will set the previous date immutable as current date
+
+      if (d?.oldDate != d?.schDate) {
+        const dataPayload = {
+          pId: selUnitDetails?.pId,
+          oldDate: d?.oldDate,
+          schDate: d?.schDate,
+          stageId: d?.stage.value,
+          newPrice: d?.value,
+          used: d?.used,
+        }
+
+        updateProjectionsAgreegations(
+          orgId,
+          dataPayload,
+          user.email,
+          enqueueSnackbar
+        )
+      }
+
+    })
+  const fullPsPayload = newPlotPS.map((d) => {
+    const newPayload = d
+    newPayload.oldDate = d?.schDate
+    return newPayload;
+  })
     const dataObj = {
       status: status,
       plotCS: costSheetA,
-      fullPs: newPlotPS,
+      fullPs: fullPsPayload,
       addChargesCS: partBPayload,
       T_balance:
         netTotal -
@@ -234,27 +290,6 @@ const CostBreakUpEditor = ({
         (selUnitDetails?.T_review + (selUnitDetails?.T_cleared || 0)),
       // T_elgible: selUnitDetails?.T_elgible || 0,
     }
-    // project1WweeknoMmonthnoYyearno
-
-    newPlotPS.map((d) => {
-      // pId d.stage.value
-      // schDate
-      console.log('da', d)
-      const dataPayload = {
-        pId: selUnitDetails?.pId,
-        oldDate: d?.oldDate,
-        schDate: d?.schDate,
-        stageId: d?.stage.value,
-        newPrice: d?.value,
-        used: d?.used
-      }
-      updateProjectionsAgreegations(
-        orgId,
-        dataPayload,
-        user.email,
-        enqueueSnackbar
-      )
-    })
 
     updateManagerApproval(
       orgId,
@@ -266,9 +301,9 @@ const CostBreakUpEditor = ({
   }
   const handlePSdateChange = (index, newDate) => {
     const updatedRows = [...newPlotPS]
-    updatedRows[index].oldDate = updatedRows[index].schDate
+    // updatedRows[index].oldDate = updatedRows[index].schDate
     updatedRows[index].schDate = newDate
-    setNewPS(updatedRows)
+    // setNewPS(updatedRows)
   }
   return (
     <div>
@@ -678,10 +713,11 @@ const CostBreakUpEditor = ({
               // disabled={loading}
               onClick={() => {
                 // mark man_cs_approval as true
+                console.log('node aa is ')
                 submitManagerApproval('approved')
               }}
             >
-              {'Approve'}
+              {'Approvee'}
             </button>
           </div>
         </div>
