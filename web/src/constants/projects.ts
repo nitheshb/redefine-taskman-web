@@ -685,3 +685,18 @@ export const apartUnitChargesMock = [
     val: '₹12000',
   },
 ]
+
+
+
+export const approvalAuthority = [
+  {
+    label: 'BMRDA'
+  },
+  {
+    label: 'BDA'
+  },
+  {
+    label: 'HUDA'
+  }
+]
+

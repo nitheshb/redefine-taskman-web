@@ -860,6 +860,9 @@ export default function TodayLeadsActivitySearchView({
             // </div>
           }
           {/* searchKey, setSearchKey */}
+
+
+
           {!schLoading && !leadByViewLayout && todaySch && (
             <>
               <div className=" ">
@@ -879,7 +882,7 @@ export default function TodayLeadsActivitySearchView({
                       setSearchKey={setSearchKey}
                     />
                   </div>
-                  <div className="w-2/12 flex flex-col">
+                    <div className="w-2/12 flex flex-col">
                     <section className="bg-white rounded  flex flex-col p-4 ml-1 mb-1 w-100 ">
                       <h5 className="text-sm">{greet}...!🖐</h5>
                       <h2 className="text-md font-semibold text-black leading-light font-Playfair pb-1">
@@ -887,20 +890,20 @@ export default function TodayLeadsActivitySearchView({
                       </h2>
 
                       {/* <h2 className="text-sm text-gray-700 ">
-                You've got {'  '}
-                <span className="inline-flex text-md leading-5 font-semibold rounded-full  text-green-800">
+                    You've got {'  '}
+                   <span className="inline-flex text-md leading-5 font-semibold rounded-full  text-green-800">
 
-                  {
+                    {
                     schFetCleanData?.filter(
                       (d) =>
                         searchKey.includes(d['sts']) ||
                         searchKey.includes('upcoming')
                     ).length
-                  }
-                </span>{' '}
-                tasks
-
-              </h2> */}
+                   }
+                    </span>{' '}
+                   tasks
+  
+                   </h2> */}
                     </section>
                     <section className="ml-1">
                       <TaskProgress userTodayPerfA={userTodayPerfA} />
@@ -923,6 +926,28 @@ export default function TodayLeadsActivitySearchView({
               </div>
             </>
           )}
+
+
+          
+
+          
+
+
+
+
+
+
+          
+
+
+
+
+
+
+
+
+
+
 
           {leadByViewLayout && todaySch && (
             <div className=" w-full">

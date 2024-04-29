@@ -16,6 +16,7 @@ import {
   developmentTypes,
   projectPlans,
   statesList,
+  approvalAuthority,
 } from 'src/constants/projects'
 import {
   createProject,
@@ -154,6 +155,7 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
     projectName: project?.projectName || '',
     bmrdaApproval: project?.bmrdaApproval || '',
     bmrdaNo: project?.bmrdaNo || '',
+    PlanningApprovalAuthority: project?.PlanningApprovalAuthority || '',
     bmrdaStartDate: project?.bmrdaStartDate || '',
     bmrdaEndDate: project?.bmrdaEndDate || '',
     hdmaApproval: project?.hdmaApproval || '',
@@ -256,7 +258,7 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                           InputProps={{
                             startAdornment: (
                               <InputAdornment position="start">
-                                sqft
+                                Saleable Area 
                               </InputAdornment>
                             ),
                             endAdornment: (
@@ -295,12 +297,30 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                     </div>
                     <div className="flex flex-col mt-2 rounded-lg bg-white border border-gray-100 p-4 ">
                       <CustomRadioGroup
-                        label="BMRDA APPROVAL"
+                        label="PLANNING APPROVAL AUTHORITY"
                         value={devType}
                         options={ChooseOptions}
                         onChange={setdevType}
                       />
+
+
+
+                        <CustomSelect
+                            name="PlanningApprovalAuthority"
+                            label="Planning Approval Authority"
+                            className="input mt-2"
+                            onChange={({ value }) => {
+                            formik.setFieldValue('PlanningApprovalAuthority', value)
+                           }}
+                            value={formik.values.PlanningApprovalAuthority}
+                            options={approvalAuthority}
+                          />
                       <div className="md:flex md:flex-row md:space-x-4 w-full text-xs">
+
+   
+
+
+
                         <div className="mt-2 w-full">
                           <TextField
                             label="BMRDA No*"
@@ -316,7 +336,7 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                           />*/}
 
                           <label className="label font-regular block mb-1">
-                            Start Date *
+                          Approval Date*
                           </label>
                           <DatePicker
                             id="bmrdaStartDate"
@@ -486,7 +506,7 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
       ) : null} */}
                         </div>
                         {devType.name === 'Joint' && (
-                          <div className="mt-2 mr-3 w-full">
+                          <div className="mt-2 mr-3 w-full  pt-1">
                             <TextField
                               label="Builder Share*"
                               name="builderShare"
@@ -494,6 +514,7 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                               onChange={(e) => EditedLandlord(e, formik)}
                               type="number"
                               id="numberSize"
+                             
                             />
                           </div>
                         )}
@@ -540,7 +561,7 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                             ) : null}
                           </div>
 
-                          <div className="mt-2 mr-3 w-full">
+                          <div className="mt-2 mr-3 w-full pt-1">
                             <TextField
                               label="LandLord Share*"
                               name="landlordShare"
@@ -553,6 +574,13 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                       )}
                     </div>
                     <div className="flex flex-col mt-2 rounded-lg bg-white border border-gray-100 p-4 ">
+
+                
+
+                      <div  className='py-2 font-semibold'>
+                        <h2>Project Location Details</h2>
+                      </div>
+
                       <div className="md:flex md:flex-row md:space-x-4 w-full text-xs">
                         <TextField
                           label="Location*"
