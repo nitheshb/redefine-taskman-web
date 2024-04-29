@@ -49,7 +49,7 @@ import ReportBars from './Reports/ReportBars'
 import TransactionCard from './Reports/TransactionCard'
 import UnitStatusCardReport from './Reports/UnitStatusCardReport'
 import CrmProjectionReport from './Reports/CrmProjectionReport'
-import CrmEmployeeAnalytics from './Reports/CrmEmployeeAnalytics'
+import CrmCollectionReport from './Reports/collectionReport'
 
 const CrmAnalyticsHome = ({ project }) => {
   const theme = useTheme()
@@ -97,13 +97,15 @@ const CrmAnalyticsHome = ({ project }) => {
         </div>
         {[
           { label: 'Booking Summary', value: 'booking_summary' },
+          { label: 'Collections', value: 'collection_performance' },
           { label: 'CRM Inventory Report', value: 'crm_table' },
+          { label: 'Collection Projection Report', value: 'crm_projection_report' },
+
+
           { label: 'Project Summary', value: 'proj_summary' },
           { label: 'Credit Note', value: 'creditnote_summary' },
           { label: 'Collections', value: 'collections-summary' },
           { label: 'Home', value: 'crm_summary' },
-          { label: 'Collection Projection Report', value: 'crm_projection_report' },
-          { label: 'Collection Employee', value: 'crm_analytics' },
           // { label: 'Source Report', value: 'source_report' },
           // { label: 'Employee Report', value: 'emp_status_report' },
           // { label: 'Project Leads Report', value: 'proj_leads_report' },
@@ -251,24 +253,19 @@ const CrmAnalyticsHome = ({ project }) => {
 {selCat === 'crm_projection_report' && (
         <div className="">
           {/* <AdvancedDataTableTest /> */}
-          <CrmProjectionReport/>
+          <CrmProjectionReport projects={projects}/>
 
           {projects.length === 0 && <DummyBodyLayout />}
         </div>
       )}
-
-
-{selCat === 'crm_analytics' && (
+      {selCat === 'collection_performance' && (
         <div className="">
           {/* <AdvancedDataTableTest /> */}
-          <CrmEmployeeAnalytics/>
+          <CrmCollectionReport projects={projects}/>
 
           {projects.length === 0 && <DummyBodyLayout />}
         </div>
       )}
-
-
-
 
 
 

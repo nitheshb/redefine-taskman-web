@@ -57,6 +57,7 @@ import {
   steamUsersListByDept,
   updateUnitCrmOwner,
   streamUnitById,
+  updateCrmExecutiveReAssignAgreegations,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import { storage } from 'src/context/firebaseConfig'
@@ -106,49 +107,48 @@ const people = [
   { name: 'Priority 4' },
 ]
 
-
-
 const StatusListA = [
   {
     label: 'Booking Review',
     value: 'booked',
     logo: 'FireIcon',
     color: 'bg-violet-500',
-    allowed: [ 'cancel_booking', 'swapUnit', 'agreement_pipeline']
+    allowed: ['cancel_booking', 'swapUnit', 'agreement_pipeline'],
   },
   {
     label: 'Agreement Pipeline',
     value: 'agreement_pipeline',
     logo: 'RefreshIcon',
     color: 'bg-violet-500',
-    allowed: ['agreement_pipeline', 'sd_pipeline',]
+    allowed: ['agreement_pipeline', 'sd_pipeline'],
   },
   {
     label: 'SD/Registration Pipleline',
     value: 'sd_pipeline',
     logo: 'FireIcon',
     color: 'bg-violet-500',
-    allowed: ['sd_pipeline']
+    allowed: ['sd_pipeline'],
   },
   {
     label: 'Registered',
     value: 'registered',
     logo: 'DuplicateInactiveIcon',
     color: 'bg-violet-500',
-    allowed: []
-  },  {
+    allowed: [],
+  },
+  {
     label: 'Cancel Booking 1',
     value: 'cancel_booking',
     logo: 'DuplicateInactiveIcon',
     color: 'bg-violet-500',
-    allowed: ['']
+    allowed: [''],
   },
   {
     label: 'Swap Unit',
     value: 'swapUnit',
     logo: 'DuplicateInactiveIcon',
     color: 'bg-violet-500',
-    allowed: ['']
+    allowed: [''],
   },
 ]
 
@@ -257,10 +257,9 @@ export default function UnitSideViewCRM({
   useEffect(() => {
     console.log('hello', customerDetails)
     streamUnitDataFun()
-
   }, [])
 
-  useEffect(()=> {
+  useEffect(() => {
     setSelUnitDetails(unitPayload)
   }, [unitPayload])
 
@@ -528,20 +527,20 @@ export default function UnitSideViewCRM({
     //   (d) => d?.sts === 'pending' && d?.schTime < torrowDate
     // ).length
 
-    const { data: data4, error: error4 } =  supabase
-    .from(`${orgId}_unit_logs`)
-    .insert([
-      {
-        type: 'assign_change',
-        subtype: 'crm_owner',
-        T: Timestamp.now().toMillis(),
-        Uuid: selCustomerPayload?.id,
-        by,
-        payload: {  },
-        from: '',
-        to: value.name,
-      },
-    ])
+    const { data: data4, error: error4 } = supabase
+      .from(`${orgId}_unit_logs`)
+      .insert([
+        {
+          type: 'assign_change',
+          subtype: 'crm_owner',
+          T: Timestamp.now().toMillis(),
+          Uuid: selCustomerPayload?.id,
+          by,
+          payload: {},
+          from: '',
+          to: value.name,
+        },
+      ])
     const txt = `A New Customer is assigned to ${value.name}`
     updateUnitCrmOwner(
       orgId,
@@ -550,6 +549,20 @@ export default function UnitSideViewCRM({
       user.email,
       enqueueSnackbar
     )
+    selCustomerPayload?.fullPs.map((ps) => {
+      console.log('my values are', ps)
+      const newPayload = ps
+      newPayload.assignedTo = value?.value
+      newPayload.oldAssignedTo = selCustomerPayload?.assignedTo
+
+      updateCrmExecutiveReAssignAgreegations(
+        orgId,
+        newPayload,
+        user.email,
+        enqueueSnackbar
+      )
+    })
+
     const msgPayload = {
       projectName: Project,
       broucherLink: '',
@@ -597,127 +610,130 @@ export default function UnitSideViewCRM({
     if (x.length > 0) {
       allowedList = x[0].allowed
     }
-console.log('value is', x, newStatus)
-    if(!allowedList?.includes(newStatus?.value)){
+    console.log('value is', x, newStatus)
+    if (!allowedList?.includes(newStatus?.value)) {
       enqueueSnackbar(`${status} unit cannot be ${newStatus?.label}`, {
         variant: 'warning',
       })
-
-    }else{
-
-
-
-    setLoader(true)
-
-    // if newStatus  make check list
-    const dataObj = { status: newStatus?.value }
-    console.log('payment stuff is ', selCustomerPayload)
-    const { fullPs } = selCustomerPayload
-
-    if (
-      newStatus?.value === 'agreement_pipeline' &&
-      selCustomerPayload?.kyc_status &&
-      selCustomerPayload?.man_cs_approval
-    ) {
-      setUnitStatus(newStatus)
-      const updatedPs = fullPs.map((item) => {
-        if (item.order === 2) {
-          return { ...item, elgible: true }
-        } else {
-          return item
-        }
-      })
-      const t_elgible = updatedPs.reduce((total, item) => {
-        if (item.elgible) {
-          return total + item.value
-        } else {
-          return total
-        }
-      }, 0)
-      dataObj.fullPs = updatedPs
-      dataObj.T_elgible_new = t_elgible
-      dataObj.T_elgible_balance =  t_elgible - (selCustomerPayload?.T_review || 0+ selCustomerPayload?.T_approved || 0)
-      updateUnitStatus(
-        orgId,
-        selCustomerPayload?.id,
-        dataObj,
-        user.email,
-        enqueueSnackbar
-      )
-    } else if (
-      newStatus?.value === 'ats_pipeline' &&
-      selCustomerPayload?.T_balance <= 0 &&
-      selCustomerPayload?.ats_creation &&
-      selCustomerPayload?.both_ats_approval
-    ) {
-      const updatedPs = fullPs.map((item) => {
-        if (item.order === 3) {
-          return { ...item, elgible: true }
-        } else {
-          return item
-        }
-      })
-      const t_elgible = updatedPs.reduce((total, item) => {
-        if (item.elgible) {
-          return total + item.value
-        } else {
-          return total
-        }
-      }, 0)
-      dataObj.fullPs = updatedPs
-      dataObj.T_elgible_new = t_elgible
-      dataObj.T_elgible_balance =  t_elgible - (selCustomerPayload?.T_review || 0+ selCustomerPayload?.T_approved || 0)
-
-      setUnitStatus(newStatus)
-      updateUnitStatus(
-        orgId,
-        selCustomerPayload?.id,
-        dataObj,
-        user.email,
-        enqueueSnackbar
-      )
     } else {
-      setStatusValidError(true)
-      console.log('is this in statusvalidat or ')
-      let errorList = ''
+      setLoader(true)
+
+      // if newStatus  make check list
+      const dataObj = { status: newStatus?.value }
+      console.log('payment stuff is ', selCustomerPayload)
+      const { fullPs } = selCustomerPayload
+
       if (
         newStatus?.value === 'agreement_pipeline' &&
-        !selCustomerPayload?.kyc_status
+        selCustomerPayload?.kyc_status &&
+        selCustomerPayload?.man_cs_approval
       ) {
-        errorList = errorList + 'KYC,'
-      }
-      if (
-        newStatus?.value === 'agreement_pipeline' &&
-        !selCustomerPayload?.man_cs_approval
-      ) {
-        errorList = errorList + 'Manger Costsheet Approval,'
-      }
-      if (
+        setUnitStatus(newStatus)
+        const updatedPs = fullPs.map((item) => {
+          if (item.order === 2) {
+            return { ...item, elgible: true }
+          } else {
+            return item
+          }
+        })
+        const t_elgible = updatedPs.reduce((total, item) => {
+          if (item.elgible) {
+            return total + item.value
+          } else {
+            return total
+          }
+        }, 0)
+        dataObj.fullPs = updatedPs
+        dataObj.T_elgible_new = t_elgible
+        dataObj.T_elgible_balance =
+          t_elgible -
+          (selCustomerPayload?.T_review ||
+            0 + selCustomerPayload?.T_approved ||
+            0)
+        updateUnitStatus(
+          orgId,
+          selCustomerPayload?.id,
+          dataObj,
+          user.email,
+          enqueueSnackbar
+        )
+      } else if (
         newStatus?.value === 'ats_pipeline' &&
-        selCustomerPayload?.T_balance <= 0
+        selCustomerPayload?.T_balance <= 0 &&
+        selCustomerPayload?.ats_creation &&
+        selCustomerPayload?.both_ats_approval
       ) {
-        errorList = errorList + 'Due Payment,'
-      }
-      if (
-        newStatus?.value === 'ats_pipeline' &&
-        !selCustomerPayload?.ats_creation
-      ) {
-        errorList = errorList + 'ATS Creation,'
-      }
-      if (
-        newStatus?.value === 'ats_pipeline' &&
-        !selCustomerPayload?.both_ats_approval
-      ) {
-        errorList = errorList + 'Manger or Customer Costsheet Approval,'
-      }
+        const updatedPs = fullPs.map((item) => {
+          if (item.order === 3) {
+            return { ...item, elgible: true }
+          } else {
+            return item
+          }
+        })
+        const t_elgible = updatedPs.reduce((total, item) => {
+          if (item.elgible) {
+            return total + item.value
+          } else {
+            return total
+          }
+        }, 0)
+        dataObj.fullPs = updatedPs
+        dataObj.T_elgible_new = t_elgible
+        dataObj.T_elgible_balance =
+          t_elgible -
+          (selCustomerPayload?.T_review ||
+            0 + selCustomerPayload?.T_approved ||
+            0)
 
-      errorList = errorList + 'is mandatory steps are missing'
-      setNewStatusErrorList(errorList)
-      enqueueSnackbar(`${errorList}`, {
-        variant: 'warning',
-      }
+        setUnitStatus(newStatus)
+        updateUnitStatus(
+          orgId,
+          selCustomerPayload?.id,
+          dataObj,
+          user.email,
+          enqueueSnackbar
+        )
+      } else {
+        setStatusValidError(true)
+        console.log('is this in statusvalidat or ')
+        let errorList = ''
+        if (
+          newStatus?.value === 'agreement_pipeline' &&
+          !selCustomerPayload?.kyc_status
+        ) {
+          errorList = errorList + 'KYC,'
+        }
+        if (
+          newStatus?.value === 'agreement_pipeline' &&
+          !selCustomerPayload?.man_cs_approval
+        ) {
+          errorList = errorList + 'Manger Costsheet Approval,'
+        }
+        if (
+          newStatus?.value === 'ats_pipeline' &&
+          selCustomerPayload?.T_balance <= 0
+        ) {
+          errorList = errorList + 'Due Payment,'
+        }
+        if (
+          newStatus?.value === 'ats_pipeline' &&
+          !selCustomerPayload?.ats_creation
+        ) {
+          errorList = errorList + 'ATS Creation,'
+        }
+        if (
+          newStatus?.value === 'ats_pipeline' &&
+          !selCustomerPayload?.both_ats_approval
+        ) {
+          errorList = errorList + 'Manger or Customer Costsheet Approval,'
+        }
 
-      )}
+        errorList = errorList + 'is mandatory steps are missing'
+        setNewStatusErrorList(errorList)
+        enqueueSnackbar(`${errorList}`, {
+          variant: 'warning',
+        })
+      }
     }
 
     return
@@ -736,8 +752,7 @@ console.log('value is', x, newStatus)
     //
     // updateLeadStatus(leadDocId, newStatus)
     // toast.success('status Updated Successfully')
-
-}
+  }
 
   const downloadFile = (url) => {
     window.location.href = url
@@ -981,13 +996,12 @@ console.log('value is', x, newStatus)
       customerDetailsObj,
     } = selCustomerPayload
     const customLeadObj = { Name: customerDetailsObj?.customerName1 }
-    data.attchUrl = data?.fileUploader?.url || "";
+    data.attchUrl = data?.fileUploader?.url || ''
     data.category = 'Payment'
     const y = {}
     y.m = data?.fileUploader
 
     console.log('unit log ', data, y, y.m, y['m']['url'])
-
 
     const x = await capturePaymentS(
       orgId,
@@ -1042,9 +1056,8 @@ console.log('value is', x, newStatus)
                       </span>
 
                       <span className=" ml-1 text-[12px] h-[20px] text-[#823d00] font-bodyLato font-[600] mt-[2px] bg-[#ffeccf] px-[6px] py-[2px] rounded-xl mr-1 ">
-                                          Booked:{' '}
-                                          {prettyDate(selCustomerPayload?.booked_on || 0)}
-                                        </span>
+                        Booked: {prettyDate(selCustomerPayload?.booked_on || 0)}
+                      </span>
                     </p>
                   </section>
 
@@ -1272,7 +1285,6 @@ console.log('value is', x, newStatus)
           </>
         )}
       </div>
-
 
       <UnitFullSummary
         customerDetails={customerDetails}

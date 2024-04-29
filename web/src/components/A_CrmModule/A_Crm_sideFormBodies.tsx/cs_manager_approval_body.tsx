@@ -68,6 +68,7 @@ export default function CSManagerApprovalBody({
   const [newAdditonalChargesObj, setNewAdditonalChargesObj] = useState([])
   const [StatusListA, setStatusListA] = useState([])
   const [showGstCol, setShowGstCol] = useState(true)
+  const [bootedPs, setBootedPs] = useState([])
 
 
   if (!user?.role?.includes(USER_ROLES.ADMIN)) {
@@ -75,6 +76,7 @@ export default function CSManagerApprovalBody({
   }
   useEffect(() => {
     console.log('unit details', selUnitPayload)
+    setBootedPs(selUnitPayload?.fullPs)
     getPhases(selUnitPayload)
   }, [])
   const getPhases = async (projectDetails) => {
@@ -180,6 +182,7 @@ export default function CSManagerApprovalBody({
         setCostSheetA={setNewPlotCostSheetA}
         setNewPS={setNewPlotPS}
         newPlotPS={newPlotPS}
+        bootedPs={bootedPs}
       />
 
     </div>

@@ -1044,7 +1044,7 @@ ${x?.length > 0 ? `${personalFinalText}` : ''}\n \n
         open={isOpenSideView}
         setOpen={setIsOpenSideView}
         title={'Notification Setup'}
-        widthClass="max-w-md"
+        widthClass="max-w-2xl"
         wbPayload={wbSelPayload}
       />
       <SiderForm

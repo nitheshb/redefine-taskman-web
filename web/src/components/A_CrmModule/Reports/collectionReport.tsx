@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react'
 
 import { X } from '@mui/icons-material'
 
-import { gretProjectionSum } from 'src/context/dbQueryFirebase'
+import { gretProjectionSum, steamUsersListByDept } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import { getNextThreeMonths } from 'src/util/dateConverter'
 import SkeletonLoaderPage from 'src/pages/SkeletonLoader/skeletonLoaderPage'
 import TableSkeleton from './_mock/comps/table/table-skeleton'
+import EmpCollectionSummary from './empCollectionReport'
 
 {
   /* frist capitalize all letters */
@@ -77,7 +78,7 @@ const reportData = [
   },
 ]
 
-const CrmProjectionReport = ({ projects }) => {
+const CrmCollectionReport = ({ projects }) => {
   const { user } = useAuth()
   const { orgId } = user
 
@@ -86,8 +87,31 @@ const CrmProjectionReport = ({ projects }) => {
   const [monthsA, setMonthsA] = useState(getNextThreeMonths())
   const [projectAValues, setProjectWithValues] = useState([])
   const [loader, setLoaderIcon] = useState(false)
-
-
+  const [selCat, setSelCat] = useState('employee_collections')
+  const [crmEmployeesA, setCRMEmployees] = useState([])
+  useEffect(() => {
+    getCRMemployees()
+  }, [])
+  const getCRMemployees = async () => {
+    const unsubscribe =  steamUsersListByDept(
+      orgId,
+      ['crm'],
+      (querySnapshot) => {
+        const usersListA = querySnapshot.docs.map((docSnapshot) =>
+          docSnapshot.data()
+        )
+        setCRMEmployees(usersListA)
+        usersListA.map((user) => {
+          user.label = user.displayName || user.name
+          user.value = user.uid
+        })
+        console.log('fetched users list is', usersListA)
+        setCRMEmployees(usersListA)
+      },
+      (error) => setCRMEmployees([])
+    )
+    return unsubscribe
+  }
   useEffect(() => {
     calMonthlyValueNew(projects)
   }, [projects])
@@ -186,31 +210,46 @@ const CrmProjectionReport = ({ projects }) => {
   }
   return (
     <div className="p-4 m-1 bg-white rounded-lg">
-      <div className="flex justify-between">
+      <div className="flex overflow-x-auto ml-2 border-b pb- mb-">
         <div>
           <h2 className="mb-4 text-lg font-semibold text-black leading-light">
-            CRM Projection Report
+             Collection Report
           </h2>
         </div>
-        {/* <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">
 
-          </label>
-          <select
-            id="view"
-            className="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            value={dataView}
-            onChange={(e) => handleChangeView(e.target.value)}
-          >
-            <option value="monthly">Monthly</option>
-            <option value="weekly">Weekly</option>
-            <option value=''>Anually</option>
-            <option value=''>Quarterly</option>
-            <option value=''>Halferly</option>
-          </select>
-        </div> */}
+        {[
+          { label: 'Project Collections', value: 'project_collections' },
+          { label: 'Employee Collections', value: 'employee_collections' },
+
+        ].map((data, i) => {
+          return (
+            <section
+              key={i}
+              className="flex "
+              onClick={() => {
+                console.log('am i clicked', data.value)
+                setSelCat(data.value)
+              }}
+            >
+
+                <span
+                  className={`flex ml-2 mt-1 items-center h-6 px-3 text-xs  ${
+                    selCat === data.value
+                      ? 'font-normal text-green-800 bg-[#FFEDEA]'
+                      : 'font-normal text-black-100 bg-[#f0f8ff]'
+                  }  rounded-full`}
+                >
+                  {/* <PencilIcon className="h-3 w-3 mr-1" aria-hidden="true" /> */}
+                  <img alt="" src="/temp2.png" className="h-3 w-3 mr-1" />
+                  {data?.label}
+                </span>
+
+            </section>
+          )
+        })}
+
       </div>
-      <table className="min-w-full bg-white border border-black">
+     {selCat === 'project_collections'  && <table className="min-w-full bg-white border border-black">
         <thead>
           <tr
             className={
@@ -383,9 +422,10 @@ const CrmProjectionReport = ({ projects }) => {
             )
           })}
         </tbody>
-      </table>
-    </div>
+      </table>}
+      {selCat === 'employee_collections'  &&  <EmpCollectionSummary projects={projects} crmEmployeesA={crmEmployeesA} />}
+       </div>
   )
 }
 
-export default CrmProjectionReport
+export default CrmCollectionReport

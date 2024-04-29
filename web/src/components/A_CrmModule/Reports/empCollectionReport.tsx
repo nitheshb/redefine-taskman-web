@@ -2,10 +2,14 @@ import React, { useEffect, useState } from 'react'
 
 import { X } from '@mui/icons-material'
 
-import { gretProjectionSum } from 'src/context/dbQueryFirebase'
+import {
+  getEmpCollectionsSum,
+  gretProjectionSum,
+} from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
-import { getNextThreeMonths } from 'src/util/dateConverter'
 import SkeletonLoaderPage from 'src/pages/SkeletonLoader/skeletonLoaderPage'
+import { getNextThreeMonths } from 'src/util/dateConverter'
+
 import TableSkeleton from './_mock/comps/table/table-skeleton'
 
 {
@@ -77,7 +81,7 @@ const reportData = [
   },
 ]
 
-const CrmProjectionReport = ({ projects }) => {
+const EmpCollectionSummary = ({ projects, crmEmployeesA }) => {
   const { user } = useAuth()
   const { orgId } = user
 
@@ -87,10 +91,9 @@ const CrmProjectionReport = ({ projects }) => {
   const [projectAValues, setProjectWithValues] = useState([])
   const [loader, setLoaderIcon] = useState(false)
 
-
   useEffect(() => {
-    calMonthlyValueNew(projects)
-  }, [projects])
+    calMonthlyValueNew(crmEmployeesA)
+  }, [crmEmployeesA])
 
   const filteredData = reportData.filter((item) => {
     return (
@@ -110,58 +113,63 @@ const CrmProjectionReport = ({ projects }) => {
   }
   const totalSoldSummary = calculateTotal(projects, 'soldUnitCount')
 
-
   const calMonthlyValueNew = async (projects) => {
+    console.log('crmEmployeesA', crmEmployeesA);
     try {
       setLoaderIcon(true)
-      const insideValues = [];
+      const insideValues = []
 
       // Iterate over projects
       for (const projectData of projects) {
         //  const z = await projects.map((projectData) => {
-        const newProjectData = { ...projectData };
-        const projectMonthArray = [];
+        console.log('projects', projects)
+        const newProjectData = { ...projectData }
+        const projectMonthArray = []
 
         // Use Promise.all to execute asynchronous operations concurrently
-        await Promise.all(monthsA.map(async (month) => {
-          const payload = {
-            pId: projectData.uid,
-            monthNo: month.count,
-            currentYear: month.currentYear,
-          };
+        await Promise.all(
+          monthsA.map(async (month) => {
+            const payload = {
+              pId: projectData.uid,
+              monthNo: month.count,
+              currentYear: month.currentYear,
+            }
 
-          // Fetch projection sum asynchronously
-          const totalReceivableValue = await gretProjectionSum(orgId, payload);
+            // Fetch projection sum asynchronously
+            const totalReceivableValue = await getEmpCollectionsSum(
+              orgId,
+              payload
+            )
 
-          // Update month object with receivable value
-          const updatedMonth = { ...month, receive: totalReceivableValue };
-          console.log(
-            'Value refreshed',
-            updatedMonth,
-            projectData?.projectName,
-            '=>',
-            updatedMonth.receive?.length
-          );
+            // Update month object with receivable value
+            const updatedMonth = { ...month, receive: totalReceivableValue }
+            console.log(
+              'Value refreshed',
+              updatedMonth,
+              projectData?.projectName,
+              '=>',
+              updatedMonth.receive?.length
+            )
 
-          projectMonthArray.push(updatedMonth);
-        }));
+            projectMonthArray.push(updatedMonth)
+          })
+        )
 
         // Update project data with month array
-        newProjectData.months = projectMonthArray;
-        insideValues.push(newProjectData);
+        newProjectData.months = projectMonthArray
+        insideValues.push(newProjectData)
       }
 
       // After processing all projects, update state with updated project data
-      setProjectWithValues(insideValues);
+      setProjectWithValues(insideValues)
     } catch (error) {
-      console.error('Error calculating monthly values:', error);
+      console.error('Error calculating monthly values:', error)
       // Handle error
-    }finally {
+    } finally {
       // Set loading state to false
-      setLoaderIcon(false);
+      setLoaderIcon(false)
     }
-  };
-
+  }
 
   const calMonthlyValue = (pId, monthNo, currentYear) => {
     const data = { pId, monthNo, currentYear }
@@ -185,31 +193,7 @@ const CrmProjectionReport = ({ projects }) => {
     // get values matched to db
   }
   return (
-    <div className="p-4 m-1 bg-white rounded-lg">
-      <div className="flex justify-between">
-        <div>
-          <h2 className="mb-4 text-lg font-semibold text-black leading-light">
-            CRM Projection Report
-          </h2>
-        </div>
-        {/* <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-
-          </label>
-          <select
-            id="view"
-            className="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            value={dataView}
-            onChange={(e) => handleChangeView(e.target.value)}
-          >
-            <option value="monthly">Monthly</option>
-            <option value="weekly">Weekly</option>
-            <option value=''>Anually</option>
-            <option value=''>Quarterly</option>
-            <option value=''>Halferly</option>
-          </select>
-        </div> */}
-      </div>
+    <div className="  bg-white rounded-lg">
       <table className="min-w-full bg-white border border-black">
         <thead>
           <tr
@@ -220,57 +204,98 @@ const CrmProjectionReport = ({ projects }) => {
             }
           >
             <th
-              className="py-3 px-6 text-center border border-black"
+              className="h-[6px] px-6 text-center border border-black"
               colSpan="1"
             ></th>
             <th
-              className="py-3 px-6 text-center border border-black"
+              className="h-[6px] px-6 text-center border border-black"
               colSpan="1"
             ></th>
             <th
-              className="py-3 px-6 text-center border border-black"
+              className="h-[6px] px-6 text-center border border-black"
               colSpan="1"
             ></th>
             {dataView === 'weekly' && (
               <th
-                className="py-3 px-6 text-center border border-black"
+                className="h-[6px] px-6 text-center border border-black"
                 colSpan="4"
               >
                 Weekly
               </th>
             )}
             {dataView === 'monthly' && (
-              <th
-                className="py-3 px-6 text-center border border-black"
-                colSpan="4"
-              >
-                Monthly
-              </th>
-            )}
-
-          </tr>
-          <tr className="bg-blue-200 text-gray-600 text-sm leading-normal">
-            <th className="py-3 px-3 text-left border border-black">
-              Project Name
-            </th>
-            <th className="py-3 px-6 text-left border border-black">
-              Sold Units
-            </th>
-            <th className="py-3 px-6 text-right border border-black">
-              Total Amount
-            </th>
-            {dataView === 'monthly' ? (
               <>
                 {monthsA.map((month, i) => {
                   return (
                     <th
                       key={i}
-                      className="py-3 px-6 text-right border border-black"
+                      className="h-[6px] px-6 text-center border border-black"
+                      colSpan="4"
                     >
                       {month?.name}
                     </th>
                   )
                 })}
+              </>
+            )}
+          </tr>
+          <tr className="bg-blue-200 text-gray-600 text-sm leading-normal">
+            <th className="py-3 px-3 text-left border border-black">
+              CRM Executive
+            </th>
+            <th className="py-3 px-6 text-left border border-black">Units</th>
+            <th className="py-3 px-6 text-right border border-black">
+              Total Amount
+            </th>
+            {dataView === 'monthly' ? (
+              <>
+                {['Target', 'Collection', 'Pending', 'Other Collection'].map(
+                  (month, i) => {
+                    return (
+                      <th
+                        key={i}
+                        className="py-3 px-6 text-right border border-black"
+                      >
+                        {month}
+                      </th>
+                    )
+                  }
+                )}
+                {['Target', 'Collection', 'Pending', 'Other Collection'].map(
+                  (month, i) => {
+                    return (
+                      <th
+                        key={i}
+                        className="py-3 px-6 text-right border border-black"
+                      >
+                        {month}
+                      </th>
+                    )
+                  }
+                )} {['Target', 'Collection', 'Pending', 'Other Collection'].map(
+                  (month, i) => {
+                    return (
+                      <th
+                        key={i}
+                        className="py-3 px-6 text-right border border-black"
+                      >
+                        {month}
+                      </th>
+                    )
+                  }
+                )}
+                {['Target', 'Collection', 'Pending', 'Other Collection'].map(
+                  (month, i) => {
+                    return (
+                      <th
+                        key={i}
+                        className="py-3 px-6 text-right border border-black"
+                      >
+                        {month}
+                      </th>
+                    )
+                  }
+                )}
               </>
             ) : (
               <>
@@ -288,15 +313,10 @@ const CrmProjectionReport = ({ projects }) => {
                 </th>
               </>
             )}
-
           </tr>
         </thead>
 
-       {loader && [1,2,3].map((d,i)=>(
-        <TableSkeleton  key={i}/>
-       ))}
-
-
+        {loader && [1, 2, 3].map((d, i) => <TableSkeleton key={i} />)}
 
         <tbody className="text-gray-600 text-sm font-light">
           {/* <tr className="bg-gray-100">
@@ -325,31 +345,52 @@ const CrmProjectionReport = ({ projects }) => {
                 className="border-b border-gray-200 hover:bg-gray-100"
               >
                 <td className="py-3 px-6 text-left whitespace-nowrap border border-black">
-                  {capitalizeFirstLetter(data?.projectName)}
+                  {capitalizeFirstLetter(data?.name)}
                 </td>
                 <td className="py-3 px-6 pr-10 text-right border border-black">
                   {data?.soldUnitCount?.toLocaleString('en-IN')}
                 </td>
                 <td className="py-3 px-6  border text-right border-black">
                   {/* {totalAmount?.toLocaleString('en-IN')} */}
-                  {data?.months?.reduce((accumulator, currentValue) => {
-  return accumulator + (currentValue?.receive || 0);
-}, 0)?.toLocaleString('en-IN')}
+                  {data?.months
+                    ?.reduce((accumulator, currentValue) => {
+                      return accumulator + (currentValue?.receive || 0)
+                    }, 0)
+                    ?.toLocaleString('en-IN')}
                 </td>
                 {dataView === 'monthly' ? (
                   <>
-                    {data?.months?.map( (month, i) => {
+                    {data?.months?.map((month, i) => {
                       console.log('what is this', month)
-                      const x =  month
-                      console.log('what is this',  month)
+                      const x = month
+                      console.log('what is this', month)
                       return (
+                        <>
                         <td
                           key={i}
                           className="py-3 px-6 text-right border border-black"
                         >
                           {`${x?.receive?.toLocaleString('en-IN')}`}
-
                         </td>
+                        <td
+                          key={i}
+                          className="py-3 px-6 text-right border border-black"
+                        >
+                          {`${x?.collected?.toLocaleString('en-IN')}`}
+                        </td>
+                        <td
+                          key={i}
+                          className="py-3 px-6 text-right border border-black"
+                        >
+                          {`${x?.pending?.toLocaleString('en-IN')}`}
+                        </td>
+                        <td
+                          key={i}
+                          className="py-3 px-6 text-right border border-black"
+                        >
+                          {`${x?.otherCollection?.toLocaleString('en-IN')}`}
+                        </td>
+</>
                       )
                     })}
                     {/* <td className="py-3 px-6 text-right border border-black">
@@ -378,7 +419,6 @@ const CrmProjectionReport = ({ projects }) => {
                     </td>
                   </>
                 )}
-
               </tr>
             )
           })}
@@ -388,4 +428,4 @@ const CrmProjectionReport = ({ projects }) => {
   )
 }
 
-export default CrmProjectionReport
+export default EmpCollectionSummary
