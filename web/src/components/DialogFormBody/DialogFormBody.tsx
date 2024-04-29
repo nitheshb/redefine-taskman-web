@@ -336,7 +336,7 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                           />*/}
 
                           <label className="label font-regular block mb-1">
-                          Approval Date *
+                            Start Date *
                           </label>
                           <DatePicker
                             id="bmrdaStartDate"
