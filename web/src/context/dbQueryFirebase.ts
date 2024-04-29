@@ -4541,7 +4541,7 @@ export const updateCrmExecutiveReAssignAgreegations = async (
   console.log('data is===>', data)
   const { oldDate, schDate, assignedTo,oldAssignedTo, value:newPrice } = data
   console.log('data is===>',  assignedTo,oldAssignedTo,)
-  if (oldAssignedTo != assignedTo) {
+
 
   const x = getWeekMonthNo(schDate)
   const y = getWeekMonthNo(oldDate)
@@ -4596,9 +4596,7 @@ export const updateCrmExecutiveReAssignAgreegations = async (
       variant: 'error',
     })
   }
-}else{
-  return
-}
+
   return
 }
 export const updateManagerApproval = async (
