@@ -123,7 +123,7 @@ const LeadsTransferHome = ({ project }) => {
   useEffect(() => {
     const unsubscribe = steamUsersListByDeptWithInactive(
       orgId,
-      ['sales-manager', 'sales-executive'],
+      ['sales','sales-manager', 'sales-executive'],
       (querySnapshot) => {
         const usersListA = querySnapshot.docs.map((docSnapshot) =>
           docSnapshot.data()
