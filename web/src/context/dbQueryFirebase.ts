@@ -4434,10 +4434,6 @@ export const updateProjectionsAgreegations = async (
   }
   console.log('Projection  updation failed', docId_d, payload)
   try {
-    await updateDoc(
-      doc(db, `${orgId}_payment_projections`, old_doc_Id),
-      oldPayload
-    )
 
     await updateDoc(doc(db, `${orgId}_payment_projections`, docId_d), payload)
   } catch (error) {
@@ -4445,6 +4441,21 @@ export const updateProjectionsAgreegations = async (
       ...data,
     })
     await setDoc(doc(db, `${orgId}_payment_projections`, docId_d), payload)
+    enqueueSnackbar('Projection updation failed BBB', {
+      variant: 'error',
+    })
+  }
+  try {
+    await updateDoc(
+      doc(db, `${orgId}_payment_projections`, old_doc_Id),
+      oldPayload
+    )
+
+  } catch (error) {
+    console.log('Projection  updation failed', error, {
+      ...data,
+    })
+
     enqueueSnackbar('Projection updation failed BBB', {
       variant: 'error',
     })
@@ -4495,6 +4506,17 @@ export const updateCrmExecutiveAgreegations = async (
       oldPayload
     )
 
+
+  } catch (error) {
+    console.log('Employee  updation failed', error, {
+      ...data,
+    })
+    enqueueSnackbar('Emp Projections updation failed BBB', {
+      variant: 'error',
+    })
+  }
+  try {
+
     await updateDoc(doc(db, `${orgId}_emp_collections`, docId_d), payload)
   } catch (error) {
     console.log('Employee  updation failed', error, {
@@ -4542,8 +4564,8 @@ export const updateCrmExecutiveReAssignAgreegations = async (
     week: y.weekNumberOfYear,
     month: y.month,
     year: y.year,
-    // receivable: increment(-newPrice),
-    receivable: 0,
+    receivable: increment(-newPrice),
+    // receivable: 0,
   }
   console.log('Employee  updation failed', docId_d, payload)
   try {
@@ -4551,6 +4573,18 @@ export const updateCrmExecutiveReAssignAgreegations = async (
       doc(db, `${orgId}_emp_collections`, old_doc_Id),
       oldPayload
     )
+
+
+  } catch (error) {
+    console.log('Employee  updation failed', error, {
+      ...data,
+    })
+    enqueueSnackbar('Emp Projections updation failed BBB', {
+      variant: 'error',
+    })
+  }
+  try {
+
 
     await updateDoc(doc(db, `${orgId}_emp_collections`, docId_d), payload)
   } catch (error) {
