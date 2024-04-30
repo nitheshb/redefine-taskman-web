@@ -35,10 +35,12 @@ const customStyles = {
 export const CustomSelect = ({
   onChange,
   options,
+  setAddNewBankStuff,
   value,
   name,
   label,
   className,
+
 }) => {
   const defaultValue = (options, value) => {
     return (
