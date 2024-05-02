@@ -34,7 +34,7 @@ const PaymentScheduleForm = ({ title, data, source, blocksViewFeature }) => {
   const [editOpitionsObj, setEditOptions] = useState({})
 
   useEffect(() => {
-    if (source === 'projectManagement') {
+    if (['projectManagement', 'projectOnboard'].includes(source)) {
       setEditOptions({
         onRowAdd: async (newData) => await handleRowAdd(newData),
         onRowUpdate: async (newData, oldData) =>
@@ -251,7 +251,7 @@ const PaymentScheduleForm = ({ title, data, source, blocksViewFeature }) => {
         const { tableData, ...rest } = e;
         return rest
       })
-     
+
       console.log('check this stuff it', c)
       await updatePaymentScheduleCharges(
         orgId,

@@ -47,6 +47,8 @@ const BookingSummaryView = ({
   section2Ref,
   section3Ref,
   section4Ref,
+  stepIndx,
+  StatusListA,
 }) => {
   const { user } = useAuth()
   const { orgId } = user

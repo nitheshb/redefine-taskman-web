@@ -51,6 +51,8 @@ const AddPaymentDetailsForm = ({
   newConstructPS,
   phase,
   projectDetails,
+  stepIndx,
+  StatusListA,
 }) => {
   const { user } = useAuth()
   const { orgId, email, displayName, department, role, phone } = user
@@ -523,6 +525,8 @@ const {id} = leadData
               projectDetails={projectDetails}
               leadDetailsObj2={leadDetailsObj2}
               onSubmitFun={onSubmitFun}
+              stepIndx = {stepIndx}
+              StatusListA={StatusListA}
             />
           </div>
         </div>

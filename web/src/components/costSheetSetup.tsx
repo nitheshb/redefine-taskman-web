@@ -35,7 +35,7 @@ const CostSheetSetup = ({ phase, source }) => {
 
   return (
     <div className="lg:col-span-10 border w-full ">
-      <div className=" border-gray-800 bg-[#203129]  text-white">
+      <div className=" border-gray-800 bg-[#516F90]  text-white">
         <ul
           className="flex justify-  rounded-t-lg border-b  "
           id="myTab"

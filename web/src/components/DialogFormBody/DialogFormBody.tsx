@@ -211,15 +211,15 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
   })
   return (
     <div className="h-full flex flex-col py-6 bg-white shadow-xl overflow-y-scroll">
-      <div className="px-4 sm:px-6  z-10">
+      <div className="px-2 sm:px-6  z-10 absolute top-0  w-full bg-white py-2">
         <Dialog.Title className=" font-semibold text-xl mr-auto ml-3  font-Playfair tracking-wider">
           {title}
         </Dialog.Title>
       </div>
 
       <div className="grid  gap-8 grid-cols-1">
-        <div className="flex flex-col m-4">
-          <div className="flex flex-col mt-2 rounded-lg bg-white border border-gray-100 p-4 ">
+        <div className="flex flex-col ">
+          <div className="flex flex-col mt-2 rounded-lg bg-white border border-gray-100 p-4 m-4 ">
             <CustomRadioGroup
               label="Type"
               value={selected}
@@ -237,7 +237,7 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
             >
               {(formik) => (
                 <Form>
-                  <div className="form">
+                  <div className="form m-4">
                     <div className="flex flex-col mt-2 rounded-lg bg-white border border-gray-100 p-4 ">
                       <TextField
                         label="Project Name*"
@@ -258,7 +258,7 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                           InputProps={{
                             startAdornment: (
                               <InputAdornment position="start">
-                                Saleable Area 
+                                Saleable Area
                               </InputAdornment>
                             ),
                             endAdornment: (
@@ -317,7 +317,7 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                           />
                       <div className="md:flex md:flex-row md:space-x-4 w-full text-xs">
 
-   
+
 
 
 
@@ -514,7 +514,7 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                               onChange={(e) => EditedLandlord(e, formik)}
                               type="number"
                               id="numberSize"
-                             
+
                             />
                           </div>
                         )}
@@ -575,7 +575,7 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                     </div>
                     <div className="flex flex-col mt-2 rounded-lg bg-white border border-gray-100 p-4 ">
 
-                
+
 
                       <div  className='py-2 font-semibold'>
                         <h2>Project Location Details</h2>
@@ -616,17 +616,19 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                           ) : null} */}
                         </div>
                       </div>
-                      <div className="mt-2 w-full">
+                      <div className="mt-2 w-full mb-10">
                         <TextAreaField
                           label="Address"
                           name="address"
                           type="text"
                         />
                       </div>
-                      <p className="text-xs text-red-500 text-right my-3">
-                        Required fields are marked with an asterisk{' '}
-                        <abbr title="Required field">*</abbr>
-                      </p>
+
+
+                    </div>
+                  </div>
+                  <div className="z-10 flex flex-row justify-between mt-4 pb-2 pr-6 bg-white shadow-lg absolute bottom-0  w-full">
+                     <div></div>
                       <div className="mt-5 text-right md:space-x-3 md:block flex flex-col-reverse mb-6">
                         <button
                           onClick={() => dialogOpen(false)}
@@ -645,14 +647,14 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                           {project?.editMode ? 'Update' : 'Save'}
                         </button>
                       </div>
-                    </div>
-                  </div>
+                      </div>
                 </Form>
               )}
             </Formik>
           </div>
         </div>
       </div>
+
     </div>
   )
 }

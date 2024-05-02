@@ -32,7 +32,7 @@ const Blockdetails = ({
   const [editOpitionsObj, setEditOptions] = useState(false)
 
   useEffect(() => {
-    if (source === 'projectManagement') {
+    if (['projectManagement', 'projectOnboard'].includes(source)) {
       setViewUnitStatusA(['Available', 'Blocked', 'Booked', 'Total'])
     }
   }, [source])
@@ -80,7 +80,7 @@ const Blockdetails = ({
               />
             </li>
           )}
-          {source === 'projectManagement' && (
+          {['projectManagement', 'projectOnboard'].includes(source) && (
             <li>
               <div
                 className="flex justify-center items-center font-semibold mt-3 border rounded-md p-1  border-[#FE4066] text-[#FE4066] hover:bg-[#FE4066]  hover:text-white  cursor-pointer"

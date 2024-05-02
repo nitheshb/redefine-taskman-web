@@ -53,6 +53,8 @@ const CaptureUnitPayment = ({
   newConstructPS,
   phase,
   projectDetails,
+  stepIndx,
+  StatusListA,
 }) => {
   const d = new window.Date()
 
@@ -318,12 +320,18 @@ const CaptureUnitPayment = ({
   return (
     <div className="">
       <div className="flex items-center justify-center">
-        <div id="bg-img" className="flex h-[664px] w-full" style={bgImgStyle}>
-          <div className="relative top-10 mx-auto max-h-[65%]  rounded-xl  px-9 pb-14 pt-10 shadow-md">
+        <div id="bg-img" className="flex h-[664px] w-full flex-col" style={bgImgStyle}>
+       {StatusListA?.length>0 && <section className="text-white text-right w-full mt-6 pr-5">
+                                        {' '}
+                                        {stepIndx} of {StatusListA?.length}{' '}
+                                        steps
+                                      </section> }
+          <div className="relative top-6 mx-auto max-h-[65%]  rounded-xl  px-9 pb-14 pt-5 shadow-md">
             {/* <div className="space-y-4 text-white">
               <h3 className="font-bold text-2xl">Confirm Booking</h3>
 
             </div> */}
+
             <div className="grid gap-8 grid-cols-1">
               <div className="flex flex-col ">
                 <div className="mt-0">
