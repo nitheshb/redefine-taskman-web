@@ -3,7 +3,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { useState, useEffect } from 'react'
 
-import { ArrowCircleDownIcon, PlusIcon } from '@heroicons/react/solid'
+import { ArrowCircleDownIcon, PlusIcon, LinkIcon } from '@heroicons/react/solid'
 import { InputAdornment, TextField as MuiTextField } from '@mui/material'
 import { setHours, setMinutes } from 'date-fns'
 import { Timestamp } from 'firebase/firestore'
@@ -60,6 +60,7 @@ const AddApplicantDetails = ({
   const [aadhrUrl1, setAadharUrl1] = useState('')
   const [aadhrUrl2, setAadharUrl2] = useState('')
   const [startDate, setStartDate] = useState(d)
+  const [showLeadLink, setShowLeadLink] = useState(false)
 
   useEffect(() => {
     console.log('yo yo ', selUnitDetails, leadPayload)
@@ -786,20 +787,64 @@ const AddApplicantDetails = ({
                                       <section className="flex flex-row">
                                         <div className="w-[43.80px] h-[47px] bg-zinc-100 rounded-[5px] mr-2"></div>
                                         <div className="w-full flex flex-col">
-                                          <h6 className="w-full lg:w-12/12 text-white text-[13px] mt-[9px] mb- font-bold uppercase">
+                                          <h6 className="w-full lg:w-12/12 text-white text-[13px] mt-[2px] mb- font-bold uppercase">
                                             Applicant
                                           </h6>
-                                          <div className="w-[455.80px] opacity-50 text-white  text-[12px] font-normal ">
-                                            Details of applicant is mandatory
+                                          <div
+                                            className="text-[12px] cursor-pointer  bg-white rounded-full px-2 py-[2px]"
+                                            onClick={() =>
+                                              setShowLeadLink(!showLeadLink)
+                                            }
+                                          >
+                                            <LinkIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400  rounded-[16px] " />
+                                            Link with lead
                                           </div>
+                                          {/* <div className="w-[455.80px] opacity-50 text-white  text-[12px] font-normal ">
+                                            Details of applicant is mandatory
+                                          </div> */}
                                         </div>
                                       </section>
-                                      <section className="text-white ">
-                                        {' '}
-                                        {stepIndx} of {StatusListA?.length}{' '}
-                                        steps
+
+                                      <section className="text-white flex flex-col">
+                                        <label className="text-right">
+                                          {' '}
+                                          {stepIndx} of {StatusListA?.length}{' '}
+                                          steps
+                                        </label>
+
                                       </section>
                                     </div>
+                                    {showLeadLink && (
+                                      <div className="bg-[#DCD7FF] rounded-xl p-2 mx-2 flex-col">
+                                        <label>Search Lead Phone no</label>
+                                        <div className="w-full lg:w-3/12 px- ">
+                                          <div className="relative w-full ">
+                                            <PhoneNoField
+                                              label="Phone No"
+                                              name="phoneNo1"
+                                              // type="text"
+                                              value={formik.values.phoneNo1}
+                                              onChange={(value) => {
+                                                // formik.setFieldValue('mobileNo', value.value)
+                                                console.log('value is ', value)
+                                                //
+                                                formik.setFieldValue(
+                                                  'phoneNo1',
+                                                  value.value
+                                                )
+                                                setGivenPhNo1(value.value)
+                                              }}
+                                              // value={formik.values.mobileNo}
+                                              options={{}}
+                                              labelSize="text-[11px]"
+                                              textSize="text-[12px]"
+                                              txtPad="px-1"
+                                              className="text-[10px]"
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+                                    )}
                                     <div className="flex flex-wrap p-4 pt-2">
                                       <div className="w-full flex flex-row justify-between lg:w-12/12 ">
                                         <div className="relative lg:w-6/12 mb-3 mt-2">

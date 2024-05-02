@@ -91,7 +91,7 @@ const ProjectDetailsFlowBody = ({ title, dialogOpen, project }) => {
   return (
     <div className="h-full flex flex-col py-6 bg-white shadow-xl overflow-y-scroll">
       <div className="px-2 sm:px-6  z-10 absolute top-0  w-full bg-white py-2">
-        <Dialog.Title className=" font-semibold text-xl mr-auto ml-3  font-Playfair tracking-wider">
+        <Dialog.Title className=" font-semibold text-xl mr-auto   font-Playfair tracking-wider">
           Project Details
         </Dialog.Title>
         {/* <CustomRadioGroup
@@ -181,7 +181,7 @@ const ProjectDetailsFlowBody = ({ title, dialogOpen, project }) => {
         </div>
       </div>
       <div className="z-10 flex flex-row justify-between mt-4 pb-2 pr-6 bg-white shadow-lg absolute bottom-0  w-full">
-        <div className="mt-5 text-right md:space-x-3 md:block ml-3 ">
+        <div className="mt-5  md:space-x-3 md:block ml-3 w-full">
           <button
             // onClick={() => dialogOpen(false)}
             onClick={() =>  goToPrevious()}
@@ -191,7 +191,8 @@ const ProjectDetailsFlowBody = ({ title, dialogOpen, project }) => {
             Back{' '}
           </button>
         </div>
-        <div className="mt-5 text-right md:space-x-3 md:block flex flex-row mb-6 justify-between w-full ">
+        <section className='w-[300px] mt-6 text-center flex flex-row text-red-400 '>{selFlow?.indx +1 } of {projectDetailFlow.length} steps</section>
+        <div className="mt-5 w-full text-right md:space-x-3 md:block flex flex-row mb-6 justify-between w-full ">
           <button
             className="mb-2 md:mb-0 bg-[#57C0D0] px-5 py-2 text-sm shadow-sm font-medium tracking-wider text-white rounded-full hover:shadow-lg "
             disabled={loading}
