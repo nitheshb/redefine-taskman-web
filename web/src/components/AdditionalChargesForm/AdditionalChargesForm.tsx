@@ -6,6 +6,7 @@ import { Alert, AlertTitle } from '@mui/lab'
 import { useSnackbar } from 'notistack'
 import Select from 'react-select'
 
+import EditableTable from 'src/components/A_ProjModule/Comps/EditableTable'
 import { MaterialCRUDTable } from 'src/components/MaterialCRUDTable'
 import {
   costSheetAdditionalChargesA,
@@ -822,6 +823,7 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
         </tbody>
       </table>
       <section className="ml-4 text-md font-[500]">Part-A</section>
+      <EditableTable />
       <div className=" min border border-radius-4">
         <MaterialCRUDTable
           title=""
@@ -899,7 +901,6 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
                 width: 'auto',
                 justifyCenter: 'center',
               }}
-
               source={source}
               editable={editOpitionsObj}
             />
