@@ -164,6 +164,37 @@ export const projectPlans = [
   },
 ]
 
+
+export const projectDetailFlow = [
+  {
+    name: 'Cost sheet',
+    value: 'CostDetails',
+    img: '/apart1.svg',
+    indx:0,
+  },
+  {
+    name: 'Payment Schedule',
+    value: 'Payment Schedule',
+    img: '/plot.svg',
+    indx:1,
+
+  },
+  {
+    name: 'Project Units',
+    value: 'Blocks',
+    img: '/weekend.svg',
+    indx:2,
+
+  },
+  {
+    name: 'Access',
+    value: 'projectAccess',
+    img: '/villa.svg',
+    indx:3,
+
+  },
+]
+
 export const sourceListItems = [
   {
     label: 'Adventures',

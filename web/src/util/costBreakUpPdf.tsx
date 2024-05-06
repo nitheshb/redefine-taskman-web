@@ -49,6 +49,8 @@ const CostBreakUpPdf = ({
   setPartBTotal,
   setPartCTotal,
   showOnly,
+  stepIndx,
+  StatusListA
 }) => {
   const d = new window.Date()
 
@@ -543,6 +545,7 @@ const CostBreakUpPdf = ({
               style={{ boxShadow: '0 1px 12px #f2f2f2' }}
             >
               <div className="w-full  flex flex-row">
+                <section className='w-full  flex flex-row'>
                 <div className="w-[63.80px] h-[57px] bg-zinc-100 rounded-[5px]"></div>
                 <div className="w-full flex flex-col ml-3">
                   <h6 className="w-full lg:w-12/12 text-blueGray-400 text-[13px] mt-[9px] mb- font-bold uppercase">
@@ -552,6 +555,12 @@ const CostBreakUpPdf = ({
                     Quotation or estimate of unit
                   </div>
                 </div>
+                </section>
+                <section className="w-full ">
+                                        {' '}
+                                        {stepIndx} of {StatusListA?.length}{' '}
+                                        steps
+                                      </section>
               </div>
               <div className="mt-4">
                 <div>

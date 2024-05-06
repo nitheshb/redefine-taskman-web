@@ -17,13 +17,12 @@ const CRMHomeList = ({
   title,
   dialogOpen,
   data,
-  setSubView,
-  subView,
   source,
   projectDetails,
   pId,
 }) => {
   const [loading, setLoading] = useState(false)
+  const [subView, setSubView] = useState('costSheet')
   const { enqueueSnackbar } = useSnackbar()
 
   const onSubmit = async (formData, resetForm) => {
@@ -56,7 +55,7 @@ const CRMHomeList = ({
         </Dialog.Title> */}
 
         <div className="flex flex-row ">
-          <div className="mr-4 templateList">
+         {source=== 'projectManagement' &&  <div className="mr-4 templateList">
             <div className=" flex">
               <div className="flex flex-col">
                 <button
@@ -197,7 +196,7 @@ const CRMHomeList = ({
 
               </div>
             </div>
-          </div>
+          </div> }
           {subView === 'crmTeamAccess' && (
             <PaymentLeadAccess
               title={'Leads Access'}

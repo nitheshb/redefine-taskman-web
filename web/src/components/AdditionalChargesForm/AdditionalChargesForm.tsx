@@ -38,7 +38,7 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
   const [editOpitionsObjPartC, setEditOptionsPartC] = useState({})
 
   useEffect(() => {
-    if (source === 'projectManagement') {
+    if (['projectManagement', 'projectOnboard'].includes(source)) {
       setEditOptions({
         onRowAdd: async (newData) => await handleRowAdd(newData),
         onRowUpdate: async (newData, oldData) =>
@@ -49,7 +49,7 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
   }, [source, data, tableData])
 
   useEffect(() => {
-    if (source === 'projectManagement') {
+    if (['projectManagement', 'projectOnboard'].includes(source)) {
       setEditOptionsPartC({
         onRowAdd: async (newData) => await handleRowAddPartC(newData),
         onRowUpdate: async (newData, oldData) =>
@@ -60,7 +60,7 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
   }, [source, data, tableData, partCData])
   useEffect(() => {
     console.log('partAData', partAData)
-    if (source === 'projectManagement') {
+    if (['projectManagement', 'projectOnboard'].includes(source)) {
       setEditOptionsPartA({
         onRowAdd: async (newData) => await handleRowAddPartA(newData),
         onRowUpdate: async (newData, oldData) =>
@@ -781,7 +781,7 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
 
   return (
     <section>
-      <table>
+      {/* <table>
         <thead>
           {partAcolumns?.map((rowDa, i) => (
             <tr key={i}>
@@ -821,7 +821,7 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table> */}
       <section className="ml-4 text-md font-[500]">Part-A</section>
       <EditableTable />
       <div className=" min border border-radius-4">

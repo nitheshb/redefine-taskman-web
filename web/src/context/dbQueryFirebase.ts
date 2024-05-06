@@ -4474,10 +4474,6 @@ export const updateProjectionsAgreegations = async (
   }
   console.log('Projection  updation failed', docId_d, payload)
   try {
-    await updateDoc(
-      doc(db, `${orgId}_payment_projections`, old_doc_Id),
-      oldPayload
-    )
 
     await updateDoc(doc(db, `${orgId}_payment_projections`, docId_d), payload)
   } catch (error) {
@@ -4485,6 +4481,21 @@ export const updateProjectionsAgreegations = async (
       ...data,
     })
     await setDoc(doc(db, `${orgId}_payment_projections`, docId_d), payload)
+    enqueueSnackbar('Projection updation failed BBB', {
+      variant: 'error',
+    })
+  }
+  try {
+    await updateDoc(
+      doc(db, `${orgId}_payment_projections`, old_doc_Id),
+      oldPayload
+    )
+
+  } catch (error) {
+    console.log('Projection  updation failed', error, {
+      ...data,
+    })
+
     enqueueSnackbar('Projection updation failed BBB', {
       variant: 'error',
     })
@@ -4535,13 +4546,24 @@ export const updateCrmExecutiveAgreegations = async (
       oldPayload
     )
 
+
+  } catch (error) {
+    console.log('Emp Projection Removal failed', error, {
+      ...data,
+    })
+    enqueueSnackbar('Emp Projection Removal failed', {
+      variant: 'error',
+    })
+  }
+  try {
+
     await updateDoc(doc(db, `${orgId}_emp_collections`, docId_d), payload)
   } catch (error) {
     console.log('Employee  updation failed', error, {
       ...data,
     })
     await setDoc(doc(db, `${orgId}_emp_collections`, docId_d), payload)
-    enqueueSnackbar('Emp Projections updation failed BBB', {
+    enqueueSnackbar('Emp Projections updation', {
       variant: 'error',
     })
   }
@@ -4557,15 +4579,16 @@ export const updateCrmExecutiveReAssignAgreegations = async (
   enqueueSnackbar
 ) => {
   console.log('data is===>', data)
-  const { oldDate, schDate, assignedTo,oldAssignedTo, value:newPrice } = data
+
+  const { oldSchDate, schDate, assignedTo,oldAssignedTo, value:newPrice } = data
   console.log('data is===>',  assignedTo,oldAssignedTo,)
-  if (oldAssignedTo != assignedTo) {
+
 
   const x = getWeekMonthNo(schDate)
-  const y = getWeekMonthNo(oldDate)
+  const y = getWeekMonthNo(schDate)
   console.log('value of schDate', x)
-  const docId_d = `${assignedTo}W${x.weekNumberOfYear}M${x.month}Y${x.year}s${data.stageId}`
-  const old_doc_Id = `${oldAssignedTo}W${y.weekNumberOfYear}M${y.month}Y${y.year}s${data.stageId}`
+  const docId_d = `${assignedTo}W${x.weekNumberOfYear}M${x.month}Y${x.year}s${data.stage.value}`
+  const old_doc_Id = `${oldAssignedTo}W${y.weekNumberOfYear}M${y.month}Y${y.year}s${data.stage.value}`
 
   const payload = {
     uId: assignedTo,
@@ -4582,8 +4605,8 @@ export const updateCrmExecutiveReAssignAgreegations = async (
     week: y.weekNumberOfYear,
     month: y.month,
     year: y.year,
-    // receivable: increment(-newPrice),
-    receivable: 0,
+    receivable: increment(-newPrice),
+    // receivable: 0,
   }
   console.log('Employee  updation failed', docId_d, payload)
   try {
@@ -4591,6 +4614,18 @@ export const updateCrmExecutiveReAssignAgreegations = async (
       doc(db, `${orgId}_emp_collections`, old_doc_Id),
       oldPayload
     )
+
+
+  } catch (error) {
+    console.log('Employee  updation failed', error, {
+      ...data,
+    })
+    enqueueSnackbar('Emp Projections updation failed BBB', {
+      variant: 'error',
+    })
+  }
+  try {
+
 
     await updateDoc(doc(db, `${orgId}_emp_collections`, docId_d), payload)
   } catch (error) {
@@ -4602,9 +4637,7 @@ export const updateCrmExecutiveReAssignAgreegations = async (
       variant: 'error',
     })
   }
-}else{
-  return
-}
+
   return
 }
 export const updateManagerApproval = async (

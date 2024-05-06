@@ -22,6 +22,8 @@ const BlockingUnitForm = ({
   dialogOpen,
   leadDetailsObj2,
   selUnitDetails,
+  stepIndx,
+  StatusListA,
 }) => {
   const { user } = useAuth()
   const { orgId } = user
