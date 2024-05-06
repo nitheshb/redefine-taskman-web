@@ -13,9 +13,11 @@ import { AreaConverter } from 'src/components/AreaConverter'
 import Loader from 'src/components/Loader/Loader'
 import {
   ChooseOptions,
+  chooseAuthorityApproval,
   developmentTypes,
   projectPlans,
   statesList,
+  chooseReraApproval,
   approvalAuthority,
 } from 'src/constants/projects'
 import {
@@ -41,6 +43,13 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
   )
   const [devType, setdevType] = useState(
     project?.developmentType || developmentTypes[0]
+  )
+  const [planningApproval, setPlanningApproval] = useState(
+    project?.planningApproval  || 'No'
+  )
+
+  const [reraApproval, setReraApproval] = useState(
+    project?.reraApproval  || 'No'
   )
   const [addNewBankStuff, setAddNewBankStuff] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -298,17 +307,19 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                     </div>
                     <div className="flex flex-col mt-2 rounded-lg bg-white border border-gray-100 p-4 ">
                       <CustomRadioGroup
-                        label="Planning Approval Authority"
-                        value={devType}
-                        options={ChooseOptions}
-                        onChange={setdevType}
+                        label="Planning Authority Approval"
+                        value={planningApproval}
+                        options={chooseAuthorityApproval}
+                        onChange={setPlanningApproval}
                       />
 
 
-                      <div className='py-2'>
+                     {planningApproval?.name === 'Yes' &&
+                     <>
+                     <div className='py-2'>
                       <CustomSelect
                             name="Planning Approval Authority"
-                            label={<label className="text-sm text-gray-800 font-medium">Planning Approval Authority</label>}
+                            label={<label className="text-sm text-gray-800 font-medium">Planning Authority</label>}
                             className="input mt-2"
                             onChange={({ value }) => {
                             formik.setFieldValue('PlanningApprovalAuthority', value)
@@ -330,7 +341,7 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
 
                         <div className="mt-2 w-full">
                           <TextField
-                            label="BMRDA No*"
+                            label={`${formik.values.PlanningApprovalAuthority.value || ''}Approval No*`}
                             name="bmrdaNo"
                             type="text"
                           />
@@ -398,15 +409,17 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                           />
                         </div>
                       </div>
+                      </>}
                     </div>
+
                     <div className="flex flex-col mt-2 rounded-lg bg-white border border-gray-100 p-4 ">
                       <CustomRadioGroup
                         label="Rera Approval"
-                        value={devType}
-                        options={ChooseOptions}
-                        onChange={setdevType}
+                        value={reraApproval}
+                        options={chooseReraApproval}
+                        onChange={setReraApproval}
                       />
-                      <div className="md:flex md:flex-row md:space-x-4 w-full text-xs">
+                     {reraApproval?.name === 'Yes' && <div className="md:flex md:flex-row md:space-x-4 w-full text-xs">
                         <div className="mt-2 w-full">
                           <TextField
                             label="RERA No*"
@@ -476,7 +489,7 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                             dateFormat="MMMM d, yyyy"
                           />
                         </div>
-                      </div>
+                      </div>}
                     </div>
                     <div className="flex flex-col mt-2 rounded-lg bg-white border border-gray-100 p-4 ">
                       <CustomRadioGroup

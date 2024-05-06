@@ -296,6 +296,28 @@ export const ChooseOptions = [
   },
 
 ]
+export const chooseAuthorityApproval = [
+  {
+    name: 'Yes',
+    img: '/check-mark-48.png',
+  },
+  {
+    name: 'No',
+    img: '/cancel-64.png',
+  },
+
+]
+export const chooseReraApproval = [
+  {
+    name: 'Yes',
+    img: '/approval-78.png',
+  },
+  {
+    name: 'No',
+    img: '/cancel-64.png',
+  },
+
+]
 export const paymentMode = [
   {
     value: 'cheque',
@@ -721,13 +743,17 @@ export const apartUnitChargesMock = [
 
 export const approvalAuthority = [
   {
-    label: 'BMRDA'
+    label: 'BMRDA',
+    value: 'bmrda'
   },
   {
-    label: 'BDA'
+    label: 'BDA',
+    value: 'bda'
   },
   {
-    label: 'HUDA'
+    label: 'HUDA',
+    value: 'huda'
+
   }
 ]
 
