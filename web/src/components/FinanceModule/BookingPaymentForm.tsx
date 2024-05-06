@@ -25,6 +25,7 @@ import {
   steamBankDetailsList,
   updateLeadStatus,
   updateProjectCounts,
+  updateProjectionsAgreegationsOnBooking,
   updateUnitAsBooked,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
@@ -185,9 +186,17 @@ const AddPaymentDetailsForm = ({
       phase?.paymentScheduleObj
     )
 
-    console.log('mysetup is', leadDetailsObj2, data)
 
-    const fullPs = [...newPlotPS, ...newConstructPS]
+    const fullPs1 = [...newPlotPS, ...newConstructPS]
+   const fullPs=  fullPs1.map((d)=> {
+      let x = d;
+      x.schDate= d.schDate || Timestamp.now().toMillis()
+      x.oldDate= d.schDate || Timestamp.now().toMillis()
+
+      return x
+    })
+    console.log('mysetup is', leadDetailsObj2, data, fullPs)
+
     const { amount } = data
     const { projectName } = projectDetails
     fullPs.map((dataObj) => {
@@ -322,6 +331,32 @@ const {id} = leadData
       schTime: Timestamp.now().toMillis() + 10800000, // 3 hrs
       ct: Timestamp.now().toMillis(),
     }
+    fullPs.map((d, i) => {
+
+      //
+     // this will set the previous date immutable as current date
+
+
+        const dataPayload = {
+          pId: selUnitDetails?.pId,
+          oldDate: d?.oldDate,
+          schDate: d?.schDate,
+          stageId: d?.stage.value,
+          newPrice: d?.value,
+          used: d?.used,
+          assignedTo: selUnitDetails?.assignedTo || 'unassigned'
+        }
+
+
+
+    updateProjectionsAgreegationsOnBooking(
+      orgId,
+      dataPayload,
+      user.email,
+      enqueueSnackbar
+    )
+      
+    })
     addModuleScheduler(
       `${orgId}_fin_tasks`,
       id,
@@ -456,7 +491,13 @@ const {id} = leadData
   await setBookCurentStep(['customer_email_send', 'notify_to_manager'])
     // 4)update lead status to book
     // updateLeadStatus(leadDocId, newStatus)
-
+    updateProjectCounts(
+      orgId,
+      leadDetailsObj2?.ProjectId,
+      { soldVal: T_elgible, t_collect: amount },
+      user?.email,
+      enqueueSnackbar
+    )
     updateLeadStatus(
       orgId,
       leadDetailsObj2?.ProjectId || '',
@@ -466,13 +507,7 @@ const {id} = leadData
       user?.email,
       enqueueSnackbar
     )
-    updateProjectCounts(
-      orgId,
-      leadDetailsObj2?.ProjectId,
-      { soldVal: T_elgible, t_collect: amount },
-      user?.email,
-      enqueueSnackbar
-    )
+
     handleClick()
     const updatedData = {
       ...data,

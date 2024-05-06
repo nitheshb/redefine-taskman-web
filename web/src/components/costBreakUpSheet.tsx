@@ -538,7 +538,7 @@ const CostBreakUpSheet = ({
                                     boxShadow: '0 1px 12px #f2f2f2',
                                   }}
                                 >
-                                  {csMode === 'both' && (
+                                  {/* {csMode === 'both' && (
                                     <CostBreakUpPdfAll
                                       projectDetails={projectDetails}
                                       csMode={csMode}
@@ -563,6 +563,39 @@ const CostBreakUpSheet = ({
                                       setNewPS={setNewConstructPS}
                                       setNewConstructPS={setNewConstructPS}
                                       newConstructPS={newConstructPS}
+                                    />
+                                  )} */}
+                                   {csMode === 'both' && (
+                                    <CostBreakUpPdf
+                                      formik={formik}
+                                      projectDetails={projectDetails}
+                                      csMode={csMode}
+                                      setCostSheet={setCostSheet}
+                                      costSheet={costSheet}
+                                      // costSheetA={costSheetA}
+                                      pdfExportComponent={pdfExportComponent}
+                                      selPhaseObj={selPhaseObj}
+                                      leadDetailsObj1={leadDetailsObj1}
+                                      selUnitDetails={selUnitDetails}
+                                      setNewPlotCsObj={setNewPlotCsObj}
+                                      newPlotCsObj={newPlotCsObj}
+                                      costSheetA={newPlotCostSheetA}
+                                      setAddiChargesObj={
+                                        setNewAdditonalChargesObj
+                                      }
+                                      setCostSheetA={setNewPlotCostSheetA}
+                                      setNewPS={setNewPlotPS}
+                                      newPlotPS={newPlotPS}
+                                      showGstCol={showGstCol}
+                                      netTotal={netTotal}
+                                      setNetTotal={setNetTotal}
+                                      partATotal={partATotal}
+                                      partBTotal={partBTotal}
+                                      partCTotal={partCTotal}
+                                      setPartATotal={setPartATotal}
+                                      setPartBTotal={setPartBTotal}
+                                      setPartCTotal={setPartCTotal}
+                                      showOnly={onStep}
                                     />
                                   )}
                                   {csMode === 'plot_cs' && (

@@ -157,7 +157,8 @@ const CostBreakUpPdf = ({
       selUnitDetails
     )
     let x = []
-    if (csMode === 'plot_cs') {
+    // if (csMode === 'plot_cs') {
+      if ('plot_cs' === 'plot_cs') {
       additonalChargesObj?.map((data, inx) => {
         let total = 0
         let gstTotal = 0
@@ -252,7 +253,7 @@ const CostBreakUpPdf = ({
           },
           component: {
             value: 'villa_construct_cost',
-            label: 'Villa Construction Cost',
+            label: 'Villa Construction Cost  ',
           },
           others: selUnitDetails?.construct_price,
           charges: Number.isFinite(y) ? y : selUnitDetails?.construct_price,
@@ -374,9 +375,11 @@ const CostBreakUpPdf = ({
   }, [netTotal, plotBookingAdv, csMode])
 
   const CreateNewPsFun = (netTotal, plotBookingAdv, csMode) => {
-    const newPs = psPayload.map((d1) => {
+    const newPs = psPayload?.map((d1) => {
       const z = d1
-      if (csMode === 'plot_cs') {
+      // if (csMode === 'plot_cs') {
+      if ('plot_cs' === 'plot_cs') {
+
         z.value = ['on_booking'].includes(d1?.stage?.value)
           ? Number(d1?.percentage)
           : Math.round((netTotal - plotBookingAdv) * (d1?.percentage / 100))
@@ -495,12 +498,12 @@ const CostBreakUpPdf = ({
     const y = costSheetA
     let total = 0
     let gstTotal = 0
-    const gstTaxForProjA = selPhaseObj?.partATaxObj.filter(
+    const gstTaxForProjA = selPhaseObj?.partATaxObj?.filter(
       (d) => d?.component.value === 'sqft_cost_tax'
     )
     const gstTaxIs =
       gstTaxForProjA.length > 0 ? gstTaxForProjA[0]?.gst?.value : 0
-    const plcGstForProjA = selPhaseObj?.partATaxObj.filter(
+    const plcGstForProjA = selPhaseObj?.partATaxObj?.filter(
       (d) => d?.component.value === 'plc_tax'
     )
     if (csMode === 'plot_cs') {
@@ -864,7 +867,7 @@ const CostBreakUpPdf = ({
                                   >
                                     ₹
                                     {partBPayload
-                                      .reduce(
+                                      ?.reduce(
                                         (partialSum, obj) =>
                                           partialSum +
                                           Number(obj?.TotalSaleValue),
@@ -879,7 +882,7 @@ const CostBreakUpPdf = ({
                                   >
                                     ₹
                                     {partBPayload
-                                      .reduce(
+                                      ?.reduce(
                                         (partialSum, obj) =>
                                           partialSum + Number(obj?.gstValue),
                                         0
@@ -994,7 +997,7 @@ const CostBreakUpPdf = ({
                                   >
                                     ₹
                                     {partCPayload
-                                      .reduce(
+                                      ?.reduce(
                                         (partialSum, obj) =>
                                           partialSum + Number(obj?.charges),
                                         0
@@ -1008,7 +1011,7 @@ const CostBreakUpPdf = ({
                                   >
                                     ₹
                                     {partCPayload
-                                      .reduce(
+                                      ?.reduce(
                                         (partialSum, obj) =>
                                           partialSum + Number(obj?.gstValue),
                                         0

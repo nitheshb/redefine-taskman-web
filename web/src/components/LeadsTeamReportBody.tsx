@@ -62,9 +62,12 @@ import { serialMyData } from './LeadsTeamReport/SourceLeads'
 import ReportSideWindow from './SiderForm/ReportSideView'
 import SiderForm from './SiderForm/SiderForm'
 
+
 //import SalesSummaryReport from './A_SalesModule/Reports/salesSummaryReport'
 //import ProfileSummary from './A_SalesModule/Reports/profileSummary'
 import Chat from './A_SalesModule/Reports/chatSummary'
+//import StepperTask from './A_SalesModule/Reports/StepperTask'
+import TableEdit from './A_SalesModule/Reports/TableEdit'
 
 
 
@@ -1216,6 +1219,8 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
 
                 { label: 'Top Bar', value: 'bar_tasks' },
                 { label: 'Profile', value: 'profile_tasks' },
+              
+                { label: 'Table Edit', value: 'edit_table' },
 
                 // { label: 'Source Report', value: 'source_report' },
                 // { label: 'Employee Report', value: 'emp_status_report' },
@@ -1740,6 +1745,10 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
           {selCat === 'marketing_Dashboard' && <MarketingAnalyticsHome />}
 
           {selCat === 'profile_tasks' && <ProfileSummary />}
+
+
+        
+          {selCat === 'edit_table' && <TableEdit/>}
 
           {/* Graph Bar start */}
 

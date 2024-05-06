@@ -239,17 +239,18 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                 <Form>
                   <div className="form m-4">
                     <div className="flex flex-col mt-2 rounded-lg bg-white border border-gray-100 p-4 ">
+                      <p className='text-sm text-gray-800 font-medium'>Project Name*</p>
                       <TextField
-                        label="Project Name*"
+                        label=""
                         name="projectName"
                         type="text"
                       />
                       <div className="mb-3">
                         <label
                           htmlFor="area"
-                          className="label font-regular text-sm"
+                          className="label font-medium text-sm"
                         >
-                          Area*
+                          Saleable Area*
                         </label>
                         <MuiTextField
                           id="area"
@@ -297,24 +298,30 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                     </div>
                     <div className="flex flex-col mt-2 rounded-lg bg-white border border-gray-100 p-4 ">
                       <CustomRadioGroup
-                        label="PLANNING APPROVAL AUTHORITY"
+                        label="Planning Approval Authority"
                         value={devType}
                         options={ChooseOptions}
                         onChange={setdevType}
                       />
 
 
-
-                        <CustomSelect
-                            name="PlanningApprovalAuthority"
-                            label="Planning Approval Authority"
+                      <div className='py-2'>
+                      <CustomSelect
+                            name="Planning Approval Authority"
+                            label={<label className="text-sm text-gray-800 font-medium">Planning Approval Authority</label>}
                             className="input mt-2"
                             onChange={({ value }) => {
                             formik.setFieldValue('PlanningApprovalAuthority', value)
                            }}
                             value={formik.values.PlanningApprovalAuthority}
                             options={approvalAuthority}
+
                           />
+                      </div>
+
+
+
+
                       <div className="md:flex md:flex-row md:space-x-4 w-full text-xs">
 
 
@@ -394,7 +401,7 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                     </div>
                     <div className="flex flex-col mt-2 rounded-lg bg-white border border-gray-100 p-4 ">
                       <CustomRadioGroup
-                        label="RERA APPROVAL"
+                        label="Rera Approval"
                         value={devType}
                         options={ChooseOptions}
                         onChange={setdevType}
@@ -415,7 +422,7 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                            />*/}
 
                           <label className="label font-regular block mb-1">
-                            Start Date *
+                          Approval Date*
                           </label>
                           <DatePicker
                             id="hdmaStartDate"
@@ -479,8 +486,10 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                         onChange={setdevType}
                       />
                       <div className="flex mt-3 mb-3 space-y-2 w-full text-xs">
+
                         <div className=" mt-2 mr-3 w-full">
-                          <MultiSelectMultiLineField
+
+                        <MultiSelectMultiLineField
                             label="Builder Bank Account*"
                             name="builderBankDocId"
                             onChange={(payload) => {
@@ -498,15 +507,21 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                             options={bankDetailsA}
                             setAddNewBankStuff={setAddNewBankStuff}
                           />
-                          {/* {formik.errors.builderBankDocId ? (
-        <div className="error-message text-red-700 text-xs p-2">
-          {formik.errors.builderBankDocId}
-          {formik.values.builderBankDocId}
-        </div>
-      ) : null} */}
+
+
+
+
+
+                               {/* {formik.errors.builderBankDocId ? (
+                             <div className="error-message text-red-700 text-xs p-2">
+                             {formik.errors.builderBankDocId}
+                                {formik.values.builderBankDocId}
+                                  </div>
+                               ) : null} */}
                         </div>
+
                         {devType.name === 'Joint' && (
-                          <div className="mt-2 mr-3 w-full  pt-1">
+                          <div className="mt-2 mr-3 w-full py-1">
                             <TextField
                               label="Builder Share*"
                               name="builderShare"
@@ -514,6 +529,8 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                               onChange={(e) => EditedLandlord(e, formik)}
                               type="number"
                               id="numberSize"
+
+                              className="border border-gray-300 h-9 p-2 rounded-md w-full"
 
                             />
                           </div>
@@ -527,6 +544,7 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                           phase={'data'}
                         />
                       )}
+
                       {devType.name === 'Joint' && (
                         <div className="flex  mb-3 space-y-2 w-full text-xs">
                           <div className=" mt-2 mr-3 w-full">
@@ -561,24 +579,27 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                             ) : null}
                           </div>
 
-                          <div className="mt-2 mr-3 w-full pt-1">
+                          <div className="mt-2 mr-3 w-full py-1">
                             <TextField
                               label="LandLord Share*"
                               name="landlordShare"
                               value={landLordShare}
                               type="number"
                               onChange={(e) => EditedLandlord(e, formik)}
+                              className="border border-gray-300 h-9 p-2 rounded-md w-full"
                             />
                           </div>
                         </div>
                       )}
+
+
                     </div>
                     <div className="flex flex-col mt-2 rounded-lg bg-white border border-gray-100 p-4 ">
 
 
 
-                      <div  className='py-2 font-semibold'>
-                        <h2>Project Location Details</h2>
+                      <div  className='py-2'>
+                        <p className="text-sm text-gray-800 font-medium">Project Location Details</p>
                       </div>
 
                       <div className="md:flex md:flex-row md:space-x-4 w-full text-xs">
