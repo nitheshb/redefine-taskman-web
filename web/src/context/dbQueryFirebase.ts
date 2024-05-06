@@ -4398,7 +4398,47 @@ export const updateUnitStatus = async (
   }
   return
 }
+export const updateProjectionsAgreegationsOnBooking = async (
+  orgId,
+  data,
+  by,
+  enqueueSnackbar
+) => {
+  console.log('data is===>', data)
+  const { oldDate, schDate, pId, newPrice } = data
+  console.log('data is===>', oldDate,schDate)
 
+
+  const x = getWeekMonthNo(schDate)
+  const y = getWeekMonthNo(oldDate)
+  console.log('value of schDate', x)
+  const docId_d = `${pId}W${x.weekNumberOfYear}M${x.month}Y${x.year}s${data.stageId}`
+
+  const payload = {
+    pId: pId,
+    block: 1,
+    week: x.weekNumberOfYear,
+    month: x.month,
+    year: x.year,
+    receivable: increment(newPrice),
+  }
+
+  console.log('Projection  updation failed', docId_d, payload)
+  try {
+    // await updateDoc(doc(db, `${orgId}_payment_projections`, docId_d), payload)
+    await setDoc(doc(db, `${orgId}_payment_projections`, docId_d), payload)
+  } catch (error) {
+    console.log('Projection  updation failed', error, {
+      ...data,
+    })
+    await setDoc(doc(db, `${orgId}_payment_projections`, docId_d), payload)
+    enqueueSnackbar('Projection updation failed BBB', {
+      variant: 'error',
+    })
+  }
+
+  return
+}
 export const updateProjectionsAgreegations = async (
   orgId,
   data,

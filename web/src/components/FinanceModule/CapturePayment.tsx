@@ -1,8 +1,8 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import { useState, useEffect, useRef } from 'react'
-import { ExclamationCircleIcon, CheckCircleIcon } from '@heroicons/react/solid'
 
+import { ExclamationCircleIcon, CheckCircleIcon } from '@heroicons/react/solid'
 import { AttachFile } from '@mui/icons-material'
 import { format } from 'date-fns'
 import { setHours, setMinutes } from 'date-fns'
@@ -124,7 +124,7 @@ const CaptureUnitPayment = ({
         console.log('fetched users list is', bankA)
         setCreditNoters([...bankA])
       },
-      {pId:  [selUnitDetails?.pId]},
+      { pId: [selUnitDetails?.pId] },
       (error) => setCreditNoters([])
     )
 
@@ -356,7 +356,9 @@ const CaptureUnitPayment = ({
                                           <div className="inline">
                                             <div className="mt-[7px]">
                                               <label className="text-[22px] font-semibold text-[#053219]  text-sm  mb-1  ">
-                                              {title==='capturePayment' ? 'Capture Payment' : 'Booking Confirmation'}
+                                                {title === 'capturePayment'
+                                                  ? 'Capture Payment'
+                                                  : 'Booking Confirmation'}
                                                 <abbr title="required"></abbr>
                                               </label>
                                             </div>
@@ -404,81 +406,87 @@ const CaptureUnitPayment = ({
                                             })}
                                           </div>
 
-                                       {paymentModex !="credit_note" && (<div className="w-full  px-4 mt-3">
-                                            <div className=" mb-4 w-full">
-                                              <MultiSelectMultiLineField
-                                                label="Paid Towards Account"
-                                                name="towardsBankDocId"
-                                                onChange={(payload) => {
-                                                  console.log(
-                                                    'changed value is ',
-                                                    payload
-                                                  )
-                                                  const {
-                                                    value,
-                                                    id,
-                                                    accountName,
-                                                  } = payload
-                                                  formik.setFieldValue(
-                                                    'builderName',
-                                                    accountName
-                                                  )
-                                                  formik.setFieldValue(
-                                                    'landlordBankDocId',
-                                                    id
-                                                  )
+                                          {paymentModex != 'credit_note' && (
+                                            <div className="w-full  px-4 mt-3">
+                                              <div className=" mb-4 w-full">
+                                                <MultiSelectMultiLineField
+                                                  label="Paid Towards Account"
+                                                  name="towardsBankDocId"
+                                                  onChange={(payload) => {
+                                                    console.log(
+                                                      'changed value is ',
+                                                      payload
+                                                    )
+                                                    const {
+                                                      value,
+                                                      id,
+                                                      accountName,
+                                                    } = payload
+                                                    formik.setFieldValue(
+                                                      'builderName',
+                                                      accountName
+                                                    )
+                                                    formik.setFieldValue(
+                                                      'landlordBankDocId',
+                                                      id
+                                                    )
 
-                                                  formik.setFieldValue(
-                                                    'towardsBankDocId',
-                                                    id
-                                                  )
-                                                }}
-                                                value={
-                                                  formik.values.towardsBankDocId
-                                                }
-                                                options={bankDetailsA}
-                                              />
+                                                    formik.setFieldValue(
+                                                      'towardsBankDocId',
+                                                      id
+                                                    )
+                                                  }}
+                                                  value={
+                                                    formik.values
+                                                      .towardsBankDocId
+                                                  }
+                                                  options={bankDetailsA}
+                                                />
+                                              </div>
                                             </div>
-                                          </div>)}
+                                          )}
 
-                                          {paymentModex ==="credit_note" && (<div className="w-full  px-4 mt-3">
-                                            <div className=" mb-4 w-full">
-                                              <MultiSelectMultiLineField
-                                                label="Credit Note Issuer"
-                                                name="creditNoteIssuer"
-                                                onChange={(payload) => {
-                                                  console.log(
-                                                    'changed value is ',
-                                                    payload
-                                                  )
-                                                  const {
-                                                    value,
-                                                    id,
-                                                    name,
-                                                    uid,
-                                                    accountName,
-                                                  } = payload
-                                                  formik.setFieldValue(
-                                                    'builderName',
-                                                    name
-                                                  )
-                                                  formik.setFieldValue(
-                                                    'landlordBankDocId',
-                                                    uid
-                                                  )
+                                          {paymentModex === 'credit_note' && (
+                                            <div className="w-full  px-4 mt-3">
+                                              <div className=" mb-4 w-full">
+                                                <MultiSelectMultiLineField
+                                                  label="Credit Note Issuer"
+                                                  name="creditNoteIssuer"
+                                                  onChange={(payload) => {
+                                                    console.log(
+                                                      'changed value is ',
+                                                      payload
+                                                    )
+                                                    const {
+                                                      value,
+                                                      id,
+                                                      name,
+                                                      uid,
+                                                      accountName,
+                                                    } = payload
+                                                    formik.setFieldValue(
+                                                      'builderName',
+                                                      name
+                                                    )
+                                                    formik.setFieldValue(
+                                                      'landlordBankDocId',
+                                                      uid
+                                                    )
 
-                                                  formik.setFieldValue(
-                                                    'towardsBankDocId',
-                                                    uid
-                                                  )
-                                                }}
-                                                value={
-                                                  formik.values.towardsBankDocId
-                                                }
-                                                options={creditNotersA}
-                                              />
+                                                    formik.setFieldValue(
+                                                      'towardsBankDocId',
+                                                      uid
+                                                    )
+                                                  }}
+                                                  value={
+                                                    formik.values
+                                                      .towardsBankDocId
+                                                  }
+                                                  options={creditNotersA}
+                                                />
+                                              </div>
                                             </div>
-                                          </div>)}
+                                          )}
                                           <div className="w-full lg:w-4/12 px-3">
                                             <div className="relative w-full mb-5">
                                               <TextField2
@@ -618,151 +626,170 @@ const CaptureUnitPayment = ({
                                         </div>
                                       </section>
                                     )}
-                                    {(title !='capturePayment' && bookingProgress) && (
-                                      <section className="mb-3">
-                                        <div className="mx-auto flex mt-6 flex-row  ">
-                                          <section className="ml-3 w-[300px]">
-                                            <div className="flex items-center">
-                                              {bookCompSteps.includes(
-                                                'payment_captured'
-                                              ) && (
-                                                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 ">
-                                                  <CheckCircleIcon   className="h-6 w-6 text-violet-500 " />
-                                                </div>
-                                              )}
-                                             { (!bookCompSteps.includes(
-                                                'payment_captured'
-                                              ) && !bookCurentStep.includes(
-                                                'payment_captured'
-                                              ))  && <ExclamationCircleIcon className="w-6 h-6 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " /> }
-                                              {bookCurentStep.includes(
-                                                'payment_captured'
-                                              ) && <Loader />}
-                                              <span className="ml-2 text-md font-bold text-navy-700 ">
-                                                Payment Confirmed
-                                              </span>
-                                            </div>
-                                          </section>
-                                          {/*  */}
-                                          <section className="ml-3 w-[300px]">
-                                            <div className="flex items-center">
-                                            {bookCompSteps.includes(
-                                                'CS_updated'
-                                              ) && (
-                                                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 ">
-                                                  <CheckCircleIcon   className="h-6 w-6 text-violet-500 " />
-                                                </div>
-                                              )}
-                                             { (!bookCompSteps.includes(
-                                                'CS_updated'
-                                              ) && !bookCurentStep.includes(
-                                                'CS_updated'
-                                              ))  && <ExclamationCircleIcon className="w-6 h-6 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " /> }
-                                              {bookCurentStep.includes(
-                                                'CS_updated'
-                                              ) && <Loader />}
-                                              <span className="ml-4 text-md font-bold text-navy-700 ">
-                                                Costsheet & Payment Updated
-                                              </span>
-                                            </div>
-                                          </section>
-                                        </div>
-                                        <div className="mx-auto flex mt-6 flex flex-row  ">
-                                          <section className="ml-3 w-[300px]">
-                                            <div className="flex items-center">
-                                            {bookCompSteps.includes(
-                                                'unit_booked'
-                                              ) && (
-                                                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 ">
-                                                  <CheckCircleIcon   className="h-6 w-6 text-violet-500 " />
-                                                </div>
-                                              )}
-                                             { (!bookCompSteps.includes(
-                                                'unit_booked'
-                                              ) && !bookCurentStep.includes(
-                                                'unit_booked'
-                                              ))  && <ExclamationCircleIcon className="w-6 h-6 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " /> }
-                                              {bookCurentStep.includes(
-                                                'unit_booked'
-                                              ) && <Loader />}
-                                              <span className="ml-2 text-md font-bold text-navy-700 ">
-                                                Unit Booked
-                                              </span>
-                                            </div>
-                                          </section>
-                                          {/*  */}
-                                          <section className="ml-3 w-[300px]">
-                                            <div className="flex items-center">
-                                            {bookCompSteps.includes(
-                                                'customer_created'
-                                              ) && (
-                                                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 ">
-                                                  <CheckCircleIcon   className="h-6 w-6 text-violet-500 " />
-                                                </div>
-                                              )}
-                                             { (!bookCompSteps.includes(
-                                                'customer_created'
-                                              ) && !bookCurentStep.includes(
-                                                'customer_created'
-                                              ))  && <ExclamationCircleIcon className="w-6 h-6 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " /> }
-                                              {bookCurentStep.includes(
-                                                'customer_created'
-                                              ) && <Loader />}
-                                              <span className="ml-2 text-md font-bold text-navy-700 ">
-                                                Customer Created
-                                              </span>
-                                            </div>
-                                          </section>
-                                        </div>
-                                        <div className="mx-auto flex mt-6 flex flex-row  ">
-                                          <section className="ml-3 w-[300px]">
-                                            <div className="flex items-center">
-                                            {bookCompSteps.includes(
-                                                'customer_email_send'
-                                              ) && (
-                                                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 ">
-                                                  <CheckCircleIcon   className="h-6 w-6 text-violet-500 " />
-                                                </div>
-                                              )}
-                                             { (!bookCompSteps.includes(
-                                                'customer_email_send'
-                                              ) && !bookCurentStep.includes(
-                                                'customer_email_send'
-                                              ))  && <ExclamationCircleIcon className="w-6 h-6 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " /> }
-                                              {bookCurentStep.includes(
-                                                'customer_email_send'
-                                              ) && <Loader />}
-                                              <span className="ml-2 text-md font-bold text-navy-700 ">
-                                                Send Welcome E-mail
-                                              </span>
-                                            </div>
-                                          </section>
-                                          {/*  */}
-                                          <section className="ml-4 w-[300px]">
-                                            <div className="flex items-center">
-                                            {bookCompSteps.includes(
-                                                'notify_to_manager'
-                                              ) && (
-                                                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 ">
-                                                  <CheckCircleIcon   className="h-6 w-6 text-violet-500 " />
-                                                </div>
-                                              )}
-                                             { (!bookCompSteps.includes(
-                                                'notify_to_manager'
-                                              ) && !bookCurentStep.includes(
-                                                'notify_to_manager'
-                                              ))  && <ExclamationCircleIcon className="w-6 h-6 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " /> }
-                                              {bookCurentStep.includes(
-                                                'notify_to_manager'
-                                              ) && <Loader />}
-                                              <span className="ml-2 text-md font-bold text-navy-700 ">
-                                                Notified to Manager
-                                              </span>
-                                            </div>
-                                          </section>
-                                        </div>
-                                      </section>
-                                    )}
+                                    {title != 'capturePayment' &&
+                                      bookingProgress && (
+                                        <section className="mb-3">
+                                          <div className="mx-auto flex mt-6 flex-row  ">
+                                            <section className="ml-3 w-[300px]">
+                                              <div className="flex items-center">
+                                                {bookCompSteps.includes(
+                                                  'payment_captured'
+                                                ) && (
+                                                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 ">
+                                                    <CheckCircleIcon className="h-6 w-6 text-violet-500 " />
+                                                  </div>
+                                                )}
+                                                {!bookCompSteps.includes(
+                                                  'payment_captured'
+                                                ) &&
+                                                  !bookCurentStep.includes(
+                                                    'payment_captured'
+                                                  ) && (
+                                                    <ExclamationCircleIcon className="w-6 h-6 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " />
+                                                  )}
+                                                {bookCurentStep.includes(
+                                                  'payment_captured'
+                                                ) && <Loader />}
+                                                <span className="ml-2 text-md font-bold text-navy-700 ">
+                                                  Payment Confirmed
+                                                </span>
+                                              </div>
+                                            </section>
+                                            {/*  */}
+                                            <section className="ml-3 w-[300px]">
+                                              <div className="flex items-center">
+                                                {bookCompSteps.includes(
+                                                  'CS_updated'
+                                                ) && (
+                                                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 ">
+                                                    <CheckCircleIcon className="h-6 w-6 text-violet-500 " />
+                                                  </div>
+                                                )}
+                                                {!bookCompSteps.includes(
+                                                  'CS_updated'
+                                                ) &&
+                                                  !bookCurentStep.includes(
+                                                    'CS_updated'
+                                                  ) && (
+                                                    <ExclamationCircleIcon className="w-6 h-6 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " />
+                                                  )}
+                                                {bookCurentStep.includes(
+                                                  'CS_updated'
+                                                ) && <Loader />}
+                                                <span className="ml-4 text-md font-bold text-navy-700 ">
+                                                  Costsheet & Payment Updated
+                                                </span>
+                                              </div>
+                                            </section>
+                                          </div>
+                                          <div className="mx-auto flex mt-6 flex flex-row  ">
+                                            <section className="ml-3 w-[300px]">
+                                              <div className="flex items-center">
+                                                {bookCompSteps.includes(
+                                                  'unit_booked'
+                                                ) && (
+                                                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 ">
+                                                    <CheckCircleIcon className="h-6 w-6 text-violet-500 " />
+                                                  </div>
+                                                )}
+                                                {!bookCompSteps.includes(
+                                                  'unit_booked'
+                                                ) &&
+                                                  !bookCurentStep.includes(
+                                                    'unit_booked'
+                                                  ) && (
+                                                    <ExclamationCircleIcon className="w-6 h-6 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " />
+                                                  )}
+                                                {bookCurentStep.includes(
+                                                  'unit_booked'
+                                                ) && <Loader />}
+                                                <span className="ml-2 text-md font-bold text-navy-700 ">
+                                                  Unit Booked
+                                                </span>
+                                              </div>
+                                            </section>
+                                            {/*  */}
+                                            <section className="ml-3 w-[300px]">
+                                              <div className="flex items-center">
+                                                {bookCompSteps.includes(
+                                                  'customer_created'
+                                                ) && (
+                                                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 ">
+                                                    <CheckCircleIcon className="h-6 w-6 text-violet-500 " />
+                                                  </div>
+                                                )}
+                                                {!bookCompSteps.includes(
+                                                  'customer_created'
+                                                ) &&
+                                                  !bookCurentStep.includes(
+                                                    'customer_created'
+                                                  ) && (
+                                                    <ExclamationCircleIcon className="w-6 h-6 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " />
+                                                  )}
+                                                {bookCurentStep.includes(
+                                                  'customer_created'
+                                                ) && <Loader />}
+                                                <span className="ml-2 text-md font-bold text-navy-700 ">
+                                                  Customer Created
+                                                </span>
+                                              </div>
+                                            </section>
+                                          </div>
+                                          <div className="mx-auto flex mt-6 flex flex-row  ">
+                                            <section className="ml-3 w-[300px]">
+                                              <div className="flex items-center">
+                                                {bookCompSteps.includes(
+                                                  'customer_email_send'
+                                                ) && (
+                                                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 ">
+                                                    <CheckCircleIcon className="h-6 w-6 text-violet-500 " />
+                                                  </div>
+                                                )}
+                                                {!bookCompSteps.includes(
+                                                  'customer_email_send'
+                                                ) &&
+                                                  !bookCurentStep.includes(
+                                                    'customer_email_send'
+                                                  ) && (
+                                                    <ExclamationCircleIcon className="w-6 h-6 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " />
+                                                  )}
+                                                {bookCurentStep.includes(
+                                                  'customer_email_send'
+                                                ) && <Loader />}
+                                                <span className="ml-2 text-md font-bold text-navy-700 ">
+                                                  Send Welcome E-mail
+                                                </span>
+                                              </div>
+                                            </section>
+                                            {/*  */}
+                                            <section className="ml-4 w-[300px]">
+                                              <div className="flex items-center">
+                                                {bookCompSteps.includes(
+                                                  'notify_to_manager'
+                                                ) && (
+                                                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 ">
+                                                    <CheckCircleIcon className="h-6 w-6 text-violet-500 " />
+                                                  </div>
+                                                )}
+                                                {!bookCompSteps.includes(
+                                                  'notify_to_manager'
+                                                ) &&
+                                                  !bookCurentStep.includes(
+                                                    'notify_to_manager'
+                                                  ) && (
+                                                    <ExclamationCircleIcon className="w-6 h-6 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " />
+                                                  )}
+                                                {bookCurentStep.includes(
+                                                  'notify_to_manager'
+                                                ) && <Loader />}
+                                                <span className="ml-2 text-md font-bold text-navy-700 ">
+                                                  Notified to Manager
+                                                </span>
+                                              </div>
+                                            </section>
+                                          </div>
+                                        </section>
+                                      )}
                                     {formik?.file?.fileUploader}
 
                                     {/* <hr className="mt-6 border-b-1 border-blueGray-300" /> */}
@@ -808,7 +835,13 @@ const CaptureUnitPayment = ({
                                             clipRule="evenodd"
                                           />
                                         </svg>
-                                        &nbsp; &nbsp;<span>    {title==='capturePayment' ? 'Confirm Payment' : 'Book Unit '} </span>
+                                        &nbsp; &nbsp;
+                                        <span>
+                                          {' '}
+                                          {title === 'capturePayment'
+                                            ? 'Confirm Payment'
+                                            : 'Book Unit '}{' '}
+                                        </span>
                                       </button>
                                     </div>
 

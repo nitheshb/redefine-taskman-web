@@ -222,9 +222,12 @@ const CostBreakUpPdfPreview = ({
   }, [netTotal, plotBookingAdv, csMode])
 
   const CreateNewPsFun = (netTotal, plotBookingAdv, csMode) => {
+    console.log('was this executed')
     const newPs = psPayload.map((d1) => {
       const z = d1
+      // if (csMode === 'plot_cs') {
       if (csMode === 'plot_cs') {
+
         z.value = ['on_booking'].includes(d1?.stage?.value)
           ? Number(d1?.percentage)
           : Math.round((netTotal - plotBookingAdv) * (d1?.percentage / 100))
@@ -233,6 +236,10 @@ const CostBreakUpPdfPreview = ({
           z.elgFrom = Timestamp.now().toMillis()
           return z
         }
+        z.oldDate= Timestamp.now().toMillis()
+        z.schDate= Timestamp.now().toMillis()
+
+
         return z
       } else {
         z.value = ['Total_Other_Charges_Amenities:\t'].includes(
@@ -243,7 +250,7 @@ const CostBreakUpPdfPreview = ({
         return z
       }
     })
-    // setNewPS(newPs)
+    setNewPS(newPs)
   }
 
   const initialState = initialValuesA
