@@ -8,6 +8,7 @@ import {
   ArrowsExpandIcon,
   PencilIcon,
   CalendarIcon,
+  ArrowDownIcon,
   EyeIcon,
   PlusIcon,
 } from '@heroicons/react/outline'
@@ -30,6 +31,7 @@ import { Link, routes } from '@redwoodjs/router'
 
 import FloorStatsCard from 'src/components/FloorStatsCard/FloorStatsCard'
 import UnitsStatsCard from 'src/components/UnitsStatsCard/UnitsStatsCard'
+import { uniTypes } from 'src/constants/projects'
 import { getUnits, updateBlock_AddFloor } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 
@@ -38,7 +40,6 @@ import PieChartProject from '../comps/pieChartProject'
 import DropCompUnitStatus from '../dropDownUnitStatus'
 import SiderForm from '../SiderForm/SiderForm'
 import UnitsSmallViewCard from '../unitsSmallView'
-import { uniTypes } from 'src/constants/projects'
 
 const Floordetails = ({
   block = 'A',
@@ -195,10 +196,25 @@ const Floordetails = ({
   }, [unitsFeed])
   useEffect(() => {
     filterFun()
-  }, [selStatus])
+  }, [selStatus, filFacing])
 
   const filterFun = async () => {
-    const z = unitsFeed?.filter((da) => selStatus.includes(da?.status));
+    console.log('status is ==>', selStatus)
+    const z = unitsFeed?.filter((da) => {
+      selStatus.includes(da?.status)
+      const statusMatch = !selStatus.includes('any')
+        ? selStatus.includes(da?.status)
+        : true
+
+      const facingMatch = !filFacing.includes('any')
+        ? filFacing.includes(da?.facing?.toLocaleLowerCase())
+        : true
+      const typeMatch = !filType.includes('any')
+        ? filType.includes(da?.size?.toLocaleLowerCase())
+        : true
+
+      return facingMatch && typeMatch
+    })
     setFilterFacingResults(z)
     setFilterTypeResults(z)
     setFilteredUnits(z)
@@ -285,7 +301,7 @@ const Floordetails = ({
   }
   const makeFilterFun = async (id, value) => {
     // unitsFeed, setUnitsFeed
-console.log('nw one', id, filFacing)
+    console.log('nw one', id, filFacing)
     if (id === 'Status') {
       let x = []
       if (value === 'Any') {
@@ -353,7 +369,7 @@ console.log('nw one', id, filFacing)
         filFacing
       )
     }
-    if (id === 'Type'|| id === 'type' ) {
+    if (id === 'Type' || id === 'type') {
       let x = []
       if (value === 'Any') {
         x = [1, 2, 3, 4]
@@ -456,6 +472,12 @@ console.log('nw one', id, filFacing)
         bed_rooms,
         da?.bed_rooms
       )
+      const facingMatch = filFacing.includes(da?.facing?.toLocaleLowerCase())
+      // const typeMatch = filType.includes(da?.size?.toLocaleLowerCase())
+      const statusMatch = !selStatus.includes('any')
+        ? selStatus.includes(da?.status)
+        : true
+      return facingMatch && statusMatch
       return (
         // (!selStatus.includes('any') ? selStatus.includes(da?.status) : true)
         // &&
@@ -473,21 +495,17 @@ console.log('nw one', id, filFacing)
       // da?.rate_per_sqft < rate_per_sqft
     })
     const z = await unitsFeed?.filter((da) => {
-
       return (
         (!selStatus.includes('any') ? selStatus.includes(da?.status) : true) &&
         filType.includes(da?.size.toLocaleLowerCase())
       )
-
     })
 
     const x = await unitsFeed?.filter((da) => {
-
       return (
         (!selStatus.includes('any') ? selStatus.includes(da?.status) : true) &&
         filFacing.includes(da?.facing.toLocaleLowerCase())
       )
-
     })
     console.log('my values are', y, facing)
     await setFilteredUnits(y)
@@ -895,7 +913,7 @@ console.log('nw one', id, filFacing)
                   filteredUnits={filteredUnits}
                   pickedValue={filRatePerSqft}
                 /> */}
-                  <DropCompUnitStatus
+                    <DropCompUnitStatus
                       type={'Type'}
                       id={'type'}
                       setStatusFun={makeFilterFun}
@@ -1163,8 +1181,11 @@ console.log('nw one', id, filFacing)
                                             </div>
                                           )}
 
-                                          {["blocked", 'customer_blocked', 'management_blocked'].includes(data?.status)
-                                             && (
+                                          {[
+                                            'blocked',
+                                            'customer_blocked',
+                                            'management_blocked',
+                                          ].includes(data?.status) && (
                                             <div className="flex flex-col items-right justify-between">
                                               <div className="flex flex-row justify-between items-right">
                                                 <h3 className="m-0 ml-2 mt-4 text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200">
@@ -1412,7 +1433,11 @@ console.log('nw one', id, filFacing)
                                         </div>
                                       )}
 
-                                      {["blocked", 'customer_blocked', 'management_blocked'].includes(data?.status) && (
+                                      {[
+                                        'blocked',
+                                        'customer_blocked',
+                                        'management_blocked',
+                                      ].includes(data?.status) && (
                                         <div className="flex flex-col items-right justify-between">
                                           <div className="flex flex-row justify-between items-right">
                                             <h3 className="m-0 ml-2 mt-4 text-sm   leading-tight tracking-tight text-blue-800 border-0 border-blue-200">
