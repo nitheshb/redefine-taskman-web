@@ -1245,7 +1245,7 @@ const partCcolumns = [
         </tbody>
       </table> */}
       <section className="ml-4 text-md font-[500]">Part-A</section>
-      <EditableTable />
+      {/* <EditableTable /> */}
       <div className=" min border border-radius-4">
         <MaterialCRUDTable
           title=""
