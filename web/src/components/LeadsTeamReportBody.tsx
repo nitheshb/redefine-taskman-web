@@ -68,6 +68,7 @@ import SiderForm from './SiderForm/SiderForm'
 import Chat from './A_SalesModule/Reports/chatSummary'
 //import StepperTask from './A_SalesModule/Reports/StepperTask'
 import TableEdit from './A_SalesModule/Reports/TableEdit'
+import TabTask from './A_SalesModule/Reports/TabTask'
 
 
 
@@ -1222,6 +1223,8 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
               
                 { label: 'Table Edit', value: 'edit_table' },
 
+                { label: 'Tabs', value: 'tab_task' },
+
                 // { label: 'Source Report', value: 'source_report' },
                 // { label: 'Employee Report', value: 'emp_status_report' },
                 // { label: 'Project Leads Report', value: 'proj_leads_report' },
@@ -1749,6 +1752,10 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
 
         
           {selCat === 'edit_table' && <TableEdit/>}
+
+
+
+          {selCat === 'tab_task' && <TabTask />}
 
           {/* Graph Bar start */}
 

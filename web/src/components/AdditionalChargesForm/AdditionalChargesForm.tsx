@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import { Dialog } from '@headlessui/react'
-import { Select as SelectMAT, MenuItem } from '@material-ui/core'
+import { Select as SelectMAT, MenuItem, InputLabel, FormControl } from '@material-ui/core'
 import { Alert, AlertTitle } from '@mui/lab'
 import { useSnackbar } from 'notistack'
 import Select from 'react-select'
@@ -103,217 +103,375 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
   }
 
   // paymentScheduleA
-  const columns = [
-    {
-      title: 'Charges For*',
-      field: 'component',
-      headerStyle: {
-        padding: '0.25rem',
-      },
-      cellStyle: {
-        padding: '0.25rem',
-      },
-      render: (rowData) => {
-        return rowData?.component?.label
-      },
-      editComponent: ({ value, onChange, rowData }) => {
-        return (
-          // <select
-          //   value={defaultValue(
-          //     blocksViewFeature === 'Construction_Other_Charges'
-          //       ? csConstruAdditionalChargesA
-          //       : costSheetAdditionalChargesA,
-          //     value
-          //   )}
-          //   onChange={(value_x) => {
-          //     console.log('onchane ', value_x)
-          //     onChange(value_x)
-          //   }}
-          //   // onChange={(e) => handleEdit(row?.id, 'sex', e.target.value)}>
-          // >
-          //   {blocksViewFeature === 'Construction_Other_Charges'
-          //     ? csConstruAdditionalChargesA
-          //     : costSheetAdditionalChargesA.map((data, i) => (
-          //         <option key={i} value={data?.value}>
-          //           {data?.label}
-          //         </option>
-          //       ))}
-          // </select>
-          <SelectMAT
-            defaultValue={'Car Parking'}
-            // value={'Car Parking'}
-            onChange={(e) => {
-              const selectedOptionObject =
-                blocksViewFeature === 'Construction_Other_Charges'
-                  ? csConstruAdditionalChargesA
-                  : costSheetAdditionalChargesA.find(
-                      (option) => option.value === e.target.value
-                    )
-              console.log(
-                'value is ',
-                selectedOptionObject,
-                e.target,
-                e.target.value,
-                value,
-                rowData
-              )
+//   const columns = [
+//     {
+//       title: 'Charges For*',
+//       field: 'component',
+//       headerStyle: {
+//         padding: '0.25rem',
+//       },
+//       cellStyle: {
+//         padding: '0.25rem',
+//       },
+//       render: (rowData) => {
+//         return rowData?.component?.label
+//       },
+//       editComponent: ({ value, onChange, rowData }) => {
+//         return (
+//           // <select
+//           //   value={defaultValue(
+//           //     blocksViewFeature === 'Construction_Other_Charges'
+//           //       ? csConstruAdditionalChargesA
+//           //       : costSheetAdditionalChargesA,
+//           //     value
+//           //   )}
+//           //   onChange={(value_x) => {
+//           //     console.log('onchane ', value_x)
+//           //     onChange(value_x)
+//           //   }}
+//           //   // onChange={(e) => handleEdit(row?.id, 'sex', e.target.value)}>
+//           // >
+//           //   {blocksViewFeature === 'Construction_Other_Charges'
+//           //     ? csConstruAdditionalChargesA
+//           //     : costSheetAdditionalChargesA.map((data, i) => (
+//           //         <option key={i} value={data?.value}>
+//           //           {data?.label}
+//           //         </option>
+//           //       ))}
+//           // </select>
+//           <SelectMAT
+//             defaultValue={'Car Parking'}
+//             // value={'Car Parking'}
+//             onChange={(e) => {
+//               const selectedOptionObject =
+//                 blocksViewFeature === 'Construction_Other_Charges'
+//                   ? csConstruAdditionalChargesA
+//                   : costSheetAdditionalChargesA.find(
+//                       (option) => option.value === e.target.value
+//                     )
+//               console.log(
+//                 'value is ',
+//                 selectedOptionObject,
+//                 e.target,
+//                 e.target.value,
+//                 value,
+//                 rowData
+//               )
 
-              onChange(selectedOptionObject)
-            }}
-          >
-            {blocksViewFeature === 'Construction_Other_Charges'
-              ? csConstruAdditionalChargesA
-              : costSheetAdditionalChargesA.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-          </SelectMAT>
-          // <Select
-          //   name="component"
-          //   onChange={(value_x) => {
-          //     onChange(value_x)
-          //   }}
-          //   options={
-          //     blocksViewFeature === 'Construction_Other_Charges'
-          //       ? csConstruAdditionalChargesA
-          //       : costSheetAdditionalChargesA
-          //   }
-          //   value={defaultValue(
-          //     blocksViewFeature === 'Construction_Other_Charges'
-          //       ? csConstruAdditionalChargesA
-          //       : costSheetAdditionalChargesA,
-          //     value
-          //   )}
-          //   className="text-md mr-2"
-          //   styles={{
-          //     menu: (provided) => ({
-          //       ...provided,
-          //       zIndex: 9999, // Adjust the z-index value as needed
-          //     }),
-          //   }}
-          // />
-        )
-      },
-      // editComponent: ({ value, onChange }) => (
-      //   <input
-      //     placeholder="Charges For"
-      //     className="w-full min-w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 px-2"
-      //     autoComplete="off"
-      //     onChange={(e) => onChange(e.target.value)}
-      //     value={value}
-      //   />
-      // ),
+//               onChange(selectedOptionObject)
+//             }}
+//           >
+//             {blocksViewFeature === 'Construction_Other_Charges'
+//               ? csConstruAdditionalChargesA
+//               : costSheetAdditionalChargesA.map((option) => (
+//                   <MenuItem key={option.value} value={option.value}>
+//                     {option.label}
+//                   </MenuItem>
+//                 ))}
+//           </SelectMAT>
+
+
+
+
+//           // <Select
+//           //   name="component"
+//           //   onChange={(value_x) => {
+//           //     onChange(value_x)
+//           //   }}
+//           //   options={
+//           //     blocksViewFeature === 'Construction_Other_Charges'
+//           //       ? csConstruAdditionalChargesA
+//           //       : costSheetAdditionalChargesA
+//           //   }
+//           //   value={defaultValue(
+//           //     blocksViewFeature === 'Construction_Other_Charges'
+//           //       ? csConstruAdditionalChargesA
+//           //       : costSheetAdditionalChargesA,
+//           //     value
+//           //   )}
+//           //   className="text-md mr-2"
+//           //   styles={{
+//           //     menu: (provided) => ({
+//           //       ...provided,
+//           //       zIndex: 9999, // Adjust the z-index value as needed
+//           //     }),
+//           //   }}
+//           // />
+//         )
+//       },
+//       // editComponent: ({ value, onChange }) => (
+//       //   <input
+//       //     placeholder="Charges For"
+//       //     className="w-full min-w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 px-2"
+//       //     autoComplete="off"
+//       //     onChange={(e) => onChange(e.target.value)}
+//       //     value={value}
+//       //   />
+//       // ),
+//     },
+
+
+//     {
+//       title: 'Units*',
+//       field: 'units',
+//       headerStyle: {
+//         padding: '0.25rem',
+//       },
+//       cellStyle: {
+//         padding: '0.25rem',
+//       },
+//       render: (rowData) => rowData?.units?.label,
+//       editComponent: ({ value, onChange, rowData }) => {
+//         return (
+
+//           <Select
+//             name="Chargesdropdown"
+//             onChange={(value) => {
+//               console.log('onchane ', value)
+//               onChange(value)
+//             }}
+//             options={unitsCancellation}
+//             value={defaultValue(unitsCancellation, value)}
+//             className="text-md mr-2"
+//             styles={{
+//               menu: (provided) => ({
+//                 ...provided,
+//                 zIndex: 1,
+//                 position: 'absolute', // Adjust the z-index value as needed
+//               }),
+//             }}
+//           />
+
+
+// //           <select
+// //   name="Chargesdropdown"
+// //   onChange={(event) => {
+// //     const selectedValue = event.target.value;
+// //     console.log('onchange ', selectedValue);
+// //     onChange(selectedValue);
+// //   }}
+// //   value={value}
+// //   className="text-md mr-2 relative z-50 bg-white text-black border-2 border-gray-400 rounded-md shadow-sm focus:ring-0  w-48 h-10"
+// // >
+// //   <option value="" disabled selected>Unite</option>
+// //   {unitsCancellation.map((option) => (
+// //     <option key={option.value} value={option.value} className="bg-white text-gray-700 hover:bg-red-200 w-32 h-10">
+// //       {option.label}
+// //     </option>
+// //   ))}
+// // </select> 
+
+
+
+
+
+
+
+
+//         )
+//       },
+//     },
+
+
+//     {
+//       title: 'Charges*',
+//       field: 'charges',
+//       headerStyle: {
+//         padding: '0.25rem',
+//       },
+//       cellStyle: {
+//         padding: '0.25rem',
+//       },
+//       render: (rowData) =>
+//         rowData?.units?.value === 'percentage'
+//           ? `${rowData?.charges} %`
+//           : `₹ ${rowData?.charges?.toLocaleString('en-IN')}`,
+//       editComponent: ({ value, onChange, rowData }) => {
+//         return (
+//           <input
+//             placeholder="Charges"
+//             className="w-full min-w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 px-2"
+//             autoComplete="off"
+//             onChange={(e) =>
+//               rowData?.units?.value === 'percentage'
+//                 ? onChange(
+//                     parseInt(e.target.value) > 100 ? 100 : e.target.value
+//                   )
+//                 : onChange(e.target.value)
+//             }
+//             value={value}
+//             type="number"
+//             max="100"
+//           />
+//         )
+//       },
+//     },
+//     {
+//       title: 'GST*',
+//       field: 'gst',
+//       headerStyle: {
+//         padding: '0.25rem',
+//       },
+//       cellStyle: {
+//         padding: '0.25rem',
+//       },
+//       render: (rowData) => rowData?.gst?.label,
+//       editComponent: ({ value, onChange, rowData }) => {
+//         return (
+
+
+//           <select
+//   name="Chargesdropdown"
+//   onChange={(event) => {
+//     const value_x = event.target.value;
+//     onChange(value_x);
+//   }}
+//   value={value}
+//   className="text-md mr-2 relative z-50 bg-white text-black border-2 border-gray-400 rounded-md shadow-sm focus:ring-0  w-48 h-10" // Tailwind classes for width and height
+// >
+//   {gstValesA.map((option) => (
+//     <option key={option.value} value={option.value}>
+//       {option.label}
+//     </option>
+//   ))}
+// </select>
+
+
+ 
+
+
+          
+//         )
+//       },
+//     },
+//     {
+//       title: 'Description*',
+//       field: 'description',
+//       headerStyle: {
+//         padding: '0.25rem',
+//       },
+//       cellStyle: {
+//         padding: '0.25rem',
+//       },
+//       editComponent: ({ value, onChange }) => (
+//         <input
+//           placeholder="Description"
+//           className="w-full min-w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 px-2"
+//           autoComplete="off"
+//           onChange={(e) => onChange(e.target.value)}
+//           value={value}
+//         />
+//       ),
+//     },
+//   ]
+
+
+const columns = [
+  {
+    title: 'Charges For*',
+    field: 'component',
+    headerStyle: {
+      padding: '0.25rem',
     },
-    {
-      title: 'Units*',
-      field: 'units',
-      headerStyle: {
-        padding: '0.25rem',
-      },
-      cellStyle: {
-        padding: '0.25rem',
-      },
-      render: (rowData) => rowData?.units?.label,
-      editComponent: ({ value, onChange, rowData }) => {
-        return (
-          <Select
-            name="Chargesdropdown"
-            onChange={(value) => {
-              console.log('onchane ', value)
-              onChange(value)
-            }}
-            options={unitsCancellation}
-            value={defaultValue(unitsCancellation, value)}
-            className="text-md mr-2"
-            styles={{
-              menu: (provided) => ({
-                ...provided,
-                zIndex: 9,
-                position: 'absolute', // Adjust the z-index value as needed
-              }),
-            }}
-          />
-        )
-      },
+    cellStyle: {
+      padding: '0.25rem',
     },
-    {
-      title: 'Charges*',
-      field: 'charges',
-      headerStyle: {
-        padding: '0.25rem',
-      },
-      cellStyle: {
-        padding: '0.25rem',
-      },
-      render: (rowData) =>
-        rowData?.units?.value === 'percentage'
-          ? `${rowData?.charges} %`
-          : `₹ ${rowData?.charges?.toLocaleString('en-IN')}`,
-      editComponent: ({ value, onChange, rowData }) => {
-        return (
-          <input
-            placeholder="Charges"
-            className="w-full min-w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 px-2"
-            autoComplete="off"
-            onChange={(e) =>
-              rowData?.units?.value === 'percentage'
-                ? onChange(
-                    parseInt(e.target.value) > 100 ? 100 : e.target.value
-                  )
-                : onChange(e.target.value)
-            }
-            value={value}
-            type="number"
-            max="100"
-          />
-        )
-      },
-    },
-    {
-      title: 'GST*',
-      field: 'gst',
-      headerStyle: {
-        padding: '0.25rem',
-      },
-      cellStyle: {
-        padding: '0.25rem',
-      },
-      render: (rowData) => rowData?.gst?.label,
-      editComponent: ({ value, onChange, rowData }) => {
-        return (
-          <Select
-            name="Chargesdropdown"
-            onChange={(value_x) => {
-              onChange(value_x)
-            }}
-            options={gstValesA}
-            value={defaultValue(gstValesA, value)}
-            className="text-md mr-2"
-          />
-        )
-      },
-    },
-    {
-      title: 'Description*',
-      field: 'description',
-      headerStyle: {
-        padding: '0.25rem',
-      },
-      cellStyle: {
-        padding: '0.25rem',
-      },
-      editComponent: ({ value, onChange }) => (
-        <input
-          placeholder="Description"
-          className="w-full min-w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 px-2"
-          autoComplete="off"
-          onChange={(e) => onChange(e.target.value)}
+    render: (rowData) => rowData?.component?.label,
+    editComponent: ({ value, onChange }) => (
+      
+        <SelectMAT
           value={value}
-        />
-      ),
+          onChange={(e) => onChange(e.target.value)}
+          className="border border-gray-400 bg-transparent  rounded-md  focus:ring-0 w-full h-10"
+          
+        >
+
+<MenuItem value="">
+  
+  </MenuItem>
+          {blocksViewFeature === 'Construction_Other_Charges'
+            ? csConstruAdditionalChargesA.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))
+            : costSheetAdditionalChargesA.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+        </SelectMAT>
+      
+    ),
+  },
+  {
+    title: 'Units*',
+    field: 'units',
+    headerStyle: {
+      padding: '0.25rem',
     },
-  ]
+    cellStyle: {
+      padding: '0.25rem',
+    },
+    render: (rowData) => rowData?.units?.label,
+    editComponent: ({ value, onChange }) => (
+      <SelectMAT
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="border border-gray-400 bg-transparent  rounded-md  focus:ring-0 w-full h-10"
+      >
+        {unitsCancellation.map((option) => (
+          <MenuItem key={option.value} value={option.value}>
+            {option.label}
+          </MenuItem>
+        ))}
+      </SelectMAT>
+    ),
+  },
+  {
+    title: 'GST*',
+    field: 'gst',
+    headerStyle: {
+      padding: '0.25rem',
+    },
+    cellStyle: {
+      padding: '0.25rem',
+    },
+    render: (rowData) => rowData?.gst?.label,
+    editComponent: ({ value, onChange }) => (
+      <SelectMAT
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="border border-gray-400 bg-transparent  rounded-md  focus:ring-0 w-full h-10"
+      >
+        {gstValesA.map((option) => (
+          <MenuItem key={option.value} value={option.value}>
+            {option.label}
+          </MenuItem>
+        ))}
+      </SelectMAT>
+    ),
+  },
+  {
+    title: 'Description*',
+    field: 'description',
+    headerStyle: {
+      padding: '0.25rem',
+    },
+    cellStyle: {
+      padding: '0.25rem',
+    },
+    editComponent: ({ value, onChange }) => (
+      <input
+        placeholder="Description"
+        className="w-full min-w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 px-2"
+        autoComplete="off"
+        onChange={(e) => onChange(e.target.value)}
+        value={value}
+      />
+    ),
+  },
+];
 
   // partA columns
   const partAcolumns = [
@@ -331,24 +489,41 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
       },
       editComponent: ({ value, onChange, rowData }) => {
         return (
-          <Select
-            name="component"
-            onChange={(value_x) => {
-              onChange(value_x)
-            }}
-            options={
-              blocksViewFeature === 'Construction_Other_Charges'
-                ? csPartATax
-                : csPartATax
-            }
-            value={defaultValue(
-              blocksViewFeature === 'Construction_Other_Charges'
-                ? csPartATax
-                : csPartATax,
-              value
+
+
+
+
+          <SelectMAT
+            labelId="component-label"
+            id="component"
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            label="Charges For*"
+            className="border border-gray-400 bg-transparent  rounded-md  focus:ring-0 w-full h-10"
+          >
+            {blocksViewFeature === 'Construction_Other_Charges' ? (
+              csPartATax.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))
+            ) : (
+              csPartATax.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))
             )}
-            className="text-md mr-2"
-          />
+          </SelectMAT>
+      
+
+
+
+
+
+
+
+
         )
       },
       // editComponent: ({ value, onChange }) => (
@@ -373,167 +548,414 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
       render: (rowData) => rowData?.gst?.label,
       editComponent: ({ value, onChange, rowData }) => {
         return (
-          <Select
-            name="Chargesdropdown"
-            onChange={(value_x) => {
-              onChange(value_x)
-            }}
-            options={gstValesPartA}
-            value={defaultValue(gstValesPartA, value)}
-            className="text-md mr-2"
-          />
+          // <Select
+          //   name="Chargesdropdown"
+          //   onChange={(value_x) => {
+          //     onChange(value_x)
+          //   }}
+          //   options={gstValesPartA}
+          //   value={defaultValue(gstValesPartA, value)}
+          //   className="text-md mr-2"
+          // />
+
+
+
+
+
+
+
+<SelectMAT
+  labelId="gst-label"
+  id="gst"
+  value={value}
+  onChange={(e) => onChange(e.target.value)}
+  label="GST*"
+  className="border border-gray-400 bg-transparent  rounded-md  focus:ring-0 w-full h-10"
+>
+
+
+  {gstValesPartA.map((option) => (
+    <MenuItem key={option.value} value={option.value}>
+      {option.label}
+    </MenuItem>
+  ))}
+</SelectMAT>
+
+
+
         )
       },
     },
   ]
 
   // partC columns
-  const partCcolumns = [
-    {
-      title: 'Charges For*',
-      field: 'component',
-      headerStyle: {
-        padding: '0.25rem',
-      },
-      cellStyle: {
-        padding: '0.25rem',
-      },
-      render: (rowData) => {
-        return rowData?.component?.label
-      },
-      editComponent: ({ value, onChange, rowData }) => {
-        return (
-          <Select
-            name="component"
-            onChange={(value_x) => {
-              onChange(value_x)
-            }}
-            options={
-              blocksViewFeature === 'Construction_Other_Charges'
-                ? csConstruAdditionalChargesA
-                : costSheetPartcChargesA
-            }
-            value={defaultValue(
-              blocksViewFeature === 'Construction_Other_Charges'
-                ? csConstruAdditionalChargesA
-                : costSheetPartcChargesA,
-              value
-            )}
-            className="text-md mr-2"
-          />
-        )
-      },
-      // editComponent: ({ value, onChange }) => (
-      //   <input
-      //     placeholder="Charges For"
-      //     className="w-full min-w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 px-2"
-      //     autoComplete="off"
-      //     onChange={(e) => onChange(e.target.value)}
-      //     value={value}
-      //   />
-      // ),
+//   const partCcolumns = [
+//     {
+//       title: 'Charges For*',
+//       field: 'component',
+//       headerStyle: {
+//         padding: '0.25rem',
+//       },
+//       cellStyle: {
+//         padding: '0.25rem',
+//       },
+//       render: (rowData) => {
+//         return rowData?.component?.label
+//       },
+//       editComponent: ({ value, onChange, rowData }) => {
+//         return (
+
+//           // <Select
+//           //   name="component"
+//           //   onChange={(value_x) => {
+//           //     onChange(value_x)
+//           //   }}
+//           //   options={
+//           //     blocksViewFeature === 'Construction_Other_Charges'
+//           //       ? csConstruAdditionalChargesA
+//           //       : costSheetPartcChargesA
+//           //   }
+//           //   value={defaultValue(
+//           //     blocksViewFeature === 'Construction_Other_Charges'
+//           //       ? csConstruAdditionalChargesA
+//           //       : costSheetPartcChargesA,
+//           //     value
+//           //   )}
+//           //   className="text-md mr-2"
+//           // />
+
+        
+
+// //           <select
+// //   name="component"
+// //   onChange={(event) => {
+// //     const value_x = event.target.value;
+// //     onChange(value_x);
+// //   }}
+// //   value={value}
+// //   className="text-md mr-2 relative z-50 bg-white text-black border-2 border-gray-400 rounded-md shadow-sm focus:ring-0  w-54 h-10"
+// // >
+// //   {(blocksViewFeature === 'Construction_Other_Charges' ? csConstruAdditionalChargesA : costSheetPartcChargesA).map((option) => (
+// //     <option key={option.value} value={option.value}>
+// //       {option.label}
+// //     </option>
+// //   ))}
+// // </select>
+
+// <FormControl fullWidth>
+// <InputLabel id="component-label">Charges For*</InputLabel>
+// <SelectMAT
+//   labelId="component-label"
+//   id="component"
+//   value={value}
+//   onChange={(e) => onChange(e.target.value)}
+//   label="Charges For*"
+// >
+//   {blocksViewFeature === 'Construction_Other_Charges' ? (
+//     csConstruAdditionalChargesA.map((option) => (
+//       <MenuItem key={option.value} value={option.value}>
+//         {option.label}
+//       </MenuItem>
+//     ))
+//   ) : (
+//     costSheetPartcChargesA.map((option) => (
+//       <MenuItem key={option.value} value={option.value}>
+//         {option.label}
+//       </MenuItem>
+//     ))
+//   )}
+// </SelectMAT>
+// </FormControl>
+
+
+
+//         )
+//       },
+//       // editComponent: ({ value, onChange }) => (
+//       //   <input
+//       //     placeholder="Charges For"
+//       //     className="w-full min-w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 px-2"
+//       //     autoComplete="off"
+//       //     onChange={(e) => onChange(e.target.value)}
+//       //     value={value}
+//       //   />
+//       // ),
+//     },
+//     {
+//       title: 'Units*',
+//       field: 'units',
+//       headerStyle: {
+//         padding: '0.25rem',
+//       },
+//       cellStyle: {
+//         padding: '0.25rem',
+//       },
+//       render: (rowData) => rowData?.units?.label,
+//       editComponent: ({ value, onChange, rowData }) => {
+//         return (
+
+
+//           // <Select
+//           //   name="Chargesdropdown"
+//           //   onChange={(value) => {
+//           //     onChange(value)
+//           //   }}
+//           //   options={unitsCancellation}
+//           //   value={defaultValue(unitsCancellation, value)}
+//           //   className="text-md mr-2"
+//           // />
+
+
+
+//           <select
+//   name="Chargesdropdown"
+//   onChange={(event) => {
+//     onChange(event.target.value);
+//   }}
+//   value={value}
+//   className="text-md mr-2 relative z-50 bg-white text-black border-2 border-gray-400 rounded-md shadow-sm focus:ring-0  w-48 h-10"
+// >
+//   {unitsCancellation.map((option) => (
+//     <option key={option.value} value={option.value}>
+//       {option.label}
+//     </option>
+//   ))}
+// </select>
+
+
+
+
+//         )
+//       },
+//     },
+//     {
+//       title: 'Charges*',
+//       field: 'charges',
+//       headerStyle: {
+//         padding: '0.25rem',
+//       },
+//       cellStyle: {
+//         padding: '0.25rem',
+//       },
+//       render: (rowData) =>
+//         rowData?.units?.value === 'percentage'
+//           ? `${rowData.charges} %`
+//           : `₹ ${rowData?.charges?.toLocaleString('en-IN')}`,
+//       editComponent: ({ value, onChange, rowData }) => {
+//         return (
+//           <input
+//             placeholder="Charges"
+//             className="w-full min-w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 px-2"
+//             autoComplete="off"
+//             onChange={(e) =>
+//               rowData?.units?.value === 'percentage'
+//                 ? onChange(
+//                     parseInt(e.target.value) > 100 ? 100 : e.target.value
+//                   )
+//                 : onChange(e.target.value)
+//             }
+//             value={value}
+//             type="number"
+//             max="100"
+//           />
+//         )
+//       },
+//     },
+//     {
+//       title: 'GST*',
+//       field: 'gst',
+//       headerStyle: {
+//         padding: '0.25rem',
+//       },
+//       cellStyle: {
+//         padding: '0.25rem',
+//       },
+//       render: (rowData) => rowData?.gst?.label,
+//       editComponent: ({ value, onChange, rowData }) => {
+//         return (
+//           // <Select
+//           //   name="Chargesdropdown"
+//           //   onChange={(value_x) => {
+//           //     onChange(value_x)
+//           //   }}
+//           //   options={gstValesA}
+//           //   value={defaultValue(gstValesA, value)}
+//           //   className="text-md mr-2"
+//           // />
+
+
+// <select
+//   name="Chargesdropdown"
+//   onChange={(event) => {
+//     const value_x = event.target.value;
+//     onChange(value_x);
+//   }}
+//   value={value}
+//   className="text-md mr-2 w-48 h-10 bg-white text-black border-2 border-gray-400 rounded-md shadow-sm focus:ring-0 " 
+// >
+//   {gstValesA.map((option) => (
+//     <option key={option.value} value={option.value}>
+//       {option.label}
+//     </option>
+//   ))}
+// </select>
+
+
+//         )
+//       },
+//     },
+//     {
+//       title: 'Description*',
+//       field: 'description',
+//       headerStyle: {
+//         padding: '0.25rem',
+//       },
+//       cellStyle: {
+//         padding: '0.25rem',
+//       },
+//       editComponent: ({ value, onChange }) => (
+//         <input
+//           placeholder="Description"
+//           className="w-full min-w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 px-2"
+//           autoComplete="off"
+//           onChange={(e) => onChange(e.target.value)}
+//           value={value}
+//         />
+//       ),
+//     },
+//   ]
+
+
+
+
+const partCcolumns = [
+  {
+    title: 'Charges For*',
+    field: 'component',
+    headerStyle: {
+      padding: '0.25rem',
     },
-    {
-      title: 'Units*',
-      field: 'units',
-      headerStyle: {
-        padding: '0.25rem',
-      },
-      cellStyle: {
-        padding: '0.25rem',
-      },
-      render: (rowData) => rowData?.units?.label,
-      editComponent: ({ value, onChange, rowData }) => {
-        return (
-          <Select
-            name="Chargesdropdown"
-            onChange={(value) => {
-              onChange(value)
-            }}
-            options={unitsCancellation}
-            value={defaultValue(unitsCancellation, value)}
-            className="text-md mr-2"
-          />
-        )
-      },
+    cellStyle: {
+      padding: '0.25rem',
     },
-    {
-      title: 'Charges*',
-      field: 'charges',
-      headerStyle: {
-        padding: '0.25rem',
-      },
-      cellStyle: {
-        padding: '0.25rem',
-      },
-      render: (rowData) =>
-        rowData?.units?.value === 'percentage'
-          ? `${rowData.charges} %`
-          : `₹ ${rowData?.charges?.toLocaleString('en-IN')}`,
-      editComponent: ({ value, onChange, rowData }) => {
-        return (
-          <input
-            placeholder="Charges"
-            className="w-full min-w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 px-2"
-            autoComplete="off"
-            onChange={(e) =>
-              rowData?.units?.value === 'percentage'
-                ? onChange(
-                    parseInt(e.target.value) > 100 ? 100 : e.target.value
-                  )
-                : onChange(e.target.value)
-            }
-            value={value}
-            type="number"
-            max="100"
-          />
-        )
-      },
-    },
-    {
-      title: 'GST*',
-      field: 'gst',
-      headerStyle: {
-        padding: '0.25rem',
-      },
-      cellStyle: {
-        padding: '0.25rem',
-      },
-      render: (rowData) => rowData?.gst?.label,
-      editComponent: ({ value, onChange, rowData }) => {
-        return (
-          <Select
-            name="Chargesdropdown"
-            onChange={(value_x) => {
-              onChange(value_x)
-            }}
-            options={gstValesA}
-            value={defaultValue(gstValesA, value)}
-            className="text-md mr-2"
-          />
-        )
-      },
-    },
-    {
-      title: 'Description*',
-      field: 'description',
-      headerStyle: {
-        padding: '0.25rem',
-      },
-      cellStyle: {
-        padding: '0.25rem',
-      },
-      editComponent: ({ value, onChange }) => (
-        <input
-          placeholder="Description"
-          className="w-full min-w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 px-2"
-          autoComplete="off"
-          onChange={(e) => onChange(e.target.value)}
+    render: (rowData) => rowData?.component?.label,
+    editComponent: ({ value, onChange }) => (
+    
+        <SelectMAT
+          labelId="component-label"
+          id="component"
           value={value}
-        />
-      ),
+          onChange={(e) => onChange(e.target.value)}
+          label="Charges For*"
+          className="border border-gray-400  bg-transparent rounded-md  focus:ring-0 w-full h-10"
+        >
+          {blocksViewFeature === 'Construction_Other_Charges'
+            ? csConstruAdditionalChargesA.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))
+            : costSheetPartcChargesA.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+        </SelectMAT>
+    ),
+  },
+  {
+    title: 'Units*',
+    field: 'units',
+    headerStyle: {
+      padding: '0.25rem',
     },
-  ]
+    cellStyle: {
+      padding: '0.25rem',
+    },
+    render: (rowData) => rowData?.units?.label,
+    editComponent: ({ value, onChange }) => (
+      <SelectMAT
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="border border-gray-400 bg-transparent  rounded-md  focus:ring-0 w-full h-10"
+      >
+        {unitsCancellation.map((option) => (
+          <MenuItem key={option.value} value={option.value}>
+            {option.label}
+          </MenuItem>
+        ))}
+      </SelectMAT>
+    ),
+  },
+  {
+    title: 'Charges*',
+    field: 'charges',
+    headerStyle: {
+      padding: '0.25rem',
+    },
+    cellStyle: {
+      padding: '0.25rem',
+    },
+    render: (rowData) =>
+      rowData?.units?.value === 'percentage'
+        ? `${rowData.charges} %`
+        : `₹ ${rowData?.charges?.toLocaleString('en-IN')}`,
+    editComponent: ({ value, onChange }) => (
+      <input
+        placeholder="Charges"
+        className="w-full min-w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 px-2"
+        autoComplete="off"
+        onChange={(e) => onChange(e.target.value)}
+        value={value}
+        type="number"
+        max="100"
+      />
+    ),
+  },
+  {
+    title: 'GST*',
+    field: 'gst',
+    headerStyle: {
+      padding: '0.25rem',
+    },
+    cellStyle: {
+      padding: '0.25rem',
+    },
+    render: (rowData) => rowData?.gst?.label,
+    editComponent: ({ value, onChange }) => (
+      <SelectMAT
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="border border-gray-400 bg-transparent  rounded-md  focus:ring-0 w-full h-10"
+      >
+        {gstValesA.map((option) => (
+          <MenuItem key={option.value} value={option.value}>
+            {option.label}
+          </MenuItem>
+        ))}
+      </SelectMAT>
+    ),
+  },
+  {
+    title: 'Description*',
+    field: 'description',
+    headerStyle: {
+      padding: '0.25rem',
+    },
+    cellStyle: {
+      padding: '0.25rem',
+    },
+    editComponent: ({ value, onChange }) => (
+      <input
+        placeholder="Description"
+        className="w-full min-w-full flex bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 px-2"
+        autoComplete="off"
+        onChange={(e) => onChange(e.target.value)}
+        value={value}
+      />
+    ),
+  },
+];
 
   const errors = (formData) => {
     //validating the data inputs
@@ -954,6 +1376,7 @@ const AdditionalChargesForm = ({ title, data, source, blocksViewFeature }) => {
         </div>
       </div>
     </section>
+    
   )
 }
 
