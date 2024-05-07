@@ -58,6 +58,8 @@ const AdditonalBookingDetails = ({
   setShowApplicantEdit,
   setOnStep,
   currentMode,
+  stepIndx,
+  StatusListA,
 }) => {
   const d = new window.Date()
   const { user } = useAuth()
@@ -194,14 +196,37 @@ const AdditonalBookingDetails = ({
 
     setOnStep('costsheet')
   }
-
+  const bgImgStyle = {
+    backgroundImage:
+      'url("https://images.unsplash.com/photo-1605106715994-18d3fecffb98?q=80&w=1926&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")',
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'cover',
+  }
   return (
     <>
-      <div className="font-['Inter']">
+      <div className="font-['Inter'] p-2">
         <div className="z-10">
-          {/* <Dialog.Title className=" font-semibold text-xl mr-auto ml-3 text-[#053219]">
-          {title}
-        </Dialog.Title> */}
+        <div
+                                      className="w-full  flex flex-row justify-between mb-2 p-4 bg-violet-100 rounded-t-md"
+                                      style={bgImgStyle}
+                                    >
+                                      <section className="flex flex-row">
+                                        <div className="w-[43.80px] h-[47px] bg-zinc-100 rounded-[5px] mr-2"></div>
+                                        <div className="w-full flex flex-col">
+                                          <h6 className="w-full lg:w-12/12 text-white text-[13px] mt-[9px] mb- font-bold uppercase">
+                                            More details
+                                          </h6>
+                                          <div className="w-[455.80px] opacity-50 text-white  text-[12px] font-normal ">
+                                            Optional details
+                                          </div>
+                                        </div>
+                                      </section>
+                                      <section className="text-white ">
+                                        {' '}
+                                        {stepIndx} of {StatusListA?.length}{' '}
+                                        steps
+                                      </section>
+                                    </div>
         </div>
         <div className="grid gap-8 grid-cols-1">
           <div className="flex flex-col rounded-lg bg-white ">

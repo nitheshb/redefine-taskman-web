@@ -17,7 +17,9 @@ import UnitBookingCancelCRM from '../A_CrmModule/A_UnitCancel.tsx/CrmUnitCancel'
 import CustomerSideViewCRM from '../A_CrmModule/CrmCustomerSideView'
 import UnitSideViewCRM from '../A_CrmModule/CrmUnitSideView'
 import ViewDocxFile from '../A_LegalModule/viewDocxFile'
+import AddCampaignForm from '../A_MarketingModule/AddCampaign'
 import NotificationsSetupForm from '../A_ProjModule/NotificatoinsSetupFromHome'
+import ProjectDetailsFlowBody from '../A_ProjModule/ProjectDetails'
 import AddTaskForm from '../A_TaskMan/AddTaskForm'
 import ViewEditTaskManForm from '../A_TaskMan/ViewEditTaskManForm'
 import AddBankDetailsForm from '../addBankDetailsForm'
@@ -37,10 +39,8 @@ import LeadsDropHomes from '../LeadUplodCsv/uploadHome'
 import LegalDocsViewHome from '../LegalModule/viewLegalDocument'
 import MoreDetailsPhaseForm from '../MoreDetailsPhaseForm/MoreDetailsPhaseForm'
 import PaymentScheduleForm from '../PaymentScheduleForm/PaymentScheduleForm'
-import ProjPhaseHome from '../ProjPhaseHome/ProjPhaseHome'
 import TransactionUpdateSideView from '../transactionUpdateSideView'
 import ViewUnitDetails from '../ViewUnitDetails'
-import AddCampaignForm from '../A_MarketingModule/AddCampaign'
 
 const SiderForm = ({
   mode,
@@ -84,7 +84,7 @@ const SiderForm = ({
   viewUnitConstData,
   wbPayload,
   widthClass,
-  campaignPaylaod
+  campaignPaylaod,
 }) => {
   // dont write too many here
   //  this is for customerProfileSideView
@@ -161,7 +161,12 @@ const SiderForm = ({
                   <AddTaskForm title={title} dialogOpen={setOpen} />
                 )}
                 {title === 'Add Campaign' && (
-                  <AddCampaignForm mode={mode} title={title} campaignPaylaod ={campaignPaylaod} dialogOpen={setOpen} />
+                  <AddCampaignForm
+                    mode={mode}
+                    title={title}
+                    campaignPaylaod={campaignPaylaod}
+                    dialogOpen={setOpen}
+                  />
                 )}
                 {title === 'view_task_man' && (
                   <ViewEditTaskManForm
@@ -172,6 +177,13 @@ const SiderForm = ({
                 )}
                 {(title === 'Create Project' || title === 'Edit Project') && (
                   <DialogFormBody
+                    title={title}
+                    dialogOpen={setOpen}
+                    project={data}
+                  />
+                )}
+                {title === 'project_details' && (
+                  <ProjectDetailsFlowBody
                     title={title}
                     dialogOpen={setOpen}
                     project={data}

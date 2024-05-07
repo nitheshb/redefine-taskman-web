@@ -164,6 +164,37 @@ export const projectPlans = [
   },
 ]
 
+
+export const projectDetailFlow = [
+  {
+    name: 'Cost sheet',
+    value: 'CostDetails',
+    img: '/apart1.svg',
+    indx:0,
+  },
+  {
+    name: 'Payment Schedule',
+    value: 'Payment Schedule',
+    img: '/plot.svg',
+    indx:1,
+
+  },
+  {
+    name: 'Project Units',
+    value: 'Blocks',
+    img: '/weekend.svg',
+    indx:2,
+
+  },
+  {
+    name: 'Access',
+    value: 'projectAccess',
+    img: '/villa.svg',
+    indx:3,
+
+  },
+]
+
 export const sourceListItems = [
   {
     label: 'Adventures',
@@ -262,6 +293,28 @@ export const ChooseOptions = [
   {
     name: 'No',
     img: '/apart1.svg',
+  },
+
+]
+export const chooseAuthorityApproval = [
+  {
+    name: 'Yes',
+    img: '/check-mark-48.png',
+  },
+  {
+    name: 'No',
+    img: '/cancel-64.png',
+  },
+
+]
+export const chooseReraApproval = [
+  {
+    name: 'Yes',
+    img: '/approval-78.png',
+  },
+  {
+    name: 'No',
+    img: '/cancel-64.png',
   },
 
 ]
@@ -690,13 +743,17 @@ export const apartUnitChargesMock = [
 
 export const approvalAuthority = [
   {
-    label: 'BMRDA'
+    label: 'BMRDA',
+    value: 'bmrda'
   },
   {
-    label: 'BDA'
+    label: 'BDA',
+    value: 'bda'
   },
   {
-    label: 'HUDA'
+    label: 'HUDA',
+    value: 'huda'
+
   }
 ]
 

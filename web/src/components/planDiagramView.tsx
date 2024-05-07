@@ -31,7 +31,7 @@ const PlanDiagramView = ({
   const [editOpitionsObj, setEditOptions] = useState(false)
 
   useEffect(() => {
-    if (source === 'projectManagement') {
+    if (['projectManagement', 'projectOnboard'].includes(source)) {
       setEditOptions(true)
     }
   }, [source])
