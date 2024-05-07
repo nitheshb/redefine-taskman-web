@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
@@ -17,8 +17,16 @@ const initialRows: TableRow[] = [
   { chargesFor: 'Product C', units: '1', charges: 200, gst: 30, description: 'Description for Product C' },
 ];
 
-const TableEdit: React.FC = () => {
+const TableEdit  = ({data}) => {
   const [rows, setRows] = useState<TableRow[]>(initialRows);
+  useEffect(() => {
+  
+  
+    console.log(data)
+      
+    
+  }, [])
+  
 
   const addRow = () => {
     const newRow: TableRow = {
@@ -38,8 +46,18 @@ const TableEdit: React.FC = () => {
   };
 
   const editRow = (index: number) => {
-   
+    const updatedRows = [...rows];
+    const rowToEdit = updatedRows[index];
+
+    
+    if (rowToEdit.chargesFor.trim() === '' || rowToEdit.units.trim() === '' || rowToEdit.charges === 0 || rowToEdit.gst === 0 || rowToEdit.description.trim() === '') {
+      console.log("Validation failed. Please fill in all fields.");
+      return; 
+    }
+
+    
     console.log("Editing row at index:", index);
+    setRows(updatedRows);
   };
 
   return (
