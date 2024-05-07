@@ -47,6 +47,8 @@ const BookingSummaryView = ({
   section2Ref,
   section3Ref,
   section4Ref,
+  stepIndx,
+  StatusListA,
 }) => {
   const { user } = useAuth()
   const { orgId } = user
@@ -125,11 +127,13 @@ const BookingSummaryView = ({
       selUnitDetails
     )
     let x = []
-    if (csMode === 'plot_cs') {
+    // if (csMode === 'plot_cs') {
+    if ('plot_cs' === 'plot_cs') {
+
       additonalChargesObj?.map((data, inx) => {
         let total = 0
         let gstTotal = 0
-        const isChargedPerSqft = data?.units.value === 'costpersqft'
+        const isChargedPerSqft = data?.units?.value === 'costpersqft'
         // const gstTaxIs =
         //   gstTaxForProjA.length > 0 ? gstTaxForProjA[0]?.gst?.value : 0
         const gstPercent =
@@ -139,7 +143,7 @@ const BookingSummaryView = ({
         total = isChargedPerSqft
           ? Number(
               selUnitDetails?.super_built_up_area ||
-                selUnitDetails?.area.replace(',', '')
+                selUnitDetails?.area
             ) * Number(data?.charges)
           : Number(data?.charges)
 
@@ -302,6 +306,7 @@ const BookingSummaryView = ({
     let merged = []
     try {
       if (leadDetailsObj1) {
+        if(additonalChargesObj){
         if (leadDetailsObj1[`${uid}_cs`]['costSheetA']) {
           const removeFulCostFieldA = leadDetailsObj1[`${uid}_cs`][
             'costSheetA'
@@ -310,6 +315,10 @@ const BookingSummaryView = ({
         } else {
           merged = [...x, ...additonalChargesObj]
         }
+      }else{
+        merged = [...x]
+
+      }
       }
     } catch (error) {
       console.log('error at feching the leadDetails Obj')
@@ -337,7 +346,9 @@ const BookingSummaryView = ({
   const CreateNewPsFun = (netTotal, plotBookingAdv, csMode) => {
     const newPs = psPayload.map((d1) => {
       const z = d1
-      if (csMode === 'plot_cs') {
+      // if (csMode === 'plot_cs') {
+      if ('plot_cs' === 'plot_cs') {
+
         z.value = ['on_booking'].includes(d1?.stage?.value)
           ? Number(d1?.percentage)
           : Math.round((netTotal - plotBookingAdv) * (d1?.percentage / 100))
@@ -367,14 +378,14 @@ const BookingSummaryView = ({
   })
 
   const setTotalFun = async () => {
-    const partBTotal = selPhaseObj?.additonalChargesObj.reduce(
+    const partBTotal = selPhaseObj?.additonalChargesObj?.reduce(
       (partialSum, obj) =>
         partialSum +
         Number(
           computeTotal(
             obj,
             selUnitDetails?.super_built_up_area ||
-              selUnitDetails?.area.replace(',', '')
+              selUnitDetails?.area
           )
         ),
       0
@@ -973,10 +984,7 @@ const BookingSummaryView = ({
                                             {Number(
                                               computeTotal(
                                                 d1,
-                                                selUnitDetails?.area.replace(
-                                                  ',',
-                                                  ''
-                                                )
+                                                selUnitDetails?.area
                                               )
                                             )?.toLocaleString('en-IN')}
                                           </td>
@@ -994,7 +1002,7 @@ const BookingSummaryView = ({
                                         >
                                           ₹
                                           {partBPayload
-                                            .reduce(
+                                            ?.reduce(
                                               (partialSum, obj) =>
                                                 partialSum +
                                                 Number(obj?.TotalSaleValue),
@@ -1009,7 +1017,7 @@ const BookingSummaryView = ({
                                         >
                                           ₹
                                           {partBPayload
-                                            .reduce(
+                                            ?.reduce(
                                               (partialSum, obj) =>
                                                 partialSum +
                                                 Number(obj?.gstValue),

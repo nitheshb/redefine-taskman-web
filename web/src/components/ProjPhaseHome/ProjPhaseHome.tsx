@@ -24,6 +24,7 @@ import FinanceHomeList from '../A_ProjModule/FinanceHomeList'
 import LegalHomeList from '../A_ProjModule/LegalHomeList'
 import MarketingHomeList from '../A_ProjModule/MarketingHomeList'
 import ProjectAccessHomeList from '../A_ProjModule/ProjectAccessHomeListAc'
+import ProjectAuditHome from '../A_ProjModule/ProjectAuditHome'
 import SalesHomeList from '../A_ProjModule/SalesHomeList'
 import TemplatesHomeList from '../A_ProjModule/TemplatesHomeList'
 import AdditionalChargesForm from '../AdditionalChargesForm/AdditionalChargesForm'
@@ -38,13 +39,14 @@ import PaymentScheduleForm from '../PaymentScheduleForm/PaymentScheduleForm'
 import PaymentLeadAccess from '../PaymentScheduleForm/ProjectLeadAccess'
 import PaymentScheduleSetup from '../paymentScheduleSetup'
 import PlanDiagramView from '../planDiagramView'
-import ProjectAuditHome from '../A_ProjModule/ProjectAuditHome'
+import DialogFormBody from '../DialogFormBody/DialogFormBody'
 
 const ProjPhaseHome = ({
   projectDetails,
   source,
   unitDetails,
   leadDetailsObj,
+  selFlow,
 }) => {
   const { user } = useAuth()
 
@@ -90,6 +92,14 @@ const ProjPhaseHome = ({
 
   const { uid } = useParams()
   let projId
+  useEffect(() => {
+    console.log('selValue are', selFlow)
+    if (selFlow) {
+      selCat(selFlow, '')
+    } else {
+      selCat('Blocks', '')
+    }
+  }, [selFlow])
 
   useEffect(() => {
     console.log(
@@ -269,6 +279,7 @@ const ProjPhaseHome = ({
               )}
               {/* {<AddBookingForm title="Booking Form" />} */}
               {/* <BlockingUnitForm title="Blocking Form" /> */}
+
               {!showCostSheetWindow && (
                 <section
                   key={phase?.uid}
@@ -286,13 +297,12 @@ const ProjPhaseHome = ({
                               role="tablist"
                             >
                               {[
-                                  {
-                                    lab: 'Cost Sheet & More...',
-                                    val: 'CostDetails',
-                                    subval: 'costSheet',
-                                  },
+                                {
+                                  lab: 'Cost Sheet & More...',
+                                  val: 'CostDetails',
+                                  subval: 'costSheet',
+                                },
                                 { lab: 'Units', val: 'Blocks' },
-
 
                                 {
                                   lab: 'Documents',
@@ -520,6 +530,15 @@ const ProjPhaseHome = ({
                       {phaseViewFeature === 'Payment Schedule' && (
                         <PaymentScheduleSetup phase={phase} source={source} />
                       )}
+                       {phaseViewFeature === 'projectDetails' && (
+                        <DialogFormBody
+                        title={'Create Project'}
+                        // dialogOpen={(=>())}
+                        project={phase}
+                      />
+                      )}
+
+
                       {phaseViewFeature === 'Blocks' &&
                         (selPhaseObj?.projectType?.name == 'Plots' ? (
                           <Floordetails
@@ -714,10 +733,10 @@ const ProjPhaseHome = ({
                           source={source}
                         />
                       )}
-                       {phaseViewFeature === 'audit' && (
+                      {phaseViewFeature === 'audit' && (
                         <ProjectAuditHome
                           title={'Templates'}
-                          projectDetails ={projectDetails}
+                          projectDetails={projectDetails}
                           dialogOpen={'false'}
                           data={{ phase: phase }}
                           source={source}

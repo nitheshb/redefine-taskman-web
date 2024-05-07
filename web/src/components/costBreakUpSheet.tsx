@@ -39,6 +39,7 @@ import {
 import CostBreakUpPdf from 'src/util/costBreakUpPdf'
 import CostBreakUpPdfAll from 'src/util/costBreakUpPdf_all'
 import CostBreakUpPdfConstruct from 'src/util/costBreakUpPdf_construct'
+import { prettyDate } from 'src/util/dateConverter'
 import { PhoneNoField } from 'src/util/formFields/phNoField'
 import { CustomSelect } from 'src/util/formFields/selectBoxField'
 import { TextField } from 'src/util/formFields/TextField'
@@ -80,6 +81,7 @@ const CostBreakUpSheet = ({
   const [initialValuesA, setInitialValuesA] = useState({})
   const [newSqftPrice, setNewSqftPrice] = useState(0)
   const [onStep, setOnStep] = useState('costsheet')
+  const [stepIndx, setStepIndx] = useState(1)
   const [soldPrice, setSoldPrice] = useState(0)
   const [csMode, setCsMode] = useState('plot_cs')
   const [showGstCol, setShowGstCol] = useState(true)
@@ -346,7 +348,6 @@ const CostBreakUpSheet = ({
     } catch (error) {
       console.log('error at feching the leadDetails Obj')
       // merged = [...x, ...additonalChargesObj]
-
     }
 
     const initformValues = {}
@@ -416,13 +417,14 @@ const CostBreakUpSheet = ({
     // newCostSheetA.push(x)
     // i need unit_uID & unit details
     const xData = {}
-if(uid) {
-    xData[`${uid}${'_cs'}`] = {
-      oldUnitDetailsObj: selUnitDetails,
-      newSqftPrice: Number(newSqftPrice),
-      soldPrice: Number(soldPrice),
-      costSheetA: costSheetA,
-    }}
+    if (uid) {
+      xData[`${uid}${'_cs'}`] = {
+        oldUnitDetailsObj: selUnitDetails,
+        newSqftPrice: Number(newSqftPrice),
+        soldPrice: Number(soldPrice),
+        costSheetA: costSheetA,
+      }
+    }
     setCostSheet(newCostSheetA)
     console.log('gen costSheetA', newCostSheetA)
     if (leadDetailsObj1?.id) {
@@ -448,16 +450,70 @@ if(uid) {
     setOnStep('payment_schedule')
   }
 
-  const setStatusFun = async (leadDocId, newStatus) => {
+  const setStatusFun = async (index, newStatus) => {
     moveStep(newStatus)
+    setStepIndx(index +1)
   }
   return (
     <>
       <section className="  bg-black font-['Inter']">
-        <div className="max-w-5xl mx-auto py-  bg-violet-100">
+        <div className="max-w-5xl mx-auto py-  bg-white">
           <article className="overflow-hidden">
-            <div className="bg-violet-100 rounded-b-md">
-              <section className="flex flex-row">
+            <div className=" rounded-b-md">
+              <section className="flex flex-row-reverse">
+                {['unitBookingMode', 'unitBlockMode'].includes(actionMode) && (
+                  <div className="flex flex-col  w-[250px] pt-4 px-2 bg-white h-screen">
+                    {stepIndx} of {StatusListA?.length} steps
+                    {StatusListA.map((statusFlowObj, i) => (
+                      <span
+                        key={i}
+                        className={`font-bodyLato text-sm font-normal px-2 py-4   mt-2 mr-1 cursor-pointer rounded-lg ${
+                          onStep === statusFlowObj.value
+                            ? 'bg-violet-500 text-white'
+                            : 'bg-violet-100'
+                        } `}
+                        onClick={() => setStatusFun(i, statusFlowObj.value)}
+                      >
+                        <section className="flex flex-row">
+                          <span
+                            className={`w-4 h-4 mt-[1px] text-[9px] mr-1 flex justify-center items-center rounded-full  border ${
+                              onStep === statusFlowObj.value
+                                ? 'bg-violet-500 text-white'
+                                : ''
+                            } `}
+                          >
+                            {i + 1}
+                          </span>
+                          <section>
+                            <div className="">{statusFlowObj.label}</div>
+                            {statusFlowObj.value == 'costsheet' && (
+                              <div className="text-zinc-800 text-[12px] font-bold font-['Lato'] tracking-wide">
+                                ₹{netTotal?.toLocaleString('en-IN')}
+                              </div>
+                            )}
+                            {statusFlowObj.value == 'customerDetails' && (
+                              <MyComponent data={customerInfo} />
+                            )}
+                            {statusFlowObj.value == 'payment_schedule' && (
+                              <PaymentScheduleStats newPlotPS={newPlotPS} />
+                            )}
+
+                            {/*
+                            {Object.entries(
+                              customerInfo?.customerDetailsObj
+                            ).reduce((count, [key, value]) => {
+                              if (value === '') {
+                                count++
+                              }
+                              return count
+                            }, 0)} */}
+                          </section>
+                        </section>
+                      </span>
+                    ))}
+                    {/* <ScrollHighlightNabbar navHeader={reviewLinks} /> */}
+                  </div>
+                )}
                 <div className="w-full">
                   {['costsheet', 'allsheets', 'payment_schedule'].includes(
                     onStep
@@ -482,7 +538,7 @@ if(uid) {
                                     boxShadow: '0 1px 12px #f2f2f2',
                                   }}
                                 >
-                                  {csMode === 'both' && (
+                                  {/* {csMode === 'both' && (
                                     <CostBreakUpPdfAll
                                       projectDetails={projectDetails}
                                       csMode={csMode}
@@ -507,6 +563,39 @@ if(uid) {
                                       setNewPS={setNewConstructPS}
                                       setNewConstructPS={setNewConstructPS}
                                       newConstructPS={newConstructPS}
+                                    />
+                                  )} */}
+                                   {csMode === 'both' && (
+                                    <CostBreakUpPdf
+                                      formik={formik}
+                                      projectDetails={projectDetails}
+                                      csMode={csMode}
+                                      setCostSheet={setCostSheet}
+                                      costSheet={costSheet}
+                                      // costSheetA={costSheetA}
+                                      pdfExportComponent={pdfExportComponent}
+                                      selPhaseObj={selPhaseObj}
+                                      leadDetailsObj1={leadDetailsObj1}
+                                      selUnitDetails={selUnitDetails}
+                                      setNewPlotCsObj={setNewPlotCsObj}
+                                      newPlotCsObj={newPlotCsObj}
+                                      costSheetA={newPlotCostSheetA}
+                                      setAddiChargesObj={
+                                        setNewAdditonalChargesObj
+                                      }
+                                      setCostSheetA={setNewPlotCostSheetA}
+                                      setNewPS={setNewPlotPS}
+                                      newPlotPS={newPlotPS}
+                                      showGstCol={showGstCol}
+                                      netTotal={netTotal}
+                                      setNetTotal={setNetTotal}
+                                      partATotal={partATotal}
+                                      partBTotal={partBTotal}
+                                      partCTotal={partCTotal}
+                                      setPartATotal={setPartATotal}
+                                      setPartBTotal={setPartBTotal}
+                                      setPartCTotal={setPartCTotal}
+                                      showOnly={onStep}
                                     />
                                   )}
                                   {csMode === 'plot_cs' && (
@@ -540,6 +629,8 @@ if(uid) {
                                       setPartBTotal={setPartBTotal}
                                       setPartCTotal={setPartCTotal}
                                       showOnly={onStep}
+                                      stepIndx={stepIndx}
+                                      StatusListA={StatusListA}
                                     />
                                   )}
                                   {csMode === 'construct_cs' && (
@@ -646,20 +737,22 @@ if(uid) {
               )} */}
                   {['customerDetails', 'allsheets'].includes(onStep) && (
                     <AddApplicantDetails
-                      title="Booking Form"
-                      selUnitDetails={selUnitDetails}
+                      currentMode={actionMode}
                       leadPayload={leadPayload}
                       setLeadPayload={setLeadPayload}
                       setCustomerInfo={setCustomerInfo}
                       customerInfo={customerInfo}
                       setOnStep={setOnStep}
                       source="Booking"
-                      currentMode={actionMode}
+                      stepIndx={stepIndx}
+                      StatusListA={StatusListA}
+                      selUnitDetails={selUnitDetails}
+                      title="Booking Form"
                     />
                   )}
                   {['additonalInfo'].includes(onStep) && (
                     <AdditonalBookingDetails
-                      title="Booking Form"
+                      currentMode={actionMode}
                       selUnitDetails={selUnitDetails}
                       additionalInfo={additionalInfo}
                       setAdditonalInfo={setAdditonalInfo}
@@ -668,7 +761,9 @@ if(uid) {
                       setCustomerInfo={setCustomerInfo}
                       setOnStep={setOnStep}
                       source="Booking"
-                      currentMode={actionMode}
+                      stepIndx={stepIndx}
+                      StatusListA={StatusListA}
+
                     />
                   )}
                   {['booksheet', 'allsheets'].includes(onStep) && (
@@ -689,6 +784,9 @@ if(uid) {
                       newConstructPS={newConstructPS}
                       newPlotPS={newPlotPS}
                       projectDetails={projectDetails}
+                      stepIndx={stepIndx}
+                      StatusListA={StatusListA}
+
                     />
                   )}
 
@@ -722,6 +820,8 @@ if(uid) {
                       section2Ref={section2Ref}
                       section3Ref={section3Ref}
                       section4Ref={section4Ref}
+                      stepIndx={stepIndx}
+                      StatusListA={StatusListA}
                     />
                   )}
 
@@ -730,6 +830,8 @@ if(uid) {
                       title="Blocking Form"
                       leadDetailsObj2={leadPayload}
                       selUnitDetails={selUnitDetails}
+                      stepIndx={stepIndx}
+                      StatusListA={StatusListA}
                     />
                   )}
                   {['Detail View'].includes(onStep) && <UnitTransactionForm />}
@@ -762,7 +864,7 @@ if(uid) {
 
                   {/* </div> */}
                 </div>
-                {['unitBookingMode', 'unitBlockMode'].includes(actionMode) && (
+                {/* {['unitBookingMode', 'unitBlockMode'].includes(actionMode) && (
                   <div className="flex flex-col  w-[250px] pt-4 px-2 bg-violet-100 h-screen">
                     {StatusListA.map((statusFlowObj, i) => (
                       <span
@@ -788,9 +890,9 @@ if(uid) {
                         </section>
                       </span>
                     ))}
-                    {/* <ScrollHighlightNabbar navHeader={reviewLinks} /> */}
+
                   </div>
-                )}
+                )} */}
               </section>
             </div>
           </article>
@@ -942,4 +1044,54 @@ ScrollHighlightNabbar.propTypes = {
       headerTitle: PropTypes.string.isRequired,
     })
   ).isRequired,
+}
+
+export const MyComponent = ({ data }) => {
+  if (data && data?.customerDetailsObj) {
+    // CustomerDetailsObj exists
+    const customerDetails = data?.customerDetailsObj
+
+    const emptyValueCount = Object.values(customerDetails).filter(
+      (value) => value != ''
+    ).length
+
+    return (
+      <div>
+        <p className="text-zinc-800 text-[12px] font-bold font-['Lato'] tracking-wide">
+          {' '}
+          {emptyValueCount} of 10 fields
+        </p>
+      </div>
+    )
+  } else {
+    // CustomerDetailsObj does not exist
+    return <p>0 of 10 Filled</p>
+  }
+}
+
+export const PaymentScheduleStats = ({ newPlotPS }) => {
+  if (newPlotPS?.length > 0) {
+    // CustomerDetailsObj exists
+
+    let start= 'NA'
+    let end = 'NA'
+    if(newPlotPS[0]['schDate']){
+    start = prettyDate(newPlotPS[0]['schDate'])
+    }
+    if(newPlotPS[newPlotPS.length - 1]['schDate']){
+
+    end = prettyDate(newPlotPS[newPlotPS.length - 1]['schDate'])
+    }
+    return (
+      <div>
+        <p className="text-zinc-800 text-[12px] font-bold font-['Lato'] tracking-wide">
+          {' '}
+          {start || 'NA'}-{end||'NA'}
+        </p>
+      </div>
+    )
+  } else {
+    // CustomerDetailsObj does not exist
+    return <p>0 of 10 Filled</p>
+  }
 }

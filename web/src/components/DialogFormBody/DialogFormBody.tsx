@@ -13,9 +13,12 @@ import { AreaConverter } from 'src/components/AreaConverter'
 import Loader from 'src/components/Loader/Loader'
 import {
   ChooseOptions,
+  chooseAuthorityApproval,
   developmentTypes,
   projectPlans,
   statesList,
+  chooseReraApproval,
+  approvalAuthority,
 } from 'src/constants/projects'
 import {
   createProject,
@@ -40,6 +43,13 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
   )
   const [devType, setdevType] = useState(
     project?.developmentType || developmentTypes[0]
+  )
+  const [planningApproval, setPlanningApproval] = useState(
+    project?.planningApproval  || 'No'
+  )
+
+  const [reraApproval, setReraApproval] = useState(
+    project?.reraApproval  || 'No'
   )
   const [addNewBankStuff, setAddNewBankStuff] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -154,6 +164,7 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
     projectName: project?.projectName || '',
     bmrdaApproval: project?.bmrdaApproval || '',
     bmrdaNo: project?.bmrdaNo || '',
+    PlanningApprovalAuthority: project?.PlanningApprovalAuthority || '',
     bmrdaStartDate: project?.bmrdaStartDate || '',
     bmrdaEndDate: project?.bmrdaEndDate || '',
     hdmaApproval: project?.hdmaApproval || '',
@@ -209,15 +220,15 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
   })
   return (
     <div className="h-full flex flex-col py-6 bg-white shadow-xl overflow-y-scroll">
-      <div className="px-4 sm:px-6  z-10">
+      <div className="px-2 sm:px-6  z-10 absolute top-0  w-full bg-white py-2">
         <Dialog.Title className=" font-semibold text-xl mr-auto ml-3  font-Playfair tracking-wider">
           {title}
         </Dialog.Title>
       </div>
 
       <div className="grid  gap-8 grid-cols-1">
-        <div className="flex flex-col m-4">
-          <div className="flex flex-col mt-2 rounded-lg bg-white border border-gray-100 p-4 ">
+        <div className="flex flex-col ">
+          <div className="flex flex-col mt-2 rounded-lg bg-white border border-gray-100 p-4 m-4 ">
             <CustomRadioGroup
               label="Type"
               value={selected}
@@ -235,19 +246,20 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
             >
               {(formik) => (
                 <Form>
-                  <div className="form">
+                  <div className="form m-4">
                     <div className="flex flex-col mt-2 rounded-lg bg-white border border-gray-100 p-4 ">
+                      <p className='text-sm text-gray-800 font-medium'>Project Name*</p>
                       <TextField
-                        label="Project Name*"
+                        label=""
                         name="projectName"
                         type="text"
                       />
                       <div className="mb-3">
                         <label
                           htmlFor="area"
-                          className="label font-regular text-sm"
+                          className="label font-medium text-sm"
                         >
-                          Area*
+                          Saleable Area*
                         </label>
                         <MuiTextField
                           id="area"
@@ -256,7 +268,7 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                           InputProps={{
                             startAdornment: (
                               <InputAdornment position="start">
-                                sqft
+                                Saleable Area
                               </InputAdornment>
                             ),
                             endAdornment: (
@@ -295,15 +307,41 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                     </div>
                     <div className="flex flex-col mt-2 rounded-lg bg-white border border-gray-100 p-4 ">
                       <CustomRadioGroup
-                        label="BMRDA APPROVAL"
-                        value={devType}
-                        options={ChooseOptions}
-                        onChange={setdevType}
+                        label="Planning Authority Approval"
+                        value={planningApproval}
+                        options={chooseAuthorityApproval}
+                        onChange={setPlanningApproval}
                       />
+
+
+                     {planningApproval?.name === 'Yes' &&
+                     <>
+                     <div className='py-2'>
+                      <CustomSelect
+                            name="Planning Approval Authority"
+                            label={<label className="text-sm text-gray-800 font-medium">Planning Authority</label>}
+                            className="input mt-2"
+                            onChange={({ value }) => {
+                            formik.setFieldValue('PlanningApprovalAuthority', value)
+                           }}
+                            value={formik.values.PlanningApprovalAuthority}
+                            options={approvalAuthority}
+
+                          />
+                      </div>
+
+
+
+
                       <div className="md:flex md:flex-row md:space-x-4 w-full text-xs">
+
+
+
+
+
                         <div className="mt-2 w-full">
                           <TextField
-                            label="BMRDA No*"
+                            label={`${formik.values.PlanningApprovalAuthority.value || ''}Approval No*`}
                             name="bmrdaNo"
                             type="text"
                           />
@@ -316,7 +354,7 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                           />*/}
 
                           <label className="label font-regular block mb-1">
-                            Start Date *
+                          Approval Date*
                           </label>
                           <DatePicker
                             id="bmrdaStartDate"
@@ -371,15 +409,17 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                           />
                         </div>
                       </div>
+                      </>}
                     </div>
+
                     <div className="flex flex-col mt-2 rounded-lg bg-white border border-gray-100 p-4 ">
                       <CustomRadioGroup
-                        label="RERA APPROVAL"
-                        value={devType}
-                        options={ChooseOptions}
-                        onChange={setdevType}
+                        label="Rera Approval"
+                        value={reraApproval}
+                        options={chooseReraApproval}
+                        onChange={setReraApproval}
                       />
-                      <div className="md:flex md:flex-row md:space-x-4 w-full text-xs">
+                     {reraApproval?.name === 'Yes' && <div className="md:flex md:flex-row md:space-x-4 w-full text-xs">
                         <div className="mt-2 w-full">
                           <TextField
                             label="RERA No*"
@@ -395,7 +435,7 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                            />*/}
 
                           <label className="label font-regular block mb-1">
-                            Start Date *
+                          Approval Date*
                           </label>
                           <DatePicker
                             id="hdmaStartDate"
@@ -449,7 +489,7 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                             dateFormat="MMMM d, yyyy"
                           />
                         </div>
-                      </div>
+                      </div>}
                     </div>
                     <div className="flex flex-col mt-2 rounded-lg bg-white border border-gray-100 p-4 ">
                       <CustomRadioGroup
@@ -459,8 +499,10 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                         onChange={setdevType}
                       />
                       <div className="flex mt-3 mb-3 space-y-2 w-full text-xs">
+
                         <div className=" mt-2 mr-3 w-full">
-                          <MultiSelectMultiLineField
+
+                        <MultiSelectMultiLineField
                             label="Builder Bank Account*"
                             name="builderBankDocId"
                             onChange={(payload) => {
@@ -478,15 +520,21 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                             options={bankDetailsA}
                             setAddNewBankStuff={setAddNewBankStuff}
                           />
-                          {/* {formik.errors.builderBankDocId ? (
-        <div className="error-message text-red-700 text-xs p-2">
-          {formik.errors.builderBankDocId}
-          {formik.values.builderBankDocId}
-        </div>
-      ) : null} */}
+
+
+
+
+
+                               {/* {formik.errors.builderBankDocId ? (
+                             <div className="error-message text-red-700 text-xs p-2">
+                             {formik.errors.builderBankDocId}
+                                {formik.values.builderBankDocId}
+                                  </div>
+                               ) : null} */}
                         </div>
+
                         {devType.name === 'Joint' && (
-                          <div className="mt-2 mr-3 w-full">
+                          <div className="mt-2 mr-3 w-full py-1">
                             <TextField
                               label="Builder Share*"
                               name="builderShare"
@@ -494,6 +542,9 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                               onChange={(e) => EditedLandlord(e, formik)}
                               type="number"
                               id="numberSize"
+
+                              className="border border-gray-300 h-9 p-2 rounded-md w-full"
+
                             />
                           </div>
                         )}
@@ -506,6 +557,7 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                           phase={'data'}
                         />
                       )}
+
                       {devType.name === 'Joint' && (
                         <div className="flex  mb-3 space-y-2 w-full text-xs">
                           <div className=" mt-2 mr-3 w-full">
@@ -540,19 +592,29 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                             ) : null}
                           </div>
 
-                          <div className="mt-2 mr-3 w-full">
+                          <div className="mt-2 mr-3 w-full py-1">
                             <TextField
                               label="LandLord Share*"
                               name="landlordShare"
                               value={landLordShare}
                               type="number"
                               onChange={(e) => EditedLandlord(e, formik)}
+                              className="border border-gray-300 h-9 p-2 rounded-md w-full"
                             />
                           </div>
                         </div>
                       )}
+
+
                     </div>
                     <div className="flex flex-col mt-2 rounded-lg bg-white border border-gray-100 p-4 ">
+
+
+
+                      <div  className='py-2'>
+                        <p className="text-sm text-gray-800 font-medium">Project Location Details</p>
+                      </div>
+
                       <div className="md:flex md:flex-row md:space-x-4 w-full text-xs">
                         <TextField
                           label="Location*"
@@ -588,17 +650,19 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                           ) : null} */}
                         </div>
                       </div>
-                      <div className="mt-2 w-full">
+                      <div className="mt-2 w-full mb-10">
                         <TextAreaField
                           label="Address"
                           name="address"
                           type="text"
                         />
                       </div>
-                      <p className="text-xs text-red-500 text-right my-3">
-                        Required fields are marked with an asterisk{' '}
-                        <abbr title="Required field">*</abbr>
-                      </p>
+
+
+                    </div>
+                  </div>
+                  <div className="z-10 flex flex-row justify-between mt-4 pb-2 pr-6 bg-white shadow-lg absolute bottom-0  w-full">
+                     <div></div>
                       <div className="mt-5 text-right md:space-x-3 md:block flex flex-col-reverse mb-6">
                         <button
                           onClick={() => dialogOpen(false)}
@@ -617,14 +681,14 @@ const DialogFormBody = ({ title, dialogOpen, project }) => {
                           {project?.editMode ? 'Update' : 'Save'}
                         </button>
                       </div>
-                    </div>
-                  </div>
+                      </div>
                 </Form>
               )}
             </Formik>
           </div>
         </div>
       </div>
+
     </div>
   )
 }

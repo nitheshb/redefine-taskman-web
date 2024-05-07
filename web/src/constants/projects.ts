@@ -164,6 +164,43 @@ export const projectPlans = [
   },
 ]
 
+
+export const projectDetailFlow = [
+  {
+    name: 'Project Details',
+    value: 'projectDetails',
+    img: '/apart1.svg',
+    indx:0,
+  },
+  {
+    name: 'Cost sheet',
+    value: 'CostDetails',
+    img: '/apart1.svg',
+    indx:1,
+  },
+  {
+    name: 'Payment Schedule',
+    value: 'Payment Schedule',
+    img: '/plot.svg',
+    indx:2,
+
+  },
+  {
+    name: 'Project Units',
+    value: 'Blocks',
+    img: '/weekend.svg',
+    indx:3,
+
+  },
+  {
+    name: 'Access',
+    value: 'projectAccess',
+    img: '/villa.svg',
+    indx:4,
+
+  },
+]
+
 export const sourceListItems = [
   {
     label: 'Adventures',
@@ -262,6 +299,28 @@ export const ChooseOptions = [
   {
     name: 'No',
     img: '/apart1.svg',
+  },
+
+]
+export const chooseAuthorityApproval = [
+  {
+    name: 'Yes',
+    img: '/check-mark-48.png',
+  },
+  {
+    name: 'No',
+    img: '/cancel-64.png',
+  },
+
+]
+export const chooseReraApproval = [
+  {
+    name: 'Yes',
+    img: '/approval-78.png',
+  },
+  {
+    name: 'No',
+    img: '/cancel-64.png',
   },
 
 ]
@@ -685,3 +744,22 @@ export const apartUnitChargesMock = [
     val: '₹12000',
   },
 ]
+
+
+
+export const approvalAuthority = [
+  {
+    label: 'BMRDA',
+    value: 'bmrda'
+  },
+  {
+    label: 'BDA',
+    value: 'bda'
+  },
+  {
+    label: 'HUDA',
+    value: 'huda'
+
+  }
+]
+

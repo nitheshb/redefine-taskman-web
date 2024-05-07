@@ -3,7 +3,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { useState, useEffect } from 'react'
 
-import { ArrowCircleDownIcon, PlusIcon } from '@heroicons/react/solid'
+import { ArrowCircleDownIcon, PlusIcon, LinkIcon } from '@heroicons/react/solid'
 import { InputAdornment, TextField as MuiTextField } from '@mui/material'
 import { setHours, setMinutes } from 'date-fns'
 import { Timestamp } from 'firebase/firestore'
@@ -44,6 +44,8 @@ const AddApplicantDetails = ({
   setShowApplicantEdit,
   setOnStep,
   currentMode,
+  stepIndx,
+  StatusListA,
 }) => {
   const d = new window.Date()
   const { user } = useAuth()
@@ -58,6 +60,7 @@ const AddApplicantDetails = ({
   const [aadhrUrl1, setAadharUrl1] = useState('')
   const [aadhrUrl2, setAadharUrl2] = useState('')
   const [startDate, setStartDate] = useState(d)
+  const [showLeadLink, setShowLeadLink] = useState(false)
 
   useEffect(() => {
     console.log('yo yo ', selUnitDetails, leadPayload)
@@ -166,6 +169,21 @@ const AddApplicantDetails = ({
   const [selRef1, setRefDataFun1] = useState({ label: 'S/O', value: 'S/O' })
   const [selRef2, setRefDataFun2] = useState({ label: 'S/O', value: 'S/O' })
   const [moveNext, setMoveNext] = useState(false)
+  const [givenPhNo1, setGivenPhNo1] = useState()
+  useEffect(() => {
+    if (givenPhNo1?.length == 10) {
+      searchFun()
+    }
+  }, [givenPhNo1])
+  const searchFun = async () => {
+    const foundLength = await checkIfLeadAlreadyExists(
+      `${orgId}_leads`,
+      givenPhNo1
+    )
+    if (foundLength?.length > 0) {
+      setLeadPayload(foundLength[0])
+    }
+  }
 
   const onSubmitFun = async (data, updateDoc, resetForm) => {
     console.log(data)
@@ -209,7 +227,10 @@ const AddApplicantDetails = ({
       bookedBy,
       purchasePurpose,
     } = data
-    const foundLength = await checkIfLeadAlreadyExists(`${orgId}_leads`, phoneNo1)
+    const foundLength = await checkIfLeadAlreadyExists(
+      `${orgId}_leads`,
+      phoneNo1
+    )
     const leadData = {
       Date: Timestamp.now().toMillis(),
       Email: email1 || '',
@@ -344,12 +365,12 @@ const AddApplicantDetails = ({
         label: 'Married',
         value: 'Married',
       },
-      address1:
+    address1:
       leadPayload?.customerDetailsObj?.address1 ||
       selUnitDetails?.customerDetailsObj?.address1 ||
       customerInfo?.customerDetailsObj?.address1 ||
       '',
-      address2:
+    address2:
       leadPayload?.secondaryCustomerDetailsObj?.address2 ||
       selUnitDetails?.secondaryCustomerDetailsObj?.address2 ||
       customerInfo?.secondaryCustomerDetailsObj?.address2 ||
@@ -454,7 +475,6 @@ const AddApplicantDetails = ({
       customerInfo?.secondaryCustomerDetailsObj?.annualIncome2 ||
       '',
 
-
     companyName2:
       leadPayload?.secondaryCustomerDetailsObj?.companyName2 ||
       selUnitDetails?.secondaryCustomerDetailsObj?.companyName2 ||
@@ -475,7 +495,7 @@ const AddApplicantDetails = ({
     sourceOfPay:
       leadPayload?.Status === 'booked'
         ? leadPayload[`${uid}_otherInfo`]?.sourceOfPay
-        :  customerInfo?.customerDetailsObj?.aggrementAddress || '',
+        : customerInfo?.customerDetailsObj?.aggrementAddress || '',
     purpose:
       leadPayload?.Status === 'booked'
         ? leadPayload[`${uid}_otherInfo`]?.purpose
@@ -575,7 +595,7 @@ const AddApplicantDetails = ({
       state1,
       state2,
       annualIncome1,
-      annualIncome2
+      annualIncome2,
     } = data
     const { uid } = selUnitDetails
     const customerDetailsObj = {
@@ -595,7 +615,7 @@ const AddApplicantDetails = ({
       city1,
       state1,
       address1,
-      annualIncome1
+      annualIncome1,
     }
     const secondaryCustomerDetailsObj = {
       customerName2,
@@ -614,7 +634,7 @@ const AddApplicantDetails = ({
       state2,
       city2,
       address2,
-      annualIncome2
+      annualIncome2,
     }
     const aggrementDetailsObj = {
       aggrementAddress,
@@ -752,94 +772,53 @@ const AddApplicantDetails = ({
 
                       <section className=" bg-blueGray-50">
                         <div className="w-full mx-auto ">
-                          <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-[#F9FBFB] border-0">
+                          <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg  bg-[#F9FBFB] border-0">
                             <div className="flex-auto">
                               <section className=" lg:px-2 py-2">
-                                <div className="flex flex-row gap-1">
+                                <div className="flex flex-col gap-1">
                                   <section
-                                    className="rounded-md   bg-[#fff] lg:w-6/12"
+                                    className="   bg-[#fff] "
                                     style={{ boxShadow: '0 1px 12px #f2f2f2' }}
                                   >
                                     <div
-                                      className="w-full  flex flex-row mb-2 p-4 bg-violet-100 rounded-t-md"
+                                      className="w-full  flex flex-row justify-between mb-2 p-4 bg-violet-100 rounded-t-md"
                                       style={bgImgStyle}
                                     >
-                                      <div className="w-[43.80px] h-[47px] bg-zinc-100 rounded-[5px]"></div>
-                                      <div className="w-full flex flex-col">
-                                        <h6 className="w-full lg:w-12/12 text-white text-[13px] mt-[9px] mb- font-bold uppercase">
-                                          Applicant
-                                        </h6>
-                                        <div className="w-[455.80px] opacity-50 text-white  text-[12px] font-normal ">
-                                          Details of applicant is mandatory
+                                      <section className="flex flex-row">
+                                        <div className="w-[43.80px] h-[47px] bg-zinc-100 rounded-[5px] mr-2"></div>
+                                        <div className="w-full flex flex-col">
+                                          <h6 className="w-full lg:w-12/12 text-white text-[13px] mt-[2px] mb- font-bold uppercase">
+                                            Applicant
+                                          </h6>
+                                          <div
+                                            className="text-[12px] cursor-pointer  bg-white rounded-full px-2 py-[2px]"
+                                            onClick={() =>
+                                              setShowLeadLink(!showLeadLink)
+                                            }
+                                          >
+                                            <LinkIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400  rounded-[16px] " />
+                                            Link with lead
+                                          </div>
+                                          {/* <div className="w-[455.80px] opacity-50 text-white  text-[12px] font-normal ">
+                                            Details of applicant is mandatory
+                                          </div> */}
                                         </div>
-                                      </div>
-                                    </div>
-                                    <div className="flex flex-wrap p-4 pt-2">
-                                      <div className="w-full lg:w-12/12 ">
-                                        <div className="relative w-full mb-3 mt-2">
-                                          <TextField
-                                            label="Customer Name*"
-                                            name="customerName1"
-                                            type="text"
-                                          />
-                                        </div>
-                                      </div>
-                                      <label className="label font-regular text-[12px] block mb-1 mt-1 text-gray-700">
-                                        Son/Daughter/Wife of{' '}
-                                      </label>
-                                      <MuiTextField
-                                        id="area"
-                                        className={`w-full bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 mt-1 p-0`}
-                                        size="small"
-                                        InputProps={{
-                                          style: {
-                                            height: '2rem',
-                                            paddingLeft: '7px',
-                                          },
-                                          startAdornment: (
-                                            <InputAdornment
-                                              position="start"
-                                              style={{ height: '32px' }}
-                                            >
-                                              <NoBorderDropDown
-                                                name="relation1"
-                                                label=""
-                                                className="input  min-w-[85px] h-[32px]"
-                                                onChange={(value) => {
-                                                  formik.setFieldValue(
-                                                    'relation1',
-                                                    value.value
-                                                  )
-                                                }}
-                                                value={formik.values.relation1}
-                                                options={[
-                                                  {
-                                                    label: 'D/O',
-                                                    value: 'D/O',
-                                                  },
-                                                  {
-                                                    label: 'S/O',
-                                                    value: 'S/O',
-                                                  },
-                                                  {
-                                                    label: 'W/O',
-                                                    value: 'W/O',
-                                                  },
-                                                ]}
-                                              />
-                                            </InputAdornment>
-                                          ),
-                                        }}
-                                        label=""
-                                        name="co_Name1"
-                                        type="text"
-                                        value={formik.values.co_Name1}
-                                        onChange={formik.handleChange}
-                                      />
+                                      </section>
 
-                                      <div className="w-full  flex flex-row lg:w-12/12 mt-1">
-                                        <div className="w-full lg:w-5/12 px- ">
-                                          <div className="relative w-full mb-3 mt-[10px]">
+                                      <section className="text-white flex flex-col">
+                                        <label className="text-right">
+                                          {' '}
+                                          {stepIndx} of {StatusListA?.length}{' '}
+                                          steps
+                                        </label>
+
+                                      </section>
+                                    </div>
+                                    {showLeadLink && (
+                                      <div className="bg-[#DCD7FF] rounded-xl p-2 mx-2 flex-col">
+                                        <label>Search Lead Phone no</label>
+                                        <div className="w-full lg:w-3/12 px- ">
+                                          <div className="relative w-full ">
                                             <PhoneNoField
                                               label="Phone No"
                                               name="phoneNo1"
@@ -848,10 +827,12 @@ const AddApplicantDetails = ({
                                               onChange={(value) => {
                                                 // formik.setFieldValue('mobileNo', value.value)
                                                 console.log('value is ', value)
+                                                //
                                                 formik.setFieldValue(
                                                   'phoneNo1',
                                                   value.value
                                                 )
+                                                setGivenPhNo1(value.value)
                                               }}
                                               // value={formik.values.mobileNo}
                                               options={{}}
@@ -862,8 +843,104 @@ const AddApplicantDetails = ({
                                             />
                                           </div>
                                         </div>
-                                        <div className="w-full lg:w-7/12 pl-4">
-                                          <div className="relative w-full mb-3 mt-2">
+                                      </div>
+                                    )}
+                                    <div className="flex flex-wrap p-4 pt-2">
+                                      <div className="w-full flex flex-row justify-between lg:w-12/12 ">
+                                        <div className="relative lg:w-6/12 mb-3 mt-2">
+                                          <TextField
+                                            label="Customer Name*"
+                                            name="customerName1"
+                                            type="text"
+                                          />
+                                        </div>
+                                        <div className="relative lg:w-6/12  mt-1 ml-2">
+                                          <label className="label font-regular text-[12px] block mb-1 mt-1 text-gray-700">
+                                            Son/Daughter/Wife of{' '}
+                                          </label>
+                                          <MuiTextField
+                                            id="area"
+                                            className={`w-full bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 mt-1 p-0`}
+                                            size="small"
+                                            InputProps={{
+                                              style: {
+                                                height: '2rem',
+                                                paddingLeft: '7px',
+                                              },
+                                              startAdornment: (
+                                                <InputAdornment
+                                                  position="start"
+                                                  style={{ height: '32px' }}
+                                                >
+                                                  <NoBorderDropDown
+                                                    name="relation1"
+                                                    label=""
+                                                    className="input  min-w-[85px] h-[32px]"
+                                                    onChange={(value) => {
+                                                      formik.setFieldValue(
+                                                        'relation1',
+                                                        value.value
+                                                      )
+                                                    }}
+                                                    value={
+                                                      formik.values.relation1
+                                                    }
+                                                    options={[
+                                                      {
+                                                        label: 'D/O',
+                                                        value: 'D/O',
+                                                      },
+                                                      {
+                                                        label: 'S/O',
+                                                        value: 'S/O',
+                                                      },
+                                                      {
+                                                        label: 'W/O',
+                                                        value: 'W/O',
+                                                      },
+                                                    ]}
+                                                  />
+                                                </InputAdornment>
+                                              ),
+                                            }}
+                                            label=""
+                                            name="co_Name1"
+                                            type="text"
+                                            value={formik.values.co_Name1}
+                                            onChange={formik.handleChange}
+                                          />
+                                        </div>
+                                      </div>
+
+                                      <div className="w-full  flex flex-row lg:w-12/12 ">
+                                        <div className="w-full lg:w-3/12 px- ">
+                                          <div className="relative w-full ">
+                                            <PhoneNoField
+                                              label="Phone No"
+                                              name="phoneNo1"
+                                              // type="text"
+                                              value={formik.values.phoneNo1}
+                                              onChange={(value) => {
+                                                // formik.setFieldValue('mobileNo', value.value)
+                                                console.log('value is ', value)
+                                                //
+                                                formik.setFieldValue(
+                                                  'phoneNo1',
+                                                  value.value
+                                                )
+                                                // setGivenPhNo1(value.value)
+                                              }}
+                                              // value={formik.values.mobileNo}
+                                              options={{}}
+                                              labelSize="text-[11px]"
+                                              textSize="text-[12px]"
+                                              txtPad="px-1"
+                                              className="text-[10px]"
+                                            />
+                                          </div>
+                                        </div>
+                                        <div className="w-full lg:w-3/12 pl-4">
+                                          <div className="relative w-full">
                                             <TextField
                                               label="Email"
                                               name="email1"
@@ -871,91 +948,256 @@ const AddApplicantDetails = ({
                                             />
                                           </div>
                                         </div>
-                                      </div>
-                                      {/* col dob etc */}
-                                      <div>
-                                        <div className="flex flex-wrap mt-3">
-                                          <div className="w-full lg:w-5/12  ">
-                                            <section className="">
-                                              <div className="w-full flex flex-col mb-3">
-                                                <CustomSelect
-                                                  name="MaritualStatus"
-                                                  label="Status"
-                                                  className="input"
-                                                  onChange={(value) => {
-                                                    formik.setFieldValue(
-                                                      'marital1',
-                                                      value.value
-                                                    )
-                                                  }}
-                                                  value={formik.values.marital1}
-                                                  options={[
-                                                    {
-                                                      label: 'Divorced',
-                                                      value: 'Divorced',
-                                                    },
-                                                    {
-                                                      label: 'Married',
-                                                      value: 'Married',
-                                                    },
-                                                    {
-                                                      label: 'Single',
-                                                      value: 'Single',
-                                                    },
-                                                  ]}
-                                                />
-                                                <p
-                                                  className="text-sm text-red-500 hidden mt-3"
-                                                  id="error"
-                                                >
-                                                  Please fill out this field.
-                                                </p>
-                                              </div>
-                                            </section>
-                                          </div>
-                                          <div className="w-full lg:w-7/12 mt-[px] pl-4">
-                                            <div className="relative w-full mb-3 ">
-                                              <label className="text-gray-500 text-[10px]">
-                                                Date Of Birth
-                                              </label>
-                                              <span className="inline">
-                                                <DatePicker
-                                                  className="h-8 outline-none border-radius rounded-md  px-2 border-[#cccccc] border-gray-500 text-sm mt-[-4px] pb-1  w-[90%] inline  w-full flex bg-grey-lighter text-grey-darker border border-gray-500 "
-                                                  label="Dated"
-                                                  name="dob1"
-                                                  selected={formik.values.dob1}
-                                                  onChange={(date) => {
-                                                    const milliseconds = Date.parse(date);
-                                                    console.log('data is ==>' ,milliseconds)
-                                                    formik.setFieldValue(
-                                                      'dob1',
-                                                      milliseconds
-                                                    )
-                                                    // setStartDate(date)
-                                                    // console.log(startDate)
-                                                  }}
-                                                  timeFormat="HH:mm"
-                                                  injectTimes={[
-                                                    setHours(
-                                                      setMinutes(d, 1),
-                                                      0
-                                                    ),
-                                                    setHours(
-                                                      setMinutes(d, 5),
-                                                      12
-                                                    ),
-                                                    setHours(
-                                                      setMinutes(d, 59),
-                                                      23
-                                                    ),
-                                                  ]}
-                                                  dateFormat="MMMM d, yyyy"
-                                                />
-                                              </span>
+                                        <div className="w-full lg:w-3/12 pl-4  ">
+                                          <section className="">
+                                            <div className="w-full flex flex-col mb-3">
+                                              <CustomSelect
+                                                name="MaritualStatus"
+                                                label="Status"
+                                                className="input"
+                                                onChange={(value) => {
+                                                  formik.setFieldValue(
+                                                    'marital1',
+                                                    value.value
+                                                  )
+                                                }}
+                                                value={formik.values.marital1}
+                                                options={[
+                                                  {
+                                                    label: 'Divorced',
+                                                    value: 'Divorced',
+                                                  },
+                                                  {
+                                                    label: 'Married',
+                                                    value: 'Married',
+                                                  },
+                                                  {
+                                                    label: 'Single',
+                                                    value: 'Single',
+                                                  },
+                                                ]}
+                                              />
+                                              <p
+                                                className="text-sm text-red-500 hidden mt-3"
+                                                id="error"
+                                              >
+                                                Please fill out this field.
+                                              </p>
                                             </div>
+                                          </section>
+                                        </div>
+                                        <div className="w-full lg:w-3/12 mt-[px] pl-4 mr-3">
+                                          <div className="relative w-full mb-3 ">
+                                            <label className="text-gray-500 text-[10px]">
+                                              Date Of Birth
+                                            </label>
+                                            <span className="inline">
+                                              <DatePicker
+                                                className="h-8 outline-none border-radius rounded-md  px-2 border-[#cccccc] border-gray-500 text-sm mt-[-4px] pb-1  w-[90%] inline  w-full flex bg-grey-lighter text-grey-darker border border-gray-500 "
+                                                label="Dated"
+                                                name="dob1"
+                                                selected={formik.values.dob1}
+                                                onChange={(date) => {
+                                                  const milliseconds =
+                                                    Date.parse(date)
+                                                  console.log(
+                                                    'data is ==>',
+                                                    milliseconds
+                                                  )
+                                                  formik.setFieldValue(
+                                                    'dob1',
+                                                    milliseconds
+                                                  )
+                                                  // setStartDate(date)
+                                                  // console.log(startDate)
+                                                }}
+                                                timeFormat="HH:mm"
+                                                injectTimes={[
+                                                  setHours(setMinutes(d, 1), 0),
+                                                  setHours(
+                                                    setMinutes(d, 5),
+                                                    12
+                                                  ),
+                                                  setHours(
+                                                    setMinutes(d, 59),
+                                                    23
+                                                  ),
+                                                ]}
+                                                dateFormat="MMMM d, yyyy"
+                                              />
+                                            </span>
                                           </div>
                                         </div>
-
+                                      </div>
+                                      {/* col dob etc */}
+                                      <div className="w-full">
+                                        <div className="flex flex-row justify-between">
+                                          <section className="w-12/12 w-full">
+                                            <label className="label font-regular text-[12px] block mb-1 mt-1 text-gray-700">
+                                              PAN No{' '}
+                                            </label>
+                                            <MuiTextField
+                                              id="area"
+                                              className={`w-full bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 mt-1 p-0`}
+                                              size="small"
+                                              InputProps={{
+                                                style: {
+                                                  height: '2rem',
+                                                  paddingLeft: '7px',
+                                                },
+                                                endAdornment: (
+                                                  <InputAdornment
+                                                    position="end"
+                                                    style={{ height: '32px' }}
+                                                  >
+                                                    <div className="flex flex-row-reverse">
+                                                      <label
+                                                        htmlFor="formFile3"
+                                                        className="form-label cursor-pointer inline-block   font-regular text-xs  rounded-2xl px-1 py-1  "
+                                                      >
+                                                        {`${
+                                                          formik.values
+                                                            .panDocUrl1 ===
+                                                            '' ||
+                                                          formik.values
+                                                            .panDocUrl1 ==
+                                                            undefined
+                                                            ? 'Upload'
+                                                            : 'Download'
+                                                        }`}
+                                                      </label>
+                                                      {formik.values
+                                                        .panDocUrl1 != '' && (
+                                                        <button
+                                                          onClick={() =>
+                                                            downloadImage(
+                                                              formik.values
+                                                                .panDocUrl1,
+                                                              'pancard1.PNG'
+                                                            )
+                                                          }
+                                                        >
+                                                          {' '}
+                                                          {formik.values
+                                                            .panDocUrl1 ===
+                                                            '' ||
+                                                          formik.values
+                                                            .panDocUrl1 ==
+                                                            undefined ? (
+                                                            <PlusIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 border rounded-[16px] " />
+                                                          ) : (
+                                                            <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " />
+                                                          )}
+                                                        </button>
+                                                      )}
+                                                      <input
+                                                        type="file"
+                                                        className="hidden"
+                                                        id="formFile3"
+                                                        onChange={async (e) => {
+                                                          await handleFileUploadFun(
+                                                            e.target.files[0],
+                                                            'panCard1',
+                                                            formik
+                                                          )
+                                                        }}
+                                                      />
+                                                    </div>
+                                                  </InputAdornment>
+                                                ),
+                                              }}
+                                              label=""
+                                              name="panNo1"
+                                              type="text"
+                                              value={formik.values.panNo1}
+                                              onChange={formik.handleChange}
+                                            />
+                                          </section>
+                                          <section className="w-full ml-4">
+                                            <label className="label font-regular text-[12px] block mb-1 mt-1 text-gray-700">
+                                              Aadhar No{' '}
+                                            </label>
+                                            <MuiTextField
+                                              id="area"
+                                              className={`w-full bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 mt-1 p-0`}
+                                              size="small"
+                                              InputProps={{
+                                                style: {
+                                                  height: '2rem',
+                                                  paddingLeft: '7px',
+                                                },
+                                                endAdornment: (
+                                                  <InputAdornment
+                                                    position="end"
+                                                    style={{ height: '32px' }}
+                                                  >
+                                                    <div className=" flex flex-row-reverse">
+                                                      <label
+                                                        htmlFor="formFile4"
+                                                        className="form-label cursor-pointer inline-block font-regular text-xs  rounded-2xl px-1 py-1"
+                                                      >
+                                                        {`${
+                                                          formik.values
+                                                            .aadharUrl1 ===
+                                                            '' ||
+                                                          formik.values
+                                                            .aadharUrl1 ==
+                                                            undefined
+                                                            ? 'Upload'
+                                                            : 'Download'
+                                                        }`}
+                                                      </label>
+                                                      {formik.values
+                                                        .aadharUrl1 != '' && (
+                                                        <button
+                                                          onClick={() =>
+                                                            downloadImage(
+                                                              formik.values
+                                                                .aadharUrl1,
+                                                              'Aadhar1.PNG'
+                                                            )
+                                                          }
+                                                        >
+                                                          {' '}
+                                                          {formik.values
+                                                            .aadharUrl1 ===
+                                                            '' ||
+                                                          formik.values
+                                                            .aadharUrl1 ==
+                                                            undefined ? (
+                                                            <PlusIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 border rounded-[16px] " />
+                                                          ) : (
+                                                            <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " />
+                                                          )}
+                                                        </button>
+                                                      )}
+                                                      <input
+                                                        type="file"
+                                                        className="hidden"
+                                                        id="formFile4"
+                                                        onChange={(e) => {
+                                                          console.log(
+                                                            'iwas clicked aadharno 2'
+                                                          )
+                                                          handleFileUploadFun(
+                                                            e.target.files[0],
+                                                            'aadharNo1Url',
+                                                            formik
+                                                          )
+                                                        }}
+                                                      />
+                                                    </div>
+                                                  </InputAdornment>
+                                                ),
+                                              }}
+                                              label=""
+                                              name="aadharNo1"
+                                              type="text"
+                                              value={formik.values.aadharNo1}
+                                              onChange={formik.handleChange}
+                                            />
+                                          </section>
+                                        </div>
                                         <div className="w-full lg:w-12/12 ">
                                           <div className="relative w-full mb-3 mt-2">
                                             <TextField
@@ -965,8 +1207,8 @@ const AddApplicantDetails = ({
                                             />
                                           </div>
                                         </div>
-                                        <div className="w-full  flex flex-row lg:w-12/12 mt-1">
-                                          <div className="w-full lg:w-5/12 px- ">
+                                        <div className="w-full  flex flex-row lg:w-12/12">
+                                          <div className="w-full lg:w-12/12 px- ">
                                             <div className="relative w-full mb-3 mt-2">
                                               <TextField
                                                 label="City"
@@ -975,7 +1217,7 @@ const AddApplicantDetails = ({
                                               />
                                             </div>
                                           </div>
-                                          <div className="w-full lg:w-7/12 pl-4">
+                                          <div className="w-full lg:w-12/12 pl-4">
                                             <div className="relative w-full mb-3 mt-2">
                                               <div className="w-full flex flex-col mb-3">
                                                 <CustomSelect
@@ -1001,82 +1243,7 @@ const AddApplicantDetails = ({
                                             </div>
                                           </div>
                                         </div>
-                                        <label className="label font-regular text-[12px] block mb-1 mt-1 text-gray-700">
-                                          PAN No{' '}
-                                        </label>
-                                        <MuiTextField
-                                          id="area"
-                                          className={`w-full bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 mt-1 p-0`}
-                                          size="small"
-                                          InputProps={{
-                                            style: {
-                                              height: '2rem',
-                                              paddingLeft: '7px',
-                                            },
-                                            endAdornment: (
-                                              <InputAdornment
-                                                position="end"
-                                                style={{ height: '32px' }}
-                                              >
-                                                <div className="flex flex-row-reverse">
-                                                  <label
-                                                    htmlFor="formFile3"
-                                                    className="form-label cursor-pointer inline-block   font-regular text-xs  rounded-2xl px-1 py-1  "
-                                                  >
-                                                    {`${
-                                                      formik.values
-                                                        .panDocUrl1 === '' ||
-                                                        formik.values
-                                                        .panDocUrl1 == undefined
-                                                        ? 'Upload'
-                                                        : 'Download'
-                                                    }`}
-                                                  </label>
-                                                  {formik.values.panDocUrl1 !=
-                                                    '' && (
-                                                    <button
-                                                      onClick={() =>
-                                                        downloadImage(
-                                                          formik.values
-                                                            .panDocUrl1,
-                                                          'pancard1.PNG'
-                                                        )
-                                                      }
-                                                    >
-                                                      {' '}
-                                                      {formik.values
-                                                        .panDocUrl1 === '' ||
-                                                      formik.values
-                                                        .panDocUrl1 ==
-                                                        undefined ? (
-                                                        <PlusIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 border rounded-[16px] " />
-                                                      ) : (
-                                                        <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " />
-                                                      )}
-                                                    </button>
-                                                  )}
-                                                  <input
-                                                    type="file"
-                                                    className="hidden"
-                                                    id="formFile3"
-                                                    onChange={async (e) => {
-                                                      await handleFileUploadFun(
-                                                        e.target.files[0],
-                                                        'panCard1',
-                                                        formik
-                                                      )
-                                                    }}
-                                                  />
-                                                </div>
-                                              </InputAdornment>
-                                            ),
-                                          }}
-                                          label=""
-                                          name="panNo1"
-                                          type="text"
-                                          value={formik.values.panNo1}
-                                          onChange={formik.handleChange}
-                                        />
+
                                         {/* <div className="w-full flex flex-row">
                                           <div className="  px-">
                                             <div className="relative w-[160px] mb-3 mt-2">
@@ -1134,86 +1301,9 @@ const AddApplicantDetails = ({
                                             </div>
                                           </div>
                                         </div> */}
-                                        <label className="label font-regular text-[12px] block mb-1 mt-1 text-gray-700">
-                                          Aadhar No{' '}
-                                        </label>
-                                        <MuiTextField
-                                          id="area"
-                                          className={`w-full bg-grey-lighter text-grey-darker border border-[#cccccc] rounded-md h-10 mt-1 p-0`}
-                                          size="small"
-                                          InputProps={{
-                                            style: {
-                                              height: '2rem',
-                                              paddingLeft: '7px',
-                                            },
-                                            endAdornment: (
-                                              <InputAdornment
-                                                position="end"
-                                                style={{ height: '32px' }}
-                                              >
-                                                <div className=" flex flex-row-reverse">
-                                                  <label
-                                                    htmlFor="formFile4"
-                                                    className="form-label cursor-pointer inline-block font-regular text-xs  rounded-2xl px-1 py-1"
-                                                  >
-                                                    {`${
-                                                      formik.values
-                                                      .aadharUrl1 === '' ||
-                                                      formik.values
-                                                        .aadharUrl1 == undefined
-                                                        ? 'Upload'
-                                                        : 'Download'
-                                                    }`}
-                                                  </label>
-                                                  {formik.values
-                                                        .aadharUrl1 != '' && (
-                                                    <button
-                                                      onClick={() =>
-                                                        downloadImage(
-                                                          formik.values
-                                                        .aadharUrl1,
-                                                          'Aadhar1.PNG'
-                                                        )
-                                                      }
-                                                    >
-                                                      {' '}
-                                                      { formik.values
-                                                        .aadharUrl1  === '' ||
-                                                        formik.values
-                                                        .aadharUrl1 == undefined ? (
-                                                        <PlusIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 border rounded-[16px] " />
-                                                      ) : (
-                                                        <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " />
-                                                      )}
-                                                    </button>
-                                                  )}
-                                                  <input
-                                                    type="file"
-                                                    className="hidden"
-                                                    id="formFile4"
-                                                    onChange={(e) => {
-                                                      console.log(
-                                                        'iwas clicked aadharno 2'
-                                                      )
-                                                      handleFileUploadFun(
-                                                        e.target.files[0],
-                                                        'aadharNo1Url',
-                                                        formik
-                                                      )
-                                                    }}
-                                                  />
-                                                </div>
-                                              </InputAdornment>
-                                            ),
-                                          }}
-                                          label=""
-                                          name="aadharNo1"
-                                          type="text"
-                                          value={formik.values.aadharNo1}
-                                          onChange={formik.handleChange}
-                                        />
-                                        <div className="w-full  flex flex-row lg:w-12/12 mt-1">
-                                          <div className="w-full lg:w-5/12 px- ">
+
+                                        <div className="w-full  flex flex-row lg:w-12/12 ">
+                                          <div className="w-full lg:w-12/12 px- ">
                                             <div className="relative w-full mb-3 mt-[10px]">
                                               <TextField
                                                 label="Occupation"
@@ -1222,7 +1312,7 @@ const AddApplicantDetails = ({
                                               />
                                             </div>
                                           </div>
-                                          <div className="w-full lg:w-7/12 pl-4">
+                                          <div className="w-full lg:w-12/12 pl-4">
                                             <div className="relative w-full mb-3 mt-2">
                                               <TextField
                                                 label="Annual Income"
@@ -1237,7 +1327,8 @@ const AddApplicantDetails = ({
                                   </section>
                                   {/* section-2 */}
                                   <section
-                                    className="rounded-md   bg-[#fff] lg:w-6/12"
+                                    // className="rounded-md   bg-[#fff] lg:w-6/12"
+                                    className="rounded-md   bg-[#fff] "
                                     style={{ boxShadow: '0 1px 12px #f2f2f2' }}
                                   >
                                     <div
@@ -1505,13 +1596,16 @@ const AddApplicantDetails = ({
                                                     className="form-label cursor-pointer inline-block   font-regular text-xs  rounded-2xl px-1 py-1  "
                                                   >
                                                     {`${
-                                                      formik.values.panDocUrl2 === '' ||
-                                                      formik.values.panDocUrl2 == undefined
+                                                      formik.values
+                                                        .panDocUrl2 === '' ||
+                                                      formik.values
+                                                        .panDocUrl2 == undefined
                                                         ? 'Upload'
                                                         : 'Download'
                                                     }`}
                                                   </label>
-                                                  {formik.values.panDocUrl2 != '' && (
+                                                  {formik.values.panDocUrl2 !=
+                                                    '' && (
                                                     <button
                                                       onClick={() =>
                                                         downloadImage(
@@ -1521,8 +1615,11 @@ const AddApplicantDetails = ({
                                                       }
                                                     >
                                                       {' '}
-                                                      {formik.values.panDocUrl2 === '' ||
-                                                      formik.values.panDocUrl2 == undefined ? (
+                                                      {formik.values
+                                                        .panDocUrl2 === '' ||
+                                                      formik.values
+                                                        .panDocUrl2 ==
+                                                        undefined ? (
                                                         <PlusIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 border rounded-[16px] " />
                                                       ) : (
                                                         <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " />
@@ -1574,24 +1671,31 @@ const AddApplicantDetails = ({
                                                     className="form-label cursor-pointer inline-block  font-regular text-xs  rounded-2xl px-1 py-1"
                                                   >
                                                     {`${
-                                                      formik.values.aadharUrl2 === '' ||
-                                                      formik.values.aadharUrl2 == undefined
+                                                      formik.values
+                                                        .aadharUrl2 === '' ||
+                                                      formik.values
+                                                        .aadharUrl2 == undefined
                                                         ? 'Upload'
                                                         : 'Download'
                                                     }`}
                                                   </label>
-                                                  {formik.values.aadharUrl2 != '' && (
+                                                  {formik.values.aadharUrl2 !=
+                                                    '' && (
                                                     <button
                                                       onClick={() =>
                                                         downloadImage(
-                                                          formik.values.aadharUrl2,
+                                                          formik.values
+                                                            .aadharUrl2,
                                                           'Aadhar2.PNG'
                                                         )
                                                       }
                                                     >
                                                       {' '}
-                                                      {formik.values.aadharUrl2 === '' ||
-                                                      formik.values.aadharUrl2 == undefined ? (
+                                                      {formik.values
+                                                        .aadharUrl2 === '' ||
+                                                      formik.values
+                                                        .aadharUrl2 ==
+                                                        undefined ? (
                                                         <PlusIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 border rounded-[16px] " />
                                                       ) : (
                                                         <ArrowCircleDownIcon className="w-4 h-4 cursor-pointer ml-1 mb-[3px] mr-2 inline-block text-gray-400 " />

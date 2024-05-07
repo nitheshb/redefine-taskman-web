@@ -1,5 +1,8 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 // import { useState } from 'react'
 // import PhaseDetailsCard from '../PhaseDetailsCard/PhaseDetailsCard'
+import { useState } from 'react'
 
 import { PencilIcon, EyeIcon } from '@heroicons/react/outline'
 import { UilUsdSquare, UilMoneyWithdrawal } from '@iconscout/react-unicons'
@@ -14,8 +17,12 @@ import ProjectProgressDisplayCard from '../A_ProjModule/Comps/ProjectProgressDis
 import CircleProgress from '../Charts_Graphs/CircleProgress'
 import PieChartProject from '../comps/pieChartProject'
 import ProjectStatsCard from '../ProjectStatsCard/ProjectStatsCard'
+import SiderForm from '../SiderForm/SiderForm'
 
 const ProjectsMHomeBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
+  const [isNewProjectOpen, setIsNewProjectOpen] = useState(false)
+  const handleNewProjectClose = () => setIsNewProjectOpen(false)
+
   const {
     totalEstValue,
     totalPlotArea,
@@ -52,7 +59,6 @@ const ProjectsMHomeBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
     t_bal,
     t_refund,
   } = project
-
 
   const data = {
     series: [
@@ -210,13 +216,12 @@ const ProjectsMHomeBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
   return (
     // <div className="px-4 pb-[0.1px] flex bg-white shadow-md rounded-lg max-w-sm dark:bg-gray-800 dark:border-gray-700 ">
     <>
-      <Link to={routes.projectEdit({ uid })}>
+      <div onClick={() => setIsNewProjectOpen(true)} className='cursor-pointer'>
         <div className="flex flex-row mb-[2px] ">
           <div className="w-2/4 bg-[#E9E9F2]">
             <div className="">
               <div className="MuiPaper-elevation  MuiPaper-elevation1 MuiCard-root css-1fwf2za-MuiPaper-root-MuiCard-root bg-gradient-to-r from-indigo-400 to-cyan-400 rounded-r-xl">
                 <Box mt={3} mb={1}>
-
                   <div className="flex flex-col align-middle justify-between">
                     <Link
                       className="flex flex-col items-center"
@@ -322,7 +327,6 @@ const ProjectsMHomeBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                   { item: 'Total', value: bookUnitCount || 0 },
                   { item: 'Booking', value: bookUnitCount || 0 },
                   { item: 'Agreement', value: s_agreeCount || 0 },
-
                 ].map((data, i) => (
                   <div
                     className=" w-1/4  mx-1"
@@ -345,7 +349,6 @@ const ProjectsMHomeBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                   { item: 'Registration', value: s_registerCount || 0 },
                   { item: 'Construction', value: s_constCount || 0 },
                   { item: 'Possession', value: s_possCount || 0 },
-
                 ].map((data, i) => (
                   <div
                     className=" w-1/4  mx-1"
@@ -375,7 +378,6 @@ const ProjectsMHomeBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                   { item: 'Total', value: totalValue || 0 },
                   { item: 'Sale', value: soldValue || 0 },
                   { item: 'Collected', value: t_collect || 0 },
-
                 ].map((data, i) => (
                   <div
                     className=" w-1/4  mx-1"
@@ -395,10 +397,9 @@ const ProjectsMHomeBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
               </div>
               <div className="flex flex-row justify-between px-1 mt-3">
                 {[
-                   { item: 'MTD ', value: t_mtd || 0 },
+                  { item: 'MTD ', value: t_mtd || 0 },
                   { item: 'Balance', value: t_bal || 0 },
                   { item: 'Refunds', value: t_refund || 0 },
-
                 ].map((data, i) => (
                   <div
                     key={i}
@@ -419,7 +420,14 @@ const ProjectsMHomeBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
             </div>
           </div>
         </div>
-      </Link>
+      </div>
+      <SiderForm
+        open={isNewProjectOpen}
+        setOpen={handleNewProjectClose}
+        title="project_details"
+        data={project}
+        widthClass="max-w-6xl"
+      />
     </>
   )
 }
