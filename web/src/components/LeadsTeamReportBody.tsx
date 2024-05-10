@@ -1220,7 +1220,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
 
                 { label: 'Top Bar', value: 'bar_tasks' },
                 { label: 'Profile', value: 'profile_tasks' },
-              
+
                 { label: 'Table Edit', value: 'edit_table' },
 
                 { label: 'Tabs', value: 'tab_task' },
@@ -1569,7 +1569,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
                     />
 
                     {/* hiding this table till we setup tables */}
-                    <table className="text-center mt-6 hidden">
+                    <table className="text-center mt-6 ">
                       <thead className="border-b">
                         <tr>
                           {[
@@ -1750,7 +1750,7 @@ const LeadsTeamReportBody = ({ project, onSliderOpen = () => {}, isEdit }) => {
           {selCat === 'profile_tasks' && <ProfileSummary />}
 
 
-        
+
           {selCat === 'edit_table' && <TableEdit/>}
 
 
