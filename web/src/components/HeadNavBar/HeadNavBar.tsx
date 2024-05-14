@@ -149,7 +149,7 @@ const HeadNavBar = (props) => {
               {' '}
               Redefine Erp .
             </span>
-            <section className="mt-1">
+            {/* <section className="mt-1">
               <ModuleSwitchDrop
                 type={selModule}
                 id={'Status'}
@@ -157,7 +157,7 @@ const HeadNavBar = (props) => {
                 filteredUnits={filteredUnits}
                 pickedValue={selModule}
               />
-            </section>
+            </section> */}
           </span>
 
           {/* <a
@@ -213,7 +213,7 @@ const HeadNavBar = (props) => {
                 placeholder="Search something here"
                 onChange={searchKeyField}
                 autoComplete="off"
-                // value={searchKey}
+
                 className="ml-6 w-52 bg-transparent focus:border-transparent focus:ring-0 focus-visible:border-transparent focus-visible:ring-0 focus:outline-none text-sm leading-7 placeholder-white text-white"
               />
 
@@ -226,16 +226,15 @@ const HeadNavBar = (props) => {
                       </div>
                     </div>
                   ) : (
-                    // console.log(searchData)
-                    // {console.log(searchData)}
+
                     <div className="z-10 absolute w-72 bg-zinc-700 text-white">
                       {searchData.length
                         ? searchData.map((item, index) => {
                             return (
-                              <div className="m-1">
+                              <div className="m-1" key={index}>
                                 <span>{item.Name}</span>
                                 <div className="">
-                                  {/* {item.sales && ( */}
+
                                   <Link
                                     to={routes.leadsManager({
                                       type: 'inProgress',
@@ -252,16 +251,14 @@ const HeadNavBar = (props) => {
                                   >
                                     CRM {'   '}
                                   </Link>
-                                  {/* )} */}
-                                  {/* {item.finance && ( */}
+
                                   <Link
                                     to={routes.financeModule()}
                                     className="text-lg underline mr-2"
                                   >
                                     Finance {'   '}
                                   </Link>
-                                  {/* )} */}
-                                  {/* {item.legal && ( */}
+
                                   <Link
                                     to={routes.legalModule()}
                                     className="text-lg underline mr-2"
@@ -269,15 +266,7 @@ const HeadNavBar = (props) => {
                                     Legal {'   '}
                                   </Link>
 
-                                  {/* )} */}
-                                  {/* {item.construction && ( */}
-                                  {/* <Link
-                                  to={routes.leadsManager()}
-                                  className="text-lg underline mr-2"
-                                >
-                                  Construction {'   '}
-                                </Link> */}
-                                  {/* )} */}
+
                                 </div>
                                 {searchData.length - 1 !== index && <hr></hr>}
                               </div>

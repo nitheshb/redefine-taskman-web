@@ -37,8 +37,8 @@ const HeadNavBar2 = ({selModule, setSelModule}) => {
         <span
           style={{ marginLeft: '10px' }}
           className="relative z-10 flex items-center text-md font-extrabold leading-none text-black select-none pl-0 ml-4"
-        >REDEFINE ERP .</span>
-            <section className="mt-1">
+        >TASKMAN </span>
+            {/* <section className="mt-1">
             <ModuleSwitchDrop
               type={selModule}
               id={'Status'}
@@ -46,8 +46,8 @@ const HeadNavBar2 = ({selModule, setSelModule}) => {
               filteredUnits={filteredUnits}
               pickedValue={selModule}
             />
-          </section>
-          <GlobalSearchBar />
+          </section> */}
+          {/* <GlobalSearchBar /> */}
         <button className="flex items-center justify-center h-10 px-4 ml-auto "></button>
         <button className="flex items-center justify-center h-10 text-sm font-medium "></button>
         <Box

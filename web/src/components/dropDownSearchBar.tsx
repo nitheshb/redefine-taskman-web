@@ -12,21 +12,21 @@ export default function DropDownSearchBar({
   selProjectIs,
 }) {
   return (
-    <div className="flex-shrink-0 z-10 inline-flex items-center  p-3 px-6 text-sm font-medium text-left text-gray-900 border-r border-gray-200 hover:bg-[#EAEBEA] hover:rounded-full focus:ring-4 focus:outline-none focus:ring-gray-100 ">
+    <div className="flex-shrink-0 z-10 inline-flex items-center p-2 px-6 text-sm font-medium text-left text-gray-900 border-r border-gray-200 hover:bg-[#EAEBEA] hover:rounded-full focus:ring-4 focus:outline-none focus:ring-gray-100 ">
       <Menu as="div" className="relative inline-block text-left">
         <div>
           <Menu.Button className="inline-flex w-full px-0 py-0 text-sm font-semibold text-black-500 bg- rounded-md bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
             <>
-            <div className='flex flex-col'>
-            <span className="text-left">{label}</span>
-            <div className="flex flex-row">
-              <span className=" text-[12px] tracking-wide text-[#0091ae] max-w-[150px] min-w-[150px] text-ellipsis text-left whitespace-nowrap ">
-                {selProjectIs?.projectName ||
-                  selProjectIs?.phaseName ||
-                  type?.toLocaleUpperCase()}
-              </span>
-              <ChevronDownIcon className="w-5 h-5  mt-[1px] inline text-[#058527] ml-2 mr-3" />
-              </div>
+              <div className="flex flex-col">
+                <span className="text-left">{label}</span>
+                <div className="flex flex-row">
+                  <span className=" text-[12px] tracking-wide text-[#0091ae] max-w-[110px] min-w-[110px] text-ellipsis text-left whitespace-nowrap ">
+                    {selProjectIs?.projectName ||
+                      selProjectIs?.phaseName ||
+                      type?.toLocaleUpperCase()}
+                  </span>
+                  <ChevronDownIcon className="w-5 h-5  mt-[1px] inline text-[#058527] ml-2 mr-3" />
+                </div>
               </div>
             </>
           </Menu.Button>
@@ -43,7 +43,7 @@ export default function DropDownSearchBar({
           <Menu.Items
             className={`${
               ['Facing'].includes(type) ? 'right-0' : 'left-[-14px]'
-            }  absolute  w-52 origin-top-left bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-[9000]`}
+            } max-h-[200px] overflow-y-scroll absolute  w-52 origin-top-left bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-[9000]`}
             style={{ zIndex: '9', marginTop: '14px' }}
           >
             <div className="px-1 py-1 ">
@@ -68,7 +68,7 @@ export default function DropDownSearchBar({
                           <CheckIcon
                             className="w-5 h-5 mr-2 text-transparent"
                             aria-hidden="true"
-                          />
+                            />
                         )}
                         {viewData?.projectName || viewData?.name}
                       </button>

@@ -24,6 +24,7 @@ import {
   addTaskBusiness,
   checkIfLeadAlreadyExists,
   getAllProjects,
+  steamDepartmentsList,
   steamUsersList,
   steamUsersListByRole,
 } from 'src/context/dbQueryFirebase'
@@ -68,6 +69,8 @@ const customStyles = {
   }),
   menu: (provided) => ({ ...provided, marginTop: 0, zIndex: 9999 }),
 }
+import AddBankDetailsForm from '../addBankDetailsForm'
+import AddTaskDeptForm from '../comps/AddDept'
 import Loader from '../Loader/Loader'
 
 import { CustomSelectNew } from 'src/util/formFields/selectBoxFieldNew'
@@ -94,7 +97,7 @@ const formatOptionLabel = ({ value, label, dept }) => (
         paddingBottom: '2px',
         borderRadius: '10px',
         fontSize: '10px',
-        height: '21px'
+        height: '21px',
       }}
     >
       {dept}
@@ -105,7 +108,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
   const { user } = useAuth()
   const { orgId } = user
   const d = new window.Date()
-  const [fetchedUsersList, setfetchedUsersList] = useState([])
+  const [fetchProjectList, setfetchProjectList] = useState([])
   const [usersList, setusersList] = useState([])
   const [projectList, setprojectList] = useState([])
   const [startDate, setStartDate] = useState(setHours(setMinutes(d, 30), 16))
@@ -123,7 +126,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
         const usersListA = querySnapshot.docs.map((docSnapshot) =>
           docSnapshot.data()
         )
-        setfetchedUsersList(usersListA)
+        setfetchProjectList(usersListA)
         usersListA.map((user) => {
           user.label = user.displayName || user.name
           user.value = user.uid
@@ -133,7 +136,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
 
         setusersList(usersListA)
       },
-      (error) => setfetchedUsersList([])
+      (error) => setfetchProjectList([])
     )
 
     return unsubscribe
@@ -145,7 +148,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
         const projectsListA = querySnapshot.docs.map((docSnapshot) =>
           docSnapshot.data()
         )
-        setfetchedUsersList(projectsListA)
+        setfetchProjectList(projectsListA)
         projectsListA.map((user) => {
           user.label = user.projectName
           user.value = user.projectName
@@ -153,7 +156,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
         console.log('fetched users list is', projectsListA)
         setprojectList(projectsListA)
       },
-      (error) => setfetchedUsersList([])
+      (error) => setfetchProjectList([])
     )
 
     return unsubscribe
@@ -227,11 +230,50 @@ const AddTaskForm = ({ title, dialogOpen }) => {
   const [selected, setSelected] = useState({})
   const [devType, setdevType] = useState(devTypeA[0])
   const [files, setFiles] = useState([])
+  const [customerRawData, setCustomerRawData] = useState([])
+  const [addNewDeptStuff, setAddNewDeptStuff] = useState(false)
+  const [deptListA, setDepartListA] = useState([])
 
   const removeFile = (filename) => {
     setFiles(files.filter((file) => file.name !== filename))
   }
 
+
+  useEffect(() => {
+    const unsubscribe = steamDepartmentsList(
+      orgId,
+      (querySnapshot) => {
+        const allSetUp = [
+          {
+            label: 'All',
+            projectName: 'All',
+            value: 'any',
+          },
+        ]
+        const addNewSetUp = [
+          {
+            label: 'Add New Department',
+            projectName: 'Add New Department',
+            value: 'addDept',
+          },
+        ]
+        const bankA = querySnapshot.docs.map((docSnapshot) => {
+          const x = docSnapshot.data()
+          x.id = docSnapshot.id
+          return x
+        })
+        bankA.map((user) => {
+          user.label = user?.label
+          user.value = user?.value
+        })
+        console.log('fetched users list is', bankA)
+        setDepartListA([...allSetUp, ...bankA, ...addNewSetUp])
+      },
+      (error) => setDepartListA([])
+    )
+
+    return unsubscribe
+  }, [])
   const phoneRegExp =
     /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/
 
@@ -249,7 +291,6 @@ const AddTaskForm = ({ title, dialogOpen }) => {
     data.attachments = files
     setLoading(true)
     await addTaskBusiness(orgId, data, user)
-
     await resetForm()
     await setFormMessage('Task Created..!')
     await setLoading(false)
@@ -332,6 +373,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
     taskTitle: Yup.string().required('Task Title is Required'),
 
     assignedTo: Yup.string().required('Required'),
+    project: Yup.string().required('Required'),
     // to_email: Yup.string().email('Email is invalid').required('Email is required'),
 
     // password: Yup.string()
@@ -362,6 +404,41 @@ const AddTaskForm = ({ title, dialogOpen }) => {
     console.log('title value is', e.target.value)
     setTakTitle(e.target.value)
   }
+  const allDepartmentsA = [
+    {
+      label: 'All',
+      projectName: 'All',
+      value: 'any',
+    },
+    {
+      label: 'Add New Department',
+      projectName: 'Add New Department',
+      value: 'addDept',
+    },
+    {
+      label: 'General',
+      projectName: 'General',
+      value: 'general',
+    },
+    {
+      label: 'Procurement',
+      projectName: 'Procurement',
+      value: 'procurement',
+    },
+    {
+      label: 'Construction',
+      projectName: 'Construction',
+      value: 'construction',
+    },
+    {
+      label: 'Marketing',
+      projectName: 'Marketing',
+      value: 'marketing',
+    },
+  ]
+  const closeAddNewDeptFun = () => {
+    setAddNewDeptStuff(false)
+  }
   return (
     <div className="h-full flex flex-col pb-6 bg-white shadow-xl overflow-y-scroll no-scrollbar bg-gradient-to-r from-blue-200 to-cyan-200">
       {/* <div className="px-4 sm:px-6  z-10 flex items-center justify-between">
@@ -389,13 +466,17 @@ const AddTaskForm = ({ title, dialogOpen }) => {
               initialValues={{
                 taskTitle: '',
                 taskdesc: '',
+                projectName: userIs.value,
+                projectObj: userIs,
+                deptName: userIs.value,
+                deptToObj: userIs,
                 assignedTo: userIs.value,
                 assignedToObj: userIs,
                 followers: [],
                 priorities: '',
                 file: '',
               }}
-              validationSchema={validate}
+              // validationSchema={validate}
               onSubmit={(values, { resetForm }) => {
                 console.log('ami submitted', values)
                 console.log('ami submitted 1', values.assignedTo === '')
@@ -451,9 +532,9 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                                 console.log('is this checked ', priorTxt)
                               }}
                             />
-                          <div className="w-[85px] ml-1 mt-[8px] text-sm text-[#00000080]">
-                            High Priority
-                          </div>
+                            <div className="w-[85px] ml-1 mt-[8px] text-sm text-[#00000080]">
+                              High Priority
+                            </div>
                             <FireIcon
                               className={`w-4 h-4 mt-[11px] ${
                                 prior ? 'text-[#f36b00]' : 'text-[#00000080] '
@@ -480,105 +561,152 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                               )
                             }}
                             placeholder="Description"
-                            className={`w-full h-[170px] pb-2 pt-2 outline-none text-[14px] font-bodyLato focus:border-blue-600 hover:border-blue-600  ${
+                            className={`w-full h-[60px] pb-2 pt-2 outline-none text-[14px] font-bodyLato focus:border-blue-600 hover:border-blue-600  ${
                               true ? ' text-[33475b] ' : ' text-[33475b]'
                             } bg-white`}
                           ></textarea>
                         </div>
                         <section className="mt-1 px-4 rounded-lg bg-[#f8f9fa] border border-gray-100 ">
-                          <section className="flex flex-row mt-3">
-                            <label className="label mt-3 w-[92px] font-regular text-[12px] block mb-1 text-gray-700">
-                              {'Responsible person*'}
-                            </label>
+                          <div className="flex flex-row justify-between">
+                            <section className="flex flex-col mt-3 w-[50%] mr-4">
+                              {/* <label className="label mt-3  font-regular text-[12px] block mb-1 text-gray-700">
+                                {'Project*'}
+                              </label> */}
 
-                            <div className="w-full flex flex-col mt-1 ">
-                              <CustomSelectNew
-                                name="assignedTo"
-                                label="Assigned To"
-                                showLabel={false}
-                                placeholder="Name"
-                                className="input mt-[3px]"
-                                onChange={(value) => {
-                                  formik.setFieldValue(
-                                    'assignedTo',
-                                    value.value
-                                  )
-                                  formik.setFieldValue('assignedToObj', value)
-                                }}
-                                value={formik.values.assignedTo}
-                                // options={aquaticCreatures}
-                                options={usersList}
-                              />
+                              <div className="w-full flex flex-col mt-3 ">
+                                <CustomSelect
+                                  name="projectName"
+                                  label="Project"
+                                  showLabel={false}
+                                  placeholder="Name"
+                                  className="input mt-[4px]"
+                                  onChange={(value) => {
+                                    formik.setFieldValue(
+                                      'projectName',
+                                      value.value
+                                    )
+                                    formik.setFieldValue('projectObj', value)
+                                  }}
+                                  value={formik.values.projectName}
+                                  // options={aquaticCreatures}
+                                  options={projectList}
+                                />
 
-                              <p
-                                className="text-sm text-red-500 hidden mt-3"
-                                id="error"
-                              >
-                                Please fill out this field.
-                              </p>
-                            </div>
-                          </section>
-                          <section className="flex flex-row mt-3">
-                            <label className="label mt-3 w-[92px] font-regular text-[12px] block mb-1 text-gray-700">
-                              {'Participants'}
-                            </label>
+                                <p
+                                  className="text-sm text-red-500 hidden mt-3"
+                                  id="error"
+                                >
+                                  Please fill out this field.
+                                </p>
+                              </div>
+                            </section>
+                            <section className="flex flex-col mt-3 w-[50%]">
+                              <label className="label mt-3  font-regular text-[12px] block mb-1 text-gray-700">
+                                {'Department*'}
+                              </label>
 
-                            <div className="w-full flex flex-col mt-1 ">
-                              <Select
-                                isMulti
-                                placeholder="Add Participants"
-                                name="followers"
-                                onChange={(value) => {
-                                  // const {uid, name} = value
-                                  console.log('followers are', value)
+                              <div className="w-full flex flex-col mt-1 ">
+                                <CustomSelectNew
+                                  name="deptName"
+                                  label="Assigned To"
+                                  showLabel={false}
+                                  placeholder="Department"
+                                  className="input mt-[3px]"
+                                  onChange={(value) => {
+                                    if (value.value === 'addDept') {
+                                      setAddNewDeptStuff(true)
+                                    }
+                                    formik.setFieldValue(
+                                      'deptName',
+                                      value.value
+                                    )
+                                    formik.setFieldValue('deptToObj', value)
+                                  }}
+                                  value={formik.values.deptName}
+                                  // options={aquaticCreatures}
+                                  options={deptListA}
+                                />
 
-                                  formik.setFieldValue('followers', [value])
-                                }}
-                                options={usersList}
-                                formatOptionLabel={formatOptionLabel}
-                                value={formik?.values?.followers[0] || []}
-                                className="basic-multi-select w-full"
-                                classNamePrefix="myselect"
-                                styles={customStyles}
-                              />
+                                <p
+                                  className="text-sm text-red-500 hidden mt-3"
+                                  id="error"
+                                >
+                                  Please fill out this field.
+                                </p>
+                              </div>
+                            </section>
+                          </div>
 
-                              <p
-                                className="text-sm text-red-500 hidden mt-3"
-                                id="error"
-                              >
-                                Please fill out this field.
-                              </p>
-                            </div>
-                          </section>
+                          {addNewDeptStuff && (
+                            <AddTaskDeptForm
+                              title={'Add New Department'}
+                              dialogOpen={closeAddNewDeptFun}
+                              phase={'data'}
+                            />
+                          )}
+                          <div className="flex flex-row  mt-3">
+                            <section className="flex flex-col  w-[49%]">
+                              <label className="label mt-3  font-regular text-[12px] block mb-1 text-gray-700">
+                                {'Responsible person*'}
+                              </label>
 
-                          <div className="md:flex flex-row md:space-x-4 mt-3 w-full text-xs mt-3 ">
-                            {/* <div className="mb-3 space-y-2 w-full text-xs mt-">
+                              <div className="w-full flex flex-col mt-1 ">
+                                <CustomSelectNew
+                                  name="assignedTo"
+                                  label="Assigned To"
+                                  showLabel={false}
+                                  placeholder="Name"
+                                  className="input mt-[3px]"
+                                  onChange={(value) => {
+                                    formik.setFieldValue(
+                                      'assignedTo',
+                                      value.value
+                                    )
+                                    formik.setFieldValue('assignedToObj', value)
+                                  }}
+                                  value={formik.values.assignedTo}
+                                  // options={aquaticCreatures}
+                                  options={usersList}
+                                />
+
+                                <p
+                                  className="text-sm text-red-500 hidden mt-3"
+                                  id="error"
+                                >
+                                  Please fill out this field.
+                                </p>
+                              </div>
+                            </section>
+                            <section className="md:flex flex flex-col md:space-x-4 ml-5 mt-3  text-xs mt-3 ">
+                              {/* <div className="mb-3 space-y-2 w-full text-xs mt-">
                             <TextField label="Size*" name="size" type="text" />
                           </div> */}
-                            <div className="flex flex-row">
-                              <label className="label font-regular text-[12px] block mb-1 text-gray-700">
-                                Deadline
-                              </label>
-                              <div className="bg-green border  pl-2 rounded flex flex-row h-[32px] ml-9 ">
-                                <CalendarIcon className="w-4  inline text-[#058527]" />
-                                <span className="inline">
-                                  <DatePicker
-                                    className="mt-[5px] pl- px-2  inline text-sm "
-                                    selected={startDate}
-                                    onChange={(date) => setStartDate(date)}
-                                    showTimeSelect
-                                    timeFormat="HH:mm"
-                                    injectTimes={[
-                                      setHours(setMinutes(d, 1), 0),
-                                      setHours(setMinutes(d, 5), 12),
-                                      setHours(setMinutes(d, 59), 23),
-                                    ]}
-                                    dateFormat="MMMM d, yyyy h:mm aa"
-                                  />
-                                </span>
+                              <div className="flex flex-col">
+                                <label className="label font-regular text-[12px] block mb-1 text-gray-700">
+                                  Deadline
+                                </label>
+                                <div className="bg-white border   rounded flex flex-row h-[34px] mt-1 px-2">
+                                  <CalendarIcon className="w-4  inline text-[#058527]" />
+                                  <span className="inline">
+                                    <DatePicker
+                                      className="mt-[5px] pl- px-2  inline text-sm "
+                                      selected={startDate}
+                                      onChange={(date) => setStartDate(date)}
+                                      showTimeSelect
+                                      timeFormat="HH:mm"
+                                      injectTimes={[
+                                        setHours(setMinutes(d, 1), 0),
+                                        setHours(setMinutes(d, 5), 12),
+                                        setHours(setMinutes(d, 59), 23),
+                                      ]}
+                                      dateFormat="MMMM d, yyyy h:mm aa"
+                                    />
+                                  </span>
+                                </div>
                               </div>
-                            </div>
+                            </section>
                           </div>
+
                           <div className=" mt-3">
                             <FileList files={files} removeFile={removeFile} />
 
@@ -636,6 +764,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                       )}
                       <button
                         // onClick={() => fAddSchedule()}
+                        type="submit"
                         className={`flex mt-2 ml-4 cursor-pointer rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium  text-[#535c69]  bg-[#bbed21]   hover:shadow-lg `}
                       >
                         <span className="ml-1 ">Add Task</span>

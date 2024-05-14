@@ -90,6 +90,10 @@ export const steamBankDetailsList = (orgId, snapshot, error) => {
   const itemsQuery = query(collection(db, `${orgId}_BankDetails`))
   return onSnapshot(itemsQuery, snapshot, error)
 }
+export const steamDepartmentsList = (orgId, snapshot, error) => {
+  const itemsQuery = query(collection(db, `${orgId}_Departments`))
+  return onSnapshot(itemsQuery, snapshot, error)
+}
 
 export const steamUsersProjAccessList = (orgId, snapshot, data, error) => {
   const itemsQuery = query(
@@ -787,6 +791,10 @@ export const editTaskManData = async (orgId, dta, user) => {
       to_email: assignedToObj?.email,
       to_name: assignedToObj?.name,
       to_uid: assignedToObj?.uid,
+      category: dta?.deptName,
+      categoryObj: dta?.deptToObj?.value,
+      projectName: dta?.projectName,
+      projectObj: dta?.projectObj?.uid,
       participantsA: followA,
       participantsC: followA.length || 0,
       followersC: followA.length || 0,
@@ -1960,6 +1968,7 @@ export const addNotificationSupabase = async (payload, enqueueSnackbar) => {
   })
 }
 export const addTaskBusiness = async (orgId, dta, user) => {
+
   const {
     taskTitle,
     taskdesc,
@@ -1971,7 +1980,7 @@ export const addTaskBusiness = async (orgId, dta, user) => {
     priorities,
     attachments,
   } = dta
-  console.log('adding item is ', priorities)
+  console.log('adding item is ', dta)
   let followA = []
   let attachA = []
   const followAUid = []
@@ -2004,6 +2013,10 @@ export const addTaskBusiness = async (orgId, dta, user) => {
       by_email: user.email,
       by_name: user.displayName,
       by_uid: user.uid,
+      category: dta?.deptName,
+      categoryObj: dta?.deptToObj?.value,
+      projectName: dta?.projectName,
+      projectObj: dta?.projectObj?.uid,
       dept: assignedToObj?.department[0] || '',
       due_date: due_date,
       priority: priorities,
@@ -2020,18 +2033,18 @@ export const addTaskBusiness = async (orgId, dta, user) => {
       attachmentsA: attachA,
     },
   ])
-  x.map(async (userId) => {
-    // get phone no's
-    const additionalUserInfo = await getUser(userId)
-    await console.log('task details are', dta, additionalUserInfo)
-    await sendWhatAppTextSms1(
-      additionalUserInfo?.offPh,
-      `New Task Added By *${user.displayName}*
-      \n \n *Due Date*:${prettyDateTime(
-        due_date
-      )}  \n *Priority*:${priorities} \n *Task*: ${taskTitle}`
-    )
-  })
+  // x.map(async (userId) => {
+  //   // get phone no's
+  //   const additionalUserInfo = await getUser(userId)
+  //   await console.log('task details are', dta, additionalUserInfo)
+  //   await sendWhatAppTextSms1(
+  //     additionalUserInfo?.offPh,
+  //     `New Task Added By *${user.displayName}*
+  //     \n \n *Due Date*:${prettyDateTime(
+  //       due_date
+  //     )}  \n *Priority*:${priorities} \n *Task*: ${taskTitle}`
+  //   )
+  // })
   await console.log('data is ', data, error)
 }
 export const addLegalClarificationTicket = async (orgId, dta, user) => {
@@ -2833,6 +2846,11 @@ export const addBankAccount = async (
 }
 export const addVirtualAccount = async (orgId, data, by, msg) => {
   await addDoc(collection(db, `${orgId}_VirtualAccounts`), data)
+  return
+}
+export const addDepartment = async (orgId, data, by, msg) => {
+  console.log('dapartments are', data)
+  await addDoc(collection(db, `${orgId}_Departments`), data)
   return
 }
 export const addLeadNotes = async (orgId, id, data) => {

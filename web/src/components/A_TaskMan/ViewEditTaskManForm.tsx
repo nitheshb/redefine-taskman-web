@@ -53,6 +53,7 @@ import {
   steamUsersList,
   editTaskManAttachmentsData,
   deleteTaskManData,
+  steamDepartmentsList,
 } from 'src/context/dbQueryFirebase'
 import { useAuth } from 'src/context/firebase-auth-context'
 import { storage } from 'src/context/firebaseConfig'
@@ -162,7 +163,43 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
   const [commentAttachUrl, setCommentAttachUrl] = useState('')
   const [cmntFileType, setCmntFileType] = useState('')
   const [progress, setProgress] = useState(0)
+  const [deptListA, setDepartListA] = useState([])
 
+  useEffect(() => {
+    const unsubscribe = steamDepartmentsList(
+      orgId,
+      (querySnapshot) => {
+        const allSetUp = [
+          {
+            label: 'All',
+            projectName: 'All',
+            value: 'any',
+          },
+        ]
+        const addNewSetUp = [
+          {
+            label: 'Add New Department',
+            projectName: 'Add New Department',
+            value: 'addDept',
+          },
+        ]
+        const bankA = querySnapshot.docs.map((docSnapshot) => {
+          const x = docSnapshot.data()
+          x.id = docSnapshot.id
+          return x
+        })
+        bankA.map((user) => {
+          user.label = user?.label
+          user.value = user?.value
+        })
+        console.log('fetched users list is', bankA)
+        setDepartListA([...allSetUp, ...bankA, ...addNewSetUp])
+      },
+      (error) => setDepartListA([])
+    )
+
+    return unsubscribe
+  }, [])
   const removeFile = (filename) => {
     console.log(
       'removing files ',
@@ -202,6 +239,33 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
 
     return unsubscribe
   }, [])
+  const allDepartmentsA = [
+    {
+      label: 'All',
+      projectName: 'All',
+      value: 'any',
+    },
+    {
+      label: 'General',
+      projectName: 'General',
+      value: 'general',
+    },
+    {
+      label: 'Procurement',
+      projectName: 'Procurement',
+      value: 'procurement',
+    },
+    {
+      label: 'Construction',
+      projectName: 'Construction',
+      value: 'construction',
+    },
+    {
+      label: 'Marketing',
+      projectName: 'Marketing',
+      value: 'marketing',
+    },
+  ]
   useEffect(() => {
     setMyTaskObj(taskManObj?.comments || [])
     setMyTaskStatus(taskManObj?.status)
@@ -323,14 +387,13 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
     // uploadStuff(file)
   }
   const onSubmitFun = async (data, resetForm) => {
-    console.log('edit task and button taskManObj',startDate, taskManObj, data)
+    console.log('edit task and button taskManObj', startDate, taskManObj, data)
     data.id = taskManObj.id
     data.priorities = prior ? 'high' : 'medium'
     data.attachments = files
-    if(startDate instanceof Date){
+    if (startDate instanceof Date) {
       data.due_date = startDate.getTime()
     }
-
 
     await editTaskManData(orgId, data, user)
     await setFormMessage('Task Edited..!')
@@ -518,12 +581,7 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                       onClick={() => {
                         // setActionMode('unitBookingMode')
                         setMyTaskStatus('InProgress')
-                        ReOpenTaskManData(
-                          orgId,
-                          taskManObj,
-                          user,
-                          'InProgress'
-                        )
+                        ReOpenTaskManData(orgId, taskManObj, user, 'InProgress')
                       }}
                       // disabled={loading}
                     >
@@ -943,6 +1001,10 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                   taskTitle: taskManObj?.title || '',
                   taskdesc: taskManObj?.desc || '',
                   assignedTo: taskManObj?.to_uid || '',
+                  projectName: taskManObj?.projectName,
+                  projectObj: taskManObj?.projectObj,
+                  deptName: taskManObj?.category,
+                  deptToObj: taskManObj?.categoryObj,
                   assignedToObj:
                     {
                       uid: taskManObj?.to_uid,
@@ -1039,137 +1101,158 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                                 )
                               }}
                               placeholder="Description"
-                              className={`w-full h-[170px] pb-2 pt-2 outline-none text-[14px] font-bodyLato focus:border-blue-600 hover:border-blue-600  ${
+                              className={`w-full h-[60px] pb-2 pt-2 outline-none text-[14px] font-bodyLato focus:border-blue-600 hover:border-blue-600  ${
                                 true ? ' text-[33475b] ' : ' text-[33475b]'
                               } bg-white`}
                             ></textarea>
                           </div>
-                          <section className="mt-1 px-4 rounded-lg bg-[#f8f9fa] border border-gray-100 ">
-                            <section className="flex flex-row mt-3">
-                              <label className="label mt-3 w-[92px] font-regular text-[12px] block mb-1 text-gray-700">
-                                {'Responsible person*'}
-                              </label>
+                          <div className="mt-1 px-4 rounded-lg bg-[#f8f9fa] border border-gray-100 ">
+                            <div className="flex flex-row justify-between">
+                              <section className="flex flex-col mt-3 w-[50%] mr-4">
+                                {/* <label className="label mt-3  font-regular text-[12px] block mb-1 text-gray-700">
+                                {'Project*'}
+                              </label> */}
 
-                              <div className="w-full flex flex-col mt-1 ">
-                                <CustomSelectNew
-                                  name="assignedTo"
-                                  label="Assigned To"
-                                  showLabel={false}
-                                  placeholder="Name"
-                                  className="input mt-[3px]"
-                                  onChange={(value) => {
-                                    formik.setFieldValue(
-                                      'assignedTo',
-                                      value.value
-                                    )
-                                    formik.setFieldValue('assignedToObj', value)
-                                  }}
-                                  value={formik.values.assignedTo}
-                                  // options={aquaticCreatures}
-                                  options={usersList}
-                                />
+                                <div className="w-full flex flex-col mt-3 ">
+                                  <CustomSelect
+                                    name="projectName"
+                                    label="Project"
+                                    showLabel={false}
+                                    placeholder="Name"
+                                    className="input mt-[4px]"
+                                    onChange={(value) => {
+                                      formik.setFieldValue(
+                                        'projectName',
+                                        value.value
+                                      )
+                                      formik.setFieldValue('projectObj', value)
+                                    }}
+                                    value={formik.values.projectName}
+                                    // options={aquaticCreatures}
+                                    options={projectList}
+                                  />
 
-                                <p
-                                  className="text-sm text-red-500 hidden mt-3"
-                                  id="error"
-                                >
-                                  Please fill out this field.
-                                </p>
-                              </div>
-                            </section>
-                            <section className="flex flex-row mt-3">
-                              <label className="label mt-3 w-[92px] font-regular text-[12px] block mb-1 text-gray-700">
-                                {'Participants'}
-                              </label>
+                                  <p
+                                    className="text-sm text-red-500 hidden mt-3"
+                                    id="error"
+                                  >
+                                    Please fill out this field.
+                                  </p>
+                                </div>
+                              </section>
+                              <section className="flex flex-col mt-3 w-[50%]">
+                                <label className="label mt-3  font-regular text-[12px] block mb-1 text-gray-700">
+                                  {'Department*'}
+                                </label>
 
-                              <div className="w-full flex flex-col mt-1 ">
-                                <Select
-                                  isMulti
-                                  placeholder="Add Participants"
-                                  name="followers"
-                                  onChange={(value) => {
-                                    // const {uid, name} = value
-                                    console.log('followers are', value)
+                                <div className="w-full flex flex-col mt-1 ">
+                                  <CustomSelectNew
+                                    name="deptName"
+                                    label="Assigned To"
+                                    showLabel={false}
+                                    placeholder="Name"
+                                    className="input mt-[3px]"
+                                    onChange={(value) => {
+                                      formik.setFieldValue(
+                                        'deptName',
+                                        value.value
+                                      )
+                                      formik.setFieldValue('deptToObj', value)
+                                    }}
+                                    value={formik.values.deptName}
+                                    // options={aquaticCreatures}
+                                    options={deptListA}
+                                  />
 
-                                    formik.setFieldValue('followers', value)
-                                  }}
-                                  options={usersList}
-                                  formatOptionLabel={formatOptionLabel}
-                                  value={formik?.values?.followers || []}
-                                  className="basic-multi-select w-full"
-                                  classNamePrefix="myselect"
-                                  styles={customStyles}
-                                />
+                                  <p
+                                    className="text-sm text-red-500 hidden mt-3"
+                                    id="error"
+                                  >
+                                    Please fill out this field.
+                                  </p>
+                                </div>
+                              </section>
+                            </div>
+                            <div className="flex flex-row w-full">
+                              <section className="flex flex-col  w-[49%]">
+                                <label className="label mt-3 font-regular text-[12px] block mb-1 text-gray-700">
+                                  {'Responsible person*'}
+                                </label>
 
-                                <p
-                                  className="text-sm text-red-500 hidden mt-3"
-                                  id="error"
-                                >
-                                  Please fill out this field.
-                                </p>
-                              </div>
-                            </section>
+                                <div className=" mt-1 ">
+                                  <CustomSelectNew
+                                    name="assignedTo"
+                                    label="Assigned To"
+                                    showLabel={false}
+                                    placeholder="Name"
+                                    className="input mt-[3px]"
+                                    onChange={(value) => {
+                                      formik.setFieldValue(
+                                        'assignedTo',
+                                        value.value
+                                      )
+                                      formik.setFieldValue(
+                                        'assignedToObj',
+                                        value
+                                      )
+                                    }}
+                                    value={formik.values.assignedTo}
+                                    // options={aquaticCreatures}
+                                    options={usersList}
+                                  />
 
-                            <div className="md:flex flex-row md:space-x-4 mt-3 w-full text-xs mt-3 ">
-                              {/* <div className="mb-3 space-y-2 w-full text-xs mt-">
+                                  <p
+                                    className="text-sm text-red-500 hidden mt-3"
+                                    id="error"
+                                  >
+                                    Please fill out this field.
+                                  </p>
+                                </div>
+                              </section>
+                              <section className="md:flex flex flex-col md:space-x-4 ml-5 mt-3  text-xs mt-3 ">
+                                {/* <div className="mb-3 space-y-2 w-full text-xs mt-">
                             <TextField label="Size*" name="size" type="text" />
                           </div> */}
-                              <div className="flex flex-row">
-                                <label className="label font-regular text-[12px] block mb-1 text-gray-700">
-                                  Deadline
-                                </label>
-                                <div className="bg-green border ml-[32px] pl-2 rounded flex flex-row h-[32px] ">
-                                  <CalendarIcon className="w-4  inline text-[#058527]" />
-                                  <span className="inline">
-                                    <DatePicker
-                                      className="mt-[5px] pl- px-2  inline text-sm "
-                                      selected={startDate}
-                                      onChange={(date) => setStartDate(date)}
-                                      showTimeSelect
-                                      timeFormat="HH:mm"
-                                      injectTimes={[
-                                        setHours(setMinutes(d, 1), 0),
-                                        setHours(setMinutes(d, 5), 12),
-                                        setHours(setMinutes(d, 59), 23),
-                                      ]}
-                                      dateFormat="MMMM d, yyyy h:mm aa"
-                                    />
-                                  </span>
+                                <div className="flex flex-col">
+                                  <label className="label font-regular text-[12px] block mb-1 text-gray-700">
+                                    Deadline
+                                  </label>
+                                  <div className="bg-white border   rounded flex flex-row h-[34px] mt-1 px-2">
+                                    <CalendarIcon className="w-4  inline text-[#058527]" />
+                                    <span className="inline">
+                                      <DatePicker
+                                        className="mt-[5px] pl- px-2  inline text-sm "
+                                        selected={startDate}
+                                        onChange={(date) => setStartDate(date)}
+                                        showTimeSelect
+                                        timeFormat="HH:mm"
+                                        injectTimes={[
+                                          setHours(setMinutes(d, 1), 0),
+                                          setHours(setMinutes(d, 5), 12),
+                                          setHours(setMinutes(d, 59), 23),
+                                        ]}
+                                        dateFormat="MMMM d, yyyy h:mm aa"
+                                      />
+                                    </span>
+                                  </div>
                                 </div>
-                              </div>
-                              <div className="w-full flex flex-row my-3 mt-6">
-                                {/* <TextField
-                              type="file"
-                              name="file"
-                              label="Add file"
-                              className="mt-[-3px] border border-gray-300 w-full rounded h-[36px] pt-0.5 pl-1"
-                            /> */}
-
-                                {/* <label
-                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                              htmlFor="file_input"
-                            >
-                              Upload file
-                            </label> */}
-                                {/* <input
-                                  className="block w-full text-sm text-gray-900 border border-blue-300 rounded-sm cursor-pointer bg-blue-50  focus:outline-none "
-                                  id="file_input"
-                                  type="file"
-                                  name="file"
-                                /> */}
-                              </div>
+                              </section>
                             </div>
-                            <div className=" mt-3">
-                              <FileList files={files} removeFile={removeFile} />
+                            <div>
+                              <div className=" mt-3">
+                                <FileList
+                                  files={files}
+                                  removeFile={removeFile}
+                                />
 
-                              <FileUpload
-                                files={files}
-                                setFiles={setFiles}
-                                removeFile={removeFile}
-                              />
-                            </div>
-                          </section>
-                          {/* <div className="w-full flex flex-col  ">
+                                <FileUpload
+                                  files={files}
+                                  setFiles={setFiles}
+                                  removeFile={removeFile}
+                                />
+                              </div>
+
+                              {/* <div className="w-full flex flex-col  ">
                           <CustomSelect
                             name="priorities"
                             label="Priority"
@@ -1192,35 +1275,35 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                             Please fill out this field.
                           </p>
                         </div> */}
-                        </div>
-                        {/* <span className="text-[#0091ae]">
+                            </div>
+                            {/* <span className="text-[#0091ae]">
                     Save
                     <ArrowRightIcon className="w-5 ml-5" />
                   </span> */}
-                      </div>
-                    </div>
-                    <div className="flex flex-row z-10 justify-between mt-4 pb-2 pr-6 bg-white shadow-lg absolute bottom-0  w-full">
-                      <section></section>
-                      <section className="flex flex-row ">
-                        {formMessage === 'Task Edited..!' && (
-                          <p className=" flex text-md text-slate-800 mt-4">
-                            <img
-                              className="w-[18px] h-[18px] inline mr-2"
-                              alt=""
-                              src="/ok.gif"
-                            />
-                            <span className="mt- text-[12px]">
-                              {formMessage}
-                            </span>
-                          </p>
-                        )}
-                        <button
-                          // onClick={() => fAddSchedule()}
-                          className={`flex mt-2 ml-4 cursor-pointer rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium  text-[#535c69]  bg-[#bbed21]   hover:shadow-lg `}
-                        >
-                          <span className="ml-1 ">Edit Task</span>
-                        </button>
-                        {/* <button
+                          </div>
+                        </div>
+                        <div className="flex flex-row z-10 justify-between mt-4 pb-2 pr-6 bg-white shadow-lg absolute bottom-0  w-full">
+                          <section></section>
+                          <section className="flex flex-row ">
+                            {formMessage === 'Task Edited..!' && (
+                              <p className=" flex text-md text-slate-800 mt-4">
+                                <img
+                                  className="w-[18px] h-[18px] inline mr-2"
+                                  alt=""
+                                  src="/ok.gif"
+                                />
+                                <span className="mt- text-[12px]">
+                                  {formMessage}
+                                </span>
+                              </p>
+                            )}
+                            <button
+                              // onClick={() => fAddSchedule()}
+                              className={`flex mt-2 ml-4 cursor-pointer rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium  text-[#535c69]  bg-[#bbed21]   hover:shadow-lg `}
+                            >
+                              <span className="ml-1 ">Edit Task</span>
+                            </button>
+                            {/* <button
                         // onClick={() => fAddSchedule()}
                         className={`flex mt-2 ml-4 cursor-pointer rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium  border border-[#c6cdd3] text-[#535b69] hover:shadow-lg   `}
                       >
@@ -1229,15 +1312,17 @@ const ViewEditTaskManForm = ({ title, dialogOpen, taskManObj }) => {
                         </span>
                       </button> */}
 
-                        <button
-                          // onClick={() => fSetLeadsType('Add Lead')}
-                          // onClick={() => cancelResetStatusFun()}
-                          onClick={() => dialogOpen(false)}
-                          className={`flex mt-2 ml- rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium `}
-                        >
-                          <span className="ml-1 ">Cancel</span>
-                        </button>
-                      </section>
+                            <button
+                              // onClick={() => fSetLeadsType('Add Lead')}
+                              // onClick={() => cancelResetStatusFun()}
+                              onClick={() => dialogOpen(false)}
+                              className={`flex mt-2 ml- rounded items-center  pl-2 h-[36px] pr-4 py-2 text-sm font-medium `}
+                            >
+                              <span className="ml-1 ">Cancel</span>
+                            </button>
+                          </section>
+                        </div>
+                      </div>
                     </div>
                   </Form>
                 )}

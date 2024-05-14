@@ -680,10 +680,9 @@ export default function TodayLeadsActivitySearchView({
     setisImportLeadsOpen(true)
     setSelUserProfile(data)
   }
-  const selTaskManObjF =(data)=>{
+  const selTaskManObjF = (data) => {
     setisViewTaskMan(true)
     setSelTaskMan(data)
-
   }
   const handleSortDrop = (e) => {
     setSortType(e.target.value)
@@ -724,150 +723,16 @@ export default function TodayLeadsActivitySearchView({
         {/* <Header /> */}
         <div className="flex justify-center items-center text-gray-900"></div>
         <div className=" justify-center items-center text-gray-900">
-          {/* <h1 className="font-Playfair box-border px-0 pt-0 pb-2  md:pb-4 m-0 text-3xl font-bold tracking-wide  text-gray-900 align-baseline border-0 xl:text-3xl xl:tracking-normal md:text-3xl md:tracking-tight">
-            {greet}, {user?.displayName?.toLocaleUpperCase()}
-          </h1> */}
-          {/* <div className="flex flex-row justify-between pb-3"> */}
-
-          {/* <div className="flex items-center justify-between">
-
-              <p
-                tabIndex={0}
-                className="focus:outline-none text-base sm:text-lg md:text-xl lg:text-2xl font-bold leading-normal text-gray-800"
-              ></p>
-              <section className="flex flex-row">
-                <div className=" flex flex-col   mr-5 w-40">
-                  <SlimSelectBox
-                    name="project"
-                    label=""
-                    className="input "
-                    onChange={(value) => {
-                      console.log('zoro condition changed one  is', value)
-                      setSelProject(value)
-                      // formik.setFieldValue('project', value.value)
-                    }}
-                    value={selProjectIs?.value}
-                    // options={aquaticCreatures}
-                    options={[
-                      ...[{ label: 'All Projects', value: 'allprojects' }],
-                      ...projectList,
-                    ]}
-                  />
-                </div>
-                {user?.access?.includes('manage_leads') && (
-                  <div className=" flex flex-col  w-40">
-                    <SlimSelectBox
-                      name="project"
-                      label=""
-                      placeholder="My Tasks"
-                      className="input "
-                      onChange={(value) => {
-                        console.log('changed value is ', value.value)
-                        setSelLeadsOf(value)
-                        // formik.setFieldValue('project', value.value)
-                      }}
-                      value={selLeadsOf?.value}
-                      // options={aquaticCreatures}
-                      options={[
-                        ...[
-                          { label: 'Team Tasks', value: 'teamtasks' },
-                          { label: 'My Tasks', value: 'mytasks' },
-                        ],
-                        ...usersList,
-                      ]}
-                    />
-                  </div>
-                )} */}
-
-          {/* <span className="inline-flex p-1 border bg-gray-200 rounded-md">
-                  <button
-                    className={`px-2  rounded ${
-                      leadByViewLayout ? 'bg-white shadow' : ''
-                    }`}
-                    onClick={() => setLeadByViewLayout(true)}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-6 w-6 text-gray-600"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"
-                      />
-                    </svg>
-                  </button>
-                  <button
-                    className={`px-2  rounded ${
-                      !leadByViewLayout ? 'bg-white shadow' : ''
-                    }`}
-                    onClick={() => setLeadByViewLayout(false)}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-6 w-6 text-gray-600"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-                      />
-                    </svg>
-                  </button>
-                </span> */}
-          {/* <div className="ml-2 py-3 px-4 flex items-center text-sm font-medium leading-none text-gray-600 bg-gray-200 hover:bg-gray-300 cursor-pointer rounded max-h-[35px]">
-                  <p>Sort By:</p>
-                  <select
-                    aria-label="select"
-                    className="focus:text-indigo-600 focus:outline-none bg-transparent ml-1"
-                    onChange={(e) => handleSortDrop(e)}
-                  >
-                    <option className="text-sm text-indigo-800">Latest</option>
-                    <option className="text-sm text-indigo-800">Oldest</option>
-                  </select>
-                </div> */}
-          {/* </section> */}
-          {/* </div> */}
-          {/* </div> */}
-
-          {
-            schLoading &&
-              [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map((data, i) => (
-                <LogSkelton key={i} />
-              ))
-            // <div className="py-8 px-8 mt-10 flex flex-col items-center bg-red-100 rounded">
-            //   <div className="font-md font-medium text-xs mb-4 text-gray-800 items-center">
-            //     <img
-            //       className="w-[180px] h-[180px] inline"
-            //       alt=""
-            //       src="../note-widget.svg"
-            //     />
-            //   </div>
-            //   <h3 className="mb-1 text-sm font-semibold text-gray-900 dark:text-white">
-            //     <Loader /> Loading
-            //   </h3>
-            //   <time className="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
-            //     <span className="text-blue-600"> Add New Lead</span>
-            //   </time>
-            // </div>
-          }
-          {/* searchKey, setSearchKey */}
-
-
+          {schLoading &&
+            [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map((data, i) => (
+              <LogSkelton key={i} />
+            ))}
 
           {!schLoading && !leadByViewLayout && todaySch && (
             <>
               <div className=" ">
                 <div className="flex flex-wrap">
-                  <div className="w-10/12">
+                  <div className="w-full">
                     <TodoListView
                       moduleName={moduleName}
                       taskListA={schFetCleanData}
@@ -882,77 +747,15 @@ export default function TodayLeadsActivitySearchView({
                       setSearchKey={setSearchKey}
                     />
                   </div>
-                    <div className="w-2/12 flex flex-col">
-                    <section className="bg-white rounded  flex flex-col p-4 ml-1 mb-1 w-100 ">
-                      <h5 className="text-sm">{greet}...!🖐</h5>
-                      <h2 className="text-md font-semibold text-black leading-light font-Playfair pb-1">
-                        {user?.displayName?.toLocaleUpperCase()}
-                      </h2>
 
-                      {/* <h2 className="text-sm text-gray-700 ">
-                    You've got {'  '}
-                   <span className="inline-flex text-md leading-5 font-semibold rounded-full  text-green-800">
-
-                    {
-                    schFetCleanData?.filter(
-                      (d) =>
-                        searchKey.includes(d['sts']) ||
-                        searchKey.includes('upcoming')
-                    ).length
-                   }
-                    </span>{' '}
-                   tasks
-  
-                   </h2> */}
-                    </section>
-                    <section className="ml-1">
-                      <TaskProgress userTodayPerfA={userTodayPerfA} />
-                      <div className="mt-1">
-                        <RecentActivity
-                          title={'My Activity'}
-                          userTodayPerfA={userTodayPerfA}
-                        />
-                      </div>
-
-                      <div className="mt-1">
-                        <RecentActivity
-                          title={'Team Activity'}
-                          userTodayPerfA={userTodayPerfA}
-                        />
-                      </div>
-                    </section>
-                  </div>
                 </div>
               </div>
             </>
           )}
 
-
-          
-
-          
-
-
-
-
-
-
-          
-
-
-
-
-
-
-
-
-
-
-
           {leadByViewLayout && todaySch && (
             <div className=" w-full">
               <div className="bg-white py-4 md:py-7 px-4 md:px-4 xl:px-6 rounded">
-
                 <div className="sm:flex items-center justify-between">
                   <div className="flex items-center">
                     <a
@@ -1063,29 +866,13 @@ export default function TodayLeadsActivitySearchView({
                             selUserProfileF('User Profile', leadUser)
                           }}
                         >
-                          {/* <div className="inline">
-                    <div className="ml-4 mt-4">
-                      <label className="font-semibold text-[#053219]  text-sm  mb-1  ">
-                        Lead Schedule Details<abbr title="required"></abbr>
-                      </label>
-                    </div>
 
-                    <div className="border-t-4 rounded-xl w-16 mt-1 ml-4 border-green-600"></div>
-                  </div> */}
 
                           <div className="flex  w-full mx-4 py-2 border-b mt-4 ">
                             <label className="font-semibold text-[#053219] px-4 py-[4px] bg-green-100  text-2xl  mb-1 mr-2  ">
                               {index + 1}
                             </label>
-                            {/* <div className="inline">
-                    <div className="ml-4 mt-4">
-                      <label className="font-semibold text-[#053219]  text-sm  mb-1  ">
-                        Lead Schedule Details<abbr title="required"></abbr>
-                      </label>
-                    </div>
 
-                    <div className="border-t-4 rounded-xl w-16 mt-1 ml-4 border-green-600"></div>
-                  </div> */}
                             <section className="mt-2">
                               <span className="inline-flex mr-4">
                                 <span className="text-sm  font-light  font text-gray-700 ">

@@ -38,7 +38,9 @@ export function prettyDate(d) {
     date.getUTCFullYear()
   )
 }
-
+export function GoodString(str){
+ return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
+}
 export function prettyDateTime(d) {
   const date = new Date(d)
   const months = [
