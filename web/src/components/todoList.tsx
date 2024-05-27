@@ -1959,7 +1959,7 @@ const TodoListView = ({
         setOpen={setisImportLeadsOpen1}
         title={'Add Task'}
         // customerDetails={selUserProfile}
-        widthClass="max-w-4xl"
+        widthClass="max-w-lg"
       />
     </>
   )

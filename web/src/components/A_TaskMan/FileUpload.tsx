@@ -2,6 +2,9 @@ import { useState } from 'react'
 
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 // import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+
+import AttachmentIcon from '@mui/icons-material/Attachment';
 
 import axios from 'axios'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
@@ -62,20 +65,36 @@ export default function FileUpload  ({ files, setFiles, removeFile }) {
 
   return (
     <>
-      <div className="file-card">
+
+
+{/* <div className="file-card">
         <div className="file-inputs">
           <input type="file" onChange={uploadHandler} />
           <button>
-            {/* <i>
-              <FontAwesomeIcon icon={faPlus} />
-            </i> */}
+            
             Upload
           </button>
         </div>
 
         <p className="main">Supported files</p>
         <p className="info">PDF, JPG, PNG</p>
-      </div>
+      </div> */}
+
+
+<div className="file-card">
+  <div className="file-inputs">
+  
+    <label htmlFor="fileInput" className="file-label">
+      <AttachFileIcon className="h-8 w-8" />
+      <span className="text-white-500 font-bold mr-1">Attachment</span>
+      <span className="text-gray-400 text-sm">(PDF, JPG, PNG)</span>
+    </label>
+    <input type="file" id="fileInput" className="file-input" onChange={uploadHandler} />
+    
+  </div>
+</div>
+
+
     </>
   )
 }

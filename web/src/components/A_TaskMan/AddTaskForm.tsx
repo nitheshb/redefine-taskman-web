@@ -39,6 +39,9 @@ import { SlimSelectBox } from 'src/util/formFields/slimSelectBoxField'
 import { TextField } from 'src/util/formFields/TextField'
 import { TextField2 } from 'src/util/formFields/TextField2'
 
+
+
+
 const customStyles = {
   control: (base) => ({
     ...base,
@@ -567,8 +570,8 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                           ></textarea>
                         </div>
                         <section className="mt-1 px-4 rounded-lg bg-[#f8f9fa] border border-gray-100 ">
-                          <div className="flex flex-row justify-between">
-                            <section className="flex flex-col mt-3 w-[50%] mr-4">
+                          <div className="flex flex-col justify-between">
+                            <section className="flex flex-col mt-3 w-[100%] mr-4">
                               {/* <label className="label mt-3  font-regular text-[12px] block mb-1 text-gray-700">
                                 {'Project*'}
                               </label> */}
@@ -579,7 +582,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                                   label="Project"
                                   showLabel={false}
                                   placeholder="Name"
-                                  className="input mt-[4px]"
+                                  className="input   mt-[4px]"
                                   onChange={(value) => {
                                     formik.setFieldValue(
                                       'projectName',
@@ -600,7 +603,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                                 </p>
                               </div>
                             </section>
-                            <section className="flex flex-col mt-3 w-[50%]">
+                            <section className="flex flex-col w-[100%] mt-3 ">
                               <label className="label mt-3  font-regular text-[12px] block mb-1 text-gray-700">
                                 {'Department*'}
                               </label>
@@ -611,7 +614,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                                   label="Assigned To"
                                   showLabel={false}
                                   placeholder="Department"
-                                  className="input mt-[3px]"
+                                  className="input  mt-[3px]"
                                   onChange={(value) => {
                                     if (value.value === 'addDept') {
                                       setAddNewDeptStuff(true)
@@ -644,8 +647,8 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                               phase={'data'}
                             />
                           )}
-                          <div className="flex flex-row  mt-3">
-                            <section className="flex flex-col  w-[49%]">
+                          <div className="flex flex-col  mt-3">
+                            <section className="flex flex-col  w-[100%]">
                               <label className="label mt-3  font-regular text-[12px] block mb-1 text-gray-700">
                                 {'Responsible person*'}
                               </label>
@@ -656,7 +659,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                                   label="Assigned To"
                                   showLabel={false}
                                   placeholder="Name"
-                                  className="input mt-[3px]"
+                                  className="input w-[400px] mt-[3px]"
                                   onChange={(value) => {
                                     formik.setFieldValue(
                                       'assignedTo',
@@ -677,7 +680,7 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                                 </p>
                               </div>
                             </section>
-                            <section className="md:flex flex flex-col md:space-x-4 ml-5 mt-3  text-xs mt-3 ">
+                            <section className="md:flex flex flex-col md:space-x-4   text-xs mt-3 ">
                               {/* <div className="mb-3 space-y-2 w-full text-xs mt-">
                             <TextField label="Size*" name="size" type="text" />
                           </div> */}
