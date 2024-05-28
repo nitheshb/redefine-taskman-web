@@ -81,18 +81,24 @@ export default function FileUpload  ({ files, setFiles, removeFile }) {
       </div> */}
 
 
-<div className="file-card">
-  <div className="file-inputs">
-  
-    <label htmlFor="fileInput" className="file-label">
-      <AttachFileIcon className="h-8 w-8" />
-      <span className="text-white-500 font-bold mr-1">Attachment</span>
-      <span className="text-gray-400 text-sm">(PDF, JPG, PNG)</span>
-    </label>
-    <input type="file" id="fileInput" className="file-input" onChange={uploadHandler} />
-    
-  </div>
-</div>
+
+
+<div className="mb-6">
+      <label
+        htmlFor="file-upload"
+        className="flex items-center cursor-pointer"
+      >
+        <AttachFileIcon className="mr-1 text-white-500" style={{ fontSize: '18px' }} />
+        <span className="text-white-500 mr-1">Attachment</span>
+        <span className="text-gray-400 text-sm">(PDF, JPG, PNG)</span>
+      </label>
+      <input
+        type="file"
+        id="file-upload"
+        className="f-hidden"
+        onChange={uploadHandler}
+      />
+    </div>
 
 
     </>

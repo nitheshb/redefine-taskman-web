@@ -680,12 +680,12 @@ const AddTaskForm = ({ title, dialogOpen }) => {
                                 </p>
                               </div>
                             </section>
-                            <section className="md:flex flex flex-col md:space-x-4   text-xs mt-3 ">
+                            <section className="md:flex flex flex-col md:space-x-4   text-xs mt-5">
                               {/* <div className="mb-3 space-y-2 w-full text-xs mt-">
                             <TextField label="Size*" name="size" type="text" />
                           </div> */}
-                              <div className="flex flex-col">
-                                <label className="label font-regular text-[12px] block mb-1 text-gray-700">
+                              <div className="flex flex-col mb-3">
+                                <label className="label font-regular text-[12px] block mb-1 mt-3 text-gray-700">
                                   Deadline
                                 </label>
                                 <div className="bg-white border   rounded flex flex-row h-[34px] mt-1 px-2">

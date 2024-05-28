@@ -769,6 +769,16 @@ img
 
 
 
+.cursor-pointer {
+  cursor: pointer;
+}
+
+
+.f-hidden {
+  display: none;
+}
+
+
 
 file-card {
   padding: 1em;
